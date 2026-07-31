@@ -1,7 +1,7 @@
 # DocFit Knowledge 与 Tools 设计（05）
 
-> 状态：设计说明
-> 日期：2026-07-30
+> 状态：最终方案
+> 日期：2026-07-31
 > 原则：Knowledge 保持可读，Tools 保持确定性，复杂性不进入 Agent runtime。
 
 ## 1. Knowledge
@@ -87,73 +87,24 @@ manifest 只说明这个包是什么、来自哪里、适用于什么。`content
 - 通用 Skill 不复制学校具体要求；
 - Knowledge 包是否可用由人工评审和对应 Eval case 共同证明，不需要额外发布服务。
 
-### 1.6 `SchoolKnowledgeDraft`
-
-模板解析的共享输出统一为 `SchoolKnowledgeDraft`。它连接模板证据与两个业务 Skill，但本身不是正式 School Knowledge Package。
-
-最小结构：
-
-```yaml
-schema_version: 1
-school: 某大学
-source_digest: sha256:...
-sources:
-  - path: template.docx
-    sha256: ...
-    kind: template
-applicability:
-  degree_level: ...
-  program_scope: ...
-  language: ...
-  academic_year: ...
-rules:
-  - field: title.font_size
-    value: 小二
-    source_ref: template.docx#paragraph-12
-    evidence_kind: template_observation
-    confidence: high
-template_asset: template.docx
-conflicts: []
-uncertainties: []
-```
-
-字段语义：
-
-- `source_digest` 标识本次输入来源集合，用于发现完全相同的模板和要求文件；
-- `source_ref` 必须指向可复核的原始证据；
-- `evidence_kind` 区分官方文字明示、模板客观表现和 Agent 推断；
-- `confidence` 是受限枚举，不是模型自报概率；只有来源明确且证据一致时才能标为 `high`；
-- `conflicts` 保存来源之间的不一致；
-- `uncertainties` 保存无法从现有证据确认的规则和适用范围。
-
-`source_digest` 按来源文件内容计算，不依赖本机绝对路径或上传时的文件名：先计算每个来源文件的 SHA-256，再按 `kind + sha256` 排序并对规范化列表计算总 SHA-256。具体序列化形式由 schema 固定并用 fixture 测试。
-
-共享模板提取能力只做三件事：
-
-1. `docx_inspect` 等 Tool 确定性提取模板结构、样式、文字、槽位和来源 hash；
-2. Agent 按一份共享模板提取协议解释证据并形成 `SchoolKnowledgeDraft`；
-3. schema validator、source-ref checker 和 digest calculator 检查草稿的结构与可追溯性。
-
-共享协议、Draft schema 和确定性校验只维护一份。它们不是新的用户可见 Skill；确定性内部模块只有在 Agent 需要直接调用时才暴露成 Tool。
-
-`SchoolKnowledgeDraft` 有两种消费方式：
-
-- `prepare-school-template` 补充完整适用范围、版本、来源检查和人工确认，再形成长期 School Knowledge Package；
-- `convert-thesis` 把它作为本次任务的临时规则证据，任务结束后不自动登记为长期学校资产。
-
-计算用户模板 digest 后，只有在来源集合与已有 Knowledge 的 source hashes 完全匹配，且适用范围也匹配时，才能直接复用已有 School Knowledge Package。digest 不匹配或适用范围不明时，生成新的任务级 Draft，不用文件名或相似文本猜测复用。
-
-`source_digest` 与正式包的 `content_digest` 不同：前者标识输入来源集合，后者标识最终会影响 Agent 或 Tool 行为的 Knowledge 内容。
-
-### 1.7 加载与积累
+### 1.6 加载、临时证据与积累
 
 Skill 告诉 Agent 何时读取哪类 Knowledge，应用壳只把适用的 Knowledge 暴露给 SDK。Knowledge 可以从文件、受控资产存储或其他普通数据源加载，但 Agent 和 Skill 不依赖具体存储实现。
 
-新学校资料通过真实任务逐步积累：用户明确要求建设长期学校资产时，`prepare-school-template` 将官方材料整理为候选 Knowledge，经过来源检查、必要 Eval 和人工确认后供后续任务复用。这是领域资产维护方式，不是在线工作流。
+已经建设过的学校直接加载匹配版本的 Knowledge。匹配必须同时考虑学历、专业范围、语言、学年和模板版本，不能只凭学校名、文件名或相似文本猜测。
 
-用户只要求转换当前论文时，`convert-thesis` 可以从本次提供的模板和要求文件中生成任务级 `SchoolKnowledgeDraft`。Draft 保留来源与 hash，但不自动写入长期学校 Knowledge。
+用户只要求转换当前论文，并临时提供模板或要求文件时：
 
-只有资料规模和查询需求真实超过普通读取能力后，才评估索引或检索；不预先增加 `KnowledgeService` 或向量数据库。
+- `docx_inspect` 提取结构、有效样式、文字、槽位、来源 hash 和不确定对象；
+- Agent 在当前 SDK 会话中根据这些证据判断适用规则；
+- 这些证据只服务当前任务，不自动写入长期 Knowledge，也不定义新的中间资产或 schema；
+- 需要复用已有学校包时，来源 hash 与适用范围都必须匹配。
+
+用户明确要求建设可复用学校资产时，`prepare-school-template` 才把官方材料整理为新的 Knowledge 版本，保留来源、适用范围、冲突和人工确认记录，并通过对应 Eval 验证。
+
+学校要求中的精确值只规范化一次：准备 Knowledge 时，将字体、字号、行距、页边距、编号和节属性等确定参数写入 `format-profile.yaml`。转换时 Tool 直接消费这些有类型的参数，不反复从自然语言中用正则推断。解释性规则、条件和冲突继续保留在 `school.md`。
+
+只有资料规模和查询需求真实超过普通读取能力后，才评估索引或检索；不预先增加 `KnowledgeService`、向量数据库或学校资产发布系统。
 
 ## 2. Tools
 
@@ -171,9 +122,29 @@ Tool 应满足：
 - 可以脱离 Agent 独立测试；
 - 不擅自做论文语义判断。
 
-### 2.2 实现与复用策略
+### 2.2 最终工具方案与复用策略
 
-下面定义的四个 Tool 是 DocFit 面向 Agent 的稳定契约，不表示底层 DOCX 能力必须由 DocFit 从零实现。
+下面定义的五个 Tool 是 DocFit 面向 Agent 的稳定契约，不表示底层 DOCX 能力必须由 DocFit 从零实现。
+
+```text
+Claude Agent SDK 中的 Agent
+        ↓ 选择规则与下一步
+五个 DocFit Tool
+        ↓ 确定性适配
+MCP / CLI / library / Word 或 LibreOffice
+```
+
+预处理发生在 `docx_inspect` 内部，后处理发生在 `docx_edit` 的后置检查、`docx_render`、`docx_visual_review` 和 `docx_validate` 内部。它们不是独立服务，也不拥有任务状态。底层 Provider 不调用另一个模型或 Agent 来解释论文；所有语义判断、视觉判断和恢复选择仍由 Claude Agent SDK 中的当前 Agent 完成。
+
+| 论文转换需要的能力 | 在 DocFit 中的归属 |
+|---|---|
+| 模板和论文的结构化预处理 | `docx_inspect` 内部 |
+| 当前任务对模板证据的解释 | Claude Agent SDK 当前会话 |
+| 可复用学校规则与精确参数 | School Knowledge Package |
+| 批量、安全、原子写回 | `docx_edit` 内部 |
+| 分页和页面证据 | `docx_render` 内部 |
+| 把指定页面图片送入当前 Agent 并建立前后对比 | `docx_visual_review` |
+| 内容、格式和产物复核 | `docx_validate` 内部 |
 
 实现时遵循以下顺序：
 
@@ -196,8 +167,9 @@ DocFit adapter
 
 DocFit 自己负责：
 
-- 四个 Tool 的输入输出、错误语义和版本兼容；
-- `DocumentObjectRef`、输入 hash、操作前置条件和过期检测；
+- 五个 Tool 的输入输出、错误语义和版本兼容；
+- Tool 间 opaque `object_ref`、输入 hash、操作前置条件和过期检测；
+- 分析与渲染缓存的正确失效；
 - 源文件只读、原子发布和非目标内容保护；
 - Knowledge 到确定性参数的映射；
 - 第三方依赖的版本锁定、适配测试和 Eval。
@@ -217,7 +189,9 @@ DocFit 自己负责：
 | [OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | 结构化读取、路径查询、批量原子编辑、OpenXML 校验和预览 |
 | [Safe Docx](https://github.com/UseJunior/safe-docx) / `docx-core` | 对既有 DOCX 的局部编辑、格式保留、稳定定位和文档比较 |
 | [SecurityRonin/docx-mcp](https://github.com/SecurityRonin/docx-mcp) | OOXML 局部操作、修订、批注和结构审计 |
-| LibreOffice 或 Microsoft Word | PDF 与分页渲染证据 |
+| Aspose.Words | 服务端快速迭代渲染、逐页图片和页面布局信息；需要验证授权、字体与目标样本保真度 |
+| LibreOffice | 低成本预览和基础可读性检查；不能作为 Microsoft Word 最终视觉标准 |
+| Microsoft Graph / Office API / 受控 Word | 面向最终 Microsoft Word 兼容性的交付渲染证据 |
 | 其他 DOCX MCP | 作为能力来源或对照实现，不默认把完整工具面暴露给 Agent |
 
 候选列表是实现调研入口，不是长期架构约束。选型必须用相同 fixture 和 Tool 契约测试比较，至少验证：
@@ -239,6 +213,7 @@ PoC 阶段可以把候选 MCP 直接接入 SDK 以验证能力；产品路径默
 docx_inspect    分析结构、样式、可见对象和风险
 docx_edit       在工作副本上执行一组受控编辑操作
 docx_render     生成 PDF、逐页图片和渲染摘要
+docx_visual_review  将指定页面、裁剪图或对比图作为图片证据返回给当前 Agent
 docx_validate   对源文件、最终文件和学校要求做确定性检查
 ```
 
@@ -282,7 +257,17 @@ analysis_path: /path/analysis.json
 
 对象引用由 Tool 生成并保持 opaque。Agent 用它选择目标，不解析内部 OOXML 路径。
 
-底层引擎返回的段落索引、XPath、bookmark 或其他 locator 必须在适配层转换为 `DocumentObjectRef`。不能把第三方定位格式直接写入 Skill 或 Knowledge。
+底层引擎返回的段落索引、XPath、bookmark 或其他 locator 必须在适配层转换为 DocFit 的 opaque `object_ref`。不能把第三方定位格式直接写入 Skill 或 Knowledge。
+
+一次底层解析应尽量完整收集后续需要的客观事实，包括：
+
+- 正文段落、表格、合并单元格、节、页眉页脚；
+- 图片、公式、脚注尾注、文本框、书签、域、内容控件和编号；
+- 原始 run、合并后的逻辑文本及两者的字符位置映射；
+- 直接格式、样式继承和最终生效的格式值；
+- package parts、relationships、输入 hash 和不支持的可见对象。
+
+Tool 将完整结果保存在任务临时目录，只向 Agent 返回摘要、风险和按需查询入口。相同输入 hash 的后续 `focus` 查询可以复用解析结果；这只是 Tool 内部缓存，不是新的运行时对象。Tool 只报告事实，不自行判定“这是一级标题”或“这是学生正文”。
 
 ### 2.5 `docx_edit`
 
@@ -316,24 +301,201 @@ operations:
 - 目标定位或前置文本不一致时安全失败；
 - 单次调用按 all-or-nothing 执行；
 - 成功时返回全部实际执行项和警告；
-- 修改后重新读取文件并做基础结构检查。
+- 修改后重新读取文件并检查目标效果、非目标内容和 package 完整性。
 
 Tool 应先验证全部 operation，再写入临时文件；临时文件能够重新打开并通过基础结构检查后，才发布到 `output_docx`。任一操作失败时，不留下可被误认成成功的输出文件。
 
 具体 OOXML 操作、跨 run 文本、节属性、表格单元格和书签处理可以由一个或多个底层引擎完成。DocFit adapter 负责把统一 operation 转换为引擎调用，并把引擎错误、警告和实际修改结果规范化；这些细节不进入 Skill。
 
+为了降低定位漂移风险，Tool 在真正写入前重新核对输入 hash、对象指纹和预期文本；同一容器内会影响位置的操作由 Tool 内部按安全顺序执行，通常从后向前。写入结束后从新文件重新解析，而不是相信 Provider 的修改清单。
+
+M1 必须在 `docx_edit` 中支持一个最小跨文档模板组合操作，例如 `import_template_sections`。它仍属于 `docx_edit`，不新增第六个 Tool。详细字段在 Provider PoC 后再锁定，当前契约只固定必须证明的安全边界：
+
+- 来源模板 hash 与来源对象引用；
+- 目标文档 hash 与插入锚点；
+- 样式、编号、媒体、relationships、页眉页脚和节属性的依赖闭包；
+- 内部 ID 与关系 ID 的冲突重映射；
+- all-or-nothing 发布；
+- 合并后重新打开、内容保留和非目标内容检查。
+
+Provider 只支持简单段落复制、无法复制完整依赖闭包时，必须把能力缺口报告为不支持或 `verification_gap`，不能把部分合并发布为成功结果。
+
 ### 2.6 `docx_render`
 
-统一入口负责：
+统一入口同时承载快速迭代和最终交付两种渲染角色，不为不同引擎增加新的 Agent 可见 Tool。
+
+输入示例：
+
+```yaml
+input_docx: /path/work-v2.docx
+render_purpose: iteration
+pages: all
+emit_layout_map: auto
+output_dir: /path/render-v2
+```
+
+`render_purpose` 只有两个稳定值：
+
+```text
+iteration  高频、低延迟的页面观察与修改后复核
+release    面向最终 Microsoft Word 兼容性的交付复核
+```
+
+Tool 负责：
 
 - DOCX → PDF；
 - PDF → 逐页图片；
-- 返回 provider、页面数、字体和转换警告；
-- 基于输入 hash 与 provider 配置复用缓存。
+- 返回 render purpose、provider、版本、页面数、页面尺寸、DPI、字体和转换警告；
+- 声明 `fidelity_claim`：`approximate`、`target_application` 或 `unknown`；
+- 可选生成对象与页码、页面区域的绑定，供 Agent 定位高风险页面；
+- 基于输入 hash、provider、版本、字体和渲染参数复用缓存。
 
-LibreOffice、Microsoft Word 和第三方渲染器可能产生分页差异。Tool adapter 应报告 provider、版本、运行环境和字体证据；Skill 应把高风险分页交给人工查看，不把近似渲染说成最终真值。
+只有 Microsoft 官方转换链路或受控 Microsoft Word 环境可以把 `target_application: microsoft_word` 与 `fidelity_claim: target_application` 同时写入 render ref。Aspose.Words、LibreOffice 和其他第三方引擎即使在样本中表现良好，也只能声明 `approximate`，除非未来存在单独批准的兼容性政策。
 
-### 2.7 `docx_validate`
+首版为快速跑通可以只实现 `iteration`，但 schema 从一开始保留 `release`。收到暂不支持的 `release` 请求时应返回明确的 `needs_input` 或 `verification_gap`，不能静默降级成迭代渲染。
+
+输出示例：
+
+```yaml
+status: ok
+render_ref:
+  document_sha256: ...
+  render_sha256: ...
+  render_purpose: iteration
+  fidelity_claim: approximate
+  target_application: microsoft_word
+  provider: ...
+  provider_version: ...
+  font_fingerprint: ...
+  font_substitutions: []
+  page_count: 42
+  dpi: 144
+artifacts:
+  pdf: /path/render-v2/preview.pdf
+  pages: /path/render-v2/pages
+  layout_map: /path/render-v2/layout-map.json
+warnings: []
+```
+
+当 Provider 支持页面布局信息时，`layout-map.json` 使用明确坐标系并绑定同一个 render ref：
+
+```yaml
+schema_version: 1
+render_sha256: ...
+pages:
+  - page: 3
+    coordinate_space:
+      unit: px
+      origin: top_left
+      width: 1190
+      height: 1684
+      dpi: 144
+    elements:
+      - object_ref: { ... }
+        type: table
+        bbox: [88, 302, 1070, 1290]
+        mapping_quality: exact
+```
+
+元素映射只能引用同一文档快照的 opaque `object_ref`。Provider 只能估算时使用 `mapping_quality: approximate`；无法可靠映射时省略该元素并返回 warning。bbox 用来把视觉发现定位回候选对象，不是内容或语义事实，也不能由 Agent 直接转换为 OOXML 路径。
+
+渲染前应解析文档实际请求的字体，记录字体文件/版本指纹和全部替代关系。学校 Knowledge 标记为必需且不允许替代的字体缺失时，Tool 返回环境错误；允许降级预览时可以继续生成 `iteration` 图片，但必须带 `font_substitution` warning，且不能声明目标应用 fidelity。
+
+LibreOffice、Microsoft Word 和第三方渲染器可能产生分页差异。Tool adapter 应报告 provider、版本、运行环境、字体证据和 fidelity claim；Skill 应把高风险分页交给目标应用渲染或人工查看，不把近似渲染说成最终真值。
+
+`docx_render` 的文件路径或“渲染成功”不等于 Agent 已经看过图片。需要视觉判断时，Agent 必须继续调用 `docx_visual_review`。
+
+### 2.7 `docx_visual_review`
+
+这个 Tool 解决的不是“再做一次渲染”，而是把已渲染图片作为受控的视觉输入送回当前 Agent。[Claude Agent SDK 的 in-process MCP Tool](https://code.claude.com/docs/en/agent-sdk/custom-tools) 支持在结果中返回 `image` content block；DocFit 使用这一原生能力，不为视觉审查启动第二个模型或 Agent。
+
+输入示例：
+
+```yaml
+render_ref:
+  document_sha256: ...
+  render_sha256: ...
+  render_purpose: iteration
+  fidelity_claim: approximate
+  provider: ...
+  provider_version: ...
+  font_fingerprint: ...
+mode: pages
+pages: [1, 2, 3]
+focus: [overflow, blank_page, header_footer, figure_table_layout]
+baseline_render_ref: null
+```
+
+支持的最小模式：
+
+```text
+pages          返回指定整页图片
+crops          返回指定页的矩形裁剪图
+contact_sheet  把多页缩略图组合成有页码标识的总览
+compare        返回基线与当前版本的并排图或差异辅助图
+```
+
+Tool 返回两类内容：
+
+1. `content` 中的一个或多个图片块，供当前 Agent 直接观察；
+2. `structuredContent` 中的文档 hash、渲染 hash、render purpose、fidelity claim、Provider、字体、页码、裁剪坐标、图片 hash、变换方式、元素映射和 evidence ref。
+
+结构化结果示例：
+
+```yaml
+status: ok
+document_sha256: ...
+render_sha256: ...
+mode: compare
+evidence:
+  - evidence_ref: visual-...
+    page: 12
+    image_sha256: ...
+    view: side_by_side
+    baseline_image_sha256: ...
+    current_image_sha256: ...
+    layout_map_ref: layout-...
+    candidate_object_refs: [obj-...]
+warnings: []
+```
+
+约束：
+
+- Tool 是只读的，不修改 DOCX、渲染文件或 Agent finding；
+- Tool 不输出 `pass`、`fail` 或“版式正确”等语义判断；
+- Tool 只读取本次任务授权目录内、由有效 `render_ref` 指向的图片；
+- 图片必须绑定当前文档 hash、渲染配置、Provider、版本、字体和页码；
+- 存在元素映射时，Tool 返回当前视图覆盖的候选 `object_ref`、bbox 和 mapping quality；不存在时不猜测；
+- 文档修改后，旧 `render_ref` 不能用于证明新文档结果；
+- `compare` 只在页面尺寸、DPI、Provider、版本、字体环境、render purpose 和 fidelity claim 可比较时生成差异辅助图，否则返回 warning；
+- 裁剪、缩放、拼接、压缩和差异着色都必须在元数据中声明，不能把变换后的图片伪装成原始页面；
+- 单次返回页数和图片字节数必须有限制，Agent 通过分批调用完成整篇复核；
+- `focus` 只是给 Agent 的检查提示，不改变图片，也不由 Tool 生成结论。
+
+Agent 观察图片后生成结构化 visual findings，至少包含：
+
+```yaml
+document_sha256: ...
+findings:
+  - evidence_ref: visual-...
+    page: 12
+    category: overflow
+    severity: blocking
+    observation: ...
+    suggested_action: ...
+reviewed_pages: [1, 2, 3]
+```
+
+应用壳负责把当前 Agent 的结构化 findings 保存为 `visual-review.json`。`docx_validate` 可以确定性检查 report 是否绑定当前文档、是否覆盖要求页面、是否存在 blocking finding，但不得把 Agent 的视觉判断改写为确定性 Tool 事实。
+
+### 2.8 `docx_validate`
+
+验证工具按四类证据组织结果，但仍然只是一个 Tool：
+
+1. **Package / OOXML 合法性**：压缩包、关系、样式、编号、书签、内容控件及图片引用是否完整；
+2. **内容与学校规则**：源文件是否未变、关键内容是否保留、占位符和固定规则是否满足；
+3. **布局指标**：页数、空白页、溢出候选、跨页表格、页边界与字体/渲染 warning；
+4. **视觉审查**：当前 Agent 的报告是否绑定当前 render、覆盖要求页面且没有未处理的 blocking finding。
 
 验证工具只做能够稳定、低误判地判断的事实：
 
@@ -344,7 +506,24 @@ LibreOffice、Microsoft Word 和第三方渲染器可能产生分页差异。Too
 - 必填内容存在；
 - 占位符和模板说明文字没有残留；
 - 目标样式的关键参数符合 Knowledge；
-- 渲染成功，字体和 provider 警告已呈现。
+- 渲染成功，字体和 provider 警告已呈现；
+- 视觉审查报告绑定当前文档与当前 render，要求页面已经覆盖；
+- 没有被忽略的 blocking visual finding；
+- 要求 Microsoft Word 最终兼容性时，存在 `render_purpose: release` 且 `fidelity_claim: target_application` 的视觉证据；否则保留 `verification_gap`。
+
+最终交付验证的输入应显式包含视觉审查报告：
+
+```yaml
+source_docx: /path/source.docx
+final_docx: /path/final.docx
+knowledge: /path/knowledge-package
+visual_review: /path/visual-review.json
+required_visual_coverage: all_final_pages
+```
+
+中间编辑轮次可以只要求变化页和相邻页；最终交付必须要求当前 `final_docx` 的全部页面覆盖。`docx_validate` 只校验覆盖、引用、版本绑定和 blocking finding，不重新解释图片内容。
+
+“首条链路已经跑通”和“已经通过 Microsoft Word 最终兼容性门”是两个不同结论。M2 可以使用 `iteration` 近似渲染完成开发闭环；如果没有 `release` 目标应用证据，验证报告和 Agent 最终回复必须明确保留该缺口。
 
 输出示例：
 
@@ -366,15 +545,17 @@ summary:
 
 `status` 表示 Tool 调用是否正常完成；文档中发现的问题放在 `checks` 和 `summary` 中。因此，成功完成验证但发现占位符时仍返回 `ok`。只有缺少必要输入时返回 `needs_input`，验证过程本身失败时返回 `error`。
 
-`docx_validate` 是普通 Tool，不是 Delivery Preflight、Verifier 或交付状态机。它可以组合第三方 OpenXML 校验与 DocFit 的 Knowledge 规则；Agent 读取规范化结果并在最终回复中如实表达。
+`docx_validate` 是普通 Tool，不是 Delivery Preflight、Verifier 或交付状态机。它可以组合第三方 OpenXML 校验、DocFit 的 Knowledge 规则和视觉审查覆盖检查；Agent 读取规范化结果并在最终回复中如实表达。
+
+验证必须从源文件和最终文件重新读取事实，不能把 `docx_edit` 的成功返回、旧分析缓存或旧截图当成验证结论。内容与对象保留、有效样式、package 关系、占位符、视觉审查覆盖和高风险页面分别检查；任何无法独立确认的事项明确返回 warning 或人工复核要求。
 
 ## 3. 内容安全的实现边界
 
 “内容不得静默丢失”是产品不变量，但不要求先建设全局内容身份平台。
 
-### 3.1 最小 `DocumentObjectRef`
+### 3.1 Tool 间的对象引用
 
-`docx_inspect` 与 `docx_edit` 之间共享一个版本化、对 Agent opaque 的值对象：
+`docx_inspect` 返回、`docx_edit` 消费的 `object_ref` 至少包含：
 
 ```yaml
 schema_version: 1
@@ -388,7 +569,7 @@ expected_fingerprint: ...
 - `expected_fingerprint` 用于发现目标内容或关键结构已经变化；
 - Tool 消费 ref 时必须验证这些前置条件，不匹配则返回 `needs_input`。
 
-该契约只服务 DOCX 工具间的安全交换，不定义跨文件类型、跨任务或跨运行的全局对象身份。
+这个小型 Tool 契约只服务指定 DOCX 快照的安全定位。跨文档模板组合可以同时携带分别绑定来源模板与目标文档 hash 的引用，但每个引用仍只在自己的文档快照内有效；它不定义跨文件类型、跨任务或跨运行的全局对象身份。
 
 ### 3.2 最小策略
 
@@ -400,7 +581,7 @@ expected_fingerprint: ...
 4. `docx_validate` 比较支持对象的文本、类型、数量和必要顺序；
 5. 发现不支持对象时返回给 Agent，不静默忽略。
 
-更细的 OOXML locator、第三方对象路径、`content_id` 或血缘关系继续留在 Tool adapter 内部。除非出现 DOCX 之外的第二类真实消费者，不把 `DocumentObjectRef` 泛化为全系统 ArtifactRef。
+更细的 OOXML locator、第三方对象路径、`content_id` 或血缘关系继续留在 Tool adapter 内部，不把 `object_ref` 泛化为全系统 ArtifactRef。
 
 当前不建设：
 
@@ -424,7 +605,7 @@ error            工具未正常完成，不应消费其输出
 
 ### 4.1 不信任第三方的成功声明
 
-DocFit adapter 不直接转发第三方引擎的 `success`、退出码或自然语言结论。按不同 Tool 的能力，一次调用适用以下四层独立检查：
+DocFit adapter 不直接转发第三方引擎的 `success`、退出码或自然语言结论。按不同 Tool 的能力，一次调用适用以下四项独立检查：
 
 1. **请求检查**：输入符合 DocFit schema，引用和前置条件仍然有效；
 2. **执行检查**：MCP、进程或库调用正常返回，没有超时、崩溃或结构异常；
@@ -439,11 +620,9 @@ DocFit adapter 不直接转发第三方引擎的 `success`、退出码或自然�
 
 ```yaml
 status: error
-operation_id: op-...
 committed: false
 failure:
   origin: engine
-  stage: execute
   code: engine_timeout
   retryable: true
   message: 第三方引擎在限定时间内未返回
@@ -456,12 +635,9 @@ engine:
 evidence:
   exit_code: ...
   output_created: false
-  log_ref: /path/sanitized-log.json
 ```
 
 `committed` 只表示经过 DocFit 后置检查的副作用是否已经发布。临时文件存在不等于 `committed: true`。日志只保留诊断所需的脱敏摘要，不写入整篇论文内容。
-
-`operation_id` 只用于关联单次 Tool 调用及其脱敏诊断证据，不是任务状态、工作流实例或 replay 协议。
 
 ### 4.2 失败来源与可恢复性
 
@@ -476,7 +652,7 @@ evidence:
 | `adapter` | DocFit 映射、协议或适配代码失败 | 不重复相同调用，保留证据并报告为 Tool 问题 |
 | `postcondition` | 引擎声称成功，但产物或修改效果未通过独立验证 | 隔离产物，切换 provider 或停止 |
 
-`stage` 进一步说明失败发生在 `validate_input`、`locate`、`execute`、`save`、`reopen`、`verify_effects` 或 `render`。`code` 用于测试和聚合，`message` 面向 Agent，`suggested_actions` 只能给出安全且可执行的恢复选项。
+`code` 用于测试和聚合，`message` 面向 Agent，`suggested_actions` 只能给出安全且可执行的恢复选项。
 
 典型结果应这样区分：
 
@@ -505,7 +681,24 @@ Agent 不应：
 - 把 `engine`、`adapter` 或 `postcondition` 失败解释成论文内容问题；
 - 隐藏失败并用未经验证的备用文件交付。
 
-## 5. 工作文件
+## 5. 如何做得更快
+
+速度优化优先减少重复解析、重复渲染和低信息量的 Agent 往返：
+
+- `docx_inspect` 一次解析尽可能覆盖全部客观对象，后续通过 `focus` 读取同一份缓存；
+- Tool 返回高信号摘要和完整证据路径，不把整份 OOXML 塞进 Agent 上下文；
+- `docx_edit` 接受一组有前置条件的操作，避免每个段落一次 Tool 调用；
+- 每轮编辑后先做便宜的结构和内容检查，只渲染发生变化或风险较高的页面；
+- 渲染缓存由输入 hash、Provider 版本、字体和参数共同决定，任何一项变化都自动失效；
+- `docx_visual_review` 使用 contact sheet 先做全局扫描，再按风险分批返回整页或裁剪图；单次图片数量和字节数受限；
+- Provider 能生成元素映射时，视觉证据同时返回视图覆盖的候选 `object_ref`，减少 Agent 从截图问题到编辑目标的往返；
+- 修改过程中优先复核变化页及相邻页，最终交付前仍需覆盖全部当前页面；
+- `docx_validate` 复用解析代码，但必须对最终文件重新取证，不能复用旧结论；
+- Provider 的选择、重试、换工具或询问用户由 Agent 决定，Tool 内部不启动隐藏的 Agent loop。
+
+这些优化改变调用成本，不改变 Claude Agent SDK 的控制关系，也不产生可持久化流程状态。
+
+## 6. 工作文件
 
 Tool 可以使用工作副本和输出目录，但不规定全局任务目录协议。例如：
 
@@ -516,6 +709,10 @@ task-work/
 │   └── working.docx
 └── output/
     ├── final.docx
+    ├── preview.pdf
+    ├── pages/
+    ├── layout-map.json
+    ├── visual-review.json
     └── validation.json
 ```
 
@@ -525,7 +722,7 @@ task-work/
 
 这不是 Run Bundle 协议；应用或测试不应依赖每个中间文件都存在。
 
-## 6. 何时增加抽象
+## 7. 何时增加抽象
 
 只有出现以下证据时才考虑扩展：
 
@@ -533,7 +730,7 @@ task-work/
 |---|---|
 | 学校包经常缺文件或格式错误 | 一个 `knowledge_validate` 脚本 |
 | 学校资料数量大到普通读取明显不足 | 增加最小索引或检索；没有测量证据时不引入向量数据库 |
-| DOCX 之外的工具也需要共享对象引用 | 在已有 `DocumentObjectRef` 之外评估跨格式 ref；没有真实消费者时不泛化 |
+| DOCX 之外的多个工具确实需要共享对象引用 | 评估最小跨格式 ref；没有真实消费者时不泛化 |
 | 同一 Tool 操作反复出现定位歧义 | 强化 Tool 内部 locator |
 | Eval case 多到串行运行太慢 | 接入现成并发 runner |
 | 产品需要多人权限和正式发布 | 在产品需求明确后设计对应服务 |

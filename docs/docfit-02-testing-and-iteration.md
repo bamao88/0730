@@ -1,208 +1,152 @@
 # DocFit 测试与迭代（02）
 
-> 状态：最小 Eval 设计
-> 日期：2026-07-30
-> 前提：Eval 是开发系统，不进入正常论文转换的运行路径。
+> 状态：最终方案
+> 日期：2026-07-31
+> 前提：测试与 Eval 是开发系统，不进入正常论文转换的运行路径。
 
 ## 1. 目标
 
 测试与 Eval 只解决三个问题：
 
-1. 确定性模块、Tool Contract 和实际 Adapter 是否正确；
-2. 当前 Skill、Knowledge 和 Tools 的组合能否完成代表性论文转换；
-3. 一次修改是否修复了目标问题，同时没有破坏已知正确行为。
+1. 五个 DocFit Tool 及其底层 Provider 是否可靠；
+2. Skill、Knowledge 和 Tools 的组合能否完成代表性论文转换；
+3. 一次修改是否修复目标问题，同时没有破坏已知正确行为。
 
-DocFit 不建设通用评测平台。测试发现、并发、报告和 CI 优先使用现成测试框架；DocFit 只维护论文领域的样本与断言。
+DocFit 不建设通用评测平台。测试发现、并发、报告和 CI 使用现成测试框架；项目只维护论文领域的 fixture、样本和断言。
 
-## 2. 四层质量验证
+代码测试目录固定为：
 
-四个层级按执行边界划分，不按文件类型划分：
+- `tests/unit/`：不依赖 SDK 或真实 Provider 的纯逻辑测试；
+- `tests/contract/`：五个公开 Tool 契约及各 Provider 对同一契约的一致性测试；
+- `tests/integration/`：真实 SDK、真实 Provider、CLI 和端到端集成测试。
 
-| 层级 | 验证对象 | 是否调用 Agent | 主要位置 | 基本通过标准 |
-|---|---|---:|---|---|
-| L1 单元测试 | 纯函数、Schema、内部确定性模块 | 否 | `tests/unit/` | 全部确定性断言通过 |
-| L2 Tool 契约与集成测试 | Tool Contract、Adapter、真实文档引擎 | 否 | `tests/integration/` | 契约、后置条件和失败语义全部通过 |
-| L3 Skill Eval | Agent 是否按 Skill 完成业务目标 | 是 | `evals/skills/` | 关键 `must` / `must_not` 全部满足 |
-| L4 端到端 Eval | 用户输入到最终可交付文件的完整链路 | 是 | `evals/e2e/` | 自动审计通过，规定的人工验收完成 |
+## 2. 三类验证
 
-L1 和 L2 判断确定性代码及工具是否正确；L3 和 L4 判断 Agent 产品是否正确。低层失败必须先修复，不能靠高层重试掩盖。
+### 2.1 Tool tests
 
-### 2.1 L1：单元测试
+Tool tests 不调用 Agent，直接验证 `docx_inspect`、`docx_edit`、`docx_render`、`docx_visual_review`、`docx_validate` 的公开契约及启用的 Adapter。
 
-#### 边界
+每个 Provider 必须通过同一套契约测试，使底层 MCP、CLI、库或渲染器可以替换，而不修改 Skill 和 Knowledge。
 
-L1 不启动 Claude Agent SDK，不调用外部 Office 进程，也不依赖网络。它验证可以快速、稳定运行的纯逻辑和内部模块：
+重点覆盖：
 
-- `SchoolKnowledgeDraft` / `SchoolKnowledgePackage` Schema；
-- digest 计算和规范化；
-- `source_ref` 格式与引用完整性；
-- `DocumentObjectRef` 指纹和过期判断；
-- 格式值归一化；
-- 冲突、不确定项和 provenance 的保留；
-- Tool 错误包的构造与分类；
-- Knowledge manifest 的适用范围与版本校验。
+- DOCX 能正确打开、无操作另存和重新打开；
+- 段落、表格、合并单元格、图片、公式、脚注尾注、文本框、域、内容控件、页眉页脚和编号能够被发现；
+- 样式继承、直接格式和最终生效值能够正确解析；
+- 原始 run 与逻辑文本之间的字符映射正确；
+- 不支持的可见对象被明确报告；
+- 对象引用绑定输入 hash，失效引用被安全拒绝；
+- 跨 run 文本和占位符能被准确定位；
+- 跨文档模板组合复制完整依赖闭包、重映射冲突 ID，并在任一操作失败时不发布部分结果；
+- 一组编辑要么全部发布，要么全部不发布；
+- 修改只影响目标对象，源文件保持不变；
+- 可能漂移的多目标修改按安全顺序执行；
+- Provider 报告成功但产物打不开或目标未变化时，Tool 返回失败；
+- 编辑后从新文件重新取证，不相信 Provider 自报结果；
+- 渲染缓存按输入 hash、Provider 版本、字体和参数正确命中与失效；
+- `docx_render` 对 `iteration` / `release`、fidelity claim 和目标应用的声明符合 Provider 能力，暂不支持的 `release` 请求不会静默降级；
+- 页面元素映射的坐标系、页码、bbox、mapping quality 和 opaque `object_ref` 与当前 render 一致；
+- `docx_visual_review` 只接受当前任务的有效 render ref，并返回与文档、页码和图片 hash 绑定的图片 content block；
+- 整页、裁剪、contact sheet 和 compare 模式的图片变换、页码、候选对象和元数据一致；
+- 修改后的文档不能继续使用旧 render ref 证明视觉结果；
+- 单次图片页数和字节上限生效，Tool 不返回视觉 `pass` / `fail` 判断；
+- 验证从源文件与最终文件重新读取事实；
+- 占位符、有效格式、内容对象、package 关系、视觉审查覆盖和渲染警告返回清晰结果；
+- 超时、字体缺失、文件锁定和不支持对象都有可行动的错误。
 
-#### 通过标准
+Tool test 的基本标准是确定性、可重复、源文件只读、失败不产生伪成功产物。
 
-- 相同输入必须得到相同结果；
-- 不依赖测试执行顺序；
-- 不读取开发者机器上的隐式状态；
-- 每个失败都能定位到一个确定性模块；
-- 全部测试通过，不接受随机失败；
-- 单个用例使用最小 fixture，能够在本地快速重复执行。
+### 2.2 Skill eval
 
-#### 首批用例
+Skill eval 使用固定任务、输入文件、Knowledge 和受控 Tool 结果，观察 Agent 是否：
 
-| 用例 ID | 输入或场景 | 核心断言 |
-|---|---|---|
-| `l1-digest-001` | 内容相同、文件路径不同的来源集合 | `source_digest` 相同 |
-| `l1-source-ref-001` | 指向不存在对象的规则 | Draft 校验失败，不能静默接受 |
-| `l1-draft-conflict-001` | 两份来源给出冲突字号 | 两条证据都保留，冲突进入 `conflicts` |
-| `l1-object-ref-001` | 文档修改后复用旧指纹 | 识别为 stale reference |
-| `l1-package-scope-001` | 缺少年份或适用范围的 Package | 发布校验失败 |
+- 触发正确 Skill；
+- 有适用 Knowledge 时读取正确版本；
+- 用户只要求当前转换时，直接分析临时模板而不创建长期学校资产；
+- 用户明确要求建设学校资产时，生成来源完整、适用范围清楚的 Knowledge；
+- 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
+- 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
+- 最终分批观察当前文档的全部页面，并把 visual finding 绑定到 evidence ref；
+- 不把旧截图、近似渲染或结构检查当作当前页面已经视觉合格；
+- 使用元素映射缩小编辑目标时仍验证 `object_ref` 前置条件，不把 bbox 当成 OOXML 定位器；
+- 区分迭代近似渲染和 Microsoft Word 目标应用渲染，没有 release 证据时保留 `verification_gap`；
+- 保护学生内容，选择破坏最小的修改方式；
+- 根据错误语义重新 inspect、缩小范围、换 Provider、询问或停止；
+- 不消费 `committed: false` 或未通过后置检查的文件；
+- 不在没有新证据时循环重试；
+- 在最终答复中如实说明产物、验证结果和未解决问题。
 
-### 2.2 L2：Tool 契约与集成测试
-
-#### 边界
-
-L2 不启动 Agent，但通过公开 `Tool Contract` 调用真实 Adapter 和文档引擎。它验证 `docx_inspect`、`docx_edit`、`docx_render`、`docx_validate`，以及它们依赖的开源或自研 Provider。
-
-同一个 `Tool Contract` 可以对应多个实现。每个 Adapter 必须通过同一套 conformance tests，这样可以替换底层实现，而不修改 Skill、Knowledge 或 Eval 断言。
-
-#### 通过标准
-
-- 输入、成功输出和失败输出都符合 Schema；
-- 原文件保持不变，成功产物发布到新位置；
-- 写入采用临时文件和原子发布，失败不残留伪成功产物；
-- 成功返回前必须重新打开输出并验证预期效果；
-- 非目标内容没有被修改、丢失、重复或错序；
-- 第三方 locator 能映射到 `DocumentObjectRef`，过期引用会被拒绝；
-- `origin`、`stage`、`code`、`retryable`、`committed` 准确；
-- Provider 报告成功但后置条件失败时，Tool 必须返回失败；
-- 超时、崩溃、字体缺失和不支持对象都有结构化错误；
-- 记录实际 `provider` 和 `provider_version`；
-- 测试固定 Provider 版本、超时和临时工作目录。
-
-#### 首批用例
-
-| 用例 ID | 输入或场景 | 核心断言 |
-|---|---|---|
-| `l2-inspect-structure-001` | 含正文、表格、图片、公式、页眉的 DOCX | 返回稳定对象引用和完整能力声明 |
-| `l2-edit-atomic-001` | 修改一个标题样式 | 原文件不变，输出可重开，只改变目标对象 |
-| `l2-edit-stale-ref-001` | 使用过期 `DocumentObjectRef` | 安全失败，`committed=false` |
-| `l2-edit-false-success-001` | Provider 返回成功但输出损坏 | 后置条件捕获并返回 `origin=postcondition` |
-| `l2-render-font-001` | 渲染环境缺少必要字体 | 返回可诊断错误，不伪造预览成功 |
-| `l2-validate-findings-001` | 文档存在占位符和错误标题级别 | Tool 调用成功，问题进入 `findings` 而非 Tool error |
-
-### 2.3 L3：Skill Eval
-
-#### 边界
-
-L3 启动 Claude Agent SDK，给 Agent 固定的任务、Skill、Knowledge 和受控 Tool 环境，验证它是否按业务目标工作。Tool 可以使用固定 fixture 或故障注入，以稳定验证 Agent 的选择和恢复行为；真实引擎正确性由 L2 负责，完整交付效果由 L4 负责。这里不比较隐藏思考过程，只检查可观察行为、最终结果和关键约束。
-
-共享模板提取协议的语义验证也属于 L3：确定性解析由 L1/L2 保证，Agent 如何从证据形成 `SchoolKnowledgeDraft` 由 L3 保证。
+Skill eval 以可观察结果为主。除安全底线和必要先后关系外，不要求 Agent 复现固定工具调用序列。
 
 允许的行为断言只有：
 
 ```text
-must       必须发生，例如读取学校 Knowledge
+must       必须发生，例如读取适用 Knowledge
 must_not   禁止发生，例如覆盖源文件
 before     必要先后，例如修改前先检查输入
 limit      成本或重复调用上限
 ```
 
-#### 通过标准
+不要保存或比较模型隐藏思维链。
 
-- 正确区分并触发 `prepare-school-template` 与 `convert-thesis`；
-- 两个 Skill 复用同一套模板提取协议和 Draft Schema；
-- 有正式 Knowledge 时优先复用，摘要不匹配时不误用；
-- 学生临时上传的模板只形成任务级 Draft，不自动发布；
-- 必要时调用 Tool 或询问用户；
-- Tool 失败后按错误语义重试、换 Provider、降级或停止；
-- 不使用 `committed=false` 的产物，也不无变化地循环重试；
-- 不把 validation findings 误报成 Tool 崩溃；
-- 最终回复如实描述产物、未解决问题和失败状态；
-- 所有关键 `must` / `must_not` 断言通过。
+### 2.3 End-to-end eval
 
-两个 Skill 的结果重点不同：
+端到端用例从用户任务开始，使用真实 Claude Agent SDK 配置和当前启用的 Tool Provider，验证：
 
-| Skill | 主要断言 |
-|---|---|
-| `prepare-school-template` | 正确消费 Draft，补全适用范围、版本、来源检查和人工确认信息，形成可复用正式 Knowledge |
-| `convert-thesis` | 正确复用已有 Knowledge 或把 Draft 限定在当前任务，最终 DOCX 可打开、学生内容保留，最终回复引用真实产物与验证结果 |
+- 最终 DOCX 存在、能打开且不要求 Word 修复；
+- 源文件未变化；
+- 支持范围内的学生内容和对象仍存在且顺序正确；
+- 目标学校关键格式断言满足；
+- 必填模板内容或槽位已处理；
+- 不应出现的占位符和说明文字已清理；
+- PDF 或页面预览可生成；
+- render ref 明确记录 purpose、fidelity claim、Provider、字体和可选元素映射；
+- `docx_visual_review` 返回的图片实际进入当前 Agent 上下文；
+- 修改前、布局变化后和最终交付前的视觉审查证据绑定正确文档版本；
+- 最终全部页面已经分批视觉审查，高风险页面完成规定的 Agent 与人工检查；
+- `visual-review.json` 的 finding、页码和 evidence refs 与当前 render 一致；
+- 没有被忽略的 blocking visual finding；
+- validation 没有被忽略的严重错误；
+- Agent 最终回复与实际产物一致。
 
-#### 首批用例
+端到端 Eval 不生成阶段状态、调用轨迹 Gold、运行胶囊或 replay 协议。
 
-| 用例 ID | 输入或场景 | 核心断言 |
-|---|---|---|
-| `l3-prepare-conflict-001` | 官方模板与要求文件存在冲突 | 生成带来源、冲突和不确定项的 Draft，等待审核后才发布 |
-| `l3-convert-package-001` | 学生论文 + 学校标识，已有正式 Package | 只加载 `convert-thesis` 并复用匹配 Knowledge |
-| `l3-convert-temp-template-001` | 学生论文 + 用户模板 | 使用共享协议生成临时 Draft，不注册长期资产 |
-| `l3-tool-retry-001` | 首选 Provider 返回 retryable 错误 | 在预算内重试或切换 Provider，并记录恢复结果 |
-| `l3-tool-stop-001` | 编辑后置条件失败 | 拒绝使用失败产物，停止或请求处理，不宣称完成 |
+## 3. 首批场景
 
-### 2.4 L4：端到端 Eval
+第一批样本应来自真实论文风险，而不是按内部模块凑数量。
 
-#### 边界
+| 场景 | Tool test | Skill eval | 端到端 |
+|---|---:|---:|---:|
+| 学校前置页与学生正文正确嫁接 | 是 | 是 | 是 |
+| 模板旧目录不被当作学生正文 |  | 是 | 是 |
+| 空附录标题不会吞掉相邻内容 |  | 是 | 是 |
+| 中英文图题及图片关系保持 | 是 | 是 | 是 |
+| 表格、合并单元格和跨页表格保持 | 是 |  | 是 |
+| 跨 run 占位符和格式说明被清理 | 是 | 是 | 是 |
+| 域、内容控件、脚注、文本框和图片不静默丢失 | 是 |  | 是 |
+| 页眉页脚、编号和节属性正确保留或修改 | 是 |  | 是 |
+| 对象引用因前次修改失效 | 是 | 是 |  |
+| Provider 伪成功被后置检查拦截 | 是 | 是 |  |
+| 渲染器或字体差异影响分页 | 是 | 是 | 是 |
+| 近似渲染被错误标成 Microsoft Word 最终事实，或 release 请求被静默降级 | 是 | 是 | 是 |
+| 页面元素 bbox 能定位到当前快照对象，失效或低可信映射不会驱动错误修改 | 是 | 是 | 是 |
+| 封面溢出、意外空白页、孤行和图表错位能被视觉审查发现 | 是 | 是 | 是 |
+| 修改后错误复用旧截图或漏审相邻页 | 是 | 是 | 是 |
+| 学校文字要求与模板表现冲突 |  | 是 | 是 |
 
-L4 从真实用户输入开始，经过 Claude Agent SDK、Skill、Knowledge、实际 Tool Provider、渲染和验证，直到生成最终可交付文件和用户回复。
+这些场景可以拆成最小合成 fixture，也可以组合进少量脱敏真实样本。
 
-#### 通过标准
+## 4. Eval case
 
-- 最终 DOCX 存在、可打开，原文件保持不变；
-- 支持范围内的文字、图片、表格和公式不丢失、不重复、不错序；
-- 学校格式要求和内容零丢失要求通过自动审计；
-- 不存在模板占位符或未解释的高严重度 findings；
-- 预览产物存在，关键页面完成视觉检查；
-- Tool 错误没有被隐藏或误报为成功；
-- 最终回复与真实产物和验证报告一致；
-- 封面、目录、目录页码、分页、页眉页脚等规定项目完成人工验收。
-
-端到端 Eval 不要求在线产品生成 delivery state、Verifier verdict 或 Run Bundle。
-
-#### 首批用例
-
-| 用例 ID | 输入或场景 | 核心断言 |
-|---|---|---|
-| `l4-public-basic-001` | 公开基础论文 + 已验收学校 Package | 生成可交付 DOCX、预览和验证报告 |
-| `l4-complex-doc-001` | 含复杂表格、图片、公式和分节的论文 | 内容完整，特殊对象与分页未被破坏 |
-| `l4-temp-template-001` | 学生论文 + 临时用户模板 | 完成本次转换，不污染正式 Knowledge |
-| `l4-package-digest-001` | 上传模板与已有 Package digest 匹配 | 正确复用资产，输出满足同一规则 |
-| `l4-adversarial-001` | 已知高风险真实文档 | 不崩溃、不静默丢内容，失败时如实给出证据 |
-
-### 2.5 用例归层原则
-
-- 一个问题优先放到能够稳定复现它的最低层；
-- 纯逻辑错误不通过 L3/L4 间接验证；
-- Agent 决策错误不塞进 Tool test；
-- 对内容丢失、源文件覆盖等交付级高风险问题，可以同时保留低层根因测试和一个 L4 回归用例；
-- 不要求同一个场景机械复制到四层。
-
-## 3. 用例格式
-
-L1/L2 使用项目测试框架直接编写，至少包含：
-
-- 用例 ID；
-- fixture 或输入构造；
-- 前置条件；
-- 操作；
-- 精确断言；
-- 预期错误和副作用；
-- 所属风险。
-
-L3/L4 使用声明式 Eval case，便于固定输入、版本和结果断言。一个用例保持小而自包含：
+一个用例保持小而自包含：
 
 ```yaml
-id: l4-hunannongye-basic-001
-level: L4
+id: hunannongye-basic-001
 skill: convert-thesis
 task: 将学生论文转换为湖南农业大学格式
 inputs:
   document: input/student.docx
-  school_knowledge:
-    id: hunannongye
-    version: v1
-    content_digest: sha256:...
+  school_knowledge: hunannongye/v1
 assertions:
   - final_docx_opens
   - source_file_unchanged
@@ -214,59 +158,21 @@ manual_review:
   - toc_pagination
 ```
 
-每个 Eval case 固定：
+用例可以附带输入、Knowledge 版本、结构化期望、少量人工确认的参考产物和失败说明。
 
-- 质量层级；
-- 输入文件；
-- 目标 Skill；
-- Knowledge 版本；
-- Knowledge content digest；
-- 结构化期望；
-- 少量人工确认的参考产物；
-- 失败说明。
-
-每次 Eval 运行只记录用于复现和归因的最小版本元数据：
-
-```yaml
-model: ...
-sdk_version: ...
-skill_revision: ...
-tool_revision: ...
-tool_engines:
-  inspect_edit: officecli@...
-  render: libreoffice@...
-knowledge_digest: sha256:...
-code_revision: ...
-```
-
-这些字段不是完整环境胶囊或运行时指纹，不记录固定 Agent 轨迹，也不支持 replay。
-
-## 4. 样本组合
+## 5. 样本组合
 
 第一阶段只维护能够推动实现的最小集合：
 
 - 1 个可公开的正常学生样本；
-- 1 个真实结构复杂样本；
-- 3–5 个由真实失败提炼的对抗样本；
-- 1 个目标学校 Knowledge 包。
+- 1 个结构复杂的脱敏或授权样本；
+- 3–5 个由真实失败提炼的单风险样本；
+- 1 个目标学校 Knowledge 包；
+- 1 组五个 Tool 的公共契约 fixture。
 
-优先覆盖：
+第二所学校加入后，增加跨学校回归，检查通用 Skill 是否混入首校知识。
 
-- 删除一段并重复另一段；
-- 表格内图片或公式；
-- 模板说明文字跨多个 Word run；
-- 目录被误当正文；
-- 缺失必要字段；
-- 字体缺失或渲染失败；
-- 学校要求与模板表现冲突。
-
-第二所学校加入后，增加跨学校回归，用来发现通用 Skill 是否混入首校知识。
-
-L1/L2 确定性测试单次运行即可。对于内容丢失、模板误删等高风险 L3/L4 Agent 用例，可在基线建立或行为波动时重复运行并记录稳定性；具体次数由 Eval 配置决定。
-
-## 5. 结果比较
-
-按数据类型选择最简单的比较方式：
+## 6. 结果比较
 
 | 类型 | 比较方式 |
 |---|---|
@@ -279,30 +185,24 @@ L1/L2 确定性测试单次运行即可。对于内容丢失、模板误删等�
 
 避免整份 DOCX 逐字节比较，也避免把一条完整 Agent 路径当成 Gold。
 
-## 6. 失败归因
-
-失败后只定位到可行动的资产：
+## 7. 失败归因
 
 | 归因 | 典型问题 | 修复位置 |
 |---|---|---|
-| Agent / Skill | 选择错误目标或动作、忽略 Tool 证据、重复不可重试调用 | Skill 资产或 Skill eval |
-| Knowledge | 学校事实、模板或示例错误 | `knowledge/` |
-| Tool contract / adapter | 错误分类、映射、后置检查或原子发布实现错误 | Tool adapter |
-| Third-party engine | MCP、CLI、库或渲染器崩溃、误报成功或版本退化 | 依赖配置、provider 选择或上游修复 |
-| Environment | 文件锁、字体、权限、依赖或渲染环境问题 | App 配置或运行环境 |
-| Eval | 断言错误、样本失效或漏测 | `evals/` |
-| App/SDK integration | 输入、权限、路径或 SDK 配置错误 | `app/` |
+| Skill | 领域判断、询问或工具使用指引错误 | `.claude/skills/` |
+| Knowledge | 学校事实、适用范围、模板或参数错误 | `knowledge/` |
+| Tool | 解析、修改、渲染、图片证据传递、缓存或验证错误 | Tool 实现与 Adapter |
+| Eval | 断言错误、样本失效或漏测 | `evals/` 或测试 fixture |
+| App/SDK integration | 输入、权限、路径或 SDK 配置错误 | 薄应用壳 |
 
-归因以 adapter 记录的请求校验、引擎结果和独立后置检查为证据，不能只相信第三方的成功声明，也不能只根据 Agent 最终回复推断。
+一次失败可以涉及多个资产，但不要用新的工作流层吸收定位困难。
 
-一次失败可以涉及多个问题，但修复时应分别落到对应资产。不要用新的工作流层来吸收定位困难。
-
-## 7. 迭代闭环
+## 8. 迭代闭环
 
 ```text
 真实任务或 Eval 失败
   → 保存最小复现
-  → 判断属于 Skill / Knowledge / Tool / Eval / App
+  → 归因到 Skill / Knowledge / Tool / Eval / App
   → 修复对应资产
   → 为该问题增加断言
   → 运行相关用例和核心回归
@@ -311,35 +211,31 @@ L1/L2 确定性测试单次运行即可。对于内容丢失、模板误删等�
 
 每个重要修复至少留下一项自动化资产：
 
-- Tool bug：单元、适配器契约或第三方版本回归测试；
+- Tool bug：单元或契约测试；
 - Skill bug：Skill eval；
-- Knowledge bug：学校用例；
+- Knowledge bug：学校端到端用例；
 - 端到端漏检：结果断言或人工复核清单。
 
-## 8. 发布门槛
+## 9. 发布门槛
 
-早期版本按四个质量层级设置门槛：
+早期版本只设四个门槛：
 
-1. L1：纯逻辑、Schema、引用、digest 和错误分类测试全部通过；
-2. L2：四个核心 Tool 及当前启用 Adapter 的契约、后置条件和失败语义测试全部通过；
-3. L3：核心 Skill Eval 的 `must` / `must_not` 全部通过，错误恢复结果与实际状态一致；
-4. L4：当前学校端到端样本通过且无内容丢失，高风险样例完成人工 Word 关键页面检查。
+1. 五个 Tool 及当前启用 Adapter 的测试通过；
+2. 核心 Skill eval 通过；
+3. 当前学校端到端样本通过且无内容静默丢失；
+4. 人工打开最终 DOCX 并检查规定的高风险页面。
 
-人工检查是 L4 的组成部分，不是独立的第五层。
+等用例数量和运行成本真实增长后，再选择并发 runner、实验平台或 trace UI。
 
-基线尚小时，逐例看失败比建立统计平台更有价值。等用例数量和运行成本真实增长后，再选择并发 runner、实验平台或 trace UI。
-
-## 9. 最小指标
+## 10. 最小指标
 
 每轮只记录：
 
-- L1 / L2 测试通过数与失败用例；
-- L3 Skill Eval 通过数 / 总数；
-- 端到端用例通过数 / 总数；
+- Tool 测试通过数与失败用例；
+- Skill eval 与端到端用例通过数；
 - 严重内容丢失或结构破坏次数；
 - 需要人工澄清的任务比例；
-- 平均每个任务的工具调用数和耗时；
-- 高风险 Agent 用例的重复运行通过数；
-- 按 Skill / Knowledge / Tool / Eval / App 的失败分布。
+- 每个任务的 Tool 调用数、解析缓存命中率、渲染页数、Agent 实际审查页数、图片输入字节数和耗时；
+- 按 Skill、Knowledge、Tool、Eval、App 的失败分布。
 
 指标用于发现趋势，不成为新的运行时状态体系。
