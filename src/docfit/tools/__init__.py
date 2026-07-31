@@ -9,7 +9,7 @@ from typing import Any
 from claude_agent_sdk import SdkMcpTool, create_sdk_mcp_server, tool
 from claude_agent_sdk.types import McpSdkServerConfig
 
-from docfit.image_smoke import make_smoke_png
+from docfit.tools.image_smoke import make_smoke_png
 
 MCP_SERVER_NAME = "docfit"
 LOGICAL_TOOL_NAMES = (

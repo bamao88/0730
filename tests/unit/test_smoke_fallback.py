@@ -4,8 +4,8 @@ import asyncio
 
 import pytest
 
-from docfit.settings import AgentBackend, BackendName
-from docfit.smoke import SmokeCase, SmokeReport, run_smoke_with_fallback
+from docfit.app.settings import AgentBackend, BackendName
+from docfit.app.smoke import SmokeCase, SmokeReport, run_smoke_with_fallback
 
 
 def _backend(name: BackendName, key: str) -> AgentBackend:
@@ -43,7 +43,7 @@ def test_smoke_tries_all_kimi_candidates_before_minimax(
             detail="candidate result",
         )
 
-    monkeypatch.setattr("docfit.smoke.run_smoke", fake_run_smoke)
+    monkeypatch.setattr("docfit.app.smoke.run_smoke", fake_run_smoke)
 
     report = asyncio.run(run_smoke_with_fallback("image", backends))
 

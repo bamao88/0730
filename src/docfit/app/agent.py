@@ -41,7 +41,7 @@ AskUser = Callable[[str], Awaitable[str]]
 
 
 def project_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+    return Path(__file__).resolve().parents[3]
 
 
 async def terminal_ask_user(prompt: str) -> str:

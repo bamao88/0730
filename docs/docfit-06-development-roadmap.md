@@ -35,17 +35,18 @@
 | 文档渲染 | 首选本地 Provider；记录版本、字体和运行环境 | 目标平台无法安装，或真实样本分页误差不可接受 |
 | 数据 | 合成 fixture 优先；真实样本必须脱敏或授权 | 无 |
 
-在调整 M0 实现前，先把长期资产归属对应的仓库骨架落盘。尚未进入实现阶段的
-目录只包含简短职责说明，不放置假实现、空接口或可被误认为已支持的 schema：
+仓库骨架和 M0 实现按长期资产归属落盘。尚未进入实现阶段的目录只包含简短职责
+说明，不放置假实现、空接口或可被误认为已支持的 schema：
 
 ```text
 .python-version
 pyproject.toml
 uv.lock
 src/docfit/
-├── app/                    # CLI 与 SDK 配置
-├── tools/                  # 五个 Tool 的契约与实现
-└── knowledge/              # Knowledge 加载与校验
+├── __main__.py             # python -m docfit 入口
+├── app/                    # CLI、SDK 配置、doctor、环境与 live smoke
+├── tools/                  # 五个 Tool 注册与 M0 图片传输 smoke
+└── knowledge/              # Knowledge 加载与校验；M0 只有职责说明
 .claude/skills/
 └── convert-thesis/
 tests/
@@ -58,6 +59,10 @@ evals/
 └── e2e/
 knowledge/schools/<first-school>/v1/
 ```
+
+M0 的应用代码只归属 `src/docfit/app/`，Tool 注册和合成图片能力只归属
+`src/docfit/tools/`；包根只保留版本与模块入口，不保留第二组兼容导入面。真实
+DOCX 行为、Knowledge 加载和 Provider 适配仍由后续里程碑按验收证据加入。
 
 `knowledge/common/` 同时作为跨学校通用领域知识的长期位置。`<first-school>` 和
 `v1` 表示真实学校标识与版本结构，不创建同名字面目录；正式学校包在对应里程碑
@@ -534,7 +539,9 @@ Entity budget: reuse=现有 Skills、DOCX 脚本和 Claude Agent SDK 原生 Skil
 Context: must-read=docs/docfit-01-architecture-core.md, docs/docfit-06-development-roadmap.md; useful=docs/docfit-04-skills-design.md, docs/docfit-05-tools-and-data-design.md, 现有 convert-thesis 与学校提取资产；avoid-unless-needed=M1–M5 实现细节、旧工作流设计与未验证平台化方案。
 Unknown-unknown scout: skipped；M0 是边界明确的 SDK/CLI 开发底座，未知项通过官方 SDK 契约、确定性测试和三个 live smoke 直接暴露，不需要在实现前扩展产品范围。
 Success: M0 的确定性门和本地产品门全部通过。
-Result: DONE；2026-07-31 已由 Kimi 完成图片与 AskUserQuestion smoke，由 MiniMax 完成拒绝工具 smoke；三个回执均匹配 claude-agent-sdk 0.2.128，docfit doctor --require agent-smoke 返回 0。
+Result: DONE；2026-07-31 目录归属收口后，Kimi 已完成图片、
+AskUserQuestion 与拒绝工具 smoke；三个回执均匹配 claude-agent-sdk 0.2.128，
+docfit doctor --require agent-smoke 返回 0。
 No regressions: 未匹配工具默认拒绝，Agent 不能访问任务目录外文件或网络，应用壳不解释 needs_input，日志不写入论文正文。
 Verification: deterministic=uv sync --frozen + ruff + mypy + pytest + docfit doctor；local-live=三个 agent-smoke case + docfit doctor --require agent-smoke。
 Execution: main=主会话实现并监督 M0 阶段门、范围与最终判定；worker=none；worker-goal=none。

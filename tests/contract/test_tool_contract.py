@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import base64
 
-from docfit.image_smoke import SMOKE_MARKER
 from docfit.tools import (
     DOCFIT_TOOLS,
     FULL_TOOL_NAMES,
@@ -12,6 +11,7 @@ from docfit.tools import (
     docx_inspect,
     docx_visual_review,
 )
+from docfit.tools.image_smoke import SMOKE_MARKER
 
 
 def test_exact_public_tool_names() -> None:

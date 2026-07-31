@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from docfit.cli import main
+from docfit.app.cli import main
 
 
 def test_doctor_is_a_credential_free_ci_gate(capsys: object) -> None:

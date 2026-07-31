@@ -11,7 +11,7 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Literal, cast
 
-from docfit.agent import (
+from docfit.app.agent import (
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     LOGGING_POLICY,
@@ -19,15 +19,16 @@ from docfit.agent import (
     build_agent_options,
     project_root,
 )
-from docfit.image_smoke import make_smoke_png
-from docfit.settings import (
+from docfit.app.settings import (
     AgentConfigurationError,
     agent_env_file_is_private,
     configured_backend_names,
     merged_agent_environment,
 )
-from docfit.smoke import SMOKE_CASES, receipt_directory
 from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME
+from docfit.tools.image_smoke import make_smoke_png
+
+from .smoke import SMOKE_CASES, receipt_directory
 
 CheckStatus = Literal["PASS", "NOT_READY", "FAIL"]
 Requirement = Literal["base", "agent-smoke", "provider"]

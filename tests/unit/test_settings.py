@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from docfit.settings import (
+from docfit.app.settings import (
     AgentConfigurationError,
     agent_env_file_is_private,
     iter_agent_backends,

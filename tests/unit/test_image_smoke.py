@@ -3,7 +3,7 @@ from __future__ import annotations
 import struct
 import zlib
 
-from docfit.image_smoke import make_smoke_png
+from docfit.tools.image_smoke import make_smoke_png
 
 
 def _decode_rgb_rows(png: bytes) -> tuple[int, int, bytes]:

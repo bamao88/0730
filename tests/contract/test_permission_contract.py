@@ -9,7 +9,7 @@ from claude_agent_sdk.types import (
     ToolPermissionContext,
 )
 
-from docfit.agent import (
+from docfit.app.agent import (
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     FORBIDDEN_TOOLS,

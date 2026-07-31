@@ -13,10 +13,15 @@ from typing import Any, Literal
 from claude_agent_sdk import ClaudeSDKClient
 from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
 
-from docfit.agent import FORBIDDEN_TOOLS, build_agent_options, project_root, terminal_ask_user
-from docfit.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
-from docfit.settings import AgentBackend, iter_agent_backends, redact_secrets
+from docfit.app.agent import (
+    FORBIDDEN_TOOLS,
+    build_agent_options,
+    project_root,
+    terminal_ask_user,
+)
+from docfit.app.settings import AgentBackend, iter_agent_backends, redact_secrets
 from docfit.tools import FULL_TOOL_NAMES
+from docfit.tools.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
 
 SmokeCase = Literal["image", "ask-user", "denied-tools"]
 SMOKE_CASES: tuple[SmokeCase, ...] = ("image", "ask-user", "denied-tools")

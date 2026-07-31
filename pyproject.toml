@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-docfit = "docfit.cli:main"
+docfit = "docfit.app.cli:main"
 
 [dependency-groups]
 dev = [

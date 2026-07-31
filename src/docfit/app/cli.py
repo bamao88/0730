@@ -35,11 +35,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "doctor":
-        from docfit.doctor import doctor_main
+        from docfit.app.doctor import doctor_main
 
         return doctor_main(requirement=args.requirement, as_json=args.as_json)
     if args.command == "agent-smoke":
-        from docfit.smoke import smoke_main
+        from docfit.app.smoke import smoke_main
 
         return smoke_main(args.case_name)
     raise AssertionError(f"unhandled command: {args.command}")

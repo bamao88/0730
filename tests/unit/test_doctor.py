@@ -4,8 +4,8 @@ import json
 from importlib.metadata import version
 from pathlib import Path
 
-from docfit.doctor import run_doctor
-from docfit.smoke import SMOKE_CASES, receipt_directory
+from docfit.app.doctor import run_doctor
+from docfit.app.smoke import SMOKE_CASES, receipt_directory
 
 
 def _make_project(root: Path) -> None:
