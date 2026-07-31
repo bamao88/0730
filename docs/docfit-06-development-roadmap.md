@@ -35,7 +35,8 @@
 | 文档渲染 | 首选本地 Provider；记录版本、字体和运行环境 | 目标平台无法安装，或真实样本分页误差不可接受 |
 | 数据 | 合成 fixture 优先；真实样本必须脱敏或授权 | 无 |
 
-首版仓库只创建实际使用的目录。推荐起点：
+在调整 M0 实现前，先把长期资产归属对应的仓库骨架落盘。尚未进入实现阶段的
+目录只包含简短职责说明，不放置假实现、空接口或可被误认为已支持的 schema：
 
 ```text
 .python-version
@@ -57,6 +58,10 @@ evals/
 └── e2e/
 knowledge/schools/<first-school>/v1/
 ```
+
+`knowledge/common/` 同时作为跨学校通用领域知识的长期位置。`<first-school>` 和
+`v1` 表示真实学校标识与版本结构，不创建同名字面目录；正式学校包在对应里程碑
+具备来源、适用范围、digest 和人工确认后再加入。
 
 只有第二个 Skill 开始实现时，才创建 `.claude/skills/prepare-school-template/`。只有第二个 Provider 实际接入时，才抽取共享 Provider 接口或增加 Provider 选择机制。
 

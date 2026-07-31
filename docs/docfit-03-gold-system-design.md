@@ -27,7 +27,7 @@ Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只�
 一个 Eval case 至少需要输入和断言。只有断言无法清楚表达时，才附参考产物。
 
 ```text
-evals/cases/hunannongye-basic-001/
+evals/e2e/hunannongye-basic-001/
 ├── case.yaml
 ├── input/
 │   └── student.docx
