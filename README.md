@@ -76,5 +76,7 @@ which backend passed; they never contain API keys.
 - `tests/contract`: public Tool names, schemas, and SDK permission boundaries
 - `tests/integration`: CLI, real SDK, and future real Provider integration
 
-The accepted milestone contract is in
+The coordinated long-term development baseline starts at
+[`docs/docfit-00-index.md`](docs/docfit-00-index.md); the accepted milestone
+contract is in
 [`docs/docfit-06-development-roadmap.md`](docs/docfit-06-development-roadmap.md).
