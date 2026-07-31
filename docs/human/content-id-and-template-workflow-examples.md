@@ -215,6 +215,6 @@ Eval 断言：
 - 通用判断模式进入 `skills/*/references/`；
 - 学校名称、具体字号、固定文案和条件规则进入对应 `knowledge/schools/<school>/<version>/`；
 - 精确修改能力进入 `tools/`；
-- 每个已修复错误进入 `evals/cases/`。
+- Agent/Skill 错误进入 `evals/skills/`，完整交付错误进入 `evals/e2e/`；纯逻辑和 Tool 错误分别进入 `tests/unit/` 与 `tests/integration/`。
 
 不需要把这些经验编译为新的运行阶段或状态机。

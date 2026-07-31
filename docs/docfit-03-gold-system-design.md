@@ -1,4 +1,4 @@
-# DocFit Eval 数据与 Gold（03）v1.0
+# DocFit Eval 数据与 Gold（03）
 
 > 状态：最小数据设计
 > 日期：2026-07-30
@@ -6,6 +6,8 @@
 ## 1. Gold 的定位
 
 Gold 是人工确认过的参考结果或关键事实，不是一个独立系统。
+
+Gold 主要服务 L3 Skill Eval 和 L4 端到端 Eval。L1/L2 的 fixture 与普通期望值放在 `tests/`，不需要升级成 Gold。
 
 它用于：
 
@@ -25,7 +27,7 @@ Gold 是人工确认过的参考结果或关键事实，不是一个独立系统
 一个 Eval case 至少需要输入和断言。只有断言无法清楚表达时，才附参考产物。
 
 ```text
-evals/cases/hunannongye-basic-001/
+evals/e2e/l4-hunannongye-basic-001/
 ├── case.yaml
 ├── input/
 │   └── student.docx
@@ -38,8 +40,13 @@ evals/cases/hunannongye-basic-001/
 `case.yaml` 示例：
 
 ```yaml
-id: hunannongye-basic-001
-school_knowledge: hunannongye/v1
+id: l4-hunannongye-basic-001
+level: L4
+skill: convert-thesis
+school_knowledge:
+  id: hunannongye
+  version: v1
+  content_digest: sha256:...
 task: 按目标学校要求转换论文
 assertions:
   - type: docx_opens
@@ -53,6 +60,17 @@ assertions:
     values: ["小二黑体加粗", "在此填写"]
 manual_review: [cover_page, toc_pagination]
 ```
+
+每个 L3/L4 case 只声明一个主要 Skill。两个 Skill 的稳定 Gold 事实不同：
+
+| Skill | 优先保存的事实 |
+|---|---|
+| `prepare-school-template` | Draft 到正式 Knowledge 的适用范围、版本、人工确认和复用所需文件 |
+| `convert-thesis` | 正式 Knowledge 命中或任务级 Draft 使用、源论文 hash、内容覆盖、最终 DOCX、格式、结构、渲染与人工页面复核 |
+
+共享模板提取能力不是第三个 Skill。它的确定性 schema、digest 和引用规则由 L1 覆盖，Tool 提取事实由 L2 覆盖，Agent 形成 Draft 的语义行为由两个 Skill 对应的 L3 case 覆盖。
+
+用户同时提供模板和论文的转换 case 仍属于 `convert-thesis`。Gold 可以引用共享 Draft facts 和论文内容分析，但不把它们保存为第三个 Skill 或固定调用轨迹。
 
 ## 3. 断言优先
 
@@ -96,7 +114,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 3. 人工检查断言覆盖不到的关键页面；
 4. 提取最少、稳定的事实到 `facts.yaml`；
 5. 必要时保存参考 `final.docx`；
-6. 记录确认人、日期、Knowledge 版本和原因。
+6. 记录确认人、日期、Knowledge 版本、content digest 和原因。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
 
@@ -107,7 +125,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 实现退化：修复 Skill、Knowledge 或 Tool；
 - Gold 过时：人工确认新结果后更新断言或参考产物；
 - 比较方式过脆：把逐字节比较收缩为事实断言；
-- 输入或 Knowledge 变更：创建新 case 或提升 case 版本。
+- 输入或 Knowledge digest 变更：创建新 case 或提升 case 版本。
 
 更新 Gold 时保留变更原因。无需不可变发布服务；版本控制历史即可满足当前阶段。
 
@@ -129,7 +147,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 
 当前架构不采用：
 
-- G1/G2/G3/G4 四层 Gold；
+- 旧设计中的 G1/G2/G3/G4 四层 Gold；
 - Stage Harness；
 - StageExecution 输入胶囊；
 - exact/comparative replay；
@@ -137,4 +155,4 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 自动 Gold 晋升；
 - Gold catalog 服务。
 
-如果将来确有单工具隔离重放需求，直接在 Tool test 中保存输入 fixture 和期望输出，不把它升级为 Agent runtime 协议。
+如果将来确有单工具隔离重放需求，直接在 L1/L2 测试中保存输入 fixture 和期望输出，不把它升级为 Agent runtime 协议。
