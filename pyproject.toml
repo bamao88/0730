@@ -12,6 +12,7 @@ license = { text = "Proprietary" }
 authors = [{ name = "DocFit contributors" }]
 dependencies = [
   "claude-agent-sdk==0.2.128",
+  "PyYAML>=6.0.2,<7",
 ]
 
 [project.scripts]
@@ -22,6 +23,7 @@ dev = [
   "mypy>=1.17,<2",
   "pytest>=8.4,<10",
   "ruff>=0.12,<1",
+  "types-PyYAML>=6.0.12,<7",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -1,12 +1,15 @@
 # DocFit Agent SDK
 
 DocFit is a permission-bounded Claude Agent SDK application for thesis-formatting
-workflows. The current implementation is **M0 only**: it establishes an installable
-Python package, a CLI, SDK and Skill discovery boundaries, five registered DocFit Tool
-names, a real image smoke path, deterministic tests, and CI.
+workflows. The Agent runtime remains at the completed **M0** boundary: it establishes an
+installable Python package, a CLI, SDK and Skill discovery boundaries, five registered
+DocFit Tool names, a real image smoke path, deterministic tests, and CI. A separately
+approved post-M0 slice also implements the Provider-independent, product-shipped universal
+Knowledge Package v1 loading and integrity boundary.
 
-Real DOCX inspection, editing, rendering, validation, Provider selection, school
-Knowledge, and the `convert` workflow begin in later milestones.
+Real DOCX inspection, editing, rendering, validation, the fixed OfficeCLI / local Word
+API adapters, current-task school evidence handling, and the `convert` workflow
+begin in later milestones.
 
 ## Requirements
 
@@ -24,9 +27,9 @@ uv run pytest
 uv run docfit doctor
 ```
 
-`docfit doctor` is the deterministic CI gate. Missing API credentials, Provider
-configuration, or fonts are reported as `NOT_READY` but do not make that base command
-fail.
+`docfit doctor` is the deterministic CI gate. Missing API credentials, fixed DOCX
+backend configuration, or fonts are reported as `NOT_READY` but do not make that base
+command fail.
 
 ## Live M0 smoke checks
 
@@ -72,9 +75,9 @@ which backend passed; they never contain API keys.
 
 ## Test layout
 
-- `tests/unit`: pure local logic
+- `tests/unit`: pure local logic, including bundled universal Knowledge validation
 - `tests/contract`: public Tool names, schemas, and SDK permission boundaries
-- `tests/integration`: CLI, real SDK, and future real Provider integration
+- `tests/integration`: CLI, real SDK, OfficeCLI, local Word API, and end-to-end integration
 
 The coordinated long-term development baseline starts at
 [`docs/docfit-00-index.md`](docs/docfit-00-index.md); the accepted milestone

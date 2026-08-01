@@ -1,7 +1,7 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-07-31
+> 日期：2026-08-01
 
 ## 1. Gold 的定位
 
@@ -44,10 +44,15 @@ evals/e2e/hunannongye-basic-001/
 ```yaml
 id: hunannongye-basic-001
 skill: convert-thesis
-school_knowledge:
-  id: hunannongye
+knowledge:
+  package_id: docfit-thesis-format
   version: v1
   content_digest: sha256:...
+school_materials:
+  - path: input/official-template.docx
+    sha256: ...
+  - path: input/official-requirements.pdf
+    sha256: ...
 task: 按目标学校要求转换论文
 assertions:
   - type: docx_opens
@@ -79,7 +84,7 @@ manual_review: [cover_page, toc_pagination]
 - 页面数量或允许范围；
 - 不应残留的占位符和说明文字；
 - 人工确认的溢出、遮挡、空白页、孤行、图表错位和页眉页脚异常；
-- 视觉 finding 所对应的文档 hash、页码、render purpose、fidelity claim、Provider、字体环境和 evidence ref；
+- 视觉 finding 所对应的文档 hash、页码、render purpose、render reason、fidelity claim、Provider、字体环境、evidence ref，以及可用的 `object_ref`、节引用或文字锚点；
 - 需要人工检查的高风险页面。
 
 只有以下情况保存完整 `final.docx` 或少量参考页面图片：
@@ -88,7 +93,7 @@ manual_review: [cover_page, toc_pagination]
 - 结构化断言暂时覆盖不了关键差异；
 - 它是已经确认的真实交付基线。
 
-完整文件和页面图片是辅助参照，不能自动覆盖事实断言。像素差异也不能单独证明版式语义正确。不同 Provider、字体、DPI、页面尺寸或 fidelity claim 的页面不得直接做像素 Gold 比较；需要比较快速迭代渲染与 Microsoft Word 目标渲染时，保存页数、bbox、问题类别和人工结论等稳定事实。
+完整文件和页面图片是辅助参照，不能自动覆盖事实断言。像素差异也不能单独证明版式语义正确。页码只在对应 render ref 内有意义；OfficeCLI 与本地 Word API 的同页码不能自动认定为同一内容范围。字体、DPI、页面尺寸或 fidelity claim 不同的页面不得直接做像素 Gold 比较。比较同一文档 hash 的快速迭代渲染与 Word 渲染时，可以使用当前快照的 `object_ref`、节引用或文字锚点关联；文档 hash 变化后必须重新 inspect，并通过新旧快照的节、文字锚点或显式内容指纹建立对照。Gold 同时保存实际后端、页数、bbox、问题类别和人工结论等稳定事实。
 
 ## 4. 比较方式
 
@@ -114,7 +119,8 @@ Gold 只从已经实际运行并人工确认的结果产生：
 4. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
 5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
 6. 必要时保存参考 `final.docx` 或少量页面图片；
-7. 记录确认人、日期、Knowledge 版本、content digest、render purpose、fidelity claim、Provider、字体环境和原因。
+7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
+   hash、render purpose、render reason、fidelity claim、Provider、字体环境、页面锚点和原因。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
 
@@ -125,7 +131,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 实现退化：修复 Skill、Knowledge 或 Tool；
 - Gold 过时：人工确认新结果后更新断言或参考产物；
 - 比较方式过脆：把逐字节比较收缩为事实断言；
-- 输入或 Knowledge 变更：创建新 case 或提升 case 版本。
+- 输入、当前任务学校材料或产品 Knowledge 变更：创建新 case 或提升 case 版本。
 
 更新时保留变更原因。版本控制历史足以满足当前阶段，不增加发布服务。
 

@@ -31,8 +31,9 @@
 
 - The canonical milestone contract is
   `docs/docfit-06-development-roadmap.md`.
-- M0 is the currently implemented foundation. Do not enter M1 or later work
-  without a newly approved Preflight.
+- M0 and the Provider-independent universal Knowledge Package v1 are the
+  currently implemented foundation. Do not enter M1 or later work without a
+  newly approved Preflight.
 - Use `$doc-keeper` or an equivalent focused drift check after changes that may
   invalidate claims in 00–06.
 
@@ -65,6 +66,9 @@ credential values into project docs, tests, logs, or examples.
 
 - Preserve the five public `mcp__docfit__...` Tool names and the default-deny
   permission boundary unless the long-term contract is explicitly revised.
+- Keep the product Knowledge Package universal and product-shipped. School
+  requirements, templates, formatting parameters, and extracted conclusions
+  remain current-task evidence and must never be auto-promoted to Knowledge.
 - Source documents are read-only; work and output files use authorized task
   directories.
 - Do not add a second Agent loop, workflow engine, question protocol, or
