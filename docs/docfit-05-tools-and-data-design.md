@@ -942,8 +942,9 @@ task-work/
 
 M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运行投影，详细产品设计见
 `docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
-数据边界；当前已完成 O0.0–O0.3 的平台骨架、runtime privacy/report v2、字段级安全
-projector 和直接 ID/hash/ref 关联、覆盖/指标投影，持久化与网站尚未实现。
+数据边界；当前已完成 O0.0–O0.4 的平台骨架、runtime privacy/report v2、字段级安全
+projector、直接 ID/hash/ref 关联、覆盖/指标投影，以及有界 SQLite 历史、保留/删除和
+非阻断降级；认证网站尚未实现。
 
 ### 8.1 任务目录是事实来源
 

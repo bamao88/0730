@@ -1,6 +1,6 @@
 # DocFit O0 本地运行观测实施计划
 
-> 状态：IN_PROGRESS（O0.0–O0.3 已完成，当前阶段 O0.4）
+> 状态：IN_PROGRESS（O0.0–O0.4 已完成，当前阶段 O0.5）
 > 日期：2026-08-03
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
@@ -15,9 +15,9 @@
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
 - First executable phase: O0.0 基线、技术骨架与风险 PoC（DONE）
-- Current phase: O0.4 有界本地投影、保留与非阻断降级
+- Current phase: O0.5 本地 Web 安全壳与证据重新挂载
 - Completed phases: O0.0（`0200e4c` + `e0eb220`）；O0.1（`3d02172`）；
-  O0.2（`bf7ab8e`）；O0.3（`524fdd4`）
+  O0.2（`bf7ab8e`）；O0.3（`524fdd4`）；O0.4（`0e1bd53`）
 - Active capsule: `docs/status/active/docfit-o0-local-observability.md`
 - Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
 - Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
@@ -33,13 +33,13 @@
 
 ```text
 Root goal: 按 docs/plans/docfit-o0-local-observability.md 顺序完成 O0.0–O0.7，并通过总体 Definition of Done。
-Current slice: 只执行 O0.4；不提前实现 Web 认证、证据挂载或页面。
-Scope: 本计划第 8 节的有界优先级 queue、后台单 writer、SQLite migration/query、保留/删除、coverage ack 与故障降级。
-Non-goals: O0.5–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
-Acceptance: O0.4 成功标准逐项有容量/优先级/ack/保留测试，以及 busy/corrupt/quota/低水位/writer 故障注入和禁用基线对比。
-Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；存储测试只写私有临时 observer root，不读取 SDK transcript/论文正文，也不发起 Adobe 调用。
+Current slice: 只执行 O0.5；不提前实现 O0.6 页面信息架构和 O0.7 跨运行比较。
+Scope: 本计划第 9 节的 loopback Web 认证、同源/CSRF/CSP、无副作用路由、会话内目录 capability、report/hash/ref 重验和路径逃逸防护。
+Non-goals: O0.6–O0.7 的页面/比较生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
+Acceptance: O0.5 成功标准逐项有 Host/Origin/session/CSRF/secret/path/symlink/挂载测试，且无 TTY、无 adapter 和无 GUI 环境均 fail closed 或明确 unmounted。
+Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；Web 测试只用 loopback/test client、临时 observer root 和合成任务目录，不读取 SDK transcript/论文正文，也不发起 Adobe 调用。
 Execution: 主会话为 root owner并直接完成该有界串行阶段；如范围扩张再恢复独立 worker。
-Stop gate: writer 必须同步阻塞 SDK hook、observer DB 必须进入任务目录，或容量/保留无法用硬上限自动证明。
+Stop gate: secret 必须进入 URL、核心必须导入 GUI/AppleScript、证据路径必须由浏览器任意提交，或框架无法落实精确 Host/Origin/CSRF/CSP。
 ```
 
 ## 0. 计划目标
@@ -166,8 +166,8 @@ src/docfit/observability/
 | O0.1 | DONE | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
 | O0.2 | DONE | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
 | O0.3 | DONE | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
-| O0.4 | IN_PROGRESS | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
-| O0.5 | PENDING | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
+| O0.4 | DONE | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
+| O0.5 | IN_PROGRESS | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
 | O0.6 | PENDING | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
 | O0.7 | PENDING | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
 
@@ -353,7 +353,7 @@ src/docfit/observability/
 
 ## 8. O0.4：有界本地投影、保留与非阻断降级
 
-> 状态：IN_PROGRESS。
+> 状态：DONE；实现提交 `0e1bd53`。
 
 ### 目标
 
@@ -395,6 +395,8 @@ Web 此时仍可不存在。
 - 容量/保留只能靠人工清理，没有可测试的硬限制。
 
 ## 9. O0.5：本地 Web 安全壳与证据重新挂载
+
+> 状态：IN_PROGRESS。
 
 ### 目标
 
