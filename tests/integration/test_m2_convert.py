@@ -21,7 +21,17 @@ from docfit.app.convert import (
 )
 from docfit.observability.events import ObservationEvent, SanitizationReceipt
 from docfit.observability.report import project_conversion_report
-from docfit.observability.runtime import NullObservationRecorder, ObservationRun
+from docfit.observability.runtime import (
+    BufferedObservationRecorder,
+    NullObservationRecorder,
+    ObservationRun,
+)
+from docfit.observability.storage import (
+    ObservationPersistResult,
+    ObservationStorageError,
+    initialize_observation_store,
+    load_observation_events,
+)
 from docfit.observability.transcript import SDKTranscriptManager
 from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
 
@@ -56,6 +66,21 @@ def _make_docx(path: Path, text: str) -> None:
         "--prop",
         f"text={text}",
     )
+
+
+def _make_conversion_request(tmp_path: Path, output_name: str) -> ConversionRequest:
+    source = tmp_path / "source.docx"
+    template = tmp_path / "template.docx"
+    requirements = tmp_path / "requirements.txt"
+    if not source.exists():
+        _make_docx(source, "学生正文")
+    if not template.exists():
+        _make_docx(template, "学校模板")
+    requirements.write_text(
+        "标题使用模板标题样式。正文保留。模板固定文字必须保留。",
+        encoding="utf-8",
+    )
+    return ConversionRequest(source, template, requirements, tmp_path / output_name)
 
 
 async def _fake_completed_agent(
@@ -279,3 +304,113 @@ def test_prepare_conversion_failure_does_not_publish_partial_task(tmp_path: Path
 
     assert failure.value.code == "requirements_empty"
     assert not output.exists()
+
+
+def test_buffered_observer_persists_history_without_web_process(tmp_path: Path) -> None:
+    request = _make_conversion_request(tmp_path, "observed-output")
+    database = initialize_observation_store(tmp_path / "observer-state")
+    recorder = BufferedObservationRecorder(
+        root=database.parent,
+        database=database,
+        disk_space_probe=lambda _: (
+            100 * 1024 * 1024 * 1024,
+            80 * 1024 * 1024 * 1024,
+        ),
+    )
+
+    report = asyncio.run(
+        run_conversion(
+            request,
+            runner=_fake_completed_agent,
+            observation=recorder,
+        )
+    )
+
+    assert report.status == "COMPLETED"
+    assert report.run_id is not None
+    assert report.observation_coverage is not None
+    assert report.observation_coverage.state == "complete"
+    assert report.observation_coverage.events_persisted == 1
+    events = load_observation_events(database, report.run_id)
+    assert [event.kind for event in events] == [
+        "run_started",
+        "conversion_report",
+        "run_finished",
+    ]
+    serialized = json.dumps([asdict(event) for event in events])
+    assert str(request.output_directory) not in serialized
+    assert "学生正文" not in serialized
+
+
+def test_observer_storage_failure_does_not_change_conversion_result(
+    tmp_path: Path,
+) -> None:
+    baseline_request = _make_conversion_request(tmp_path, "baseline-output")
+    failed_request = _make_conversion_request(tmp_path, "failed-observer-output")
+    baseline = asyncio.run(
+        run_conversion(
+            baseline_request,
+            runner=_fake_completed_agent,
+            observation=NullObservationRecorder(),
+        )
+    )
+    database = initialize_observation_store(tmp_path / "failing-observer-state")
+
+    def readonly(
+        *_: object,
+    ) -> ObservationPersistResult:
+        raise ObservationStorageError("observer_database_readonly")
+
+    recorder = BufferedObservationRecorder(
+        root=database.parent,
+        database=database,
+        batch_persister=readonly,  # type: ignore[arg-type]
+    )
+    observed = asyncio.run(
+        run_conversion(
+            failed_request,
+            runner=_fake_completed_agent,
+            observation=recorder,
+        )
+    )
+
+    assert observed.status == baseline.status == "COMPLETED"
+    assert observed.final_sha256 == baseline.final_sha256
+    assert observed.tool_uses == baseline.tool_uses
+    assert observed.warnings == baseline.warnings
+    assert observed.observation_coverage is not None
+    assert observed.observation_coverage.state == "unavailable"
+    assert "observer_database_readonly" in (
+        observed.observation_coverage.failure_codes
+    )
+    assert Path(observed.final_docx or "").is_file()
+    assert (failed_request.output_directory / "conversion-report.json").is_file()
+
+
+def test_task_storage_failure_remains_an_app_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = _make_conversion_request(tmp_path, "task-storage-failure")
+    real_atomic_write = atomic_write_json
+
+    def fail_report(path: Path, payload: object) -> None:
+        if path.name == "conversion-report.json":
+            raise OSError("synthetic task filesystem full")
+        real_atomic_write(path, payload)
+
+    monkeypatch.setattr("docfit.app.convert.atomic_write_json", fail_report)
+
+    with pytest.raises(ToolFailure) as failure:
+        asyncio.run(
+            run_conversion(
+                request,
+                runner=_fake_completed_agent,
+                observation=NullObservationRecorder(),
+            )
+        )
+
+    assert failure.value.origin == "app"
+    assert failure.value.code == "conversion_report_write_failed"
+    assert "observer" not in failure.value.code
+    assert not (request.output_directory / "conversion-report.json").exists()

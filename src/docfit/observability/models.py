@@ -1,8 +1,7 @@
-"""Internal O0 observation bootstrap contracts.
+"""Internal O0 observation lifecycle, coverage, and benchmark contracts.
 
-O0.0 deliberately has no event payload model yet.  Later phases may extend this
-module only with already-sanitized values; raw SDK or Tool objects never belong
-on the recorder boundary.
+Only already-sanitized event and receipt types cross the recorder boundary; raw
+SDK messages, Tool payloads, paths, and exceptions never belong here.
 """
 
 from __future__ import annotations
@@ -122,6 +121,8 @@ class ObservationRecorder(Protocol):
     def summary(self) -> ObservationCoverageSummary: ...
 
     def record(self, event: ObservationEvent) -> SanitizationReceipt: ...
+
+    def note_drop(self, receipt: SanitizationReceipt) -> None: ...
 
     def close(self) -> None: ...
 

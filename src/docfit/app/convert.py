@@ -1074,7 +1074,15 @@ async def run_conversion(
                 ),
             ),
         )
-        atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
+        try:
+            atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
+        except OSError as error:
+            raise ToolFailure(
+                status="error",
+                origin="app",
+                code="conversion_report_write_failed",
+                message="The conversion report could not be written to task storage.",
+            ) from error
         return report
     finally:
         close_observation_safely(recorder)

@@ -2,13 +2,13 @@
 
 from docfit.observability.models import ObservationRecorder
 from docfit.observability.runtime import (
-    BootstrapObservationRecorder,
+    BufferedObservationRecorder,
     NullObservationRecorder,
     create_observation_recorder,
 )
 
 __all__ = [
-    "BootstrapObservationRecorder",
+    "BufferedObservationRecorder",
     "NullObservationRecorder",
     "ObservationRecorder",
     "create_observation_recorder",

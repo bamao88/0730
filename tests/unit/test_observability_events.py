@@ -51,6 +51,32 @@ def test_valid_event_is_bounded_and_accepted() -> None:
     assert observation_event_bytes(event) < MAX_OBSERVATION_EVENT_BYTES
 
 
+def test_app_priorities_reserve_p0_for_run_terminal_and_failures() -> None:
+    backend = project_app_event(
+        _context(2),
+        source_event_id="backend-start",
+        kind="backend_started",
+        status="started",
+    )
+    failed_backend = project_app_event(
+        _context(3),
+        source_event_id="backend-failed",
+        kind="backend_finished",
+        status="error",
+        failure_code="backend_failed",
+    )
+    terminal = project_app_event(
+        _context(4),
+        source_event_id="run-finish",
+        kind="run_finished",
+        status="completed",
+    )
+
+    assert backend.event is not None and backend.event.priority == "P1"
+    assert failed_backend.event is not None and failed_backend.event.priority == "P0"
+    assert terminal.event is not None and terminal.event.priority == "P0"
+
+
 def test_future_sink_rejects_raw_payload_before_recording() -> None:
     class Sink:
         calls = 0

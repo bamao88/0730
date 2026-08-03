@@ -928,20 +928,28 @@ def project_app_event(
             }
         )
         safe_failure_code = _safe_code(failure_code)
+        safe_status = _safe_code(status) or "unknown"
         error = (
             ObservationError(safe_failure_code, "app")
             if safe_failure_code is not None
             else None
+        )
+        priority: ObservationPriority = (
+            "P0"
+            if kind in {"run_started", "run_finished"}
+            or safe_failure_code is not None
+            or safe_status in {"error", "needs_input", "failed"}
+            else "P1"
         )
         return _event(
             context,
             source_event_id=_source_id(source_event_id),
             source="app",
             kind=kind,
-            priority="P0",
+            priority=priority,
             actor=ObservationActor("app"),
             summary_code=f"{kind}_observed",
-            status=_safe_code(status) or "unknown",
+            status=safe_status,
             duration_ms=_nonnegative_number(duration_ms),
             attributes=_attrs(**attributes),
             error=error,
