@@ -63,6 +63,27 @@ def test_options_expose_three_builtins_and_one_five_tool_server(tmp_path: Path) 
     assert LOGGING_POLICY == "metadata_only_no_document_body"
 
 
+def test_observation_hook_adds_lifecycle_sources_without_replacing_agent_gate(
+    tmp_path: Path,
+) -> None:
+    async def observe(*_: object) -> dict[str, object]:
+        return {}
+
+    options = build_agent_options(cwd=tmp_path, observation_hook=observe)  # type: ignore[arg-type]
+
+    assert options.hooks is not None
+    assert set(options.hooks) == {
+        "PreToolUse",
+        "PostToolUse",
+        "PostToolUseFailure",
+        "SubagentStart",
+        "SubagentStop",
+    }
+    assert len(options.hooks["PreToolUse"]) == 2
+    assert options.hooks["PreToolUse"][0].matcher is None
+    assert options.hooks["PreToolUse"][1].matcher == "Agent"
+
+
 def test_skill_and_five_docfit_tools_are_approved_if_callback_is_consulted() -> None:
     async def ask_user(_: str) -> str:
         raise AssertionError("DocFit Tool approval must not ask the CLI")
@@ -95,11 +116,13 @@ def test_only_named_read_only_subagent_is_approved() -> None:
         assert isinstance(denied, PermissionResultDeny)
         assert SUBAGENT_NAME in denied.message
 
-    assert events == [
-        PermissionAuditEvent("Agent", "allow", SUBAGENT_NAME),
-        PermissionAuditEvent("Agent", "deny", "general-purpose"),
-        PermissionAuditEvent("Agent", "deny", "unknown-agent"),
-        PermissionAuditEvent("Agent", "deny", None),
+    assert [
+        (event.tool_name, event.decision, event.subagent_type) for event in events
+    ] == [
+        ("Agent", "allow", SUBAGENT_NAME),
+        ("Agent", "deny", "general-purpose"),
+        ("Agent", "deny", "unknown-agent"),
+        ("Agent", "deny", None),
     ]
 
 
@@ -161,11 +184,13 @@ def test_agent_pre_tool_hook_allows_only_named_subagent() -> None:
         )
         assert denied["hookSpecificOutput"]["permissionDecision"] == "deny"
 
-    assert events == [
-        PermissionAuditEvent("Agent", "allow", SUBAGENT_NAME),
-        PermissionAuditEvent("Agent", "deny", "general-purpose"),
-        PermissionAuditEvent("Agent", "deny", "unknown-agent"),
-        PermissionAuditEvent("Agent", "deny", None),
+    assert [
+        (event.tool_name, event.decision, event.subagent_type) for event in events
+    ] == [
+        ("Agent", "allow", SUBAGENT_NAME),
+        ("Agent", "deny", "general-purpose"),
+        ("Agent", "deny", "unknown-agent"),
+        ("Agent", "deny", None),
     ]
 
 

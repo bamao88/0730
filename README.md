@@ -18,9 +18,10 @@ Agent-visible document surface; no second workflow or Provider-selection layer i
 The approved M2-follow-on design for a local, read-only runtime observability UI is documented
 in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
 It will project actual SDK Agent/Tool/Subagent events, redacted metrics, and stable local
-evidence references without storing thesis text or controlling the conversion. O0.0 has started
-the platform-independent recorder/storage/CLI skeleton; detailed event capture, history storage,
-and the website are not yet implemented.
+evidence references without storing thesis text or controlling the conversion. O0.0–O0.2 now
+provide the platform-neutral skeleton, SDK transcript/report v2 privacy boundary, and synchronous
+field-allowlist projectors; correlation, bounded history storage, and the website are not yet
+implemented.
 
 “Without storing thesis text” applies to the observability index. The SDK's own local session
 transcript is a separate data plane; O0 requires a private per-run `CLAUDE_CONFIG_DIR`, explicit

@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+from dataclasses import asdict
 from pathlib import Path
 
 import pytest
@@ -18,8 +19,10 @@ from docfit.app.convert import (
     prepare_conversion,
     run_conversion,
 )
+from docfit.observability.events import ObservationEvent, SanitizationReceipt
 from docfit.observability.report import project_conversion_report
-from docfit.observability.runtime import NullObservationRecorder
+from docfit.observability.runtime import NullObservationRecorder, ObservationRun
+from docfit.observability.transcript import SDKTranscriptManager
 from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
 
 
@@ -58,7 +61,8 @@ def _make_docx(path: Path, text: str) -> None:
 async def _fake_completed_agent(
     prompt: str,
     prepared: PreparedConversion,
-    transcripts: object,
+    transcripts: SDKTranscriptManager,
+    observation_run: ObservationRun,
 ) -> AgentExecution:
     assert prepared.source_sha256 in prompt
     assert prepared.template_sha256 in prompt
@@ -191,14 +195,27 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     monkeypatch.setenv("XDG_STATE_HOME", str(observation_state))
 
     class BrokenSummaryRecorder(NullObservationRecorder):
+        def __init__(self) -> None:
+            super().__init__()
+            self.events: list[ObservationEvent] = []
+
+        @property
+        def enabled(self) -> bool:
+            return True
+
+        def record(self, event: ObservationEvent) -> SanitizationReceipt:
+            self.events.append(event)
+            return SanitizationReceipt("accepted", "observer_event_accepted", 0.0)
+
         def summary(self) -> object:
             raise RuntimeError("PRIVATE_OBSERVER_FAILURE_CANARY")
 
+    recorder = BrokenSummaryRecorder()
     report = asyncio.run(
         run_conversion(
             request,
             runner=_fake_completed_agent,
-            observation=BrokenSummaryRecorder(),
+            observation=recorder,
         )
     )
 
@@ -223,6 +240,15 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     assert "PRIVATE_OBSERVER_FAILURE_CANARY" not in (
         output / "conversion-report.json"
     ).read_text(encoding="utf-8")
+    assert [event.kind for event in recorder.events] == [
+        "run_started",
+        "conversion_report",
+        "run_finished",
+    ]
+    assert all(event.run_id == report.run_id for event in recorder.events)
+    serialized_events = json.dumps([asdict(event) for event in recorder.events])
+    assert str(output) not in serialized_events
+    assert report.detail not in serialized_events
     assert sha256_file(source) == original_source_hash
     validation = json.loads((output / "validation.json").read_text(encoding="utf-8"))
     assert validation["summary"]["errors"] == 0

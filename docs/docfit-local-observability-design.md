@@ -284,6 +284,12 @@ SDK `session_id`、任务目录或任何公开 CLI/Tool 标识。
 事件投影允许升级内部 schema，但不会成为 Skill、Tool 或 Eval 必须消费的产品协议。
 删除观测数据库不能破坏任务产物；删除任务目录也不能由观测数据库重建产物。
 
+O0.2 实现把可变摘要限制为固定 attribute-key allowlist；safe event 类型没有
+`prompt/tool_input/tool_response/result/body/text/content/path/bytes/raw` 等逃逸字段。每个
+事件在进入 sink 前完成 schema 与 64 KiB 大小检查；同步 projector 单次达到 10 ms、抛错、
+遇到未知类型或产生无效 shape 时，只返回固定 drop receipt，不记录异常详情或 raw
+fallback。禁用观测时不安装额外 SDK lifecycle hook/audit，也不执行 projector。
+
 ### 4.3 事件类型
 
 首版需要覆盖：
@@ -969,7 +975,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
 - 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
 - 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前已开始 O0.0 平台无关骨架，后续阶段尚未实施；
+- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.2，直接关联、有界存储与网站仍待后续阶段；
 - 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务

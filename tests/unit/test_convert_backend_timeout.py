@@ -7,6 +7,7 @@ import pytest
 
 from docfit.app.convert import AgentExecution, run_conversion_agent
 from docfit.app.settings import AgentBackend, BackendName
+from docfit.observability.runtime import ObservationRun
 from docfit.observability.transcript import SDKTranscriptManager
 
 
@@ -31,6 +32,7 @@ def test_conversion_timeout_moves_to_next_candidate(
         prepared: object,
         backend: AgentBackend,
         config_directory: Path,
+        observation_run: ObservationRun,
     ) -> AgentExecution:
         assert prompt == "prompt"
         assert config_directory.is_dir()
@@ -76,6 +78,7 @@ def test_conversion_timeout_skips_duplicate_credentials_for_same_route(
         prepared: object,
         backend: AgentBackend,
         config_directory: Path,
+        observation_run: ObservationRun,
     ) -> AgentExecution:
         assert config_directory.is_dir()
         calls.append(backend.credential_variable)

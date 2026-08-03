@@ -942,7 +942,8 @@ task-work/
 
 M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运行投影，详细产品设计见
 `docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
-数据边界；当前只有 O0.0 平台无关骨架，逐事件采集与网站尚未实现。
+数据边界；当前已完成 O0.0–O0.2 的平台骨架、runtime privacy/report v2 和字段级安全
+projector，关联、持久化与网站尚未实现。
 
 ### 8.1 任务目录是事实来源
 
@@ -988,6 +989,12 @@ SDK 升级必须先用合成 message/hook fixture 重验字段和关联链；不
 浏览器或导出之前完成；不得先完整序列化再遮盖。`prompt`、Assistant/Result 正文、
 `ThinkingBlock`、`transcript_path`、`cwd`、raw Tool input/response/error、DOCX/PDF/图片载荷和
 Provider 原始错误都不能进入观测通道。未知事件和未知字段默认丢弃。
+
+O0.2 的内部 safe event 使用冻结的固定字段、固定 attribute-key allowlist 和强类型
+hash/ref/error；单事件序列化上限为 64 KiB，projector 异常、schema/大小失败或单次达到
+10 ms 时只返回固定 drop receipt，不保存 raw fallback。`--observation off` 时不安装额外
+lifecycle hook/audit，也不执行 projector；`auto` 在有界队列/持久化完成前仍如实报告
+event capture unavailable。
 
 ### 8.3 SDK 原生 transcript 生命周期
 

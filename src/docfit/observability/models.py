@@ -13,6 +13,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Literal, Protocol
 
+from docfit.observability.events import (
+    ObservationEvent,
+    SanitizationReceipt,
+)
+
 ObservationMode = Literal["auto", "off"]
 ObservationCoverageState = Literal["complete", "degraded", "unavailable"]
 SDKTranscriptStatus = Literal[
@@ -115,6 +120,8 @@ class ObservationRecorder(Protocol):
     def failure_code(self) -> str | None: ...
 
     def summary(self) -> ObservationCoverageSummary: ...
+
+    def record(self, event: ObservationEvent) -> SanitizationReceipt: ...
 
     def close(self) -> None: ...
 

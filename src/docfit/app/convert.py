@@ -9,15 +9,32 @@ import secrets
 import shutil
 import subprocess
 import tempfile
+import time
 from collections.abc import Awaitable, Callable
+from contextlib import suppress
 from dataclasses import asdict, dataclass, replace
+from functools import partial
 from pathlib import Path
 from typing import Any, Literal
 
 from claude_agent_sdk import ClaudeSDKClient
-from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
+from claude_agent_sdk.types import (
+    AssistantMessage,
+    HookContext,
+    HookInput,
+    HookJSONOutput,
+    ResultMessage,
+    ToolResultBlock,
+    ToolUseBlock,
+)
 
-from docfit.app.agent import SKILL_NAMES, build_agent_options, project_root, terminal_ask_user
+from docfit.app.agent import (
+    SKILL_NAMES,
+    PermissionAuditEvent,
+    build_agent_options,
+    project_root,
+    terminal_ask_user,
+)
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.knowledge.loader import load_knowledge, select_knowledge_modules
 from docfit.observability.models import (
@@ -25,8 +42,20 @@ from docfit.observability.models import (
     ObservationRecorder,
     SDKTranscriptSummary,
 )
+from docfit.observability.privacy import (
+    project_app_event,
+    project_assistant_message,
+    project_permission_decision,
+    project_report_event,
+    project_result_message,
+    project_subagent_hook,
+    project_tool_hook,
+    project_tool_result_block,
+    project_tool_use_block,
+)
 from docfit.observability.runtime import (
     NullObservationRecorder,
+    ObservationRun,
     close_observation_safely,
     observation_summary_safely,
 )
@@ -209,7 +238,8 @@ class ConversionReport:
 
 
 ConversionRunner = Callable[
-    [str, PreparedConversion, SDKTranscriptManager], Awaitable[AgentExecution]
+    [str, PreparedConversion, SDKTranscriptManager, ObservationRun],
+    Awaitable[AgentExecution],
 ]
 
 
@@ -474,17 +504,55 @@ async def _run_backend(
     prepared: PreparedConversion,
     backend: AgentBackend,
     config_directory: Path,
+    observation_run: ObservationRun,
 ) -> AgentExecution:
     environment = isolated_sdk_environment(
         backend.sdk_environment(),
         config_directory,
     )
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
+
+    async def observe_hook(
+        hook_input: HookInput,
+        _tool_use_id: str | None,
+        _context: HookContext,
+    ) -> HookJSONOutput:
+        with suppress(Exception):
+            phase = hook_input.get("hook_event_name")
+            observation_run.project(
+                lambda context: (
+                    project_subagent_hook(hook_input, context)
+                    if phase in {"SubagentStart", "SubagentStop"}
+                    else project_tool_hook(hook_input, context)
+                )
+            )
+        return {}
+
+    def observe_permission(event: PermissionAuditEvent) -> None:
+        with suppress(Exception):
+            observation_run.project(
+                lambda context: project_permission_decision(
+                    context,
+                    tool_name=event.tool_name,
+                    decision=("allow" if event.decision == "allow" else "deny"),
+                    tool_use_id=event.tool_use_id,
+                    agent_id=event.agent_id,
+                    subagent_type=event.subagent_type,
+                    reason_code=event.reason_code,
+                    question_count=event.question_count,
+                    option_count=event.option_count,
+                    answered=event.answered,
+                    duration_ms=event.duration_ms,
+                ),
+            )
+
     options = build_agent_options(
         terminal_ask_user,
         cwd=project_root(),
         agent_env=environment,
         model=backend.model,
+        permission_audit=observe_permission if observation_run.enabled else None,
+        observation_hook=observe_hook if observation_run.enabled else None,
         system_prompt=_conversion_system_prompt(),
         output_format={"type": "json_schema", "schema": CONVERSION_OUTPUT_SCHEMA},
         max_turns=40,
@@ -496,15 +564,37 @@ async def _run_backend(
         await client.query(prompt)
         async for message in client.receive_response():
             if isinstance(message, AssistantMessage):
+                observation_run.project(
+                    partial(project_assistant_message, message)
+                )
                 for block in message.content:
-                    if not isinstance(block, ToolUseBlock):
-                        continue
-                    tool_uses.append(block.name)
-                    if block.name == "Skill":
-                        skill_name = block.input.get("skill") or block.input.get("name")
-                        if isinstance(skill_name, str):
-                            skills_loaded.append(skill_name)
+                    if isinstance(block, ToolUseBlock):
+                        observation_run.project(
+                            partial(
+                                project_tool_use_block,
+                                block,
+                                session_id=message.session_id,
+                                parent_tool_use_id=message.parent_tool_use_id,
+                            )
+                        )
+                        tool_uses.append(block.name)
+                        if block.name == "Skill":
+                            skill_name = block.input.get("skill") or block.input.get("name")
+                            if isinstance(skill_name, str):
+                                skills_loaded.append(skill_name)
+                    elif isinstance(block, ToolResultBlock):
+                        observation_run.project(
+                            partial(
+                                project_tool_result_block,
+                                block,
+                                session_id=message.session_id,
+                                parent_tool_use_id=message.parent_tool_use_id,
+                            )
+                        )
             if isinstance(message, ResultMessage):
+                observation_run.project(
+                    partial(project_result_message, message)
+                )
                 result = message
     if result is None or result.is_error or not isinstance(result.structured_output, dict):
         raise RuntimeError("Agent did not return a successful structured conversion result.")
@@ -522,8 +612,13 @@ async def run_conversion_agent(
     prompt: str,
     prepared: PreparedConversion,
     transcripts: SDKTranscriptManager | None = None,
+    observation_run: ObservationRun | None = None,
 ) -> AgentExecution:
     transcript_manager = transcripts or SDKTranscriptManager()
+    run_observation = observation_run or ObservationRun(
+        f"run_{secrets.token_hex(16)}",
+        NullObservationRecorder(),
+    )
     backends = tuple(iter_agent_backends())
     if not backends:
         raise ToolFailure(
@@ -534,26 +629,67 @@ async def run_conversion_agent(
         )
     failures: list[str] = []
     timed_out_routes: set[tuple[str, str, str]] = set()
-    for backend in backends:
+    for attempt_number, backend in enumerate(backends, start=1):
         route = (backend.name, backend.base_url, backend.model)
         if route in timed_out_routes:
             continue
+        attempt_started = time.monotonic()
+        run_observation.project(
+            partial(
+                project_app_event,
+                source_event_id=f"backend-{attempt_number}-start",
+                kind="backend_started",
+                status="started",
+                backend=backend.name,
+                model=backend.model,
+                attempt=attempt_number,
+            )
+        )
         try:
             with transcript_manager.attempt() as config_directory:
                 async with asyncio.timeout(CONVERSION_BACKEND_TIMEOUT_SECONDS):
-                    return await _run_backend(
+                    execution = await _run_backend(
                         prompt,
                         prepared,
                         backend,
                         config_directory,
+                        run_observation,
                     )
+            run_observation.project(
+                partial(
+                    project_app_event,
+                    source_event_id=f"backend-{attempt_number}-finish",
+                    kind="backend_finished",
+                    status="ok",
+                    backend=backend.name,
+                    model=backend.model,
+                    attempt=attempt_number,
+                    duration_ms=(time.monotonic() - attempt_started) * 1000,
+                )
+            )
+            return execution
         except TimeoutError:
             timed_out_routes.add(route)
             failures.append(
                 f"{backend.name}:timeout-{CONVERSION_BACKEND_TIMEOUT_SECONDS}s"
             )
+            failure_code = "backend_timeout"
         except Exception as error:
             failures.append(f"{backend.name}:{type(error).__name__}")
+            failure_code = "backend_attempt_failed"
+        run_observation.project(
+            partial(
+                project_app_event,
+                source_event_id=f"backend-{attempt_number}-finish",
+                kind="backend_finished",
+                status="error",
+                backend=backend.name,
+                model=backend.model,
+                attempt=attempt_number,
+                failure_code=failure_code,
+                duration_ms=(time.monotonic() - attempt_started) * 1000,
+            )
+        )
     raise ToolFailure(
         status="error",
         origin="engine",
@@ -854,14 +990,35 @@ async def run_conversion(
     task_ref = f"task_{secrets.token_hex(16)}"
     recorder = observation or NullObservationRecorder()
     transcript_manager = transcripts
+    observation_run: ObservationRun | None = None
     try:
         prepared = prepare_conversion(request)
+        observation_run = ObservationRun(run_id, recorder)
+        observation_run.project(
+            lambda context: project_app_event(
+                context,
+                source_event_id="run-start",
+                kind="run_started",
+                status="started",
+                task_ref=task_ref,
+                hashes={
+                    "source_sha256": prepared.source_sha256,
+                    "template_sha256": prepared.template_sha256,
+                    "requirements_sha256": prepared.requirements_sha256,
+                },
+            ),
+        )
         transcript_manager = transcript_manager or SDKTranscriptManager(
             forbidden_roots=(prepared.task_root, project_root())
         )
         prompt = build_conversion_prompt(prepared)
         try:
-            execution = await runner(prompt, prepared, transcript_manager)
+            execution = await runner(
+                prompt,
+                prepared,
+                transcript_manager,
+                observation_run,
+            )
             report = _finalize_conversion(prepared, execution)
         except ToolFailure as error:
             report = ConversionReport(
@@ -898,6 +1055,24 @@ async def run_conversion(
             final_sha256=final_sha256,
             observation_coverage=observation_summary_safely(recorder),
             sdk_transcript=transcript_summary_safely(transcript_manager),
+        )
+        observation_run.project(
+            lambda context: project_report_event(asdict(report), context)
+        )
+        observation_run.project(
+            lambda context: project_app_event(
+                context,
+                source_event_id="run-finish",
+                kind="run_finished",
+                status=report.status.casefold(),
+                duration_ms=context.monotonic_offset_ms,
+                hashes={"final_sha256": report.final_sha256 or ""},
+                failure_code=(
+                    report.warnings[0]
+                    if report.status != "COMPLETED" and report.warnings
+                    else None
+                ),
+            ),
         )
         atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
         return report

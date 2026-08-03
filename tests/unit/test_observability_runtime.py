@@ -3,10 +3,16 @@ from __future__ import annotations
 from pathlib import Path
 
 from docfit.observability.benchmark import measure_operation
+from docfit.observability.events import (
+    ProjectionContext,
+    ProjectionResult,
+    SanitizationReceipt,
+)
 from docfit.observability.models import ObservationCoverageSummary
 from docfit.observability.runtime import (
     BootstrapObservationRecorder,
     NullObservationRecorder,
+    ObservationRun,
     close_observation_safely,
     create_observation_recorder,
     observation_summary_safely,
@@ -113,3 +119,21 @@ def test_benchmark_helper_reports_wall_cpu_and_rss() -> None:
     assert result.wall_seconds >= 0
     assert result.cpu_seconds >= 0
     assert result.peak_rss_bytes > 0
+
+
+def test_disabled_observation_run_does_not_execute_projector() -> None:
+    run = ObservationRun(
+        "run_0123456789abcdef0123456789abcdef",
+        NullObservationRecorder(),
+    )
+    called = False
+
+    def projector(_: ProjectionContext) -> ProjectionResult:
+        nonlocal called
+        called = True
+        raise AssertionError("disabled projector must not execute")
+
+    receipt = run.project(projector)
+
+    assert called is False
+    assert receipt == SanitizationReceipt("dropped", "observation_disabled", 0.0)

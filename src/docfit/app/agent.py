@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -66,9 +67,20 @@ class PermissionAuditEvent:
     tool_name: str
     decision: str
     subagent_type: str | None = None
+    tool_use_id: str | None = None
+    agent_id: str | None = None
+    reason_code: str = "permission_policy"
+    question_count: int | None = None
+    option_count: int | None = None
+    answered: bool | None = None
+    duration_ms: float | None = None
 
 
 PermissionAudit = Callable[[PermissionAuditEvent], None]
+ObservationHook = Callable[
+    [HookInput, str | None, HookContext],
+    Awaitable[HookJSONOutput],
+]
 
 
 def project_root() -> Path:
@@ -130,7 +142,7 @@ def make_agent_gate_hook(
 ) -> Callable[[HookInput, str | None, HookContext], Awaitable[HookJSONOutput]]:
     async def gate_agent(
         hook_input: HookInput,
-        _tool_use_id: str | None,
+        tool_use_id: str | None,
         _context: HookContext,
     ) -> HookJSONOutput:
         if hook_input["hook_event_name"] != "PreToolUse":
@@ -148,6 +160,9 @@ def make_agent_gate_hook(
                     "Agent",
                     "allow" if allowed else "deny",
                     normalized_type,
+                    tool_use_id,
+                    hook_input.get("agent_id"),
+                    "subagent_type_allowed" if allowed else "subagent_type_denied",
                 )
             )
         return {
@@ -175,22 +190,58 @@ def make_permission_callback(
     async def can_use_tool(
         tool_name: str,
         tool_input: dict[str, Any],
-        _context: ToolPermissionContext,
+        context: ToolPermissionContext,
     ) -> PermissionResultAllow | PermissionResultDeny:
         if tool_name == "Skill" or tool_name in FULL_TOOL_NAMES:
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "allow",
+                    tool_use_id=context.tool_use_id,
+                    agent_id=context.agent_id,
+                    reason_code="registered_tool_allowed",
+                )
+            )
             return PermissionResultAllow()
         if tool_name == "Agent":
             subagent_type = tool_input.get("subagent_type")
             if subagent_type == SUBAGENT_NAME:
-                record(PermissionAuditEvent(tool_name, "allow", SUBAGENT_NAME))
+                record(
+                    PermissionAuditEvent(
+                        tool_name,
+                        "allow",
+                        SUBAGENT_NAME,
+                        context.tool_use_id,
+                        context.agent_id,
+                        "subagent_type_allowed",
+                    )
+                )
                 return PermissionResultAllow()
             normalized_type = subagent_type if isinstance(subagent_type, str) else None
-            record(PermissionAuditEvent(tool_name, "deny", normalized_type))
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "deny",
+                    normalized_type,
+                    context.tool_use_id,
+                    context.agent_id,
+                    "subagent_type_denied",
+                )
+            )
             return PermissionResultDeny(
                 message=("DocFit permits only the read-only docfit-unit-analyst subagent type."),
                 interrupt=False,
             )
         if tool_name != "AskUserQuestion":
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "deny",
+                    tool_use_id=context.tool_use_id,
+                    agent_id=context.agent_id,
+                    reason_code="unmatched_tool_denied",
+                )
+            )
             return PermissionResultDeny(
                 message=f"DocFit denies unmatched tool: {tool_name}",
                 interrupt=False,
@@ -198,19 +249,58 @@ def make_permission_callback(
 
         questions = tool_input.get("questions")
         if not isinstance(questions, list) or not questions:
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "deny",
+                    tool_use_id=context.tool_use_id,
+                    agent_id=context.agent_id,
+                    reason_code="question_shape_invalid",
+                )
+            )
             return PermissionResultDeny(
                 message="AskUserQuestion requires a non-empty questions list.",
                 interrupt=False,
             )
         answers: dict[str, str] = {}
+        option_count = sum(
+            len(question.get("options", ()))
+            for question in questions
+            if isinstance(question, dict) and isinstance(question.get("options"), list)
+        )
+        started = time.perf_counter()
         for question in questions:
             if not isinstance(question, dict):
+                record(
+                    PermissionAuditEvent(
+                        tool_name,
+                        "deny",
+                        tool_use_id=context.tool_use_id,
+                        agent_id=context.agent_id,
+                        reason_code="question_shape_invalid",
+                        question_count=len(questions),
+                        option_count=option_count,
+                        answered=False,
+                    )
+                )
                 return PermissionResultDeny(
                     message="AskUserQuestion contains an invalid question.",
                     interrupt=False,
                 )
             question_text = question.get("question")
             if not isinstance(question_text, str) or not question_text:
+                record(
+                    PermissionAuditEvent(
+                        tool_name,
+                        "deny",
+                        tool_use_id=context.tool_use_id,
+                        agent_id=context.agent_id,
+                        reason_code="question_text_missing",
+                        question_count=len(questions),
+                        option_count=option_count,
+                        answered=False,
+                    )
+                )
                 return PermissionResultDeny(
                     message="AskUserQuestion question text is missing.",
                     interrupt=False,
@@ -218,6 +308,19 @@ def make_permission_callback(
             answers[question_text] = await ask_user(_question_prompt(question))
         updated_input = dict(tool_input)
         updated_input["answers"] = answers
+        record(
+            PermissionAuditEvent(
+                tool_name,
+                "allow",
+                tool_use_id=context.tool_use_id,
+                agent_id=context.agent_id,
+                reason_code="ask_user_answered",
+                question_count=len(questions),
+                option_count=option_count,
+                answered=True,
+                duration_ms=(time.perf_counter() - started) * 1000,
+            )
+        )
         return PermissionResultAllow(updated_input=updated_input)
 
     return can_use_tool
@@ -230,11 +333,34 @@ def build_agent_options(
     agent_env: Mapping[str, str] | None = None,
     model: str | None = None,
     permission_audit: PermissionAudit | None = None,
+    observation_hook: ObservationHook | None = None,
     system_prompt: str | None = None,
     output_format: dict[str, Any] | None = None,
     max_turns: int = 12,
 ) -> ClaudeAgentOptions:
     root = cwd or project_root()
+    configured_hooks: dict[str, list[HookMatcher]] = {
+        "PreToolUse": [
+            HookMatcher(
+                matcher="Agent",
+                hooks=[make_agent_gate_hook(permission_audit)],
+            )
+        ]
+    }
+    if observation_hook is not None:
+        configured_hooks["PreToolUse"].insert(
+            0,
+            HookMatcher(matcher=None, hooks=[observation_hook]),
+        )
+        for event_name in (
+            "PostToolUse",
+            "PostToolUseFailure",
+            "SubagentStart",
+            "SubagentStop",
+        ):
+            configured_hooks[event_name] = [
+                HookMatcher(matcher=None, hooks=[observation_hook])
+            ]
     return ClaudeAgentOptions(
         tools=list(BUILTIN_TOOLS),
         allowed_tools=list(FULL_TOOL_NAMES),
@@ -243,14 +369,7 @@ def build_agent_options(
         strict_mcp_config=True,
         permission_mode="default",
         can_use_tool=make_permission_callback(ask_user, audit=permission_audit),
-        hooks={
-            "PreToolUse": [
-                HookMatcher(
-                    matcher="Agent",
-                    hooks=[make_agent_gate_hook(permission_audit)],
-                )
-            ]
-        },
+        hooks=configured_hooks,  # type: ignore[arg-type]
         agents={SUBAGENT_NAME: build_unit_analyst_definition()},
         setting_sources=["project"],
         skills=list(SKILL_NAMES),

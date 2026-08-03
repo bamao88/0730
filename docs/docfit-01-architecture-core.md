@@ -94,7 +94,7 @@ flowchart LR
     F --> SDK
     SDK --> A
     A --> U
-    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>O0.0 骨架已开始"]
+    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>O0.0–O0.2 安全投影已完成"]
     A -."权限与最终报告".-> O
     O -."hash/ref 只读定位".-> F
     E["Eval<br/>离线"] -.运行样本并比较结果.-> SDK
@@ -269,7 +269,8 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
   warning 或旧 summary 重新发布为当前事实；
 - 记录必要的产品级用量与错误；
 - 按批准的 O0 目标设计，把 SDK 实际事件、权限判断、Tool 脱敏摘要和本地证据引用投影
-  为本地只读运行视图；当前只有 O0.0 平台无关骨架，逐事件投影尚未实现；
+  为本地只读运行视图；当前已完成 O0.0–O0.2 的平台骨架、runtime privacy/report v2 与
+  入队前安全 projector，关联、持久化和页面尚未实现；
 - 为每次 SDK 运行提供私有临时 `CLAUDE_CONFIG_DIR`，不配置 transcript mirror，并在正常
   退出/下一次安全 preflight 管理 SDK 原生 transcript 清理；
 - 生成带 `run_id/task_ref`、最终文档 hash、观测覆盖与 transcript privacy 摘要的

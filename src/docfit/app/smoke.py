@@ -272,13 +272,18 @@ async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
         "mcp__docfit__docx_render",
         "mcp__docfit__docx_validate",
     }
-    allowed_named_subagent = PermissionAuditEvent("Agent", "allow", SUBAGENT_NAME)
+    allowed_named_subagent = any(
+        event.tool_name == "Agent"
+        and event.decision == "allow"
+        and event.subagent_type == SUBAGENT_NAME
+        for event in permission_events
+    )
     passed = (
         result is not None
         and not result.is_error
         and required_tools.issubset(tool_uses)
         and not forbidden_tools.intersection(tool_uses)
-        and allowed_named_subagent in permission_events
+        and allowed_named_subagent
         and all(field in text for field in UNIT_ANALYSIS_REQUIRED_FIELDS)
         and SMOKE_MARKER in text
         and SMOKE_BORDER_COLOR.casefold() in text.casefold()

@@ -2,10 +2,20 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+import time
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
+from threading import Lock
 
+from docfit.observability.events import (
+    ObservationEvent,
+    ProjectionContext,
+    ProjectionResult,
+    SanitizationReceipt,
+    record_sanitized_event,
+)
 from docfit.observability.models import (
     ObservationCoverageSummary,
     ObservationMode,
@@ -36,6 +46,9 @@ class NullObservationRecorder:
     def summary(self) -> ObservationCoverageSummary:
         return unavailable_observation_summary(self.failure_code or "observation_disabled")
 
+    def record(self, event: ObservationEvent) -> SanitizationReceipt:
+        return SanitizationReceipt("dropped", "observation_disabled", 0.0)
+
     def close(self) -> None:
         return None
 
@@ -58,6 +71,13 @@ class BootstrapObservationRecorder:
 
     def summary(self) -> ObservationCoverageSummary:
         return unavailable_observation_summary("observation_event_capture_not_started")
+
+    def record(self, event: ObservationEvent) -> SanitizationReceipt:
+        return SanitizationReceipt(
+            "dropped",
+            "observation_event_capture_not_started",
+            0.0,
+        )
 
     def close(self) -> None:
         return None
@@ -116,3 +136,45 @@ def close_observation_safely(recorder: ObservationRecorder) -> None:
         recorder.close()
     except Exception:
         return None
+
+
+class ObservationRun:
+    """Run-local clock/sequence seam that only accepts projected events."""
+
+    def __init__(self, run_id: str, recorder: ObservationRecorder) -> None:
+        self.run_id = run_id
+        self._recorder = recorder
+        self._started = time.monotonic()
+        self._sequence = 0
+        self._lock = Lock()
+
+    def next_context(self) -> ProjectionContext:
+        with self._lock:
+            self._sequence += 1
+            sequence = self._sequence
+        return ProjectionContext(
+            run_id=self.run_id,
+            source_sequence=sequence,
+            observed_at=datetime.now(UTC).isoformat(),
+            monotonic_offset_ms=max(0.0, (time.monotonic() - self._started) * 1000),
+        )
+
+    def accept(self, result: ProjectionResult) -> SanitizationReceipt:
+        if result.event is None:
+            return result.receipt
+        return record_sanitized_event(self._recorder, result.event)
+
+    @property
+    def enabled(self) -> bool:
+        return self._recorder.enabled
+
+    def project(
+        self,
+        projector: Callable[[ProjectionContext], ProjectionResult],
+    ) -> SanitizationReceipt:
+        if not self.enabled:
+            return SanitizationReceipt("dropped", "observation_disabled", 0.0)
+        try:
+            return self.accept(projector(self.next_context()))
+        except Exception:
+            return SanitizationReceipt("dropped", "observer_projector_failed", 0.0)
