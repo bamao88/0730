@@ -18,6 +18,8 @@ from docfit.app.convert import (
     prepare_conversion,
     run_conversion,
 )
+from docfit.observability.report import project_conversion_report
+from docfit.observability.runtime import NullObservationRecorder
 from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
 
 
@@ -56,6 +58,7 @@ def _make_docx(path: Path, text: str) -> None:
 async def _fake_completed_agent(
     prompt: str,
     prepared: PreparedConversion,
+    transcripts: object,
 ) -> AgentExecution:
     assert prepared.source_sha256 in prompt
     assert prepared.template_sha256 in prompt
@@ -187,7 +190,17 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     observation_state = tmp_path / "observation-state"
     monkeypatch.setenv("XDG_STATE_HOME", str(observation_state))
 
-    report = asyncio.run(run_conversion(request, runner=_fake_completed_agent))
+    class BrokenSummaryRecorder(NullObservationRecorder):
+        def summary(self) -> object:
+            raise RuntimeError("PRIVATE_OBSERVER_FAILURE_CANARY")
+
+    report = asyncio.run(
+        run_conversion(
+            request,
+            runner=_fake_completed_agent,
+            observation=BrokenSummaryRecorder(),
+        )
+    )
 
     assert report.status == "COMPLETED"
     assert Path(report.final_docx or "").is_file()
@@ -195,6 +208,21 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     assert Path(report.visual_review or "").is_file()
     assert Path(report.validation or "").is_file()
     assert (output / "conversion-report.json").is_file()
+    assert report.schema_version == 2
+    assert report.run_id is not None and report.run_id.startswith("run_")
+    assert report.task_ref is not None and report.task_ref.startswith("task_")
+    assert report.final_sha256 == sha256_file(Path(report.final_docx or ""))
+    assert report.observation_coverage is not None
+    assert report.observation_coverage.state == "unavailable"
+    assert report.observation_coverage.failure_codes == ("observer_summary_failed",)
+    assert report.sdk_transcript is not None
+    assert report.sdk_transcript.status == "unknown"
+    projected = project_conversion_report(output / "conversion-report.json")
+    assert projected["run_id"] == report.run_id
+    assert str(output) not in json.dumps(projected)
+    assert "PRIVATE_OBSERVER_FAILURE_CANARY" not in (
+        output / "conversion-report.json"
+    ).read_text(encoding="utf-8")
     assert sha256_file(source) == original_source_hash
     validation = json.loads((output / "validation.json").read_text(encoding="utf-8"))
     assert validation["summary"]["errors"] == 0

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+from pathlib import Path
 
 import pytest
 
 from docfit.app.convert import AgentExecution, run_conversion_agent
 from docfit.app.settings import AgentBackend, BackendName
+from docfit.observability.transcript import SDKTranscriptManager
 
 
 def _backend(name: BackendName, candidate: str = "primary") -> AgentBackend:
@@ -20,6 +22,7 @@ def _backend(name: BackendName, candidate: str = "primary") -> AgentBackend:
 
 def test_conversion_timeout_moves_to_next_candidate(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     backends = (_backend("kimi"), _backend("minimax"))
 
@@ -27,8 +30,10 @@ def test_conversion_timeout_moves_to_next_candidate(
         prompt: str,
         prepared: object,
         backend: AgentBackend,
+        config_directory: Path,
     ) -> AgentExecution:
         assert prompt == "prompt"
+        assert config_directory.is_dir()
         if backend.name == "kimi":
             await asyncio.sleep(1)
         return AgentExecution(
@@ -44,13 +49,20 @@ def test_conversion_timeout_moves_to_next_candidate(
     monkeypatch.setattr("docfit.app.convert._run_backend", fake_run_backend)
     monkeypatch.setattr("docfit.app.convert.CONVERSION_BACKEND_TIMEOUT_SECONDS", 0.01)
 
-    result = asyncio.run(run_conversion_agent("prompt", object()))  # type: ignore[arg-type]
+    result = asyncio.run(
+        run_conversion_agent(
+            "prompt",
+            object(),  # type: ignore[arg-type]
+            SDKTranscriptManager(parent=tmp_path / "transcripts"),
+        )
+    )
 
     assert result.backend == "minimax"
 
 
 def test_conversion_timeout_skips_duplicate_credentials_for_same_route(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     backends = (
         _backend("kimi", "first"),
@@ -63,7 +75,9 @@ def test_conversion_timeout_skips_duplicate_credentials_for_same_route(
         prompt: str,
         prepared: object,
         backend: AgentBackend,
+        config_directory: Path,
     ) -> AgentExecution:
+        assert config_directory.is_dir()
         calls.append(backend.credential_variable)
         if backend.name == "kimi":
             await asyncio.sleep(1)
@@ -80,7 +94,13 @@ def test_conversion_timeout_skips_duplicate_credentials_for_same_route(
     monkeypatch.setattr("docfit.app.convert._run_backend", fake_run_backend)
     monkeypatch.setattr("docfit.app.convert.CONVERSION_BACKEND_TIMEOUT_SECONDS", 0.01)
 
-    result = asyncio.run(run_conversion_agent("prompt", object()))  # type: ignore[arg-type]
+    result = asyncio.run(
+        run_conversion_agent(
+            "prompt",
+            object(),  # type: ignore[arg-type]
+            SDKTranscriptManager(parent=tmp_path / "transcripts"),
+        )
+    )
 
     assert result.backend == "minimax"
     assert calls == [

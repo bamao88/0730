@@ -3,11 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 
 from docfit.observability.benchmark import measure_operation
+from docfit.observability.models import ObservationCoverageSummary
 from docfit.observability.runtime import (
     BootstrapObservationRecorder,
     NullObservationRecorder,
     close_observation_safely,
     create_observation_recorder,
+    observation_summary_safely,
 )
 
 
@@ -67,6 +69,39 @@ def test_close_failure_never_escapes_conversion_boundary() -> None:
             raise RuntimeError("sensitive close detail")
 
     close_observation_safely(BrokenRecorder())
+
+
+def test_summary_failure_returns_fixed_unavailable_shape() -> None:
+    class BrokenRecorder(NullObservationRecorder):
+        def summary(self) -> object:
+            raise RuntimeError("PRIVATE_OBSERVER_FAILURE_CANARY")
+
+    summary = observation_summary_safely(BrokenRecorder())  # type: ignore[arg-type]
+
+    assert summary.state == "unavailable"
+    assert summary.events_persisted is None
+    assert summary.events_dropped is None
+    assert summary.failure_codes == ("observer_summary_failed",)
+    assert "PRIVATE_OBSERVER_FAILURE_CANARY" not in str(summary)
+
+
+def test_invalid_summary_dataclass_returns_fixed_unavailable_shape() -> None:
+    class InvalidRecorder(NullObservationRecorder):
+        def summary(self) -> ObservationCoverageSummary:
+            return ObservationCoverageSummary(
+                state="complete",
+                events_persisted=-1,
+                events_dropped=0,
+                missing_sources=(),
+                last_observed_at=None,
+                failure_codes=(),
+            )
+
+    summary = observation_summary_safely(InvalidRecorder())
+
+    assert summary.state == "unavailable"
+    assert summary.events_persisted is None
+    assert summary.failure_codes == ("observer_summary_invalid",)
 
 
 def test_benchmark_helper_reports_wall_cpu_and_rss() -> None:

@@ -252,8 +252,9 @@ O0 在页面开发前先建立以下非 Eval 产品合同测试：
   path traversal、symlink 和挂载后替换建立安全测试；secret 不得进入 URL、日志或导出，
   登录码/session 的失败次数、idle/absolute expiry 与轮换生效，无交互 TTY/受保护 IPC 时
   必须 fail closed；
-- schema v2 新字段、v1 读取、v1 unavailable/null、无效 v2、未知版本和 observation summary
-  provider 异常必须有契约测试；summary 失败时基础 v2 conversion report 仍可写出；
+- schema v2 的随机 run/task ID、最终文档 hash 与 coverage/privacy 字段、v1 读取、v1
+  unavailable/null、无效 v2、未知版本和 observation summary provider 异常必须有契约
+  测试；summary 失败时基础 v2 conversion report 仍可写出；
 - collector 恢复后只允许从用户显式挂载且验证通过的最终报告进行 summary-only 对账；
   缺少最终报告时终态保持 unknown，不生成虚构时间线；
 - 用确定性 synthetic runner 验证同步 projector、事件/queue/run、数据库/保留、低水位、

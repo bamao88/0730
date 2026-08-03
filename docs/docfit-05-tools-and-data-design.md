@@ -1075,10 +1075,10 @@ SDK transcript 或反造逐事件时间线。
 ### 8.8 Conversion report v2
 
 O0 把 `conversion-report.json` 从 schema v1 升级到 additive v2：保留全部 v1 转换字段，
-新增 `run_id`、opaque `task_ref`、固定 shape 的 `observation_coverage` 和
-`sdk_transcript` privacy 摘要。App 先构造不依赖 observer 的基础报告；summary provider
-异常时填入 `unavailable/unknown` 与安全错误码，仍原子写出 v2。任务目录本身写入失败
-继续是 App storage failure。
+新增 `run_id`、opaque `task_ref`、成功产物的 `final_sha256`、固定 shape 的
+`observation_coverage` 和 `sdk_transcript` privacy 摘要。App 先构造不依赖 observer 的基础
+报告；summary provider 异常时填入 `unavailable/unknown` 与安全错误码，仍原子写出 v2。
+任务目录本身写入失败继续是 App storage failure。
 
 reader 必须显式区分 v1/v2。v1 只在用户选择目录后作为临时 legacy summary 读取，不自动
 导入历史或生成时间线；其观测覆盖为 unavailable、transcript 为 unknown、缺失计数为

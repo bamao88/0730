@@ -5,6 +5,7 @@ import sys
 
 import pytest
 
+from docfit.app.agent import build_agent_options
 from docfit.app.cli import build_parser, main
 from docfit.observability.sdk_sources import (
     FORBIDDEN_PERSISTED_SDK_FIELDS,
@@ -57,6 +58,15 @@ def test_core_conversion_import_does_not_load_local_debug_platform_adapters() ->
     )
 
     assert probe.returncode == 0, probe.stderr
+
+
+def test_sdk_attempt_environment_is_explicit_and_session_store_is_disabled() -> None:
+    options = build_agent_options(
+        agent_env={"CLAUDE_CONFIG_DIR": "/private/docfit-sdk-attempt"}
+    )
+
+    assert options.env["CLAUDE_CONFIG_DIR"] == "/private/docfit-sdk-attempt"
+    assert options.session_store is None
 
 
 def test_convert_observation_cli_defaults_off_and_accepts_auto() -> None:

@@ -272,8 +272,8 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
   为本地只读运行视图；当前只有 O0.0 平台无关骨架，逐事件投影尚未实现；
 - 为每次 SDK 运行提供私有临时 `CLAUDE_CONFIG_DIR`，不配置 transcript mirror，并在正常
   退出/下一次安全 preflight 管理 SDK 原生 transcript 清理；
-- 生成带 `run_id/task_ref`、观测覆盖与 transcript privacy 摘要的 conversion report v2，
-  同时保持 v1 报告可读；
+- 生成带 `run_id/task_ref`、最终文档 hash、观测覆盖与 transcript privacy 摘要的
+  conversion report v2，同时保持 v1 报告可读；
 - 保证观测写入失败时不改变转换控制流或最终产物。
 
 应用壳不负责：

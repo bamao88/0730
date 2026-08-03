@@ -238,7 +238,7 @@ src/docfit/observability/
 4. 建立固定私有父目录、owner marker、lock/process identity 和安全 preflight；只处理
    DocFit owned 目录，不跟随 symlink，不扫描用户全局配置或任意临时目录；
 5. 将 `conversion-report.json` writer 升级到 additive schema v2，保留 v1 字段，新增
-   `run_id/task_ref/observation_coverage/sdk_transcript`；
+   `run_id/task_ref/final_sha256/observation_coverage/sdk_transcript`；
 6. 基础 report 先独立构造，观测 summary provider 超时、异常或 shape 错误时写入固定
    `unavailable/unknown` fallback，仍原子发布基础 v2 report；
 7. 实现 report reader/projector：支持 v1/v2，拒绝未知更高版本，v1 缺失观测值为
@@ -251,8 +251,8 @@ src/docfit/observability/
 - 项目 Skill、hooks、MCP、backend environment 和唯一 Subagent 在空运行级 config 下仍工作；
 - 正常退出后 attempt 目录立即消失；强制终止后的 owned 残留能在下一次 preflight 被发现，
   并按 owner-dead/24 小时规则安全清理；路径和正文不进日志/report；
-- schema v2 report 保留所有 v1 转换事实，并包含随机 run/task ID 与固定 shape privacy/
-  coverage 摘要；
+- schema v2 report 保留所有 v1 转换事实，并包含随机 run/task ID、最终文档 hash 与固定
+  shape privacy/coverage 摘要；
 - v1、有效 v2、无效 v2、未知版本、缺失字段和 summary provider 异常都有契约测试；
 - v1 缺失计数是 `null` 而不是 0，关联最多为 partial；
 - task 文件系统不可写时仍按原 App storage failure 失败；observer summary 失败不改变

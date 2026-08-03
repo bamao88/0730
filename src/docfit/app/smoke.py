@@ -23,6 +23,10 @@ from docfit.app.agent import (
     terminal_ask_user,
 )
 from docfit.app.settings import AgentBackend, iter_agent_backends, redact_secrets
+from docfit.observability.transcript import (
+    SDKTranscriptManager,
+    isolated_sdk_environment,
+)
 from docfit.tools import FULL_TOOL_NAMES
 from docfit.tools.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
 
@@ -89,25 +93,37 @@ async def _collect(
     result: ResultMessage | None = None
     tool_uses: list[str] = []
     session_ids: set[str] = set()
-    options = build_agent_options(
-        ask_user,
-        agent_env=backend.sdk_environment(),
-        model=backend.model,
-        permission_audit=permission_events.append if permission_events is not None else None,
-        system_prompt=SMOKE_SYSTEM_PROMPT,
-    )
-    async with ClaudeSDKClient(options=options) as client:
-        await client.query(prompt)
-        async for message in client.receive_response():
-            message_session = getattr(message, "session_id", None)
-            if isinstance(message_session, str) and message_session:
-                session_ids.add(message_session)
-            if isinstance(message, AssistantMessage):
-                tool_uses.extend(
-                    block.name for block in message.content if isinstance(block, ToolUseBlock)
-                )
-            if isinstance(message, ResultMessage):
-                result = message
+    transcripts = SDKTranscriptManager(forbidden_roots=(project_root(),))
+    with transcripts.attempt() as config_directory:
+        environment = isolated_sdk_environment(
+            backend.sdk_environment(),
+            config_directory,
+        )
+        options = build_agent_options(
+            ask_user,
+            agent_env=environment,
+            model=backend.model,
+            permission_audit=(
+                permission_events.append if permission_events is not None else None
+            ),
+            system_prompt=SMOKE_SYSTEM_PROMPT,
+        )
+        async with ClaudeSDKClient(options=options) as client:
+            await client.query(prompt)
+            async for message in client.receive_response():
+                message_session = getattr(message, "session_id", None)
+                if isinstance(message_session, str) and message_session:
+                    session_ids.add(message_session)
+                if isinstance(message, AssistantMessage):
+                    tool_uses.extend(
+                        block.name
+                        for block in message.content
+                        if isinstance(block, ToolUseBlock)
+                    )
+                if isinstance(message, ResultMessage):
+                    result = message
+    if transcripts.summary().status != "cleaned":
+        raise RuntimeError("sdk_transcript_cleanup_incomplete")
     return result, tuple(tool_uses), tuple(sorted(session_ids))
 
 

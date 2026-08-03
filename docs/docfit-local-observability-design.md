@@ -775,8 +775,9 @@ privacy 摘要，不嵌入逐事件轨迹：
 
 ```yaml
 schema_version: 2
-run_id: run-...
-task_ref: task-...
+run_id: run_0123456789abcdef0123456789abcdef
+task_ref: task_fedcba9876543210fedcba9876543210
+final_sha256: <64 lowercase hex characters or null>
 observation_coverage:
   state: degraded
   events_persisted: 37
@@ -825,6 +826,7 @@ sdk_transcript:
 O0 将当前报告从 schema v1 升级为 v2。v2 保留全部 v1 转换字段，并新增：
 
 - `run_id` 与 opaque `task_ref`；
+- `final_sha256`，成功产物可读时绑定最终文档快照，否则为 `null`；
 - 固定 shape 的 `observation_coverage`；
 - 固定 shape 的 `sdk_transcript` runtime privacy 摘要。
 

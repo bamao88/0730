@@ -5,11 +5,12 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import secrets
 import shutil
 import subprocess
 import tempfile
 from collections.abc import Awaitable, Callable
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
 
@@ -19,8 +20,21 @@ from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
 from docfit.app.agent import SKILL_NAMES, build_agent_options, project_root, terminal_ask_user
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.knowledge.loader import load_knowledge, select_knowledge_modules
-from docfit.observability.models import ObservationRecorder
-from docfit.observability.runtime import NullObservationRecorder, close_observation_safely
+from docfit.observability.models import (
+    ObservationCoverageSummary,
+    ObservationRecorder,
+    SDKTranscriptSummary,
+)
+from docfit.observability.runtime import (
+    NullObservationRecorder,
+    close_observation_safely,
+    observation_summary_safely,
+)
+from docfit.observability.transcript import (
+    SDKTranscriptManager,
+    isolated_sdk_environment,
+    transcript_summary_safely,
+)
 from docfit.tools.adobe import ADOBE_FIDELITY
 from docfit.tools.images import pdf_page_count
 from docfit.tools.runtime import (
@@ -187,9 +201,16 @@ class ConversionReport:
     tool_uses: tuple[str, ...]
     warnings: tuple[str, ...]
     detail: str
+    run_id: str | None = None
+    task_ref: str | None = None
+    final_sha256: str | None = None
+    observation_coverage: ObservationCoverageSummary | None = None
+    sdk_transcript: SDKTranscriptSummary | None = None
 
 
-ConversionRunner = Callable[[str, PreparedConversion], Awaitable[AgentExecution]]
+ConversionRunner = Callable[
+    [str, PreparedConversion, SDKTranscriptManager], Awaitable[AgentExecution]
+]
 
 
 def _extract_requirements(path: Path, *, character_limit: int = 80000) -> str:
@@ -452,8 +473,12 @@ async def _run_backend(
     prompt: str,
     prepared: PreparedConversion,
     backend: AgentBackend,
+    config_directory: Path,
 ) -> AgentExecution:
-    environment = backend.sdk_environment()
+    environment = isolated_sdk_environment(
+        backend.sdk_environment(),
+        config_directory,
+    )
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
     options = build_agent_options(
         terminal_ask_user,
@@ -493,7 +518,12 @@ async def _run_backend(
     )
 
 
-async def run_conversion_agent(prompt: str, prepared: PreparedConversion) -> AgentExecution:
+async def run_conversion_agent(
+    prompt: str,
+    prepared: PreparedConversion,
+    transcripts: SDKTranscriptManager | None = None,
+) -> AgentExecution:
+    transcript_manager = transcripts or SDKTranscriptManager()
     backends = tuple(iter_agent_backends())
     if not backends:
         raise ToolFailure(
@@ -509,8 +539,14 @@ async def run_conversion_agent(prompt: str, prepared: PreparedConversion) -> Age
         if route in timed_out_routes:
             continue
         try:
-            async with asyncio.timeout(CONVERSION_BACKEND_TIMEOUT_SECONDS):
-                return await _run_backend(prompt, prepared, backend)
+            with transcript_manager.attempt() as config_directory:
+                async with asyncio.timeout(CONVERSION_BACKEND_TIMEOUT_SECONDS):
+                    return await _run_backend(
+                        prompt,
+                        prepared,
+                        backend,
+                        config_directory,
+                    )
         except TimeoutError:
             timed_out_routes.add(route)
             failures.append(
@@ -812,13 +848,20 @@ async def run_conversion(
     *,
     runner: ConversionRunner = run_conversion_agent,
     observation: ObservationRecorder | None = None,
+    transcripts: SDKTranscriptManager | None = None,
 ) -> ConversionReport:
+    run_id = f"run_{secrets.token_hex(16)}"
+    task_ref = f"task_{secrets.token_hex(16)}"
     recorder = observation or NullObservationRecorder()
+    transcript_manager = transcripts
     try:
         prepared = prepare_conversion(request)
+        transcript_manager = transcript_manager or SDKTranscriptManager(
+            forbidden_roots=(prepared.task_root, project_root())
+        )
         prompt = build_conversion_prompt(prepared)
         try:
-            execution = await runner(prompt, prepared)
+            execution = await runner(prompt, prepared, transcript_manager)
             report = _finalize_conversion(prepared, execution)
         except ToolFailure as error:
             report = ConversionReport(
@@ -841,6 +884,21 @@ async def run_conversion(
                 (error.code,),
                 error.message,
             )
+        final_sha256: str | None = None
+        if report.final_docx is not None:
+            try:
+                final_sha256 = sha256_file(Path(report.final_docx))
+            except OSError:
+                final_sha256 = None
+        report = replace(
+            report,
+            schema_version=2,
+            run_id=run_id,
+            task_ref=task_ref,
+            final_sha256=final_sha256,
+            observation_coverage=observation_summary_safely(recorder),
+            sdk_transcript=transcript_summary_safely(transcript_manager),
+        )
         atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
         return report
     finally:

@@ -575,7 +575,8 @@ capsule，不写成长期行为合同。
    建立隐私安全的本地观测：SDK 实际 Agent/Skill/Tool/Subagent/权限事件、脱敏输入输出、
    总耗时、各 Tool 调用数/状态/耗时、解析与渲染缓存命中、Adobe API 调用与缓存命中、
    渲染/审查页数、图片输入字节、Token/成本来源、重试、首个失败来源和本地证据引用；
-   稳定且无正文的任务级覆盖/privacy 汇总进入 schema v2 `conversion-report.json`；
+   稳定且无正文的 run/task ID、最终文档 hash 与任务级覆盖/privacy 汇总进入 schema v2
+   `conversion-report.json`；
 3. 保留全量 pytest、ruff、mypy、build/lock、基础/provider/agent-smoke doctor 和受影响
    的真实合成产品 smoke；这些是产品回归门，不属于延期的 M3 Eval；
 4. 每项优化只声明一个主要可量化目标，使用同一输入、固定路由和同一安全/验证要求
