@@ -250,6 +250,11 @@ def project_conversion_report(source: Path | Mapping[str, Any]) -> dict[str, Any
             )
         ),
         "tool_use_count": len(tool_uses),
+        "warning_count": (
+            len(payload.get("warnings", ()))
+            if isinstance(payload.get("warnings"), (list, tuple))
+            else 0
+        ),
         "observation_coverage": {
             "state": coverage.state,
             "events_persisted": coverage.events_persisted,

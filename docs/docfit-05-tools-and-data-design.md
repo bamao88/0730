@@ -942,8 +942,8 @@ task-work/
 
 M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运行投影，详细产品设计见
 `docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
-数据边界；当前已完成 O0.0–O0.2 的平台骨架、runtime privacy/report v2 和字段级安全
-projector，关联、持久化与网站尚未实现。
+数据边界；当前已完成 O0.0–O0.3 的平台骨架、runtime privacy/report v2、字段级安全
+projector 和直接 ID/hash/ref 关联、覆盖/指标投影，持久化与网站尚未实现。
 
 ### 8.1 任务目录是事实来源
 
@@ -1025,6 +1025,16 @@ DocFit invocation 时，崩溃残留可能持续到操作系统清理，产品�
 引用目标缺失或失效是 `broken`，两个直接来源矛盾是 `conflict`。Tool 名、相邻时间、
 文件名或相同页码都不是关联证据。重复事件仅按 `source + source_event_id + kind/phase`
 幂等合并；跨来源顺序保留各自 sequence 和本地单调时间，不伪造全局串行轨迹。
+
+O0.3 的纯关联投影只接收已经通过 O0.2 schema/隐私门的安全事件和固定回执。语义相同而
+接收时间不同的重复事件幂等合并；同一来源 identity 的事实矛盾保留全部变体并标为
+`conflict`。Tool lifecycle、父 `Agent` 调用、子消息、具体 Subagent actor 和证据 scope
+分别保留直接证明字段；缺桥、目标缺失和直接事实矛盾稳定映射为
+`partial/broken/conflict`，不以时间、名称或预期调用顺序补边。
+
+运行结果、观测覆盖、本地证据和 SDK transcript 保持四个独立维度。Tool/Subagent 数量、
+耗时、Token/成本、cache/Adobe、页面、图片字节、权限和错误指标标记为
+`reported/estimated/unknown`；来源缺失或 coverage 降级时不能把未知总量补成 0。
 
 ### 8.5 引用检查
 

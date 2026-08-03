@@ -290,6 +290,12 @@ O0.2 实现把可变摘要限制为固定 attribute-key allowlist；safe event �
 遇到未知类型或产生无效 shape 时，只返回固定 drop receipt，不记录异常详情或 raw
 fallback。禁用观测时不安装额外 SDK lifecycle hook/audit，也不执行 projector。
 
+O0.3 在 safe event 之后提供纯直接关联投影，不读取 SDK transcript、任务文件、正文或图片，
+也不写数据库。它按 `source + source_event_id + kind/phase` 做语义幂等；时间不同但安全事实
+相同的事件合并，事实矛盾的变体全部保留并标为 `conflict`。Tool/Subagent/父子与证据关系
+只携带直接 proof fields；四个展示维度互不覆盖，聚合指标显式区分
+`reported/estimated/unknown`，coverage 降级时未知总量不补 0。
+
 ### 4.3 事件类型
 
 首版需要覆盖：
@@ -975,7 +981,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
 - 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
 - 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.2，直接关联、有界存储与网站仍待后续阶段；
+- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.3，有界存储与网站仍待后续阶段；
 - 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务

@@ -80,6 +80,7 @@ def test_v2_projection_is_direct_and_excludes_paths_and_prose() -> None:
     assert projected["association"] == "direct"
     assert projected["final_sha256"] == HASH_D
     assert projected["tool_use_count"] == 1
+    assert projected["warning_count"] == 1
     assert "/private/task" not in serialized
     assert "PAPER_CANARY" not in serialized
     assert "warnings" not in projected

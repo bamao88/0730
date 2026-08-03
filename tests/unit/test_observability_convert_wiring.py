@@ -17,6 +17,10 @@ from claude_agent_sdk.types import (
 
 from docfit.app.convert import _run_backend
 from docfit.app.settings import AgentBackend
+from docfit.observability.correlation import (
+    AdapterHealthReceipt,
+    correlate_observation_run,
+)
 from docfit.observability.events import ObservationEvent, SanitizationReceipt
 from docfit.observability.runtime import NullObservationRecorder, ObservationRun
 
@@ -101,9 +105,9 @@ def test_backend_wires_sdk_messages_and_hooks_only_after_projection(
     config.mkdir()
 
     execution = asyncio.run(
-        _run_backend(  # type: ignore[arg-type]
+        _run_backend(
             "PRIVATE_PROMPT_CANARY",
-            prepared,
+            prepared,  # type: ignore[arg-type]
             backend,
             config,
             observation_run,
@@ -130,3 +134,19 @@ def test_backend_wires_sdk_messages_and_hooks_only_after_projection(
         "SubagentStart",
         "SubagentStop",
     }
+    correlation = correlate_observation_run(
+        observation_run.run_id,
+        recorder.events,
+        adapter_receipts=(
+            AdapterHealthReceipt("app", "available"),
+            AdapterHealthReceipt("sdk", "available"),
+            AdapterHealthReceipt("permission", "available"),
+            AdapterHealthReceipt("tool", "available"),
+            AdapterHealthReceipt("report", "available"),
+        ),
+    )
+    assert correlation.dimensions.observation.state == "degraded"
+    assert correlation.dimensions.run_result == "unknown"
+    assert correlation.tools[0].tool_use_id == "tool-1"
+    assert correlation.tools[0].association_status == "verified"
+    assert correlation.metrics.agent_turns.value == 1

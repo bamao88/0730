@@ -969,6 +969,7 @@ def project_report_event(
             knowledge_version=_safe_identifier(projected.get("knowledge_version")),
             knowledge_digest=_safe_identifier(projected.get("knowledge_digest")),
             tool_use_count=_nonnegative_int(projected.get("tool_use_count")),
+            warning_count=_nonnegative_int(projected.get("warning_count")),
             coverage_state=(
                 _safe_code(coverage.get("state"))
                 if isinstance(coverage, Mapping)
