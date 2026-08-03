@@ -127,8 +127,9 @@ Agent 为一次可选委派选择模块；主 Agent 把模块内容、ID、版�
 validate 与 `edit_feedback`，Adobe PDF Services SDK 4.2.0 adapter 负责 `baseline` 和
 `candidate_verification`；Pillow 与 Poppler 只派生受控图片证据。公开 schema 不接受
 Provider selector，固定后端失败时不回退。Adobe 路由使用
-`pdfservices-sdk==4.2.0`、服务主体凭据和远程 API；不依赖本地 Word、AppleScript、
-图形会话或本地字体库存。每个未命中缓存的转换消耗一个 Document Transaction。
+`pdfservices-sdk==4.2.0`、服务主体凭据和远程 API；核心转换与云端运行不依赖本地 Word、
+AppleScript、图形会话、用户电脑或本地字体库存。每个未命中缓存的转换消耗一个
+Document Transaction。本地调试壳的可选平台适配器不属于 Tool 或核心依赖。
 
 ### 2.1 定位
 
@@ -941,7 +942,7 @@ task-work/
 
 M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运行投影，详细产品设计见
 `docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
-数据边界；逐事件采集与网站当前尚未实现。
+数据边界；当前只有 O0.0 平台无关骨架，逐事件采集与网站尚未实现。
 
 ### 8.1 任务目录是事实来源
 
@@ -962,11 +963,14 @@ ArtifactRef，也不要求 Skill、Knowledge 或 Eval 消费。`tool_use_id` 与
 来自 Claude Agent SDK；网站不生成替代标识来冒充 SDK 事实。
 
 `task_ref` 由薄应用壳在当前授权上下文中签发，不编码或 hash 绝对路径。观测索引不保存
-句柄到绝对路径的映射。`docfit convert` 退出后历史运行默认 unmounted；只有用户在 Web
-会话中通过认证 POST 触发服务端 OS 原生目录选择器，并通过 v2
-`run_id/task_ref/session/hash` 校验后，才可打开
-task-relative locator。挂载路径只在当前会话内存中存在；v1 因缺少 run/task ID 最多标为
-partial。O0 不建立全局任务注册表，也不扫描任意目录恢复关联。
+句柄到绝对路径的映射。`docfit convert` 退出后历史运行默认 unmounted；用户可以在 Web
+会话中通过认证 POST 请求本地调试壳的可选平台适配器生成仅存于内存的目录 capability，
+核心证据验证再按 v2 `run_id/task_ref/session/hash` 校验，成功后才可打开 task-relative
+locator。核心转换、云端运行和平台无关观测模块不导入 AppleScript/GUI 实现；无适配器或
+无图形会话时挂载能力保持 unavailable，历史摘要仍可查看，且不得退化为浏览器提交任意
+绝对路径。平台适配器的真实 GUI smoke 不是 O0 核心完成门。挂载路径只在当前会话内存中
+存在；v1 因缺少 run/task ID 最多标为 partial。O0 不建立全局任务注册表，也不扫描任意
+目录恢复关联。
 
 ### 8.2 观测来源与原始载荷边界
 

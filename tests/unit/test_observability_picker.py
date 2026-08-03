@@ -3,11 +3,11 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from docfit.observability.evidence import NativeDirectoryPicker
+from docfit.observability.local_debug.macos import MacOSDirectoryPicker
 
 
 def test_picker_is_unavailable_without_supported_gui_platform(tmp_path: Path) -> None:
-    picker = NativeDirectoryPicker(platform_name="linux", executable=tmp_path / "missing")
+    picker = MacOSDirectoryPicker(platform_name="linux", executable=tmp_path / "missing")
 
     result = picker.select()
 
@@ -30,7 +30,7 @@ def test_picker_returns_server_side_selected_directory(tmp_path: Path) -> None:
         calls.append((normalized, script, timeout))
         return subprocess.CompletedProcess(normalized, 0, f"{selected}\n", "")
 
-    picker = NativeDirectoryPicker(
+    picker = MacOSDirectoryPicker(
         platform_name="darwin",
         runner=run,
         executable=executable,
@@ -59,7 +59,7 @@ def test_picker_cancellation_does_not_return_a_path(tmp_path: Path) -> None:
         del script, timeout
         return subprocess.CompletedProcess(arguments, 1, "", "execution error -128")
 
-    result = NativeDirectoryPicker(
+    result = MacOSDirectoryPicker(
         platform_name="darwin",
         runner=cancel,
         executable=executable,
@@ -71,7 +71,7 @@ def test_picker_cancellation_does_not_return_a_path(tmp_path: Path) -> None:
 
 
 def test_picker_api_accepts_no_browser_path_argument(tmp_path: Path) -> None:
-    picker = NativeDirectoryPicker(platform_name="linux", executable=tmp_path / "missing")
+    picker = MacOSDirectoryPicker(platform_name="linux", executable=tmp_path / "missing")
 
     try:
         picker.select(tmp_path)  # type: ignore[call-arg]

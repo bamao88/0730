@@ -6,22 +6,25 @@
 本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
 M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
 固定 OfficeCLI/Adobe PDF Services 薄适配、`docfit convert` 薄应用壳，以及最小
-`docfit eval --suite core`。第二个后端已纠正为 Adobe PDF Services API；产品不再依赖
-本地 Microsoft Word、AppleScript、macOS 图形会话或本地字体库存。确定性与 live
-完成情况仍分别按 06 判定。当前用户批准的产品开发范围已在 M2 结束并完成；M3 的
+`docfit eval --suite core`。第二个后端已纠正为 Adobe PDF Services API；核心转换和
+云端运行链路不依赖本地 Microsoft Word、AppleScript、macOS 图形会话、用户电脑或
+本地字体库存。本地调试壳可以提供可选的平台适配器，但核心代码不得导入该实现，
+平台适配能力也不构成核心完成门。确定性与 live 完成情况仍分别按 06 判定。当前用户
+批准的产品开发范围已在 M2 结束并完成；M3 的
 Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
 宣称 M3 已通过，也不再作为当前计划 blocker。
 
 M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
 06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
 再基于同一合成产品链路依次减少重复 Tool 调用、复用单次运行解析/渲染结果、优化
-页面批次与图片载荷、收紧无效重试。该轨道目前只完成决策与目标设计记录，尚未实现或验收；
-它不能产生真实交付质量、MVP 或 M3 已通过的声明。
+页面批次与图片载荷、收紧无效重试。该轨道已经开始 O0.0 的平台无关技术骨架与风险
+PoC，但尚未实现逐事件采集、历史索引、网站或 O0 总体验收；它不能产生真实交付质量、
+MVP 或 M3 已通过的声明。
 
 该轨道的 O0 已进一步批准为一个薄应用壳内的本地只读观测界面，详细目标见
 `docfit-local-observability-design.md`。它只投影 SDK 实际运行事件、脱敏 Tool 摘要与
 本地证据引用，不控制 Agent、不复制任务文件，也不建立第二套 loop、工作流或 replay。
-当前只完成设计文档，逐事件采集、历史索引和网站尚未实现。
+当前已完成设计与 O0.0 骨架，逐事件采集、历史索引和网站尚未实现。
 
 O0 的 metadata-only 只描述观测索引，不掩盖 SDK 原生 transcript：实现必须使用运行级
 临时 `CLAUDE_CONFIG_DIR` 并管理清理回执。CLI 结束后的历史证据默认 unmounted，只有

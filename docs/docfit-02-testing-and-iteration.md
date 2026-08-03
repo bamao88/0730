@@ -244,6 +244,10 @@ O0 在页面开发前先建立以下非 Eval 产品合同测试：
 - CLI 结束后历史证据为 unmounted。用户显式挂载时，v2 目录通过
   `run_id/task_ref/session/hash` 验证，错误目录为 conflict；v1 因缺少 run/task ID 最多为
   partial，Web 重启后不保留路径；
+- 核心转换、云端运行和 O0 自动化完成门必须可在无头环境执行。证据挂载核心只测试
+  注入的内存目录 capability、hash/ref 验证和无适配器时的 `unmounted` 降级；macOS 等
+  原生目录选择器属于本地调试壳的可选 platform adapter，可有独立合成测试和手工 smoke，
+  但真实 GUI 可用性不阻塞 O0，也不得使核心模块导入 AppleScript/GUI 实现；
 - 对一次性登录/session、Host、Origin、CORS、CSRF、GET side effect、未授权 `task_ref`、
   path traversal、symlink 和挂载后替换建立安全测试；secret 不得进入 URL、日志或导出，
   登录码/session 的失败次数、idle/absolute expiry 与轮换生效，无交互 TTY/受保护 IPC 时
@@ -404,7 +408,8 @@ Token 更低或耗时更短本身不能替代最终证据和质量断言。
 3. 使用当前任务学校材料的端到端样本通过且无内容静默丢失；
 4. 人工打开最终 DOCX 并检查规定的高风险页面。
 
-M2 后已批准先建设本地只读运行观测界面，但当前只完成目标设计，尚未实现。它服务
+M2 后已批准先建设本地只读运行观测界面，当前已进入 O0.0 平台无关骨架，逐事件采集和
+网站尚未实现。它服务
 核心转换问题定位和性能比较，不是 M3 Eval 平台。并发 runner、实验平台、集中式
 trace 服务和正式性能平台仍等真实规模与成本增长后再选择。
 

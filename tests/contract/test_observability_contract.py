@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import subprocess
+import sys
+
 import pytest
 
 from docfit.app.cli import build_parser, main
@@ -34,6 +37,26 @@ def test_installed_sdk_exposes_required_direct_source_ids() -> None:
         "agent_transcript_path",
         "cwd",
     } <= FORBIDDEN_PERSISTED_SDK_FIELDS
+
+
+def test_core_conversion_import_does_not_load_local_debug_platform_adapters() -> None:
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; import docfit.app.convert; "
+                "assert not any(name.startswith('docfit.observability.local_debug') "
+                "for name in sys.modules)"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
 
 
 def test_convert_observation_cli_defaults_off_and_accepts_auto() -> None:

@@ -20,8 +20,9 @@
 - Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
 - Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
 - Unknown-unknown scout: 计划阶段已核对 SDK 0.2.128 本地 transcript/公开 hook 字段、当前
-  `convert.py`/`agent.py` 接线，以及 Starlette/Uvicorn/SQLite 官方能力；O0.0 的原生目录
-  选择器、SQLite busy 和真实 SDK fixture PoC 是剩余实证，不改变已批准边界
+  `convert.py`/`agent.py` 接线，以及 Starlette/Uvicorn/SQLite 官方能力；O0.0 的 SQLite
+  busy 和真实 SDK fixture PoC 是核心实证，本地 GUI 选择器只验证可选适配器的失败安全，
+  不改变平台无关边界或构成完成门
 - Blocked on: none
 - Completion claim: 只有 O0.0–O0.7 全部通过后才能声明 O0 完成
 - Deferred: O1 调用降重、O2 单次运行复用、O3 证据载荷、O4 重试收紧、M3 Eval
@@ -36,7 +37,7 @@ Non-goals: O0.1–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远�
 Acceptance: O0.0 成功标准逐项有代码/测试/PoC 证据；任何失败保持 IN_PROGRESS 或触发停止门。
 Verification: O0.0 focused unit/contract/integration + ruff + mypy + build/lock + base doctor；关闭观测的 M2 行为不变。
 Execution: 主会话为 root owner；有界 worker 只拥有 O0.0 文件与证明，主会话复核 diff、测试和文档状态。
-Stop gate: SDK 只能靠 transcript 取直接 ID、目录选择器只能接收任意绝对路径、SQLite 必须阻塞 hook，或必须改变安全/隐私/公共 Tool 边界。
+Stop gate: SDK 只能靠 transcript 取直接 ID、核心只能通过浏览器任意绝对路径挂载证据、SQLite 必须阻塞 hook，或必须改变安全/隐私/公共 Tool 边界。
 ```
 
 ## 0. 计划目标
@@ -64,6 +65,8 @@ Stop gate: SDK 只能靠 transcript 取直接 ID、目录选择器只能接收�
 - 源文档只读，任务文件只写授权目录；
 - O0 数据库不保存论文正文、完整页面图片、完整模型请求/响应或凭据；
 - conversion report 仍是任务目录内的最终转换事实，观测索引只是脱敏投影；
+- 核心转换、云端运行和平台无关观测代码不导入本地 Word、AppleScript 或 GUI 适配器；
+  本地调试壳的平台能力可选且不作为核心阶段完成门；
 - M3、Gold、真实样本资格验证和外部人工复核继续延期。
 
 ### 1.2 明确不做
@@ -104,6 +107,7 @@ Stop gate: SDK 只能靠 transcript 取直接 ID、目录选择器只能接收�
 | 历史变化检测 | SQLite `PRAGMA data_version` + 有界轮询 | Web 只观察其他连接提交，不要求事件总线或 daemon |
 | Web 会话 | 服务端内存中的随机 session，浏览器只持有 opaque HttpOnly cookie | 不把会话内容放进可读签名 cookie，不持久化 secret |
 | 证据挂载 | 当前 Web session 内存中的已验证目录 capability | 会话关闭即失效，绝对路径不进入数据库、URL、日志或导出 |
+| 本地平台适配 | 调试壳组合根按需加载的可选 adapter | 核心/云端不导入；无 adapter 时挂载 unavailable，真实 GUI smoke 不是核心门 |
 
 数据库写入由 `docfit convert` 所在进程负责；Web 使用独立连接读取。Web 的历史删除动作
 只能通过窄化的 observer-admin connection 删除观测记录，不能写转换事件、任务目录或
@@ -134,7 +138,8 @@ src/docfit/observability/
 ├── runtime.py      # run context、recorder、queue、coverage、transcript lifecycle
 ├── storage.py      # SQLite schema/migration、写入、查询、保留与删除
 ├── report.py       # conversion report v1/v2 reader/projector
-├── evidence.py     # session mount、hash/ref/canonical path 重验
+├── evidence.py     # 平台无关的 session mount capability、hash/ref/canonical path 重验
+├── local_debug/    # 可选 OS/GUI 适配器；仅由本地调试壳组合根延迟加载
 └── web/
     ├── app.py      # Starlette routes/middleware/SSE
     ├── templates/  # 服务端页面
@@ -155,7 +160,7 @@ src/docfit/observability/
 
 | 阶段 | 目标 | 硬依赖 | 成功后得到什么 |
 |---|---|---|---|
-| O0.0 | 冻结基线、技术骨架和高风险 PoC | 已完成 M2 | 可执行骨架、禁用基线、目录选择器结论 |
+| O0.0 | 冻结基线、技术骨架和高风险 PoC | 已完成 M2 | 可执行骨架、禁用基线、平台适配边界结论 |
 | O0.1 | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
 | O0.2 | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
 | O0.3 | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
@@ -172,8 +177,8 @@ src/docfit/observability/
 ### 目标
 
 在改变真实转换行为之前，冻结可比较基线，锁定最小依赖、文件责任、CLI 入口和三个高
-风险事实：SDK hook fixture 是否足够、SQLite 读写方式是否满足非阻断目标、当前支持平台
-是否能安全调用原生目录选择器。
+风险事实：SDK hook fixture 是否足够、SQLite 读写方式是否满足非阻断目标、本地平台
+便利能力是否能与核心/云端代码完全隔离并在不可用时安全降级。
 
 ### 实施内容
 
@@ -184,8 +189,9 @@ src/docfit/observability/
 4. 建立仓库和任务目录之外的 observer data root，固定目录 `0700`、数据库 `0600`；
 5. 建立 SQLite schema v1 草案与迁移测试，验证 WAL、query-only reader、busy/只读失败；
 6. 用已锁定 SDK 0.2.128 建立 message/hook fixture inventory，列出每种来源的直接 ID；
-7. 为当前支持平台实现最小原生目录选择器 PoC。它只能由已认证服务端动作调用，返回值
-   只存在内存；如果平台/GUI 不可用，返回 `picker_unavailable`，不能退化成文本路径框；
+7. 在 `evidence.py` 固定平台无关的内存目录 capability/selector 合同，并把最小 macOS
+   目录选择器放入本地调试壳 adapter。核心转换和云端代码不得导入 adapter；平台/GUI
+   不可用时返回 `picker_unavailable`，不能退化成文本路径框；真实 GUI 点选仅为可选 smoke；
 8. 建立 O0 benchmark runner 和完全禁用 recorder 的对照入口；
 9. 写出 `docfit observe` 与 convert 观测开关的 CLI contract test，阶段内仍默认关闭。
 
@@ -198,8 +204,8 @@ src/docfit/observability/
   不无限等待；
 - 数据根权限、数据库权限、schema migration 和损坏/未知 schema 拒绝都有测试；
 - SDK fixture inventory 覆盖设计来源矩阵，不支持的字段明确记为 unavailable；
-- 当前开发平台的目录选择器 PoC 可以返回用户实际选择的目录而不把路径放进 HTTP 请求；
-  无 GUI 情况能安全拒绝；
+- 平台无关 capability 合同不接受浏览器路径，核心转换 import graph 不加载本地调试
+  adapter；合成 adapter 测试覆盖选择、取消、无 GUI 和非法结果，真实 GUI 不作为完成门；
 - benchmark 能输出 wall/CPU/RSS，并证明本阶段关闭 recorder 的增量在测量噪声内；
 - 技术选型与本计划不冲突，不需要 Node、远程服务或新的 Agent/Tool 协议。
 
@@ -207,7 +213,7 @@ src/docfit/observability/
 
 - SDK 公开消息/hooks 无法提供设计要求的直接 ID，且只能通过 transcript 取得；
 - SQLite 必须通过长时间阻塞 hook 才能保持一致；
-- 支持平台无法提供安全目录选择器，并且只能让浏览器提交任意绝对路径；
+- 核心证据挂载必须导入具体 GUI/AppleScript 实现，或只能让浏览器提交任意绝对路径；
 - Web 依赖要求 Python 3.13、引入远程资产或与现有锁文件不可兼容。
 
 ## 5. O0.1：SDK runtime privacy、run identity 与 report v2
@@ -393,7 +399,8 @@ Web 此时仍可不存在。
 5. GET/HEAD 无副作用；登录、删除、清空、挂载、打开证据只接受认证 POST + CSRF；
 6. 无交互 TTY 且没有受保护本地 IPC/FD 时拒绝启动管理面，不把 secret 改放 URL、CLI
    参数或环境变量；
-7. 接入 O0.0 已验证的原生目录选择器，绝对路径只保存在当前 server session 内存；
+7. Web 核心只接收注入的目录 selector/capability；本地调试壳可以延迟加载 O0.0 的可选
+   平台 adapter，绝对路径只保存在当前 server session 内存；无 adapter 时挂载 unavailable；
 8. v2 挂载必须验证 run/task/session 和全部输入/产物 hash；v1 最多 partial；错误目录
    conflict；关闭 session 或服务后重新变为 unmounted；
 9. task-relative locator 逐段拒绝 `..`、绝对路径、设备文件和 symlink；canonicalize 后及
@@ -409,7 +416,8 @@ Web 此时仍可不存在。
 - 无 TTY/无受保护 IPC 时 fail closed，不降级成无认证网站；
 - 历史 run 初始为 unmounted；选择正确 v2 目录后 verified，错误目录 conflict，v1 最多
   partial；Web 重启后路径消失；
-- 浏览器不能提交任意绝对路径字符串绕过原生选择器；
+- 浏览器不能提交任意绝对路径字符串；无平台 adapter 时历史证据保持 unmounted，其他
+  观测页面仍可用；adapter 的真实 GUI smoke 不属于本阶段核心完成门；
 - path traversal、absolute locator、symlink escape、挂载后替换和未授权 `task_ref` 全部
   被拒绝，安全错误中不包含本地路径；
 - Web 的所有 route 都不能启动、重试、取消或影响 Agent/Tool。
@@ -417,7 +425,7 @@ Web 此时仍可不存在。
 ### 停止条件
 
 - secret 必须进入 URL 才能登录；
-- 目录挂载只能通过浏览器提交绝对路径；
+- 核心必须导入平台 GUI/AppleScript 才能启动，或目录挂载只能通过浏览器提交绝对路径；
 - Web 框架默认行为无法落实精确 Host/Origin/CSRF/CSP；
 - 文件打开必须绕过 mount capability 或 canonical path 重验。
 

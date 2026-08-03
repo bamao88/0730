@@ -8,6 +8,8 @@
 接线唯一只读 `docfit-unit-analyst`、两个领域 Skill、最小 Knowledge 选择投影、五个
 真实 DOCX Tool、固定 OfficeCLI/Adobe PDF Services 薄适配和 `docfit convert`。M3 的确定性 core Eval
 也已落地为可选开发资产。第二个固定后端是 Adobe PDF Services API，不是本地 Word；
+核心转换与云端运行不导入或依赖 AppleScript、桌面 GUI、用户电脑或本地 Word。
+本地调试壳可以按平台提供可选适配能力，但缺少该能力不能改变转换或阻塞核心验收；
 当前产品开发范围在 M2 链路完成。授权/脱敏复杂样本、Gold、M3 Skill/E2E Eval 和外部
 人工页面复核属于后续独立质量范围，不由近似渲染或 mock 替代，也不阻塞当前范围完成。
 
@@ -92,7 +94,7 @@ flowchart LR
     F --> SDK
     SDK --> A
     A --> U
-    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>目标设计，尚未实现"]
+    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>O0.0 骨架已开始"]
     A -."权限与最终报告".-> O
     O -."hash/ref 只读定位".-> F
     E["Eval<br/>离线"] -.运行样本并比较结果.-> SDK
@@ -267,7 +269,7 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
   warning 或旧 summary 重新发布为当前事实；
 - 记录必要的产品级用量与错误；
 - 按批准的 O0 目标设计，把 SDK 实际事件、权限判断、Tool 脱敏摘要和本地证据引用投影
-  为本地只读运行视图；该能力当前尚未实现；
+  为本地只读运行视图；当前只有 O0.0 平台无关骨架，逐事件投影尚未实现；
 - 为每次 SDK 运行提供私有临时 `CLAUDE_CONFIG_DIR`，不配置 transcript mirror，并在正常
   退出/下一次安全 preflight 管理 SDK 原生 transcript 清理；
 - 生成带 `run_id/task_ref`、观测覆盖与 transcript privacy 摘要的 conversion report v2，
@@ -306,6 +308,13 @@ report ID/hash/ref 重验通过才可打开，绝对路径不进入索引。coll
 本地 Web 绑定 loopback 仍必须有短期会话、Host/Origin/CSRF 校验、无宽松 CORS、无副作用
 GET 和 canonical path/symlink 防逃逸。删除历史、重新挂载和打开本地证据是认证后的观测
 管理动作，不是转换控制能力。
+
+核心观测、转换和云端进程只消费平台无关的目录授权 capability 与验证结果，不导入
+AppleScript、GUI toolkit 或具体桌面实现。本地调试壳可以在组合根中按需加载 macOS 等
+平台适配器，把用户选择的目录作为仅存于内存的 capability 交给证据验证；适配器不可用
+时历史证据保持 `unmounted`，运行总览和其他核心观测功能继续可用，也不得退化为浏览器
+提交任意绝对路径。平台适配器的真实桌面 smoke 属于可选本地兼容性证据，不是 O0 或
+核心转换完成门。
 
 ## 5. 一次任务如何运行
 
