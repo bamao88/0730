@@ -1,6 +1,6 @@
 # DocFit O0 本地运行观测实施计划
 
-> 状态：IN_PROGRESS（O0.0 已完成，当前阶段 O0.1）
+> 状态：IN_PROGRESS（O0.0–O0.1 已完成，当前阶段 O0.2）
 > 日期：2026-08-03
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
@@ -15,8 +15,8 @@
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
 - First executable phase: O0.0 基线、技术骨架与风险 PoC（DONE）
-- Current phase: O0.1 SDK runtime privacy、run identity 与 report v2
-- Completed phases: O0.0（`0200e4c` + `e0eb220`）
+- Current phase: O0.2 来源 adapter 与字段级隐私 projector
+- Completed phases: O0.0（`0200e4c` + `e0eb220`）；O0.1（`3d02172`）
 - Active capsule: `docs/status/active/docfit-o0-local-observability.md`
 - Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
 - Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
@@ -32,13 +32,13 @@
 
 ```text
 Root goal: 按 docs/plans/docfit-o0-local-observability.md 顺序完成 O0.0–O0.7，并通过总体 Definition of Done。
-Current slice: 只执行 O0.1；不提前实现逐事件 projector、queue/SQLite 事件写入或 UI。
-Scope: 本计划第 5 节的 transcript 隔离、run identity、report v2 reader/writer 与安全 fallback。
-Non-goals: O0.2–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
-Acceptance: O0.1 成功标准逐项有代码、契约、故障注入和真实 SDK lifecycle 证据。
-Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；真实 SDK 正常/强制终止 smoke 只证明 transcript 隔离清理，不读取 transcript 正文。
+Current slice: 只执行 O0.2；不提前实现关联聚合、queue/SQLite 事件写入或 UI。
+Scope: 本计划第 6 节的 safe event schema、来源 projector、字段 allowlist、大小/耗时门与 drop receipt。
+Non-goals: O0.3–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
+Acceptance: O0.2 成功标准逐项有代码、字段快照、隐私 canary、异常/超限 fixture 和 benchmark。
+Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；projector 测试只处理合成 fixture，不读取 SDK transcript 或发起 Adobe 调用。
 Execution: 主会话为 root owner并直接完成该有界串行阶段；如范围扩张再恢复独立 worker。
-Stop gate: SDK 隔离后必须使用用户全局 config、基础 report 依赖 observer 成功，或 run/task ID 必须编码路径。
+Stop gate: raw SDK/Tool 对象必须先进异步队列、正文/绝对路径是必需字段，或 projector 错误会回抛 SDK/Tool。
 ```
 
 ## 0. 计划目标
@@ -162,8 +162,8 @@ src/docfit/observability/
 | 阶段 | 状态 | 目标 | 硬依赖 | 成功后得到什么 |
 |---|---|---|---|---|
 | O0.0 | DONE | 冻结基线、技术骨架和高风险 PoC | 已完成 M2 | 可执行骨架、禁用基线、平台适配边界结论 |
-| O0.1 | IN_PROGRESS | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
-| O0.2 | PENDING | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
+| O0.1 | DONE | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
+| O0.2 | IN_PROGRESS | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
 | O0.3 | PENDING | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
 | O0.4 | PENDING | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
 | O0.5 | PENDING | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
@@ -221,7 +221,7 @@ src/docfit/observability/
 
 ## 5. O0.1：SDK runtime privacy、run identity 与 report v2
 
-> 状态：IN_PROGRESS。
+> 状态：DONE；实现提交 `3d02172`。
 
 ### 目标
 
@@ -266,6 +266,8 @@ src/docfit/observability/
 - `run_id/task_ref` 必须保存或推导绝对路径才能工作。
 
 ## 6. O0.2：来源 adapter 与字段级隐私 projector
+
+> 状态：IN_PROGRESS。
 
 ### 目标
 

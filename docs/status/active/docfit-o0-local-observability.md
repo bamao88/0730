@@ -4,17 +4,17 @@
 - Source plan: `docs/plans/docfit-o0-local-observability.md`
 - Root goal: 按批准计划完成 O0.0–O0.7，并通过 O0 总体 Definition of Done
 - Latest user intent: 执行，不是继续讨论或重新规划
-- Current slice: O0.1 SDK transcript 隔离、run identity 与 conversion report v2
-- Last decision delta: 用户明确平台适配边界后，O0.0 按无头核心门验收完成并进入 O0.1
-- Last proven evidence: O0.0 提交 `0200e4c` + `e0eb220`；`144 passed`，ruff、mypy、lock、
-  build、base doctor 通过；核心 import graph 不加载 `local_debug*`；SDK gaps 为空
-- Completed slice batch: O0.0 Null recorder、外部私有 state root、SQLite v1/WAL/busy、SDK
-  inventory、可选平台 adapter、benchmark/CLI contract；synthetic convert wall 7.17s、CPU
-  4.06s、peak RSS 87,556,096 bytes，final/report SHA-256 为 `b52153cb…1fe7` / `e562b003…bd33`
-- Next action: 实现运行级私有 `CLAUDE_CONFIG_DIR` 生命周期、随机 run/task ID、report v2
-  writer/reader 与 observer summary 安全 fallback
-- Next proof: report v1/v2 契约、正常/异常 summary、owned transcript preflight/cleanup、转换
-  非干扰集成测试；随后真实 SDK 正常/强制终止 lifecycle smoke
-- Stop condition: 隔离 config 破坏项目 Skill/hooks/MCP，基础 report 依赖 observer，或 ID 需要路径
-- No-touch scope: 当前并行的 Skill、Eval、预设样式计划和 `temp/`；O0.1–O0.7；O1–O4；M3
-- Parked work: event projectors、correlation、bounded recorder、Web/UI；O1–O4；M3
+- Current slice: O0.2 来源 adapter 与字段级隐私 projector
+- Last decision delta: O0.1 通过实现、契约、真实 SDK 正常/强制终止门并提交 `3d02172`
+- Last proven evidence: `168 passed`，ruff、mypy、lock、build、base doctor overall PASS；四个真实
+  SDK smoke PASS；强制终止前 owned residual=1、下一次 preflight 后=0；正常退出 residual=0
+- Completed slice batch: O0.0 Null recorder、外部私有 state root、SQLite/SDK inventory、可选
+  platform adapter 与基线；O0.1 每 backend 私有 `CLAUDE_CONFIG_DIR`、owner/lock/preflight、
+  随机 run/task ID、report v2 writer/reader/projector、summary 安全 fallback 与 final hash
+- Next action: 定义 sanitized event schema 与 queue 只接受安全事件的 API，再逐来源实现 SDK、
+  hook、App、permission、用户追问和五个 Tool projector
+- Next proof: 字段 allowlist 快照、隐私 canary/超大/异常 fixture、64 KiB 大小门、deadline/drop
+  receipt、P95/P99 projector benchmark 和原 Tool/permission 非干扰集成
+- Stop condition: raw payload 必须先进队列、绝对路径/正文成为必需字段，或 projector 异常回抛
+- No-touch scope: 当前并行的 Skill、Eval、预设样式计划和 `temp/`；O0.3–O0.7；O1–O4；M3
+- Parked work: correlation、coverage/metrics、bounded recorder、Web/UI；O1–O4；M3
