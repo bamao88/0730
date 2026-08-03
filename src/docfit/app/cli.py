@@ -11,6 +11,16 @@ from pathlib import Path
 from typing import Any
 
 
+def _port_number(value: str) -> int:
+    try:
+        port = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("port must be an integer") from error
+    if not 0 <= port <= 65535:
+        raise argparse.ArgumentTypeError("port must be between 0 and 65535")
+    return port
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="docfit")
     parser.add_argument("--version", action="version", version="docfit 0.1.0")
@@ -87,6 +97,17 @@ def build_parser() -> argparse.ArgumentParser:
     convert_parser.add_argument("--school-template", required=True)
     convert_parser.add_argument("--school-requirements", required=True)
     convert_parser.add_argument("--output", required=True, dest="output_directory")
+    convert_parser.add_argument(
+        "--observation",
+        choices=("auto", "off"),
+        default="off",
+    )
+
+    observe_parser = subparsers.add_parser(
+        "observe",
+        help="start the local DocFit observation website",
+    )
+    observe_parser.add_argument("--port", type=_port_number, default=0)
 
     eval_parser = subparsers.add_parser(
         "eval",
@@ -228,10 +249,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return smoke_main(args.case_name)
     if args.command == "tools":
         return _tools_main(args)
+    if args.command == "observe":
+        from docfit.observability.web import run_observer_server
+
+        return run_observer_server(port=args.port)
     if args.command == "convert":
         from dataclasses import asdict
 
+        from docfit.app.agent import project_root
         from docfit.app.convert import ConversionRequest, run_conversion
+        from docfit.observability.runtime import create_observation_recorder
         from docfit.tools.runtime import ToolFailure
 
         request = ConversionRequest(
@@ -240,8 +267,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             school_requirements=Path(args.school_requirements),
             output_directory=Path(args.output_directory),
         )
+        observation = create_observation_recorder(
+            args.observation,
+            task_root=Path(args.output_directory),
+            repository_root=project_root(),
+        )
         try:
-            conversion_report = asyncio.run(run_conversion(request))
+            conversion_report = asyncio.run(run_conversion(request, observation=observation))
         except ToolFailure as error:
             print(json.dumps(error.result(), ensure_ascii=False, indent=2), file=sys.stderr)
             return 2

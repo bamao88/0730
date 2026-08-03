@@ -170,6 +170,7 @@ async def _fake_completed_agent(
 
 def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     source = tmp_path / "source.docx"
     template = tmp_path / "template.docx"
@@ -183,6 +184,8 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     )
     original_source_hash = sha256_file(source)
     request = ConversionRequest(source, template, requirements, output)
+    observation_state = tmp_path / "observation-state"
+    monkeypatch.setenv("XDG_STATE_HOME", str(observation_state))
 
     report = asyncio.run(run_conversion(request, runner=_fake_completed_agent))
 
@@ -201,6 +204,7 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     assert report.warnings == ("candidate:service_managed_render_environment",)
     assert "stale" not in report.detail.casefold()
     assert "complete Agent visual coverage" in report.detail
+    assert not observation_state.exists()
 
     (output / "input").chmod(0o755)
     for path in (output / "input").iterdir():

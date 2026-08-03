@@ -1,6 +1,6 @@
 # DocFit O0 本地运行观测实施计划
 
-> 状态：APPROVED / NOT_STARTED
+> 状态：IN_PROGRESS（当前阶段 O0.0）
 > 日期：2026-08-03
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
@@ -8,16 +8,36 @@
 
 ## Plan Ledger
 
-- Plan status: APPROVED / NOT_STARTED
+- Plan status: IN_PROGRESS
 - Session scope: o0-local-observability
 - Current milestone: M2 后优化轨道的 O0；O1–O4 在 O0 完成前不得开始
 - Canonical implementation plan: `docs/plans/docfit-o0-local-observability.md`
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
 - First executable phase: O0.0 基线、技术骨架与风险 PoC
+- Current phase: O0.0
+- Active capsule: `docs/status/active/docfit-o0-local-observability.md`
+- Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
+- Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
+- Unknown-unknown scout: 计划阶段已核对 SDK 0.2.128 本地 transcript/公开 hook 字段、当前
+  `convert.py`/`agent.py` 接线，以及 Starlette/Uvicorn/SQLite 官方能力；O0.0 的原生目录
+  选择器、SQLite busy 和真实 SDK fixture PoC 是剩余实证，不改变已批准边界
 - Blocked on: none
 - Completion claim: 只有 O0.0–O0.7 全部通过后才能声明 O0 完成
 - Deferred: O1 调用降重、O2 单次运行复用、O3 证据载荷、O4 重试收紧、M3 Eval
+
+## Execution Contract
+
+```text
+Root goal: 按 docs/plans/docfit-o0-local-observability.md 顺序完成 O0.0–O0.7，并通过总体 Definition of Done。
+Current slice: 只执行 O0.0；不提前实现 transcript/report、逐事件采集或 UI。
+Scope: 本计划第 1、2 节固定边界与 O0.0 实施内容。
+Non-goals: O0.1–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
+Acceptance: O0.0 成功标准逐项有代码/测试/PoC 证据；任何失败保持 IN_PROGRESS 或触发停止门。
+Verification: O0.0 focused unit/contract/integration + ruff + mypy + build/lock + base doctor；关闭观测的 M2 行为不变。
+Execution: 主会话为 root owner；有界 worker 只拥有 O0.0 文件与证明，主会话复核 diff、测试和文档状态。
+Stop gate: SDK 只能靠 transcript 取直接 ID、目录选择器只能接收任意绝对路径、SQLite 必须阻塞 hook，或必须改变安全/隐私/公共 Tool 边界。
+```
 
 ## 0. 计划目标
 

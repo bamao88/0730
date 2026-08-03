@@ -196,9 +196,12 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "claude-agent-sdk" },
+    { name = "jinja2" },
     { name = "pdfservices-sdk" },
     { name = "pillow" },
     { name = "pyyaml" },
+    { name = "starlette" },
+    { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
@@ -212,9 +215,12 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "claude-agent-sdk", specifier = "==0.2.128" },
+    { name = "jinja2", specifier = ">=3.1,<4" },
     { name = "pdfservices-sdk", specifier = "==4.2.0" },
     { name = "pillow", specifier = ">=11.3,<13" },
     { name = "pyyaml", specifier = ">=6.0.2,<7" },
+    { name = "starlette", specifier = ">=1,<2" },
+    { name = "uvicorn", specifier = ">=0.35,<1" },
 ]
 
 [package.metadata.requires-dev]

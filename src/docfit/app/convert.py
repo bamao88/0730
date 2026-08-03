@@ -19,6 +19,8 @@ from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
 from docfit.app.agent import SKILL_NAMES, build_agent_options, project_root, terminal_ask_user
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.knowledge.loader import load_knowledge, select_knowledge_modules
+from docfit.observability.models import ObservationRecorder
+from docfit.observability.runtime import NullObservationRecorder, close_observation_safely
 from docfit.tools.adobe import ADOBE_FIDELITY
 from docfit.tools.images import pdf_page_count
 from docfit.tools.runtime import (
@@ -809,32 +811,37 @@ async def run_conversion(
     request: ConversionRequest,
     *,
     runner: ConversionRunner = run_conversion_agent,
+    observation: ObservationRecorder | None = None,
 ) -> ConversionReport:
-    prepared = prepare_conversion(request)
-    prompt = build_conversion_prompt(prepared)
+    recorder = observation or NullObservationRecorder()
     try:
-        execution = await runner(prompt, prepared)
-        report = _finalize_conversion(prepared, execution)
-    except ToolFailure as error:
-        report = ConversionReport(
-            1,
-            "NEEDS_INPUT" if error.status == "needs_input" else "ERROR",
-            str(prepared.task_root),
-            None,
-            None,
-            None,
-            None,
-            None,
-            prepared.source_sha256,
-            prepared.template_sha256,
-            prepared.requirements_sha256,
-            prepared.knowledge_version,
-            prepared.knowledge_digest,
-            None,
-            None,
-            (),
-            (error.code,),
-            error.message,
-        )
-    atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
-    return report
+        prepared = prepare_conversion(request)
+        prompt = build_conversion_prompt(prepared)
+        try:
+            execution = await runner(prompt, prepared)
+            report = _finalize_conversion(prepared, execution)
+        except ToolFailure as error:
+            report = ConversionReport(
+                1,
+                "NEEDS_INPUT" if error.status == "needs_input" else "ERROR",
+                str(prepared.task_root),
+                None,
+                None,
+                None,
+                None,
+                None,
+                prepared.source_sha256,
+                prepared.template_sha256,
+                prepared.requirements_sha256,
+                prepared.knowledge_version,
+                prepared.knowledge_digest,
+                None,
+                None,
+                (),
+                (error.code,),
+                error.message,
+            )
+        atomic_write_json(prepared.task_root / "conversion-report.json", asdict(report))
+        return report
+    finally:
+        close_observation_safely(recorder)
