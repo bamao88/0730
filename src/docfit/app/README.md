@@ -7,5 +7,18 @@
 - 本地环境检查与 live smoke；
 - 将 Skill、Knowledge 和五个 DocFit Tool 暴露给 SDK。
 
-这里不承载论文语义、学校规则、DOCX 实现或第二套工作流。现有 M0 平铺模块
-已经迁入本目录；后续应用入口继续保持薄壳，只负责把领域资产接入 SDK。
+Provider-independent P1 已完成 SDK 接线：`Agent` 对主 Agent 可见但不裸批准，SDK
+原生 `PreToolUse` 权限钩子只允许具名 `docfit-unit-analyst`，该 Subagent 只看见
+inspect + visual-review。`can_use_tool` 继续处理 `AskUserQuestion` 与防御性默认拒绝。
+为什么委派、如何拆分、选择哪些 Knowledge 和如何合并返回仍属于两个领域 Skill，
+不进入本目录的应用壳逻辑。
+
+这里不承载论文语义、学校规则、DOCX 实现或第二套工作流。现有应用模块
+已经迁入本目录；`docfit convert` 只负责挂载只读输入、加载完整通用 Knowledge、调用
+同一个 SDK runtime，并对 Agent 声称的最终产物执行独立完成门。`docfit eval` 只转发到
+离线 core runner。论文单元识别、Knowledge 选择、委派和 Tool 顺序仍不进入应用壳。
+
+应用壳把 SDK subprocess message buffer 固定为 16 MiB，以承载受控的多页 image
+content block；Tool 自身的图片数量与字节预算仍是更窄的业务边界。convert 在某个
+backend route 超时后不会仅因 credential 不同而重复等待同一 name/base URL/model
+路由，其他错误仍可按既定 credential 顺序恢复。

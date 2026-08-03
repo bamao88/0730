@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "stale-object-ref",
+  "fixture": "synthetic",
+  "document": "stale-object-ref.docx",
+  "risk": "An object ref from an older document snapshot can target the wrong object.",
+  "automatic_assertion": "A modified document hash is rejected and publishes no output."
+}

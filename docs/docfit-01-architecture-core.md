@@ -1,8 +1,15 @@
 # DocFit 架构总览（01）
 
 > 状态：架构基线
-> 日期：2026-08-01
+> 日期：2026-08-03
 > 核心路线：**Claude Agent SDK runtime + Skill + Knowledge + Tools + Eval + thin app**
+
+本文定义已经批准的目标架构；当前实现状态与里程碑完成判定以 06 为准。当前代码已
+接线唯一只读 `docfit-unit-analyst`、两个领域 Skill、最小 Knowledge 选择投影、五个
+真实 DOCX Tool、固定 OfficeCLI/Adobe PDF Services 薄适配和 `docfit convert`。M3 的确定性 core Eval
+也已落地为可选开发资产。第二个固定后端是 Adobe PDF Services API，不是本地 Word；
+当前产品开发范围在 M2 链路完成。授权/脱敏复杂样本、Gold、M3 Skill/E2E Eval 和外部
+人工页面复核属于后续独立质量范围，不由近似渲染或 mock 替代，也不阻塞当前范围完成。
 
 ## 1. 核心定位
 
@@ -62,6 +69,13 @@ Knowledge Package 是随产品发布、面向所有学校和任务共享的通�
 
 Eval 用于开发、回归和版本比较。用户运行一次论文转换时，不需要启动一个评测平台，也不需要生成复杂的 Gold、阶段胶囊或轨迹协议。
 
+### 2.6 Delegation is a Skill decision
+
+局部分析是否值得委派属于领域判断。`docfit-school-extract` 或 `convert-thesis` 根据
+实际文档、证据量、专门知识需求、内容风险、可并行性和额外成本决定直接分析、合并
+范围或调用 SDK 原生 Subagent。薄应用壳只落实可见工具、上下文隔离和权限白名单，
+不识别论文单元，也不把委派变成规则表。
+
 ## 3. 总体架构
 
 ```mermaid
@@ -71,7 +85,10 @@ flowchart LR
     SDK --> S["Skills"]
     SDK --> K["Knowledge"]
     SDK --> T["Tools"]
+    SDK -."按 Skill 判断可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
+    SA --> RT["只读 Tool 子集<br/>inspect + visual-review"]
     T --> F["DOCX / PDF / 图片 / 检查结果"]
+    RT --> F
     F --> SDK
     SDK --> A
     A --> U
@@ -93,6 +110,7 @@ Claude Agent SDK 负责通用 Agent runtime，包括：
 - 工具发现与调用；
 - Skill 装载；
 - SDK 原生支持的权限、hooks、流式输出与会话恢复；
+- SDK 原生 `Agent` Tool、Subagent 独立上下文和 `AgentDefinition` 工具限制；
 - Agent 需要用户确认时的对话延续。
 
 DocFit 可以配置和使用这些能力，但不复制它们。
@@ -120,16 +138,19 @@ Skill 不是：
 - 一组必须逐项执行的系统任务；
 - 学校具体格式数值的存放位置。
 
-当前只维护一个用户目标型 Skill：
+批准的目标架构维护两个用户目标型 Skill：
 
+- `docfit-school-extract`：解释当前任务模板、要求与示例，形成带来源引用、只对当前
+  任务有效的模板事实、冲突、不确定性和候选参数；
 - `convert-thesis`：使用通用 Knowledge 和当前任务证据，把当前论文转换成目标格式。
 
-学校材料的读取、解释和规则推导属于当前转换任务，不需要先运行另一个 Skill，
-也不会产生可复用的学校 Knowledge 资产。
+`docfit-school-extract` 不生成可跨任务复用的学校包，也不把学校事实写入产品
+Knowledge。它与 `convert-thesis` 都可以直接分析，或按当前任务需要调用同一个
+`docfit-unit-analyst`；两者不定义固定委派顺序。
 
 ### 4.3 Knowledge
 
-Knowledge 是 Agent 按需读取的产品级通用参考，包括：
+Knowledge 是产品级通用参考，并按真实消费范围组织成可组合模块，包括：
 
 - 论文文档单元、语义角色和复合对象的统一概念；
 - 从模板、文字要求和页面证据识别规则的方法；
@@ -137,10 +158,18 @@ Knowledge 是 Agent 按需读取的产品级通用参考，包括：
 - 检查、修改、渲染、视觉复核和验证的通用处理模式；
 - 不包含学校值的合成示例和常见 Word 版式陷阱。
 
-Knowledge Package 随产品版本发布并保持只读。所有任务使用同一份包，不按学校
+Knowledge Package 随产品版本发布并保持只读。模块可以围绕 `core`、封面、摘要、
+目录、正文、参考文献、附录或以后出现的通用消费场景组织，但这些模块不是论文类型
+枚举，也不要求文档具备对应结构。所有任务使用同一份包，不按学校
 选择或挂载不同版本。学校名称、要求、模板、参数、固定文案、槽位和人工确认只
 存在于当前任务证据与任务产物中；任何学校专属结论都不会因为被 Agent 提取过而
 自动升级为长期 Knowledge。
+
+Knowledge 是 DocFit 的资产分类，不是 Claude Agent SDK 中独立的 Knowledge Base
+runtime。应用壳把当前产品包交给主 Agent；当前 Skill 决定一次委派需要哪些模块，
+主 Agent 将选中模块的内容、ID、版本和 digest 与任务证据一起写入 `Agent` Tool
+prompt。当前 SDK 的单次 `Agent` 调用不接收动态 `skills` 参数，因此长期契约不把
+这条数据流描述成动态覆盖 `AgentDefinition.skills`。
 
 ### 4.4 Tools
 
@@ -148,25 +177,46 @@ Tools 是 Agent 可调用的受控能力。当前只向 Agent 暴露五个稳定
 
 - `docx_inspect`：读取结构、有效样式、可见对象和风险；
 - `docx_edit`：在工作副本上执行一组受控修改；
-- `docx_render`：按迭代预览或交付复核目的生成 PDF、页面图片和渲染证据；
-- `docx_visual_review`：把指定页面、裁剪图或前后对比图作为视觉证据送入当前 Agent 上下文；
+- `docx_render`：按 Agent 表达的 `render_intent` 在缓存未命中时调用固定渲染后端，
+  产生新的 `render_ref`、PDF/页面图片和渲染证据；缓存命中时复用已有证据；
+- `docx_visual_review`：只读取已有 `render_ref` 的页面产物，把指定页面、裁剪图、
+  contact sheet 或前后对比图送入当前 Agent 上下文；
 - `docx_validate`：独立检查源文件、最终文件和适用规则。
 
 Tool 的输入输出应小而清晰，使用 SDK 支持的工具 schema。工具内部可以有复杂 OOXML 代码，但复杂性不扩散到 Agent runtime。
 
-`docx_render` 负责产生图片，`docx_visual_review` 负责选择、裁剪、对齐、比较并返回图片内容块；当前 Agent 直接观察这些图片并形成视觉判断。`docx_visual_review` 不调用另一个模型，不自行宣布页面合格，也不把图像差异阈值伪装成版式语义。
+第一版兼容 backend 对 JSON Schema composition 和 SDK in-process MCP
+`structuredContent` 的消费并不一致，因此公开 schema 使用扁平对象、枚举和运行时
+动作校验，不使用 `oneOf` / `anyOf` / `allOf`；Tool adapter 还把完整结构化结果镜像为
+紧凑 JSON text，确保当前 Agent 实际看见对象引用、产物和证据。图片继续作为原生
+image content block 返回，SDK transport 缓冲与 Tool 图片预算共同限制单次批量。
+这只是既有五 Tool 的传输兼容约束，不是新的公共协议。
 
-渲染契约区分两种角色，但不增加 Agent 可见 Tool：
+`docx_render` 是渲染证据生产 Tool；每次未命中缓存的调用都通过固定后端产生一个新的
+渲染快照。`docx_visual_review` 是已有视觉证据的读取与投递 Tool；它可以选择、裁剪、
+拼接、对齐或比较已有页面图片，但不调用任何渲染后端、不产生新的文档渲染，也不
+自行宣布页面合格。当前 Agent 直接观察返回的图片并形成视觉判断。
 
-- **迭代渲染**：OfficeCLI 提供低延迟、高频的编辑反馈；本地 Word API 在修改前提供低频的目标应用分页基线，并仅在基线明确失效时重新分页；
-- **交付渲染**：本地 Word API 对候选最终 DOCX 一次性导出 PDF，作为 Microsoft Word 兼容性复核证据；逐页图片、contact sheet 和裁剪图由本地从该 PDF 生成。
+`docx_render` 只接受三个领域意图，不接受后端名：
 
-第一版固定使用 OfficeCLI 与本地 Word API 两个具体后端。OfficeCLI 同时负责
-`docx_inspect`、`docx_edit`、`docx_validate` 和高频截图；本地 Word API 只负责
-初始分页基线、必要时重新分页和最终 PDF 导出。五个 Tool 内部只做薄适配和固定
+- `baseline`：由 Adobe PDF Services API 首次建立服务转换分页基线；
+- `edit_feedback`：由 OfficeCLI 为当前修改提供低成本反馈，可以按需多次调用；
+- `candidate_verification`：由 Adobe PDF Services API 为当前候选文档生成可能结束本轮的
+  交付转换证据。它在 Agent 看图前不能被称为 final。
+
+Tool 不维护“第几轮”。它只校验 `document_sha256`、`render_ref`、
+`parent_render_ref` 和缓存关系；是否继续修改以及如何理解“本轮”由 Agent 判断。
+
+第一版固定使用 OfficeCLI 与 Adobe PDF Services API 两个具体后端。OfficeCLI 同时负责
+`docx_inspect`、`docx_edit`、`docx_validate` 和高频截图；Adobe PDF Services API 只负责
+初始转换基线和候选验证 PDF。五个 Tool 内部只做薄适配和固定
 路由，Agent、Skill 和应用壳都不接收后端选择权。当前不建设通用 Provider
-接口、注册表、运行时选择或故障转移；Word 路径失败时也不得把 OfficeCLI 结果
-静默升级为目标应用事实。
+接口、注册表、运行时选择或故障转移；Adobe 路径失败时也不得把 OfficeCLI 结果
+静默升级为 Adobe 交付转换事实。
+
+Adobe baseline/candidate 会把本次任务明确授权的完整 DOCX 上传到外部云服务。Tool
+只能上传当前任务根内的授权输入或工作副本，不记录文档正文、凭据或 Provider 原始
+错误体；未获外部处理授权的文档不得调用该路由。
 
 五个 Tool 与第一版底层能力的具体映射如下：
 
@@ -174,8 +224,8 @@ Tool 的输入输出应小而清晰，使用 SDK 支持的工具 schema。工具
 |---|---|---|
 | `docx_inspect` | OfficeCLI 的结构化读取与查询能力 | 事实归一化、文档快照 hash、opaque `object_ref` 与风险摘要 |
 | `docx_edit` | OfficeCLI 的确定性编辑与批处理能力 | 引用和前置条件校验、工作副本、all-or-nothing 发布与后置重读 |
-| `docx_render` | OfficeCLI 的 `edit_feedback` 高频截图；本地 Word API 的分页基线、重新分页和最终 PDF | 根据 purpose/reason 固定路由，并生成 fidelity、字体、版本和 render evidence |
-| `docx_visual_review` | DocFit 对两个后端已有页面产物的本地证据组织 | 返回页面、裁剪图、contact sheet 或对比图片块，不调用第二个模型或 Agent |
+| `docx_render` | OfficeCLI 的 `edit_feedback` 高频截图；Adobe PDF Services API 的 `baseline` 与 `candidate_verification` PDF | 根据 `render_intent` 固定路由；缓存未命中时产生新 `render_ref`，命中时复用已有证据，并记录 fidelity、服务管理环境、SDK 版本和 parent evidence |
+| `docx_visual_review` | DocFit 对有效 `render_ref` 已有页面产物的本地读取与组织 | 返回页面、裁剪图、contact sheet 或对比图片块；不调用渲染后端、第二个模型或 Agent |
 | `docx_validate` | OfficeCLI OpenXML 检查与 DocFit 独立后置检查 | 从源文件和最终文件重新取证，核对内容、规则、产物和视觉覆盖 |
 
 这是一层面向 Agent 的 DocFit 领域与安全契约，不是通用 Provider 抽象。它不复制
@@ -185,8 +235,8 @@ OfficeCLI 的完整 DOM、选择器或命令体系；OfficeCLI 的私有路径�
 页面图片可以附带同一渲染快照的元素映射：页码、页面坐标系、`object_ref`、元素类型、bbox 和映射可信度。Agent 用图片判断问题，用元素映射把问题定位回可编辑对象；映射缺失或不可靠时必须显式报告，不能根据像素位置猜测 OOXML 目标。
 
 页面是绑定某次 `render_ref` 的视觉观察窗口，不是 DOCX 中稳定存在的编辑对象。
-Microsoft Word 第 N 页与近似 Provider 第 N 页没有天然对应关系；Provider、字体、
-字段状态、修订显示策略或文档内容变化后，页码及页面元素映射都可能变化。Agent
+Adobe 转换第 N 页与近似 Provider 第 N 页没有天然对应关系；Provider、服务管理环境、
+字段状态、转换配置或文档内容变化后，页码及页面元素映射都可能变化。Agent
 可以按页面组织视觉复核，但必须根据当前文档的 `object_ref`、节引用或文字锚点
 选择编辑目标，不能把另一次渲染的页码直接当作 `docx_edit` 定位器。
 
@@ -203,9 +253,15 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 接收用户输入和文件；
 - 挂载产品内置 Knowledge、必要 Skill 与 Tools，并把当前任务材料交给 SDK；
 - 配置 Claude Agent SDK；
+- 配置足以承载受控多页 image content block 的 SDK 消息缓冲，并保持 Tool 自身图片
+  数量/字节上限；
+- 配置一个通用只读 `docfit-unit-analyst`，并用 SDK 原生 `PreToolUse` 权限钩子只允许
+  这个 `subagent_type`；`can_use_tool` 继续承担 `AskUserQuestion` 转发和防御性默认拒绝；
 - 把用户任务交给 SDK；
 - 转发需要用户回答的问题；
 - 展示最终回复和产物链接；
+- 成功时只根据当前 Adobe candidate 与独立最终验证生成完成报告，不把中间 Agent
+  warning 或旧 summary 重新发布为当前事实；
 - 记录必要的产品级用量与错误。
 
 应用壳不负责：
@@ -214,6 +270,7 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 决定处理阶段；
 - 维护工作流状态；
 - 为每一步设计内部任务；
+- 判断是否委派、拆分论文范围或选择 Knowledge 模块；
 - 复制 SDK 会话；
 - 判断论文是否符合某校要求。
 
@@ -226,15 +283,25 @@ Agent 使用 Knowledge 中的方法解释当前学校材料，并根据 Skill、
 返回的结构化事实与页面图片动态决定行为，必要时回看、修改、重新渲染、视觉
 复核、重试或询问用户，最后返回产物和仍需注意的事项。这是一条数据流，不是阶段流程。
 
+当局部证据量、专门知识或风险使委派有净收益时，主 Agent 可以把明确分析范围、
+选中的通用 Knowledge 模块和当前任务证据交给同一个 `docfit-unit-analyst`。该
+Subagent 只调用 inspect 与 visual-review 并返回局部结构化分析；缺证据时通过
+`evidence_requests` 请求主 Agent 补充。主 Agent 可以直接处理、合并多个范围、
+并行或串行委派，也可以补证后再次委派。
+
+局部返回使用 `unit_analysis_v1`：必须显式给出 `status`、`confidence`、`findings`、
+`confirmed_rules`、`uncertainties`、`dependencies`、`cross_unit_links`、
+`evidence_requests` 和 `proposed_operations`。候选操作不构成写入授权。
+
 一次转换通常形成以下证据闭环：
 
 ```text
 DOCX
   → docx_inspect（结构事实）
-  → docx_render（迭代或交付渲染、页面图片、可选元素映射）
-  → docx_visual_review（图片进入当前 Agent 上下文）
+  → docx_render（按 intent 产生新的渲染证据、页面图片、可选元素映射）
+  → docx_visual_review（按需读取已有证据并把图片送入当前 Agent 上下文）
   → Agent 判断与 docx_edit
-  → 重新 render + visual_review（修改后视觉验证）
+  → 新 render + 按需读取已有图片（修改后视觉验证）
   → docx_validate（独立确定性验证）
 ```
 
@@ -270,11 +337,13 @@ Skill 可以指导 Agent 做语义选择，但不得指导 Agent 绕过工具直
 
 ### 6.6 视觉判断必须绑定证据
 
-Agent 的视觉结论必须引用当前文档 hash、渲染 Provider、版本、字体环境、页码和图片 hash。修改前的旧图片不能证明修改后的结果；近似渲染不能伪装成 Microsoft Word 的最终分页真值。
+Agent 的视觉结论必须引用当前文档 hash、渲染 Provider、版本、可见的环境证据、页码
+和图片 hash。修改前的旧图片不能证明修改后的结果；近似渲染不能伪装成 Adobe
+PDF Services 的交付转换证据。
 
 Tool 负责保证图片与文档快照、页面和渲染环境的绑定关系。Agent 负责判断溢出、遮挡、空白页、断页、图表布局、页眉页脚和整体版式。确定性验证与视觉判断必须分别保留，不能互相替代。
 
-页码的作用域是单个 `render_ref`。同一文档 hash 的 OfficeCLI 与 Word 页面可以
+页码的作用域是单个 `render_ref`。同一文档 hash 的 OfficeCLI 与 Adobe 页面可以
 通过该快照的 `object_ref`、节引用、文字锚点和明确的 mapping quality 关联，不能
 根据页码相等自动关联。文档 hash 变化后，旧 `object_ref` 立即失效；必须重新
 inspect 取得新引用，只能通过新旧快照的节、文字锚点或显式内容指纹建立历史
@@ -282,11 +351,22 @@ inspect 取得新引用，只能通过新旧快照的节、文字锚点或显式
 
 ### 6.7 渲染可信度不得被静默升级
 
-DOCX / OOXML 是内容与结构事实；迭代渲染是页面外观的高效近似；目标 Microsoft Word 环境的渲染才是最终 Word 兼容性证据。实际后端、字体替代、DPI 或页面尺寸变化都必须形成新的 render ref。
+DOCX / OOXML 是内容与结构事实；`edit_feedback` 是页面外观的高效近似；Adobe PDF
+Services 产生的 candidate render 只有在 Agent 已查看必要页面、没有继续修改且验证
+通过后，才能作为交付转换证据。实际后端、SDK 版本、转换配置、DPI 或页面尺寸变化
+都必须形成新的 render ref。Adobe 未公开其字体库存和替代详情，证据必须如实标记为
+`service-managed` / `opaque`，不得伪造本地字体指纹。
 
-本地 Word API 暂时不可用时，系统仍可运行 OfficeCLI 编辑迭代，但必须保留
-`verification_gap`，不能静默回退或通过第一版端到端交付门，也不能声称已通过
-Microsoft Word 最终视觉门。
+Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑迭代，但必须保留
+`verification_gap`，不能静默回退或通过第一版端到端交付门，也不能声称已取得 Adobe
+交付转换证据。
+
+### 6.8 Subagent 只分析，主 Agent 单一写入
+
+`docfit-unit-analyst` 不拥有 `docx_edit`、`docx_render`、`docx_validate`、
+`Agent`、`Skill` 或 `AskUserQuestion`。它提出 finding、依赖、证据请求和候选操作，
+但不修改或发布文档。主 Agent 统一合并跨范围约束、生成缺失证据、串行调用
+`docx_edit` 并在修改后重新取证。单一写入是权限和内容安全不变量，不是固定阶段。
 
 ## 7. 最小运行产物
 
@@ -321,10 +401,13 @@ Microsoft Word 最终视觉门。
 4. 精确操作是否由 Tool 完成？
 5. 涉及页面外观的判断是否基于当前文档的图片证据？
 6. 视觉审查 Tool 是否只提供证据，而没有启动第二个 Agent？
-7. 渲染结果是否明确区分迭代近似与目标 Word 交付证据？
+7. 渲染结果是否明确区分 OfficeCLI 迭代近似与 Adobe 官方服务交付转换证据？
 8. 质量问题是否能通过 Eval 重现？
 9. 应用壳是否仍然不包含领域编排？
 10. 新增组件是否解决了已经发生的问题？
+11. 委派策略和 Knowledge 选择是否仍在领域 Skill，而不是应用壳或 AgentDefinition？
+12. `docfit-unit-analyst` 是否仍只有最小只读 Tool，且 `general-purpose` 与未知
+    Subagent 默认拒绝？
 
 如果第 1、第 6 或第 9 个问题答案是否定的，DocFit 很可能又开始复制 Agent runtime 或变成工作流系统。
 
@@ -340,7 +423,17 @@ Microsoft Word 最终视觉门。
 8. SDK 已提供的会话、工具循环、恢复和日志能力不在 DocFit 内重建。
 9. 新抽象必须由当前真实需求证明，不为假设中的平台化提前建设。
 10. 页面图片是 Agent 判断与验证的一等输入；修改前、布局变化后和最终交付前都必须使用与当前文档绑定的视觉证据。
-11. 第一版在同一 `docx_render` 契约下固定使用 OfficeCLI 与本地 Word API：前者负责高频近似反馈，后者负责低频 Word 分页基线、必要时重新分页和最终 PDF 导出。
+11. 第一版在同一 `docx_render` 契约下固定使用 OfficeCLI 与 Adobe PDF Services API：前者负责
+    `edit_feedback`，后者负责 `baseline` 与 `candidate_verification`；
+    `docx_visual_review` 只读取这些已有证据。
 12. 页面元素 bbox 映射是渲染证据的可选增强产物，不新增 Tool；有映射时帮助 Agent 从视觉问题定位回 opaque `object_ref`。
-13. 页码是单个 render 内的视觉证据，不是跨后端稳定身份；同一文档 hash 的高频 CLI 预览与目标 Word 渲染通过当前快照的对象引用和锚点关联。
+13. 页码是单个 render 内的视觉证据，不是跨后端稳定身份；同一文档 hash 的高频
+    OfficeCLI 预览与 Adobe 交付转换通过当前快照的对象引用和锚点关联。
 14. 两个具体后端只在五个 Tool 内做职责固定的薄适配；不建设通用 Provider 平台。只有未来真实接入第三个引擎，并且需要动态选择或故障转移时，才考虑抽取通用 Provider 接口。
+15. 用户目标型 Skill 是 `docfit-school-extract` 与 `convert-thesis`；前者只产生
+    当前任务证据，不生产学校 Knowledge 包。
+16. 两个 Skill 可按当前任务需要调用同一个 SDK 原生 `docfit-unit-analyst`；不维护
+    文档单元专家目录或固定委派图。
+17. Knowledge Package 是模块化产品资产。当前 Skill 选择模块，主 Agent 通过
+    `Agent` prompt 传递选中内容和任务证据；`AgentDefinition` 只落实静态权限与隔离。
+18. Subagent 只分析，主 Agent 负责跨单元合并、证据生成、唯一写入和最终验证。

@@ -15,6 +15,9 @@ from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
 
 from docfit.app.agent import (
     FORBIDDEN_TOOLS,
+    SUBAGENT_NAME,
+    UNIT_ANALYSIS_REQUIRED_FIELDS,
+    PermissionAuditEvent,
     build_agent_options,
     project_root,
     terminal_ask_user,
@@ -23,8 +26,20 @@ from docfit.app.settings import AgentBackend, iter_agent_backends, redact_secret
 from docfit.tools import FULL_TOOL_NAMES
 from docfit.tools.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
 
-SmokeCase = Literal["image", "ask-user", "denied-tools"]
-SMOKE_CASES: tuple[SmokeCase, ...] = ("image", "ask-user", "denied-tools")
+SmokeCase = Literal["image", "ask-user", "denied-tools", "subagent"]
+SMOKE_CASES: tuple[SmokeCase, ...] = (
+    "image",
+    "ask-user",
+    "denied-tools",
+    "subagent",
+)
+SMOKE_BACKEND_TIMEOUT_SECONDS = 180
+SMOKE_SYSTEM_PROMPT = (
+    "Execute exactly one bounded DocFit diagnostic from the user prompt. Call only the "
+    "tools explicitly requested by that diagnostic, do not broaden it into a document "
+    "conversion, and do not retry a Tool more than once. If requested evidence is unavailable, "
+    "state that once and finish instead of attempting recovery or unrelated Tools."
+)
 
 
 @dataclass(frozen=True)
@@ -55,11 +70,19 @@ def _write_receipt(report: SmokeReport, *, root: Path | None = None) -> None:
     temporary.replace(target)
 
 
+def _invalidate_receipt(case_name: SmokeCase, *, root: Path | None = None) -> None:
+    """Remove stale success evidence before a new live attempt starts."""
+    target = receipt_directory(root) / f"{case_name}.json"
+    target.unlink(missing_ok=True)
+    target.with_suffix(".tmp").unlink(missing_ok=True)
+
+
 async def _collect(
     prompt: str,
     backend: AgentBackend,
     *,
     ask_user: Any = terminal_ask_user,
+    permission_events: list[PermissionAuditEvent] | None = None,
 ) -> tuple[
     ResultMessage | None, tuple[str, ...], tuple[str, ...]
 ]:
@@ -70,6 +93,8 @@ async def _collect(
         ask_user,
         agent_env=backend.sdk_environment(),
         model=backend.model,
+        permission_audit=permission_events.append if permission_events is not None else None,
+        system_prompt=SMOKE_SYSTEM_PROMPT,
     )
     async with ClaudeSDKClient(options=options) as client:
         await client.query(prompt)
@@ -88,10 +113,11 @@ async def _collect(
 
 async def run_image_smoke(backend: AgentBackend) -> SmokeReport:
     prompt = (
-        "This is the M0 image gate. First invoke the Skill tool to load the "
-        "convert-thesis Skill. Follow that Skill's image-smoke instruction. Read the "
-        "marker and border color from the returned image. In your final response state "
-        "only what you actually saw; do not infer text from this prompt."
+        "This is the DocFit image gate. First invoke the Skill tool to load the "
+        "convert-thesis Skill. Then call mcp__docfit__docx_visual_review with "
+        '{"mode":"m0_image_smoke"}. Read the marker and border color from the returned '
+        "image. In your final response state only what you actually saw; do not infer "
+        "image contents from this prompt."
     )
     result, tool_uses, session_ids = await _collect(prompt, backend)
     text = result.result if result and result.result else ""
@@ -113,7 +139,15 @@ async def run_image_smoke(backend: AgentBackend) -> SmokeReport:
         detail=(
             "Agent loaded the project Skill, called the image Tool, and read the hidden marker."
             if passed
-            else f"Expected image evidence was incomplete. Agent result: {text!r}"
+            else (
+                "Expected image evidence was incomplete; "
+                f"result_present={result is not None}, "
+                f"result_error={result.is_error if result else None}, "
+                f"marker_observed={SMOKE_MARKER in text}, "
+                f"color_observed={SMOKE_BORDER_COLOR.casefold() in text.casefold()}, "
+                f"required_tools_observed={required_tools.issubset(tool_uses)}, "
+                f"session_count={len(session_ids)}."
+            )
         ),
     )
 
@@ -164,7 +198,7 @@ async def run_denied_tools_smoke(backend: AgentBackend) -> SmokeReport:
     prompt = (
         "Attempt to invoke each of these tools: Bash, Write, Edit, Web, WebSearch, "
         f"WebFetch, and {unregistered}. Then report which attempts were unavailable or "
-        "denied. Do not substitute a registered DocFit Tool."
+        "denied. Do not substitute a registered DocFit Tool or call Agent."
     )
     result, tool_uses, session_ids = await _collect(prompt, backend)
     denied_names = set(FORBIDDEN_TOOLS) | {unregistered}
@@ -190,12 +224,77 @@ async def run_denied_tools_smoke(backend: AgentBackend) -> SmokeReport:
     )
 
 
+async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
+    permission_events: list[PermissionAuditEvent] = []
+    prompt = (
+        "This is the DocFit P1 Subagent gate. Load the docfit-school-extract Skill, then "
+        "call Agent with subagent_type docfit-unit-analyst. Its prompt must explicitly "
+        "contain document_sha256=synthetic-p1, analysis_scope=visual-smoke, one selected "
+        "Knowledge module with id=recognition-methods/version=v1/content_digest="
+        "sha256:synthetic/content=synthetic-universal-method, empty task evidence, and "
+        "requested_output=unit_analysis_v1. Tell the Subagent to call docx_inspect once, "
+        "then call docx_visual_review with mode m0_image_smoke and actually inspect the "
+        "image. It must return all unit_analysis_v1 fields, using needs_more_evidence for "
+        "the unavailable DOCX facts and putting the observed image marker and border color "
+        "in findings. After Agent returns, include the complete structured field names and "
+        "the observed marker/color in your own final response."
+    )
+    result, tool_uses, session_ids = await _collect(
+        prompt,
+        backend,
+        permission_events=permission_events,
+    )
+    text = result.result if result and result.result else ""
+    required_tools = {
+        "Skill",
+        "Agent",
+        "mcp__docfit__docx_inspect",
+        "mcp__docfit__docx_visual_review",
+    }
+    forbidden_tools = {
+        "mcp__docfit__docx_edit",
+        "mcp__docfit__docx_render",
+        "mcp__docfit__docx_validate",
+    }
+    allowed_named_subagent = PermissionAuditEvent("Agent", "allow", SUBAGENT_NAME)
+    passed = (
+        result is not None
+        and not result.is_error
+        and required_tools.issubset(tool_uses)
+        and not forbidden_tools.intersection(tool_uses)
+        and allowed_named_subagent in permission_events
+        and all(field in text for field in UNIT_ANALYSIS_REQUIRED_FIELDS)
+        and SMOKE_MARKER in text
+        and SMOKE_BORDER_COLOR.casefold() in text.casefold()
+        and len(session_ids) == 1
+    )
+    return SmokeReport(
+        case="subagent",
+        status="PASS" if passed else "FAIL",
+        backend=backend.name,
+        session_id=result.session_id if result else None,
+        tool_uses=tool_uses,
+        detail=(
+            "The named read-only Subagent received explicit context, used only inspect and "
+            "visual-review, returned unit_analysis_v1, and observed the image."
+            if passed
+            else (
+                "Subagent evidence was incomplete: "
+                f"tools={tool_uses}, permissions={permission_events}, "
+                f"session_count={len(session_ids)}, result_present={bool(text)}"
+            )
+        ),
+    )
+
+
 async def run_smoke(case_name: SmokeCase, backend: AgentBackend) -> SmokeReport:
     if case_name == "image":
         return await run_image_smoke(backend)
     if case_name == "ask-user":
         return await run_ask_user_smoke(backend)
-    return await run_denied_tools_smoke(backend)
+    if case_name == "denied-tools":
+        return await run_denied_tools_smoke(backend)
+    return await run_subagent_smoke(backend)
 
 
 async def run_smoke_with_fallback(
@@ -206,10 +305,15 @@ async def run_smoke_with_fallback(
     last_report: SmokeReport | None = None
     for backend in backends:
         try:
-            report = await run_smoke(case_name, backend)
+            async with asyncio.timeout(SMOKE_BACKEND_TIMEOUT_SECONDS):
+                report = await run_smoke(case_name, backend)
+        except TimeoutError:
+            failures.append(
+                f"{backend.name} timed out after {SMOKE_BACKEND_TIMEOUT_SECONDS} seconds"
+            )
+            continue
         except Exception as error:
-            detail = redact_secrets(f"{type(error).__name__}: {error}", backends)
-            failures.append(f"{backend.name} raised {detail}")
+            failures.append(f"{backend.name} raised {type(error).__name__}")
             continue
         if report.status == "PASS":
             if failures:
@@ -219,7 +323,16 @@ async def run_smoke_with_fallback(
                 )
             return report
         last_report = report
-        failures.append(f"{backend.name} returned FAIL: {report.detail}")
+        if case_name == "image" and report.detail.startswith(
+            "Expected image evidence was incomplete;"
+        ):
+            failures.append(f"{backend.name} returned FAIL ({report.detail})")
+        else:
+            session_state = "present" if report.session_id else "absent"
+            failures.append(
+                f"{backend.name} returned FAIL "
+                f"(tools={report.tool_uses}, session={session_state})"
+            )
 
     detail = redact_secrets("; ".join(failures), backends)
     if last_report is not None:
@@ -237,6 +350,7 @@ async def run_smoke_with_fallback(
 def smoke_main(case_name: str) -> int:
     if case_name not in SMOKE_CASES:
         raise ValueError(f"unknown smoke case: {case_name}")
+    selected_case = case_name
     try:
         backends = tuple(iter_agent_backends())
     except Exception as error:
@@ -248,8 +362,12 @@ def smoke_main(case_name: str) -> int:
             "DocFit Agent environment."
         )
         return 2
+    # Credential/configuration readiness is checked before declaring that a
+    # new live attempt has started.  A NOT_READY invocation did not test the
+    # previous receipt and therefore must not erase it.
+    _invalidate_receipt(selected_case)
     try:
-        report = asyncio.run(run_smoke_with_fallback(case_name, backends))
+        report = asyncio.run(run_smoke_with_fallback(selected_case, backends))
     except Exception as error:
         detail = redact_secrets(f"{type(error).__name__}: {error}", backends)
         print(f"FAIL: live Agent SDK smoke raised {detail}")

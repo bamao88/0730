@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import json
 import re
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any, NoReturn, cast
@@ -18,6 +18,7 @@ from docfit.knowledge.models import (
     KnowledgeDocumentSpec,
     KnowledgeErrorCode,
     KnowledgeManifest,
+    KnowledgeModule,
     KnowledgePackage,
     KnowledgeReview,
     KnowledgeScope,
@@ -94,6 +95,42 @@ def load_knowledge() -> KnowledgePackage:
     """Load DocFit's single product-bundled universal Knowledge Package."""
 
     return validate_knowledge_package(_BUNDLED_PACKAGE_ROOT)
+
+
+def select_knowledge_modules(
+    module_ids: Sequence[str],
+    *,
+    package: KnowledgePackage | None = None,
+) -> tuple[KnowledgeModule, ...]:
+    """Project declared universal documents into an explicit ordered selection."""
+
+    if isinstance(module_ids, str) or not module_ids:
+        raise ValueError("Knowledge module selection must be a non-empty sequence of IDs.")
+    if len(set(module_ids)) != len(module_ids):
+        raise ValueError("Knowledge module selection contains duplicate IDs.")
+
+    selected_package = package or load_knowledge()
+    documents_by_id = {
+        document.spec.id: document for document in selected_package.documents
+    }
+    if any(module_id not in documents_by_id for module_id in module_ids):
+        raise ValueError("Knowledge module selection contains an unknown ID.")
+
+    manifest = selected_package.manifest
+    return tuple(
+        KnowledgeModule(
+            id=document.spec.id,
+            kind=document.spec.kind,
+            description=document.spec.description,
+            version=manifest.version,
+            content_digest=f"sha256:{document.spec.sha256}",
+            content=document.markdown,
+            package_id=manifest.package_id,
+            package_content_digest=manifest.content_digest,
+        )
+        for module_id in module_ids
+        for document in (documents_by_id[module_id],)
+    )
 
 
 def validate_knowledge_package(package_root: Path) -> KnowledgePackage:

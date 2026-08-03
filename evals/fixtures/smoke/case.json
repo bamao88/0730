@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "synthetic-smoke-v1",
+  "fixture": "synthetic",
+  "builder": "docfit.evals.fixtures.build_core_fixtures",
+  "inputs": [
+    "student.docx",
+    "school-template.docx",
+    "school-requirements.pdf"
+  ],
+  "assertions": [
+    "source_hash_unchanged",
+    "template_section_imported",
+    "cross_run_placeholder_replaced",
+    "edit_feedback_pages_exist",
+    "table_object_ref_has_approximate_bbox",
+    "verification_gap_preserved_without_adobe_candidate"
+  ]
+}

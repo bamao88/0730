@@ -11,9 +11,10 @@ from docfit.app.smoke import SMOKE_CASES, receipt_directory
 def _make_project(root: Path) -> None:
     for name in ("pyproject.toml", "uv.lock", ".python-version"):
         (root / name).write_text("m0\n", encoding="utf-8")
-    skill = root / ".claude" / "skills" / "convert-thesis" / "SKILL.md"
-    skill.parent.mkdir(parents=True)
-    skill.write_text("---\nname: convert-thesis\n---\n", encoding="utf-8")
+    for skill_name in ("docfit-school-extract", "convert-thesis"):
+        skill = root / ".claude" / "skills" / skill_name / "SKILL.md"
+        skill.parent.mkdir(parents=True)
+        skill.write_text(f"---\nname: {skill_name}\n---\n", encoding="utf-8")
 
 
 def test_base_gate_ignores_optional_credentials_and_receipts(tmp_path: Path) -> None:
@@ -24,9 +25,10 @@ def test_base_gate_ignores_optional_credentials_and_receipts(tmp_path: Path) -> 
     assert report.gate == "PASS"
     assert report.exit_code == 0
     assert report.overall_status == "NOT_READY"
-    assert next(
-        check for check in report.checks if check.name == "agent_backend_credentials"
-    ).status == "NOT_READY"
+    assert (
+        next(check for check in report.checks if check.name == "agent_backend_credentials").status
+        == "NOT_READY"
+    )
 
 
 def test_agent_smoke_gate_requires_backend_and_current_receipts(tmp_path: Path) -> None:
@@ -68,7 +70,7 @@ def test_agent_smoke_gate_requires_backend_and_current_receipts(tmp_path: Path) 
     assert ready.exit_code == 0
 
 
-def test_provider_gate_is_reserved_for_m1(tmp_path: Path) -> None:
+def test_provider_gate_checks_the_two_fixed_backends(tmp_path: Path) -> None:
     _make_project(tmp_path)
 
     report = run_doctor(
@@ -78,8 +80,13 @@ def test_provider_gate_is_reserved_for_m1(tmp_path: Path) -> None:
         python_version=(3, 12),
     )
 
-    assert report.gate == "NOT_READY"
-    assert report.exit_code == 1
+    assert {check.name for check in report.checks if "provider" in check.required_for} >= {
+        "officecli_backend",
+        "adobe_pdf_services_backend",
+        "pdf_page_derivation",
+    }
+    assert report.gate in {"PASS", "NOT_READY"}
+    assert report.exit_code == (0 if report.gate == "PASS" else 1)
 
 
 def test_base_gate_fails_for_wrong_python_or_missing_files(tmp_path: Path) -> None:

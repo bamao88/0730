@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Awaitable, Callable, Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from claude_agent_sdk import ClaudeAgentOptions
+from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions, HookMatcher
 from claude_agent_sdk.types import (
     CanUseTool,
+    HookContext,
+    HookInput,
+    HookJSONOutput,
     PermissionResultAllow,
     PermissionResultDeny,
     ToolPermissionContext,
@@ -17,7 +21,7 @@ from claude_agent_sdk.types import (
 
 from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME, build_docfit_server
 
-BUILTIN_TOOLS = ("Skill", "AskUserQuestion")
+BUILTIN_TOOLS = ("Skill", "AskUserQuestion", "Agent")
 FORBIDDEN_TOOLS = (
     "Bash",
     "Write",
@@ -29,7 +33,23 @@ FORBIDDEN_TOOLS = (
     "WebSearch",
     "WebFetch",
 )
-SKILL_NAME = "convert-thesis"
+SKILL_NAMES = ("docfit-school-extract", "convert-thesis")
+SUBAGENT_NAME = "docfit-unit-analyst"
+READ_ONLY_SUBAGENT_TOOLS = (
+    "mcp__docfit__docx_inspect",
+    "mcp__docfit__docx_visual_review",
+)
+UNIT_ANALYSIS_REQUIRED_FIELDS = (
+    "status",
+    "confidence",
+    "findings",
+    "confirmed_rules",
+    "uncertainties",
+    "dependencies",
+    "cross_unit_links",
+    "evidence_requests",
+    "proposed_operations",
+)
 DIRECTORY_POLICY = (
     "input_read_only",
     "work_writable",
@@ -37,7 +57,18 @@ DIRECTORY_POLICY = (
     "outside_task_denied",
 )
 LOGGING_POLICY = "metadata_only_no_document_body"
+AGENT_SDK_MAX_BUFFER_BYTES = 16 * 1024 * 1024
 AskUser = Callable[[str], Awaitable[str]]
+
+
+@dataclass(frozen=True, slots=True)
+class PermissionAuditEvent:
+    tool_name: str
+    decision: str
+    subagent_type: str | None = None
+
+
+PermissionAudit = Callable[[PermissionAuditEvent], None]
 
 
 def project_root() -> Path:
@@ -62,7 +93,85 @@ def _question_prompt(question: dict[str, Any]) -> str:
     return "\n".join(lines) or "Agent needs input"
 
 
-def make_permission_callback(ask_user: AskUser) -> CanUseTool:
+def build_unit_analyst_definition() -> AgentDefinition:
+    return AgentDefinition(
+        description=("Read-only DocFit analyst for one explicitly bounded thesis evidence scope."),
+        prompt=(
+            "Analyze only the explicit scope, selected universal Knowledge modules, and "
+            "task evidence in the parent prompt. You do not inherit other parent context. "
+            "Use only docx_inspect and docx_visual_review. Never render, edit, validate, "
+            "ask the user, call another Agent, or persist memory. If evidence is missing, "
+            "return needs_more_evidence with evidence_requests. Return unit_analysis_v1 "
+            "with status, confidence, findings, confirmed_rules, uncertainties, "
+            "dependencies, cross_unit_links, evidence_requests, and proposed_operations. "
+            "Proposed operations are analysis only and never authorize a write."
+        ),
+        tools=list(READ_ONLY_SUBAGENT_TOOLS),
+        disallowedTools=[
+            "Agent",
+            "Skill",
+            "AskUserQuestion",
+            "mcp__docfit__docx_edit",
+            "mcp__docfit__docx_render",
+            "mcp__docfit__docx_validate",
+        ],
+        model="inherit",
+        skills=[],
+        memory=None,
+        mcpServers=[MCP_SERVER_NAME],
+        maxTurns=6,
+        background=False,
+        permissionMode="dontAsk",
+    )
+
+
+def make_agent_gate_hook(
+    audit: PermissionAudit | None = None,
+) -> Callable[[HookInput, str | None, HookContext], Awaitable[HookJSONOutput]]:
+    async def gate_agent(
+        hook_input: HookInput,
+        _tool_use_id: str | None,
+        _context: HookContext,
+    ) -> HookJSONOutput:
+        if hook_input["hook_event_name"] != "PreToolUse":
+            return {}
+        pre_tool_input = hook_input
+        if pre_tool_input["tool_name"] != "Agent":
+            return {}
+
+        subagent_type = pre_tool_input["tool_input"].get("subagent_type")
+        normalized_type = subagent_type if isinstance(subagent_type, str) else None
+        allowed = normalized_type == SUBAGENT_NAME
+        if audit is not None:
+            audit(
+                PermissionAuditEvent(
+                    "Agent",
+                    "allow" if allowed else "deny",
+                    normalized_type,
+                )
+            )
+        return {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "allow" if allowed else "deny",
+                "permissionDecisionReason": (
+                    "DocFit permits only the read-only docfit-unit-analyst subagent type."
+                ),
+            }
+        }
+
+    return gate_agent
+
+
+def make_permission_callback(
+    ask_user: AskUser,
+    *,
+    audit: PermissionAudit | None = None,
+) -> CanUseTool:
+    def record(event: PermissionAuditEvent) -> None:
+        if audit is not None:
+            audit(event)
+
     async def can_use_tool(
         tool_name: str,
         tool_input: dict[str, Any],
@@ -70,9 +179,20 @@ def make_permission_callback(ask_user: AskUser) -> CanUseTool:
     ) -> PermissionResultAllow | PermissionResultDeny:
         if tool_name == "Skill" or tool_name in FULL_TOOL_NAMES:
             return PermissionResultAllow()
+        if tool_name == "Agent":
+            subagent_type = tool_input.get("subagent_type")
+            if subagent_type == SUBAGENT_NAME:
+                record(PermissionAuditEvent(tool_name, "allow", SUBAGENT_NAME))
+                return PermissionResultAllow()
+            normalized_type = subagent_type if isinstance(subagent_type, str) else None
+            record(PermissionAuditEvent(tool_name, "deny", normalized_type))
+            return PermissionResultDeny(
+                message=("DocFit permits only the read-only docfit-unit-analyst subagent type."),
+                interrupt=False,
+            )
         if tool_name != "AskUserQuestion":
             return PermissionResultDeny(
-                message=f"DocFit M0 denies unmatched tool: {tool_name}",
+                message=f"DocFit denies unmatched tool: {tool_name}",
                 interrupt=False,
             )
 
@@ -109,6 +229,10 @@ def build_agent_options(
     cwd: Path | None = None,
     agent_env: Mapping[str, str] | None = None,
     model: str | None = None,
+    permission_audit: PermissionAudit | None = None,
+    system_prompt: str | None = None,
+    output_format: dict[str, Any] | None = None,
+    max_turns: int = 12,
 ) -> ClaudeAgentOptions:
     root = cwd or project_root()
     return ClaudeAgentOptions(
@@ -118,17 +242,34 @@ def build_agent_options(
         mcp_servers={MCP_SERVER_NAME: build_docfit_server()},
         strict_mcp_config=True,
         permission_mode="default",
-        can_use_tool=make_permission_callback(ask_user),
+        can_use_tool=make_permission_callback(ask_user, audit=permission_audit),
+        hooks={
+            "PreToolUse": [
+                HookMatcher(
+                    matcher="Agent",
+                    hooks=[make_agent_gate_hook(permission_audit)],
+                )
+            ]
+        },
+        agents={SUBAGENT_NAME: build_unit_analyst_definition()},
         setting_sources=["project"],
-        skills=[SKILL_NAME],
+        skills=list(SKILL_NAMES),
         cwd=root,
         env=dict(agent_env or {}),
         model=model,
-        max_turns=8,
-        system_prompt=(
-            "You are running the DocFit M0 smoke harness. Never claim that real DOCX "
-            "inspection, editing, rendering, review, or validation exists. Use only the "
-            "visible built-ins and the five registered DocFit MCP tools. Interpret Tool "
-            "results yourself; the application shell does not interpret needs_input."
+        max_turns=max_turns,
+        max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
+        output_format=output_format,
+        system_prompt=system_prompt
+        or (
+            "You are running the DocFit M1 Tool harness. The five DocFit Tools provide "
+            "real, permission-bounded DOCX inspection, editing, rendering, visual evidence, "
+            "and independent validation. Use only the two enabled domain Skills, the five "
+            "registered DocFit MCP tools, and the type-gated read-only docfit-unit-analyst. "
+            "Interpret Tool results yourself; the application shell does not choose Knowledge, "
+            "delegate scopes, or interpret needs_input. Never treat approximate OfficeCLI "
+            "rendering as Adobe delivery conversion evidence, and never consume an error or "
+            "committed=false "
+            "output."
         ),
     )

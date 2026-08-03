@@ -12,6 +12,7 @@ import docfit.knowledge as knowledge_api
 from docfit.knowledge import (
     KnowledgeValidationError,
     load_knowledge,
+    select_knowledge_modules,
     validate_knowledge_package,
 )
 
@@ -72,6 +73,37 @@ def test_validates_generic_synthetic_package_as_frozen_typed_model() -> None:
     assert package.documents[-1].spec.kind == "example"
     with pytest.raises(FrozenInstanceError):
         package.manifest.title = "changed"  # type: ignore[misc]
+
+
+def test_selects_only_requested_universal_documents_as_prompt_modules() -> None:
+    package = load_knowledge()
+
+    modules = select_knowledge_modules(
+        ["recognition-methods", "interpretation-principles"],
+        package=package,
+    )
+
+    assert [module.id for module in modules] == [
+        "recognition-methods",
+        "interpretation-principles",
+    ]
+    assert all(module.version == package.manifest.version for module in modules)
+    assert all(module.package_id == package.manifest.package_id for module in modules)
+    assert all(
+        module.package_content_digest == package.manifest.content_digest
+        for module in modules
+    )
+    assert all(module.content_digest.startswith("sha256:") for module in modules)
+    assert "通用论文格式概念" not in "\n".join(module.content for module in modules)
+
+
+@pytest.mark.parametrize(
+    "module_ids",
+    [[], ["concepts", "concepts"], ["unknown-module"]],
+)
+def test_rejects_invalid_knowledge_module_selection(module_ids: list[str]) -> None:
+    with pytest.raises(ValueError):
+        select_knowledge_modules(module_ids)
 
 
 @pytest.mark.parametrize(

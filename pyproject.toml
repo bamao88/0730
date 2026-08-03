@@ -12,6 +12,8 @@ license = { text = "Proprietary" }
 authors = [{ name = "DocFit contributors" }]
 dependencies = [
   "claude-agent-sdk==0.2.128",
+  "pdfservices-sdk==4.2.0",
+  "Pillow>=11.3,<13",
   "PyYAML>=6.0.2,<7",
 ]
 
@@ -46,3 +48,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.12"
 strict = true
 packages = ["docfit"]
+
+[[tool.mypy.overrides]]
+module = ["adobe.*"]
+ignore_missing_imports = true

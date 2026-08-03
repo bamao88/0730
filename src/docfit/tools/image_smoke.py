@@ -5,7 +5,7 @@ from __future__ import annotations
 import struct
 import zlib
 
-SMOKE_MARKER = "DOCFIT-M0-IMAGE-SMOKE"
+SMOKE_MARKER = "DOCFIT-M0"
 SMOKE_BORDER_COLOR = "BLUE"
 
 _FONT: dict[str, tuple[str, ...]] = {
@@ -33,7 +33,7 @@ def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
 
 def make_smoke_png() -> bytes:
     """Return a PNG whose marker must be read from the image, not tool text."""
-    width, height = 520, 150
+    width, height = 640, 220
     white = (250, 252, 255)
     blue = (20, 82, 180)
     dark = (18, 30, 54)
@@ -44,16 +44,19 @@ def make_smoke_png() -> bytes:
         if 0 <= x < width and 0 <= y < height:
             pixels[y * width + x] = list(color)
 
-    border = 8
+    border = 12
     for y in range(height):
         for x in range(width):
             if x < border or x >= width - border or y < border or y >= height - border:
                 paint(x, y, blue)
 
-    scale = 3
+    # Keep the diagnostic OCR target deliberately large and short.  The smoke
+    # proves that the Agent received image pixels; it should not also depend on
+    # a provider recognizing a long line of tiny bitmap text.
+    scale = 8
     text_width = len(SMOKE_MARKER) * 6 * scale - scale
     start_x = (width - text_width) // 2
-    start_y = 48
+    start_y = 62
     for char_index, char in enumerate(SMOKE_MARKER):
         glyph = _FONT[char]
         glyph_x = start_x + char_index * 6 * scale
@@ -68,9 +71,9 @@ def make_smoke_png() -> bytes:
                                 dark,
                             )
 
-    for y in range(104, 126):
-        for x in range(220, 300):
-            if (x - 260) ** 2 + (y - 115) ** 2 <= 11**2:
+    for y in range(148, 188):
+        for x in range(300, 340):
+            if (x - 320) ** 2 + (y - 168) ** 2 <= 20**2:
                 paint(x, y, green)
 
     raw = b"".join(b"\x00" + bytes(channel for pixel in row for channel in pixel) for row in (

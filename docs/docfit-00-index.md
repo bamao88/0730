@@ -1,7 +1,16 @@
 # DocFit 设计文档索引（00）
 
 > 状态：最终架构索引
-> 日期：2026-08-01
+> 日期：2026-08-03
+
+本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
+M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
+固定 OfficeCLI/Adobe PDF Services 薄适配、`docfit convert` 薄应用壳，以及最小
+`docfit eval --suite core`。第二个后端已纠正为 Adobe PDF Services API；产品不再依赖
+本地 Microsoft Word、AppleScript、macOS 图形会话或本地字体库存。确定性与 live
+完成情况仍分别按 06 判定。当前用户批准的产品开发范围已在 M2 结束并完成；M3 的
+Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
+宣称 M3 已通过，也不再作为当前计划 blocker。
 
 ## 一句话架构
 
@@ -11,12 +20,37 @@ DocFit 以 **Claude Agent SDK** 为运行时边界，产品只维护五类资产
 Skill + Knowledge + Tools + Eval + 薄应用壳
 ```
 
-DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
+DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问、
+原生 Subagent 与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
+
+批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）负责
+任务判断与可选委派，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
+DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个通用只读
+`docfit-unit-analyst`，以 SDK 原生隔离上下文执行局部分析；它不是新的产品资产、
+单元专家目录或固定工作流节点。
 
 第一版在五个 Tool 内只适配两个职责不重叠的具体后端：OfficeCLI 负责
-inspect、edit、validate 和高频截图，本地 Word API 负责初始分页基线、必要时
-重新分页和最终 PDF 导出。Agent 只表达任务目的，不选择后端；当前不建设通用
+inspect、edit、validate 和高频截图，Adobe PDF Services API 负责 `baseline` 与
+`candidate_verification` 的 DOCX→PDF 服务转换。Agent 只表达 `baseline`、
+`edit_feedback` 或
+`candidate_verification`，不选择后端；当前不建设通用
 Provider 接口、注册表、动态选择或故障转移。
+
+Adobe 路由通过锁定的 `pdfservices-sdk==4.2.0` 和仓库外 `0600` 凭据运行。每个未命中
+缓存的 DOCX→PDF 调用消耗一个 Document Transaction；免费开发额度当前按每月 500 次
+做容量规划。配额是运行资源约束，不进入公开 Tool schema，也不允许失败后回退到
+OfficeCLI 冒充交付证据。Adobe 未公开的字体库存和替代详情必须标记为
+`service-managed` / `opaque`，不得用本地字体指纹代替。
+
+Claude Agent SDK 兼容边界也属于薄应用壳与 Tool adapter：公开 Tool schema 使用兼容
+backend 能稳定消费的扁平 JSON Schema 子集；Tool 的完整结构化结果同时以紧凑 JSON
+text 对当前 Agent 可见，图片仍使用原生 image content block。应用壳为真实页面批次
+配置足够的 SDK 消息缓冲，但单次视觉返回仍受图片数量和字节预算限制。这些兼容处理
+不增加第六个 Tool、第二套协议或新的 Agent loop。
+
+`docx_render` 是新渲染证据的生产边界；`docx_visual_review` 只读取有效
+`render_ref` 的已有页面产物并将图片投递给 Agent，不调用任何渲染后端，也不产生新
+的文档 render。Tool 不维护编辑轮次，是否继续由 Agent 判断。
 
 ## 文档清单
 
@@ -51,13 +85,19 @@ Provider 接口、注册表、动态选择或故障转移。
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 领域目标、判断方法、工具使用、询问与停止条件 | 运行时调度、持久化状态机 |
-| Knowledge | 面向所有学校和任务共享的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
-| Tools | DOCX 分析、修改、迭代/交付渲染、可选元素映射、向 Agent 提供视觉证据、确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Word 最终事实，或替当前 Agent 做语义判断 |
+| Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回 | 固定调度图、持久化状态机、真实工具权限实现 |
+| Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
+| Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
-| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、返回回复与产物 | 领域判断、工作流引擎 |
+| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实 Subagent 上下文隔离和最小权限、返回回复与产物 | 领域判断、委派策略、工作流引擎 |
 
-Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、阶段、checkpoint 或恢复协议。
+Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、
+阶段、checkpoint、Subagent 或恢复协议。`AgentDefinition` 只是 SDK 接线配置，不与
+Skill、Knowledge、Tools、Eval 或薄应用壳并列为第六类产品资产。
+
+Claude Agent SDK 没有一个与 Skill、Tool 并列的 DocFit Knowledge Base runtime。
+稳定通用知识由产品 Knowledge Package 提供；当前 Skill 选择本次委派所需模块，主
+Agent 将选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
 
 Knowledge Package 随产品发布且必须保持通用。学校事实只来自当前任务提供的
 模板、要求、示例和用户确认；Agent 在任务中提取或推导的学校结论不会因此自动
@@ -72,6 +112,8 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 以下内容不属于当前 DocFit 架构：
 
 - 自定义工作流引擎、阶段 DAG 或任务调度器；
+- 六个或更多文档单元专家目录、固定 AgentDefinition 注册表或穷尽式文档类型枚举；
+- “发现某单元就必须委派”的规则、固定复杂度阈值或应用壳领域路由；
 - `StageExecution`、Run Evidence Module、事件 hash chain；
 - 自定义 checkpoint、exact replay、comparative replay；
 - Delivery Preflight 子系统和多层交付状态机；
@@ -80,7 +122,7 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 - 只有一处消费者的抽象层；
 - 与 Claude Agent SDK 重叠的路由、会话和恢复实现。
 
-OfficeCLI 与本地 Word API 分担不同职责，不构成“两个实现共同消费一套通用
+OfficeCLI 与 Adobe PDF Services API 分担不同职责，不构成“两个实现共同消费一套通用
 Provider 抽象”的证据。只有未来真实接入第三个引擎，并且确实需要动态选择或
 故障转移时，才重新评估该抽象。
 
@@ -96,3 +138,6 @@ Provider 抽象”的证据。只有未来真实接入第三个引擎，并且�
 4. 新抽象是否至少有两个明确消费者？
 
 任一问题没有清楚答案时，不新增架构组件。
+
+增加新的通用 Knowledge 模块不等于增加 Agent 类型。未匹配、复合或简单文档范围可以
+由主 Agent 直接分析，或连同所需 Knowledge 交给同一个 `docfit-unit-analyst`。

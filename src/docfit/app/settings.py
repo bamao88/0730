@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
-import os
-import re
-import stat
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal, cast
+
+from docfit.config import (
+    ConfigurationError,
+    default_env_file,
+    env_file_is_private,
+    merged_environment,
+    read_env_file,
+    resolve_env_file,
+)
 
 BackendName = Literal["kimi", "minimax"]
 
@@ -18,7 +24,6 @@ DEFAULT_KIMI_MODEL = "kimi-for-coding"
 DEFAULT_MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
 DEFAULT_MINIMAX_MODEL = "MiniMax-M3"
 
-_ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _BACKEND_KEY_NAMES: dict[BackendName, tuple[str, ...]] = {
     "kimi": (
         "DOCFIT_KIMI_API_KEY",
@@ -29,7 +34,7 @@ _BACKEND_KEY_NAMES: dict[BackendName, tuple[str, ...]] = {
 }
 
 
-class AgentConfigurationError(ValueError):
+class AgentConfigurationError(ConfigurationError):
     """Raised when the local Agent environment file is structurally invalid."""
 
 
@@ -65,42 +70,18 @@ class AgentBackend:
 
 
 def default_agent_env_file() -> Path:
-    return Path.home() / ".config" / "docfit" / "agent.env"
+    return default_env_file()
 
 
 def resolve_agent_env_file(environment: Mapping[str, str] | None = None) -> Path:
-    env = os.environ if environment is None else environment
-    configured = env.get("DOCFIT_ENV_FILE")
-    return Path(configured).expanduser() if configured else default_agent_env_file()
+    return resolve_env_file(environment)
 
 
 def read_agent_env_file(path: Path) -> dict[str, str]:
-    """Parse a small dotenv-compatible file without shell evaluation or expansion."""
-    if not path.is_file():
-        return {}
-
-    values: dict[str, str] = {}
-    for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
-            continue
-        if line.startswith("export "):
-            line = line.removeprefix("export ").lstrip()
-        if "=" not in line:
-            raise AgentConfigurationError(
-                f"{path}:{line_number}: expected NAME=VALUE"
-            )
-        name, value = line.split("=", 1)
-        name = name.strip()
-        value = value.strip()
-        if not _ENV_NAME.fullmatch(name):
-            raise AgentConfigurationError(
-                f"{path}:{line_number}: invalid environment variable name"
-            )
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
-            value = value[1:-1]
-        values[name] = value
-    return values
+    try:
+        return read_env_file(path)
+    except ConfigurationError as error:
+        raise AgentConfigurationError(str(error)) from error
 
 
 def merged_agent_environment(
@@ -108,18 +89,10 @@ def merged_agent_environment(
     *,
     env_file: Path | None = None,
 ) -> tuple[dict[str, str], Path | None]:
-    """Load the shared file, then apply process overrides without mutating os.environ."""
-    explicit_environment = environment is not None
-    process_values = dict(os.environ if environment is None else environment)
-    selected_file = env_file
-    if selected_file is None and (
-        not explicit_environment or process_values.get("DOCFIT_ENV_FILE")
-    ):
-        selected_file = resolve_agent_env_file(process_values)
-
-    merged = read_agent_env_file(selected_file) if selected_file is not None else {}
-    merged.update(process_values)
-    return merged, selected_file
+    try:
+        return merged_environment(environment, env_file=env_file)
+    except ConfigurationError as error:
+        raise AgentConfigurationError(str(error)) from error
 
 
 def backend_order(values: Mapping[str, str]) -> tuple[BackendName, ...]:
@@ -202,9 +175,7 @@ def configured_backend_names(
 
 
 def agent_env_file_is_private(path: Path) -> bool:
-    if not path.is_file():
-        return False
-    return stat.S_IMODE(path.stat().st_mode) == 0o600
+    return env_file_is_private(path)
 
 
 def redact_secrets(message: str, backends: tuple[AgentBackend, ...]) -> str:

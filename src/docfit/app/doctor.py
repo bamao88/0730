@@ -1,4 +1,4 @@
-"""Deterministic and local-product readiness checks for DocFit."""
+"""Deterministic and provider readiness checks for DocFit."""
 
 from __future__ import annotations
 
@@ -15,8 +15,11 @@ from docfit.app.agent import (
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     LOGGING_POLICY,
-    SKILL_NAME,
+    READ_ONLY_SUBAGENT_TOOLS,
+    SKILL_NAMES,
+    SUBAGENT_NAME,
     build_agent_options,
+    build_unit_analyst_definition,
     project_root,
 )
 from docfit.app.settings import (
@@ -26,7 +29,15 @@ from docfit.app.settings import (
     merged_agent_environment,
 )
 from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME
+from docfit.tools.adobe import AdobePdfServicesAdapter
 from docfit.tools.image_smoke import make_smoke_png
+from docfit.tools.images import poppler_versions
+from docfit.tools.officecli import (
+    OFFICECLI_EXPECTED_SHA256,
+    OFFICECLI_EXPECTED_VERSION,
+    OfficeCliAdapter,
+)
+from docfit.tools.runtime import ToolFailure, sha256_file
 
 from .smoke import SMOKE_CASES, receipt_directory
 
@@ -61,23 +72,6 @@ def _sdk_version() -> str | None:
         return None
 
 
-def _font_count() -> int:
-    roots = (
-        Path("/System/Library/Fonts"),
-        Path("/Library/Fonts"),
-        Path.home() / "Library" / "Fonts",
-        Path("/usr/share/fonts"),
-    )
-    suffixes = {".otf", ".ttf", ".ttc"}
-    return sum(
-        1
-        for root in roots
-        if root.is_dir()
-        for path in root.rglob("*")
-        if path.suffix.casefold() in suffixes
-    )
-
-
 def _receipt_check(root: Path, sdk_version: str | None) -> DoctorCheck:
     missing: list[str] = []
     invalid: list[str] = []
@@ -97,7 +91,7 @@ def _receipt_check(root: Path, sdk_version: str | None) -> DoctorCheck:
         return DoctorCheck(
             "agent_smoke_receipts",
             "PASS",
-            "All three live smoke receipts match the installed SDK version.",
+            f"All {len(SMOKE_CASES)} live smoke receipts match the installed SDK version.",
             ("agent-smoke",),
         )
     detail_parts = []
@@ -160,7 +154,7 @@ def run_doctor(
         project / "pyproject.toml",
         project / "uv.lock",
         project / ".python-version",
-        project / ".claude" / "skills" / SKILL_NAME / "SKILL.md",
+        *(project / ".claude" / "skills" / skill_name / "SKILL.md" for skill_name in SKILL_NAMES),
     )
     missing_files = [
         str(path.relative_to(project)) for path in required_files if not path.is_file()
@@ -172,7 +166,7 @@ def run_doctor(
             (
                 f"Missing: {', '.join(missing_files)}"
                 if missing_files
-                else "Project metadata, lock, Python pin, and project Skill are present."
+                else "Project metadata, lock, Python pin, and both domain Skills are present."
             ),
             ("base", "agent-smoke", "provider"),
         )
@@ -193,12 +187,24 @@ def run_doctor(
     try:
         options = build_agent_options(cwd=project)
         mcp_names = tuple(options.mcp_servers) if isinstance(options.mcp_servers, dict) else ()
+        hooks = options.hooks or {}
+        agent_hooks = hooks.get("PreToolUse", [])
+        unit_analyst = build_unit_analyst_definition()
         config_ok = (
             tuple(options.tools or ()) == BUILTIN_TOOLS
             and tuple(options.allowed_tools) == FULL_TOOL_NAMES
             and mcp_names == (MCP_SERVER_NAME,)
             and options.setting_sources == ["project"]
-            and options.skills == [SKILL_NAME]
+            and options.skills == list(SKILL_NAMES)
+            and options.agents is not None
+            and tuple(options.agents) == (SUBAGENT_NAME,)
+            and options.agents[SUBAGENT_NAME] == unit_analyst
+            and tuple(hooks) == ("PreToolUse",)
+            and len(agent_hooks) == 1
+            and agent_hooks[0].matcher == "Agent"
+            and tuple(unit_analyst.tools or ()) == READ_ONLY_SUBAGENT_TOOLS
+            and unit_analyst.skills == []
+            and unit_analyst.memory is None
         )
     except Exception:
         config_ok = False
@@ -207,10 +213,10 @@ def run_doctor(
             "sdk_configuration",
             "PASS" if config_ok else "FAIL",
             (
-                "Only Skill and AskUserQuestion are visible; one DocFit server exposes five "
-                "pre-approved names."
+                "Skill, AskUserQuestion, and Agent are visible; Agent is type-gated to one "
+                "read-only definition and the DocFit server exposes five pre-approved names."
                 if config_ok
-                else "SDK permission or discovery configuration does not match the M0 contract."
+                else "SDK permission or discovery configuration does not match the P1 contract."
             ),
             ("base", "agent-smoke", "provider"),
         )
@@ -225,10 +231,7 @@ def run_doctor(
         DoctorCheck(
             "directory_policy",
             "PASS" if policy_ok else "FAIL",
-            (
-                "M0 exposes no filesystem built-ins; the future Tool boundary fixes input "
-                "as read-only and work/output as writable."
-            ),
+            ("The Tool boundary fixes input as read-only and work/output as writable."),
             ("base", "agent-smoke", "provider"),
         )
     )
@@ -255,7 +258,7 @@ def run_doctor(
         DoctorCheck(
             "iteration_rendering",
             "PASS" if image_ok else "FAIL",
-            "The M0 synthetic page image path is available for Agent iteration evidence.",
+            "The synthetic page image path is available for Agent iteration evidence.",
             ("base", "agent-smoke"),
         )
     )
@@ -271,9 +274,7 @@ def run_doctor(
         env_file_detail = f"Shared Agent environment is present with mode 0600: {selected_env_file}"
     elif selected_env_file.is_file():
         env_file_status = "NOT_READY"
-        env_file_detail = (
-            f"Shared Agent environment must have mode 0600: {selected_env_file}"
-        )
+        env_file_detail = f"Shared Agent environment must have mode 0600: {selected_env_file}"
     else:
         env_file_status = "NOT_READY"
         env_file_detail = f"Shared Agent environment is absent: {selected_env_file}"
@@ -306,22 +307,58 @@ def run_doctor(
     )
     checks.append(_receipt_check(project, sdk_version))
 
-    font_count = _font_count()
+    try:
+        office = OfficeCliAdapter()
+        office_hash = sha256_file(office.executable)
+        office_ok = (
+            office.version == OFFICECLI_EXPECTED_VERSION
+            and office_hash == OFFICECLI_EXPECTED_SHA256
+        )
+        office_detail = (
+            f"OfficeCLI {office.version}; executable hash "
+            f"{'matches' if office_hash == OFFICECLI_EXPECTED_SHA256 else 'does not match'} "
+            "the locked M1 binary."
+        )
+    except ToolFailure as error:
+        office_ok = False
+        office_detail = error.message
     checks.append(
         DoctorCheck(
-            "fonts",
-            "PASS" if font_count else "NOT_READY",
-            f"Discovered {font_count} local font files." if font_count else "No local fonts found.",
+            "officecli_backend",
+            "PASS" if office_ok else "NOT_READY",
+            office_detail,
             ("provider",),
         )
     )
+
+    try:
+        adobe = AdobePdfServicesAdapter.from_environment(environment, env_file=env_file)
+        adobe_ok = True
+        adobe_detail = (
+            f"Adobe PDF Services SDK {adobe.version}; service-principal configuration is ready."
+        )
+    except ToolFailure as error:
+        adobe_ok = False
+        adobe_detail = error.message
     checks.append(
         DoctorCheck(
-            "provider",
-            "NOT_READY",
+            "adobe_pdf_services_backend",
+            "PASS" if adobe_ok else "NOT_READY",
+            adobe_detail,
+            ("provider",),
+        )
+    )
+
+    poppler = poppler_versions()
+    poppler_ok = all(poppler.values())
+    checks.append(
+        DoctorCheck(
+            "pdf_page_derivation",
+            "PASS" if poppler_ok else "NOT_READY",
             (
-                "Delivery DOCX rendering and Provider support checks are intentionally "
-                "reserved for M1."
+                f"pdftoppm: {poppler['pdftoppm']}; pdfinfo: {poppler['pdfinfo']}."
+                if poppler_ok
+                else "pdftoppm and pdfinfo are both required for converted PDF page derivation."
             ),
             ("provider",),
         )

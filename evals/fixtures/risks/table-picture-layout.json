@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "table-picture-layout",
+  "fixture": "synthetic",
+  "document": "table-picture-layout.docx",
+  "risk": "Tables and picture relationships can be lost or visually displaced.",
+  "automatic_assertion": "The table, image relationship, and current table object ref survive inspection.",
+  "delivery_assertion": "Review the delivery PDF for table pagination and picture placement."
+}

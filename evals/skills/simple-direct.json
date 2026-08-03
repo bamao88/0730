@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "simple-direct",
+  "scope": "simple",
+  "task": "Interpret one explicit current-task template slot.",
+  "delegation": "optional_not_required",
+  "assertions": [
+    "may_analyze_in_main_agent",
+    "uses_only_current_task_school_evidence",
+    "does_not_create_school_knowledge"
+  ]
+}

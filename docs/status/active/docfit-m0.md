@@ -16,10 +16,9 @@
   `app/` / `tools/` module ownership
 - Live backend evidence: Kimi passed `image`, `ask-user`, and `denied-tools`;
   MiniMax remains the configured fallback
-- Next action: review and approve `docs/plans/docfit-m1-tools-v1.md`; do not execute
-  M1 while its Preflight status is DRAFT
-- Next proof: none for M0; the next proof contract is the draft M1 Preflight
+- Next action: none for M0; P1 is complete and the user-approved M1–M3 execution is tracked
+  separately
+- Next proof: see `docs/status/active/docfit-development-plan.md` for current execution proof
 - Stop condition: satisfied; stop before any M1 implementation
-- No-touch scope: real DOCX behavior, OfficeCLI/local Word API adapters, product Knowledge and current-task school evidence,
-  `convert`, and M1–M5
-- Parked work: every capability listed in M1–M5
+- No-touch scope for this historical capsule: later milestone implementation and evidence
+- Parked work: none assigned to M0; see the unified active capsule

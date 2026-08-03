@@ -76,6 +76,20 @@ class KnowledgePackage:
     documents: tuple[KnowledgeDocument, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class KnowledgeModule:
+    """One explicitly selected, prompt-ready view of a universal document."""
+
+    id: str
+    kind: KnowledgeDocumentKind
+    description: str
+    version: str
+    content_digest: str
+    content: str
+    package_id: str
+    package_content_digest: str
+
+
 class KnowledgeValidationError(ValueError):
     """A stable, content-safe error raised for an invalid Knowledge package."""
 

@@ -1,7 +1,11 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-01
+> 日期：2026-08-03
+
+本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
+合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
+在新的 M3 计划获批后进行。
 
 ## 1. Gold 的定位
 
@@ -16,11 +20,16 @@ Gold 是人工确认过的参考结果或关键事实，不是独立系统。
 它不用于：
 
 - 规定 Agent 必须走哪条完整路径；
+- 规定是否必须委派、Subagent 数量、并行/串行选择或固定论文单元目录；
 - 复制运行时状态；
 - 重放自定义工作流阶段；
-- 替代真实 Word 查看和人工判断。
+- 替代真实 Adobe 交付页面查看和人工判断。
 
 Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只有在事实断言不足时才保存 Gold 产物。
+
+当前 core Eval 只提交 JSON case 元数据、合成 fixture builder 和人工交付页面 checklist；
+生成的 DOCX/PDF/PNG、运行报告与中间产物均被忽略。它们不是 Gold，不能替代经过授权
+或脱敏的复杂真实样本与人工确认结果。
 
 ## 2. 最小形式
 
@@ -70,7 +79,10 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-用户同时提供模板和论文的用例仍属于 `convert-thesis`。测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定调用轨迹或命名的中间资产。
+模板提取目标使用 `docfit-school-extract`，其 Gold 只保存带来源引用的当前任务事实、
+冲突与不确定性；同时提供模板和论文并要求交付转换的用例属于 `convert-thesis`。
+测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
+调用轨迹、Subagent transcript、委派图或命名的中间阶段资产。
 
 ## 3. 断言优先
 
@@ -84,8 +96,11 @@ manual_review: [cover_page, toc_pagination]
 - 页面数量或允许范围；
 - 不应残留的占位符和说明文字；
 - 人工确认的溢出、遮挡、空白页、孤行、图表错位和页眉页脚异常；
-- 视觉 finding 所对应的文档 hash、页码、render purpose、render reason、fidelity claim、Provider、字体环境、evidence ref，以及可用的 `object_ref`、节引用或文字锚点；
+- 视觉 finding 所对应的文档 hash、页码、render intent、fidelity、Provider、字体环境、
+  parent render ref、evidence ref，以及可用的 `object_ref`、节引用或文字锚点；
 - 需要人工检查的高风险页面。
+- 可选 Subagent 返回中的事实、依赖、证据请求和最终被主 Agent 接受/拒绝的结论；
+  不保存隐藏思维、完整 Subagent 历史或“正确调用了几次 Agent”的轨迹 Gold。
 
 只有以下情况保存完整 `final.docx` 或少量参考页面图片：
 
@@ -93,7 +108,13 @@ manual_review: [cover_page, toc_pagination]
 - 结构化断言暂时覆盖不了关键差异；
 - 它是已经确认的真实交付基线。
 
-完整文件和页面图片是辅助参照，不能自动覆盖事实断言。像素差异也不能单独证明版式语义正确。页码只在对应 render ref 内有意义；OfficeCLI 与本地 Word API 的同页码不能自动认定为同一内容范围。字体、DPI、页面尺寸或 fidelity claim 不同的页面不得直接做像素 Gold 比较。比较同一文档 hash 的快速迭代渲染与 Word 渲染时，可以使用当前快照的 `object_ref`、节引用或文字锚点关联；文档 hash 变化后必须重新 inspect，并通过新旧快照的节、文字锚点或显式内容指纹建立对照。Gold 同时保存实际后端、页数、bbox、问题类别和人工结论等稳定事实。
+完整文件和页面图片是辅助参照，不能自动覆盖事实断言。像素差异也不能单独证明版式
+语义正确。页码只在对应 render ref 内有意义；OfficeCLI 与 Adobe PDF Services API 的同页码不能
+自动认定为同一内容范围。字体、DPI、页面尺寸或 fidelity 不同的页面不得直接做像素
+Gold 比较。比较同一文档 hash 的 `edit_feedback` 与 Adobe candidate 时，可以使用当前
+快照的 `object_ref`、节引用或文字锚点关联；文档 hash 变化后必须重新 inspect，并通过
+新旧快照的节、文字锚点或显式内容指纹建立对照。Gold 同时保存实际后端、页数、bbox、
+问题类别和人工结论等稳定事实。
 
 ## 4. 比较方式
 
@@ -115,12 +136,13 @@ Gold 只从已经实际运行并人工确认的结果产生：
 
 1. 用当前 Skill、Knowledge 和 Tools 处理样本；
 2. 运行确定性断言；
-3. 通过 `docx_visual_review` 查看与当前文档绑定的页面图片；
+3. 查看 `docx_render` 随结果返回的有限预览，或通过 `docx_visual_review` 按需读取与
+   当前文档绑定的已有页面图片；
 4. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
 5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
 6. 必要时保存参考 `final.docx` 或少量页面图片；
 7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
-   hash、render purpose、render reason、fidelity claim、Provider、字体环境、页面锚点和原因。
+   hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
 
@@ -161,6 +183,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 阶段输入胶囊；
 - exact/comparative replay；
 - trajectory Gold；
+- Subagent 数量、调用顺序、并行方式或单元到 Agent 映射 Gold；
 - 自动 Gold 晋升；
 - Gold catalog 服务。
 

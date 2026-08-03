@@ -31,9 +31,15 @@
 
 - The canonical milestone contract is
   `docs/docfit-06-development-roadmap.md`.
-- M0 and the Provider-independent universal Knowledge Package v1 are the
-  currently implemented foundation. Do not enter M1 or later work without a
-  newly approved Preflight.
+- M0, the Provider-independent universal Knowledge Package v1, P1, M1, and M2 are
+  verified. The current product-development scope is complete at the M2 `docfit convert`
+  chain, including the non-Eval safety, evidence, and reporting support required by that
+  chain.
+- M3 Eval expansion, authorized/deidentified real-sample qualification, Gold work, and
+  external manual review are explicitly outside the current development scope. Keep M3 as
+  a future milestone in `docs/docfit-06-development-roadmap.md`; do not claim that it passed,
+  and do not treat its deferred gates as blockers for the completed current plan. A new
+  user-approved plan is required before resuming that work.
 - Use `$doc-keeper` or an equivalent focused drift check after changes that may
   invalidate claims in 00–06.
 
@@ -55,6 +61,7 @@ Live M0 proof additionally requires:
 uv run docfit agent-smoke --case image
 uv run docfit agent-smoke --case ask-user
 uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case subagent
 uv run docfit doctor --require agent-smoke
 ```
 
@@ -62,10 +69,23 @@ Keep API credentials only in the repository-external
 `~/.config/docfit/agent.env` with mode `0600`. Never print, commit, or copy
 credential values into project docs, tests, logs, or examples.
 
+The fixed document backends are OfficeCLI 1.0.143 for inspect/edit/validate/edit feedback
+and Adobe PDF Services (`pdfservices-sdk==4.2.0`) for baseline/candidate DOCX-to-PDF.
+Delivery conversion must not depend on local Microsoft Word, AppleScript, GUI session
+state, or local fonts. An Adobe cache miss consumes one Document Transaction; cache hits
+must not repeat the API call. Treat Adobe's font environment as service-managed and opaque.
+Adobe conversion uploads the complete authorized DOCX to the external service; never send
+an input that is outside the current task authorization or log its document body.
+
 ## Working rules
 
 - Preserve the five public `mcp__docfit__...` Tool names and the default-deny
   permission boundary unless the long-term contract is explicitly revised.
+- Communicate decisions directly and concretely. State fixed responsibilities and
+  observable behavior first; do not complicate settled facts with speculative
+  implementation details, unnecessary fallback scenarios, or invented status terms.
+  Prefer wording such as "this Tool call fails and publishes no output" over abstract
+  statements such as "the system must stop."
 - Keep the product Knowledge Package universal and product-shipped. School
   requirements, templates, formatting parameters, and extracted conclusions
   remain current-task evidence and must never be auto-promoted to Knowledge.

@@ -1,8 +1,28 @@
 # DocFit 开发路线与阶段验收（06）
 
 > 状态：开发执行基线
-> 日期：2026-08-01
+> 日期：2026-08-03
 > 核心目标：先让第一条论文转换链路真实跑通，再用稳定契约、测试样本和清晰边界支持持续迭代。
+
+当前执行证据：五个真实 Tool、固定适配、开发者 CLI、`docfit convert` 薄壳、合成
+集成测试和一个可选 `docfit eval --suite core` 已实现；
+原实现曾错误依赖本地 Word/AppleScript；该路径已废止，固定转换后端改为 Adobe PDF
+Services API。仓库外凭据、SDK 4.2.0、路由、测试、Eval 和文档必须作为同一修正验证。
+最新确定性与 live 结果只写入 active capsule；本节不以旧的 Word 证据判定 M1–M3。
+
+截至 2026-08-03，M1、M2 各自分配的 deterministic、live Adobe 与合成转换门均已
+通过，当前非评测产品开发范围已经完成。用户随后明确把 M3 Eval、Gold、授权/脱敏
+真实样本资格验证和外部人工复核移出当前范围；M3 作为后续里程碑未纳入当前执行、
+也未通过，
+但不再是当前计划 blocker。仓库外授权复杂论文曾完成 Adobe baseline/candidate、15 页
+全页 Agent 审查、同快照 Adobe/OfficeCLI 私有文字锚点映射与独立高风险目视检查；该
+检查准确保留了可见域错误、未完成占位、跨页表格和空白末页等 blocking/warning，
+结果为 `FAIL`，且外部 human signoff 尚未执行。因此这份证据证明真实链路能运行并能
+拒绝错误交付，不构成 M3 完成声明，也不要求在本轮继续修正样本或取得人工签字。
+真实样本暴露的 Adobe 上传 timeout、SDK 默认
+1 MiB 图片消息上限、结构化结果不可见、只读 mode 传播、同路由超时重复轮换和测试
+污染 live smoke 回执，以及成功报告重放中间 Agent 旧 warning 等问题均已进入对应
+回归；最终判定仍以 active capsule 和本节完成门为准。
 
 ## 1. 路线原则
 
@@ -12,7 +32,7 @@
 
 1. **先有真实可运行结果**：每个阶段都必须增加一个可执行命令、可检查产物或可重复测试，不能只增加目录和抽象。
 2. **先跑一条窄链路**：第一版只支持一个入口、一组当前任务学校材料、唯一产品
-   Knowledge Package、OfficeCLI 与本地 Word API 两个固定后端，以及少量合成样本。
+   Knowledge Package、OfficeCLI 与 Adobe PDF Services API 两个固定后端，以及少量合成样本。
 3. **先复用再重写**：现有 `convert-thesis`、学校提取 Skill、DOCX 检查与渲染脚本先做迁移评估，能满足新契约的能力优先复用。
 4. **接口由当前消费者驱动**：五个 DocFit Tool 契约、通用 Knowledge Package 和
    Eval case 是稳定边界；当前任务学校事实不升级为长期数据模型。
@@ -29,12 +49,13 @@
 | 依赖与命令 | `uv`；提交 `uv.lock`，本地与 CI 均按锁文件安装 | 团队现有交付环境无法运行 `uv` |
 | Agent runtime | Claude Agent SDK for Python | 产品部署目标改为托管 Managed Agents，且需求已经确认 |
 | 用户入口 | 本地 CLI | CLI 已跑通，且真实用户需要 API 或 GUI |
-| Skill 装载 | 仓库内 `.claude/skills/` | 需要跨项目安装或发布时再封装 Plugin |
+| Skill 装载 | Provider-independent P1 已在仓库内实现 `docfit-school-extract` 与 `convert-thesis` 两个领域 Skill | 需要跨项目安装或发布时再封装 Plugin |
 | 测试 | `pytest` | 无 |
 | 静态检查 | `ruff` + `mypy` | 无 |
-| SDK 内置工具 | 只暴露 `Skill` 与 `AskUserQuestion` | 新增内置能力有经过批准的真实需求 |
-| Tool 接入 | SDK in-process MCP server 只注册五个高层 Tool，其中视觉审查 Tool 返回图片 content block | 出现必须独立部署或跨进程复用的真实消费者 |
-| 文档执行与渲染 | OfficeCLI 负责 inspect/edit/validate/高频截图；本地 Word API 负责分页基线、必要时重新分页和最终 PDF | 目标平台无法安装，或真实样本证明固定职责不可行 |
+| SDK 内置工具 | P1 暴露 `Skill`、`AskUserQuestion` 与 `Agent`；`Agent` 由 SDK 原生 `PreToolUse` 权限钩子按 `subagent_type` 精确白名单，且不进入自动批准列表 | 再扩大内置工具或 Subagent 权限时重新审批 |
+| Tool 接入 | SDK in-process MCP server 只注册五个高层 Tool；公开 schema 使用扁平兼容子集，结构化结果镜像为 Agent 可见 JSON text，视觉审查返回图片 content block；SDK buffer 为 16 MiB | 出现必须独立部署或跨进程复用的真实消费者 |
+| 文档执行与渲染 | OfficeCLI 1.0.143 负责 inspect/edit/validate/`edit_feedback`；Adobe PDF Services API（`pdfservices-sdk==4.2.0`）负责 `baseline` 与 `candidate_verification` DOCX→PDF | 服务 API 不可用，或真实样本证明固定职责不可行 |
+| Adobe 凭据与额度 | 凭据只放仓库外 `~/.config/docfit/agent.env` 且 mode 0600；缓存未命中的转换按一个 Document Transaction 计，开发免费额度按每月 500 次规划 | Adobe 官方套餐或凭据格式变化 |
 | 数据 | 合成 fixture 优先；真实样本必须脱敏或授权 | 无 |
 
 仓库骨架和 M0 实现按长期资产归属落盘。以下代码块描述 M0 验收时的边界；
@@ -51,7 +72,7 @@ src/docfit/
 └── knowledge/              # 通用产品 Knowledge 的模型、加载器和内置只读数据
     └── package/v1/         # 随 wheel/sdist 发布，不含学校专属内容
 .claude/skills/
-└── convert-thesis/
+└── convert-thesis/          # 当前 M0 discovery marker
 tests/
 ├── unit/
 ├── contract/
@@ -70,16 +91,19 @@ Knowledge Package 的静态加载与完整性校验。真实 DOCX 行为和两�
 适配仍由后续里程碑按验收证据加入。
 
 学校模板、要求、示例和推导规则不进入仓库长期 Knowledge；它们只能作为当前
-任务输入或授权 Eval fixture。当前只维护 `convert-thesis` Skill，不创建
-`prepare-school-template` 学校资产生产入口。当前两个后端职责不同，只在五个
-Tool 内做薄适配，不抽取共享 Provider 接口。只有
+任务输入或授权 Eval fixture。P1 已实现 `docfit-school-extract` 与
+`convert-thesis` 两个领域 Skill；模板提取只产生当前任务证据，不创建学校资产生产
+入口。当前两个
+后端职责不同，只在五个 Tool 内做薄适配，不抽取共享 Provider 接口。只有
 未来真实接入第三个引擎，并且确实需要动态选择或故障转移时，才重新评估该接口。
 
 测试目录的职责固定为：
 
 - `tests/unit/`：不依赖 SDK 或真实 Provider 的纯逻辑测试；
-- `tests/contract/`：五个公开 Tool、固定路由，以及两个后端各自职责范围内的契约测试；
-- `tests/integration/`：真实 SDK、两个固定后端、CLI 和端到端集成测试。
+- `tests/contract/`：五个公开 Tool、固定路由、SDK Subagent 权限/上下文边界，以及
+  两个后端各自职责范围内的契约测试；
+- `tests/integration/`：真实 OfficeCLI、CLI 与薄转换壳集成测试；真实 SDK 与 Adobe API
+  由仓库外凭据驱动的独立 live 产品门验证。
 
 ## 3. 首条链路
 
@@ -88,7 +112,9 @@ Tool 内做薄适配，不抽取共享 Provider 接口。只有
 ```text
 CLI
  └─ Claude Agent SDK（最小权限）
-     └─ convert-thesis Skill
+     ├─ docfit-school-extract / convert-thesis Skill
+     ├─ 可选 docfit-unit-analyst（SDK 原生、隔离、只读）
+     └─ 主 Agent
          ├─ docx_inspect
          ├─ docx_render
          ├─ docx_visual_review
@@ -102,10 +128,12 @@ CLI
 - 一份随产品发布的通用 Knowledge Package；
 - 一组带来源 hash 的合成当前任务学校材料；
 - 一份不含真实学生隐私的合成论文；
-- OfficeCLI 与本地 Word API 两个通过各自职责契约测试的固定后端；
+- OfficeCLI 与 Adobe PDF Services API 两个通过各自职责契约测试的固定后端；
 - 一条可重复运行的 CLI 命令；
 - 一组能证明源文件不变、产物可打开、关键内容保留的自动断言；
 - 一条能把页面图片真实送入当前 Agent、形成可追溯 visual findings 的审查链路。
+- 两个领域 Skill 可以直接分析或按当前任务需要调用同一个通用只读 Subagent；不存在
+  的单元不被强制创建，Subagent 不拥有写入、渲染或验证能力。
 
 首版不要求：
 
@@ -171,7 +199,7 @@ uv run docfit doctor
 ```text
 docfit doctor
   检查基础安装、Python、SDK、目录权限和配置结构。
-  统一 Agent 环境文件、API key、Provider 或字体缺失可以报告为 NOT_READY，
+  统一 Agent 环境文件、API key 或可选运行能力缺失可以报告为 NOT_READY，
   但不影响 CI 退出码。
 
 docfit doctor --require agent-smoke
@@ -179,7 +207,7 @@ docfit doctor --require agent-smoke
   或 SDK live 能力时返回非零。
 
 docfit doctor --require provider
-  留给 M1；OfficeCLI、本地 Word API 任一固定后端或必需字体环境缺失时返回非零。
+  留给 M1；OfficeCLI、Adobe PDF Services SDK/凭据或必需的 Poppler 工具缺失时返回非零。
 ```
 
 验收事实：
@@ -187,7 +215,8 @@ docfit doctor --require provider
 - 全新 checkout 可以仅按 README 在本地完成安装；
 - `.python-version`、`pyproject.toml` 和 `uv.lock` 对 Python 与依赖版本的声明一致；
 - `docfit --help` 和 `docfit doctor` 正常运行；
-- `doctor` 能明确报告 Python、SDK、API key、Provider、迭代/交付渲染能力、字体和工作目录状态，并按 `--require` 选择正确退出码；
+- `doctor` 能明确报告 Python、SDK、API key、Provider、三个 render intent 的后端能力、
+  PDF 页面派生和工作目录状态，并按 `--require` 选择正确退出码；
 - SDK 的内置工具可见集合只有 `Skill` 和 `AskUserQuestion`，in-process MCP server 只注册五个 `mcp__docfit__...` Tool；
 - 五个 DocFit Tool 自动批准，`AskUserQuestion` 进入 CLI 的 `can_use_tool` 回调，其他未匹配工具默认拒绝；
 - Agent 尝试调用 `Bash`、`Write`、`Edit`、`WebSearch`、`WebFetch` 或未注册 MCP Tool 时被拒绝，且不能借此访问任务目录之外的文件或网络；
@@ -214,8 +243,8 @@ uv run docfit doctor --require agent-smoke
 Agent 配置统一放在仓库外 `~/.config/docfit/agent.env`，文件权限必须为 `0600`；
 当前 runtime 按 Kimi、MiniMax 的顺序选择 Anthropic 兼容 backend，并通过
 `ClaudeAgentOptions.env` 只向 SDK 子进程注入当前候选配置。LibreOffice 或其他
-DOCX 引擎不再是第一版候选；OfficeCLI、本地 Word API 或字体环境的缺失与版本
-问题属于 M1 双后端接入证据，不阻塞 M0。
+DOCX 引擎不再是第一版候选；OfficeCLI、Adobe PDF Services SDK/凭据或 Poppler 的缺失与
+版本问题属于 M1 双后端接入证据，不阻塞 M0。
 
 ### 4.5 停止门
 
@@ -242,6 +271,57 @@ ruff、mypy、pytest 和基础 `docfit doctor`。它不得新增 Agent 可见 To
 Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学校/学生资料，也不改变 M0 已通过的
 权限与 live smoke 结论。
 
+### 4.7 M0 后独立切片：两个领域 Skill、模块化 Knowledge 与原生只读 Subagent（已完成）
+
+架构决策由 `docs/plans/docfit-progressive-subagents.md` 锁定，执行契约与证据由
+`docs/plans/docfit-development-plan.md` 记录。当前 P1 已完成运行时代码接线；这不表示
+五个 Tool 已具备真实 DOCX 行为，也不进入 M1。
+
+该 Provider-independent 实现切片已按单独批准的边界完成：
+
+- 从 M0 marker 重写 `convert-thesis`，新增从零设计的 `docfit-school-extract`；
+- 复用现有 Knowledge document ID/hash 形成开放、可组合的最小逻辑模块投影，不创建
+  新 schema、学校包或单元专家目录；
+- 在薄应用壳中内联配置一个 `docfit-unit-analyst`，固定为 inspect + visual-review
+  只读权限；
+- 让 `Agent` 对主 Agent 可见但不裸批准；SDK live 证据证明 `can_use_tool` 不是
+  `Agent` 的可靠必经路径，因此改由 SDK 原生 `PreToolUse` 权限钩子只批准该
+  `subagent_type`，拒绝 `general-purpose` 和未知类型；
+- 由领域 Skill 指导主 Agent 把选中 Knowledge 模块和当前任务证据写入 `Agent`
+  prompt；不虚构单次调用可动态覆盖 `AgentDefinition.skills`；
+- 增加权限、上下文隔离、结构化返回、Knowledge 选择和四项 live smoke 证据。
+
+该切片不实现真实 DOCX Tool，不改变五个公开 Tool 名称，也不进入 M1。测试不得固定
+委派次数、单元枚举、并行度或调用顺序；必须分别证明复杂场景能够委派、简单场景允许
+不委派，以及单一写入和默认拒绝始终成立。
+
+P1 的确定性与本地产品门为：
+
+```bash
+uv sync --frozen
+uv lock --check
+uv build
+uv run ruff check .
+uv run mypy src
+uv run pytest -q
+uv run docfit doctor
+uv run docfit agent-smoke --case image
+uv run docfit agent-smoke --case ask-user
+uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case subagent
+uv run docfit doctor --require agent-smoke
+```
+
+`subagent` live smoke 必须观察到主 Agent 加载领域 Skill、唯一具名 Subagent 通过
+`PreToolUse` 类型白名单、Subagent 只调用 inspect + visual-review、图片真实进入其
+隔离上下文，并返回完整 `unit_analysis_v1`。`general-purpose`、未知类型和写入 Tool
+由同一权限钩子与契约测试拒绝。四项 live 回执只记录 SDK 版本、backend、工具名和
+通过摘要，不保存 Knowledge 内容、任务证据或文档正文。凭据和配置已确认存在可运行
+backend 后，每次新 live 尝试开始前必须使该 case 的旧 PASS 回执失效，只有本次 PASS
+才发布新回执；失败、超时或中断后 `doctor --require agent-smoke` 必须保持
+`NOT_READY`。尚未启动任何 backend 就返回的 `NOT_READY` 不删除先前 live 证据，测试
+必须使用临时项目根，不能污染真实回执。
+
 ## 5. M1：五个 DocFit Tool 跑通
 
 ### 5.1 目标
@@ -251,19 +331,25 @@ Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学
 ### 5.2 范围
 
 - 固化五个 Tool 的版本化 JSON Schema；
+- schema 不使用兼容 backend 会误解释的 `oneOf` / `anyOf` / `allOf`；不同 action 的
+  专属字段由 runtime 校验；
 - 统一 `status`、`checks`、`warnings`、`failure`、`committed` 和 Provider 证据；
 - 明确 `object_ref` 的输入 hash、对象 ID、指纹和失效规则；
 - 在 `docx_edit` 中实现一个最小跨文档模板组合操作，例如 `import_template_sections`；它仍属于 `docx_edit`，不新增第六个 Tool；
-- 在 `docx_render` 契约中固定 `iteration` / `release`、render reason、fidelity claim、目标应用和可选 layout map，并实现四条固定路由；
+- 在 `docx_render` 契约中固定 `baseline` / `edit_feedback` /
+  `candidate_verification` 三个 intent、fidelity、parent ref、转换 profile 和可选 layout map；
 - 明确页码只在单个 render ref 内有效；同一文档 hash 的跨后端页面可通过当前快照的 opaque `object_ref`、节引用或文字锚点关联，文档 hash 变化后必须重新 inspect；不得把页面升级为编辑身份；
-- 接入并锁定 OfficeCLI：负责 inspect、edit、validate 和 `iteration` / `edit_feedback` 高频截图；
-- 接入并锁定本地 Word API：负责 `iteration` / `baseline_pagination`、必要时的 `pagination_recheck`，以及 `release` / `final_verification` 最终 PDF 导出；
+- 接入并锁定 OfficeCLI：负责 inspect、edit、validate 和 `edit_feedback` 高频截图；
+- 接入并锁定Adobe PDF Services API：负责 `baseline` 与 `candidate_verification` 完整 PDF 导出；
 - 固定路由由五个 Tool 内部完成，公开 schema 不提供后端选择参数，后端失败时不跨职责静默回退；
 - 用同一组 fixture 分别验证两个后端的职责契约，不要求它们实现一套可互换能力；
 - 复用或迁移现有 DOCX 脚本，放到 Tool 内部；
 - 提供面向开发者的 Tool CLI，便于脱离 Agent 调试。
 
-当前只稳定五个 Agent 可见 Tool。OfficeCLI 与本地 Word API 的私有命令、XPath、段落索引和内部对象路径不得进入 Skill 或 Knowledge。`docx_visual_review` 只传递和组织视觉证据，不在 Tool 内启动另一个模型或生成版式结论。
+当前只稳定五个 Agent 可见 Tool。OfficeCLI 与 Adobe PDF Services API 的私有命令、XPath、段落
+索引和内部对象路径不得进入 Skill 或 Knowledge。`docx_visual_review` 只读取有效
+render ref 的已有页面产物并传递、组织视觉证据；它不调用任何渲染后端、不产生新的
+render ref，也不在 Tool 内启动另一个模型或生成版式结论。
 
 `import_template_sections` 的详细字段在 OfficeCLI PoC 后锁定。M1 契约至少覆盖来源模板 hash 与来源对象引用、目标文档 hash 与插入锚点、样式/编号/媒体/relationships/页眉页脚/节属性的依赖闭包、ID 冲突重映射、all-or-nothing 发布，以及合并后重新打开、内容保留和非目标内容检查。
 
@@ -271,7 +357,7 @@ Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学
 
 至少用同一组 fixture 验证：
 
-- 无操作另存后 Word 不要求修复；
+- 无操作另存后 package 可重新解析，OfficeCLI 可重新检查；
 - 段落、样式、表格、图片、公式、节、页眉页脚和编号能被发现；
 - 跨 run 文字和占位符可以定位；
 - 修改只影响目标对象；
@@ -279,14 +365,20 @@ Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学
 - 失效引用被拒绝；
 - 一组修改满足 all-or-nothing；
 - 输出能重新打开并通过 package 检查；
-- OfficeCLI 可生成高频页面截图；本地 Word API 可生成完整 PDF，并由本地派生逐页图片；
-- render ref 能准确声明 purpose、fidelity claim、目标应用、页面尺寸、DPI、字体文件/版本指纹、替代关系和 Provider；不支持的 `release` 请求不会静默降级；
-- render ref 能区分 `baseline_pagination`、`edit_feedback`、`pagination_recheck` 和 `final_verification`，并把目标应用版本、修订显示策略纳入缓存与失效证据；
-- Word 与 CLI 页数或分页边界不同的 fixture 能证明相同页码不会被直接关联；同一文档 hash 的页面只能通过当前对象引用、节引用、文字锚点和 mapping quality 对应，文档 hash 变化后旧 ref 被拒绝；
+- OfficeCLI 可生成高频页面截图；Adobe PDF Services API 可生成完整 PDF，并由本地派生逐页图片；
+- render ref 能准确声明 intent、fidelity、页面尺寸、DPI、Provider、SDK 版本、转换
+  profile、服务管理且不透明的字体环境和 parent ref；
+- render ref 能区分 `baseline`、`edit_feedback` 和 `candidate_verification`，并把 SDK
+  版本、转换 profile 和环境证据纳入缓存与失效证据；
+- Adobe 与 CLI 页数或分页边界不同的 fixture 能证明相同页码不会被直接关联；同一文档 hash 的页面只能通过当前对象引用、节引用、文字锚点和 mapping quality 对应，文档 hash 变化后旧 ref 被拒绝；
 - OfficeCLI 支持时可生成绑定当前 render 的页面元素 bbox 映射；不支持时以能力缺口呈现，不阻塞首版；
-- `edit_feedback` 只路由到 OfficeCLI，三个 Word reason 只路由到本地 Word API；非法 purpose/reason 组合和任何后端选择参数都被拒绝；
-- 本地 Word API 不可用或导出失败时不会用 OfficeCLI 结果伪造 `target_application` 或 `release` 证据；
-- 指定页面、裁剪图、contact sheet 和前后对比图可以作为图片 content block 返回；
+- `edit_feedback` 只路由到 OfficeCLI，`baseline` 与 `candidate_verification` 只路由到
+  Adobe PDF Services API；未知 intent 和任何后端选择参数都被拒绝；
+- Adobe PDF Services API 不可用、额度耗尽或转换失败时不会用 OfficeCLI 结果伪造
+  `official_service_conversion` candidate 证据；
+- `docx_render` 可以附带有大小限制的 contact sheet；`docx_visual_review` 可以把已有
+  render 的指定页面、裁剪图、contact sheet 和前后对比图作为图片 content block
+  返回，但不调用渲染后端或产生新的 render ref；
 - 版本、字体、环境和已知渲染差异可报告；
 - 能在开发机和 CI 中锁定版本、重复安装。
 
@@ -301,18 +393,17 @@ Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学
 uv run pytest tests/unit tests/contract -q
 uv run docfit tools inspect evals/fixtures/smoke/student.docx
 uv run docfit tools edit evals/fixtures/smoke/student.docx --plan evals/fixtures/smoke/edit-plan.json
-uv run docfit tools render .tmp/smoke/edited.docx --purpose iteration --reason edit_feedback --output .tmp/smoke/render-cli
+uv run docfit tools render .tmp/smoke/edited.docx --intent edit_feedback --output .tmp/smoke/render-cli
 uv run docfit tools visual-review .tmp/smoke/render-cli --pages 1,2
 uv run docfit tools validate evals/fixtures/smoke/student.docx .tmp/smoke/edited.docx
 ```
 
-必需的本地 Word 后端门：
+必需的Adobe PDF Services 后端门：
 
 ```bash
 uv run docfit doctor --require provider
-uv run docfit tools render evals/fixtures/smoke/student.docx --purpose iteration --reason baseline_pagination --output .tmp/smoke/render-word-baseline
-uv run docfit tools render .tmp/smoke/edited.docx --purpose iteration --reason pagination_recheck --output .tmp/smoke/render-word-recheck
-uv run docfit tools render .tmp/smoke/edited.docx --purpose release --reason final_verification --output .tmp/smoke/render-word-final
+uv run docfit tools render evals/fixtures/smoke/student.docx --intent baseline --output .tmp/smoke/render-adobe-baseline
+uv run docfit tools render .tmp/smoke/edited.docx --intent candidate_verification --baseline-ref .tmp/smoke/render-adobe-baseline/render-ref.json --output .tmp/smoke/render-adobe-candidate
 ```
 
 验收事实：
@@ -323,24 +414,34 @@ uv run docfit tools render .tmp/smoke/edited.docx --purpose release --reason fin
 - `docx_edit` 至少完成一次 `import_template_sections`，并证明来源/目标 hash、插入锚点、依赖闭包、冲突重映射和原子发布符合契约；
 - 错误 ref、错误前置文本和输出路径等于输入路径都安全失败；
 - 多操作中任一项失败时没有可被误认成成功的输出；
-- OfficeCLI `edit_feedback` 生成逐页截图和 purpose/fidelity/Provider/字体证据，并明确标记为近似；该路由的 PDF 不是完成门；
-- 本地 Word API 成功生成初始分页基线、分页重新取证和候选最终文件的完整 PDF；逐页图片由本地 PDF 派生，并形成 `target_application` render refs；
+- OfficeCLI `edit_feedback` 生成逐页截图和 intent/fidelity/Provider/字体证据，并明确
+  标记为近似；该路由的 PDF 不是完成门；
+- Adobe PDF Services API 成功生成 `baseline` 与 `candidate_verification` 的完整 PDF；逐页
+  图片由本地 PDF 派生，并形成 `official_service_conversion` render refs；缓存命中不
+  重复上传或消耗 Document Transaction；
+- candidate 的 `parent_render_ref` 正确绑定输入 baseline；缓存命中不产生新的
+  `render_sha256`；
 - `docx_render` 的页码只在当前 render ref 内有效；契约测试证明跨 Provider 同页码不会自动对应或成为 `docx_edit` 目标；
 - `docx_render` 的 layout map 在可用时包含坐标系、bbox、mapping quality 和当前快照的 opaque `object_ref`；
-- `docx_visual_review` 返回实际图片块，以及绑定文档 hash、render hash、purpose、fidelity、Provider、字体、页码、图片 hash 和候选对象的 structured content；
+- `docx_render` 可以返回一张有大小限制的 contact sheet；`docx_visual_review` 返回
+  已有 render 的实际图片块，以及绑定文档 hash、render hash、intent、fidelity、
+  Provider、字体、页码、图片 hash 和候选对象的 structured content；
+- `docx_visual_review` 的 pages/crops/contact_sheet/compare 均不触发 Adobe PDF Services API 或
+  OfficeCLI、不产生新的 render ref，也不返回 `pass` / `fail`；
 - 旧 render ref、越权路径、超出页数/字节上限和不可比较的 compare 请求安全失败或返回明确 warning；
 - `docx_visual_review` 不返回页面是否合格的语义结论；
 - `docx_validate` 从最终文件重新取证，不复用编辑器的成功声明；
 - 验证结果对每项问题包含 `severity`、`blocking`、`evidence` 和可行动建议；
 - Provider 声称成功但产物打不开或修改未发生时，结果为 `error` 且 `committed: false`；
-- OfficeCLI 版本与许可证、本地 Word 版本与自动化接口信息均已记录并锁定。
+- OfficeCLI 版本与许可证、Adobe PDF Services 版本与自动化接口信息均已记录并锁定。
 
 ### 5.5 停止门
 
 - 可见对象可能丢失但 Tool 无法发现或报告；
 - 无法独立验证 Provider 的写入结果；
-- 渲染结果无法说明 Provider、版本和字体环境；
-- 近似 Provider 可以把结果标成 Microsoft Word 目标应用事实，或 `release` 请求被静默降级；
+- 渲染结果无法说明 Provider、版本、转换 profile 和环境可见性；
+- 近似 Provider 可以把结果标成 Adobe 官方服务转换事实，或 Adobe intent 被静默
+  降级；
 - 页面图片不能通过受控 Tool 结果进入 Agent 上下文，或无法绑定到当前文档快照；
 - 为接入这两个职责固定的后端就需要建设通用 Provider 平台、注册表或动态选择器。
 
@@ -353,20 +454,29 @@ uv run docfit tools render .tmp/smoke/edited.docx --purpose release --reason fin
 ### 6.2 范围
 
 - 实现薄 CLI 应用壳；
-- 加载 `.claude/skills/convert-thesis/SKILL.md`；
-- 自动加载随当前产品发布的唯一通用 Knowledge Package；
+- 加载 `.claude/skills/docfit-school-extract/SKILL.md` 与
+  `.claude/skills/convert-thesis/SKILL.md`；
+- 自动加载随当前产品发布的唯一模块化通用 Knowledge Package；
 - 接收一组当前任务学校模板、要求文件、官方示例或用户确认；
-- 只向 Agent 暴露五个 DocFit Tool；
+- 向主 Agent 暴露五个 DocFit Tool，并配置一个可选的 SDK 原生
+  `docfit-unit-analyst`；
+- 复用 P1 已完成的 `Agent` 可见性与 SDK `PreToolUse` 类型白名单；只允许
+  `subagent_type == "docfit-unit-analyst"`；
+- 把该 Subagent 限制为 inspect + visual-review，禁止 Skill、Agent、用户询问、
+  render、edit、validate 和持久记忆；
+- 由当前领域 Skill 指导主 Agent 选择 Knowledge 模块，并把模块内容/digest 与当前
+  任务证据写入 Agent prompt；
 - 把 Tool 错误、用户追问和最终回复转发到 CLI；
 - 定义 Agent visual findings 的结构化输出 schema；
 - 应用壳收集 Agent 的结构化 visual findings，并保存为 `visual-review.json`；
-- 跑通固定混合链路：输入与模板的 Word 初始分页基线 → OfficeCLI 多轮 inspect/edit/validate 与高频视觉反馈 → Word 最终 PDF；
+- 证明主 Agent 可以组合 Adobe `baseline`、按需 OfficeCLI `edit_feedback`、Adobe
+  `candidate_verification` 和已有证据读取；具体次数与顺序由当前任务判断；
 - 产物写入独立输出目录；
 - 建立一个真实 SDK 端到端 smoke case。
 
-第一版不实现 `prepare-school-template`，也不生成学校包。合成学校材料由现有学校
-提取资产和人工经验改写而来，必须保留来源 hash 和任务适用范围，但只服务该次
-运行与对应 Eval。
+`docfit-school-extract` 只生成当前任务证据，不生成学校包。合成学校材料由现有学校
+提取资产和人工经验重新设计而来，必须保留来源 hash 和任务适用范围，但只服务该次
+运行与对应 Eval；不得复制许可证未确认的旧 Skill 内容。
 
 ### 6.3 公共产品命令
 
@@ -380,6 +490,9 @@ uv run docfit convert \
   --output .tmp/smoke-output
 ```
 
+模板提取可以作为独立用户目标；其公共 CLI 命令名与参数在 M2 实现 Preflight 中锁定，
+本文只固定 `docfit-school-extract` Skill 名和任务级输出边界。
+
 ### 6.4 验收标准
 
 必需的集成门：
@@ -390,25 +503,41 @@ uv run pytest tests/integration -q
 
 必需的本地产品门：
 
-- 上述 `docfit convert` 使用真实 Claude Agent SDK、OfficeCLI 和本地 Word API 成功完成；
-- 输出目录至少包含 `final.docx`、本地 Word API 导出的最终 PDF、由该 PDF 生成的逐页图片、`visual-review.json`、`validation.json`；OfficeCLI 支持时包含 `layout-map.json`；
-- `final.docx` 能由本地 Microsoft Word 重新打开且不要求修复；
+- 上述 `docfit convert` 使用真实 Claude Agent SDK、OfficeCLI 和 Adobe PDF Services API 成功完成；
+- 输出目录至少包含 `final.docx`、与当前最终文档 hash 相同的 Adobe candidate PDF、由
+  该 PDF 生成的逐页图片、`visual-review.json`、`validation.json`；OfficeCLI 支持时
+  包含 `layout-map.json`；
+- `final.docx` 能通过独立 package 检查并由 OfficeCLI 重新读取；在 Microsoft Word
+  桌面版中的人工打开只能是可选兼容性观察，不是产品运行依赖或完成前提；
 - 源文件 hash 不变；
 - 合成论文中的关键文本、表格、图片和必要对象未丢失、重复或错序；
 - 目标学校的一个标题规则、一个正文规则和一个模板/占位符规则真实生效；
 - Agent 修改前通过图片观察输入与模板，影响布局的修改后通过图片复核变化页和相邻页；
 - Agent 以当前文档的对象引用和锚点选择修改范围，不把初始页面编号直接复用于修改后的 render 或其他 Provider；
 - Agent 最终分批观察当前 final.docx 的全部页面，每个 visual finding 都引用有效 evidence ref；
-- `visual-review.json` 绑定最终文档 hash、render hash、Provider、字体和已审查页面，没有未解释的 blocking finding；
-- validation 与最终回复引用有效的 Word `baseline_pagination` 和 `release` / `final_verification` 证据；缺少最终 Word 证据时 M2 不通过；
+- 整页缩放不足以辨认域结果、小字或页边界时，Agent 使用同一 render ref 的 crop
+  补证；可见应用错误标记、断裂域/交叉引用和未完成占位不能被结构成功或 Adobe
+  转换成功掩盖；
+- `visual-review.json` 绑定最终文档 hash、render hash、Provider、服务管理环境和已审查页面，没有未解释的 blocking finding；
+- validation 与最终回复引用有效的 Adobe `baseline` 和已经由 Agent 覆盖必查页面、
+  后续没有再修改文档的 `candidate_verification` 证据；缺少当前 Adobe candidate 证据时
+  M2 不通过；
 - Agent 没有调用五个 DocFit Tool 之外的写入能力；
+- 复杂、证据密集场景能够使用 `docfit-unit-analyst`，简单场景允许主 Agent 不委派；
+- 不存在的单元不被强制创建，未匹配或复合范围可由主 Agent 直接或合并处理；
+- SDK `PreToolUse` 权限钩子拒绝 `general-purpose` 和未知 Subagent；通用 Subagent
+  只使用 inspect 与 visual-review；
+- Subagent 只收到选中 Knowledge 模块和显式任务证据；缺少页面时返回
+  `needs_more_evidence`，由主 Agent 补证并自行决定是否再次委派；
+- 并行和串行委派都合法，测试不固定调用数量或顺序；
+- 跨范围依赖、render 成本、`docx_edit` 和最终发布始终由主 Agent 控制；
 - Tool 返回 `needs_input` 时，Agent 能根据证据重新 inspect；确需用户补充时调用 `AskUserQuestion`，由 CLI 的 `can_use_tool` 回调展示问题并继续同一 SDK 会话；
 - Tool 返回 `error` 或 `committed: false` 时，Agent 不交付该产物；
 - 最终回复中的产物、产品 Knowledge 版本、当前任务学校材料 hash、验证摘要和 warning 与磁盘事实一致；
 - 相同错误在输入、调用方式和固定后端环境均未变化时不会无限重试。
 
 M2 通过后，可以对外说明“DocFit 第一条混合渲染论文转换链路已在合成 smoke
-case 上跑通，并取得 Word 最终渲染证据”，但不能说明已经达到真实论文交付质量
+case 上跑通，并取得 Adobe 交付转换证据”，但不能说明已经达到真实论文交付质量
 或覆盖复杂真实样本。
 
 ### 6.5 停止门
@@ -418,10 +547,14 @@ case 上跑通，并取得 Word 最终渲染证据”，但不能说明已经达
 - 修改后继续使用旧截图，或没有复核受影响的相邻页面；
 - 最终回复声称完成，但验证仍有未解释的 blocking issue；
 - CLI 依赖开发者手工修改中间文件才能完成；
-- 本地 Word API 缺失、失败或被 OfficeCLI 静默替代，但链路仍被报告为 M2 通过；
+- Adobe PDF Services API 缺失、失败或被 OfficeCLI 静默替代，但链路仍被报告为 M2 通过；
 - 为了完成单个用例而把学校规则写进通用 Skill。
+- 应用壳开始判断论文单元、选择 Knowledge、强制委派或维护 Subagent 工作流状态。
 
 ## 7. M3：达到可试用 MVP
+
+> 当前范围说明：M3 的 Eval、Gold、授权/脱敏真实样本资格验证和外部人工复核不在
+> 本轮开发范围；以下长期范围与完成门保持不变，恢复时必须新建并批准计划。
 
 ### 7.1 目标
 
@@ -433,10 +566,14 @@ case 上跑通，并取得 Word 最终渲染证据”，但不能说明已经达
 - 增加 1 个普通合成样本和 3–5 个单风险 fixture；
 - 在授权或脱敏前提下引入 1 个结构复杂的真实样本；
 - 把所有已发现缺陷变成自动断言；
-- 建立人工 Word 高风险页面复核清单；
-- 把 M1/M2 已接入的本地 Word API release 链路扩展到授权或脱敏真实样本，并建立高风险页面人工复核；不在 M3 才首次接入 Word 后端；
-- 对分页敏感的授权或脱敏真实样本，证明“修改前 Word 分页基线 → OfficeCLI 多轮视觉反馈 → 最终 Word release”成立；只有分页基线因节、分页属性、大段内容或跨页对象变化明确失效时，才允许额外重新基线；
-- 对当前任务模板按模板 hash、目标应用版本、字体和修订显示策略复用初始分页基线；目标应用对同一文档和相同策略不重复导出；
+- 建立人工交付高风险页面复核清单；
+- 把 M1/M2 已接入的 Adobe PDF Services candidate 链路扩展到授权或脱敏真实样本，并建立高风险
+  页面人工复核；不在 M3 才首次接入 Adobe 后端；
+- 对分页敏感的授权或脱敏真实样本，证明首次 Adobe baseline、按需 CLI feedback 和
+  一个或多个 Adobe candidate 能由 Agent 自适应组合；上一 candidate 可以作为下一
+  candidate 的 baseline ref，不额外导出“轮次基线”；
+- 对当前任务模板按模板 hash、SDK 版本、转换 profile 和环境证据复用 baseline；同一
+  文档和相同策略不重复调用 Adobe API；
 - 验证 OfficeCLI 页面元素 bbox 映射对视觉问题定位和编辑目标选择的帮助；
 - 记录调用数、解析缓存、渲染页数、耗时和失败归因；
 - 只根据测量结果优化重复解析、重复渲染和低信息 Tool 返回。
@@ -456,14 +593,24 @@ uv run docfit eval --suite core
 
 - 五个 Tool、固定路由及两个后端各自职责范围内的契约测试全部通过；
 - 核心 Skill eval 全部通过；
+- 模板提取与转换 Skill eval 覆盖“复杂场景可委派、简单场景可直接处理、未匹配/复合
+  范围可合并处理”，且不把具体委派轨迹作为 Gold；
+- `docfit-unit-analyst` 的类型白名单、最小 Tool、Knowledge 选择性载荷、证据请求和
+  主 Agent 单一写入边界均有回归用例；
 - 使用不同当前任务学校材料的端到端样本全部通过；
 - 没有内容静默丢失、结构破坏或源文件覆盖；
 - Provider 伪成功、失效引用、跨 run 占位符、复杂对象、字体/渲染差异和视觉审查旧证据误用都有回归用例；
 - Agent 能在 Eval 中发现封面溢出、意外空白页、孤行和图表错位等代表性视觉问题；
-- 至少一份授权或脱敏真实论文完成 Microsoft Word 目标环境渲染、全部页面 Agent 视觉审查与高风险页面人工检查；
-- 该真实论文的同快照 Word / OfficeCLI 页面通过当前对象引用或文字锚点关联；跨编辑快照先重新 inspect，再通过新旧节、文字锚点或显式内容指纹对照；Eval 证明 Agent 没有把相同页码当成稳定内容身份；
-- 同一份可变论文的目标应用渲染通常只用于初始基线和最终复核；分页基线明确失效的 fixture 允许一次额外重新基线，当前任务模板基线按模板 hash 独立缓存，并记录 reason 与缓存命中；
-- release render ref 声明 `fidelity_claim: target_application`，并与最终文档、字体和页面图片正确绑定；
+- Agent 能把可见应用错误标记、断裂域/交叉引用、未完成占位和截断必需内容保留为
+  blocking finding；整页不足以辨认时以同一 render ref 的 crop 补证；
+- 至少一份授权或脱敏真实论文完成 Adobe PDF Services 转换、全部页面 Agent 视觉审查与高风险页面人工检查；
+- 该真实论文的同快照 Adobe / OfficeCLI 页面通过当前对象引用或文字锚点关联；跨编辑快照先重新 inspect，再通过新旧节、文字锚点或显式内容指纹对照；Eval 证明 Agent 没有把相同页码当成稳定内容身份；
+- 同一份可变论文首次只建立一个 baseline；每个需要 Adobe 交付判断的新候选产生一个
+  candidate，上一 candidate 通过 parent ref 作为下一候选 baseline，当前任务模板
+  baseline 按模板 hash 独立缓存；
+- 最终采用的 candidate render ref 声明 `fidelity: official_service_conversion`，与最终
+  文档、Adobe provider/SDK/转换 profile、服务管理环境和页面图片正确绑定，并有 Agent
+  实际覆盖页面的视觉证据；
 - 至少一个包含表格或图片错位的 fixture 能通过 layout map 找到正确候选 `object_ref`，低可信或失效映射不会触发错误修改；
 - 所有 `FAIL`、`UNKNOWN`、`verification_gap` 和 blocking issue 都被准确保留并呈现；
 - CI 使用合成/授权 fixture，不包含真实学生隐私；
@@ -490,6 +637,8 @@ M3 通过后，DocFit 才达到“可受控试用 MVP”。
 - 用 `docx_inspect`、`docx_render` 和 `docx_visual_review` 在各自任务中分析学校材料；
 - 为不同学校材料建立合成、脱敏或授权的代表性 Eval；
 - 归纳多任务重复出现的领域概念、识别方法、解释原则和通用处理模式；
+- 把新增通用内容放入最小合适的 Knowledge 模块；新消费范围不自动产生新的
+  Subagent 类型；
 - 删除候选内容中的学校名称、精确数值、固定文案、模板对象和 Provider 私有字段；
 - 通过跨学校回归与人工评审后提升产品 Knowledge 版本和 digest；
 - 保留 Agent 判断、当前任务证据与确定性 Tool 的边界。
@@ -519,7 +668,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 - 容器化、任务隔离、资源配额和正式密钥管理；
 - 通用 Knowledge 的按需索引（只有内容规模证明需要时）；
 - 并发 Eval、性能基线和缓存优化；
-- 自动化、可扩展的 Microsoft Word 交付渲染和人工复核工作台。
+- 自动化、可扩展的 Adobe 服务转换和人工交付复核工作台。
 
 每项新增能力必须单独说明：
 
@@ -535,7 +684,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 |---|---|---|---|
 | M0 | CLI、doctor、SDK smoke | 开发环境和 Agent runtime 已接通 | 能处理论文 |
 | M1 | 五个 Tool 可独立运行 | 合成 DOCX 可安全检查、修改、渲染、返回图片证据并验证 | Agent 已能完成转换 |
-| M2 | 一条 `docfit convert` 命令 | 合成样本上的 OfficeCLI + Word 混合链路及最终 Word 渲染门已跑通 | 已达到复杂真实论文交付质量 |
+| M2 | 一条 `docfit convert` 命令 | 合成样本上的 OfficeCLI + Adobe 混合链路及交付转换门已跑通 | 已达到复杂真实论文交付质量 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
 | M5 | 按需求增加的产品能力 | 对应能力已产品化 | 可以跳过证据直接扩平台 |
@@ -547,18 +696,24 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 - **Tool 契约稳定**：Agent 只依赖五个版本化 Tool schema，不依赖 Provider 私有接口；
 - **视觉证据可追溯**：每张送入 Agent 的图片都绑定文档、render、Provider、字体、页码和图片 hash；
 - **页面身份受限**：页码只在对应 render ref 内有效；同一文档 hash 的跨后端页面可通过当前 opaque `object_ref`、节引用或文字锚点关联；文档 hash 变化后重新 inspect，并用新旧快照的节、文字锚点或显式内容指纹对照；
-- **渲染角色可扩展**：同一个 Tool 契约区分 `iteration` 与 `release`，近似结果不能升级成目标应用事实；
+- **渲染意图可扩展**：同一个 Tool 契约区分 `baseline`、`edit_feedback` 与
+  `candidate_verification`，近似结果不能升级成 Adobe 交付转换事实；
 - **视觉定位可增强**：layout map 作为可选渲染产物绑定 opaque `object_ref`，后续增加 bbox 能力不修改 Skill 或 Tool 名称；
-- **固定后端被封装**：Tool 结果包含实际后端与环境证据，但 Skill 和 Agent 不依赖 OfficeCLI / Word 私有接口；第一版不建设通用 Provider 平台；
+- **固定后端被封装**：Tool 结果包含实际后端与环境证据，但 Skill 和 Agent 不依赖 OfficeCLI / Adobe SDK 私有接口；第一版不建设通用 Provider 平台；
 - **Knowledge 可版本化**：通用包随产品发布并具有 manifest、文档 hash 和 digest；学校事实只在当前任务证据中；
-- **Skill 可独立迭代**：Skill 文件和 references 可以在不修改 Tool 实现的情况下演进；
+- **Knowledge 可选择投影**：当前领域 Skill 选择委派所需模块，主 Agent 把模块内容、
+  版本/digest 和任务证据写入通用 Subagent prompt；
+- **Skill 可独立迭代**：`docfit-school-extract` 与 `convert-thesis` 可以在不修改 Tool
+  实现的情况下演进；
+- **Subagent 配置最小**：只有一个 SDK 接线级 `docfit-unit-analyst`，类型白名单和
+  只读 Tool 面可验证；委派逻辑不进入应用壳；
 - **失败可回归**：每个重要缺陷都有 fixture 和对应层级的断言；
 - **应用壳保持薄**：CLI 只配置 SDK、输入、权限和输出，不包含论文语义；
 - **真实数据可隔离**：任务工作目录、输出、缓存与日志有明确权限和生命周期；
 - **公共命令稳定**：Provider 或内部解析器替换后，`docfit convert` 的用户契约保持不变。
 
 如果为了“以后可能需要”新增基类、服务、状态表、事件总线、数据库或发布系统，
-应拒绝该抽象。OfficeCLI 与本地 Word API 的职责不相同，本身不构成通用 Provider
+应拒绝该抽象。OfficeCLI 与 Adobe PDF Services API 的职责不相同，本身不构成通用 Provider
 接口的两个消费者；只有真实接入第三个引擎且需要动态选择或故障转移时才重评。
 
 ## 12. 总体验收与执行契约
@@ -566,7 +721,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 ### 12.1 “项目已经跑起来”
 
 只有 M0、M1、M2 全部通过，且公共 `docfit convert` 命令在真实 SDK、OfficeCLI
-与本地 Word API 下完成合成 smoke case，才满足当前最主要目标。
+与Adobe PDF Services API 下完成合成 smoke case，才满足当前最主要目标。
 
 ### 12.2 “项目易于后续迭代”
 

@@ -15,9 +15,10 @@
   Knowledge Package、只读加载器、内容、合成测试和长期文档同步。
 - Completed proof: Knowledge 定向测试 69 个、全仓测试 90 个、ruff、mypy、
   `uv sync --frozen`、lock check、build、wheel/sdist 归档检查和基础 doctor 全部通过。
-- Next action: 不自动继续；当前任务学校证据的 Tool 映射与 SDK 组合等待 M1/M2 批准。
+- Next action: 不自动继续；`docs/plans/docfit-development-plan.md` 已完成 P1 的选择性
+  Knowledge 与只读 Subagent 组合，M1/M2 仍分别等待后续批准。
 - Blocked on: none
-- Do not touch from this session: 五个 Tool 的公开名称和 schema、OfficeCLI/Word
+- Do not touch from this session: 五个 Tool 的公开名称和 schema、OfficeCLI/Adobe PDF Services
   adapter、真实 DOCX 行为、M1 实现、Agent runtime 权限。
 - Unknown-unknown scout: skipped；用户已经锁定产品定义和禁止项，未知学校差异通过
   “当前任务证据”边界隔离，不需要扩展长期数据模型。
@@ -222,11 +223,14 @@ KnowledgeDocument
 上述 checklist 全部满足且 L0–L2 通过后停止。不得顺带实现当前任务学校证据模型、
 Tool schema、`convert` 或 M1 后端。
 
-## 10. Parked
+## 10. 后续状态
 
-- 当前任务学校证据如何序列化为 Tool 输入：等待 M1 Tool contract。
-- `convert-thesis` 如何把学校材料和通用 Knowledge 一起挂入 SDK：等待 M2。
-- 学校材料提取的任务级产物命名和清理策略：等待真实转换链路证明需要。
+- M1 Tool contract 已固定当前任务证据、任务根路径、opaque ref 与 render ref 输入边界；
+  学校事实仍不进入 Knowledge。
+- M2 薄应用壳已把当前任务学校材料、完整通用 Knowledge 和两个 Skill 挂入同一个 SDK
+  runtime；真实 SDK + Adobe 产品门仍由统一 M1–M3 计划跟踪。
+- 任务输入复制到只读 `input/`，工作副本和最终产物分别进入授权 `work/` 与输出根；
+  不新增学校 package 或跨任务清理系统。
 - 通用 Knowledge 内容的后续扩展：只允许从多个任务中反复出现且已去学校化的
   概念、方法、原则或处理模式进入，并经产品评审和回归测试发布。
 
@@ -237,9 +241,9 @@ Refactor scope: Knowledge Package v1 universal boundary
 Discovery source: user definition + 00–06 + current School Knowledge implementation
 Target: docs, public Python API, bundled data, fixtures, tests, stale school-package surfaces
 Accepted severities: P0/P1 and supporting P2
-Parked cross-seam / future ideas: task-evidence schema, Tool mappings, convert runtime, M1/M2
+Parked cross-seam / future ideas: P1 selective Knowledge/task-evidence transport, Tool mappings, convert runtime, M1/M2
 Evidence ladder: L0 stale search + L1 unit + L2 full repo/build
 Stop condition: one bundled universal package, no persistent school Knowledge, all gates green
-Execution risks: inherited dirty docs contain unrelated OfficeCLI/Word edits; preserve them
+Execution risks: inherited dirty docs contain unrelated OfficeCLI/Adobe PDF Services edits; preserve them
 Low-value stop signal: changes no longer remove a school-specific persistence surface or prove the new boundary
 ```

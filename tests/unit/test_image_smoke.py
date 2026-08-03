@@ -26,7 +26,7 @@ def test_smoke_png_has_expected_dimensions_and_colors() -> None:
 
     assert png.startswith(b"\x89PNG\r\n\x1a\n")
     width, height, raw = _decode_rgb_rows(png)
-    assert (width, height) == (520, 150)
+    assert (width, height) == (640, 220)
     assert len(raw) == height * (1 + width * 3)
     assert raw[1:4] == bytes((20, 82, 180))
     assert bytes((31, 153, 93)) in raw

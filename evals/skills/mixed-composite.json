@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "mixed-composite",
+  "scope": "mixed",
+  "task": "Handle a composite front-matter range with unmatched elements.",
+  "delegation": "direct_or_merged_optional",
+  "assertions": [
+    "no_fixed_thesis_unit_taxonomy",
+    "no_mandatory_delegation_threshold",
+    "cross_range_dependencies_return_to_main_agent"
+  ]
+}
