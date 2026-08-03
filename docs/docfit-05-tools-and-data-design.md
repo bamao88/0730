@@ -936,3 +936,162 @@ task-work/
 | 已真实接入第三个引擎，并且同一职责需要动态选择或故障转移 | 再评估最小通用 Provider 接口；两个职责不同的现有后端本身不构成抽象证据 |
 
 扩展应从已经发生的问题出发，不从“以后可能平台化”出发。
+
+## 8. 本地运行观测的数据边界
+
+M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运行投影，详细产品设计见
+`docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
+数据边界；逐事件采集与网站当前尚未实现。
+
+### 8.1 任务目录是事实来源
+
+本地任务目录继续保存授权 DOCX、工作副本、PDF/页面、render evidence、
+`visual-review.json`、`validation.json` 与 `conversion-report.json`。观测索引不复制这些
+文件，只保存明确允许的投影：
+
+- 本地 `run_id`、opaque `task_ref`、SDK `session_id`、message ID/UUID、`tool_use_id`、
+  `agent_id/type` 与 `parent_tool_use_id`；
+- 来源序号、接收序号、墙钟时间、本地单调 offset、状态、耗时、计数、版本、
+  Token/成本来源和错误码；
+- `document_sha256`、`object_ref`、`render_ref`、visual evidence ref 与页码；
+- 经过每种 Tool 字段 allowlist 生成的脱敏摘要；
+- `verified/partial/broken/conflict` 关联质量、观测覆盖与本地证据可用性。
+
+`run_id` 和 `task_ref` 只是应用壳内部索引，不加入五个公开 Tool schema，不泛化为跨任务
+ArtifactRef，也不要求 Skill、Knowledge 或 Eval 消费。`tool_use_id` 与 `session_id` 继续
+来自 Claude Agent SDK；网站不生成替代标识来冒充 SDK 事实。
+
+`task_ref` 由薄应用壳在当前授权上下文中签发，不编码或 hash 绝对路径。观测索引不保存
+句柄到绝对路径的映射。`docfit convert` 退出后历史运行默认 unmounted；只有用户在 Web
+会话中通过认证 POST 触发服务端 OS 原生目录选择器，并通过 v2
+`run_id/task_ref/session/hash` 校验后，才可打开
+task-relative locator。挂载路径只在当前会话内存中存在；v1 因缺少 run/task ID 最多标为
+partial。O0 不建立全局任务注册表，也不扫描任意目录恢复关联。
+
+### 8.2 观测来源与原始载荷边界
+
+权威来源只包括 Claude Agent SDK 公开消息与 lifecycle hooks、权限回调、薄应用壳的
+run/backend 边界、五个 Tool 的既有结构化结果、`conversion-report.json` 和授权任务目录。
+当前锁定的 `claude-agent-sdk==0.2.128` 能直接提供 ToolUseBlock `id`、
+ToolResultBlock/hook `tool_use_id`、子消息
+`parent_tool_use_id`、Tool hook `agent_id/type` 与 Subagent lifecycle `agent_id/type`。
+OpenTelemetry 只能补充耗时/usage，不能覆盖这些直接 ID。
+
+SDK 升级必须先用合成 message/hook fixture 重验字段和关联链；不能以私有 transcript
+格式作为兼容层。
+
+每种来源使用独立 allowlist projector。脱敏必须在原始事件进入异步队列、数据库、日志、
+浏览器或导出之前完成；不得先完整序列化再遮盖。`prompt`、Assistant/Result 正文、
+`ThinkingBlock`、`transcript_path`、`cwd`、raw Tool input/response/error、DOCX/PDF/图片载荷和
+Provider 原始错误都不能进入观测通道。未知事件和未知字段默认丢弃。
+
+### 8.3 SDK 原生 transcript 生命周期
+
+观测索引的 allowlist 不会阻止 SDK 子进程把完整 session transcript 写入本地磁盘。O0
+实现必须为每次运行创建 mode `0700` 的私有临时 `CLAUDE_CONFIG_DIR`，不配置
+`SessionStore`，在 client disconnect 后主动清理。hook 中的 transcript path 不进入索引，
+也不能被 collector 用来补事件。
+
+正常退出保留期为 0。崩溃残留只能在固定 DocFit 私有临时父目录中，通过无正文 owner
+marker、进程身份、年龄和活跃 lock 检查后，于下一次 preflight 清理；owner 明确退出时可
+立即清理，状态不确定时须超过 24 小时且无活跃 lock。不跟随 symlink，不扫描用户全局
+config 或任意临时目录。清理失败只记录安全状态/数量/年龄区间，不记录路径。没有下一次
+DocFit invocation 时，崩溃残留可能持续到操作系统清理，产品不得宣称 hard TTL。
+
+### 8.4 关联证明
+
+观测索引只根据直接键建立关系：
+
+1. Tool use/result：Tool block `id` 至少与一个 ToolResultBlock/hook `tool_use_id` 相等；
+   多个来源同时存在时，所有已观测 ID 必须一致；
+2. 子 Tool/actor：子 Tool block `id = hook.tool_use_id`，且 hook 的 `agent_id` 与
+   `SubagentStart/Stop.agent_id` 相等；
+3. 父 `Agent` 调用/子消息：`Agent` Tool block `id = child.parent_tool_use_id`；
+4. 当子消息 Tool ID 和 Tool hook 的 `tool_use_id` 相等时，才可把上述父调用桥接到具体
+   `agent_id`；桥缺失时标为 `partial`；
+5. hash/ref 关联只有在第 8.5 节的检查通过后才是 `verified`。
+
+引用目标缺失或失效是 `broken`，两个直接来源矛盾是 `conflict`。Tool 名、相邻时间、
+文件名或相同页码都不是关联证据。重复事件仅按 `source + source_event_id + kind/phase`
+幂等合并；跨来源顺序保留各自 sequence 和本地单调时间，不伪造全局串行轨迹。
+
+### 8.5 引用检查
+
+网站打开或定位本地证据前必须重新核对：
+
+1. 用户已显式挂载目录，且 `task_ref` 在当前 Web 授权会话中解析到该根；
+2. 文件仍存在且没有越出授权目录；
+3. `document_sha256` 与文件内容一致；
+4. `object_ref` 仍只用于其绑定的文档快照；
+5. `render_ref`、Provider、profile、render hash 与证据文件一致；
+6. 页码只在该 `render_ref` 内解释；
+7. visual evidence ref 指向的派生视图仍可验证。
+
+任一检查失败时，界面只显示“本地证据不可用”及安全原因分类。旧状态、计数和错误摘要
+可以保留，但不能据此猜测正文、对象位置、当前页码或可恢复产物。
+
+### 8.6 字段留存与 Tool 摘要
+
+观测代码必须先选择允许字段，再持久化摘要；不得先把完整 Tool JSON 写入数据库或日志
+后再尝试遮盖。首版 allowlist 是：
+
+- inspect：文档 hash、focus、对象/风险/ref 数量；
+- edit：输入/输出 hash、operation 类型/数量、opaque ref、committed 与 failure；
+- render：intent、Provider、cache、render ref、页数、DPI、产物存在性；
+- visual-review：render/evidence ref、mode、页码、图片数量与字节；
+- validate：检查数、errors/issues/warnings、failure 与证据 ref。
+
+禁止持久化论文/学校材料文本、expected/replacement 文本、对象完整文本、PDF/图片内容、
+完整 validation evidence、Provider 原始错误体、完整 Agent prompt/response、隐藏思维链与
+任何凭据。Agent/用户事件摘要必须由允许元数据生成固定模板，不把原始文本交给另一个
+模型摘要。安全失败消息只能来自固定模板/allowlist；task artifact locator 只能保存相对
+授权任务的 opaque 值，不能保存绝对路径。
+
+脱敏、schema 或大小校验失败时丢弃整个可变载荷，只保存固定的 drop reason 和计数；
+禁止 raw fallback、异常 `repr`、截断原文、base64 前缀或携带原值的死信队列。未知字段
+默认不记录；增加 allowlist 字段必须先验证它不会泄露正文、身份、路径或凭据。
+
+### 8.7 采集失败与可删除投影
+
+观测投影必须支持按运行删除、全部清除和保留上限。删除投影不删除任务产物；删除任务
+产物也不会由投影恢复。观测写入、索引损坏或页面未启动都不能改变 Tool 调用、原子
+发布、权限判断、最终验证或 `docfit convert` 的返回结果。
+
+页面分别展示运行结果、`complete/degraded/unavailable` 观测覆盖和本地证据可用性。
+脱敏失败、观测队列/配额满、观测库锁/写入失败或 collector/UI 不可用时采用有界非阻断
+drop，记录安全原因和数量，不把观测失败冒充转换失败。任务文件系统或整个共享卷耗尽
+可能阻止 DOCX、证据和 report 写出，继续按 App/Tool storage failure 处理；不属于 O0
+“转换继续”保证。进程没有最终结果时终态为 unknown。
+覆盖状态依据来源 adapter 健康回执、drop/error 计数和已打开生命周期的配对完整性，
+不能把本次未调用某 Tool 或未启动 Subagent 当成 source 缺失。
+collector 重启后历史证据保持 unmounted；只有用户显式选择并验证目录后，才可通过
+`conversion-report.json` 对账任务级状态和 hash，并标记来源。不得扫描任意目录、读取
+SDK transcript 或反造逐事件时间线。
+
+### 8.8 Conversion report v2
+
+O0 把 `conversion-report.json` 从 schema v1 升级到 additive v2：保留全部 v1 转换字段，
+新增 `run_id`、opaque `task_ref`、固定 shape 的 `observation_coverage` 和
+`sdk_transcript` privacy 摘要。App 先构造不依赖 observer 的基础报告；summary provider
+异常时填入 `unavailable/unknown` 与安全错误码，仍原子写出 v2。任务目录本身写入失败
+继续是 App storage failure。
+
+reader 必须显式区分 v1/v2。v1 只在用户选择目录后作为临时 legacy summary 读取，不自动
+导入历史或生成时间线；其观测覆盖为 unavailable、transcript 为 unknown、缺失计数为
+null，且挂载关联最多 partial。未知更高版本拒绝猜测解析。观测 projector 不复制
+v1/v2 报告中的绝对 artifact path、warning/detail 文本或未知字段，只保留状态、安全 code、
+hash、计数、版本和 task-relative opaque locator。
+
+### 8.9 Web 授权与资源硬上限
+
+本地 Web 除 loopback 外必须验证短期 session、Host、Origin 和 CSRF，禁用宽松 CORS；
+GET/HEAD 不得产生副作用，删除、挂载和打开本地证据只接受认证 POST。登录/session secret 不进入 URL、
+日志或存储；没有交互 TTY 时不得降级为无认证，只能使用受保护的本地 IPC/文件描述符
+交接或拒绝启动管理面。候选目录和 artifact locator 必须 canonicalize，并拒绝 `..`、绝对路径、
+symlink/设备文件和挂载后逃逸。
+
+首版硬上限与专题设计一致：单事件 64 KiB；队列 1024 事件或 16 MiB；单 run 10,000 事件
+或 64 MiB；数据库/索引/WAL 合计 512 MiB；历史最多 30 天且 500 个已完成 run；可用空间
+低于 1 GiB 或 5% 中较大者时停止观测写入。至少 10% 且 64 个 queue slot 保留给终态、
+coverage、privacy、deny/error 和 Tool/Subagent terminal。资源压力先丢可重算指标，再丢
+普通 start/allow；任何情况下不阻塞 SDK hook。

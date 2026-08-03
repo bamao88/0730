@@ -92,6 +92,9 @@ flowchart LR
     F --> SDK
     SDK --> A
     A --> U
+    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>目标设计，尚未实现"]
+    A -."权限与最终报告".-> O
+    O -."hash/ref 只读定位".-> F
     E["Eval<br/>离线"] -.运行样本并比较结果.-> SDK
 ```
 
@@ -262,7 +265,14 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 展示最终回复和产物链接；
 - 成功时只根据当前 Adobe candidate 与独立最终验证生成完成报告，不把中间 Agent
   warning 或旧 summary 重新发布为当前事实；
-- 记录必要的产品级用量与错误。
+- 记录必要的产品级用量与错误；
+- 按批准的 O0 目标设计，把 SDK 实际事件、权限判断、Tool 脱敏摘要和本地证据引用投影
+  为本地只读运行视图；该能力当前尚未实现；
+- 为每次 SDK 运行提供私有临时 `CLAUDE_CONFIG_DIR`，不配置 transcript mirror，并在正常
+  退出/下一次安全 preflight 管理 SDK 原生 transcript 清理；
+- 生成带 `run_id/task_ref`、观测覆盖与 transcript privacy 摘要的 conversion report v2，
+  同时保持 v1 报告可读；
+- 保证观测写入失败时不改变转换控制流或最终产物。
 
 应用壳不负责：
 
@@ -272,9 +282,30 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 为每一步设计内部任务；
 - 判断是否委派、拆分论文范围或选择 Knowledge 模块；
 - 复制 SDK 会话；
-- 判断论文是否符合某校要求。
+- 判断论文是否符合某校要求；
+- 从观测页面启动、重试或调度 Agent、Subagent 或 Tool；
+- 保存论文正文、完整页面图片、完整模型历史或隐藏思维链。
 
 命令行、API 或图形界面都只是应用壳的可替换入口，不改变上述边界。
+
+批准的本地运行观测界面是应用壳的一个只读入口，不是面向转换的第二个 GUI、任务
+队列或 Agent runtime。它只使用 Claude Agent SDK 已公开的消息流、hooks/telemetry、
+五个 Tool 的现有状态与证据字段，以及 `conversion-report.json` 和本地任务目录。
+每种来源先经字段 allowlist projector 脱敏，再进入有上限的本地事件通道和只读索引；
+原始 prompt、Tool input/response、图片或 Provider error 不能排队后再清洗。Tool 与
+Subagent 只通过 SDK 的 `tool_use_id`、`parent_tool_use_id`、`agent_id` 等直接键关联，
+本地证据只通过重新验证的 hash/ref 关联，不能按名称或相邻时间推断。运行轨迹只表示
+实际观测到的事件；来源、桥接 ID 或证据缺失必须显示 partial/degraded/不可用，不能从
+最终文本反推。这里的 metadata-only 只约束 O0 投影；SDK 原生 transcript 由独立临时
+config 目录和清理合同管理。CLI 退出后历史证据默认 unmounted，只有用户显式选择目录且
+report ID/hash/ref 重验通过才可打开，绝对路径不进入索引。collector、观测存储或页面
+故障采用有界非阻断降级，不能改变 Tool、转换终态或产物；任务文件系统本身耗尽仍按
+原 App/Tool storage failure 处理。详细设计见
+`docfit-local-observability-design.md`。
+
+本地 Web 绑定 loopback 仍必须有短期会话、Host/Origin/CSRF 校验、无宽松 CORS、无副作用
+GET 和 canonical path/symlink 防逃逸。删除历史、重新挂载和打开本地证据是认证后的观测
+管理动作，不是转换控制能力。
 
 ## 5. 一次任务如何运行
 
@@ -374,6 +405,10 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 
 只有当一个新产物被真实调试或 Eval 反复消费时，才把它提升为稳定接口。
 
+本地观测索引不是转换交付产物，也不是任务目录的副本。删除该索引不能影响转换
+产物；本地任务证据删除或 hash 变化后，观测界面只能显示引用失效，不能根据历史摘要
+恢复或猜测正文。
+
 ## 8. 人工介入与恢复
 
 人工介入使用普通 Agent 对话：
@@ -408,6 +443,7 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 11. 委派策略和 Knowledge 选择是否仍在领域 Skill，而不是应用壳或 AgentDefinition？
 12. `docfit-unit-analyst` 是否仍只有最小只读 Tool，且 `general-purpose` 与未知
     Subagent 默认拒绝？
+13. 本地观测是否仍然只读、无正文、不可控制运行，并在证据失效时明确报告不可用？
 
 如果第 1、第 6 或第 9 个问题答案是否定的，DocFit 很可能又开始复制 Agent runtime 或变成工作流系统。
 
@@ -437,3 +473,5 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 17. Knowledge Package 是模块化产品资产。当前 Skill 选择模块，主 Agent 通过
     `Agent` prompt 传递选中内容和任务证据；`AgentDefinition` 只落实静态权限与隔离。
 18. Subagent 只分析，主 Agent 负责跨单元合并、证据生成、唯一写入和最终验证。
+19. M2 后本地观测界面属于薄应用壳的只读投影；它展示 SDK 实际轨迹并通过 hash/ref
+    定位任务证据，但不保存任务正文、不参与调度，也不提供 exact replay。

@@ -197,15 +197,68 @@ limit      成本或重复调用上限
 ### 2.4 非 Eval 的核心转换优化验证
 
 核心转换优化不以扩大 Eval 集合为前提，也不能用性能改善替代质量验收。开始改变
-调用策略、缓存、图片批次或重试行为之前，先在 `conversion-report.json` 中形成
-隐私安全的任务级观测面，至少能够回答：
+调用策略、缓存、图片批次或重试行为之前，先按
+`docfit-local-observability-design.md` 建立隐私安全的任务级事件与指标观测面，并把
+稳定汇总写入扩展后的 `conversion-report.json`。至少能够回答：
 
-- 整体耗时，以及每种公开 Tool 的调用数、结果状态和累计耗时；
+- 当前运行和终态，以及真实 Agent turn、Skill、Tool 与 Subagent 的时间顺序；
+- 整体耗时，以及每种公开 Tool 的调用数、结果状态、单次与累计耗时；
+- Tool 的脱敏输入/输出摘要、`tool_use_id`、committed、错误码和相关证据 ref；
+- Subagent 的父子关系、安全任务元数据、Tool、耗时、Token、返回状态和证据请求计数；
 - OfficeCLI 解析次数与单次运行缓存命中；
 - Adobe baseline/candidate 的真实 API 调用与缓存命中；
-- 实际渲染页数、Agent 读取页数、图片输入字节数；
-- 重试次数，以及失败首先来自 App/SDK、Tool、OfficeCLI 还是 Adobe；
-- 指标中不包含论文正文、学校材料正文、凭据值或未经授权的绝对路径。
+- 实际渲染页数、Agent 读取页数、重复读取页数和图片输入字节数；
+- Token、成本来源、权限拒绝、用户追问和重试次数；
+- 失败首先来自哪里，并能按 App/SDK、main Agent、Subagent、Skill、Tool、OfficeCLI、
+  Adobe 聚合错误，定位相关文档 hash、`object_ref`、`render_ref`、evidence ref 与页码；
+- 指标中不包含论文正文、学校材料正文、完整页面图片、完整模型请求/响应、隐藏思维链、
+  凭据值或未经授权的绝对路径。
+
+观测页面只是薄应用壳的本地只读投影。它不启动或重试 Agent/Tool，不改变转换结果，
+也不把内部事件记录升级为 Eval 轨迹 Gold、公共 replay 协议或新的运行时状态机。SDK
+没有暴露的事件和 usage 必须显示 unknown，不能由最终文本反推。
+
+O0 在页面开发前先建立以下非 Eval 产品合同测试：
+
+- 用合成 SDK message/hook fixture 证明 Tool block `id` 与至少一个
+  ToolResultBlock/hook `tool_use_id` 相等，多个来源出现时必须全部一致，并验证正常、
+  失败、权限和追问事件；
+- 用两个交错执行的 Subagent fixture 证明 `parent_tool_use_id`、子 Tool `tool_use_id` 与
+  lifecycle `agent_id` 的桥接，不允许按 Tool 名或时间邻近归属 actor；
+- 覆盖直接 ID 缺失、目标缺失、ID/hash 矛盾、重复和跨来源乱序，分别得到
+  `partial/broken/conflict`、幂等去重和保留并行，而不是错误连线；
+- 修改、删除或撤权本地证据，验证 document/object/render/evidence/page 的 hash/ref 检查
+  会使证据变为 stale/missing/unauthorized/conflict；
+- 在 prompt、用户问题/答案、Tool input/output、raw error、图片字节与路径中分别放入唯一
+  隐私 canary，并扫描观测数据库、导出、应用日志和 `conversion-report.json`；任何 canary
+  出现都使测试失败；
+- 真实 SDK smoke 必须证明每次运行使用独立 `0700` `CLAUDE_CONFIG_DIR`、没有
+  `SessionStore` mirror、正常退出立即清理；强制终止后只能由下一次 preflight 在固定私有
+  父目录内发现/清理 owned 残留，不能记录 transcript path 或正文；
+- 注入 projector/schema 失败、队列/观测配额满、观测库锁/写入失败、collector 未启动和
+  UI 断开，
+  验证转换最终状态、产物 hash、五个 Tool 结果和权限行为与禁用观测的基线一致，同时
+  coverage/drop reason 可见；
+- 单独让任务文件系统或共享卷耗尽，验证最终 DOCX/report 可以按原 storage failure 失败，
+  不错误断言“采集失败不影响转换”；观测 writer 必须在设计低水位先停止；
+- CLI 结束后历史证据为 unmounted。用户显式挂载时，v2 目录通过
+  `run_id/task_ref/session/hash` 验证，错误目录为 conflict；v1 因缺少 run/task ID 最多为
+  partial，Web 重启后不保留路径；
+- 对一次性登录/session、Host、Origin、CORS、CSRF、GET side effect、未授权 `task_ref`、
+  path traversal、symlink 和挂载后替换建立安全测试；secret 不得进入 URL、日志或导出，
+  登录码/session 的失败次数、idle/absolute expiry 与轮换生效，无交互 TTY/受保护 IPC 时
+  必须 fail closed；
+- schema v2 新字段、v1 读取、v1 unavailable/null、无效 v2、未知版本和 observation summary
+  provider 异常必须有契约测试；summary 失败时基础 v2 conversion report 仍可写出；
+- collector 恢复后只允许从用户显式挂载且验证通过的最终报告进行 summary-only 对账；
+  缺少最终报告时终态保持 unknown，不生成虚构时间线；
+- 用确定性 synthetic runner 验证同步 projector、事件/queue/run、数据库/保留、低水位、
+  wall time、CPU 与 RSS 都满足目标设计预算，不能用网络或 Adobe 延迟掩盖开销；
+- 观测开关、失败注入和页面刷新都不能增加 OfficeCLI/Adobe Tool 调用；已有 Adobe cache
+  命中路径不得因 O0 多消耗 Document Transaction。
+
+上述测试锁定数据可信度与非干扰性，不要求 Agent 复现固定调用轨迹，也不属于延期的
+M3 Eval。
 
 每项优化只选择一个主要可量化目标，并在同一输入、同一固定路由和同一验证要求下
 比较前后结果。首轮顺序固定为：先减少没有新增证据的重复 Tool 调用，再复用单次运行
@@ -302,8 +355,13 @@ manual_review:
 | 字号、页边距、坐标 | tolerance |
 | Agent 判断与最终论文 | 关键事实断言 |
 | 页面视觉 | 人工复核，必要时加图像差异辅助 |
+| 非 Eval 运行性能 | 同输入/材料 hash、同版本与同验证门下比较 Tool/Agent/缓存/载荷指标 |
 
 避免整份 DOCX 逐字节比较，也避免把一条完整 Agent 路径当成 Gold。
+
+运行性能比较必须先报告可比性：输入、模板、要求、model/backend、SDK、App、Skill、
+Knowledge、Tool 和 Provider 版本不一致时，标记为条件可比或不可直接比较。调用更少、
+Token 更低或耗时更短本身不能替代最终证据和质量断言。
 
 ## 7. 失败归因
 
@@ -346,19 +404,30 @@ manual_review:
 3. 使用当前任务学校材料的端到端样本通过且无内容静默丢失；
 4. 人工打开最终 DOCX 并检查规定的高风险页面。
 
-等用例数量和运行成本真实增长后，再选择并发 runner、实验平台或 trace UI。
+M2 后已批准先建设本地只读运行观测界面，但当前只完成目标设计，尚未实现。它服务
+核心转换问题定位和性能比较，不是 M3 Eval 平台。并发 runner、实验平台、集中式
+trace 服务和正式性能平台仍等真实规模与成本增长后再选择。
 
 ## 10. 最小指标
 
-本节定义长期目标指标，不表示当前 M2 报告已经实现全部字段。M2 后优化切片先落地
-任务级运行指标；M3 恢复后再在其独立计划中记录 Eval 结果。
+本节定义长期目标指标，不表示当前 M2 报告已经实现全部字段。M2 后优化切片先按
+`docfit-local-observability-design.md` 落地逐事件本地观测和任务级汇总；M3 恢复后再
+在其独立计划中记录 Eval 结果。
 
 非 Eval 核心转换任务只记录：
 
-- 总耗时与每个 Tool 的调用数、结果状态和耗时；
+- 当前/最终状态、总耗时、Agent turn、Skill、Tool 和 Subagent 数；
+- 每个 Tool 的调用者、调用数、结果状态、单次/累计耗时、错误码和 committed；
+- 主 Agent/Subagent 的层级、耗时、Token、成本来源、权限拒绝和证据请求；
 - 解析次数、单次运行缓存命中、渲染页数、Agent 实际审查页数和图片输入字节数；
 - Adobe 转换调用数、缓存命中数、baseline/candidate intent 分布和 parent ref 复用；
-- 重试次数与按 App/SDK、Tool、OfficeCLI、Adobe 分类的首个失败来源。
+- 重试次数、首个失败来源，以及按 App/SDK、main Agent、Subagent、Skill、Tool、
+  OfficeCLI、Adobe 聚合的错误；
+- 相关 task/session/tool ID、文档 hash、opaque object/render/evidence ref、页码和本地
+  证据可用性；
+- O0 自身的 coverage、drop/queue high-water、projector P95/P99、事件/数据库字节、CPU、
+  peak RSS、增量 wall time，以及 SDK transcript cleanup 状态；
+- 同一可比样本在不同版本间的耗时、调用、缓存、页面、图片字节、Token、成本和错误差异。
 
 未来 M3 Eval 轮次只记录：
 
@@ -369,4 +438,5 @@ manual_review:
 - 按 Skill、Knowledge、Tool、Eval、App 的失败分布。
 
 两类指标都只用于发现趋势和验证单项改动，不成为新的运行时状态体系，也不保存正文、
-隐藏思维链或凭据。
+完整页面图片、完整模型请求/响应、隐藏思维链或凭据。监控历史不能作为 exact replay
+或 Agent 路径 Gold。

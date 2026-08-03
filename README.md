@@ -15,6 +15,18 @@ Knowledge Package, five DocFit MCP Tools, and one SDK-wiring-level read-only
 shell only enforces context isolation and permissions. The five Tool names remain the only
 Agent-visible document surface; no second workflow or Provider-selection layer is added.
 
+The approved M2-follow-on design for a local, read-only runtime observability UI is documented
+in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
+It will project actual SDK Agent/Tool/Subagent events, redacted metrics, and stable local
+evidence references without storing thesis text or controlling the conversion. This is a
+design baseline only; detailed event capture, history storage, and the website are not yet
+implemented.
+
+“Without storing thesis text” applies to the observability index. The SDK's own local session
+transcript is a separate data plane; O0 requires a private per-run `CLAUDE_CONFIG_DIR`, explicit
+cleanup status, and no transcript mirror. Historical evidence stays unmounted until the user
+reselects a task directory and its report IDs/hashes verify.
+
 ## Requirements
 
 - Python 3.12 (pinned by `.python-version`)

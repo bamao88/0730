@@ -3,16 +3,33 @@
 - Capsule status: COMPLETED
 - Source plan: `docs/plans/docfit-development-plan.md`
 - Child plan: `docs/plans/docfit-m1-tools-v1.md`
-- Latest user intent: 先冻结已完成代码，再记录 M2 后核心转换优化的必需前置、优先级
-  和延期项；M3 评测继续不在当前范围
+- Latest user intent: 保持已完成 M2 代码冻结，按已批准的
+  `docs/plans/docfit-o0-local-observability.md` 分阶段实施 O0；当前只完成目标设计和
+  可执行计划，代码尚未开始，M3 继续延期
 - Current slice: M0–M2 产品链路及其非评测支撑已完成；当前计划无剩余开发项
 - Frozen baseline: `7cd72fc`（`feat: complete DocFit M2 conversion baseline`）；该提交
   已在提交前通过全量确定性、doctor、live 产品门和凭据值扫描
-- Follow-on status: 06 第 6.6 节的核心转换优化边界已记录，尚未建立或执行新实现计划；
+- Follow-on status: 06 第 6.6 节的核心转换优化边界与 O0 可执行计划已经批准，尚未执行；
   不改变本 capsule 的 COMPLETED 状态，也不构成 M3 恢复或通过
-- Required first slice: O0 为 `conversion-report.json` 增加总耗时、Tool 调用/结果/
-  耗时、解析与渲染缓存、Adobe 调用/cache hit、页面/图片字节、重试和首个失败来源；
-  不得记录正文、凭据或未经授权的绝对路径
+- Approved follow-on design: `docs/docfit-local-observability-design.md` 定义薄壳内本地
+  只读观测页；当前只有设计，无逐事件采集、历史索引或网站实现
+- Approved execution plan: `docs/plans/docfit-o0-local-observability.md` 按 O0.0–O0.7
+  锁定 transcript/report、projector、关联、存储、Web 安全、页面和最终验收的实施顺序；
+  当前状态为 APPROVED / NOT_STARTED
+- Required first slice: O0 先以来源级 allowlist projector 在原始载荷入队前完成脱敏，
+  采集 SDK 实际 Agent/Skill/Tool/Subagent/权限事件；Tool use/result 通过 `tool_use_id`，
+  Subagent 通过 `parent_tool_use_id + child tool_use_id + agent_id`，本地证据通过重验
+  hash/ref 证明，缺桥或矛盾显示 partial/conflict；稳定无正文的 coverage 汇总进入扩展后
+  的 schema v2 `conversion-report.json`；每次 SDK 运行使用私有临时
+  `CLAUDE_CONFIG_DIR` 且管理 transcript 清理；CLI 结束后历史证据默认 unmounted，用户
+  显式选择目录并通过 report/hash 验证后才可打开；Web 具备 session/同源/CSRF/路径安全；
+  采集/观测存储/UI 故障非阻断且必须显示 degraded/unavailable，不得记录正文、完整图片、
+  完整模型历史、隐藏思维链、凭据或未经授权的绝对路径
+- O0 gate: 隐私 canary 扫描、交错 Subagent/缺失/冲突/重复/乱序 fixture、证据失效测试和
+  projector/队列/观测存储/collector/UI 故障注入、transcript 正常/崩溃清理、v1/v2 report、
+  显式挂载、恶意 Host/Origin/CSRF/path/symlink 和资源预算全部通过；观测关闭或失败不得
+  改变转换状态、产物 hash、Tool/权限结果或 Adobe 调用次数；任务文件系统耗尽仍按原
+  storage failure 报告；否则不得进入 O1
 - First measured target: 先减少没有产生新快照或新证据的重复 Tool 调用。当前两页真实
   合成基线观察到 render 6 次、visual-review 11 次、validate 4 次、inspect 3 次；这些
   是待优化的历史观测，不是固定流程、调用上限或验收 Gold
@@ -55,7 +72,8 @@
 - Deferred scope: M3 Skill/E2E Eval、Gold、真实样本资格验证和外部人工复核；恢复时
   依据 06 第 7 节另建计划；同时延期 M4/M5、第三引擎/通用 Provider、更多 Subagent/
   第二 Agent loop、并发与跨任务持久缓存、OCR/更多格式、精确版式/像素判定、高级 Word
-  对象编辑/桌面兼容性、Eval 平台/replay/学校数据库
+  对象编辑/桌面兼容性、集中式 trace/实验服务、Eval 平台/replay/学校数据库
 - Stop condition: 当前计划已完成；任何第六 Tool、第三引擎、第二 Agent loop、恢复 M3
   或长期合同冲突须先请求决定；开始核心转换优化时先另建可执行计划并完成 O0
-- No-touch scope: M4/M5、GUI/API/任务队列、学校规则持久化、通用 Provider 抽象
+- No-touch scope: M4/M5、面向转换用户的 GUI/API/任务队列、学校规则持久化、通用
+  Provider 抽象；本地只读观测页只有设计，开始实现前必须另建计划
