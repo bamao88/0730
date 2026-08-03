@@ -1,6 +1,6 @@
 # DocFit O0 本地运行观测实施计划
 
-> 状态：IN_PROGRESS（当前阶段 O0.0）
+> 状态：IN_PROGRESS（O0.0 已完成，当前阶段 O0.1）
 > 日期：2026-08-03
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
@@ -14,8 +14,9 @@
 - Canonical implementation plan: `docs/plans/docfit-o0-local-observability.md`
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
-- First executable phase: O0.0 基线、技术骨架与风险 PoC
-- Current phase: O0.0
+- First executable phase: O0.0 基线、技术骨架与风险 PoC（DONE）
+- Current phase: O0.1 SDK runtime privacy、run identity 与 report v2
+- Completed phases: O0.0（`0200e4c` + `e0eb220`）
 - Active capsule: `docs/status/active/docfit-o0-local-observability.md`
 - Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
 - Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
@@ -31,13 +32,13 @@
 
 ```text
 Root goal: 按 docs/plans/docfit-o0-local-observability.md 顺序完成 O0.0–O0.7，并通过总体 Definition of Done。
-Current slice: 只执行 O0.0；不提前实现 transcript/report、逐事件采集或 UI。
-Scope: 本计划第 1、2 节固定边界与 O0.0 实施内容。
-Non-goals: O0.1–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
-Acceptance: O0.0 成功标准逐项有代码/测试/PoC 证据；任何失败保持 IN_PROGRESS 或触发停止门。
-Verification: O0.0 focused unit/contract/integration + ruff + mypy + build/lock + base doctor；关闭观测的 M2 行为不变。
-Execution: 主会话为 root owner；有界 worker 只拥有 O0.0 文件与证明，主会话复核 diff、测试和文档状态。
-Stop gate: SDK 只能靠 transcript 取直接 ID、核心只能通过浏览器任意绝对路径挂载证据、SQLite 必须阻塞 hook，或必须改变安全/隐私/公共 Tool 边界。
+Current slice: 只执行 O0.1；不提前实现逐事件 projector、queue/SQLite 事件写入或 UI。
+Scope: 本计划第 5 节的 transcript 隔离、run identity、report v2 reader/writer 与安全 fallback。
+Non-goals: O0.2–O0.7 的生产行为、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
+Acceptance: O0.1 成功标准逐项有代码、契约、故障注入和真实 SDK lifecycle 证据。
+Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；真实 SDK 正常/强制终止 smoke 只证明 transcript 隔离清理，不读取 transcript 正文。
+Execution: 主会话为 root owner并直接完成该有界串行阶段；如范围扩张再恢复独立 worker。
+Stop gate: SDK 隔离后必须使用用户全局 config、基础 report 依赖 observer 成功，或 run/task ID 必须编码路径。
 ```
 
 ## 0. 计划目标
@@ -158,21 +159,23 @@ src/docfit/observability/
 
 ## 3. 阶段总览
 
-| 阶段 | 目标 | 硬依赖 | 成功后得到什么 |
-|---|---|---|---|
-| O0.0 | 冻结基线、技术骨架和高风险 PoC | 已完成 M2 | 可执行骨架、禁用基线、平台适配边界结论 |
-| O0.1 | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
-| O0.2 | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
-| O0.3 | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
-| O0.4 | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
-| O0.5 | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
-| O0.6 | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
-| O0.7 | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
+| 阶段 | 状态 | 目标 | 硬依赖 | 成功后得到什么 |
+|---|---|---|---|---|
+| O0.0 | DONE | 冻结基线、技术骨架和高风险 PoC | 已完成 M2 | 可执行骨架、禁用基线、平台适配边界结论 |
+| O0.1 | IN_PROGRESS | SDK transcript 隔离、run identity、report v2 | O0.0 | 两个 P1 闭环，不含逐事件 UI |
+| O0.2 | PENDING | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
+| O0.3 | PENDING | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
+| O0.4 | PENDING | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
+| O0.5 | PENDING | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
+| O0.6 | PENDING | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
+| O0.7 | PENDING | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
 
 阶段必须顺序执行。每一阶段应形成一个可回滚、可单独复查的提交；前一阶段成功标准未
 满足时，不得通过 UI mock 或手工截图绕过后端合同进入下一阶段。
 
 ## 4. O0.0：基线、骨架与风险 PoC
+
+> 状态：DONE；实现提交 `0200e4c`，平台边界与完成门收口提交 `e0eb220`。
 
 ### 目标
 
@@ -217,6 +220,8 @@ src/docfit/observability/
 - Web 依赖要求 Python 3.13、引入远程资产或与现有锁文件不可兼容。
 
 ## 5. O0.1：SDK runtime privacy、run identity 与 report v2
+
+> 状态：IN_PROGRESS。
 
 ### 目标
 
