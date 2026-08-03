@@ -16,7 +16,10 @@
 - Completed implementation proof: 124 tests、严格 mypy/ruff、build/lock、base/provider/
   agent-smoke doctor、四条真实 SDK smoke、Adobe 合成与 15 页授权复杂样本
   baseline/candidate/cache hit、真实 SDK 合成 convert，以及 core Eval 7/7、41 assertions
-- Next action: 当前计划无剩余开发项；恢复 M3 时另建并批准评测计划
+- Next action: 当前计划无剩余开发项；如开始 M2 后核心转换优化，按 06 第 6.6 节另建
+  可执行计划并先完成 O0 观测面；恢复 M3 时另建并批准评测计划
+- Follow-on decision: 核心转换优化与 M3 Eval 分轨；先测量再减少重复 Tool 调用，
+  不以恢复评测、真实样本或平台化为前提
 - Blocked on: none
 - Do not touch from this session: M4/M5、第三后端、通用 Provider 抽象、GUI/API/任务队列
 - Unknown-unknown scout: 自动 `autoplan` 因当前宿主没有 AskUserQuestion 能力不可运行；已执行
@@ -275,3 +278,17 @@ Approval: 用户已于当前会话回复“继续”批准 P1；P1 完成后停�
   可工作，但这些只是已存在的探索资产。当前不继续 M3 完成门，也不能称为 MVP。
 - 隐私边界：授权样本源 SHA-256 前后不变；正文、绝对私有路径和凭据不进入提交、计划、
   日志摘要或 Eval fixture。私有运行证据只保留在被忽略的授权任务目录。
+
+## 9. 后续核心转换优化决策（不重开本计划）
+
+M1–M2 的完成状态不因后续性能工作改变。用户已批准把下一步边界写入文档，但尚未
+批准或执行新的实现计划。后续计划必须以 06 第 6.6 节为准：
+
+- 先把总耗时、各 Tool 调用/耗时、解析与渲染缓存、Adobe 调用/cache hit、页面与图片
+  字节、重试和首个失败来源写入隐私安全的 `conversion-report.json`；
+- 再依次减少无新增证据的重复 Tool 调用、复用单次运行解析/渲染结果、优化页面批次与
+  图片载荷、收紧同条件无效重试；
+- 每次只优化一个主要指标，并保持全部普通产品回归门；普通测试和 live smoke 不属于
+  M3 Eval，不因 M3 延期而取消；
+- M3 Eval/Gold/真实样本/人工复核，以及平台化、第三引擎、跨任务持久缓存等延期项不
+  随该优化计划自动进入范围。

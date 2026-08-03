@@ -12,6 +12,12 @@ M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX T
 Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
 宣称 M3 已通过，也不再作为当前计划 blocker。
 
+M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
+06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
+再基于同一合成产品链路依次减少重复 Tool 调用、复用单次运行解析/渲染结果、优化
+页面批次与图片载荷、收紧无效重试。该轨道目前只完成决策记录，尚未实现或验收；
+它不能产生真实交付质量、MVP 或 M3 已通过的声明。
+
 ## 一句话架构
 
 DocFit 以 **Claude Agent SDK** 为运行时边界，产品只维护五类资产：
@@ -60,7 +66,7 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 | 06 | `docfit-06-development-roadmap.md` | 如何按阶段开发，每个阶段如何验收和停止 |
 | 04 | `docfit-04-skills-design.md` | Skill 如何指导 Agent，而不变成固定工作流 |
 | 05 | `docfit-05-tools-and-data-design.md` | Knowledge 如何组织，Tools 提供哪些确定性能力 |
-| 02 | `docfit-02-testing-and-iteration.md` | 如何用 Eval 驱动 Skill、Knowledge 与 Tools 迭代 |
+| 02 | `docfit-02-testing-and-iteration.md` | 如何区分普通回归、运行指标与 Eval，并据此迭代 Skill、Knowledge 与 Tools |
 | 03 | `docfit-03-gold-system-design.md` | Eval case 与 Gold 数据如何保持简单、可维护 |
 
 `docs/human/` 存放面向人的示例，不定义架构。

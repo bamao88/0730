@@ -3,8 +3,22 @@
 - Capsule status: COMPLETED
 - Source plan: `docs/plans/docfit-development-plan.md`
 - Child plan: `docs/plans/docfit-m1-tools-v1.md`
-- Latest user intent: M3 评测不在当前开发范围；确认非评测产品面完整完成
+- Latest user intent: 先冻结已完成代码，再记录 M2 后核心转换优化的必需前置、优先级
+  和延期项；M3 评测继续不在当前范围
 - Current slice: M0–M2 产品链路及其非评测支撑已完成；当前计划无剩余开发项
+- Frozen baseline: `7cd72fc`（`feat: complete DocFit M2 conversion baseline`）；该提交
+  已在提交前通过全量确定性、doctor、live 产品门和凭据值扫描
+- Follow-on status: 06 第 6.6 节的核心转换优化边界已记录，尚未建立或执行新实现计划；
+  不改变本 capsule 的 COMPLETED 状态，也不构成 M3 恢复或通过
+- Required first slice: O0 为 `conversion-report.json` 增加总耗时、Tool 调用/结果/
+  耗时、解析与渲染缓存、Adobe 调用/cache hit、页面/图片字节、重试和首个失败来源；
+  不得记录正文、凭据或未经授权的绝对路径
+- First measured target: 先减少没有产生新快照或新证据的重复 Tool 调用。当前两页真实
+  合成基线观察到 render 6 次、visual-review 11 次、validate 4 次、inspect 3 次；这些
+  是待优化的历史观测，不是固定流程、调用上限或验收 Gold
+- Follow-on order: O0 观测 → O1 调用降重 → O2 单次运行解析/渲染复用 → O3 页面批次、
+  crop/contact sheet 与图片载荷 → O4 同条件无效重试；每次只设一个主要指标并保留全部
+  普通产品回归门
 - Completed foundation: M0、通用 Knowledge v1、P1 两个 Skill/选择性 Knowledge/唯一
   只读 Subagent；五个 Tool、M2 薄壳与 M3 core Eval 的既有实现保留
 - Fixed backend contract: OfficeCLI 1.0.143 负责 inspect/edit/validate/edit feedback；
@@ -39,7 +53,9 @@
   不变，私有正文未进入仓库。结果为 FAIL，共 6 个 blocking finding；外部人工签字为
   NOT_PERFORMED。该证据不属于当前完成门，不继续作为 blocker，也不代表 M3 通过
 - Deferred scope: M3 Skill/E2E Eval、Gold、真实样本资格验证和外部人工复核；恢复时
-  依据 06 第 7 节另建计划
+  依据 06 第 7 节另建计划；同时延期 M4/M5、第三引擎/通用 Provider、更多 Subagent/
+  第二 Agent loop、并发与跨任务持久缓存、OCR/更多格式、精确版式/像素判定、高级 Word
+  对象编辑/桌面兼容性、Eval 平台/replay/学校数据库
 - Stop condition: 当前计划已完成；任何第六 Tool、第三引擎、第二 Agent loop、恢复 M3
-  或长期合同冲突须先请求决定
+  或长期合同冲突须先请求决定；开始核心转换优化时先另建可执行计划并完成 O0
 - No-touch scope: M4/M5、GUI/API/任务队列、学校规则持久化、通用 Provider 抽象

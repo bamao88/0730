@@ -35,6 +35,13 @@
   verified. The current product-development scope is complete at the M2 `docfit convert`
   chain, including the non-Eval safety, evidence, and reporting support required by that
   chain.
+- The frozen M2 baseline is recorded in the active development capsule. The documented
+  next development direction is a separate post-M2 core-conversion optimization slice;
+  it has not started and is not an M3 completion claim. Before changing conversion
+  behavior, add privacy-safe runtime observability to `conversion-report.json`, keep the
+  existing deterministic and live product gates, and give each optimization one measured
+  target. Ordinary unit, contract, integration, doctor, and live smoke gates are not M3
+  Eval and remain required.
 - M3 Eval expansion, authorized/deidentified real-sample qualification, Gold work, and
   external manual review are explicitly outside the current development scope. Keep M3 as
   a future milestone in `docs/docfit-06-development-roadmap.md`; do not claim that it passed,
