@@ -361,30 +361,79 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
         extraction_skill = (
             repository / ".claude/skills/docfit-school-extract/SKILL.md"
         ).read_text(encoding="utf-8")
+        assertions = 0
+
+        def check(condition: bool, message: str) -> None:
+            nonlocal assertions
+            _assert(condition, message)
+            assertions += 1
+
+        required_headings = (
+            "## 触发范围",
+            "## 输入与产物",
+            "## 不可违反的核心边界",
+            "## 根据证据选择下一步",
+            "## Tool 与 references 路由",
+            "## 完成检查清单",
+            "## 最终回复要求",
+        )
         required_conversion_phrases = (
-            "current-task school materials",
-            "five DocFit Tools",
-            "optionally delegate",
-            "Do not force delegation",
-            "main Agent",
+            "依据当前任务证据修改一份论文 DOCX",
+            "所有 DOCX 修改只通过",
+            "原始论文保持只读",
+            "先说明可交付、不可交付或缺少证据",
         )
         required_extraction_phrases = (
-            "current-task",
-            "never a persistent school package",
-            "optional read-only delegation",
-            "Analyze directly",
-            "Do not create fixed",
+            "读取当前任务提供的学校材料",
+            "输入仅限当前任务提供的学校模板",
+            "scope: current_task_only",
+            "此 Skill 不修改任何文档",
         )
+        for skill in (conversion_skill, extraction_skill):
+            heading_positions = [skill.index(heading) for heading in required_headings]
+            check(heading_positions == sorted(heading_positions), "Skill navigation drifted")
+            check(
+                "| 当前情况 | 下一步 | 读取参考 |" in skill,
+                "Skill decision table is missing",
+            )
         for phrase in required_conversion_phrases:
-            _assert(phrase in conversion_skill, "conversion Skill contract drifted")
+            check(phrase in conversion_skill, "conversion Skill contract drifted")
         for phrase in required_extraction_phrases:
-            _assert(phrase in extraction_skill, "extraction Skill contract drifted")
-        for scenario in sorted((repository / "evals/skills").glob("*.json")):
+            check(phrase in extraction_skill, "extraction Skill contract drifted")
+
+        extraction_delegation = (
+            repository
+            / ".claude/skills/docfit-school-extract/references/delegation-task-packet.md"
+        ).read_text(encoding="utf-8")
+        conversion_delegation = (
+            repository
+            / ".claude/skills/convert-thesis/references/delegation-task-packet.md"
+        ).read_text(encoding="utf-8")
+        check("学生" not in extraction_skill, "extraction Skill crossed its domain")
+        check(
+            "`convert-thesis`" not in extraction_skill,
+            "extraction Skill references another Skill",
+        )
+        check(
+            "`docfit-school-extract`" not in conversion_skill,
+            "conversion Skill references another Skill",
+        )
+        check(
+            "requested_output: unit_analysis_v1" in extraction_delegation,
+            "extraction delegation contract is missing",
+        )
+        check(
+            "requested_output: unit_analysis_v1" in conversion_delegation,
+            "conversion delegation contract is missing",
+        )
+
+        scenarios = sorted((repository / "evals/skills").glob("*.json"))
+        for scenario in scenarios:
             payload = read_json(scenario)
-            _assert(payload.get("scope") in {"simple", "complex", "mixed"}, "invalid scope")
-            _assert(isinstance(payload.get("assertions"), list), "Skill assertions missing")
-        _assert(len(list((repository / "evals/skills").glob("*.json"))) == 3, "Skill cases missing")
-        return {"assertions": 13, "skill_cases": 3}
+            check(payload.get("scope") in {"simple", "complex", "mixed"}, "invalid scope")
+            check(isinstance(payload.get("assertions"), list), "Skill assertions missing")
+        check(len(scenarios) == 3, "Skill cases missing")
+        return {"assertions": assertions, "skill_cases": len(scenarios)}
 
     def app_contract() -> JsonObject:
         _assert(

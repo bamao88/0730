@@ -1,96 +1,75 @@
 ---
 name: docfit-school-extract
-description: Analyze the school templates, written requirements, official examples, and user confirmations supplied for the current thesis task. Use this Skill whenever the user asks what a thesis template requires, wants template slots or instruction text identified, needs conflicting school sources compared, or wants traceable formatting evidence prepared for a conversion. Produce task-scoped evidence only, never a persistent school package or product Knowledge update.
+description: 当用户需要解释当前任务的学校论文模板、书面格式要求或官方示例，并把规则、槽位、冲突和未知项整理成可追溯证据时使用。
 ---
 
-# DocFit School Extract
+# 学校材料证据提取
 
-Interpret only the school materials supplied for the current task. Use universal DocFit
-Knowledge for concepts and methods, and return traceable facts, conflicts, uncertainties,
-applicability, and candidate Tool parameters that expire with the task.
+读取当前任务提供的学校材料，识别其中能够直接支持格式判断的事实，并输出带来源定位的任务证据。
 
-## Keep school evidence task-scoped
+## 触发范围
 
-- Record a source hash and evidence location for every school-specific conclusion.
-- Distinguish observed facts from interpretations, unresolved conflicts, and user
-  confirmations.
-- Keep school names, templates, exact values, fixed wording, slots, and extracted
-  conclusions out of product Knowledge and out of reusable profiles.
-- Do not create a school directory, school package, `format-profile.yaml`, publication
-  request, or automatic Knowledge promotion.
-- Leave unsupported or unconfirmed matters unknown. Do not fill gaps from prior tasks,
-  filenames, or universal examples.
+在以下情况使用：
 
-## Inspect and interpret current materials
+- 解释学校论文模板或书面格式要求；
+- 识别模板中的固定文字、条件文字、待填槽位和操作说明；
+- 比较模板、书面要求和官方示例之间的差异；
+- 整理格式规则、适用条件、冲突和未知项。
 
-Use `mcp__docfit__docx_inspect` for objective template structure, effective styles,
-visible objects, slots, instruction text, source hashes, risks, and opaque refs. Use
-`mcp__docfit__docx_render` and `mcp__docfit__docx_visual_review` when layout, pagination,
-position, or visual grouping matters. Choose only `baseline`, `edit_feedback`, or
-`candidate_verification` as render intent; never select a backend or treat approximate
-pages as Adobe PDF Services delivery evidence.
+## 输入与产物
 
-Select the smallest useful set of universal Knowledge documents by document ID. Each
-selected logical module carries the product package version, content digest, and content.
-Use it to recognize semantic roles, classify evidence, interpret conflicts, and describe
-safe processing patterns. It cannot establish a school's actual rule.
+输入仅限当前任务提供的学校模板、书面要求、官方示例、适用性说明和用户确认。
 
-Classify template text when evidence supports it:
+产物是 `scope: current_task_only` 的证据集合，包括：
 
-```text
-fixed_content       school wording that should remain
-conditional_content wording whose presence depends on the current student/task
-slot_placeholder    a location awaiting current student content
-format_instruction  explanatory text that should not remain in a final thesis
-```
+- 实际使用的来源及其哈希、对象引用或页码定位；
+- 可直接观察的事实和有证据支持的格式规则；
+- 模板文字分类、适用条件和候选 Tool 参数；
+- 未解决冲突、未知项和最小证据请求。
 
-If the classification is unsafe, preserve the text and record the uncertainty instead of
-guessing or deleting it.
+字段说明见 `.claude/skills/docfit-school-extract/references/output-schema.md`。
 
-## Use optional read-only delegation
+## 不可违反的核心边界
 
-Analyze directly when the scope is simple, absent, mixed, or cheaper to keep in the main
-context. When a bounded evidence-heavy range benefits from isolation, call the SDK
-`Agent` Tool only with `subagent_type: docfit-unit-analyst`.
+1. 只分析当前任务提供的学校材料，不引入其他任务或历史学校结论。
+2. 每项规则都必须引用具体来源；证据不足时保留未知，不凭经验补全。
+3. 所有输入材料保持只读；此 Skill 不修改任何文档。
+4. Knowledge 只提供通用识别方法，不能提供或覆盖学校的具体要求。
+5. 来源冲突必须保留，除非当前材料或用户确认给出了明确的裁决依据。
 
-The Subagent inherits no parent conversation or hidden evidence. Put the analysis scope,
-current document hash and refs, selected Knowledge module ID/version/digest/content,
-current-task source refs, known rules, dependencies, and `requested_output:
-unit_analysis_v1` directly in its prompt.
+## 根据证据选择下一步
 
-Require a return containing `status`, `confidence`, `findings`, `confirmed_rules`,
-`uncertainties`, `dependencies`, `cross_unit_links`, `evidence_requests`, and
-`proposed_operations`. The Subagent can inspect or read existing visual evidence only. It
-cannot render, edit, validate, ask the user, call another Agent, or persist memory. Handle
-missing evidence and cross-range merging in the main Agent.
+| 当前情况 | 下一步 | 读取参考 |
+| --- | --- | --- |
+| 来源身份、版本或适用范围不清楚 | 先建立来源清单 | `.claude/skills/docfit-school-extract/references/evidence-and-conflicts.md` |
+| 需要判断一段模板文字的作用 | 执行模板文字分类 | `.claude/skills/docfit-school-extract/references/template-text-classification.md` |
+| 两个来源给出不同要求 | 保留两条证据并判断能否裁决 | `.claude/skills/docfit-school-extract/references/evidence-and-conflicts.md` |
+| 结构结果不能说明页面位置或视觉分组 | 建立基线渲染并查看相关页面 | `.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md` |
+| 材料很大且存在互不重叠的分析范围 | 可选委派只读分析 | `.claude/skills/docfit-school-extract/references/delegation-task-packet.md` |
+| 证据已经足够 | 按输出合同整理结果 | `.claude/skills/docfit-school-extract/references/output-schema.md` |
+| 情形不在常规路径中 | 对照典型场景和反例 | `.claude/skills/docfit-school-extract/references/scenarios-and-edge-cases.md` |
 
-Do not create fixed unit-to-Agent mappings, mandatory delegation rules, or page/object
-thresholds. A composite front matter range can be analyzed as one scope without becoming
-a new permanent thesis type.
+## Tool 与 references 路由
 
-## Return current-task evidence
+| 目的 | Tool |
+| --- | --- |
+| 读取结构、样式、对象和来源哈希 | `mcp__docfit__docx_inspect` |
+| 为视觉判断建立学校材料的基线渲染 | `mcp__docfit__docx_render`，使用 `baseline` intent |
+| 查看已有渲染中的页面或局部图像 | `mcp__docfit__docx_visual_review` |
 
-Return a compact task artifact or response with:
+Tool 的选择和失败恢复见 `.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md`。
 
-```yaml
-scope: current_task_only
-sources:
-  - sha256: ...
-    location: ...
-observed_facts: [...]
-confirmed_rules: [...]
-conflicts: [...]
-uncertainties: [...]
-applicability: [...]
-template_text_classification: [...]
-candidate_tool_parameters: [...]
-evidence_requests: [...]
-```
+## 完成检查清单
 
-Candidate parameters are inputs for the current task's later Tool calls, not universal
-defaults. If sources conflict or applicability is unclear, show both evidence paths and
-ask the current user the smallest question needed to proceed.
+- [ ] 所有使用过的来源都有哈希和具体定位。
+- [ ] 可观察事实、解释后的规则和用户确认彼此分开。
+- [ ] 每项规则都写明适用对象和适用条件。
+- [ ] 必要的模板文字已经分类。
+- [ ] 冲突和未知项没有被静默消解。
+- [ ] Knowledge 没有被当作学校事实。
+- [ ] 任何输入文档都没有被修改。
+- [ ] 输出符合 `scope: current_task_only`。
 
-Do not modify the template or thesis while performing extraction. If a Tool returns an
-`error`, stale refs, unsupported visible objects, or untrustworthy render evidence, publish
-no fabricated conclusion; report the exact capability or evidence gap.
+## 最终回复要求
+
+说明证据是否完整，并列出已确认规则、模板文字分类、冲突、未知项和来源定位。若证据不足，只提出能够改变结论的最小补充请求。
