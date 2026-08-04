@@ -217,6 +217,17 @@ def project_conversion_report(source: Path | Mapping[str, Any]) -> dict[str, Any
         final_sha256 = payload.get("final_sha256")
         association = "direct"
     tool_uses = payload.get("tool_uses", ())
+    final_evidence_category = None
+    if payload.get("status") == "COMPLETED" and all(
+        isinstance(payload.get(key), str) and bool(payload.get(key))
+        for key in (
+            "candidate_render_ref",
+            "candidate_pdf",
+            "visual_review",
+            "validation",
+        )
+    ):
+        final_evidence_category = "adobe_candidate_full_page_validation_v1"
     return {
         "schema_version": version,
         "run_id": run_id,
@@ -229,6 +240,7 @@ def project_conversion_report(source: Path | Mapping[str, Any]) -> dict[str, Any
         "template_sha256": payload["template_sha256"],
         "requirements_sha256": payload["requirements_sha256"],
         "final_sha256": final_sha256,
+        "final_evidence_category": final_evidence_category,
         "knowledge_version": _identifier(
             payload.get("knowledge_version"), code="conversion_report_knowledge_invalid"
         ),

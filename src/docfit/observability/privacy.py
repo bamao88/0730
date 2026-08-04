@@ -65,6 +65,17 @@ _USAGE_KEYS = {
     "cache_read_input_tokens",
 }
 _HASH_KEYS = {"source_sha256", "template_sha256", "requirements_sha256", "final_sha256"}
+_RUNTIME_IDENTITY_KEYS = {
+    "app_version",
+    "sdk_version",
+    "tool_version",
+    "officecli_version",
+    "adobe_sdk_version",
+    "route_fingerprint",
+    "routing_policy",
+    "task_authorization",
+    "validation_requirement",
+}
 
 
 def _attrs(**values: SafeAttributeValue) -> tuple[ObservationAttribute, ...]:
@@ -507,8 +518,21 @@ def _common_result(
                 retryable if isinstance(retryable, bool) else None,
             )
     committed = payload.get("committed")
+    provider = payload.get("provider")
+    provider_name = (
+        _safe_identifier(provider.get("name"))
+        if isinstance(provider, Mapping)
+        else None
+    )
+    provider_version = (
+        _safe_identifier(provider.get("version"))
+        if isinstance(provider, Mapping)
+        else None
+    )
     return status, error, _attrs(
         committed=committed if isinstance(committed, bool) else None,
+        provider=provider_name,
+        provider_version=provider_version,
         warning_count=(
             len(payload.get("warnings", ()))
             if isinstance(payload.get("warnings"), list)
@@ -603,6 +627,11 @@ def _tool_result_summary(
                 if isinstance(provider, Mapping)
                 else None
             )
+            provider_version = (
+                _safe_identifier(provider.get("version"))
+                if isinstance(provider, Mapping)
+                else None
+            )
             if document_hash is not None:
                 evidence.append(ObservationEvidenceRef("document", document_hash))
             if render_hash is not None:
@@ -621,6 +650,7 @@ def _tool_result_summary(
                     else None
                 ),
                 provider=provider_name,
+                provider_version=provider_version,
                 cache_hit=(
                     payload.get("cache_hit")
                     if isinstance(payload.get("cache_hit"), bool)
@@ -911,6 +941,7 @@ def project_app_event(
     model: str | None = None,
     attempt: int | None = None,
     hashes: Mapping[str, str] | None = None,
+    runtime_identity: Mapping[str, str] | None = None,
     failure_code: str | None = None,
     duration_ms: float | None = None,
 ) -> ProjectionResult:
@@ -919,6 +950,9 @@ def project_app_event(
         for key, value in (hashes or {}).items():
             if key in _HASH_KEYS and (safe_hash := _hash(value)) is not None:
                 attributes[key] = safe_hash
+        for key, value in (runtime_identity or {}).items():
+            if key in _RUNTIME_IDENTITY_KEYS:
+                attributes[key] = _safe_identifier(value)
         attributes.update(
             {
                 "task_ref": _safe_identifier(task_ref),
@@ -974,6 +1008,9 @@ def project_report_event(
             task_ref=_safe_identifier(projected.get("task_ref")),
             association=_safe_code(projected.get("association")),
             backend=_safe_identifier(projected.get("backend")),
+            final_evidence_category=_safe_identifier(
+                projected.get("final_evidence_category")
+            ),
             knowledge_version=_safe_identifier(projected.get("knowledge_version")),
             knowledge_digest=_safe_identifier(projected.get("knowledge_digest")),
             tool_use_count=_nonnegative_int(projected.get("tool_use_count")),

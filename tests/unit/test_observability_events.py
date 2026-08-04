@@ -77,6 +77,34 @@ def test_app_priorities_reserve_p0_for_run_terminal_and_failures() -> None:
     assert terminal.event is not None and terminal.event.priority == "P0"
 
 
+def test_app_runtime_identity_keeps_only_safe_comparison_fields() -> None:
+    result = project_app_event(
+        _context(5),
+        source_event_id="run-start",
+        kind="run_started",
+        status="started",
+        runtime_identity={
+            "app_version": "0.1.0",
+            "sdk_version": "0.2.128",
+            "routing_policy": "configured_backend_fallback_v1",
+            "task_authorization": "task_root_capability_v1",
+            "validation_requirement": "m2_delivery_gate_v1",
+            "unknown_field": "PRIVATE_BODY_CANARY",
+            "tool_version": "/private/PRIVATE_PATH_CANARY",
+        },
+    )
+
+    assert result.event is not None
+    attributes = {item.key: item.value for item in result.event.attributes}
+    assert attributes == {
+        "app_version": "0.1.0",
+        "sdk_version": "0.2.128",
+        "routing_policy": "configured_backend_fallback_v1",
+        "task_authorization": "task_root_capability_v1",
+        "validation_requirement": "m2_delivery_gate_v1",
+    }
+
+
 def test_future_sink_rejects_raw_payload_before_recording() -> None:
     class Sink:
         calls = 0

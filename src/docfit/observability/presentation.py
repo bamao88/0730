@@ -44,6 +44,12 @@ _VERSION_KEYS = (
     "tool_version",
     "officecli_version",
     "adobe_sdk_version",
+    "provider_version",
+    "routing_policy",
+    "task_authorization",
+    "validation_requirement",
+    "final_evidence_category",
+    "route_fingerprint",
 )
 
 
@@ -228,24 +234,42 @@ def _subagent_view(
 
 def _metric_rows(correlation: RunCorrelation) -> tuple[dict[str, object], ...]:
     values = (
-        ("Total duration", correlation.metrics.total_duration_ms),
-        ("Agent turns", correlation.metrics.agent_turns),
-        ("Tool calls", correlation.metrics.tool_calls),
-        ("Subagents", correlation.metrics.subagents),
-        ("Input tokens", correlation.metrics.input_tokens),
-        ("Output tokens", correlation.metrics.output_tokens),
-        ("Reported cost (USD)", correlation.metrics.total_cost_usd),
-        ("Cache hits", correlation.metrics.cache_hits),
-        ("Adobe API calls", correlation.metrics.adobe_api_calls),
-        ("Pages viewed", correlation.metrics.pages_viewed),
-        ("Image count", correlation.metrics.image_count),
-        ("Image bytes", correlation.metrics.image_bytes),
-        ("Permission denials", correlation.metrics.permission_denials),
-        ("User questions", correlation.metrics.user_questions),
-        ("Errors", correlation.metrics.errors),
-        ("Warnings", correlation.metrics.warnings),
+        ("total_duration_ms", "Total duration", correlation.metrics.total_duration_ms),
+        ("agent_turns", "Agent turns", correlation.metrics.agent_turns),
+        ("tool_calls", "Tool calls", correlation.metrics.tool_calls),
+        ("subagents", "Subagents", correlation.metrics.subagents),
+        ("input_tokens", "Input tokens", correlation.metrics.input_tokens),
+        ("output_tokens", "Output tokens", correlation.metrics.output_tokens),
+        (
+            "cache_creation_input_tokens",
+            "Cache creation input tokens",
+            correlation.metrics.cache_creation_input_tokens,
+        ),
+        (
+            "cache_read_input_tokens",
+            "Cache read input tokens",
+            correlation.metrics.cache_read_input_tokens,
+        ),
+        ("total_cost_usd", "Reported cost (USD)", correlation.metrics.total_cost_usd),
+        ("cache_hits", "Cache hits", correlation.metrics.cache_hits),
+        ("adobe_api_calls", "Adobe API calls", correlation.metrics.adobe_api_calls),
+        ("pages_viewed", "Pages viewed", correlation.metrics.pages_viewed),
+        ("image_count", "Image count", correlation.metrics.image_count),
+        ("image_bytes", "Image bytes", correlation.metrics.image_bytes),
+        (
+            "permission_denials",
+            "Permission denials",
+            correlation.metrics.permission_denials,
+        ),
+        ("user_questions", "User questions", correlation.metrics.user_questions),
+        ("retries", "Retries", correlation.metrics.retries),
+        ("errors", "Errors", correlation.metrics.errors),
+        ("warnings", "Warnings", correlation.metrics.warnings),
     )
-    return tuple({"label": label, **_metric(metric)} for label, metric in values)
+    return tuple(
+        {"key": key, "label": label, **_metric(metric)}
+        for key, label, metric in values
+    )
 
 
 def _tool_statistics(correlation: RunCorrelation) -> tuple[dict[str, object], ...]:

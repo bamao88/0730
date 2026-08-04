@@ -345,7 +345,11 @@ def _post_hook(tool_name: str, response: object) -> dict[str, object]:
                     "document_sha256": HASH_A,
                     "render_sha256": HASH_B,
                     "render_intent": "candidate_verification",
-                    "provider": {"name": "adobe_pdf_services", "raw": "PRIVATE_ERROR_CANARY"},
+                    "provider": {
+                        "name": "adobe_pdf_services",
+                        "version": "4.2.0",
+                        "raw": "PRIVATE_ERROR_CANARY",
+                    },
                     "page_count": 2,
                     "dpi": 144,
                     "artifacts": {
@@ -359,6 +363,7 @@ def _post_hook(tool_name: str, response: object) -> dict[str, object]:
                 "check_count",
                 "render_intent",
                 "provider",
+                "provider_version",
                 "cache_hit",
                 "page_count",
                 "dpi",

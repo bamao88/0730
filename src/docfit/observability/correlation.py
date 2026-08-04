@@ -226,6 +226,7 @@ class RunMetrics:
     user_questions: MetricValue
     errors: MetricValue
     warnings: MetricValue
+    retries: MetricValue
     tools: tuple[ToolStatistics, ...]
 
 
@@ -1198,9 +1199,11 @@ def _metrics(
     )
     user_questions = sum(tool.tool_name == "AskUserQuestion" for tool in tools)
     errors = sum(tool.status in {"error", "denied", "conflict"} for tool in tools)
+    backend_attempts = sum(item.event.kind == "backend_started" for item in indexed)
     if not complete:
         derived_tool_calls = derived_subagents = derived_cache_hits = _unknown()
         derived_permissions = derived_questions = derived_errors = _unknown()
+        derived_retries = _unknown()
         derived_adobe = derived_pages = derived_image_count = derived_image_bytes = _unknown()
     else:
         derived_tool_calls = _estimated(len(tools))
@@ -1213,6 +1216,7 @@ def _metrics(
         derived_permissions = _estimated(permission_denials)
         derived_questions = _estimated(user_questions)
         derived_errors = _estimated(errors)
+        derived_retries = _estimated(max(0, backend_attempts - 1))
         derived_adobe = (
             _estimated(adobe_calls) if adobe_known else _unknown()
         )
@@ -1261,6 +1265,7 @@ def _metrics(
         user_questions=derived_questions,
         errors=derived_errors,
         warnings=_reported_warning_count(indexed),
+        retries=derived_retries,
         tools=_tool_statistics(tools, complete=complete),
     )
 

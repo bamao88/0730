@@ -100,7 +100,11 @@ def build_parser() -> argparse.ArgumentParser:
     convert_parser.add_argument(
         "--observation",
         choices=("auto", "off"),
-        default="off",
+        default="auto",
+        help=(
+            "local metadata-only observation "
+            "(default: auto; use off for the no-observer baseline)"
+        ),
     )
 
     observe_parser = subparsers.add_parser(

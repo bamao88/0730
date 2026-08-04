@@ -111,7 +111,7 @@ def test_sdk_attempt_environment_is_explicit_and_session_store_is_disabled() -> 
     assert options.session_store is None
 
 
-def test_convert_observation_cli_defaults_off_and_accepts_auto() -> None:
+def test_convert_observation_cli_defaults_auto_and_accepts_explicit_off() -> None:
     parser = build_parser()
     common = [
         "convert",
@@ -125,8 +125,9 @@ def test_convert_observation_cli_defaults_off_and_accepts_auto() -> None:
         "out",
     ]
 
-    assert parser.parse_args(common).observation == "off"
+    assert parser.parse_args(common).observation == "auto"
     assert parser.parse_args([*common, "--observation", "auto"]).observation == "auto"
+    assert parser.parse_args([*common, "--observation", "off"]).observation == "off"
 
 
 def test_observe_cli_has_port_but_no_remote_host(capsys: pytest.CaptureFixture[str]) -> None:
@@ -191,7 +192,9 @@ def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
         ("/static/{asset:str}", frozenset({"GET", "HEAD"})),
         ("/login", frozenset({"POST"})),
         ("/runs/{run_id:str}", frozenset({"GET", "HEAD"})),
+        ("/compare", frozenset({"GET", "HEAD"})),
         ("/api/runs", frozenset({"GET", "HEAD"})),
+        ("/api/compare", frozenset({"GET", "HEAD"})),
         ("/api/runs/{run_id:str}", frozenset({"GET", "HEAD"})),
         (
             "/api/runs/{run_id:str}/debug/{event_index:int}",

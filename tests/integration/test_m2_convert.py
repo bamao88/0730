@@ -417,6 +417,47 @@ def test_observer_storage_failure_does_not_change_conversion_result(
     assert (failed_request.output_directory / "conversion-report.json").is_file()
 
 
+def test_enabled_and_disabled_observation_publish_the_same_conversion_facts(
+    tmp_path: Path,
+) -> None:
+    disabled_request = _make_conversion_request(tmp_path, "disabled-observer-output")
+    enabled_request = _make_conversion_request(tmp_path, "enabled-observer-output")
+    disabled = asyncio.run(
+        run_conversion(
+            disabled_request,
+            runner=_fake_completed_agent,
+            observation=NullObservationRecorder(),
+        )
+    )
+    database = initialize_observation_store(tmp_path / "enabled-observer-state")
+    recorder = BufferedObservationRecorder(
+        root=database.parent,
+        database=database,
+        disk_space_probe=lambda _: (
+            100 * 1024 * 1024 * 1024,
+            80 * 1024 * 1024 * 1024,
+        ),
+    )
+    enabled = asyncio.run(
+        run_conversion(
+            enabled_request,
+            runner=_fake_completed_agent,
+            observation=recorder,
+        )
+    )
+
+    assert enabled.status == disabled.status == "COMPLETED"
+    assert enabled.final_sha256 == disabled.final_sha256
+    assert enabled.tool_uses == disabled.tool_uses
+    assert enabled.warnings == disabled.warnings
+    assert enabled.backend == disabled.backend
+    assert Path(enabled.final_docx or "").read_bytes() == Path(
+        disabled.final_docx or ""
+    ).read_bytes()
+    assert enabled.observation_coverage is not None
+    assert enabled.observation_coverage.state == "complete"
+
+
 def test_task_storage_failure_remains_an_app_failure(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

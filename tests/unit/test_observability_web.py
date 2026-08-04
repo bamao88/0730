@@ -238,6 +238,45 @@ def test_login_is_one_time_cookie_bound_and_not_reflected(tmp_path: Path) -> Non
     assert rejected.status_code == 401
 
 
+def test_comparison_page_and_api_keep_unknown_values_explicit(tmp_path: Path) -> None:
+    database = _seed_database(tmp_path / "state", tmp_path / "task")
+    first_events = load_observation_events(database, RUN_ID)
+    second_run_id = "run_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    second_events = tuple(
+        replace(
+            event,
+            run_id=second_run_id,
+            source_event_id=f"second-{event.source_event_id}",
+        )
+        for event in first_events
+    )
+    with observation_writer(database) as writer:
+        persisted = persist_observation_batch(
+            writer,
+            database,
+            second_events,
+            disk_space_probe=_ample_disk_space,
+        )
+    assert persisted.persisted_events == len(second_events)
+    client = _client(database)
+    _login(client)
+
+    query = f"?left={RUN_ID}&right={second_run_id}"
+    page = client.get(f"/compare{query}")
+    payload = client.get(f"/api/compare{query}")
+
+    assert page.status_code == 200
+    assert "跨运行差异" in page.text
+    assert "unknown" in page.text
+    assert payload.status_code == 200
+    comparison = payload.json()["comparison"]
+    assert comparison["comparability"]["status"] == "conditional"
+    assert comparison["comparability"]["performance_conclusion"] == "not_allowed"
+    assert comparison["winner"] is None
+    assert client.get("/compare").status_code == 400
+    assert client.get(f"/api/compare?left={RUN_ID}&right=run_missing").status_code == 404
+
+
 def test_host_origin_query_body_and_failure_limit_are_fail_closed(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
     client = _client(database)
@@ -601,7 +640,12 @@ def test_html_json_static_and_debug_views_are_privacy_safe(tmp_path: Path) -> No
     assert detail.status_code == 200
     metrics = detail.json()["view"]["metrics"]
     input_tokens = next(item for item in metrics if item["label"] == "Input tokens")
-    assert input_tokens == {"label": "Input tokens", "value": None, "source": "unknown"}
+    assert input_tokens == {
+        "key": "input_tokens",
+        "label": "Input tokens",
+        "value": None,
+        "source": "unknown",
+    }
     assert debug.status_code == 200
     assert debug.json()["debug_context_schema_version"] == 1
     assert debug.json()["run_id"] == RUN_ID

@@ -24,6 +24,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, Response, StreamingResponse
 from starlette.routing import Route
 
+from docfit.observability.comparison import build_run_comparison
 from docfit.observability.correlation import LocalEvidenceStatus
 from docfit.observability.events import ObservationEvent
 from docfit.observability.evidence import (
@@ -327,6 +328,20 @@ def _load_overview(
     return tuple(views), history_revision(runs)
 
 
+def _load_comparison(
+    context: ObserverWebContext,
+    left_run_id: str,
+    right_run_id: str,
+) -> dict[str, object] | None:
+    left_run = get_observation_run(context.database, left_run_id)
+    right_run = get_observation_run(context.database, right_run_id)
+    if left_run is None or right_run is None:
+        return None
+    left_events = load_observation_events(context.database, left_run_id)
+    right_events = load_observation_events(context.database, right_run_id)
+    return build_run_comparison(left_run, left_events, right_run, right_events)
+
+
 async def _root(request: Request) -> Response:
     session = _authenticated(request)
     if session is None:
@@ -435,6 +450,59 @@ async def _run_detail(request: Request) -> Response:
         return _error("observer_run_not_found", 404)
     _, _, view = loaded
     return JSONResponse({"status": "ok", "view": view})
+
+
+def _comparison_ids(request: Request) -> tuple[str, str] | None:
+    left = request.query_params.get("left")
+    right = request.query_params.get("right")
+    if left is None or right is None or len(left) > 64 or len(right) > 64:
+        return None
+    return left, right
+
+
+async def _comparison_page(request: Request) -> Response:
+    session = _authenticated(request)
+    if session is None:
+        return _error("observer_session_required", 401)
+    run_ids = _comparison_ids(request)
+    if run_ids is None:
+        return _error("observer_comparison_selection_invalid", 400)
+    try:
+        comparison = await run_in_threadpool(
+            _load_comparison, _context(request), *run_ids
+        )
+        runs = await run_in_threadpool(
+            list_observation_runs,
+            _context(request).database,
+            limit=WEB_RUN_LIMIT,
+        )
+    except ObservationStorageError as error:
+        return _error(error.code, 503)
+    if comparison is None:
+        return _error("observer_run_not_found", 404)
+    return _render_template(
+        "comparison.html",
+        comparison=comparison,
+        revision=history_revision(runs),
+        csrf_token=session.csrf_token,
+    )
+
+
+async def _comparison_detail(request: Request) -> Response:
+    if _authenticated(request) is None:
+        return _error("observer_session_required", 401)
+    run_ids = _comparison_ids(request)
+    if run_ids is None:
+        return _error("observer_comparison_selection_invalid", 400)
+    try:
+        comparison = await run_in_threadpool(
+            _load_comparison, _context(request), *run_ids
+        )
+    except ObservationStorageError as error:
+        return _error(error.code, 503)
+    if comparison is None:
+        return _error("observer_run_not_found", 404)
+    return JSONResponse({"status": "ok", "comparison": comparison})
 
 
 async def _debug_context(request: Request) -> Response:
@@ -647,7 +715,9 @@ def create_observer_app(
             Route("/static/{asset:str}", _static_asset, methods=["GET", "HEAD"]),
             Route("/login", _login, methods=["POST"]),
             Route("/runs/{run_id:str}", _run_page, methods=["GET", "HEAD"]),
+            Route("/compare", _comparison_page, methods=["GET", "HEAD"]),
             Route("/api/runs", _runs, methods=["GET", "HEAD"]),
+            Route("/api/compare", _comparison_detail, methods=["GET", "HEAD"]),
             Route(
                 "/api/runs/{run_id:str}",
                 _run_detail,

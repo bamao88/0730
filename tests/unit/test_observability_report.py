@@ -87,6 +87,24 @@ def test_v2_projection_is_direct_and_excludes_paths_and_prose() -> None:
     assert "detail" not in projected
 
 
+def test_completed_v2_projects_only_the_final_evidence_category() -> None:
+    payload = {
+        **_v2(),
+        "candidate_render_ref": "/private/PAPER_CANARY/render-ref.json",
+        "candidate_pdf": "/private/PAPER_CANARY/candidate.pdf",
+        "visual_review": "/private/PAPER_CANARY/visual.json",
+        "validation": "/private/PAPER_CANARY/validation.json",
+    }
+
+    projected = project_conversion_report(payload)
+
+    assert (
+        projected["final_evidence_category"]
+        == "adobe_candidate_full_page_validation_v1"
+    )
+    assert "/private" not in json.dumps(projected)
+
+
 @pytest.mark.parametrize(
     ("mutation", "code"),
     [

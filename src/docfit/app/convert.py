@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import os
 import secrets
@@ -14,6 +15,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import suppress
 from dataclasses import asdict, dataclass, replace
 from functools import partial
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, Literal
 
@@ -88,6 +90,29 @@ REQUIRED_CONVERSION_TOOLS = frozenset(
         "mcp__docfit__docx_validate",
     }
 )
+
+
+def _installed_version(package: str) -> str | None:
+    try:
+        return version(package)
+    except PackageNotFoundError:
+        return None
+
+
+def _observation_runtime_identity() -> dict[str, str]:
+    """Return non-secret runtime conditions required for honest run comparison."""
+
+    app_version = _installed_version("docfit-agent")
+    sdk_version = _installed_version("claude-agent-sdk")
+    values = {
+        "app_version": app_version,
+        "sdk_version": sdk_version,
+        "tool_version": app_version,
+        "routing_policy": "configured_backend_fallback_v1",
+        "task_authorization": "task_root_capability_v1",
+        "validation_requirement": "m2_delivery_gate_v1",
+    }
+    return {key: value for key, value in values.items() if value is not None}
 
 CONVERSION_OUTPUT_SCHEMA: JsonObject = {
     "type": "object",
@@ -631,6 +656,7 @@ async def run_conversion_agent(
     timed_out_routes: set[tuple[str, str, str]] = set()
     for attempt_number, backend in enumerate(backends, start=1):
         route = (backend.name, backend.base_url, backend.model)
+        route_fingerprint = hashlib.sha256("\x00".join(route).encode()).hexdigest()
         if route in timed_out_routes:
             continue
         attempt_started = time.monotonic()
@@ -643,6 +669,7 @@ async def run_conversion_agent(
                 backend=backend.name,
                 model=backend.model,
                 attempt=attempt_number,
+                runtime_identity={"route_fingerprint": route_fingerprint},
             )
         )
         try:
@@ -664,6 +691,7 @@ async def run_conversion_agent(
                     backend=backend.name,
                     model=backend.model,
                     attempt=attempt_number,
+                    runtime_identity={"route_fingerprint": route_fingerprint},
                     duration_ms=(time.monotonic() - attempt_started) * 1000,
                 )
             )
@@ -686,6 +714,7 @@ async def run_conversion_agent(
                 backend=backend.name,
                 model=backend.model,
                 attempt=attempt_number,
+                runtime_identity={"route_fingerprint": route_fingerprint},
                 failure_code=failure_code,
                 duration_ms=(time.monotonic() - attempt_started) * 1000,
             )
@@ -1006,6 +1035,7 @@ async def run_conversion(
                     "template_sha256": prepared.template_sha256,
                     "requirements_sha256": prepared.requirements_sha256,
                 },
+                runtime_identity=_observation_runtime_identity(),
             ),
         )
         transcript_manager = transcript_manager or SDKTranscriptManager(
