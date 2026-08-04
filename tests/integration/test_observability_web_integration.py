@@ -63,20 +63,56 @@ def test_real_loopback_server_exchanges_login_and_reads_empty_history(
         assert login.getheader("Date") is None
         assert login.getheader("Access-Control-Allow-Origin") is None
         assert login_code not in json.dumps(login_payload)
+        session_cookie = cookie.split(";", 1)[0]
+
+        connection.request(
+            "GET",
+            "/",
+            headers={
+                "Host": f"127.0.0.1:{port}",
+                "Cookie": session_cookie,
+            },
+        )
+        overview = connection.getresponse()
+        overview_body = overview.read().decode()
+        assert overview.status == 200
+        assert "最近运行" in overview_body
 
         connection.request(
             "GET",
             "/api/runs",
             headers={
                 "Host": f"127.0.0.1:{port}",
-                "Cookie": cookie.split(";", 1)[0],
+                "Cookie": session_cookie,
             },
         )
         history = connection.getresponse()
         history_payload = json.loads(history.read())
 
         assert history.status == 200
-        assert history_payload == {"status": "ok", "runs": []}
+        assert history_payload["status"] == "ok"
+        assert history_payload["runs"] == []
+        assert len(history_payload["revision"]) == 64
+
+        stream_connection = http.client.HTTPConnection("127.0.0.1", port, timeout=5.0)
+        try:
+            stream_connection.request(
+                "GET",
+                "/api/stream",
+                headers={
+                    "Host": f"127.0.0.1:{port}",
+                    "Cookie": session_cookie,
+                },
+            )
+            stream = stream_connection.getresponse()
+            assert stream.status == 200
+            assert stream.getheader("Content-Type", "").startswith("text/event-stream")
+            lines = [stream.readline().decode() for _ in range(5)]
+            assert "retry: 5000\n" in lines
+            assert "event: history\n" in lines
+            assert any(line.startswith('data: {"revision":"') for line in lines)
+        finally:
+            stream_connection.close()
     finally:
         connection.close()
         server.should_exit = True

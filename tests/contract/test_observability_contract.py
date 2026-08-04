@@ -154,8 +154,10 @@ def test_observer_web_core_does_not_import_optional_platform_adapter() -> None:
                 "from docfit.observability.web import create_observer_app; "
                 "create_observer_app(Path('/observer.sqlite3'), port=43123, "
                 "login_code='synthetic-login'); "
-                "assert not any(name.startswith('docfit.observability.local_debug') "
-                "for name in sys.modules)"
+                "forbidden=('docfit.observability.local_debug','docfit.tools',"
+                "'adobe','win32com','appscript','pyautogui'); "
+                "assert not any(name == item or name.startswith(item + '.') "
+                "for name in sys.modules for item in forbidden)"
             ),
         ],
         capture_output=True,
@@ -186,8 +188,17 @@ def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
 
     assert routes == {
         ("/", frozenset({"GET", "HEAD"})),
+        ("/static/{asset:str}", frozenset({"GET", "HEAD"})),
         ("/login", frozenset({"POST"})),
+        ("/runs/{run_id:str}", frozenset({"GET", "HEAD"})),
         ("/api/runs", frozenset({"GET", "HEAD"})),
+        ("/api/runs/{run_id:str}", frozenset({"GET", "HEAD"})),
+        (
+            "/api/runs/{run_id:str}/debug/{event_index:int}",
+            frozenset({"GET", "HEAD"}),
+        ),
+        ("/api/revision", frozenset({"GET", "HEAD"})),
+        ("/api/stream", frozenset({"GET", "HEAD"})),
         ("/api/runs/{run_id:str}/mount", frozenset({"POST"})),
         ("/api/runs/{run_id:str}/delete", frozenset({"POST"})),
         ("/api/history/clear", frozenset({"POST"})),
@@ -201,6 +212,22 @@ def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
         forbidden not in route_text
         for forbidden in ("agent/start", "subagent/start", "tool/call", "convert/start")
     )
+
+
+def test_observer_static_client_has_bounded_sse_fallback_and_no_remote_assets() -> None:
+    static_root = Path(__file__).parents[2] / "src" / "docfit" / "observability" / "static"
+    script = (static_root / "observer.js").read_text(encoding="utf-8")
+    stylesheet = (static_root / "observer.css").read_text(encoding="utf-8")
+
+    assert "new EventSource(\"/api/stream\")" in script
+    assert "setInterval" in script
+    assert "5000" in script
+    assert "stream.onerror" in script
+    assert "WebSocket" not in script
+    assert "localStorage" not in script
+    assert "sessionStorage" not in script
+    assert "http://" not in script + stylesheet
+    assert "https://" not in script + stylesheet
 
 
 def test_storage_schema_contains_only_safe_projection_fields(tmp_path: Path) -> None:

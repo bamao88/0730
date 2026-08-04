@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}登录 · DocFit Observer{% endblock %}
+{% block content %}
+<section class="login-panel" aria-labelledby="login-title">
+  <p class="eyebrow">LOCAL ONLY · 127.0.0.1</p>
+  <h1 id="login-title">打开本地观测界面</h1>
+  <p class="lede">输入启动终端中显示的一次性登录码。登录码不会写入 URL、浏览器存储或观测数据库。</p>
+  <form id="login-form" class="login-form">
+    <label for="login-code">一次性登录码</label>
+    <div class="input-row">
+      <input id="login-code" name="login-code" type="password" autocomplete="off" required autofocus>
+      <button type="submit">进入观测界面</button>
+    </div>
+  </form>
+  <p class="quiet">登录码使用后立即失效；5 分钟或连续失败 5 次后需重启服务取得新码。</p>
+</section>
+{% endblock %}

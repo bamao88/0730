@@ -5,6 +5,7 @@ import io
 import json
 import socket
 from collections.abc import Callable
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -17,6 +18,7 @@ from docfit.observability.privacy import project_app_event, project_report_event
 from docfit.observability.storage import (
     initialize_observation_store,
     list_observation_runs,
+    load_observation_events,
     observation_writer,
     persist_observation_batch,
 )
@@ -350,10 +352,13 @@ def test_verified_mount_and_open_never_return_local_paths(tmp_path: Path) -> Non
     opened = client.post(
         f"/api/runs/{RUN_ID}/open/final_docx", headers=_post_headers(csrf)
     )
+    run_page = client.get(f"/runs/{RUN_ID}")
 
     assert runs.status_code == 200
     assert mounted.json() == {"status": "verified", "failure_code": None}
     assert opened.json() == {"status": "ok"}
+    assert "打开 final.docx" in run_page.text
+    assert "选择并重新授权任务目录" not in run_page.text
     assert opener.paths == [(task_root / "final.docx").resolve()]
     combined = runs.text + mounted.text + opened.text
     assert str(task_root) not in combined
@@ -521,3 +526,237 @@ def test_observer_without_protected_tty_fails_before_issuing_secret() -> None:
     assert result == 2
     assert "observer_interactive_tty_required" in output.getvalue()
     assert "One-time login code" not in output.getvalue()
+
+
+def test_observer_keyboard_interrupt_exits_cleanly(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class InteractiveStream(io.StringIO):
+        def isatty(self) -> bool:
+            return True
+
+    class InterruptingServer:
+        def run(self, *, sockets: list[socket.socket]) -> None:
+            assert len(sockets) == 1
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(
+        "docfit.observability.web.observation_state_root",
+        lambda: tmp_path / "state",
+    )
+    monkeypatch.setattr(
+        "docfit.observability.web.build_observer_server",
+        lambda app, listener: InterruptingServer(),
+    )
+    output = InteractiveStream()
+
+    result = run_observer_server(
+        port=0,
+        input_stream=InteractiveStream(),
+        output_stream=output,
+    )
+
+    assert result == 0
+    assert "DocFit observer: http://127.0.0.1:" in output.getvalue()
+
+
+def test_html_json_static_and_debug_views_are_privacy_safe(tmp_path: Path) -> None:
+    task_root = tmp_path / "PRIVATE_TASK_DIRECTORY"
+    database = _seed_database(tmp_path / "state", task_root)
+    client = _client(database)
+
+    login_page = client.get("/")
+    stylesheet = client.get("/static/observer.css")
+    script = client.get("/static/observer.js")
+    missing_asset = client.get("/static/private.txt")
+
+    assert login_page.status_code == 200
+    assert login_page.headers["content-type"].startswith("text/html")
+    assert "一次性登录码" in login_page.text
+    assert stylesheet.headers["content-type"].startswith("text/css")
+    assert script.headers["content-type"].startswith("application/javascript")
+    assert missing_asset.status_code == 404
+    assert "script-src 'self'" in login_page.headers["content-security-policy"]
+    assert "style-src 'self'" in login_page.headers["content-security-policy"]
+
+    _login(client)
+    overview = client.get("/")
+    run_page = client.get(f"/runs/{RUN_ID}")
+    detail = client.get(f"/api/runs/{RUN_ID}")
+    debug = client.get(f"/api/runs/{RUN_ID}/debug/0")
+    revision = client.get("/api/revision").json()["revision"]
+
+    assert overview.status_code == 200
+    assert "最近运行" in overview.text
+    assert RUN_ID in overview.text
+    assert run_page.status_code == 200
+    assert "Transcript / 时间线" in run_page.text
+    assert "Agent / Subagent 树" in run_page.text
+    assert "Tool 调用" in run_page.text
+    assert "四个独立状态维度" in run_page.text
+    assert "选择并重新授权任务目录" in run_page.text
+    assert "打开 final.docx" not in run_page.text
+    assert f'data-revision="{revision}"' in run_page.text
+    assert detail.status_code == 200
+    metrics = detail.json()["view"]["metrics"]
+    input_tokens = next(item for item in metrics if item["label"] == "Input tokens")
+    assert input_tokens == {"label": "Input tokens", "value": None, "source": "unknown"}
+    assert debug.status_code == 200
+    assert debug.json()["debug_context_schema_version"] == 1
+    assert debug.json()["run_id"] == RUN_ID
+    assert debug.json()["local_evidence"] == "unmounted"
+
+    combined = "\n".join(
+        (overview.text, run_page.text, detail.text, debug.text, stylesheet.text, script.text)
+    )
+    assert str(task_root) not in combined
+    assert "PRIVATE_REPORT_PROSE" not in combined
+    assert LOGIN_CODE not in combined
+
+
+def test_debug_context_index_matches_deduplicated_display_order(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    database = _seed_database(tmp_path / "state", task_root)
+    events = load_observation_events(database, RUN_ID)
+    duplicate = replace(
+        events[0],
+        source_sequence=4,
+        monotonic_offset_ms=1.5,
+    )
+    with observation_writer(database) as writer:
+        persisted = persist_observation_batch(
+            writer,
+            database,
+            (duplicate,),
+            disk_space_probe=_ample_disk_space,
+        )
+    assert persisted.persisted_events == 1
+    client = _client(database)
+    _login(client)
+
+    displayed = client.get(f"/api/runs/{RUN_ID}").json()["view"]["events"]
+    debug_kinds = [
+        client.get(f"/api/runs/{RUN_ID}/debug/{index}").json()["event_kind"]
+        for index in range(len(displayed))
+    ]
+
+    assert debug_kinds == [event["kind"] for event in displayed]
+    assert len(displayed) == 3
+
+
+def test_sse_emits_only_an_opaque_history_revision(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database = _seed_database(tmp_path / "state", tmp_path / "PRIVATE_TASK_DIRECTORY")
+    moments = iter((0.0, 0.0, 0.0, 0.0, float(SESSION_IDLE_SECONDS)))
+
+    def clock() -> float:
+        return next(moments, float(SESSION_IDLE_SECONDS))
+
+    client = _client(database, clock=clock)
+    _login(client)
+    monkeypatch.setattr("docfit.observability.web.STREAM_POLL_SECONDS", 0.0)
+
+    response = client.get("/api/stream")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+    assert "event: history" in response.text
+    assert 'data: {"revision":"' in response.text
+    assert RUN_ID not in response.text
+    assert str(tmp_path) not in response.text
+    assert "PRIVATE_REPORT_PROSE" not in response.text
+
+
+def test_evidence_states_are_session_local_and_distinct(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    database = _seed_database(tmp_path / "state", task_root)
+    selector = StaticSelector(DirectorySelection("selected", task_root))
+    opener = RecordingOpener()
+    client = _client(database, selector=selector, opener=opener)
+    csrf = _login(client)
+
+    initial = client.get(f"/api/runs/{RUN_ID}").json()["view"]["dimensions"]
+    assert initial["local_evidence"] == "unmounted"
+
+    assert client.post(
+        f"/api/runs/{RUN_ID}/mount", headers=_post_headers(csrf)
+    ).status_code == 200
+    available = client.get(f"/api/runs/{RUN_ID}").json()["view"]["dimensions"]
+    assert available["local_evidence"] == "available"
+    assert available["evidence_association"] == "verified"
+
+    report_path = task_root / "conversion-report.json"
+    report_path.write_text(report_path.read_text() + " ", encoding="utf-8")
+    stale = client.post(
+        f"/api/runs/{RUN_ID}/open/final_docx", headers=_post_headers(csrf)
+    )
+    assert stale.status_code == 409
+    stale_dimensions = client.get(f"/api/runs/{RUN_ID}").json()["view"][
+        "dimensions"
+    ]
+    assert stale_dimensions["local_evidence"] == "stale"
+    assert stale_dimensions["evidence_failure"] == "evidence_report_changed"
+
+    missing_root = tmp_path / "missing-task"
+    missing_database = _seed_database(tmp_path / "missing-state", missing_root)
+    missing_client = _client(
+        missing_database,
+        selector=StaticSelector(DirectorySelection("selected", missing_root)),
+        opener=RecordingOpener(),
+        login_code="missing-login",
+    )
+    missing_csrf = _login(missing_client, code="missing-login")
+    assert missing_client.post(
+        f"/api/runs/{RUN_ID}/mount", headers=_post_headers(missing_csrf)
+    ).status_code == 200
+    assert missing_client.post(
+        f"/api/runs/{RUN_ID}/open/validation", headers=_post_headers(missing_csrf)
+    ).status_code == 409
+    missing_dimensions = missing_client.get(f"/api/runs/{RUN_ID}").json()["view"][
+        "dimensions"
+    ]
+    assert missing_dimensions["local_evidence"] == "missing"
+
+    unauthorized_root = tmp_path / "unauthorized-task"
+    unauthorized_database = _seed_database(
+        tmp_path / "unauthorized-state", unauthorized_root
+    )
+    unauthorized_client = _client(
+        unauthorized_database,
+        selector=StaticSelector(DirectorySelection("selected", unauthorized_root)),
+        opener=RecordingOpener(),
+        login_code="unauthorized-login",
+    )
+    unauthorized_csrf = _login(unauthorized_client, code="unauthorized-login")
+    assert unauthorized_client.post(
+        f"/api/runs/{RUN_ID}/mount", headers=_post_headers(unauthorized_csrf)
+    ).status_code == 200
+    (unauthorized_root / "validation.json").symlink_to(unauthorized_root / "final.docx")
+    assert unauthorized_client.post(
+        f"/api/runs/{RUN_ID}/open/validation",
+        headers=_post_headers(unauthorized_csrf),
+    ).status_code == 409
+    unauthorized_dimensions = unauthorized_client.get(
+        f"/api/runs/{RUN_ID}"
+    ).json()["view"]["dimensions"]
+    assert unauthorized_dimensions["local_evidence"] == "unauthorized"
+
+    conflict_root = tmp_path / "conflict-task"
+    conflict_database = _seed_database(tmp_path / "conflict-state", conflict_root)
+    (conflict_root / "final.docx").write_bytes(b"changed")
+    conflict_client = _client(
+        conflict_database,
+        selector=StaticSelector(DirectorySelection("selected", conflict_root)),
+        login_code="conflict-login",
+    )
+    conflict_csrf = _login(conflict_client, code="conflict-login")
+    assert conflict_client.post(
+        f"/api/runs/{RUN_ID}/mount", headers=_post_headers(conflict_csrf)
+    ).status_code == 409
+    conflict_dimensions = conflict_client.get(f"/api/runs/{RUN_ID}").json()[
+        "view"
+    ]["dimensions"]
+    assert conflict_dimensions["local_evidence"] == "conflict"

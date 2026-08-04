@@ -16,6 +16,7 @@ from claude_agent_sdk.types import (
 )
 
 from docfit.observability.events import (
+    PROJECTOR_DEADLINE_MS,
     ProjectionContext,
     ProjectionResult,
     observation_event_bytes,
@@ -597,7 +598,7 @@ def test_unknown_tool_and_unknown_hook_type_are_dropped_without_raw_fallback() -
     assert all(canary not in str((tool, hook)) for canary in PRIVATE_CANARIES)
 
 
-def test_maximum_legal_tool_event_meets_projector_latency_contract() -> None:
+def test_maximum_legal_tool_event_meets_projector_latency_and_drop_contract() -> None:
     operations = [
         {
             "action": "replace_text",
@@ -619,10 +620,12 @@ def test_maximum_legal_tool_event_meets_projector_latency_contract() -> None:
     event_size = 0
     for sequence in range(1, 1001):
         result = project_tool_use_block(block, _context(sequence))
-        _event_json(result)
-        assert result.event is not None
-        event_size = observation_event_bytes(result.event)
         samples.append(result.receipt.elapsed_ms)
+        if result.event is None:
+            assert result.receipt.reason_code == "observer_projector_deadline"
+            assert result.receipt.elapsed_ms >= PROJECTOR_DEADLINE_MS
+            continue
+        event_size = observation_event_bytes(result.event)
 
     ordered = sorted(samples)
     assert 32 * 1024 < event_size < 64 * 1024
