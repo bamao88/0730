@@ -109,9 +109,22 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
 - Adobe 大文件上传使用固定且可测试的 connect/read timeout；真实上传超时仍返回
   安全 provider failure，不泄露 SDK 原始错误或凭据；
 - 只读源文件权限不会被传播到临时编辑副本；同一 backend route 超时后不会仅因轮换
-  credential 重复等待同一模型路由。
+  credential 重复等待同一模型路由；Kimi Claude Code 环境显式保持官方 high-effort
+  Tool 上下文并关闭 Tool Search，HTTP 400 请求格式拒绝映射为不含原始错误体的安全码，
+  且不会轮换同一 name/base URL/model 的 credential 重放相同无效请求。
 
 Tool test 的基本标准是确定性、可重复、源文件只读、失败不产生伪成功产物。
+
+当 06 中“样式观测与确定性补全”候选切片获得独立实施批准时，还必须新增以下
+普通 Tool/契约测试；本段不表示这些门当前已经通过：
+
+- 模板观测能区分命名样式、直接格式、继承链、最终有效值、覆盖、缺失与冲突；
+- 解析器不把 Word 继承或缺省值误标为国家标准补全，也不把观测值误标为目标要求；
+- 规则解析器只接受已批准的标准标识、版本和适用性证据，且只补当前任务证据
+  未规定的单个属性；
+- 当前任务来源冲突、标准不适用、条款无规定或多条规则冲突时，结果为未决而非默认值；
+- 每个解析后属性保留来源类型、来源 hash/ref，以及适用时的标准版本、条款和适用性；
+- 不向 Agent 或 Subagent 载入国家标准样式值表、缺省补全表或历史学校样式。
 
 ### 2.2 Skill eval
 
@@ -134,6 +147,10 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
   再次委派，而不是让 Subagent 越权生成证据；
 - 只从当前任务模板、要求、示例和用户确认中形成学校事实；
 - 不把当前任务提取出的学校规则、模板或精确参数写入长期 Knowledge；
+- 只把 Tool 观测到的模板样式绑定到语义角色，不从 Knowledge、历史任务或常识生成
+  未观测的样式值；
+- 样式属性仍缺失时，请求程序的确定性解析结果或显式保留未决，不在 prompt 中
+  读取国家标准数值表后自行决定；
 - 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
 - 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
 - 分页敏感且 Adobe 服务可用时，修改前建立输入与模板的服务转换分页基线；不可用时保留明确的能力缺口；
@@ -184,6 +201,8 @@ limit      成本或重复调用上限
 - 源文件未变化；
 - 支持范围内的学生内容和对象仍存在且顺序正确；
 - 目标学校关键格式断言满足；
+- 对每个被确定的目标样式属性，可区分当前任务明确要求、模板观测、继承后
+  有效值、适用国家级标准或未决，且未决属性没有被静默写入文档；
 - 必填模板内容或槽位已处理；
 - 不应出现的占位符和说明文字已清理；
 - PDF 或页面预览可生成；
@@ -261,11 +280,11 @@ O0 在页面开发前先建立以下非 Eval 产品合同测试：
   注入的内存目录 capability、hash/ref 验证和无适配器时的 `unmounted` 降级；macOS 等
   原生目录选择器属于本地调试壳的可选 platform adapter，可有独立合成测试和手工 smoke，
   但真实 GUI 可用性不阻塞 O0，也不得使核心模块导入 AppleScript/GUI 实现；
-- 对一次性登录/session、Host、Origin、CORS、CSRF、GET side effect、未授权 `task_ref`、
-  path traversal、symlink 和挂载后替换建立安全测试；secret 不得进入 URL、日志或导出，
-  登录码/session 的失败次数、idle/absolute expiry、失效与服务重启轮换生效，无交互
-  TTY/受保护 IPC 时
-  必须 fail closed；
+- 对免登录直接打开、自动短期 session、Host、Origin、CORS、CSRF、GET 管理副作用、
+  未授权 `task_ref`、path traversal、symlink 和挂载后替换建立安全测试；session/CSRF
+  secret 不得进入 URL、日志、数据库或导出；idle/absolute expiry 后自动轮换会话并丢失
+  会话内挂载，旧 CSRF 必须失效，服务端会话数保持有界；`/login` 不存在，非交互/无头
+  环境可以启动 loopback 页面；
 - schema v2 的随机 run/task ID、最终文档 hash 与 coverage/privacy 字段、v1 读取、v1
   unavailable/null、无效 v2、未知版本和 observation summary provider 异常必须有契约
   测试；summary 失败时基础 v2 conversion report 仍可写出；

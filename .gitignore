@@ -11,3 +11,7 @@ htmlcov/
 .docfit/
 .tmp/
 dist/
+.gstack/
+temp/manual-gold-preparation/
+temp/docfit-unit-boundary-word-output/
+temp/docfit-unit-boundary-word-output-corrected/

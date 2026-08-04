@@ -21,18 +21,54 @@ _CHROME_CANDIDATES = (
 _LAYOUT_SCRIPT = r"""
 <script>
 (() => {
+  const virtualPages = __DOCFIT_VIRTUAL_PAGES__;
+  const pageMetrics = new Map();
+  let nextPage = 1;
+  for (const page of document.querySelectorAll('.page')) {
+    const rectangle = page.getBoundingClientRect();
+    const style = getComputedStyle(page);
+    const paddingTop = parseFloat(style.paddingTop) || 0;
+    const paddingBottom = parseFloat(style.paddingBottom) || 0;
+    const pageHeight = parseFloat(style.minHeight) || rectangle.height;
+    const contentHeight = pageHeight - paddingTop - paddingBottom;
+    const scrollContentHeight = Math.max(0, page.scrollHeight - paddingTop - paddingBottom);
+    const pageSpan = virtualPages && contentHeight > 0 ?
+      Math.max(1, Math.ceil((scrollContentHeight - 0.5) / contentHeight)) : 1;
+    pageMetrics.set(page, {
+      basePage: virtualPages ? nextPage : Number(page.getAttribute('data-page')),
+      rectangle,
+      paddingTop,
+      paddingBottom,
+      pageHeight,
+      contentHeight
+    });
+    nextPage += pageSpan;
+  }
   const records = [...document.querySelectorAll('[data-path]')].map((element) => {
     const page = element.closest('.page');
     const rectangle = element.getBoundingClientRect();
-    const pageRectangle = page ? page.getBoundingClientRect() : null;
+    const metrics = page ? pageMetrics.get(page) : null;
+    const pageRectangle = metrics ? metrics.rectangle : null;
+    const paddingTop = metrics ? metrics.paddingTop : 0;
+    const pageHeight = metrics ? metrics.pageHeight : 0;
+    const contentHeight = metrics ? metrics.contentHeight : 0;
+    const relativeContentTop = metrics ?
+      rectangle.top - metrics.rectangle.top - paddingTop : rectangle.top;
+    const flowPageOffset = virtualPages && contentHeight > 0 ?
+      Math.max(0, Math.floor(relativeContentTop / contentHeight)) : 0;
+    const normalizedTop = metrics && virtualPages ?
+      paddingTop + relativeContentTop - flowPageOffset * contentHeight :
+      (pageRectangle ? rectangle.top - pageRectangle.top : rectangle.top);
     return {
       path: element.getAttribute('data-path'),
-      page: page ? Number(page.getAttribute('data-page')) : null,
+      page: metrics ? metrics.basePage + flowPageOffset : null,
+      page_width: pageRectangle ? pageRectangle.width : null,
+      page_height: pageRectangle ? pageHeight : null,
       bbox: [
         rectangle.left,
-        pageRectangle ? rectangle.top - pageRectangle.top : rectangle.top,
+        normalizedTop,
         rectangle.right,
-        pageRectangle ? rectangle.bottom - pageRectangle.top : rectangle.bottom
+        normalizedTop + rectangle.height
       ]
     };
   });
@@ -51,7 +87,11 @@ def chrome_executable() -> Path | None:
     return Path(found).resolve() if found else None
 
 
-def measure_html_layout(html_path: Path) -> tuple[JsonObject, ...]:
+def measure_html_layout(
+    html_path: Path,
+    *,
+    virtual_pages: bool = False,
+) -> tuple[JsonObject, ...]:
     executable = chrome_executable()
     if executable is None:
         raise ToolFailure(
@@ -62,10 +102,14 @@ def measure_html_layout(html_path: Path) -> tuple[JsonObject, ...]:
         )
     source = html_path.read_text(encoding="utf-8", errors="strict")
     closing = source.lower().rfind("</body>")
+    layout_script = _LAYOUT_SCRIPT.replace(
+        "__DOCFIT_VIRTUAL_PAGES__",
+        "true" if virtual_pages else "false",
+    )
     instrumented = (
-        source[:closing] + _LAYOUT_SCRIPT + source[closing:]
+        source[:closing] + layout_script + source[closing:]
         if closing >= 0
-        else source + _LAYOUT_SCRIPT
+        else source + layout_script
     )
     descriptor, temporary_name = tempfile.mkstemp(
         prefix="docfit-layout-",
@@ -135,10 +179,16 @@ def measure_html_layout(html_path: Path) -> tuple[JsonObject, ...]:
         for value in values:
             path = value.get("path")
             page = value.get("page")
+            page_width = value.get("page_width")
+            page_height = value.get("page_height")
             bbox = value.get("bbox")
             if (
                 isinstance(path, str)
                 and isinstance(page, int)
+                and isinstance(page_width, (int, float))
+                and isinstance(page_height, (int, float))
+                and page_width > 0
+                and page_height > 0
                 and isinstance(bbox, list)
                 and len(bbox) == 4
                 and all(isinstance(item, (int, float)) for item in bbox)
@@ -147,6 +197,8 @@ def measure_html_layout(html_path: Path) -> tuple[JsonObject, ...]:
                     {
                         "path": path,
                         "page": page,
+                        "page_width": round(float(page_width), 2),
+                        "page_height": round(float(page_height), 2),
                         "bbox": [round(float(item), 2) for item in bbox],
                     }
                 )

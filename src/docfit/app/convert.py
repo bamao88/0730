@@ -235,6 +235,15 @@ class AgentExecution:
     backend: str
 
 
+class BackendAttemptFailure(RuntimeError):
+    """Privacy-safe SDK attempt failure with an explicit route retry decision."""
+
+    def __init__(self, code: str, *, retry_same_route: bool) -> None:
+        super().__init__(code)
+        self.code = code
+        self.retry_same_route = retry_same_route
+
+
 @dataclass(frozen=True, slots=True)
 class ConversionReport:
     schema_version: int
@@ -635,8 +644,20 @@ async def _run_backend(
                     partial(project_result_message, message)
                 )
                 result = message
-    if result is None or result.is_error or not isinstance(result.structured_output, dict):
-        raise RuntimeError("Agent did not return a successful structured conversion result.")
+    if result is None:
+        raise BackendAttemptFailure("agent_result_missing", retry_same_route=True)
+    if result.is_error:
+        if result.api_error_status == 400:
+            raise BackendAttemptFailure(
+                "backend_request_rejected",
+                retry_same_route=False,
+            )
+        raise BackendAttemptFailure("backend_result_error", retry_same_route=True)
+    if not isinstance(result.structured_output, dict):
+        raise BackendAttemptFailure(
+            "agent_structured_output_missing",
+            retry_same_route=True,
+        )
     return AgentExecution(
         structured_output=result.structured_output,
         final_text=result.result or "",
@@ -668,10 +689,11 @@ async def run_conversion_agent(
         )
     failures: list[str] = []
     timed_out_routes: set[tuple[str, str, str]] = set()
+    rejected_routes: set[tuple[str, str, str]] = set()
     for attempt_number, backend in enumerate(backends, start=1):
         route = (backend.name, backend.base_url, backend.model)
         route_fingerprint = hashlib.sha256("\x00".join(route).encode()).hexdigest()
-        if route in timed_out_routes:
+        if route in timed_out_routes or route in rejected_routes:
             continue
         attempt_started = time.monotonic()
         run_observation.project(
@@ -716,6 +738,11 @@ async def run_conversion_agent(
                 f"{backend.name}:timeout-{CONVERSION_BACKEND_TIMEOUT_SECONDS}s"
             )
             failure_code = "backend_timeout"
+        except BackendAttemptFailure as error:
+            failures.append(f"{backend.name}:{error.code}")
+            failure_code = error.code
+            if not error.retry_same_route:
+                rejected_routes.add(route)
         except Exception as error:
             failures.append(f"{backend.name}:{type(error).__name__}")
             failure_code = "backend_attempt_failed"

@@ -9,7 +9,7 @@ from typing import get_type_hints
 import pytest
 
 from docfit.app.agent import build_agent_options
-from docfit.app.cli import build_parser, main
+from docfit.app.cli import build_parser
 from docfit.observability.events import ObservationEvent, SanitizationReceipt
 from docfit.observability.models import ObservationRecorder
 from docfit.observability.runtime import (
@@ -130,7 +130,7 @@ def test_convert_observation_cli_defaults_auto_and_accepts_explicit_off() -> Non
     assert parser.parse_args([*common, "--observation", "off"]).observation == "off"
 
 
-def test_observe_cli_has_port_but_no_remote_host(capsys: pytest.CaptureFixture[str]) -> None:
+def test_observe_cli_has_port_but_no_remote_host() -> None:
     parser = build_parser()
 
     assert parser.parse_args(["observe"]).port == 0
@@ -140,11 +140,6 @@ def test_observe_cli_has_port_but_no_remote_host(capsys: pytest.CaptureFixture[s
     with pytest.raises(SystemExit):
         parser.parse_args(["observe", "--port", "70000"])
 
-    assert main(["observe", "--port", "0"]) == 2
-    error = capsys.readouterr().err
-    assert "observer_interactive_tty_required" in error
-
-
 def test_observer_web_core_does_not_import_optional_platform_adapter() -> None:
     probe = subprocess.run(
         [
@@ -153,8 +148,7 @@ def test_observer_web_core_does_not_import_optional_platform_adapter() -> None:
             (
                 "import sys; from pathlib import Path; "
                 "from docfit.observability.web import create_observer_app; "
-                "create_observer_app(Path('/observer.sqlite3'), port=43123, "
-                "login_code='synthetic-login'); "
+                "create_observer_app(Path('/observer.sqlite3'), port=43123); "
                 "forbidden=('docfit.observability.local_debug','docfit.tools',"
                 "'adobe','win32com','appscript','pyautogui'); "
                 "assert not any(name == item or name.startswith(item + '.') "
@@ -179,7 +173,6 @@ def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
     app = create_observer_app(
         database,
         port=43123,
-        login_code="synthetic-login",
     )
     routes = {
         (route.path, frozenset(route.methods or ()))
@@ -190,7 +183,6 @@ def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
     assert routes == {
         ("/", frozenset({"GET", "HEAD"})),
         ("/static/{asset:str}", frozenset({"GET", "HEAD"})),
-        ("/login", frozenset({"POST"})),
         ("/runs/{run_id:str}", frozenset({"GET", "HEAD"})),
         ("/compare", frozenset({"GET", "HEAD"})),
         ("/api/runs", frozenset({"GET", "HEAD"})),

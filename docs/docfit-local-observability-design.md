@@ -22,7 +22,7 @@ Claude Agent SDK 实际发生的 Agent loop、Tool 调用、权限判断和 Suba
 > 本地任务证据；它不保存论文正文、不执行文档操作，也不参与 Agent 决策和调度。
 
 本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.7 已实现 schema v2 report、
-逐事件安全投影、直接关联、有界 SQLite 历史、认证 loopback 安全壳和会话内证据重新
+逐事件安全投影、直接关联、有界 SQLite 历史、免登录 loopback 安全壳、自动短期会话和会话内证据重新
 挂载，以及运行总览、Transcript/树/时间线、Tool/Subagent/事件详情、SSE/轮询和调试
 上下文页面，并完成跨运行可比性判定、指标差异页、默认 `auto` 与 O0 总门；原始 report
 中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。
@@ -109,7 +109,7 @@ runtime。它复用 Claude Agent SDK 已公开的消息流和 hooks、DocFit Too
 本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.7 已实现 SDK
 message/hook、权限、App/Tool/report 的字段 allowlist projector，Tool/Subagent 直接 ID
 关联，运行级临时 `CLAUDE_CONFIG_DIR` 与 report v2，有界 queue/SQLite 历史，以及
-loopback session/同源/CSRF/CSP 和显式目录重挂载。Web 核心只接收注入的 selector/
+免登录 loopback、自动短期 session、同源/CSRF/CSP 和显式目录重挂载。Web 核心只接收注入的 selector/
 capability；macOS picker/opener 只由本地调试组合根延迟加载。核心页面使用打包的本地
 HTML/CSS/JavaScript，按安全事件投影运行列表、四维状态、Transcript/时间线、verified
 直接关系树、显式关系缺口、Tool/Subagent/事件详情、SSE 更新和 allowlist 调试上下文。
@@ -301,9 +301,9 @@ P0 至少保留 128 个槽位，压力下先丢 P2、再丢 P1。存储执行单
 busy、只读、损坏、配额、低水位或 writer 故障只产生安全 drop/failure code，不改变转换；
 任务文件系统写失败继续是独立 App storage failure。
 
-O0.5 在该索引外建立只绑定 `127.0.0.1` 的认证安全壳。一次性登录码只输出到交互 TTY，
-同源 POST 交换服务端 session；Host、Origin、CSRF、CSP、无 CORS 和无副作用 GET 由合同
-测试锁定。历史证据默认 unmounted，只有目录 selector 返回的 server-side capability
+O0.5 在该索引外建立只绑定 `127.0.0.1` 的免登录安全壳。首次合法请求自动建立服务端
+内存短期 session；Host、Origin、CSRF、CSP、无 CORS 和除会话安全记账外无管理副作用的
+GET 由合同测试锁定。历史证据默认 unmounted，只有目录 selector 返回的 server-side capability
 通过 v2 run/task/session/hash 或 v1 session/input-hash 检查后才可打开；路径不进入浏览器
 或数据库，挂载在 Web 重启后消失。可选 macOS picker/opener 不被核心转换或 Web factory
 导入，也不是核心完成门。
@@ -569,7 +569,7 @@ hash；`run_id` 与 `task_ref` 都使用与路径、文件名和文档内容无�
 `task_ref -> path` 映射。当前 `docfit convert` 是会退出的 CLI，因此 CLI 结束后，历史运行
 默认只能查看脱敏摘要，本地证据状态为 `unmounted`，不能假设独立 Web 进程仍持有原授权。
 
-需要重新调查时，用户在认证页面发起 POST。本地调试壳可以按平台加载可选目录选择器，
+需要重新调查时，用户在已经直接打开的页面发起同源 POST + CSRF。本地调试壳可以按平台加载可选目录选择器，
 把用户选择的候选任务目录转换成仅存于服务端内存的授权 capability；浏览器不能提交任意
 路径字符串来绕过选择。核心转换、云端运行和平台无关的观测/证据验证代码不导入
 AppleScript、GUI toolkit 或具体桌面适配器。挂载只在当前 Web 会话内有效，绝对路径只
@@ -644,25 +644,26 @@ O0 历史不会被描述为删除 SDK transcript；两种删除动作有独立�
 
 ### 7.4 本地 Web 安全边界
 
-loopback 只是网络可达性限制，不是完整认证。首版 Web 安全合同固定为：
+这是只供本机开发使用的免登录页面；loopback、浏览器同源约束和进程内短期会话共同构成
+它的安全边界。Web 安全合同固定为：
 
-- 只绑定明确的 `127.0.0.1` 和/或 `::1`，拒绝非 loopback socket；启动时生成至少 128 bit
-  随机的一次性本地登录码，由发起 CLI 直接显示在当前 TTY，用户通过同源 POST 交换
-  短期会话；登录码 5 分钟过期或连续失败 5 次后失效，只有重启服务才能在当前 TTY
-  取得新码；
-- 登录码和会话 secret 不进入 URL、查询参数、fragment、浏览器 local storage、应用日志、
-  观测数据库或导出；一次性码使用后立即失效，服务重启后全部轮换；
-- 没有交互 TTY 时不能降级为无认证服务；实现计划只能采用受保护的本地 IPC/文件描述符
-  交接，或拒绝启动需要管理动作的 Web 服务，不能把 secret 改放命令行参数或环境变量；
+- 只绑定明确的 `127.0.0.1` 和/或 `::1`，拒绝非 loopback socket；不提供登录页面、登录
+  路由、一次性登录码或远程 host 配置，非交互/无头本地环境也可以启动；
+- 首次通过 Host 检查的合法请求自动建立服务端内存短期 session；session 不代表用户身份，
+  只承载 CSRF 与会话内证据 capability，服务重启后全部失效；
 - session secret 至少 256 bit，idle 30 分钟、absolute 8 小时后失效；cookie 使用
   `HttpOnly`、`SameSite=Strict`、`Path=/` 且不设置 `Domain`，使用 HTTPS 时同时设置
-  `Secure`；
+  `Secure`；过期后下一次合法请求自动建立新 session，旧 CSRF 和挂载必须失效；服务端
+  同时最多保留 64 个 session，超限淘汰最早创建的会话；
+- session/CSRF secret 不进入 URL、查询参数、fragment、浏览器 local storage、应用日志、
+  观测数据库或导出；
 - `SameSite` 只是补充防线。每个修改请求还必须在自定义 header 中携带与当前 session
   绑定的不可预测 CSRF token；token 不放入 cookie、URL 或日志，校验失败一律拒绝；
 - `Host` 必须精确匹配实际绑定的 loopback host/port，浏览器修改请求的 `Origin` 必须精确
   匹配当前 origin；不允许 wildcard/反射 CORS，不接受未授权或 `null` Origin；
-- GET/HEAD 不产生副作用。删除历史、清空记录、重新挂载目录、打开文件管理器/产物等
-  本地管理动作只接受认证后的 POST，并通过 CSRF 校验；
+- GET/HEAD 除建立或轮换进程内短期安全会话外，不产生观测历史、任务证据或平台管理
+  副作用。删除历史、清空记录、重新挂载目录、打开文件管理器/产物等本地管理动作只接受
+  当前 session 的同源 POST，并通过 CSRF 校验；
 - 响应使用禁止远程 script/frame 的严格 CSP，不加载第三方字体、analytics、图片或 CDN；
 - 用户选择的根目录先做 strict canonicalize。相对 artifact locator 必须逐段拒绝 symlink、
   `..`、绝对路径和设备文件，解析结果必须仍在当前挂载根内；打开前再次校验，避免检查后
@@ -675,7 +676,7 @@ loopback 只是网络可达性限制，不是完整认证。首版 Web 安全合
 
 ### 7.5 本地运行与删除
 
-- 网站遵守第 7.4 节的 loopback、认证和同源安全合同，不对局域网或公网开放；
+- 网站遵守第 7.4 节的 loopback、免登录短期会话和同源安全合同，不对局域网或公网开放；
 - 观测数据默认只保存在本机，不自动上传到任何第三方 trace 服务；
 - 历史记录必须支持按单次运行删除、全部清除和可配置保留上限；
 - 观测文件权限不得宽于现有任务与凭据策略；
@@ -941,8 +942,9 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
    不使用 Tool 名称或时间邻近补链；
 11. CLI 退出后的历史运行先显示 `unmounted`；显式选择正确 v2 目录后通过
     `run_id/task_ref/hash` 验证，错误目录为 conflict，v1 最多为 partial，关闭会话后不保留路径；
-12. 恶意 Host/Origin、CORS、CSRF、GET side effect、未授权 `task_ref`、路径穿越、symlink
-    和挂载后替换测试全部被拒绝；登录码/session secret 不出现在 URL、日志或导出；
+12. 直接打开、自动短期 session、恶意 Host/Origin、CORS、CSRF、GET 管理副作用、未授权
+    `task_ref`、路径穿越、symlink 和挂载后替换均有合同测试；不存在 `/login`，session/
+    CSRF secret 不出现在 URL、日志、数据库或导出；
 13. schema v1/v2、无效 v2、未知版本、缺失字段和 summary provider 异常均有契约测试；
     v1 观测字段为 unavailable/null，基础 v2 report 仍可原子写出；
 14. 本地证据挂载后通过授权与 hash/ref 定位，删除、修改或撤权后明确显示对应不可用原因；
@@ -961,7 +963,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 
 | 验收项 | 完成证据 |
 |---:|---|
-| 1 | synthetic `run_conversion` 真实写 report v2、SQLite、运行列表和详情页；独立真实 loopback HTTP/SSE 测试验证登录、读取和流式更新。 |
+| 1 | synthetic `run_conversion` 真实写 report v2、SQLite、运行列表和详情页；独立真实 loopback HTTP/SSE 测试验证免登录直接打开、读取和流式更新。 |
 | 2 | SDK message/hook fixture、相关性合同和五项 live smoke 共同覆盖 Skill、Tool、权限、结果与顺序；use/result 只按 `tool_use_id` 连接。 |
 | 3 | 交错、重复、乱序、缺桥和冲突 fixture 覆盖 `parent_tool_use_id + child tool_use_id + agent_id`，并验证 `verified/partial/conflict`。 |
 | 4 | Tool、Subagent 和事件详情只使用各来源 allowlist；unknown 保持 `null`，未知字段被丢弃。 |
@@ -972,7 +974,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 | 9 | collector 不可用时转换继续并生成安全 coverage；无 report 的终态保持 unknown，report 对账只来自会话内显式挂载。 |
 | 10 | 相关性 fixture 对重复、乱序、缺失和矛盾 ID 给出确定性去重/缺口/冲突，不按时间或 Tool 名称补链。 |
 | 11 | v2 按 run/task/session/hash 重验，v1 最多 partial；重启后 capability 清空，历史回到 unmounted。 |
-| 12 | Host、Origin、CORS、CSRF、GET side effect、session、task ref、穿越、symlink 与挂载后替换均有拒绝合同。 |
+| 12 | 免登录直接打开、自动 session、Host、Origin、CORS、CSRF、GET 管理副作用、task ref、穿越、symlink 与挂载后替换均有合同。 |
 | 13 | report v1/v2、无效/未知 schema、缺字段和 summary provider 异常均有契约测试；缺失值为 unavailable/null，基础 v2 仍写出。 |
 | 14 | available、stale、missing、unauthorized、conflict 与 locator/hash 失效均由授权和重验结果驱动，不显示或持久化绝对路径。 |
 | 15 | `/compare` 与 `/api/compare` 覆盖 strict/conditional/not_comparable；关键条件或 metric 缺失时为 unknown 且 `winner=null`。 |
@@ -983,8 +985,9 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 页面另外在 375 px、768 px 和 1280 px 宽度完成手工检查；比较表在窄屏使用可聚焦的横向
 滚动容器，长 ID、unknown、条件差异和禁止结论均可读。O0 只锁定 O1 候选基线字段，
 没有修改 Agent 调用策略，也没有为了取得基线制造 Adobe Document Transaction。
-最终确定性回归为 299 个测试通过；lock、build、Ruff、mypy、base doctor 和五项 live
-receipt doctor 同时通过。
+O0.7 原始确定性回归为 299 个测试通过；免登录简化后的当前全量回归为 314 个测试通过。
+lock、build、Ruff、mypy 和 base doctor 通过；O0.7 当时的五项 live receipt doctor 回执
+继续作为历史证据，不由本次 Web-only 变更重跑。
 
 ## 12. 实现顺序与复用原则
 
@@ -1002,7 +1005,7 @@ receipt doctor 同时通过。
    fixture 锁定 `verified/partial/broken/conflict` 与 `complete/degraded/unavailable`；
 4. **非阻断本地投影**：按第 10.5 节建立有界通道、优先级、容量/保留/低水位、删除能力、
    drop 计数与故障注入，证明转换结果和资源预算；
-5. **Web 安全与重新挂载**：先完成登录/session、Host/Origin/CORS/CSRF、POST 和路径逃逸
+5. **Web 安全与重新挂载**：先完成免登录自动 session、Host/Origin/CORS/CSRF、POST 和路径逃逸
    合同，再提供平台无关的目录 capability、v2 验证和会话级挂载；本地调试壳的 OS 选择器
    是可选适配器，不进入核心依赖或完成门；
 6. **单次运行页**：完成运行总览、Transcript、事件详情、覆盖/privacy 状态和证据有效性；

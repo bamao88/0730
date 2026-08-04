@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import re
 import socket
 from collections.abc import Callable
 from dataclasses import replace
@@ -25,12 +26,12 @@ from docfit.observability.storage import (
 from docfit.observability.web import (
     CSRF_HEADER,
     CSRF_TOKEN_BYTES,
-    LOGIN_HEADER,
-    LOGIN_TOKEN_BYTES,
     SESSION_ABSOLUTE_SECONDS,
     SESSION_COOKIE,
     SESSION_IDLE_SECONDS,
+    SESSION_MAX_COUNT,
     SESSION_TOKEN_BYTES,
+    ObserverSecurityState,
     build_observer_server,
     create_observer_app,
     run_observer_server,
@@ -41,7 +42,6 @@ TASK_REF = "task_fedcba9876543210fedcba9876543210"
 SESSION_ID = "synthetic-session"
 PORT = 43123
 ORIGIN = f"http://127.0.0.1:{PORT}"
-LOGIN_CODE = "test-login-code-with-at-least-128-bits"
 
 
 def _hash(value: bytes) -> str:
@@ -177,13 +177,11 @@ def _client(
     selector: StaticSelector | None = None,
     opener: RecordingOpener | None = None,
     clock: Callable[[], float] | None = None,
-    login_code: str = LOGIN_CODE,
 ) -> TestClient:
     options = {} if clock is None else {"clock": clock}
     app = create_observer_app(
         database,
         port=PORT,
-        login_code=login_code,
         selector=selector,
         opener=opener,
         **options,
@@ -191,51 +189,45 @@ def _client(
     return TestClient(app, base_url=ORIGIN)
 
 
-def _login(client: TestClient, *, code: str = LOGIN_CODE) -> str:
-    response = client.post(
-        "/login",
-        headers={"origin": ORIGIN, LOGIN_HEADER: code},
-    )
+def _open(client: TestClient) -> str:
+    response = client.get("/")
     assert response.status_code == 200, response.text
-    return str(response.json()["csrf_token"])
+    match = re.search(r'<meta name="docfit-csrf" content="([^"]+)"', response.text)
+    assert match is not None
+    return match.group(1)
 
 
 def _post_headers(csrf: str) -> dict[str, str]:
     return {"origin": ORIGIN, CSRF_HEADER: csrf}
 
 
-def test_login_is_one_time_cookie_bound_and_not_reflected(tmp_path: Path) -> None:
+def test_root_opens_directly_with_ephemeral_cookie_bound_session(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
     client = _client(database)
 
-    response = client.post(
-        "/login",
-        headers={"origin": ORIGIN, LOGIN_HEADER: LOGIN_CODE},
-    )
+    response = client.get("/")
 
     assert response.status_code == 200
+    assert "最近运行" in response.text
+    assert "一次性登录码" not in response.text
     cookie = response.headers["set-cookie"]
     assert "HttpOnly" in cookie
     assert "SameSite=strict" in cookie
     assert "Path=/" in cookie
     assert "Domain=" not in cookie
-    assert LOGIN_CODE not in response.text
     assert "access-control-allow-origin" not in response.headers
     assert response.headers["cache-control"] == "no-store"
     assert "frame-ancestors 'none'" in response.headers["content-security-policy"]
-    csrf = str(response.json()["csrf_token"])
+    match = re.search(r'<meta name="docfit-csrf" content="([^"]+)"', response.text)
+    assert match is not None
+    csrf = match.group(1)
     session_token = client.cookies.get(SESSION_COOKIE)
     assert session_token is not None
     database_bytes = database.read_bytes()
-    assert LOGIN_CODE.encode() not in database_bytes
     assert csrf.encode() not in database_bytes
     assert session_token.encode() not in database_bytes
 
-    replay = TestClient(client.app, base_url=ORIGIN)
-    rejected = replay.post(
-        "/login", headers={"origin": ORIGIN, LOGIN_HEADER: LOGIN_CODE}
-    )
-    assert rejected.status_code == 401
+    assert client.post("/login", headers={"origin": ORIGIN}).status_code == 404
 
 
 def test_comparison_page_and_api_keep_unknown_values_explicit(tmp_path: Path) -> None:
@@ -259,7 +251,7 @@ def test_comparison_page_and_api_keep_unknown_values_explicit(tmp_path: Path) ->
         )
     assert persisted.persisted_events == len(second_events)
     client = _client(database)
-    _login(client)
+    _open(client)
 
     query = f"?left={RUN_ID}&right={second_run_id}"
     page = client.get(f"/compare{query}")
@@ -277,64 +269,52 @@ def test_comparison_page_and_api_keep_unknown_values_explicit(tmp_path: Path) ->
     assert client.get(f"/api/compare?left={RUN_ID}&right=run_missing").status_code == 404
 
 
-def test_host_origin_query_body_and_failure_limit_are_fail_closed(tmp_path: Path) -> None:
+def test_host_origin_and_request_body_are_fail_closed(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
     client = _client(database)
+    csrf = _open(client)
 
     assert client.get("/", headers={"host": "localhost:43123"}).status_code == 400
-    assert client.post("/login", headers={LOGIN_HEADER: LOGIN_CODE}).status_code == 403
     assert (
         client.post(
-            "/login",
-            headers={"origin": "null", LOGIN_HEADER: LOGIN_CODE},
+            "/api/history/clear",
+            headers={"origin": "null", CSRF_HEADER: csrf},
         ).status_code
         == 403
     )
     assert (
         client.post(
-            f"/login?code={LOGIN_CODE}",
-            headers={"origin": ORIGIN, LOGIN_HEADER: LOGIN_CODE},
-        ).status_code
-        == 400
-    )
-    assert (
-        client.post(
-            "/login",
-            headers={"origin": ORIGIN, LOGIN_HEADER: LOGIN_CODE},
+            "/api/history/clear",
+            headers=_post_headers(csrf),
             content=b"unexpected",
         ).status_code
         == 400
     )
-    for index in range(5):
-        rejected = client.post(
-            "/login",
-            headers={"origin": ORIGIN, LOGIN_HEADER: f"wrong-{index}"},
-        )
-        assert rejected.status_code == 401
-    assert (
-        client.post(
-            "/login", headers={"origin": ORIGIN, LOGIN_HEADER: LOGIN_CODE}
-        ).status_code
-        == 401
-    )
 
 
-def test_session_idle_and_absolute_expiry_are_enforced(tmp_path: Path) -> None:
+def test_session_idle_and_absolute_expiry_rotate_automatically(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
     now = [0.0]
     idle_client = _client(database, clock=lambda: now[0])
-    _login(idle_client)
+    stale_idle_csrf = _open(idle_client)
+    idle_token = idle_client.cookies.get(SESSION_COOKIE)
     now[0] = float(SESSION_IDLE_SECONDS)
-    assert idle_client.get("/api/runs").status_code == 401
+    assert idle_client.get("/api/runs").status_code == 200
+    assert idle_client.cookies.get(SESSION_COOKIE) != idle_token
+    assert idle_client.post(
+        "/api/history/clear", headers=_post_headers(stale_idle_csrf)
+    ).status_code == 403
 
     now[0] = 0.0
     absolute_client = _client(database, clock=lambda: now[0])
-    _login(absolute_client)
+    _open(absolute_client)
+    absolute_token = absolute_client.cookies.get(SESSION_COOKIE)
     for moment in range(1700, SESSION_ABSOLUTE_SECONDS, 1700):
         now[0] = float(moment)
         assert absolute_client.get("/api/runs").status_code == 200
     now[0] = float(SESSION_ABSOLUTE_SECONDS)
-    assert absolute_client.get("/api/runs").status_code == 401
+    assert absolute_client.get("/api/runs").status_code == 200
+    assert absolute_client.cookies.get(SESSION_COOKIE) != absolute_token
 
 
 def test_get_and_missing_csrf_cannot_mutate_or_open(tmp_path: Path) -> None:
@@ -343,7 +323,7 @@ def test_get_and_missing_csrf_cannot_mutate_or_open(tmp_path: Path) -> None:
     selector = StaticSelector(DirectorySelection("selected", task_root))
     opener = RecordingOpener()
     client = _client(database, selector=selector, opener=opener)
-    csrf = _login(client)
+    csrf = _open(client)
     initial = list_observation_runs(database)
 
     for path in (
@@ -382,7 +362,7 @@ def test_verified_mount_and_open_never_return_local_paths(tmp_path: Path) -> Non
     selector = StaticSelector(DirectorySelection("selected", task_root))
     opener = RecordingOpener()
     client = _client(database, selector=selector, opener=opener)
-    csrf = _login(client)
+    csrf = _open(client)
 
     runs = client.get("/api/runs")
     mounted = client.post(
@@ -414,9 +394,8 @@ def test_mount_capability_is_lost_on_restart_and_picker_failure_is_safe(
         database,
         selector=StaticSelector(DirectorySelection("selected", task_root)),
         opener=opener,
-        login_code="first-login-code",
     )
-    csrf = _login(first, code="first-login-code")
+    csrf = _open(first)
     assert first.post(
         f"/api/runs/{RUN_ID}/mount", headers=_post_headers(csrf)
     ).status_code == 200
@@ -427,9 +406,8 @@ def test_mount_capability_is_lost_on_restart_and_picker_failure_is_safe(
             DirectorySelection("unavailable", None, "picker_unavailable")
         ),
         opener=opener,
-        login_code="second-login-code",
     )
-    restarted_csrf = _login(restarted, code="second-login-code")
+    restarted_csrf = _open(restarted)
     open_response = restarted.post(
         f"/api/runs/{RUN_ID}/open/final_docx",
         headers=_post_headers(restarted_csrf),
@@ -455,11 +433,10 @@ def test_adapter_failures_return_only_fixed_safe_codes(tmp_path: Path) -> None:
     failed_picker = create_observer_app(
         database,
         port=PORT,
-        login_code="picker-login",
         selector=FailingSelector(),
     )
     picker_client = TestClient(failed_picker, base_url=ORIGIN)
-    picker_csrf = _login(picker_client, code="picker-login")
+    picker_csrf = _open(picker_client)
 
     picker_response = picker_client.post(
         f"/api/runs/{RUN_ID}/mount",
@@ -473,12 +450,11 @@ def test_adapter_failures_return_only_fixed_safe_codes(tmp_path: Path) -> None:
     opener_app = create_observer_app(
         database,
         port=PORT,
-        login_code="opener-login",
         selector=StaticSelector(DirectorySelection("selected", task_root)),
         opener=FailingOpener(),
     )
     opener_client = TestClient(opener_app, base_url=ORIGIN)
-    opener_csrf = _login(opener_client, code="opener-login")
+    opener_csrf = _open(opener_client)
     assert opener_client.post(
         f"/api/runs/{RUN_ID}/mount", headers=_post_headers(opener_csrf)
     ).status_code == 200
@@ -497,7 +473,7 @@ def test_delete_and_clear_remove_only_observer_history(tmp_path: Path) -> None:
     task_root = tmp_path / "task"
     database = _seed_database(tmp_path / "state", task_root)
     client = _client(database)
-    csrf = _login(client)
+    csrf = _open(client)
 
     deleted = client.post(
         f"/api/runs/{RUN_ID}/delete", headers=_post_headers(csrf)
@@ -516,7 +492,7 @@ def test_delete_and_clear_remove_only_observer_history(tmp_path: Path) -> None:
 
 def test_uvicorn_configuration_is_loopback_and_proxy_free(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
-    app = create_observer_app(database, port=PORT, login_code=LOGIN_CODE)
+    app = create_observer_app(database, port=PORT)
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         listener.bind(("127.0.0.1", 0))
@@ -537,7 +513,7 @@ def test_uvicorn_configuration_is_loopback_and_proxy_free(tmp_path: Path) -> Non
 
 def test_non_loopback_listener_is_rejected(tmp_path: Path) -> None:
     database = initialize_observation_store(tmp_path / "state")
-    app = create_observer_app(database, port=PORT, login_code=LOGIN_CODE)
+    app = create_observer_app(database, port=PORT)
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         listener.bind(("0.0.0.0", 0))
@@ -547,34 +523,25 @@ def test_non_loopback_listener_is_rejected(tmp_path: Path) -> None:
         listener.close()
 
 
-def test_production_secret_entropy_floors_are_explicit() -> None:
-    assert LOGIN_TOKEN_BYTES >= 16
+def test_ephemeral_session_secret_entropy_floors_are_explicit() -> None:
+    assert SESSION_MAX_COUNT == 64
     assert SESSION_TOKEN_BYTES >= 32
     assert CSRF_TOKEN_BYTES >= 32
 
 
-def test_observer_without_protected_tty_fails_before_issuing_secret() -> None:
-    output = io.StringIO()
+def test_ephemeral_session_count_is_bounded() -> None:
+    state = ObserverSecurityState(clock=lambda: 0.0)
 
-    result = run_observer_server(
-        port=0,
-        input_stream=io.StringIO(),
-        output_stream=output,
-    )
+    tokens = [state.create_session()[0] for _ in range(SESSION_MAX_COUNT + 1)]
 
-    assert result == 2
-    assert "observer_interactive_tty_required" in output.getvalue()
-    assert "One-time login code" not in output.getvalue()
+    assert state.session(tokens[0], touch=False) is None
+    assert state.session(tokens[-1], touch=False) is not None
 
 
-def test_observer_keyboard_interrupt_exits_cleanly(
+def test_observer_starts_without_tty_and_keyboard_interrupt_exits_cleanly(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    class InteractiveStream(io.StringIO):
-        def isatty(self) -> bool:
-            return True
-
     class InterruptingServer:
         def run(self, *, sockets: list[socket.socket]) -> None:
             assert len(sockets) == 1
@@ -588,16 +555,16 @@ def test_observer_keyboard_interrupt_exits_cleanly(
         "docfit.observability.web.build_observer_server",
         lambda app, listener: InterruptingServer(),
     )
-    output = InteractiveStream()
+    output = io.StringIO()
 
     result = run_observer_server(
         port=0,
-        input_stream=InteractiveStream(),
         output_stream=output,
     )
 
     assert result == 0
     assert "DocFit observer: http://127.0.0.1:" in output.getvalue()
+    assert "login" not in output.getvalue().casefold()
 
 
 def test_html_json_static_and_debug_views_are_privacy_safe(tmp_path: Path) -> None:
@@ -605,22 +572,21 @@ def test_html_json_static_and_debug_views_are_privacy_safe(tmp_path: Path) -> No
     database = _seed_database(tmp_path / "state", task_root)
     client = _client(database)
 
-    login_page = client.get("/")
+    overview = client.get("/")
     stylesheet = client.get("/static/observer.css")
     script = client.get("/static/observer.js")
     missing_asset = client.get("/static/private.txt")
 
-    assert login_page.status_code == 200
-    assert login_page.headers["content-type"].startswith("text/html")
-    assert "一次性登录码" in login_page.text
+    assert overview.status_code == 200
+    assert overview.headers["content-type"].startswith("text/html")
+    assert "最近运行" in overview.text
+    assert "一次性登录码" not in overview.text
     assert stylesheet.headers["content-type"].startswith("text/css")
     assert script.headers["content-type"].startswith("application/javascript")
     assert missing_asset.status_code == 404
-    assert "script-src 'self'" in login_page.headers["content-security-policy"]
-    assert "style-src 'self'" in login_page.headers["content-security-policy"]
+    assert "script-src 'self'" in overview.headers["content-security-policy"]
+    assert "style-src 'self'" in overview.headers["content-security-policy"]
 
-    _login(client)
-    overview = client.get("/")
     run_page = client.get(f"/runs/{RUN_ID}")
     detail = client.get(f"/api/runs/{RUN_ID}")
     debug = client.get(f"/api/runs/{RUN_ID}/debug/0")
@@ -656,7 +622,7 @@ def test_html_json_static_and_debug_views_are_privacy_safe(tmp_path: Path) -> No
     )
     assert str(task_root) not in combined
     assert "PRIVATE_REPORT_PROSE" not in combined
-    assert LOGIN_CODE not in combined
+    assert "x-docfit-login-code" not in combined
 
 
 def test_debug_context_index_matches_deduplicated_display_order(tmp_path: Path) -> None:
@@ -677,7 +643,7 @@ def test_debug_context_index_matches_deduplicated_display_order(tmp_path: Path) 
         )
     assert persisted.persisted_events == 1
     client = _client(database)
-    _login(client)
+    _open(client)
 
     displayed = client.get(f"/api/runs/{RUN_ID}").json()["view"]["events"]
     debug_kinds = [
@@ -700,7 +666,7 @@ def test_sse_emits_only_an_opaque_history_revision(
         return next(moments, float(SESSION_IDLE_SECONDS))
 
     client = _client(database, clock=clock)
-    _login(client)
+    _open(client)
     monkeypatch.setattr("docfit.observability.web.STREAM_POLL_SECONDS", 0.0)
 
     response = client.get("/api/stream")
@@ -720,7 +686,7 @@ def test_evidence_states_are_session_local_and_distinct(tmp_path: Path) -> None:
     selector = StaticSelector(DirectorySelection("selected", task_root))
     opener = RecordingOpener()
     client = _client(database, selector=selector, opener=opener)
-    csrf = _login(client)
+    csrf = _open(client)
 
     initial = client.get(f"/api/runs/{RUN_ID}").json()["view"]["dimensions"]
     assert initial["local_evidence"] == "unmounted"
@@ -750,9 +716,8 @@ def test_evidence_states_are_session_local_and_distinct(tmp_path: Path) -> None:
         missing_database,
         selector=StaticSelector(DirectorySelection("selected", missing_root)),
         opener=RecordingOpener(),
-        login_code="missing-login",
     )
-    missing_csrf = _login(missing_client, code="missing-login")
+    missing_csrf = _open(missing_client)
     assert missing_client.post(
         f"/api/runs/{RUN_ID}/mount", headers=_post_headers(missing_csrf)
     ).status_code == 200
@@ -772,9 +737,8 @@ def test_evidence_states_are_session_local_and_distinct(tmp_path: Path) -> None:
         unauthorized_database,
         selector=StaticSelector(DirectorySelection("selected", unauthorized_root)),
         opener=RecordingOpener(),
-        login_code="unauthorized-login",
     )
-    unauthorized_csrf = _login(unauthorized_client, code="unauthorized-login")
+    unauthorized_csrf = _open(unauthorized_client)
     assert unauthorized_client.post(
         f"/api/runs/{RUN_ID}/mount", headers=_post_headers(unauthorized_csrf)
     ).status_code == 200
@@ -794,9 +758,8 @@ def test_evidence_states_are_session_local_and_distinct(tmp_path: Path) -> None:
     conflict_client = _client(
         conflict_database,
         selector=StaticSelector(DirectorySelection("selected", conflict_root)),
-        login_code="conflict-login",
     )
-    conflict_csrf = _login(conflict_client, code="conflict-login")
+    conflict_csrf = _open(conflict_client)
     assert conflict_client.post(
         f"/api/runs/{RUN_ID}/mount", headers=_post_headers(conflict_csrf)
     ).status_code == 409

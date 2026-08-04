@@ -30,7 +30,7 @@ Services API。核心转换和云端运行链路不依赖本地 Word、AppleScri
 `docfit-local-observability-design.md`。它仍属于薄应用壳的只读能力，不恢复 M3，
 不建立第二 Agent loop，也不属于面向最终转换用户的 GUI 产品化。当前已完成 O0.0–O0.7
 的平台骨架、SDK runtime privacy/report v2、入队前安全 projector 与直接关联/覆盖/指标
-投影，以及有界 SQLite 历史、保留/删除与非阻断降级、认证 loopback 安全壳与会话内
+投影，以及有界 SQLite 历史、保留/删除与非阻断降级、免登录 loopback 安全壳、自动短期会话与会话内
 证据重新挂载、核心监控页面与跨运行比较；O0 总门已通过，O1 尚未开始。
 
 随后批准的主 Agent 渐进式披露权限切片先增加路径受限 Read/Glob/Grep；2026-08-04 的
@@ -267,7 +267,10 @@ uv run docfit doctor --require agent-smoke
 没有 API key 时可以完成 M0 代码工作，但不能宣称本地产品门通过。M0 的本地
 Agent 配置统一放在仓库外 `~/.config/docfit/agent.env`，文件权限必须为 `0600`；
 当前 runtime 按 Kimi、MiniMax 的顺序选择 Anthropic 兼容 backend，并通过
-`ClaudeAgentOptions.env` 只向 SDK 子进程注入当前候选配置。LibreOffice 或其他
+`ClaudeAgentOptions.env` 只向 SDK 子进程注入当前候选配置。Kimi 配置显式保持官方
+high-effort Tool 上下文并关闭 Tool Search；HTTP 400 请求格式拒绝被视为同一
+name/base URL/model route 的不可重放失败，不再轮换 credential 重复请求，而是转到下一个
+不同 route。LibreOffice 或其他
 DOCX 引擎不再是第一版候选；OfficeCLI、Adobe PDF Services SDK/凭据或 Poppler 的缺失与
 版本问题属于 M1 双后端接入证据，不阻塞 M0。
 
@@ -622,7 +625,8 @@ O0 核心实现与自动化完成门必须可在无头/云端环境运行。历�
    路径；页面只读，不启动、重试或调度 Agent/Tool；原始载荷不得进入观测队列，父子
    关系只由直接 ID 证明，不能证明时显示 partial/conflict；每次 SDK 运行使用临时
    `CLAUDE_CONFIG_DIR` 并清理 transcript；CLI 结束后证据默认 unmounted，用户重新选择且
-   report/hash 验证后才可打开；Web 具备 session/同源/CSRF/路径安全和硬资源上限；
+   report/hash 验证后才可打开；Web 直接打开且具备自动短期 session、同源/CSRF/路径安全
+   和硬资源上限；
 2. **O1 调用降重**：减少没有产生新文档快照或新视觉证据的重复 inspect、render、
    visual-review 和 validate，同时保留 Agent 自主判断，不引入固定工作流；
 3. **O2 单次运行复用**：优先复用已绑定相同文档 hash、Provider/SDK、profile 与参数的
@@ -632,11 +636,15 @@ O0 核心实现与自动化完成门必须可在无头/云端环境运行。历�
 5. **O4 失败与重试**：根据明确失败来源阻止同一输入、调用方式和固定后端环境下的
    无效重试，不增加跨职责 fallback。
 
+已知 Kimi Claude Code HTTP 400 请求格式缺陷的窄兼容修复属于运行正确性 hotfix：显式
+high effort、关闭 Tool Search、400 安全分类和同 route credential 去重已提前落地；这不表示
+O4 的完整失败分类、测量和验收已经启动或完成。
+
 O0 完成门是后续 O1 的硬前置：合成消息/hook fixture 必须精确证明 Tool use/result 与
 交错 Subagent 的 actor/parent 关联；缺失、冲突、重复和乱序必须安全降级；prompt、用户
 回答、Tool 原始载荷、错误、图片和路径中的隐私 canary 必须在数据库、导出、日志和最终
 报告中全部缺席；真实 SDK 正常/强制终止 smoke 必须证明 transcript 隔离与清理；v1/v2
-report、平台无关的 capability 挂载验证、登录/session、Host/Origin/CORS/CSRF、路径/symlink
+report、平台无关的 capability 挂载验证、免登录自动 session、Host/Origin/CORS/CSRF、路径/symlink
 和资源预算必须通过；真实 OS/GUI 目录选择器只属于可选本地调试兼容性 smoke，不是此门；
 projector、队列、观测存储、collector 与 UI 故障注入不得改变转换终态、产物 hash、Tool/
 权限结果或 Adobe 调用次数；任务文件系统耗尽则必须如实报告 App storage failure；重启后
@@ -720,6 +728,27 @@ editing/validation/completion。共同的 Subagent 字段和权限由架构合�
 ask-user、denied-tools、subagent smoke 继续通过，其中 denied-tools 只验证 Edit/Web 与
 未注册 Tool 拒绝。该切片不调用
 OfficeCLI/Adobe，不消耗 Adobe Document Transaction。
+
+### 6.8 M2 后候选切片：样式观测与确定性补全（仅长期合同，未实现）
+
+该候选切片用属性级合同稳定模板提取、Agent 语义判断与下游写入之间的耦合。
+它不要求 Agent 服从固定内容树或样式模型，也不把可直接套用的样式值交给 Agent。
+目标范围只包括：
+
+- 扩展现有 Tool 内部观测，完整报告命名样式、直接格式、继承链、有效值、覆盖、
+  缺失和冲突；
+- Agent/Skill 只完成语义角色识别、观测绑定、冲突解释和未决项暴露，不生成
+  缺失样式值；
+- 缺失属性只由程序使用经明确选定、版本化且适用性可验证的国家级标准明文解析；
+- 每个属性保留当前任务要求、模板观测、继承后有效值、国家级标准或未决的来源，
+  以及标准版本、条款、适用性和规则集 digest；
+- 无明文、不适用或来源冲突时保持未决，不增加通用默认样式、学校 profile、第六个 Tool
+  或 Agent 可读的国家标准数值表。
+
+开始实现前必须另行批准计划，并先确认标准来源的授权/维护方式、精确标识与版本、
+适用性输入、条款映射、冲突语义、属性级来源和合成契约测试。任何公开 Tool schema
+调整都必须单独审批并保持五个 Tool 名称。本节不启动 O1、M3 或 M4，不改变 M2 已完成
+状态，也不声称当前代码已具备该能力。
 
 ## 7. M3：达到可试用 MVP
 
@@ -857,6 +886,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 | M2 | 一条 `docfit convert` 命令 | 合成样本上的 OfficeCLI + Adobe 混合链路及交付转换门已跑通 | 已达到复杂真实论文交付质量 |
 | M2 后权限/Skill 渐进披露切片 | 主 Agent 可按需直接读取 Skill references、产品 Knowledge 与当前任务证据，并使用受信任 Bash/Write | realpath 受限的直接 Read/Glob/Grep、无路径 gate 的自动批准 Bash/Write、五 Tool 直调和不等权 Subagent 权限已验证 | Bash/Write 是 sandbox、所有 Agent 等权或 M3 已通过 |
 | M2 后观测/优化切片 | 本地只读运行观测页，以及同一转换链路在既有安全门下减少可测量的重复工作 | 已观测的实际轨迹、有效本地证据定位，以及已证明的单项耗时、调用或载荷改善 | 精确 replay、M3、MVP 或真实论文质量已通过 |
+| M2 后样式观测/补全候选切片 | 属性级模板观测、缺口和可追溯的确定性解析 | 仅在独立计划实施并通过契约门后，可声称已覆盖的属性可追溯解析 | Agent 可以杜撰样式、已覆盖任意国家标准，或当前能力已实现 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
 | M5 | 按需求增加的产品能力 | 对应能力已产品化 | 可以跳过证据直接扩平台 |
@@ -875,6 +905,8 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 - **Knowledge 可版本化**：通用包随产品发布并具有 manifest、文档 hash 和 digest；学校事实只在当前任务证据中；
 - **Knowledge 可选择投影**：当前领域 Skill 选择委派所需模块，主 Agent 把模块内容、
   版本/digest 和任务证据写入通用 Subagent prompt；
+- **样式来源可扩展**：未来可在不向 Agent Knowledge 增加样式值的前提下，在现有 Tool
+  内部增加属性级观测、标准解析、来源和未决状态；这是扩展点，不是 M2 已实现声明；
 - **Skill 可独立迭代**：`docfit-school-extract` 与 `convert-thesis` 可以在不修改 Tool
   实现的情况下演进；
 - **Skill 可渐进披露**：`SKILL.md` 以明确项目相对路径按需读取 references；主 Agent

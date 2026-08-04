@@ -15,6 +15,8 @@ Agent 从当前任务提供的学校材料中理解并推导具体规则。
 Knowledge 必须通用。它不保存任何学校的专属要求、模板、格式参数、固定文案、
 适用范围或人工确认。学校事实必须来自当前任务证据；任何学校专属结论都不能因为
 被 Agent 提取过，就自动升级为长期 Knowledge。
+可直接决定字体、字号、行距、边距、标题顺序等结果的样式经验值、国家标准数值表和
+默认补全表也不属于 Agent Knowledge。
 
 ### 1.2 组织示例
 
@@ -81,6 +83,8 @@ YAML mapping key 与未声明字段。`version` 必须匹配包目录名；docum
 
 Knowledge 不保存学校数值，也不提供默认学校格式。通用示例必须使用合成占位值，
 不能让 Agent 将示例字号、页边距、固定文案或对象顺序当作学校事实。
+Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆盖”“缺失”“冲突”和
+“未决”等通用概念，但不携带任何供 Agent 套用的目标属性值。
 
 模块化改变的是上下文选择粒度，不改变 Knowledge 的语义边界。一个复合前置结构可以
 同时使用多个模块；未匹配范围也可以只使用 `core` 或由主 Agent 直接分析。
@@ -91,6 +95,8 @@ Knowledge 不保存学校数值，也不提供默认学校格式。通用示例�
 - 每个学校专属结论必须能引用当前任务材料 hash 或当前用户确认；
 - 精确格式值可以被规范化为本次 Tool 调用参数，但不写入长期 profile；
 - 来源冲突或适用范围不明时，Agent 保留证据并询问，不用 Knowledge 补齐；
+- 模板未观测到的样式属性保持为缺口；Agent 只能请求程序确定性解析或保留未决，
+  不自行补值；
 - 任务结束后，材料和推导结论按任务数据策略处理，不复制到产品 Knowledge；
 - Eval 可以保存合成、脱敏或授权的学校场景，但 Eval fixture 不是运行时 Knowledge。
 
@@ -170,6 +176,8 @@ MCP / CLI / library / cloud API
 | 当前任务对模板证据的解释 | Claude Agent SDK 主会话；必要时使用受限 `docfit-unit-analyst` |
 | 通用格式概念、识别方法与处理模式 | 产品内置 Knowledge Package |
 | 学校规则、模板证据与精确参数 | 当前任务材料、Agent 当前会话与 Tool 调用参数 |
+| 模板样式的属性级观测 | `docx_inspect` 内部 |
+| 缺失样式属性的国家级标准解析 | 现有 Tool/adapter 内部的版本化确定性规则；不向 Agent 加载数值表 |
 | 批量、安全、原子写回 | `docx_edit` 内部 |
 | 分页和页面证据 | `docx_render` 内部 |
 | 把指定页面图片送入调用它的当前 Agent 并建立前后对比 | `docx_visual_review` |
@@ -318,6 +326,35 @@ analysis_path: /path/analysis.json
 - package parts、relationships、输入 hash 和不支持的可见对象。
 
 Tool 将完整结果保存在任务临时目录，只向 Agent 返回摘要、风险和按需查询入口。相同输入 hash 的后续 `focus` 查询可以复用解析结果；这只是 Tool 内部缓存，不是新的运行时对象。Tool 只报告事实，不自行判定“这是一级标题”或“这是学生正文”。
+
+#### 2.4.1 样式观测与确定性补全合同
+
+这个合同用来稳定上游识别与下游写入的耦合点，不是要求 Agent 按一张固定内容树或
+一套固定样式执行。当该能力按 06 的独立候选切片实现后，程序应对每个样式属性输出：
+
+- 语义对象或可绑定范围；
+- 观测值、直接格式、命名样式、继承链和最终有效值；
+- `observed`、`missing`、`conflict` 或 `unresolved` 覆盖状态；
+- 解析值及其属性级来源：`current_task_requirement`、`template_observation`、
+  `inherited`、`national_standard` 或 `unresolved`；
+- 来源 hash/ref，以及适用时的标准标识、版本、条款、适用性与规则集 digest。
+
+这里的“属性”既可以是字体、字号、行距、边距等标量样式，也可以是图、表、
+中英文题名、题注与注释的附着关系、上下位置和相对顺序等有限编排字段。建模只声明这些
+字段可被观测、绑定、解析和追溯，不预先指定它们必须取什么值或出现在哪里。
+
+解析顺序固定为：
+
+1. 保留当前任务文字要求、用户确认和模板观测的原始事实；它们冲突时不静默排序，
+   而是返回 `conflict` 交给 Agent 询问或保留未决；
+2. 对仍缺失的单个属性，只有当调用上下文已给出经批准的国家级标准标识、版本和
+   适用性证据，且对应条款有明文规定时，才应用该值；
+3. 标准无明文、不适用、条款冲突或规则数据不可验证时，保持 `unresolved`，不使用产品经验默认值。
+
+Word 的样式继承和文档默认值是“源文档最终如何生效”的观测事实，不是对目标要求
+的补全根据。国家级标准规则作为现有 Tool/adapter 内部的版本化确定性数据维护：它不进入
+Agent prompt，不形成学校 profile，不新增第六个 Tool。本节定义目标合同；当前五个 Tool
+的公开 schema 和 M2 完成状态不因本节改变。
 
 ### 2.5 `docx_edit`
 
@@ -970,6 +1007,7 @@ Skill references 和产品 Knowledge。受信任 Bash/Write 可绕过这项直�
 | 新的通用消费范围反复需要独立知识 | 增加 Knowledge 模块；不因此增加 Agent 类型或固定文档分类 |
 | DOCX 之外的多个工具确实需要共享对象引用 | 评估最小跨格式 ref；没有真实消费者时不泛化 |
 | 同一 Tool 操作反复出现定位歧义 | 强化 Tool 内部 locator |
+| 模板样式缺口反复出现，且已明确选定可授权维护的国家级标准 | 按 2.4.1 扩展现有 Tool 内部观测/解析器与属性级来源；不增加 Knowledge 默认值或第六个 Tool |
 | Eval case 多到串行运行太慢 | 接入现成并发 runner |
 | 产品需要多人权限和正式发布 | 在产品需求明确后设计对应服务 |
 | 已真实接入第三个引擎，并且同一职责需要动态选择或故障转移 | 再评估最小通用 Provider 接口；两个职责不同的现有后端本身不构成抽象证据 |
@@ -982,7 +1020,7 @@ M2 后批准的本地观测界面只在薄应用壳中建立隐私安全的运�
 `docfit-local-observability-design.md`。本节只锁定它与 Tool、任务目录和证据引用之间的
 数据边界；当前已完成 O0.0–O0.7 的平台骨架、runtime privacy/report v2、字段级安全
 projector、直接 ID/hash/ref 关联、覆盖/指标投影，以及有界 SQLite 历史、保留/删除和
-非阻断降级、认证 loopback 安全壳、会话内证据重新挂载、核心监控页面和跨运行比较；
+非阻断降级、免登录 loopback 安全壳、自动短期会话、会话内证据重新挂载、核心监控页面和跨运行比较；
 O0 总门已通过。
 
 ### 8.1 任务目录是事实来源
@@ -1005,7 +1043,7 @@ ArtifactRef，也不要求 Skill、Knowledge 或 Eval 消费。`tool_use_id` 与
 
 `task_ref` 由薄应用壳在当前授权上下文中签发，不编码或 hash 绝对路径。观测索引不保存
 句柄到绝对路径的映射。`docfit convert` 退出后历史运行默认 unmounted；用户可以在 Web
-会话中通过认证 POST 请求本地调试壳的可选平台适配器生成仅存于内存的目录 capability，
+会话中通过同源 POST + CSRF 请求本地调试壳的可选平台适配器生成仅存于内存的目录 capability，
 核心证据验证再按 v2 `run_id/task_ref/session/hash` 校验，成功后才可打开 task-relative
 locator。核心转换、云端运行和平台无关观测模块不导入 AppleScript/GUI 实现；无适配器或
 无图形会话时挂载能力保持 unavailable，历史摘要仍可查看，且不得退化为浏览器提交任意
@@ -1145,11 +1183,12 @@ hash、计数、版本和 task-relative opaque locator。
 
 ### 8.9 Web 授权与资源硬上限
 
-本地 Web 除 loopback 外必须验证短期 session、Host、Origin 和 CSRF，禁用宽松 CORS；
-GET/HEAD 不得产生副作用，删除、挂载和打开本地证据只接受认证 POST。登录/session secret 不进入 URL、
-日志或存储；没有交互 TTY 时不得降级为无认证，只能使用受保护的本地 IPC/文件描述符
-交接或拒绝启动管理面。候选目录和 artifact locator 必须 canonicalize，并拒绝 `..`、绝对路径、
-symlink/设备文件和挂载后逃逸。
+本地 Web 固定 loopback 并直接打开，不设置登录页、登录路由或一次性登录码；首次通过
+Host 检查的合法请求自动建立服务端内存短期 session。Web 仍必须验证 Host、Origin 和
+CSRF，禁用宽松 CORS；GET/HEAD 除建立/轮换短期安全会话外不得产生观测或任务管理副作用，
+删除、挂载和打开本地证据只接受当前会话的同源 POST + CSRF。session/CSRF secret 不进入
+URL、日志、数据库或导出；session 数量有硬上限，非交互/无头环境允许启动。候选目录和 artifact locator 必须
+canonicalize，并拒绝 `..`、绝对路径、symlink/设备文件和挂载后逃逸。
 
 首版硬上限与专题设计一致：单事件 64 KiB；队列 1024 事件或 16 MiB；单 run 10,000 事件
 或 64 MiB；数据库/索引/WAL 合计 512 MiB；历史最多 30 天且 500 个已完成 run；可用空间

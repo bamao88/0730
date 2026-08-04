@@ -5,7 +5,8 @@
 - Child plan: `docs/plans/docfit-m1-tools-v1.md`
 - Latest user intent: 保持已完成 M2 基线，按
   `docs/plans/docfit-o0-local-observability.md` 完成 O0；O0.0–O0.7 已通过，执行回执见
-  `docs/status/active/docfit-o0-local-observability.md`，O1 尚未开始，M3 继续延期
+  `docs/status/active/docfit-o0-local-observability.md`；完成已知 Kimi Claude Code HTTP 400
+  请求格式兼容 hotfix，O1 尚未开始，M3 继续延期
 - Current slice: M0–M2 产品链路及其非评测支撑已完成；当前计划无剩余开发项
 - Frozen baseline: `7cd72fc`（`feat: complete DocFit M2 conversion baseline`）；该提交
   已在提交前通过全量确定性、doctor、live 产品门和凭据值扫描
@@ -14,7 +15,7 @@
   不改变本 capsule 的 COMPLETED 状态，也不构成 M3 恢复或通过
 - Approved follow-on design: `docs/docfit-local-observability-design.md` 定义薄壳内本地
   只读观测页；当前已有 privacy-safe 逐事件投影、runtime 接线、直接关联/指标聚合、
-  有界 SQLite 历史索引、认证 loopback 安全壳、会话内证据重挂载、核心监控页面与跨运行
+  有界 SQLite 历史索引、免登录 loopback 安全壳、自动短期会话、会话内证据重挂载、核心监控页面与跨运行
   比较；O0 总门已通过
 - Approved execution plan: `docs/plans/docfit-o0-local-observability.md` 按 O0.0–O0.7
   锁定 transcript/report、projector、关联、存储、Web 安全、页面和最终验收的实施顺序；
@@ -25,7 +26,8 @@
   hash/ref 证明，缺桥或矛盾显示 partial/conflict；稳定无正文的 coverage 汇总进入扩展后
   的 schema v2 `conversion-report.json`；每次 SDK 运行使用私有临时
   `CLAUDE_CONFIG_DIR` 且管理 transcript 清理；CLI 结束后历史证据默认 unmounted，用户
-  显式选择目录并通过 report/hash 验证后才可打开；Web 具备 session/同源/CSRF/路径安全；
+  显式选择目录并通过 report/hash 验证后才可打开；Web 直接打开并具备自动短期
+  session/同源/CSRF/路径安全；
   采集/观测存储/UI 故障非阻断且必须显示 degraded/unavailable，不得记录正文、完整图片、
   完整模型历史、隐藏思维链、凭据或未经授权的绝对路径
 - O0 gate: 隐私 canary 扫描、交错 Subagent/缺失/冲突/重复/乱序 fixture、证据失效测试和
@@ -66,6 +68,8 @@
   validation 均发布；candidate 绑定 final hash，errors=0、verification_gap=0、blocking=0
 - Live defects fixed: 兼容 backend 不支持 JSON Schema composition；SDK MCP bridge 丢弃
   structuredContent；只读输入 mode 被 copy2 传播到编辑副本；同 route 超时重复轮换 key。
+  Kimi 现显式保持官方 high-effort Tool 上下文并关闭 Tool Search；HTTP 400 请求格式拒绝
+  使用安全错误码且不再轮换同 route credential 重放。
   Adobe SDK 默认写超时不足以上传复杂 DOCX；SDK 默认 1 MiB 消息 buffer 无法承载真实
   页面图片；过长小字号 image-smoke marker 导致 OCR 不稳定；无凭据 CLI 测试污染真实
   smoke 回执；成功 conversion report 重放中间 Agent 的旧 warning/summary。九项均已有
@@ -81,4 +85,5 @@
 - Stop condition: 当前计划与 O0 已完成；任何第六 Tool、第三引擎、第二 Agent loop、恢复
   M3 或长期合同冲突须先请求决定；开始 O1 时先锁定单一主要指标和可比样本
 - No-touch scope: M4/M5、面向转换用户的 GUI/API/任务队列、学校规则持久化、通用
-  Provider 抽象；O1–O4 与 M3 尚未开始
+  Provider 抽象；O1–O4 完整切片与 M3 尚未开始；已知 Kimi HTTP 400 的窄正确性
+  hotfix 不构成 O4 启动

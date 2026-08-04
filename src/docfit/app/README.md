@@ -29,10 +29,13 @@ inspect + visual-review。`can_use_tool` 继续处理 `AskUserQuestion` 与防�
 应用壳把 SDK subprocess message buffer 固定为 16 MiB，以承载受控的多页 image
 content block；Tool 自身的图片数量与字节预算仍是更窄的业务边界。convert 在某个
 backend route 超时后不会仅因 credential 不同而重复等待同一 name/base URL/model
-路由，其他错误仍可按既定 credential 顺序恢复。
+路由；Kimi 按官方 Claude Code 配置显式保持 high effort 且关闭 Tool Search，Provider
+返回 HTTP 400 请求格式拒绝时也不会轮换同路由 credential 重放相同请求，而是保留安全
+错误码并进入下一个不同 backend route。其他错误仍可按既定 credential 顺序恢复。
 
 O0 本地观测已完成。`docfit convert` 默认使用 `--observation auto`，也可显式传
-`--observation off` 取得无观测基线；`docfit observe` 只在 loopback 提供认证后的只读
-运行、Agent loop、Tool/Subagent 详情、证据状态和跨运行比较。观测失败不改变转换事实，
+`--observation off` 取得无观测基线；`docfit observe` 只在 loopback 提供免登录直接打开的
+只读运行、Agent loop、Tool/Subagent 详情、证据状态和跨运行比较。首次合法访问自动建立
+内存短期会话，管理 POST 仍要求同源与 CSRF。观测失败不改变转换事实，
 比较缺少关键条件时不产生性能结论。Web 核心只接收平台无关 capability；可选本地
 picker/opener 由调试组合根延迟加载，不被核心转换或云端路径导入，也不构成完成门。

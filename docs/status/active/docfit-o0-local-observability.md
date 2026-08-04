@@ -11,10 +11,11 @@
   `6579fa4` + `df33f92` + `17f4fea` + 最终文档回执提交
 - Delivered surface: 私有 SDK transcript 生命周期、run/task identity、report v2、来源级
   allowlist projector、直接 Tool/Subagent/hash/ref 关联、四维状态、安全指标、有界 queue/
-  SQLite 历史、保留/删除/低水位与非阻断降级、认证 loopback Web、会话内证据重挂载、
+  SQLite 历史、保留/删除/低水位与非阻断降级、免登录 loopback Web、自动短期会话、会话内证据重挂载、
   运行总览、Transcript/时间线、verified Agent 树、详情、SSE/轮询、调试上下文和
   strict/conditional/not_comparable 跨运行比较
-- Deterministic proof: `299 passed`（1 个已知 Starlette/httpx 弃用 warning），build/lock/
+- Deterministic proof: O0 收口时免登录简化后的全量回归为 `314 passed`；后续主 Agent
+  权限切片的当前全量回归为 `312 passed`（均有 1 个已知 Starlette/httpx 弃用 warning），build/lock/
   ruff/mypy/base doctor 通过；enabled/off
   synthetic convert 的终态、最终 hash、Tool facts、warnings、backend 和文件字节一致；
   observer storage failure 不改变转换，任务文件系统失败仍由 App 报告
@@ -22,8 +23,8 @@
   250 ms）、CPU 增量 1.39%（预算 5%）、peak RSS 增量 1.5 MiB（预算 64 MiB）；实际卷
   可用率约 4% 时安全进入 `observer_storage_low_space`
 - Privacy/security proof: observer DB/WAL、report、HTML、JSON API、SSE、debug export 和
-  捕获日志七个表面 canary 零命中；Host/Origin/CORS/CSRF/session/POST/path/symlink/
-  task-ref 合同通过；浏览器 storage 为空且只访问 loopback
+  捕获日志七个表面 canary 零命中；免登录直接打开、自动 session、Host/Origin/CORS/
+  CSRF/POST/path/symlink/task-ref 合同通过；浏览器 storage 为空且只访问 loopback
 - SDK proof: image、ask-user、denied-tools、path-tools、subagent 五项 live smoke 与
   `doctor --require agent-smoke` 通过；后续权限切片已用 denied-tools/path-tools v3 证明
   主 Agent Bash/Write 自动批准、无 DocFit 路径 gate，同时直接 Read 与 Subagent gate

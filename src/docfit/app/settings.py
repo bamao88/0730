@@ -52,7 +52,7 @@ class AgentBackend:
     def sdk_environment(self) -> dict[str, str]:
         """Map the selected backend to Claude Code's Anthropic-compatible env."""
         model = self.model
-        return {
+        environment = {
             "ANTHROPIC_BASE_URL": self.base_url,
             "ANTHROPIC_API_KEY": self.api_key,
             "ANTHROPIC_AUTH_TOKEN": "",
@@ -67,6 +67,12 @@ class AgentBackend:
             "ENABLE_TOOL_SEARCH": "false",
             "CLAUDE_AGENT_SDK_CLIENT_APP": "docfit/0.1.0",
         }
+        if self.name == "kimi":
+            # Kimi's Claude Code contract requires thinking context to remain enabled
+            # across assistant tool-call messages.  Make the documented default explicit
+            # so a host setting cannot silently produce reasoning-free tool history.
+            environment["CLAUDE_CODE_EFFORT_LEVEL"] = "high"
+        return environment
 
 
 def default_agent_env_file() -> Path:

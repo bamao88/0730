@@ -68,6 +68,8 @@ Agent 不直接拼写 OOXML；工具不自主决定某段是不是标题。
 Knowledge Package 是随产品发布、面向所有学校和任务共享的通用论文格式领域资产。
 它提供统一概念、识别方法、解释原则和通用处理模式，帮助 Agent 从当前任务材料
 中理解并推导具体规则。学校专属要求、模板、格式参数和任务结论不属于 Knowledge。
+Knowledge 可以教 Agent 区分“已观测样式”“目标样式”与“仍缺失的属性”，
+但不提供可直接套用的样式值、国家标准数值表或缺省补全表。
 
 ### 2.5 Eval is outside the product runtime
 
@@ -98,7 +100,7 @@ flowchart LR
     F --> SDK
     SDK --> A
     A --> U
-    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>O0.0–O0.7 安全投影、历史、认证、重挂载、页面与比较已完成"]
+    SDK -."实际运行元数据".-> O["薄壳内本地观测视图<br/>O0.0–O0.7 安全投影、历史、免登录短期会话、重挂载、页面与比较已完成"]
     A -."权限与最终报告".-> O
     O -."hash/ref 只读定位".-> F
     E["Eval<br/>离线"] -.运行样本并比较结果.-> SDK
@@ -175,6 +177,10 @@ Knowledge 是产品级通用参考，并按真实消费范围组织成可组合�
 - 检查、修改、渲染、视觉复核和验证的通用处理模式；
 - 不包含学校值的合成示例和常见 Word 版式陷阱。
 
+样式相关 Knowledge 只解释观测、继承、覆盖、语义绑定、冲突和未决状态。
+它不携带字号、字体、行距、边距等目标值，也不向 Agent 暴露供程序补全使用的
+国家级标准规则数据。
+
 Knowledge Package 随产品版本发布并保持只读。模块可以围绕 `core`、封面、摘要、
 目录、正文、参考文献、附录或以后出现的通用消费场景组织，但这些模块不是论文类型
 枚举，也不要求文档具备对应结构。所有任务使用同一份包，不按学校
@@ -199,6 +205,13 @@ Tools 是 Agent 可调用的受控能力。当前只向 Agent 暴露五个稳定
 - `docx_visual_review`：只读取已有 `render_ref` 的页面产物，把指定页面、裁剪图、
   contact sheet 或前后对比图送入当前 Agent 上下文；
 - `docx_validate`：独立检查源文件、最终文件和适用规则。
+
+目标架构中，模板样式观测和缺失属性的确定性补全仍封装在这五个 Tool 及其
+adapter 内部。Tool 负责展开命名样式、直接格式和继承后有效值，并报告覆盖、
+缺失与冲突；Agent 只把这些事实绑定到语义对象，不生成缺失样式值。若要补全，
+调用方必须给出明确的规则集标识、版本和适用性证据；程序仅对当前任务证据未规定的
+属性应用国家级标准明文规则。无规则、不适用或来源冲突时保持未决。该能力的实现
+与公开 schema 变更必须按 06 的独立候选切片另行批准，不因本段而视为已实现。
 
 Tool 的输入输出应小而清晰，使用 SDK 支持的工具 schema。工具内部可以有复杂 OOXML 代码，但复杂性不扩散到 Agent runtime。
 
@@ -292,7 +305,7 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 按批准的 O0 目标设计，把 SDK 实际事件、权限判断、Tool 脱敏摘要和本地证据引用投影
   为本地只读运行视图；当前已完成 O0.0–O0.7 的平台骨架、runtime privacy/report v2、
   入队前安全 projector、直接 ID 关联/覆盖/指标投影，以及有界 queue、后台 SQLite writer、
-  保留/删除和非阻断降级、认证 loopback 安全壳、会话内证据重新挂载，以及运行总览、
+  保留/删除和非阻断降级、免登录 loopback 安全壳、自动短期会话、会话内证据重新挂载，以及运行总览、
   Agent loop/Tool/Subagent/事件详情、调查交接页面与跨运行比较；O0 总门已通过；
 - 为每次 SDK 运行提供私有临时 `CLAUDE_CONFIG_DIR`，不配置 transcript mirror，并在正常
   退出/下一次安全 preflight 管理 SDK 原生 transcript 清理；
@@ -330,9 +343,10 @@ report ID/hash/ref 重验通过才可打开，绝对路径不进入索引。coll
 原 App/Tool storage failure 处理。详细设计见
 `docfit-local-observability-design.md`。
 
-本地 Web 绑定 loopback 仍必须有短期会话、Host/Origin/CSRF 校验、无宽松 CORS、无副作用
-GET 和 canonical path/symlink 防逃逸。删除历史、重新挂载和打开本地证据是认证后的观测
-管理动作，不是转换控制能力。
+本地 Web 绑定 loopback 后直接打开，不设置登录页或一次性登录码；首次合法请求自动建立
+只存在服务端内存中的短期会话。它仍必须有 Host/Origin/CSRF 校验、无宽松 CORS、除短期
+会话安全记账外无管理副作用的 GET，以及 canonical path/symlink 防逃逸。删除历史、重新
+挂载和打开本地证据只接受当前会话的同源 POST + CSRF，不是转换控制能力。
 
 核心观测、转换和云端进程只消费平台无关的目录授权 capability 与验证结果，不导入
 AppleScript、GUI toolkit 或具体桌面实现。本地调试壳可以在组合根中按需加载 macOS 等
@@ -397,6 +411,10 @@ Bash/Write 是无 DocFit 路径 gate 的信任能力，这不是对主 Agent 的
 ### 6.4 精确修改只通过 Tool
 
 Skill 可以指导 Agent 做语义选择，但不得指导 Agent 绕过工具直接修改 OOXML。
+
+每个被采用的样式属性都必须能区分其来源：当前任务明确要求、模板观测、
+Word 继承后有效值、适用的版本化国家级标准，或未决。继承是源文档观测逻辑，
+不是目标样式的默认补全。Agent 不得用 Knowledge、历史任务或常识填充未决属性。
 
 ### 6.5 不确定性必须显式呈现
 
@@ -503,6 +521,8 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 13. 本地观测是否仍然只读、无正文、不可控制运行，并在证据失效时明确报告不可用？
 14. 主 Agent 的 `Read/Glob/Grep` 是否仍先 realpath、只进入批准根；`Bash/Write` 是否仍
     明确标注为无 DocFit 路径 gate 的信任能力，而没有把直接 Read allowlist 冒充 sandbox？
+15. Agent 是否只绑定样式观测而不杜撰缺失值，确定性补全是否保留了属性级来源、
+    标准版本/条款、适用性和未决状态？
 
 如果第 1、第 6 或第 9 个问题答案是否定的，DocFit 很可能又开始复制 Agent runtime 或变成工作流系统。
 
@@ -538,3 +558,5 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 20. 主 Agent 直接拥有 `Skill`、路径受限的 `Read/Glob/Grep`、受信任且自动批准的
     `Bash/Write`、`AskUserQuestion`、类型受限的 `Agent` 和五个 DocFit Tool；五个 Tool
     是权威的文档证据面。Subagent 只保留 inspect + visual-review，没有 Bash/Write。
+21. 样式经验值不进入 Agent Knowledge。Tool/程序先确定性观测模板；缺失属性只能
+    由适用的版本化国家级标准明文补全，并保留属性级来源；无据可依时保持未决。

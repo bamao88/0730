@@ -86,6 +86,22 @@ def test_sdk_environment_uses_anthropic_compatible_variables_without_repr_leak()
     assert "secret-value" not in repr(backend)
 
 
+def test_kimi_sdk_environment_keeps_official_high_effort_tool_context() -> None:
+    backend = next(
+        iter_agent_backends(
+            {
+                "DOCFIT_AGENT_BACKEND_ORDER": "kimi",
+                "DOCFIT_KIMI_API_KEY": "secret-value",
+            }
+        )
+    )
+
+    sdk_env = backend.sdk_environment()
+
+    assert sdk_env["CLAUDE_CODE_EFFORT_LEVEL"] == "high"
+    assert sdk_env["ENABLE_TOOL_SEARCH"] == "false"
+
+
 def test_invalid_backend_order_is_rejected() -> None:
     with pytest.raises(AgentConfigurationError, match="unsupported"):
         tuple(

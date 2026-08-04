@@ -34,7 +34,7 @@ from docfit.observability.storage import (
     load_observation_events,
 )
 from docfit.observability.transcript import SDKTranscriptManager
-from docfit.observability.web import LOGIN_HEADER, create_observer_app
+from docfit.observability.web import create_observer_app
 from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
 
 
@@ -348,17 +348,8 @@ def test_buffered_observer_persists_history_without_web_process(tmp_path: Path) 
     app = create_observer_app(
         database,
         port=port,
-        login_code="synthetic-observer-login",
     )
     client = TestClient(app, base_url=origin)
-    login = client.post(
-        "/login",
-        headers={
-            "origin": origin,
-            LOGIN_HEADER: "synthetic-observer-login",
-        },
-    )
-    assert login.status_code == 200
 
     overview = client.get("/")
     detail = client.get(f"/runs/{report.run_id}")

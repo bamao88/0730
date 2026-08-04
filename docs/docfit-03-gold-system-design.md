@@ -1,7 +1,7 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-03
+> 日期：2026-08-04
 
 本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
 合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
@@ -92,6 +92,8 @@ manual_review: [cover_page, toc_pagination]
 - 学生正文关键文本；
 - 表格、图片、公式及其他支持对象的数量和必要顺序；
 - 目标有效样式；
+- 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、
+  适用的版本化国家级标准或未决；
 - 必填字段内容；
 - 页面数量或允许范围；
 - 不应残留的占位符和说明文字；
@@ -142,9 +144,12 @@ Gold 只从已经实际运行并人工确认的结果产生：
 5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
 6. 必要时保存参考 `final.docx` 或少量页面图片；
 7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
-   hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因。
+   hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因；
+   若使用确定性样式补全，还记录每个属性的标准标识、版本、条款、适用性与规则集 digest。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
+国家级标准的样式值补全表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存必要的
+标识、版本、条款引用、digest 和人工确认事实。
 
 ## 6. Gold 的更新
 

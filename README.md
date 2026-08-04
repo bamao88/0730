@@ -26,8 +26,9 @@ It projects actual SDK Agent/Tool/Subagent events, redacted metrics, and stable 
 evidence references without storing thesis text or controlling the conversion. O0.0–O0.7 now
 provide the platform-neutral skeleton, SDK transcript/report v2 privacy boundary, synchronous
 field-allowlist projectors, direct-ID correlation, coverage dimensions, safe metrics, and a
-bounded background SQLite history writer, plus the authenticated loopback security shell and
-session-only evidence remount. The offline run overview, Transcript/timeline, verified Agent tree,
+bounded background SQLite history writer, plus the direct-open loopback security shell, automatic
+ephemeral sessions, and session-only evidence remount. The offline run overview,
+Transcript/timeline, verified Agent tree,
 Tool/Subagent/event details, SSE refresh, debug-context copy, evidence states, and evidence-aware
 cross-run comparison are implemented. The O0 privacy, security, fault, resource, benchmark, live
 SDK, and documentation gates are complete; O1 optimization has not started.
@@ -67,9 +68,13 @@ credentials, plus `pdftoppm`/`pdfinfo`.
 
 Keep all local API credentials in one repository-external file:
 `~/.config/docfit/agent.env`. The file must have mode `0600`; never add it to
-this repository. DocFit tries every configured Kimi credential first, then
-falls back to MiniMax. Process environment variables override values from the
-file when a one-off local override is needed.
+this repository. DocFit normally tries configured Kimi credentials before
+falling back to MiniMax. Kimi runs with the documented high-effort Claude Code
+tool context and Tool Search disabled. An HTTP 400 request-format rejection is
+treated as a route-level incompatibility, so DocFit skips the remaining credentials
+for the same Kimi name/base URL/model instead of replaying the same invalid request.
+Process environment variables override values from the file when a one-off local
+override is needed.
 
 ```dotenv
 DOCFIT_AGENT_BACKEND_ORDER=kimi,minimax
@@ -169,15 +174,18 @@ A successful `conversion-report.json` is generated from the current Adobe candid
 independent final validation rerun. Intermediate Agent warnings or summaries are not replayed
 as current completion facts.
 
-The local observer security shell can be started from an interactive terminal with
-`uv run docfit observe`. It binds only `127.0.0.1`, prints a one-time login code to that TTY,
-and fails closed when no interactive TTY is available. The server-rendered monitoring pages use
-only packaged local CSS/JavaScript, show privacy-safe stored events and unknown values without
-inventing facts, and expose local evidence actions only after the current session reauthorizes and
-verifies a task directory. `docfit convert` now uses `--observation auto` by default; pass
+Start the local observer with `uv run docfit observe`. It binds only `127.0.0.1` and opens directly
+without a login page or one-time code, including in non-interactive local development. The first
+valid request creates an in-memory ephemeral session; same-origin checks and session-bound CSRF
+remain mandatory for delete, mount, and open actions. The server-rendered monitoring pages use only
+packaged local CSS/JavaScript, show privacy-safe stored events and unknown values without inventing
+facts, and expose local evidence actions only after the current session reauthorizes and verifies a
+task directory. `docfit convert` now uses `--observation auto` by default; pass
 `--observation off` for the explicit no-observer baseline. The comparison page distinguishes
 strict, conditional, and not-comparable runs and never turns missing metrics into zero or declares
-a winner.
+a winner. For startup commands and a human reading order from run result to Tool, Subagent, and
+local evidence, see the
+[`DocFit local observer user guide`](docs/human/docfit-local-observer-user-guide.md).
 
 ## Test layout
 

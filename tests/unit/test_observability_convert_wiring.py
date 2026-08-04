@@ -15,7 +15,7 @@ from claude_agent_sdk.types import (
     ToolUseBlock,
 )
 
-from docfit.app.convert import _run_backend
+from docfit.app.convert import BackendAttemptFailure, _run_backend
 from docfit.app.settings import AgentBackend
 from docfit.observability.correlation import (
     AdapterHealthReceipt,
@@ -150,3 +150,63 @@ def test_backend_wires_sdk_messages_and_hooks_only_after_projection(
     assert correlation.tools[0].tool_use_id == "tool-1"
     assert correlation.tools[0].association_status == "verified"
     assert correlation.metrics.agent_turns.value == 1
+
+
+def test_backend_maps_provider_400_to_safe_nonretryable_route_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeClient:
+        def __init__(self, *, options: Any) -> None:
+            pass
+
+        async def __aenter__(self) -> FakeClient:
+            return self
+
+        async def __aexit__(self, *_: object) -> None:
+            return None
+
+        async def query(self, prompt: str) -> None:
+            assert prompt == "PRIVATE_PROMPT_CANARY"
+
+        async def receive_response(self) -> Any:
+            yield ResultMessage(
+                subtype="success",
+                duration_ms=10,
+                duration_api_ms=8,
+                is_error=True,
+                num_turns=2,
+                session_id="session-1",
+                result=None,
+                structured_output=None,
+                errors=["PRIVATE_ERROR_CANARY"],
+                api_error_status=400,
+                terminal_reason="api_error",
+                uuid="result-1",
+            )
+
+    monkeypatch.setattr("docfit.app.convert.ClaudeSDKClient", FakeClient)
+    backend = AgentBackend(
+        name="kimi",
+        base_url="https://example.invalid",
+        model="synthetic-model",
+        credential_variable="DOCFIT_KIMI_API_KEY",
+        api_key="secret",
+    )
+    config = tmp_path / "config"
+    config.mkdir()
+
+    with pytest.raises(BackendAttemptFailure) as captured:
+        asyncio.run(
+            _run_backend(
+                "PRIVATE_PROMPT_CANARY",
+                SimpleNamespace(task_root=tmp_path),  # type: ignore[arg-type]
+                backend,
+                config,
+                ObservationRun("run_0123456789abcdef0123456789abcdef", NullObservationRecorder()),
+            )
+        )
+
+    assert captured.value.code == "backend_request_rejected"
+    assert captured.value.retry_same_route is False
+    assert "PRIVATE_ERROR_CANARY" not in repr(captured.value)

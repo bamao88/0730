@@ -1,4 +1,4 @@
-"""Fail-closed loopback Web security shell for local observation history."""
+"""Direct-open loopback Web shell for local observation history."""
 
 from __future__ import annotations
 
@@ -56,13 +56,10 @@ from docfit.observability.storage import (
 )
 
 SESSION_COOKIE = "docfit_observer_session"
-LOGIN_HEADER = "x-docfit-login-code"
 CSRF_HEADER = "x-docfit-csrf"
-LOGIN_LIFETIME_SECONDS = 5 * 60
-LOGIN_MAX_FAILURES = 5
 SESSION_IDLE_SECONDS = 30 * 60
 SESSION_ABSOLUTE_SECONDS = 8 * 60 * 60
-LOGIN_TOKEN_BYTES = 16
+SESSION_MAX_COUNT = 64
 SESSION_TOKEN_BYTES = 32
 CSRF_TOKEN_BYTES = 32
 WEB_RUN_LIMIT = 50
@@ -113,35 +110,32 @@ class ObserverSession:
 
 
 class ObserverSecurityState:
-    """In-memory login/session/mount authority; no secret or path is persisted."""
+    """In-memory session/mount authority; no secret or path is persisted."""
 
     def __init__(
         self,
         *,
-        login_code: str,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
-        self._login_digest = _token_digest(login_code)
-        self._login_created_at = clock()
-        self._login_failures = 0
-        self._login_consumed = False
         self._clock = clock
         self._sessions: dict[str, ObserverSession] = {}
 
-    def exchange_login(self, candidate: str | None) -> tuple[str, ObserverSession] | None:
+    def create_session(self) -> tuple[str, ObserverSession]:
         now = self._clock()
-        if (
-            self._login_consumed
-            or self._login_failures >= LOGIN_MAX_FAILURES
-            or now - self._login_created_at >= LOGIN_LIFETIME_SECONDS
-        ):
-            return None
-        if candidate is None or not secrets.compare_digest(
-            _token_digest(candidate), self._login_digest
-        ):
-            self._login_failures += 1
-            return None
-        self._login_consumed = True
+        expired = tuple(
+            digest
+            for digest, session in self._sessions.items()
+            if now - session.last_seen_at >= SESSION_IDLE_SECONDS
+            or now - session.created_at >= SESSION_ABSOLUTE_SECONDS
+        )
+        for digest in expired:
+            self._sessions.pop(digest, None)
+        while len(self._sessions) >= SESSION_MAX_COUNT:
+            oldest = min(
+                self._sessions,
+                key=lambda digest: self._sessions[digest].created_at,
+            )
+            self._sessions.pop(oldest, None)
         token = secrets.token_urlsafe(SESSION_TOKEN_BYTES)
         session = ObserverSession(secrets.token_urlsafe(CSRF_TOKEN_BYTES), now, now)
         self._sessions[_token_digest(token)] = session
@@ -213,15 +207,34 @@ class SecurityBoundaryMiddleware(BaseHTTPMiddleware):
         elif request.method == "POST" and _has_request_body(request):
             response = _error("observer_request_body_rejected", 400)
         else:
+            token = request.cookies.get(SESSION_COOKIE)
+            session = self._context.security.session(token)
+            session_created = session is None
+            if session_created:
+                token, session = self._context.security.create_session()
+            assert token is not None
+            request.state.observer_session = session
+            request.state.observer_session_token = token
             response = await call_next(request)
+            if session_created:
+                response.set_cookie(
+                    SESSION_COOKIE,
+                    token,
+                    max_age=SESSION_ABSOLUTE_SECONDS,
+                    httponly=True,
+                    secure=self._context.secure_cookie,
+                    samesite="strict",
+                    path="/",
+                )
         for name, value in SECURITY_HEADERS.items():
             response.headers[name] = value
         return response
 
 
-def _authenticated(request: Request, *, csrf: bool = False) -> ObserverSession | None:
-    context = _context(request)
-    session = context.security.session(request.cookies.get(SESSION_COOKIE))
+def _request_session(request: Request, *, csrf: bool = False) -> ObserverSession | None:
+    session = getattr(request.state, "observer_session", None)
+    if not isinstance(session, ObserverSession):
+        return None
     if session is None:
         return None
     if csrf and not secrets.compare_digest(
@@ -343,9 +356,9 @@ def _load_comparison(
 
 
 async def _root(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
-        return _render_template("login.html", revision=None, csrf_token=None)
+        return _error("observer_session_unavailable", 503)
     try:
         runs, revision = await run_in_threadpool(_load_overview, _context(request), session)
     except ObservationStorageError as error:
@@ -370,28 +383,8 @@ async def _static_asset(request: Request) -> Response:
     return Response(body, media_type=media_type)
 
 
-async def _login(request: Request) -> Response:
-    if request.url.query:
-        return _error("observer_login_query_rejected", 400)
-    exchange = _context(request).security.exchange_login(request.headers.get(LOGIN_HEADER))
-    if exchange is None:
-        return _error("observer_login_rejected", 401)
-    token, session = exchange
-    response = JSONResponse({"status": "ok", "csrf_token": session.csrf_token})
-    response.set_cookie(
-        SESSION_COOKIE,
-        token,
-        max_age=SESSION_ABSOLUTE_SECONDS,
-        httponly=True,
-        secure=_context(request).secure_cookie,
-        samesite="strict",
-        path="/",
-    )
-    return response
-
-
 async def _runs(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
         return _error("observer_session_required", 401)
     try:
@@ -402,7 +395,7 @@ async def _runs(request: Request) -> Response:
 
 
 async def _run_page(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
         return _error("observer_session_required", 401)
     try:
@@ -434,7 +427,7 @@ async def _run_page(request: Request) -> Response:
 
 
 async def _run_detail(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
         return _error("observer_session_required", 401)
     try:
@@ -461,7 +454,7 @@ def _comparison_ids(request: Request) -> tuple[str, str] | None:
 
 
 async def _comparison_page(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
         return _error("observer_session_required", 401)
     run_ids = _comparison_ids(request)
@@ -489,7 +482,7 @@ async def _comparison_page(request: Request) -> Response:
 
 
 async def _comparison_detail(request: Request) -> Response:
-    if _authenticated(request) is None:
+    if _request_session(request) is None:
         return _error("observer_session_required", 401)
     run_ids = _comparison_ids(request)
     if run_ids is None:
@@ -506,7 +499,7 @@ async def _comparison_detail(request: Request) -> Response:
 
 
 async def _debug_context(request: Request) -> Response:
-    session = _authenticated(request)
+    session = _request_session(request)
     if session is None:
         return _error("observer_session_required", 401)
     try:
@@ -536,7 +529,7 @@ async def _debug_context(request: Request) -> Response:
 
 
 async def _revision(request: Request) -> Response:
-    if _authenticated(request) is None:
+    if _request_session(request) is None:
         return _error("observer_session_required", 401)
     try:
         runs = await run_in_threadpool(
@@ -551,15 +544,16 @@ async def _revision(request: Request) -> Response:
 
 async def _stream(request: Request) -> Response:
     context = _context(request)
-    cookie = request.cookies.get(SESSION_COOKIE)
-    if context.security.session(cookie) is None:
+    session = _request_session(request)
+    token = getattr(request.state, "observer_session_token", None)
+    if session is None or not isinstance(token, str):
         return _error("observer_session_required", 401)
 
     async def events() -> AsyncIterator[str]:
         last_revision: str | None = None
         last_heartbeat = time.monotonic()
         yield "retry: 5000\n\n"
-        while context.security.session(cookie, touch=False) is not None:
+        while context.security.session(token, touch=False) is not None:
             if await request.is_disconnected():
                 return
             try:
@@ -590,7 +584,7 @@ async def _stream(request: Request) -> Response:
 
 
 async def _mount(request: Request) -> Response:
-    session = _authenticated(request, csrf=True)
+    session = _request_session(request, csrf=True)
     if session is None:
         return _error("observer_authorization_failed", 403)
     context = _context(request)
@@ -633,7 +627,7 @@ async def _mount(request: Request) -> Response:
 
 
 async def _delete_run(request: Request) -> Response:
-    session = _authenticated(request, csrf=True)
+    session = _request_session(request, csrf=True)
     if session is None:
         return _error("observer_authorization_failed", 403)
     run_id = request.path_params["run_id"]
@@ -648,7 +642,7 @@ async def _delete_run(request: Request) -> Response:
 
 
 async def _clear_history(request: Request) -> Response:
-    session = _authenticated(request, csrf=True)
+    session = _request_session(request, csrf=True)
     if session is None:
         return _error("observer_authorization_failed", 403)
     try:
@@ -662,7 +656,7 @@ async def _clear_history(request: Request) -> Response:
 
 
 async def _open_artifact(request: Request) -> Response:
-    session = _authenticated(request, csrf=True)
+    session = _request_session(request, csrf=True)
     if session is None:
         return _error("observer_authorization_failed", 403)
     context = _context(request)
@@ -690,7 +684,6 @@ def create_observer_app(
     database: Path,
     *,
     port: int,
-    login_code: str,
     selector: DirectorySelector | None = None,
     opener: ArtifactOpener | None = None,
     clock: Callable[[], float] = time.monotonic,
@@ -703,7 +696,7 @@ def create_observer_app(
         database,
         expected_host,
         f"http://{expected_host}",
-        ObserverSecurityState(login_code=login_code, clock=clock),
+        ObserverSecurityState(clock=clock),
         selector,
         opener,
         secure_cookie,
@@ -713,7 +706,6 @@ def create_observer_app(
         routes=[
             Route("/", _root, methods=["GET", "HEAD"]),
             Route("/static/{asset:str}", _static_asset, methods=["GET", "HEAD"]),
-            Route("/login", _login, methods=["POST"]),
             Route("/runs/{run_id:str}", _run_page, methods=["GET", "HEAD"]),
             Route("/compare", _comparison_page, methods=["GET", "HEAD"]),
             Route("/api/runs", _runs, methods=["GET", "HEAD"]),
@@ -811,15 +803,11 @@ def _startup_error(code: str, *, stream: IO[str]) -> int:
 def run_observer_server(
     *,
     port: int,
-    input_stream: IO[str] | None = None,
     output_stream: IO[str] | None = None,
 ) -> int:
-    """Start only with an interactive TTY; never move the login secret to a URL."""
+    """Start a loopback-only observer that opens directly without a login step."""
 
-    input_stream = sys.stdin if input_stream is None else input_stream
     output_stream = sys.stderr if output_stream is None else output_stream
-    if not input_stream.isatty() or not output_stream.isatty():
-        return _startup_error("observer_interactive_tty_required", stream=output_stream)
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -828,16 +816,13 @@ def run_observer_server(
         listener.set_inheritable(False)
         actual_port = int(listener.getsockname()[1])
         database = initialize_observation_store(observation_state_root())
-        login_code = secrets.token_urlsafe(LOGIN_TOKEN_BYTES)
         app = create_observer_app(
             database,
             port=actual_port,
-            login_code=login_code,
             selector=_default_selector(),
             opener=_default_opener(),
         )
         print(f"DocFit observer: http://127.0.0.1:{actual_port}/", file=output_stream)
-        print(f"One-time login code: {login_code}", file=output_stream)
         try:
             build_observer_server(app, listener).run(sockets=[listener])
         except KeyboardInterrupt:

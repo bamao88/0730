@@ -5,12 +5,20 @@
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
 > 上位计划：`docs/plans/docfit-development-plan.md`（M1/M2 已完成）
+>
+> 2026-08-04 批准的本地开发简化：O0.5 的一次性登录码交换已移除，当前合同为
+> loopback 直接打开、首次合法请求自动建立内存短期 session；同源、CSRF、CSP、路径和
+> 管理 POST 防线保持不变。O0.5 仍为 DONE，本计划以下内容按当前合同记录。
+>
+> 后续权限修订：O0 完成后，主 Agent Bash/Write 已按 06 第 6.7 节全部开放；本计划中
+> “任务文件只写授权目录”记录 O0 当时的转换行为目标，不是当前文件系统 sandbox。
 
 ## Plan Ledger
 
 - Plan status: COMPLETED
 - Session scope: o0-local-observability
-- Current milestone: M2 后优化轨道的 O0 已完成；O1–O4 尚未开始
+- Current milestone: M2 后优化轨道的 O0 已完成；O1–O4 完整切片尚未开始；已知 Kimi
+  HTTP 400 的窄正确性 hotfix 不构成 O4 启动
 - Canonical implementation plan: `docs/plans/docfit-o0-local-observability.md`
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
@@ -122,8 +130,8 @@ Web 关闭一律进入观测降级，不得阻塞 Agent/Tool。
 ### 2.1 计划中的公共入口
 
 - 新增 `docfit observe [--port PORT]`：启动本地 Web，固定 loopback，默认 `PORT=0` 选择
-  空闲端口，在当前 TTY 分别打印本地 URL 和一次性登录码；不提供 `--host`，登录码不放进
-  URL、参数、环境变量或日志；
+  空闲端口并打印本地 URL；不提供 `--host`、登录页、登录路由或一次性登录码，非交互/
+  无头本地环境也可以启动；
 - `docfit convert` 提供 `--observation {auto,off}`；O0.7 总门通过后默认值已切为 `auto`，
   并保留 `off` 用于基线和故障排查；
 - 不新增面向 Agent 的 Tool，不把 Web 路由当作公共自动化 API。
@@ -169,7 +177,7 @@ src/docfit/observability/
 | O0.2 | DONE | 来源 adapter 与字段级隐私 projector | O0.1 | 原始载荷入队前被删除，得到安全事件 |
 | O0.3 | DONE | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
 | O0.4 | DONE | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
-| O0.5 | DONE | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
+| O0.5 | DONE | 本地 Web 安全壳与证据重新挂载 | O0.4 | 免登录直开、同源、路径安全的本地入口 |
 | O0.6 | DONE | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
 | O0.7 | DONE | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
 
@@ -402,19 +410,23 @@ Web 此时仍可不存在。
 
 ### 目标
 
-先建立安全边界，再开放任何历史删除、目录选择和本地文件操作。loopback 本身不算认证。
+先建立 loopback、自动短期会话与同源安全边界，再开放任何历史删除、目录选择和本地文件
+操作。该页面只供本机开发，不提供用户登录。
 
 ### 实施内容
 
 1. 实现 `docfit observe`，Uvicorn 只绑定 `127.0.0.1` 空闲端口，关闭 proxy header 信任、
    access log 中的敏感字段和宽松 server 配置；
-2. 启动时生成至少 128 bit 一次性登录码，只打印到交互 TTY；5 分钟或 5 次失败后失效；
-3. 同源 POST 交换至少 256 bit server-side session；idle 30 分钟、absolute 8 小时；cookie
-   为 HttpOnly、SameSite=Strict、Path=/、无 Domain，HTTPS 时再加 Secure；
+2. 首页直接打开，不注册 `/login`，也不生成、打印或校验一次性登录码；非交互/无头本地
+   环境允许启动；
+3. 首次合法请求自动建立至少 256 bit server-side session；idle 30 分钟、absolute 8 小时；
+   cookie 为 HttpOnly、SameSite=Strict、Path=/、无 Domain，HTTPS 时再加 Secure；过期后
+   自动轮换，旧 CSRF 和会话内挂载失效；服务端同时最多保留 64 个 session；
 4. 实现精确 Host/port、Origin、CSRF custom header、无 CORS、null Origin 拒绝、严格 CSP；
-5. GET/HEAD 无副作用；登录、删除、清空、挂载、打开证据只接受认证 POST + CSRF；
-6. 无交互 TTY 且没有受保护本地 IPC/FD 时拒绝启动管理面，不把 secret 改放 URL、CLI
-   参数或环境变量；
+5. GET/HEAD 除建立/轮换内存短期会话外无管理副作用；删除、清空、挂载、打开证据只接受
+   当前 session 的同源 POST + CSRF；
+6. session/CSRF secret 不进入 URL、CLI 参数、环境变量、日志、数据库、导出或浏览器
+   storage；
 7. Web 核心只接收注入的目录 selector/capability；本地调试壳可以延迟加载 O0.0 的可选
    平台 adapter，绝对路径只保存在当前 server session 内存；无 adapter 时挂载 unavailable；
 8. v2 挂载必须验证 run/task/session 和全部输入/产物 hash；v1 最多 partial；错误目录
@@ -426,10 +438,12 @@ Web 此时仍可不存在。
 ### 成功标准
 
 - 非 loopback socket、错误 Host/port、恶意/缺失/null Origin、宽松 CORS 请求全部拒绝；
-- 无 session、过期 session、错误 CSRF、GET side effect 和重放一次性登录码全部拒绝；
-- login/session/CSRF secret 不出现在 URL、access log、数据库、导出或页面持久存储；
+- 首次访问直接得到运行总览和自动短期 session；session 过期后自动轮换，旧 CSRF 与会话
+  挂载失效，错误 CSRF 和 GET 管理副作用全部拒绝；
+- `/login` 不存在；session/CSRF secret 不出现在 URL、access log、数据库、导出或页面
+  持久存储；
 - 页面和响应不加载 CDN、远程 script/font/image/analytics，CSP 合同测试通过；
-- 无 TTY/无受保护 IPC 时 fail closed，不降级成无认证网站；
+- 无 TTY/无受保护 IPC 时仍可按相同 loopback/同源/CSRF 合同启动；
 - 历史 run 初始为 unmounted；选择正确 v2 目录后 verified，错误目录 conflict，v1 最多
   partial；Web 重启后路径消失；
 - 浏览器不能提交任意绝对路径字符串；无平台 adapter 时历史证据保持 unmounted，其他
@@ -440,7 +454,7 @@ Web 此时仍可不存在。
 
 ### 停止条件
 
-- secret 必须进入 URL 才能登录；
+- 为直接打开而放宽 loopback、Host/Origin/CSRF 或把 secret 放入 URL；
 - 核心必须导入平台 GUI/AppleScript 才能启动，或目录挂载只能通过浏览器提交绝对路径；
 - Web 框架默认行为无法落实精确 Host/Origin/CSRF/CSP；
 - 文件打开必须绕过 mount capability 或 canonical path 重验。
@@ -474,7 +488,7 @@ Subagent、事件和本地证据。页面只显示实际观测事实。
 7. coverage/privacy/evidence banner：四个维度独立显示；
 8. SSE 单向刷新 run list/detail，断线后回退到有界轮询，不建立 WebSocket 控制面；
 9. 调试上下文复制：使用 `debug_context_schema_version: 1` 的 allowlist 导出；
-10. 已挂载证据提供认证 POST 的“打开本地产物/复制 ref”，未挂载时只显示重新授权入口；
+10. 已挂载证据提供同源 POST + CSRF 的“打开本地产物/复制 ref”，未挂载时只显示重新授权入口；
 11. 历史删除/清空界面只删除观测记录，显示不会删除任务证据或 SDK transcript。
 
 ### 成功标准
@@ -571,7 +585,8 @@ Subagent、事件和本地证据。页面只显示实际观测事实。
   数字制造 Adobe Document Transaction，也没有实施任何 O1 行为优化；
 - 目标设计第 11.1 节逐项映射 18 项验收。未触发扩张停止门；核心与云端路径没有导入
   Word、AppleScript 或 GUI，本地调试 adapter 继续只是可选便利能力。
-- 最终确定性门为 `299 passed`（另有 1 个已知 Starlette/httpx 弃用 warning）；
+- O0.7 原始完成门为 `299 passed`；Kimi HTTP 400 hotfix 后的当前全量回归为 `315 passed`（另有 1 个
+  已知 Starlette/httpx 弃用 warning）；
   `uv sync --frozen`、lock、sdist/wheel、Ruff、mypy、base doctor、五项 live receipt doctor
   与 `git diff --check` 全部通过。
 
@@ -634,7 +649,7 @@ O0 完成必须同时满足：
 4. SDK transcript、O0 索引和本地任务证据三类数据面有独立生命周期和状态；
 5. 历史 evidence 未重新授权时绝不解析路径，授权后按 report/hash/ref 重验；
 6. observer 的所有失败都安全降级，任务磁盘失败如实失败；
-7. Web 的 session、同源、CSRF、CSP、路径和本地动作合同全部通过；
+7. Web 的免登录直接打开、自动 session、同源、CSRF、CSP、路径和本地动作合同全部通过；
 8. 隐私/凭据 canary 在所有持久化、传输和导出面零命中；
 9. 资源和性能预算全部通过，O0 不增加 Adobe 调用；
 10. 代码、README、00–06、专题设计、CLI help、active capsule 和本计划同步；

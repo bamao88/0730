@@ -36,26 +36,6 @@ async function copyText(value) {
   return copied;
 }
 
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const input = document.getElementById("login-code");
-    const code = input instanceof HTMLInputElement ? input.value : "";
-    const response = await fetch("/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {"x-docfit-login-code": code}
-    });
-    if (input instanceof HTMLInputElement) input.value = "";
-    if (response.ok) window.location.replace("/");
-    else {
-      const payload = await readJson(response);
-      announce(payload.failure?.code || "observer_login_rejected", true);
-    }
-  });
-}
-
 document.querySelectorAll("[data-post-url]").forEach((node) => {
   node.addEventListener("click", async () => {
     if (!(node instanceof HTMLElement) || !csrfToken) return;
@@ -70,7 +50,7 @@ document.querySelectorAll("[data-post-url]").forEach((node) => {
     const payload = await readJson(response);
     node.removeAttribute("aria-busy");
     if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 401) {
         window.location.assign("/");
         return;
       }
