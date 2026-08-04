@@ -1049,6 +1049,27 @@ def list_observation_runs(
     return tuple(StoredObservationRun(*row) for row in rows)
 
 
+def get_observation_run(
+    database: Path,
+    run_id: str,
+) -> StoredObservationRun | None:
+    try:
+        with observation_reader(database) as connection:
+            row = connection.execute(
+                """
+                SELECT run_id, task_ref, session_id, status, started_at, completed_at,
+                       last_observed_at, event_count, event_bytes
+                FROM observation_runs WHERE run_id=?
+                """,
+                (run_id,),
+            ).fetchone()
+    except ObservationStorageError:
+        raise
+    except sqlite3.DatabaseError as error:
+        raise _normalize_database_error(error) from error
+    return None if row is None else StoredObservationRun(*row)
+
+
 def load_observation_events(
     database: Path,
     run_id: str,

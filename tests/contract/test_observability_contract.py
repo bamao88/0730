@@ -141,7 +141,66 @@ def test_observe_cli_has_port_but_no_remote_host(capsys: pytest.CaptureFixture[s
 
     assert main(["observe", "--port", "0"]) == 2
     error = capsys.readouterr().err
-    assert "observer_web_not_ready" in error
+    assert "observer_interactive_tty_required" in error
+
+
+def test_observer_web_core_does_not_import_optional_platform_adapter() -> None:
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; from pathlib import Path; "
+                "from docfit.observability.web import create_observer_app; "
+                "create_observer_app(Path('/observer.sqlite3'), port=43123, "
+                "login_code='synthetic-login'); "
+                "assert not any(name.startswith('docfit.observability.local_debug') "
+                "for name in sys.modules)"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
+
+
+def test_observer_routes_are_read_only_projection_and_local_evidence_actions(
+    tmp_path: Path,
+) -> None:
+    from docfit.observability.web import create_observer_app
+
+    database = initialize_observation_store(tmp_path / "state")
+    app = create_observer_app(
+        database,
+        port=43123,
+        login_code="synthetic-login",
+    )
+    routes = {
+        (route.path, frozenset(route.methods or ()))
+        for route in app.routes
+        if hasattr(route, "path")
+    }
+
+    assert routes == {
+        ("/", frozenset({"GET", "HEAD"})),
+        ("/login", frozenset({"POST"})),
+        ("/api/runs", frozenset({"GET", "HEAD"})),
+        ("/api/runs/{run_id:str}/mount", frozenset({"POST"})),
+        ("/api/runs/{run_id:str}/delete", frozenset({"POST"})),
+        ("/api/history/clear", frozenset({"POST"})),
+        (
+            "/api/runs/{run_id:str}/open/{artifact:str}",
+            frozenset({"POST"}),
+        ),
+    }
+    route_text = " ".join(path for path, _ in routes)
+    assert all(
+        forbidden not in route_text
+        for forbidden in ("agent/start", "subagent/start", "tool/call", "convert/start")
+    )
 
 
 def test_storage_schema_contains_only_safe_projection_fields(tmp_path: Path) -> None:

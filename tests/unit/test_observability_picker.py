@@ -3,7 +3,10 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from docfit.observability.local_debug.macos import MacOSDirectoryPicker
+from docfit.observability.local_debug.macos import (
+    MacOSArtifactOpener,
+    MacOSDirectoryPicker,
+)
 
 
 def test_picker_is_unavailable_without_supported_gui_platform(tmp_path: Path) -> None:
@@ -79,3 +82,34 @@ def test_picker_api_accepts_no_browser_path_argument(tmp_path: Path) -> None:
         pass
     else:
         raise AssertionError("picker accepted a caller-supplied path")
+
+
+def test_opener_reveals_only_a_pre_resolved_server_path(tmp_path: Path) -> None:
+    executable = tmp_path / "open"
+    executable.write_bytes(b"synthetic")
+    artifact = tmp_path / "final.docx"
+    artifact.write_bytes(b"final")
+    calls: list[tuple[list[str], float]] = []
+
+    def run(
+        arguments: object, timeout: float
+    ) -> subprocess.CompletedProcess[bytes]:
+        normalized = [str(item) for item in arguments]  # type: ignore[union-attr]
+        calls.append((normalized, timeout))
+        return subprocess.CompletedProcess(normalized, 0, b"", b"")
+
+    opened = MacOSArtifactOpener(
+        platform_name="darwin",
+        runner=run,
+        executable=executable,
+    ).open(artifact)
+
+    assert opened is True
+    assert calls == [([str(executable), "-R", str(artifact)], 10.0)]
+
+
+def test_opener_is_unavailable_outside_optional_local_shell(tmp_path: Path) -> None:
+    artifact = tmp_path / "final.docx"
+    artifact.write_bytes(b"final")
+
+    assert MacOSArtifactOpener(platform_name="linux").open(artifact) is False

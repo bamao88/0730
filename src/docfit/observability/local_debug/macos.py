@@ -10,6 +10,7 @@ from pathlib import Path
 from docfit.observability.evidence import DirectorySelection
 
 PickerRunner = Callable[[Sequence[str], str, float], subprocess.CompletedProcess[str]]
+OpenerRunner = Callable[[Sequence[str], float], subprocess.CompletedProcess[bytes]]
 
 
 def _run_picker(
@@ -20,6 +21,19 @@ def _run_picker(
         input=script,
         capture_output=True,
         text=True,
+        timeout=timeout,
+        check=False,
+    )
+
+
+def _run_opener(
+    arguments: Sequence[str], timeout: float
+) -> subprocess.CompletedProcess[bytes]:
+    return subprocess.run(
+        list(arguments),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
         timeout=timeout,
         check=False,
     )
@@ -68,3 +82,35 @@ class MacOSDirectoryPicker:
         if not selected.is_dir():
             return DirectorySelection(status="invalid", failure_code="picker_invalid_selection")
         return DirectorySelection(status="selected", path=selected)
+
+
+class MacOSArtifactOpener:
+    """Reveal a pre-verified artifact without returning its path to the browser."""
+
+    def __init__(
+        self,
+        *,
+        platform_name: str = sys.platform,
+        runner: OpenerRunner = _run_opener,
+        executable: Path = Path("/usr/bin/open"),
+    ) -> None:
+        self._platform_name = platform_name
+        self._runner = runner
+        self._executable = executable
+
+    def open(self, path: Path) -> bool:
+        if (
+            self._platform_name != "darwin"
+            or not self._executable.is_file()
+            or not path.is_file()
+            or path.is_symlink()
+        ):
+            return False
+        try:
+            completed = self._runner(
+                [str(self._executable), "-R", str(path)],
+                10.0,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return False
+        return completed.returncode == 0
