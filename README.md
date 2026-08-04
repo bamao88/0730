@@ -18,11 +18,13 @@ Agent-visible document surface; no second workflow or Provider-selection layer i
 The approved M2-follow-on design for a local, read-only runtime observability UI is documented
 in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
 It projects actual SDK Agent/Tool/Subagent events, redacted metrics, and stable local
-evidence references without storing thesis text or controlling the conversion. O0.0–O0.5 now
+evidence references without storing thesis text or controlling the conversion. O0.0–O0.6 now
 provide the platform-neutral skeleton, SDK transcript/report v2 privacy boundary, synchronous
 field-allowlist projectors, direct-ID correlation, coverage dimensions, safe metrics, and a
 bounded background SQLite history writer, plus the authenticated loopback security shell and
-session-only evidence remount. The human monitoring pages and cross-run comparison remain O0.6–O0.7.
+session-only evidence remount. The offline run overview, Transcript/timeline, verified Agent tree,
+Tool/Subagent/event details, SSE refresh, debug-context copy, and evidence states are implemented;
+cross-run comparison and the O0 total gate remain O0.7.
 
 “Without storing thesis text” applies to the observability index. The SDK's own local session
 transcript is a separate data plane; O0 requires a private per-run `CLAUDE_CONFIG_DIR`, explicit
@@ -158,9 +160,10 @@ as current completion facts.
 
 The local observer security shell can be started from an interactive terminal with
 `uv run docfit observe`. It binds only `127.0.0.1`, prints a one-time login code to that TTY,
-and fails closed when no interactive TTY is available. The server-rendered monitoring pages are
-the next O0.6 slice; O0.5 currently provides the authenticated history and evidence-access
-foundation rather than the finished human UI.
+and fails closed when no interactive TTY is available. The server-rendered monitoring pages use
+only packaged local CSS/JavaScript, show privacy-safe stored events and unknown values without
+inventing facts, and expose local evidence actions only after the current session reauthorizes and
+verifies a task directory. Cross-run comparison remains the O0.7 slice.
 
 ## Test layout
 

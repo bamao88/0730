@@ -1,6 +1,6 @@
 # DocFit O0 本地运行观测实施计划
 
-> 状态：IN_PROGRESS（O0.0–O0.5 已完成，当前阶段 O0.6）
+> 状态：IN_PROGRESS（O0.0–O0.6 已完成，当前阶段 O0.7）
 > 日期：2026-08-04
 > 上位合同：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 目标设计：`docs/docfit-local-observability-design.md`
@@ -15,10 +15,10 @@
 - Design authority: `docs/docfit-local-observability-design.md`
 - Start point: 已验证的 M2 `docfit convert` 基线；不重新实现 M2
 - First executable phase: O0.0 基线、技术骨架与风险 PoC（DONE）
-- Current phase: O0.6 核心监控页面与调查交接
+- Current phase: O0.7 跨运行比较、总门与文档收口
 - Completed phases: O0.0（`0200e4c` + `e0eb220`）；O0.1（`3d02172`）；
   O0.2（`bf7ab8e`）；O0.3（`524fdd4`）；O0.4（`0e1bd53`）；
-  O0.5（`cb294f8`）
+  O0.5（`cb294f8`）；O0.6（`40094f1`）
 - Active capsule: `docs/status/active/docfit-o0-local-observability.md`
 - Route: `$intuitive-flow` durable execution；阶段完成后先验证、提交，再进入下一阶段
 - Worker strategy: 每次只委派一个有界阶段；主会话持有合同、集成、证明和最终完成判断
@@ -34,11 +34,11 @@
 
 ```text
 Root goal: 按 docs/plans/docfit-o0-local-observability.md 顺序完成 O0.0–O0.7，并通过总体 Definition of Done。
-Current slice: 只执行 O0.6；不提前实现 O0.7 跨运行比较或 O1 调用降重。
-Scope: 本计划第 10 节的运行总览、单次运行、Transcript、Agent/Subagent 树与时间线、事件详情、四维 banner、单向刷新、调试上下文和已授权证据入口。
-Non-goals: O0.7 比较/总门/default-auto、O1–O4、M3、第二 Agent loop、远程 collector、正文持久化。
-Acceptance: O0.6 成功标准逐项有安全 HTML/JSON/SSE、真实直接关系、unknown/null、断线非干扰、证据状态和调试上下文证明，并完成人工可访问性/溢出/空状态检查。
-Verification: focused unit/contract/integration + ruff + mypy + build/lock + base doctor；页面测试只用 loopback/test client、临时 observer root 和合成安全事件，不读取 SDK transcript/论文正文，也不发起 Adobe 调用。
+Current slice: 只执行 O0.7；不提前实现 O1 调用降重。
+Scope: 本计划第 11 节的跨运行可比性、指标差异、资源/安全/live 总门、观测默认启用、O1 基线和文档收口。
+Non-goals: O1–O4 行为优化、M3、第二 Agent loop、远程 collector、正文持久化。
+Acceptance: O0.7 成功标准和目标设计 18 项验收全部有自动或明确人工回执，default-auto 不改变转换、Tool/权限或 Adobe 调用事实。
+Verification: 全量 unit/contract/integration/security/fault/capacity/benchmark/live smoke + canary 扫描 + ruff/mypy/build/lock/doctor；不读取 SDK transcript/论文正文，也不为页面或比较额外发起 Adobe 调用。
 Execution: 主会话为 root owner并直接完成该有界串行阶段；如范围扩张再恢复独立 worker。
 Stop gate: 页面必须伪造节点/顺序/关系、读取正文/图片才能显示默认视图，或任一路由可以触发转换/Tool 副作用。
 ```
@@ -169,8 +169,8 @@ src/docfit/observability/
 | O0.3 | DONE | 直接 ID 关联、覆盖状态和指标聚合 | O0.2 | 可信 Tool/Subagent 树模型与 coverage |
 | O0.4 | DONE | 有界 SQLite 投影、保留、删除和故障降级 | O0.3 | Web 未启动时仍可安全积累历史 |
 | O0.5 | DONE | 本地 Web 安全壳与证据重新挂载 | O0.4 | 已认证、同源、路径安全的本地入口 |
-| O0.6 | IN_PROGRESS | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
-| O0.7 | PENDING | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
+| O0.6 | DONE | 总览、单次运行、Transcript、树、详情与调查交接 | O0.5 | 核心监控页面可用 |
+| O0.7 | IN_PROGRESS | 指标比较、资源/安全/live 总门与文档收口 | O0.6 | O0 完成，可决定是否进入 O1 |
 
 阶段必须顺序执行。每一阶段应形成一个可回滚、可单独复查的提交；前一阶段成功标准未
 满足时，不得通过 UI mock 或手工截图绕过后端合同进入下一阶段。
@@ -446,7 +446,13 @@ Web 此时仍可不存在。
 
 ## 10. O0.6：核心监控页面与调查交接
 
-> 状态：IN_PROGRESS。
+> 状态：DONE；实现提交 `40094f1`。
+
+验证回执：离线 server-rendered 页面、JSON/SSE、直接关系与缺口、四维状态、调试上下文、
+会话证据状态和仅观测删除均有 unit/contract/integration 覆盖；synthetic convert 落库后可
+在页面读取。人工 UI 检查覆盖 375/768/1280 视口、键盘焦点、长 ID、空/冲突状态、复制
+回退、无浏览器 storage 和仅 loopback 资源。阶段收口时 `280 passed`，lock、build、ruff、
+mypy 和 base doctor 全部通过，wheel 包含本地模板/CSS/JavaScript，未发起 Adobe 调用。
 
 ### 目标
 
@@ -491,6 +497,8 @@ Subagent、事件和本地证据。页面只显示实际观测事实。
 - 浏览器能够通过某个 route 触发转换或 Tool 副作用。
 
 ## 11. O0.7：跨运行比较、总门与文档收口
+
+> 状态：IN_PROGRESS。
 
 ### 目标
 

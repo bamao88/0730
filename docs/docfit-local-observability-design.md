@@ -1,6 +1,6 @@
 # DocFit 本地运行观测与问题定位界面
 
-> 状态：目标设计已批准；O0.0–O0.5 已完成，O0.6 实施中
+> 状态：目标设计已批准；O0.0–O0.6 已完成，O0.7 实施中
 > 日期：2026-08-04
 > 所属范围：M2 后核心转换优化的 O0 观测面
 > 上位契约：`docfit-00-index.md`–`docfit-06-development-roadmap.md`
@@ -21,10 +21,11 @@ Claude Agent SDK 实际发生的 Agent loop、Tool 调用、权限判断和 Suba
 > 轨迹、汇总隐私安全的运行指标、定位 Tool 与 Subagent 问题，并通过稳定引用连接到
 > 本地任务证据；它不保存论文正文、不执行文档操作，也不参与 Agent 决策和调度。
 
-本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.5 已实现 schema v2 report、
+本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.6 已实现 schema v2 report、
 逐事件安全投影、直接关联、有界 SQLite 历史、认证 loopback 安全壳和会话内证据重新
-挂载；原始 report 中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。运行
-总览、Transcript/树/时间线、调试上下文页面和跨运行比较仍属于 O0.6–O0.7。
+挂载，以及运行总览、Transcript/树/时间线、Tool/Subagent/事件详情、SSE/轮询和调试
+上下文页面；原始 report 中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。
+跨运行比较、默认启用和 O0 总门仍属于 O0.7。
 
 O0 的核心不是先画页面，而是先满足四份可验证合同：
 
@@ -105,21 +106,20 @@ runtime。它复用 Claude Agent SDK 已公开的消息流和 hooks、DocFit Too
 
 ### 3.1 当前实现边界与剩余 O0 差距
 
-本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.5 已实现 SDK
+本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.6 已实现 SDK
 message/hook、权限、App/Tool/report 的字段 allowlist projector，Tool/Subagent 直接 ID
 关联，运行级临时 `CLAUDE_CONFIG_DIR` 与 report v2，有界 queue/SQLite 历史，以及
 loopback session/同源/CSRF/CSP 和显式目录重挂载。Web 核心只接收注入的 selector/
-capability；macOS picker/opener 只由本地调试组合根延迟加载。
+capability；macOS picker/opener 只由本地调试组合根延迟加载。核心页面使用打包的本地
+HTML/CSS/JavaScript，按安全事件投影运行列表、四维状态、Transcript/时间线、verified
+直接关系树、显式关系缺口、Tool/Subagent/事件详情、SSE 更新和 allowlist 调试上下文。
 
 当前仍未实现：
 
-- 面向人的运行总览、单次运行页和 Transcript；
-- Agent/Subagent 树、时间线、事件详情和调试上下文导出；
-- SSE/有界轮询刷新、页面可访问性与空/冲突状态人工 UI 验证；
 - 跨运行 comparability、O0 总门和观测默认启用。
 
-因此下述完整链路仍是 O0 总体目标；其中采集、关联、存储和安全重挂载已具备，页面与
-比较仍须按 O0.6–O0.7 完成。
+因此下述完整链路仍是 O0 总体目标；其中采集、关联、存储、安全重挂载和核心页面已
+具备，比较与总门仍须按 O0.7 完成。
 SDK 升级时必须先用合成 message/hook fixture 重新证明字段存在性与关联链，不能假设
 私有 transcript 格式或历史 hook 语义保持不变。
 
@@ -991,7 +991,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
 - 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
 - 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.5，核心监控页面与比较仍待后续阶段；
+- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.6，跨运行比较与总门仍待 O0.7；
 - 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务
