@@ -20,7 +20,7 @@ button:hover, button:focus-visible { background: var(--accent-strong); }
 .button-secondary { background: transparent; border: 1px solid var(--line); color: var(--ink); }
 .button-secondary:hover, .button-secondary:focus-visible { background: #e8e6df; color: var(--ink); }
 .button-danger { background: var(--danger); }
-a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #e1943b; outline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid #e1943b; outline-offset: 3px; }
 .skip-link { position: fixed; left: 1rem; top: -4rem; z-index: 50; background: var(--ink); color: white; padding: .75rem; }
 .skip-link:focus { top: 1rem; }
 .site-header { min-height: 72px; padding: 0 max(24px, calc((100vw - 1400px)/2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(255,253,248,.92); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); }
@@ -49,6 +49,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .section-heading h2, .detail-card h3 { margin: 0; }
 .table-scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
+.comparison-table { min-width: 760px; }
 th { text-align: left; color: var(--muted); font-size: .73rem; text-transform: uppercase; letter-spacing: .08em; }
 th, td { border-bottom: 1px solid var(--line); padding: .85rem .65rem; vertical-align: top; }
 .id-link, .id-wrap, .split-grid p, .reference-list code { overflow-wrap: anywhere; word-break: break-word; }

@@ -36,8 +36,8 @@
 
 <section class="panel table-panel" aria-labelledby="conditions-title">
   <div class="section-heading"><h2 id="conditions-title">可比性条件</h2><span class="quiet">所有条件一致且可用才是 strict</span></div>
-  <div class="table-scroll">
-    <table>
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部可比性条件">
+    <table class="comparison-table">
       <thead><tr><th>条件</th><th>基线</th><th>候选</th><th>判定</th></tr></thead>
       <tbody>
       {% for row in comparison.comparability.conditions %}
@@ -55,8 +55,8 @@
 
 <section class="panel table-panel" aria-labelledby="metrics-title">
   <div class="section-heading"><h2 id="metrics-title">运行指标</h2><span class="quiet">delta = candidate − baseline；不代表赢家</span></div>
-  <div class="table-scroll">
-    <table>
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部运行指标">
+    <table class="comparison-table">
       <thead><tr><th>指标</th><th>基线</th><th>候选</th><th>差值</th></tr></thead>
       <tbody>
       {% for row in comparison.metrics %}
@@ -75,8 +75,8 @@
 <section class="panel table-panel" aria-labelledby="tools-title">
   <div class="section-heading"><h2 id="tools-title">Tool 差异</h2><span class="quiet">未观测到的值不按 0 填充</span></div>
   {% if comparison.tools %}
-  <div class="table-scroll">
-    <table>
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部 Tool 差异">
+    <table class="comparison-table">
       <thead><tr><th>Tool</th><th>调用数</th><th>总耗时</th><th>平均耗时</th><th>错误</th></tr></thead>
       <tbody>
       {% for row in comparison.tools %}
