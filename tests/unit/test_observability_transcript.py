@@ -37,6 +37,7 @@ def test_attempt_is_private_unique_and_removed_without_reading_payload(tmp_path:
                 "PRIVATE_TRANSCRIPT_CANARY", encoding="utf-8"
             )
             assert manager.summary().status == "active"
+            assert manager.summary().residual_count == 0
         assert not attempt.exists()
 
     assert seen[0] != seen[1]
@@ -53,8 +54,8 @@ def test_preflight_preserves_an_active_attempt(tmp_path: Path) -> None:
     with owner.attempt() as attempt:
         observer = SDKTranscriptManager(parent=parent)
         assert attempt.is_dir()
-        assert observer.summary().status == "residual"
-        assert observer.summary().residual_count == 1
+        assert observer.summary().status == "unknown"
+        assert observer.summary().residual_count == 0
 
     cleanup = SDKTranscriptManager(parent=parent)
     assert cleanup.summary().residual_count == 0

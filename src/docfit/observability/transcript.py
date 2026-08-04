@@ -374,12 +374,23 @@ class SDKTranscriptManager:
             self._failure_codes.add("sdk_transcript_summary_failed")
             return None, None
         ages: list[float] = []
+        residual_count = 0
         for candidate in candidates:
+            state, descriptor = self._try_lock(candidate)
             try:
+                if state == "active":
+                    continue
+                residual_count += 1
                 ages.append(max(0.0, self._now() - candidate.lstat().st_mtime))
             except OSError:
                 continue
-        if not candidates:
+            finally:
+                if descriptor is not None:
+                    try:
+                        fcntl.flock(descriptor, fcntl.LOCK_UN)
+                    finally:
+                        os.close(descriptor)
+        if residual_count == 0:
             return 0, None
         oldest = max(ages, default=0.0)
         if oldest < 60 * 60:
@@ -390,7 +401,7 @@ class SDKTranscriptManager:
             bucket = "1d_to_7d"
         else:
             bucket = "over_7d"
-        return len(candidates), bucket
+        return residual_count, bucket
 
     def summary(self) -> SDKTranscriptSummary:
         """Return fixed-shape metadata without paths or transcript payloads."""
