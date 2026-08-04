@@ -263,6 +263,46 @@ def test_skill_agent_and_user_question_inputs_keep_counts_not_prompts() -> None:
     }
 
 
+@pytest.mark.parametrize(
+    ("tool_name", "tool_input"),
+    (
+        (
+            "Write",
+            {
+                "file_path": "/private/PRIVATE_PATH_CANARY.md",
+                "content": "PRIVATE_BODY_CANARY",
+            },
+        ),
+        ("Bash", {"command": "echo PRIVATE_BODY_CANARY > /private/PRIVATE_PATH_CANARY"}),
+    ),
+)
+def test_trusted_basic_tool_lifecycle_is_observed_without_arguments(
+    tool_name: str,
+    tool_input: dict[str, str],
+) -> None:
+    block = project_tool_use_block(
+        ToolUseBlock("trusted-1", tool_name, tool_input),
+        _context(),
+    )
+    hook = project_tool_hook(
+        {
+            "hook_event_name": "PreToolUse",
+            "session_id": "session-1",
+            "transcript_path": "/private/PRIVATE_PATH_CANARY",
+            "cwd": "/private/PRIVATE_PATH_CANARY",
+            "tool_name": tool_name,
+            "tool_input": tool_input,
+            "tool_use_id": "trusted-1",
+        },
+        _context(2),
+    )
+
+    _event_json(block)
+    _event_json(hook)
+    assert _attributes(block) == {}
+    assert _attributes(hook) == {}
+
+
 def _post_hook(tool_name: str, response: object) -> dict[str, object]:
     return {
         "hook_event_name": "PostToolUse",

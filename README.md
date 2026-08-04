@@ -13,9 +13,12 @@ two domain Skills (`docfit-school-extract` and `convert-thesis`), one modular un
 Knowledge Package, five DocFit MCP Tools, and one SDK-wiring-level read-only
 `docfit-unit-analyst`. Delegation remains a Skill-guided Agent decision; the application
 shell only enforces context isolation and permissions. The five Tool names remain the only
-Agent-visible DOCX operation and side-effect surface. The main Agent additionally has
-path-bounded Read/Glob/Grep for project Skill references, product Knowledge, and current-task
-evidence; arbitrary Bash remains denied. No second workflow or Provider-selection layer is added.
+Agent-visible evidence-bound DOCX operation surface. The main Agent additionally has path-bounded
+Read/Glob/Grep for project Skill references, product Knowledge, and current-task evidence, plus
+trusted, auto-approved Bash and Write without a DocFit path gate. Bash and Write can access any
+resource available to the Agent process, so direct Read restrictions are not a sandbox boundary.
+The read-only `docfit-unit-analyst` still receives neither tool. No second workflow or
+Provider-selection layer is added.
 
 The approved M2-follow-on design for a local, read-only runtime observability UI is documented
 in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
@@ -101,9 +104,11 @@ uv run docfit doctor --require agent-smoke
 
 The five cases verify that the Agent can inspect an actual MCP Tool image, can route
 `AskUserQuestion` through the CLI within the same session, and cannot execute hidden or
-unregistered tools. The path case proves that Read/Glob/Grep can access only canonical
-project Skill references, product Knowledge, and current-task roots while an outside file
-remains unreadable. The Subagent case additionally proves that only the named read-only
+unregistered tools. The path case proves that direct Read/Glob/Grep calls remain canonical-root
+checked while trusted Bash and Write execute without a DocFit path gate inside a temporary test
+scope. This does not claim that files outside the direct Read allowlist are inaccessible through
+Bash.
+The Subagent case additionally proves that only the named read-only
 Agent definition receives explicit task context, uses inspect + visual-review, and returns
 `unit_analysis_v1`. Receipts under `.docfit/smoke/` contain metadata only and record
 which backend passed; they never contain API keys. Starting a new runnable live attempt

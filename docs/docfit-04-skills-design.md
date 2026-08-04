@@ -12,7 +12,8 @@ Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独�
 
 两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标与判断入口，并用项目相对路径
 指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联文件不会由
-Skill 工具自动带入，Bash 也不属于读取或执行 Skill 的能力面。
+Skill 工具自动带入。主 Agent 虽拥有受信任 Bash，但 Skill references 的稳定加载契约
+仍是明确路径的 Read，而不是 shell 行为。
 
 ## 1. Skill 在架构中的位置
 
@@ -33,8 +34,8 @@ Skill 不定义固定阶段、状态转换、checkpoint、任务队列或工具�
 
 较长的冲突处理、模板文字分类、委派任务包、视觉复核和完成 schema 可以进入
 `references/`，但 `SKILL.md` 必须说明在什么判断下读取哪一份明确路径。Agent 可以使用
-Read/Glob/Grep 在批准根内发现相关材料；Skill 不应假定关联文件自动加载，也不能要求
-任意 Bash、管道、重定向或网络。
+Read/Glob/Grep 在批准根内发现相关材料；Skill 不应假定关联文件自动加载，也不应把
+Bash、管道、重定向或网络作为读取 references 的必要条件。
 
 ## 2. 批准的领域 Skill
 
@@ -189,7 +190,8 @@ Agent 不直接修改 OOXML，也不能仅凭底层 MCP 返回成功、输出文
 - Adapter 或后置检查失败：不消费该产物，停止并说明；首版不切换到另一职责的后端补位；
 - Adobe PDF Services API 不可用时：可以继续 OfficeCLI 编辑迭代，但保留 `verification_gap`，不得把近似预览作为 Adobe 交付证据或宣布完成；
 - 相同错误在没有新证据时不循环重试；
-- 所有写入产物必须是 `committed: true`，并通过必要后置检查。
+- 五个 DocFit Tool 发布的写入产物必须是 `committed: true`，并通过必要后置检查；
+  Bash/Write 支持性产物不产生该 Tool 状态，也不能替代它。
 
 ### 4.7 完成条件
 
@@ -293,7 +295,7 @@ Subagent 不继承父对话、父系统提示词或父 Tool 结果。未显式�
 - `mcp__docfit__docx_visual_review`。
 
 它不拥有 `Agent`、`Skill`、`AskUserQuestion`、`docx_edit`、`docx_render` 或
-`docx_validate`，也不拥有 Read/Glob/Grep、Bash 或持久记忆。缺少页面或其他证据时，
+`docx_validate`，也不拥有 Read/Glob/Grep/Write、Bash 或持久记忆。缺少页面或其他证据时，
 它返回证据请求，由主 Agent 决定是否生成证据和是否再次委派。主 Agent 必须把选中的
 Knowledge/reference 结论与当前任务证据显式放入任务包，不能让 Subagent 自行遍历项目。
 
@@ -315,17 +317,22 @@ confidence: high | medium | low
 `blocked` 保留冲突或能力缺口。`proposed_operations` 不是写入授权，`confidence` 也
 不能替代证据引用和主 Agent 复核。
 
-### 5.6 单一写入
+### 5.6 Subagent 只分析，主 Agent 统一文档决策
 
 Subagent 只分析。主 Agent 合并目录与正文标题、引用与参考文献、前置内容与节、页眉
 页脚与多个范围之间的依赖，控制 inspect/render/visual-review 成本，串行调用
-`docx_edit`，并在修改后重新取证和验证。这是安全不变量，不是固定执行阶段。
+`docx_edit`，并在修改后重新取证和验证。这是取得可审计文档证据的产品完成条件，不是
+固定执行阶段，也不是唯一物理写入权限。这里的固定安全边界是 Subagent 不写入。
+主 Agent 可以用自动批准且无 DocFit 路径 gate 的 Bash/Write 保存支持性产物或执行命令。
+五个 DocFit Tool 仍是证据绑定、可验证的文档操作路线；Skill 应优先通过 `docx_edit`
+修改 DOCX，但这不是对受信任主 Agent 的文件系统 sandbox。
 
 ## 6. 当前任务学校材料
 
 学校模板、PDF/文字要求、官方示例、适用范围和人工确认都属于当前任务输入。
-Agent 可以在授权任务目录中形成结构化分析、来源 hash、冲突记录和本次转换所需的
-精确参数，但这些内容是任务证据或中间产物，不是 Knowledge Package。
+Agent 可以形成结构化分析、来源 hash、冲突记录和本次转换所需的精确参数，并可用
+Bash/Write 保存结果；无论路径位于何处，这些当前任务内容仍是任务证据或中间产物，
+不是 Knowledge Package，也不得自动晋升到产品 Knowledge。
 
 处理原则：
 
@@ -389,9 +396,9 @@ Subagent 运行时字段和权限边界；每份 Skill 只在自己的 `referenc
 共享操作手册。文件名不是新的运行时协议；`SKILL.md` 必须逐个引用真实存在的本地
 reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
 
-当前两个 Skill 不包含可执行脚本。未来若确有确定性脚本需求，不开放任意 Bash；必须
-另行设计只允许随产品发布固定脚本、固定解释器、结构化参数、授权任务输入输出、无
-shell expansion/管道/重定向/网络且不传 Agent API 凭据的执行面。
+当前两个 Skill 不包含可执行脚本。主 Agent 现已拥有受信任 Bash；未来若 Skill 增加脚本，
+必须明确命令、输入输出、凭据处理和测试边界，且不能把 shell 输出、凭据或文档正文写入
+观测事件。该能力没有 DocFit sandbox，不能把提示词约束描述成强制隔离。
 
 ## 9. Skill 评审问题
 
@@ -416,6 +423,7 @@ shell expansion/管道/重定向/网络且不传 Agent API 凭据的执行面。
   `AgentDefinition.skills` 的虚假契约？
 - Subagent 是否只分析，所有 render、edit、validate、用户询问和跨范围合并是否仍由
   主 Agent 负责？
-- `SKILL.md` 是否以明确项目相对路径按需读取 references，而不是依赖自动加载或 Bash？
+- `SKILL.md` 是否以明确项目相对路径按需读取 references，而不是依赖自动加载或临时
+  shell 约定？
 
 如果 Skill 需要复杂状态图才能解释，说明设计已经偏离 Agent-first 架构。

@@ -5,18 +5,21 @@
 - CLI 入口；
 - Claude Agent SDK 配置和会话接入；
 - 本地环境检查与 live smoke；
-- 将 Skill、路径受限的 Read/Glob/Grep、Knowledge 和五个 DocFit Tool 暴露给主 Agent。
+- 将 Skill、路径受限的 Read/Glob/Grep、受信任的 Bash/Write、Knowledge 和五个 DocFit Tool
+  暴露给主 Agent。
 
 Provider-independent P1 已完成 SDK 接线：`Agent` 对主 Agent 可见但不裸批准，SDK
 原生 `PreToolUse` 权限钩子只允许具名 `docfit-unit-analyst`，该 Subagent 只看见
-inspect + visual-review。`can_use_tool` 继续处理 `AskUserQuestion` 与防御性默认拒绝。
+inspect + visual-review。`can_use_tool` 继续处理 `AskUserQuestion` 与防御性的未匹配工具默认拒绝。
 为什么委派、如何拆分、选择哪些 Knowledge 和如何合并返回仍属于两个领域 Skill，
 不进入本目录的应用壳逻辑。
 
-主 Agent 的 Read/Glob/Grep 不自动批准。`PreToolUse` 与 `can_use_tool` 先解析真实绝对
-路径，只允许项目 `.claude/skills/**`、产品 Knowledge Package 和当前任务
-input/work/output；敏感路径、其他任务、项目外路径与 symlink 逃逸拒绝。任意 Bash
-继续不可见，`docfit-unit-analyst` 不继承主 Agent 的文件工具。
+主 Agent 的 Read/Glob/Grep 不自动批准。`PreToolUse` 与 `can_use_tool` 先解析真实绝对路径，
+只允许项目 `.claude/skills/**`、产品 Knowledge Package 和当前任务 input/work/output 的
+直接读取；允许时把 canonical path 写回 SDK Tool input。Bash 与 Write 则可见且自动批准，
+不经过 DocFit 路径 hook，可访问 Agent 进程本来可访问的路径与环境，因此直接读取 allowlist
+不是 sandbox。权限与观测事件不保存路径、命令、pattern、正文或文件内容。
+`docfit-unit-analyst` 不继承主 Agent 的文件工具、Bash 或 Write。
 
 这里不承载论文语义、学校规则、DOCX 实现或第二套工作流。现有应用模块
 已经迁入本目录；`docfit convert` 只负责挂载只读输入、加载完整通用 Knowledge、调用

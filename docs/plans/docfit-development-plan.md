@@ -3,6 +3,8 @@
 > 状态：COMPLETED；M1/M2 与非评测产品支撑已完成，M3 评测延期
 > 日期：2026-08-03
 > 长期基线：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
+> 后续权限修订：本计划的“源只读 / 主 Agent 单一写入”记录 M1–M2 当时的行为与责任
+> 边界；当前 Bash/Write 权限以 06 第 6.7 节为准，不构成文件系统 sandbox。
 
 ## Plan Ledger
 
@@ -154,7 +156,8 @@ Tool 或部分发布，停止并重新审批。
 ### P3：M2 第一条 Agent 端到端链路
 
 依赖 P1 与 M1 都通过。把两个 Skill、模块化 Knowledge 投影、只读 Subagent 和五个真实
-Tool 组合为 `docfit convert`。用合成任务材料证明源文件只读、主 Agent 单一写入、
+Tool 组合为 `docfit convert`。用合成任务材料证明源 hash 完成门、Subagent 无写权限、
+主 Agent 统一合并与发布、
 Adobe baseline / OfficeCLI edit feedback / Adobe candidate verification、全部最终页面视觉
 覆盖和独立 validate。
 
@@ -226,7 +229,8 @@ Scope:
 - 复用现有 Knowledge document ID/hash 形成最小可选择模块投影，不改变学校事实边界。
 - 让 Agent 对主 Agent 可见，内联配置唯一 docfit-unit-analyst，并通过 SDK PreToolUse 权限钩子落实精确 subagent_type 白名单。
 - 将 Subagent 限制为 inspect + visual-review，验证无写入、无渲染、无验证、无用户追问、无继续委派和无持久记忆。
-- 固化显式任务包与 unit_analysis_v1 返回校验；证明选择性 Knowledge、上下文隔离、证据请求和主 Agent 单一写入边界。
+- 固化显式任务包与 unit_analysis_v1 返回校验；证明选择性 Knowledge、上下文隔离、证据
+  请求和 P1 当时由主 Agent 独占写入责任；当前 Bash/Write 权限以 06 第 6.7 节为准。
 - 更新 doctor、既有 smoke、一个新 Subagent live smoke、unit/contract/integration 测试及所有受影响文档。
 
 Non-goals: 真实 DOCX inspect/edit/render/visual-review/validate、OfficeCLI/Adobe PDF Services adapter、M1 Tool schema、docfit convert、学校包/profile/数据库、固定委派图、多个专家、Provider 抽象、M2–M5。
@@ -238,7 +242,9 @@ Acceptance:
 - BLOCKED_NEEDS_DECISION: SDK 无法落实精确类型/Tool 隔离，或最小 document-ID 模块投影无法满足任务包证据；否则 none。
 - BLOCKED_NEEDS_LOCAL_VALIDATION: 新 Subagent live smoke 或现有三个 M0 live smoke 未在真实 SDK/backend 下通过；否则 none。
 - INTERMEDIATE_ONLY: none。
-- No regressions: 五个 mcp__docfit__ 名称、默认拒绝、AskUserQuestion 同会话、图片 content block、Knowledge v1 digest、源文件只读边界和 base doctor 保持。
+- No regressions（P1 历史）: 五个 mcp__docfit__ 名称、默认拒绝、AskUserQuestion 同会话、
+  图片 content block、Knowledge v1 digest、五 Tool 源文件只读边界和 base doctor 保持；
+  当前主 Agent Bash/Write 不是该文件隔离的一部分。
 
 Verification: deterministic=uv sync --frozen; uv lock --check; uv build; uv run ruff check .; uv run mypy src; uv run pytest -q; uv run docfit doctor; git diff --check；integration=两个 Skill discovery + Knowledge selection/omission + AgentDefinition/permission/context/result contract；product-run=uv run docfit agent-smoke --case image + ask-user + denied-tools + 新 subagent case；local-live-manual=真实 Claude Agent SDK/backend 下四个 smoke + uv run docfit doctor --require agent-smoke；optional=none。
 Execution: main=主会话按 Knowledge 最小投影→Skill→SDK 权限接线→确定性测试→live smoke→doc-keeper 顺序执行并持有最终判断；worker=none；worker-goal=none。

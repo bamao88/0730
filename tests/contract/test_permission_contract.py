@@ -11,6 +11,7 @@ from claude_agent_sdk.types import (
 
 from docfit.app.agent import (
     AGENT_SDK_MAX_BUFFER_BYTES,
+    AUTO_APPROVED_TOOL_NAMES,
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     FORBIDDEN_TOOLS,
@@ -20,6 +21,7 @@ from docfit.app.agent import (
     READ_ONLY_SUBAGENT_TOOLS,
     SKILL_NAMES,
     SUBAGENT_NAME,
+    TRUSTED_BASIC_TOOLS,
     PermissionAuditEvent,
     ReadPathPolicy,
     build_agent_options,
@@ -32,7 +34,7 @@ from docfit.app.agent import (
 from docfit.tools import FULL_TOOL_NAMES
 
 
-def test_options_expose_bounded_builtins_and_one_five_tool_server(tmp_path: Path) -> None:
+def test_options_expose_trusted_main_tools_and_one_five_tool_server(tmp_path: Path) -> None:
     options = build_agent_options(
         cwd=tmp_path,
         agent_env={"ANTHROPIC_BASE_URL": "https://example.invalid/"},
@@ -40,7 +42,7 @@ def test_options_expose_bounded_builtins_and_one_five_tool_server(tmp_path: Path
     )
 
     assert tuple(options.tools or ()) == BUILTIN_TOOLS
-    assert tuple(options.allowed_tools) == FULL_TOOL_NAMES
+    assert tuple(options.allowed_tools) == AUTO_APPROVED_TOOL_NAMES
     assert set(options.disallowed_tools) == set(FORBIDDEN_TOOLS)
     assert isinstance(options.mcp_servers, dict)
     assert tuple(options.mcp_servers) == ("docfit",)
@@ -77,7 +79,9 @@ def test_options_expose_bounded_builtins_and_one_five_tool_server(tmp_path: Path
         "sensitive_outside_and_symlink_escape_denied",
     )
     assert set(READ_ONLY_BUILTIN_TOOLS).isdisjoint(FORBIDDEN_TOOLS)
-    assert "Bash" in FORBIDDEN_TOOLS
+    assert TRUSTED_BASIC_TOOLS == ("Bash", "Write")
+    assert set(TRUSTED_BASIC_TOOLS).isdisjoint(FORBIDDEN_TOOLS)
+    assert set(TRUSTED_BASIC_TOOLS) <= set(options.allowed_tools)
 
 
 def test_observation_hook_adds_lifecycle_sources_without_replacing_agent_gate(
@@ -102,14 +106,14 @@ def test_observation_hook_adds_lifecycle_sources_without_replacing_agent_gate(
     assert options.hooks["PreToolUse"][2].matcher == "Agent"
 
 
-def test_skill_and_five_docfit_tools_are_approved_if_callback_is_consulted() -> None:
+def test_registered_and_trusted_tools_are_approved_if_callback_is_consulted() -> None:
     async def ask_user(_: str) -> str:
-        raise AssertionError("DocFit Tool approval must not ask the CLI")
+        raise AssertionError("Pre-approved Tool approval must not ask the CLI")
 
     callback = make_permission_callback(ask_user)
     context = ToolPermissionContext()
 
-    for tool_name in ("Skill", *FULL_TOOL_NAMES):
+    for tool_name in ("Skill", *FULL_TOOL_NAMES, *TRUSTED_BASIC_TOOLS):
         result = asyncio.run(callback(tool_name, {}, context))
         assert isinstance(result, PermissionResultAllow)
 
@@ -373,6 +377,7 @@ def test_unit_analyst_definition_has_only_two_read_only_tools() -> None:
     assert definition.permissionMode == "dontAsk"
     assert set(definition.disallowedTools or ()) >= {
         "Bash",
+        "Write",
         "Read",
         "Glob",
         "Grep",
@@ -470,8 +475,6 @@ def test_unmatched_tools_are_denied() -> None:
     callback = make_permission_callback(ask_user)
 
     for tool_name in (
-        "Bash",
-        "Write",
         "Edit",
         "Web",
         "WebSearch",

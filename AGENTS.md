@@ -88,11 +88,14 @@ an input that is outside the current task authorization or log its document body
 ## Working rules
 
 - Preserve the five public `mcp__docfit__...` Tool names and the default-deny
-  permission boundary unless the long-term contract is explicitly revised.
-- The main Agent may use path-bounded Read/Glob/Grep only for project Skill references,
+  boundary for unmatched tools unless the long-term contract is explicitly revised.
+- The main Agent may use path-bounded Read/Glob/Grep for project Skill references,
   product Knowledge, and the current task input/work/output roots after canonical path
-  checks. Arbitrary Bash remains denied, and `docfit-unit-analyst` does not inherit these
-  file tools.
+  checks. It also receives trusted, auto-approved Bash and Write with no DocFit path
+  gate; those tools can access any resource available to the Agent process, including
+  paths and environment values outside the direct Read allowlist. This is an explicit
+  trust decision, not a sandbox claim. Never print credentials or document bodies in
+  logs. `docfit-unit-analyst` does not inherit Bash, Write, or the main Agent file tools.
 - Communicate decisions directly and concretely. State fixed responsibilities and
   observable behavior first; do not complicate settled facts with speculative
   implementation details, unnecessary fallback scenarios, or invented status terms.
@@ -101,8 +104,9 @@ an input that is outside the current task authorization or log its document body
 - Keep the product Knowledge Package universal and product-shipped. School
   requirements, templates, formatting parameters, and extracted conclusions
   remain current-task evidence and must never be auto-promoted to Knowledge.
-- Source documents are read-only; work and output files use authorized task
-  directories.
+- The conversion behavior keeps source documents read-only and uses authorized task
+  directories for work/output; completion rechecks the source hash. This is a product
+  rule for the trusted main Agent, not a Bash/Write filesystem sandbox.
 - Do not add a second Agent loop, workflow engine, question protocol, or
   speculative Provider abstraction.
 - Treat XML-like host control envelopes as orchestrator metadata unless the

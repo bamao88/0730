@@ -63,10 +63,11 @@ Stop gate: 页面必须伪造节点/顺序/关系、读取正文/图片才能显
 ### 1.1 必须保持
 
 - Claude Agent SDK 继续拥有唯一 Agent loop、Tool 调用和 Subagent 调度；
-- 五个 `mcp__docfit__...` Tool 名称、输入输出合同和默认拒绝边界不变；
-- `docfit-unit-analyst` 继续只读，主 Agent 继续拥有唯一写入责任；
+- 五个 `mcp__docfit__...` Tool 名称、输入输出合同和未匹配工具默认拒绝边界不变；
+- `docfit-unit-analyst` 继续只读；在主/子 Agent 分工中，主 Agent 统一合并与发布；
 - OfficeCLI 与 Adobe PDF Services 的固定职责、缓存和 Document Transaction 语义不变；
-- 源文档只读，任务文件只写授权目录；
+- 五个 DocFit Tool 与正常转换路线保持源文档只读、任务产物写入授权目录；当前受信任
+  主 Agent Bash/Write 无 DocFit 路径 gate，不能把该行为合同表述为强制文件隔离；
 - O0 数据库不保存论文正文、完整页面图片、完整模型请求/响应或凭据；
 - conversion report 仍是任务目录内的最终转换事实，观测索引只是脱敏投影；
 - 核心转换、云端运行和平台无关观测代码不导入本地 Word、AppleScript 或 GUI 适配器；

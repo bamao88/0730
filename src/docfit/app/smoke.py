@@ -39,6 +39,13 @@ SMOKE_CASES: tuple[SmokeCase, ...] = (
     "path-tools",
     "subagent",
 )
+SMOKE_CASE_VERSIONS: dict[SmokeCase, int] = {
+    "image": 1,
+    "ask-user": 1,
+    "denied-tools": 3,
+    "path-tools": 3,
+    "subagent": 1,
+}
 SMOKE_BACKEND_TIMEOUT_SECONDS = 180
 SMOKE_SYSTEM_PROMPT = (
     "Execute exactly one bounded DocFit diagnostic from the user prompt. Call only the "
@@ -67,6 +74,7 @@ def _write_receipt(report: SmokeReport, *, root: Path | None = None) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     payload = {
         **asdict(report),
+        "case_version": SMOKE_CASE_VERSIONS[report.case],
         "sdk_version": version("claude-agent-sdk"),
         "created_at": datetime.now(UTC).isoformat(),
     }
@@ -216,7 +224,7 @@ async def run_ask_user_smoke(backend: AgentBackend) -> SmokeReport:
 async def run_denied_tools_smoke(backend: AgentBackend) -> SmokeReport:
     unregistered = "mcp__docfit__not_registered"
     prompt = (
-        "Attempt to invoke each of these tools: Bash, Write, Edit, Web, WebSearch, "
+        "Attempt to invoke each of these tools: Edit, Web, WebSearch, "
         f"WebFetch, and {unregistered}. Then report which attempts were unavailable or "
         "denied. Do not substitute a registered DocFit Tool or call Agent."
     )
@@ -256,10 +264,17 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
         read_file = input_root / "evidence.txt"
         glob_file = work_root / "DOCFIT_GLOB_ALLOWED.md"
         grep_file = task_root / "output-evidence.txt"
+        write_file = work_root / "DOCFIT_WRITE_ALLOWED.txt"
+        input_write_file = input_root / "DOCFIT_WRITE_INPUT.txt"
+        outside_write_file = temporary / "DOCFIT_WRITE_OUTSIDE.txt"
         outside_file = temporary / "outside-secret.txt"
         read_marker = "DOCFIT_READ_ALLOWED_7D21"
         grep_marker = "DOCFIT_GREP_ALLOWED_4C92"
         denied_canary = "DOCFIT_OUTSIDE_DENIED_9B73"
+        write_marker = "DOCFIT_WRITE_ALLOWED_6A18"
+        input_write_marker = "DOCFIT_WRITE_INPUT_5E20"
+        outside_write_marker = "DOCFIT_WRITE_OUTSIDE_2F41"
+        bash_marker = "DOCFIT_BASH_ALLOWED_8C37"
         read_file.write_text(read_marker + "\n", encoding="utf-8")
         glob_file.write_text("bounded glob evidence\n", encoding="utf-8")
         grep_file.write_text(grep_marker + "\n", encoding="utf-8")
@@ -270,9 +285,14 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
             f"{read_file}. Use Glob once with path={work_root} and pattern=*.md. "
             f"Use Grep once with path={task_root}, pattern={grep_marker}, and "
             "output_mode=files_with_matches. "
-            f"Then attempt Read on {outside_file}; it must be denied. Do not call Bash, Agent, "
-            "or any DocFit MCP Tool. Report the allowed Read marker, the Glob filename, and "
-            "whether the outside Read was denied. Never guess or invent the denied file content."
+            f"Use Write to create {write_file} with exact content {write_marker}, "
+            f"{input_write_file} with exact content {input_write_marker}, and "
+            f"{outside_write_file} with exact content {outside_write_marker}. "
+            f"Use Bash once to read {outside_write_file} and print {bash_marker}. "
+            f"Then attempt direct Read on {outside_file}; that direct Read must be denied. "
+            "Do not call Agent or any DocFit MCP Tool. Report the allowed Read marker, the Glob "
+            "filename, all three exact Write markers, the Bash marker, and that direct outside "
+            "Read was denied. Never guess or invent denied file content."
         )
         result, tool_uses, session_ids = await _collect(
             prompt,
@@ -280,18 +300,45 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
             task_root=task_root,
             permission_events=permission_events,
         )
+        writes_succeeded = all(
+            path.is_file() and path.read_text(encoding="utf-8").strip() == marker
+            for path, marker in (
+                (write_file, write_marker),
+                (input_write_file, input_write_marker),
+                (outside_write_file, outside_write_marker),
+            )
+        )
 
     text = result.result if result and result.result else ""
     decisions = {(event.tool_name, event.decision) for event in permission_events}
+    required_tools_seen = {"Read", "Glob", "Grep", "Bash", "Write"}.issubset(tool_uses)
+    read_permissions_seen = {
+        ("Read", "allow"),
+        ("Glob", "allow"),
+        ("Grep", "allow"),
+        ("Read", "deny"),
+    } <= decisions
+    final_evidence_seen = (
+        read_marker in text
+        and glob_file.name in text
+        and all(
+            marker in text
+            for marker in (
+                write_marker,
+                input_write_marker,
+                outside_write_marker,
+                bash_marker,
+            )
+        )
+    )
     passed = (
         result is not None
         and not result.is_error
-        and {"Read", "Glob", "Grep"}.issubset(tool_uses)
-        and {("Read", "allow"), ("Glob", "allow"), ("Grep", "allow")} <= decisions
-        and ("Read", "deny") in decisions
-        and read_marker in text
-        and glob_file.name in text
+        and required_tools_seen
+        and read_permissions_seen
+        and final_evidence_seen
         and denied_canary not in text
+        and writes_succeeded
         and len(session_ids) == 1
         and not set(tool_uses).intersection(FULL_TOOL_NAMES)
     )
@@ -302,12 +349,15 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
-            "Read, Glob, and Grep stayed inside canonical authorized roots; "
-            "an outside Read was denied."
+            "Trusted Bash/Write executed inside the temporary smoke scope while direct "
+            "Read, Glob, and Grep remained path-gated."
             if passed
             else (
                 "Path permission evidence was incomplete: "
-                f"tools={tool_uses}, decisions={sorted(decisions)}, "
+                f"required_tools_seen={required_tools_seen}, "
+                f"read_permissions_seen={read_permissions_seen}, "
+                f"final_evidence_seen={final_evidence_seen}, "
+                f"writes_succeeded={writes_succeeded}, "
                 f"session_count={len(session_ids)}, result_present={bool(text)}"
             )
         ),
@@ -420,8 +470,12 @@ async def run_smoke_with_fallback(
                 )
             return report
         last_report = report
-        if case_name == "image" and report.detail.startswith(
-            "Expected image evidence was incomplete;"
+        if (
+            case_name == "image"
+            and report.detail.startswith("Expected image evidence was incomplete;")
+        ) or (
+            case_name == "path-tools"
+            and report.detail.startswith("Path permission evidence was incomplete:")
         ):
             failures.append(f"{backend.name} returned FAIL ({report.detail})")
         else:

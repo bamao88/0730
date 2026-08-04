@@ -25,15 +25,21 @@ from claude_agent_sdk.types import (
 from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME, build_docfit_server
 
 READ_ONLY_BUILTIN_TOOLS = ("Read", "Glob", "Grep")
-BUILTIN_TOOLS = ("Skill", *READ_ONLY_BUILTIN_TOOLS, "AskUserQuestion", "Agent")
+TRUSTED_BASIC_TOOLS = ("Bash", "Write")
+BUILTIN_TOOLS = (
+    "Skill",
+    *READ_ONLY_BUILTIN_TOOLS,
+    *TRUSTED_BASIC_TOOLS,
+    "AskUserQuestion",
+    "Agent",
+)
 FORBIDDEN_TOOLS = (
-    "Bash",
-    "Write",
     "Edit",
     "Web",
     "WebSearch",
     "WebFetch",
 )
+AUTO_APPROVED_TOOL_NAMES = (*FULL_TOOL_NAMES, *TRUSTED_BASIC_TOOLS)
 SKILL_NAMES = ("docfit-school-extract", "convert-thesis")
 SUBAGENT_NAME = "docfit-unit-analyst"
 READ_ONLY_SUBAGENT_TOOLS = (
@@ -319,6 +325,7 @@ def build_unit_analyst_definition() -> AgentDefinition:
         disallowedTools=[
             *FORBIDDEN_TOOLS,
             *READ_ONLY_BUILTIN_TOOLS,
+            *TRUSTED_BASIC_TOOLS,
             "Agent",
             "Skill",
             "AskUserQuestion",
@@ -457,6 +464,17 @@ def make_permission_callback(
                 ),
                 interrupt=False,
             )
+        if tool_name in TRUSTED_BASIC_TOOLS:
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "allow",
+                    tool_use_id=context.tool_use_id,
+                    agent_id=context.agent_id,
+                    reason_code="trusted_basic_tool_allowed",
+                )
+            )
+            return PermissionResultAllow()
         if tool_name == "Skill" or tool_name in FULL_TOOL_NAMES:
             record(
                 PermissionAuditEvent(
@@ -638,7 +656,7 @@ def build_agent_options(
             ]
     return ClaudeAgentOptions(
         tools=list(BUILTIN_TOOLS),
-        allowed_tools=list(FULL_TOOL_NAMES),
+        allowed_tools=list(AUTO_APPROVED_TOOL_NAMES),
         disallowed_tools=list(FORBIDDEN_TOOLS),
         mcp_servers={MCP_SERVER_NAME: build_docfit_server()},
         strict_mcp_config=True,
@@ -664,8 +682,11 @@ def build_agent_options(
             "real, permission-bounded DOCX inspection, editing, rendering, visual evidence, "
             "and independent validation. Use the two enabled domain Skills; path-bounded "
             "Read, Glob, and Grep for project Skill references, product Knowledge, and the "
-            "current task; the five registered DocFit MCP tools; and the type-gated read-only "
-            "docfit-unit-analyst. Arbitrary Bash remains unavailable. "
+            "current task; trusted, auto-approved Bash and Write; the five registered "
+            "DocFit MCP tools; and the type-gated read-only docfit-unit-analyst. Bash and "
+            "Write have no DocFit path gate and can access any resource available to this "
+            "process, so use them deliberately and never expose credentials or document "
+            "content in logs. "
             "Interpret Tool results yourself; the application shell does not choose Knowledge, "
             "delegate scopes, or interpret needs_input. Never treat approximate OfficeCLI "
             "rendering as Adobe delivery conversion evidence, and never consume an error or "

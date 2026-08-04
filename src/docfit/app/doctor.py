@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Literal, cast
 
 from docfit.app.agent import (
+    AUTO_APPROVED_TOOL_NAMES,
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     LOGGING_POLICY,
@@ -19,6 +20,7 @@ from docfit.app.agent import (
     READ_ONLY_SUBAGENT_TOOLS,
     SKILL_NAMES,
     SUBAGENT_NAME,
+    TRUSTED_BASIC_TOOLS,
     build_agent_options,
     build_unit_analyst_definition,
     project_root,
@@ -29,7 +31,7 @@ from docfit.app.settings import (
     configured_backend_names,
     merged_agent_environment,
 )
-from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME
+from docfit.tools import MCP_SERVER_NAME
 from docfit.tools.adobe import AdobePdfServicesAdapter
 from docfit.tools.image_smoke import make_smoke_png
 from docfit.tools.images import poppler_versions
@@ -40,7 +42,7 @@ from docfit.tools.officecli import (
 )
 from docfit.tools.runtime import ToolFailure, sha256_file
 
-from .smoke import SMOKE_CASES, receipt_directory
+from .smoke import SMOKE_CASE_VERSIONS, SMOKE_CASES, receipt_directory
 
 CheckStatus = Literal["PASS", "NOT_READY", "FAIL"]
 Requirement = Literal["base", "agent-smoke", "provider"]
@@ -86,7 +88,11 @@ def _receipt_check(root: Path, sdk_version: str | None) -> DoctorCheck:
         except (OSError, json.JSONDecodeError):
             invalid.append(case_name)
             continue
-        if payload.get("status") != "PASS" or payload.get("sdk_version") != sdk_version:
+        if (
+            payload.get("status") != "PASS"
+            or payload.get("sdk_version") != sdk_version
+            or payload.get("case_version", 1) != SMOKE_CASE_VERSIONS[case_name]
+        ):
             invalid.append(case_name)
     if not missing and not invalid:
         return DoctorCheck(
@@ -193,7 +199,7 @@ def run_doctor(
         unit_analyst = build_unit_analyst_definition()
         config_ok = (
             tuple(options.tools or ()) == BUILTIN_TOOLS
-            and tuple(options.allowed_tools) == FULL_TOOL_NAMES
+            and tuple(options.allowed_tools) == AUTO_APPROVED_TOOL_NAMES
             and mcp_names == (MCP_SERVER_NAME,)
             and options.setting_sources == ["project"]
             and options.skills == list(SKILL_NAMES)
@@ -215,9 +221,9 @@ def run_doctor(
             "sdk_configuration",
             "PASS" if config_ok else "FAIL",
             (
-                "Skill, path-bounded Read/Glob/Grep, AskUserQuestion, and Agent are visible; "
-                "Agent is type-gated to one read-only definition and the DocFit server exposes "
-                "five pre-approved names."
+                "Skill, path-bounded Read/Glob/Grep, trusted Bash/Write, AskUserQuestion, "
+                "and Agent are visible; Agent is type-gated to one read-only definition and "
+                "Bash, Write, plus the five DocFit names are pre-approved."
                 if config_ok
                 else "SDK permission or discovery configuration does not match the P1 contract."
             ),
@@ -235,6 +241,18 @@ def run_doctor(
             "directory_policy",
             "PASS" if policy_ok else "FAIL",
             ("The Tool boundary fixes input as read-only and work/output as writable."),
+            ("base", "agent-smoke", "provider"),
+        )
+    )
+    trusted_basic_tools_ok = TRUSTED_BASIC_TOOLS == ("Bash", "Write")
+    checks.append(
+        DoctorCheck(
+            "main_agent_trusted_basic_tools",
+            "PASS" if trusted_basic_tools_ok else "FAIL",
+            (
+                "Bash and Write are visible and auto-approved for the main Agent without a "
+                "DocFit path gate; the read-only unit analyst still receives neither tool."
+            ),
             ("base", "agent-smoke", "provider"),
         )
     )

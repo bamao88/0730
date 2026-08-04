@@ -113,7 +113,11 @@ def test_convert_thesis_uses_only_the_five_public_docfit_tools() -> None:
     assert "可见的应用错误" in body
     assert "损坏的域或交叉引用结果" in body
     assert "阻断性发现" in body
-    assert "主 Agent 保持唯一写入者" in body
+    assert "所有 DOCX 修改只通过 `mcp__docfit__docx_edit` 完成" in body
+    assert "Bash/Write 已完全" in body
+    assert "没有 DocFit 路径 gate" in body
+    assert "在主/子 Agent 分工中，主 Agent 统一承担写入" in body
+    assert "不表示 Bash/Write 权限被关闭" in body
 
 
 def test_school_extract_is_read_only_and_task_scoped() -> None:
@@ -126,6 +130,9 @@ def test_school_extract_is_read_only_and_task_scoped() -> None:
     }
     assert "scope: current_task_only" in body
     assert "不修改任何文档" in body
+    assert "不是主 Agent 的文件系统 sandbox" in body
+    assert "Bash/Write 虽然对主" in body
+    assert "Agent 完全开放" in body
     assert "只对当前任务有效" in body
     assert "此 Skill 不修改任何文档" in body
 

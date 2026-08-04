@@ -5,7 +5,7 @@ from importlib.metadata import version
 from pathlib import Path
 
 from docfit.app.doctor import run_doctor
-from docfit.app.smoke import SMOKE_CASES, receipt_directory
+from docfit.app.smoke import SMOKE_CASE_VERSIONS, SMOKE_CASES, receipt_directory
 
 
 def _make_project(root: Path) -> None:
@@ -50,6 +50,7 @@ def test_agent_smoke_gate_requires_backend_and_current_receipts(tmp_path: Path) 
                 {
                     "case": case_name,
                     "status": "PASS",
+                    "case_version": SMOKE_CASE_VERSIONS[case_name],
                     "sdk_version": version("claude-agent-sdk"),
                 }
             ),

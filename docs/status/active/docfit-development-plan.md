@@ -58,8 +58,9 @@
 - Resolved blocker: `agent_backend_multimodal_transport` 实际根因为顶层 `oneOf` 被兼容
   backend 生成为 `{"oneOf":"m0_image_smoke"}`，Tool 从未产生图片；视觉 schema 扁平化
   后 image 与只读 subagent 在 Kimi 通过，ask-user 在 MiniMax fallback 通过
-- Receipt truth: 已修复“失败后旧 PASS 回执仍生效”的漏洞；当前四条回执均来自本轮真实
-  SDK 会话，`doctor --require agent-smoke` 为 PASS
+- Receipt truth: 已修复“失败后旧 PASS 回执仍生效”的漏洞；当前五条回执与 case version
+  均有效，Bash/Write 信任权限变更后的 denied-tools/path-tools v3 来自本轮真实 SDK 会话，
+  `doctor --require agent-smoke` 为 PASS
 - Live M2 proof: MiniMax 真实 SDK convert 返回 COMPLETED；两 Skills 与五 Tool 均有调用，
   源 hash 不变，根目录 final.docx、当前 Adobe candidate PDF/ref、2 页全页 review、
   validation 均发布；candidate 绑定 final hash，errors=0、verification_gap=0、blocking=0

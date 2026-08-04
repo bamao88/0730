@@ -4,6 +4,8 @@
 > 日期：2026-08-01
 > 范围：先锁定长期架构与实施契约，随后由批准的 P1 完成 SDK/Skill/Knowledge
 > 运行时对齐；未进入 M1 Tool 实现。
+> 后续权限修订：本计划中的“统一写入”记录 P1 当时的 Subagent 边界；当前主 Agent
+> Bash/Write 信任合同以 `docs/docfit-06-development-roadmap.md` 第 6.7 节为准。
 
 ## Plan Ledger
 
@@ -145,7 +147,7 @@ confidence: high | medium | low
 - `proposed_operations` 只是候选操作；只有主 Agent 可以决定并串行调用 `docx_edit`。
 - `confidence` 不替代证据引用、依赖声明或主 Agent 复核。
 
-## 6. 单一写入与跨单元合并
+## 6. P1 当时的单一写入与跨单元合并
 
 Subagent 只分析。主 Agent 负责：
 
@@ -156,7 +158,9 @@ Subagent 只分析。主 Agent 负责：
 - 只使用当前快照的有效 `object_ref`，串行调用 `docx_edit`；
 - 修改后重新 inspect、render、visual review 和 validate。
 
-这不是固定调用顺序。统一写入是权限与内容安全不变量，不是工作流阶段。
+这不是固定调用顺序。P1 的持久结论是 Subagent 只分析、主 Agent 统一合并与发布；后续
+第 6.7 节已向主 Agent 自动批准无 DocFit 路径 gate 的 Bash/Write，因此“所有物理写入
+只能经过 docx_edit”不再是当前 sandbox 不变量。
 
 ## 7. 验收与测试边界
 
@@ -173,7 +177,9 @@ P1 实现切片已经证明：
 - Subagent 只收到选中 Knowledge 模块和显式任务证据；
 - 缺少页面时返回 `needs_more_evidence`，主 Agent 补证后可以重新委派；
 - `docx_edit`、render 成本控制、跨单元合并和最终发布始终由主 Agent 掌握；
-- 无论采用哪条合法分析路径，源文件只读、Knowledge 通用性、证据绑定和内容保护不变量成立。
+- 无论采用哪条合法分析路径，Knowledge 通用性、证据绑定和内容保护完成门成立；当前
+  源文件保护依赖五 Tool 正常路线与最终源 hash 校验，不是对受信任主 Agent Bash/Write
+  的文件系统隔离保证。
 
 ## 8. 非目标
 
@@ -208,7 +214,8 @@ P1 实现切片已经证明：
 ### C. M2 组合与真实 Eval（依赖 M1）
 
 - 使用真实五 Tool 结果形成任务包；
-- 证明选择性 Knowledge 载荷、证据请求、重新委派和主 Agent 单一写入；
+- 证明选择性 Knowledge 载荷、证据请求、重新委派，以及 P1 当时由主 Agent 独占写入
+  责任；当前权限由第 6.7 节的 Bash/Write 信任合同取代；
 - 不把一次具体委派轨迹保存成 Gold。
 
 ## 10. 文档切片 Preflight
@@ -222,7 +229,7 @@ Goal: 只落地长期文档和实施契约，不修改运行时代码。
 Scope: 新计划、00–06、README 与必要边界说明。
 Non-goals: 所有 Python、Skill、Knowledge package 数据和测试修改；M1 Tool 实现。
 Unknown-unknown scout: skipped；用户已明确收敛架构，且当前 SDK 的 AgentDefinition 与 Agent Tool 输入契约已用本机 0.2.128 类型和官方文档核对。
-Acceptance: 文档对两个 Skill、模块化 Knowledge、五 Tool、一个 SDK 接线级只读 Subagent、动态 prompt 载荷、默认拒绝和单一写入表述一致；不出现固定工作流或六专家目录。
+Acceptance: 在该历史切片时点，文档对两个 Skill、模块化 Knowledge、五 Tool、一个 SDK 接线级只读 Subagent、动态 prompt 载荷、默认拒绝和单一写入表述一致；不出现固定工作流或六专家目录。当前主 Agent 权限以第 6.7 节为准。
 Verification: 精确搜索旧断言、跨文档术语核对、git diff 检查与 doc-keeper audit。
 Execution: main session direct；worker none。
 Stop: 文档验收后停止，不自动开始 SDK/Skill/Knowledge 实现。
@@ -235,8 +242,8 @@ Stop: 文档验收后停止，不自动开始 SDK/Skill/Knowledge 实现。
 - Doc Keeper 审计以当前代码反向核对：M0 仍只开放 `Skill` 与 `AskUserQuestion`、只
   装载 `convert-thesis` discovery marker，Knowledge loader 仍执行 v1 完整性契约；
   所有新能力均明确标记为批准目标或后续切片，没有冒充当前实现。
-- 五个公开 Tool 名称、默认拒绝、学校事实只属于当前任务、源文件只读和主 Agent
-  单一写入边界未被改写。
+- 在该历史切片时点，五个公开 Tool 名称、默认拒绝、学校事实只属于当前任务、源文件
+  只读和主 Agent 独占写入责任未被改写；后续 Bash/Write 权限修订已在本文开头标明。
 - 固定单元枚举、固定复杂度阈值、强制委派、六专家目录和 per-call 动态
   `AgentDefinition.skills` 均被明确排除。
 - `git diff --check` 通过；`uv run pytest -q` 为 `90 passed`；`uv run docfit doctor`

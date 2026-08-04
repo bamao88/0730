@@ -768,24 +768,27 @@ expected_fingerprint: ...
 - 事件溯源；
 - 全仓库 schema registry。
 
-### 3.3 单一写入权限
+### 3.3 文档操作权威路线与 Subagent 写入边界
 
-薄应用壳对主 Agent 暴露五个 Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面；
+薄应用壳对主 Agent 暴露五个 Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面
+与受信任的 Bash/Write；
 `docfit-unit-analyst` 的 SDK Tool allowlist 仍只包含 `docx_inspect` 和
 `docx_visual_review`。`docx_edit`、`docx_render` 与 `docx_validate` 不出现在 Subagent
-上下文中；`Agent`、`Skill`、`Read/Glob/Grep`、`AskUserQuestion` 和 Bash 也不可见。
-主 Agent 合并跨范围约束后串行写入，文档 hash 变化后重新 inspect 并丢弃旧 ref。
+上下文中；`Agent`、`Skill`、`Read/Glob/Grep/Write`、`AskUserQuestion` 和 Bash 也不可见。
+主 Agent 合并跨范围约束后串行调用 `docx_edit` 写文档，文档 hash 变化后重新 inspect
+并丢弃旧 ref。`docx_edit` 是产生对象前置条件、提交状态和后置证据的权威文档编辑路线；
+Bash/Write 没有 DocFit 路径 gate，因而不能再声称它们在文件系统层无法修改文档。
 
 `Agent` 对主 Agent 可见但不以裸工具名通用自动批准。SDK 0.2.128 的 live 证据表明
 `Agent` 调用不是 `can_use_tool` 的可靠必经路径，因此薄应用壳用 SDK 原生
 `PreToolUse` 权限钩子检查 `subagent_type`，只允许 `docfit-unit-analyst`，拒绝 SDK
 内置 `general-purpose` 与未知类型。`can_use_tool` 继续处理用户追问与防御性拒绝。
 
-### 3.4 主 Agent 路径只读权限
+### 3.4 主 Agent 直接读取权限与受信任 Bash/Write
 
-主 Agent 的内置工具面固定为 `Skill`、`Read`、`Glob`、`Grep`、`AskUserQuestion` 与
-类型受限的 `Agent`；五个 `mcp__docfit__...` Tool 继续直接调用。Read/Glob/Grep 不加入
-自动批准集合，SDK `PreToolUse` hook 与 `can_use_tool` 使用同一策略：
+主 Agent 的内置工具面固定为 `Skill`、`Read`、`Glob`、`Grep`、`Bash`、`Write`、
+`AskUserQuestion` 与类型受限的 `Agent`；五个 `mcp__docfit__...` Tool 继续直接调用。
+Read/Glob/Grep 不加入自动批准集合；SDK `PreToolUse` hook 与 `can_use_tool` 使用同一策略：
 
 1. 把相对路径按项目 cwd 解析并 canonicalize 为真实绝对路径；
 2. 只允许项目 `.claude/skills/**`、产品 Knowledge Package、当前任务 `input/**`、
@@ -796,9 +799,14 @@ expected_fingerprint: ...
    非普通文件和 symlink 逃逸；搜索树含 symlink 或敏感文件时整次搜索失败；
 5. 允许时把 canonical path 写回 Tool input，拒绝时只返回固定安全原因，不记录路径或正文。
 
-Read/Glob/Grep 不能修改文件，也不能取代五个 DocFit Tool 的 inspect/render/edit/
-visual-review/validate 契约。Bash、Write、Edit 与网络工具继续默认拒绝；Agent SDK 子进程
-中的后端凭据不会因此对模型可读。
+Bash/Write 与五个 DocFit Tool 加入自动批准集合；Bash/Write 不安装 DocFit 路径 hook，
+可访问 Agent SDK 子进程本来可访问的路径和环境，包括直接 Read allowlist 之外的文件与
+后端凭据。系统提示要求不输出凭据或文档正文，观测 projector 丢弃命令、路径和内容，
+但这是一项显式信任决策，不是 sandbox。Edit 与网络工具继续默认拒绝。
+
+Read/Glob/Grep 本身不能修改文件；Bash/Write 的存在不改变五个 DocFit Tool 的
+inspect/render/edit/visual-review/validate 契约或完成门。Bash/Write 的参数与结果只记录
+无载荷生命周期元数据，不进入权限事件或观测索引。
 
 ## 4. 工具错误语义
 
@@ -943,10 +951,11 @@ task-work/
 
 第三方引擎只能访问本次调用明确授权的输入、临时目录和输出路径。若其自带网络、脚本执行或任意文件访问能力，适配层应关闭这些非必要能力；运行时不得自动下载未锁定版本。
 
-主 Agent 可以用 Read/Glob/Grep 搜索上述任务目录中的文本证据和 Tool 已发布摘要，不能
-读取其他任务或凭据。Skill references 和 Knowledge 同样只读。当前不开放任意 Bash；
-未来固定 Skill 脚本如果获得独立批准，必须使用固定解释器、结构化参数、授权输入输出、
-无 shell expansion/管道/重定向/网络，并从脚本环境移除 Agent API 凭据。
+主 Agent 的直接 Read/Glob/Grep 只搜索上述任务目录中的文本证据、Tool 已发布摘要、
+Skill references 和产品 Knowledge。受信任 Bash/Write 可绕过这项直接读取限制，并访问
+进程可访问的其他任务文件、凭据、input 或 Tool/App 管理产物；这项能力不会被描述成
+强制文件隔离。Agent 仍被明确要求不打印凭据或文档正文，最终交付仍必须满足五 Tool
+证据、源 hash、当前 Adobe candidate 与独立验证完成门。
 
 这不是 Run Bundle 协议；应用或测试不应依赖每个中间文件都存在。
 

@@ -174,6 +174,12 @@ Agent SDK 自己仍会把 session transcript 写入本地磁盘，并由第 3.4 
 | 最终转换事实 | `conversion-report.json` 与最终 App 结果 | `run_id`、`session_id`、文档 hash | `COMPLETED/NEEDS_INPUT/ERROR`、产物类型、warning/error 计数 | 没有终态时显示“终态未知” |
 | 文档、对象、render、页面证据 | 五个 Tool 结果与授权任务目录 | document/render/image hash 和 opaque refs | hash/ref/page、Provider、证据可用性 | 显示 unavailable/broken/conflict，不缓存正文 |
 
+主 Agent 的 Bash/Write 由 `allowed_tools` 自动批准时，SDK 可以在 `can_use_tool` 之前完成
+批准，因此观测层不得伪造一条 callback 权限事件。它仍可从 Tool use 与 lifecycle hook
+投影工具名、actor、时序和安全状态，但 Bash command、Write 路径/内容、stdout/stderr、
+Tool input/result 与环境值全部丢弃。没有直接 permission decision 时显示“权限来源未观测”，
+不能推断成 deny、sandbox 或未执行。
+
 SDK `ThinkingBlock`、hook 中的 `prompt`、`transcript_path`/`cwd`、Tool 的原始 input/
 response 和 `ResultMessage.result` 不进入观测索引。OpenTelemetry 可以补充标准耗时与
 usage，但不能覆盖上述直接 ID，也不能成为父子关系或文档证据关联的唯一依据。

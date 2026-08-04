@@ -25,7 +25,9 @@
   捕获日志七个表面 canary 零命中；Host/Origin/CORS/CSRF/session/POST/path/symlink/
   task-ref 合同通过；浏览器 storage 为空且只访问 loopback
 - SDK proof: image、ask-user、denied-tools、path-tools、subagent 五项 live smoke 与
-  `doctor --require agent-smoke` 通过；真实强制终止探针留下 1 个 owned residual，下一次
+  `doctor --require agent-smoke` 通过；后续权限切片已用 denied-tools/path-tools v3 证明
+  主 Agent Bash/Write 自动批准、无 DocFit 路径 gate，同时直接 Read 与 Subagent gate
+  保持；真实强制终止探针留下 1 个 owned residual，下一次
   preflight 清理后为 0；持活动锁的其他合法 attempt 不计作本 run residual；未读取
   transcript 内容或输出路径
 - UI proof: 375/768/1280 px、键盘与 focus、长 ID、unknown、条件差异、禁止性能结论、
@@ -38,4 +40,5 @@
 - Stop condition: 任何 O1–O4、M3、第二 Agent loop、第六 Tool、远程 collector、正文
   留存、跨任务持久缓存，或让核心/云端导入 Word、AppleScript、GUI adapter，都需要新的
   明确批准
-- No-touch scope: M3、Gold、真实样本资格验证、外部人工复核与当前并行 Skill/权限工作
+- No-touch scope: M3、Gold、真实样本资格验证、外部人工复核；后续已完成的主 Agent
+  Bash/Write 权限切片属于独立合同，不改写 O0 完成范围
