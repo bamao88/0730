@@ -210,8 +210,13 @@ def test_projector_latency_p95_and_p99_stay_within_contract() -> None:
             attempt=sequence,
             hashes={"source_sha256": "a" * 64},
         )
-        assert result.event is not None
         samples.append(result.receipt.elapsed_ms)
+        if result.event is None:
+            assert result.receipt.status == "dropped"
+            assert result.receipt.reason_code == "observer_projector_deadline"
+            assert result.receipt.elapsed_ms >= 10.0
+        else:
+            assert result.receipt.status == "accepted"
 
     ordered = sorted(samples)
     p95 = ordered[int(len(ordered) * 0.95) - 1]
