@@ -1,0 +1,110 @@
+--- BEGIN rubric ---
+你在做 T3 分层节点决策。输入只包含当前 target 的完整事实、直接 children 摘要、必要上下文和视觉证据。你只能引用输入里已有的 ref，不能创造节点、父子关系、文本、run 或 span。
+
+先在当前能够安全统一判断的最粗层级结束：
+- keep：当前 target 覆盖的全部后代内容都应原样保留；
+- fill：当前 target 整体是一个边界明确、可由学生内容或系统生成值替换的范围；
+- delete：当前 target 是可精确执行的 run/span/image/text_box，且只包含最终模板应删除的说明或纯示例；
+- split：当前 target 内存在不同动作，只沿真正需要继续检查的直接 child 下钻。
+
+本阶段产物用于生成“干净、可直接填写的最终模板”，不是学校说明稿、写作指南或 Word
+操作手册。任何只用于告诉模板使用者如何编辑、排版、删除、替换、刷新字段、插入题注、
+复制样式、处理 Word/PDF/WPS、理解样例或查看修订记录的可见文字，都不是
+template_fixed。即使这些说明有帮助、来自学校、位于正文/摘要/参考文献/表单中，最终
+模板也不能保留它们。
+
+说明内容的强制动作不变量：
+- 纯说明 run/span 必须 high-confidence delete；不能因为它“是模板说明/格式指引/
+  操作说明/示例文字”而 keep，也不能用 fill 代替删除；
+- paragraph/cell 等容器只要包含应删除说明，就不能终局 keep；必须 split 到可精确删除
+  的非零长度 run/span；
+- 固定标签或真实填写位与行内括号说明混合时，必须 split：标签 keep、实际填写范围
+  fill、字体/字号/颜色/行距/居中/按键/操作步骤等说明 delete；
+- 说明句中被引号、括号或“打印/显示/命名为”等措辞引用的 `摘要`、`ABSTRACT`、
+  `KEY WORDS`、章节名、字段名等，只是说明句正在谈论的对象，仍随整句说明 delete；
+  不能因为同名固定标签确实应在模板其他独立位置出现，就从说明句内部抽出一个
+  keep。必须结合当前 paragraph 完整文本和相邻独立标签判断“真实标签”与
+  “被提及的标签”；
+- Word 的 run 边界、单独 run 样式、大写、加粗、颜色或字体变化都不构成语义独立。
+  如果同一 paragraph 的前后 run 连成 `打印“` + `ABSTRACT` + `”（三号字）`、
+  `显示“` + `KEY WORDS` + `”` 等说明句，那么中间标签 run 仍必须 delete；
+  只有脱离说明句、在独立 paragraph/对象中作为模板标签呈现，才允许 Keep；
+- 当前 paragraph 的直接 run child 若自身同时含占位和括号说明，并且 evidence 显示
+  它还有可精确区分的 span children，paragraph 决策只能把该 run 留在
+  inspect_child_refs 继续下钻；不得对这个混合 run 直接 fill/delete，也不得把
+  result=split 塞进 child_decisions；
+- `XXX`、`×××`、示例姓名/日期/题目/章节/参考文献/图表数据若只是演示最终效果，
+  不能作为 fixed 示例原样保留；有明确学生字段边界时 fill，否则删除纯示例范围。
+  `×××（400字左右、字体、行距等说明）×××` 这类结构具有明确填写边界：占位
+  span 必须 fill，括号说明及其内部标点 delete，不能把整段占位和说明一起 delete；
+- 参考文献示例块必须按“干净可填写模板”处理，而不是保留成教学手册：`普通图书示例`、
+  `期刊中析出的文献示例`、`论文集/会议录示例`、`科技报告示例`、`学位论文示例`
+  等类别标题的全部可见文字都是示例说明，必须逐 run/span delete，不能只删“示例”
+  二字后留下类别名；其后的具体作者、题名、文献类型、出版地、出版社、年份、页码、
+  序号和标点共同构成一条完整样例参考文献。只要 paragraph facts 和前后段 context
+  证明它位于该示例块内，就必须在完整 paragraph 边界统一 fill，由学生真实参考文献
+  条目替换；不得 split 后保留任何示例作者、题名、缩写、类型标记、年份或标点；
+- “应遵照某标准”“应包含哪些内容”“字数/数量范围”“应放在何处”等学校写作要求
+  仍是给使用者看的规范说明，不因其来源权威或内容正确就成为最终论文中必须可见的
+  fixed 业务文本；除非事实明确证明该句是必须逐字出现在成品中的法律声明或固定正文，
+  否则应精确 delete。如果整句是规范说明，则其中被引用的标准编号、标准名称和句末
+  标点也同属说明，必须一起 delete，不能孤立保留一个编号或名称；
+- 法律声明正文、学校名称、固定标题、表头标签、打印后签名/意见/盖章位置属于业务
+  模板本体，应与相邻说明严格区分并保留；
+- fill 只表示最终该精确范围会被一个真实学生值或系统生成值替换，绝不表示“删除后
+  留空”“这是一段说明”或“以后由程序处理”。
+- 空格、Tab、换行、点引导符等结构性排版字符本身不是“说明文字”。它们用于保持
+  已有对齐、缩进和字段布局时默认 keep，绝不能仅因 reason 称其为格式字符、Word
+  排版残留或对齐符而 delete。若一个完整段落整体是学生值或系统生成值，应在该完整
+  段落边界 fill，不能拆开后把其中的分隔字符逐个 delete。
+- 逗号、句号、括号等普通标点不单独决定动作：属于说明句的标点随说明 delete；
+  连接固定标签与填写位的冒号、分号等模板结构标点 keep。绝不能声称说明文字删掉后
+  其内部孤立标点会“自动消失”；每个保留/删除范围都必须按自身合同闭合。
+- image/text_box 只有在 evidence.action_contract 允许 delete，且视觉/对象事实能高
+  置信证明它只是操作截图、说明框或纯示例对象时才能 delete；校徽、签章、业务表单
+  图形、必须保留的结构对象一律 keep。不能看清用途时保守 keep 并说明原因。
+
+结构保留不等于终局 keep。表格骨架应保留、但内部存在电子字段或格式说明时，table 必须 split。打印后手写、签字、盖章、人工意见和勾选区域通常 keep，不是系统 fill。
+
+Split 规则：
+- default_child_result 固定为 keep；
+- inspect_child_refs 只能列当前 children 中的直接子节点；
+- 未列出的直接子节点由程序继承 keep；
+- 如果当前 evidence 已经完整展示某个直接 child 的文字、身份、样式和完整成员范围，必须在 child_decisions 中直接给出该 child 的终局 keep/fill/delete，不得只把它列入 inspect_child_refs 后要求下一次模型重复判断；该 ref 仍必须同时出现在 inspect_child_refs；
+- 只有当前 evidence 不能对该 child 整体安全终局、确实还需要查看其下一层直接 children 时，才允许只列 inspect_child_refs 而不提供对应 child_decisions；
+- child_decisions 只能处理当前直接 child，且只能给终局动作；需要继续 split 的 child 只列在 inspect_child_refs，由程序递归调用；
+- terminal keep 会立即保留该 child 的全部后代，不存在“先 keep 容器、以后再下钻删除”
+  的隐含语义。如果 child 是 paragraph/cell 等非叶容器，而 reason 已说明其中包含
+  `pure instruction note`、`school writing-prescription`、`filling instructions`
+  或任何需要在 run/span 删除的内容，该 child 只能留在 inspect_child_refs 递归
+  split，绝不能在 child_decisions 中以 keep 充当临时容器；
+- 输出前逐项检查 child_decisions：发现任一 child 的 result=split 时，必须从
+  child_decisions 删除该项，只把该 ref 留在 inspect_child_refs，不能提交无
+  inspect_child_refs 的内联 split；
+- split 表示确定存在不同动作，不用于掩盖证据不足。
+
+首版动作边界：unit/table 只允许 keep 或 split；row/cell/paragraph 允许 keep、fill 或 split；run 允许 keep、fill、delete 或在其预生成 span children 确有不同动作时 split；span 允许 keep、fill、delete 且不再 split；image/text_box 允许 keep，且仅在 action_contract 明确允许时允许 delete。没有 children 的节点不能 split。Delete 必须 confidence=high，并提供明确 delete.reason。Fill 必须提供 fill.source；学生内容使用 student_content，系统生成值使用 generated_field，并尽量提供 field。
+
+必须优先服从 evidence.action_contract 和 evidence.child_action_contracts 中逐节点列出的 allowed_results。若 zero_length_span_refs 非空，这些零长度范围只是格式身份，不是可替换字符；其唯一可执行终局动作是 keep。不要把空 run/span 当成待填写内容，也不要对它输出 fill/delete。
+
+现有 Word field 节点不是因为自身没有普通文本就等于学生填空位。先看 object.field_type、instruction 和 result_raw_run_ids：REF、PAGEREF、STYLEREF、SEQ、TOC、PAGE、NUMPAGES、QUOTE、ADDIN 等引用、计算、编号、目录或文献字段，应保留其字段身份；需要表达系统生成语义时输出 fill 且 fill.source=generated_field，不能输出 student_content。只有事实明确表明它是用户数据录入字段（例如 FORMTEXT、MERGEFIELD、DOCPROPERTY 等数据占位字段），才可输出 fill 且 fill.source=student_content。字段当前显示日期、数字、引用错误或空结果，都不能单独证明它是学生填空位。
+
+完整性门禁：如果 completeness 表示成员、内容或必要证据不完整，不得用高置信终局动作覆盖整个容器。能沿完整直接子节点缩小范围时选择 split；否则输出低置信 keep，并在 reason 中指出需要人工复核。context 只帮助理解，不能跨范围认领。
+
+只输出一个 JSON 对象，不要输出解释文字。
+--- END rubric ---
+
+--- BEGIN output_contract ---
+终局结果：
+{"target_ref":"<当前 target.ref>","result":"keep|fill|delete","confidence":"low|medium|high","reason":"<判断依据>","fill":{"source":"student_content|generated_field","field":"<可选业务字段>"},"delete":{"reason":"<仅 delete 必填>"}}
+
+Split 结果：
+{"target_ref":"<当前 target.ref>","result":"split","default_child_result":"keep","inspect_child_refs":["<当前 children 中的直接 ref>"],"child_decisions":[{"target_ref":"<已充分看清的直接叶子 child.ref>","result":"keep|fill|delete","confidence":"low|medium|high","reason":"<依据>","fill":{"source":"student_content|generated_field","field":"<可选业务字段>"},"delete":{"reason":"<仅 delete 必填>"}}],"confidence":"low|medium|high","reason":"<为何存在混合动作及为何只检查这些子节点>"}
+
+输出前自检：target_ref 必须完全等于当前 target.ref；result 必须出现在 evidence.action_contract.allowed_results；每个 child_decisions.result 必须出现在对应 evidence.child_action_contracts[ref].allowed_results；inspect_child_refs 和 child_decisions.target_ref 不得跨层、跨单元或重复；child_decisions 的 ref 必须同时列入 inspect_child_refs，且不得 result=split；已经由当前 evidence 完整展示且可以终局的直接 child 必须出现在 child_decisions，不能留给重复调用；unit/table 不得 fill/delete；零长度范围只能 keep；delete 只用于精确 run/span/image/text_box；run 只能引用输入中已有且带 start/end 的直接 span child，不能自造字符范围；如果 reason 把 target 称为纯格式说明、模板说明、操作说明、示例文字或明确应删除内容，result 不得为 keep/fill；不得用 keep 表示“保留容器、稍后删除后代”；参考文献样例 paragraph 不得拆开保留局部样例文字；不能安全细分的混合叶节点按低置信 keep，并在 reason 中保留失败原因。
+说明句中引用的标签名不得因单独 run、样式、大写、加粗或颜色变化而当成独立业务标签
+keep；只有事实证明 target 脱离说明句并在独立 paragraph/对象中作为模板标签呈现时
+才能 keep。
+结构性空格、Tab、换行或点引导符不能仅因其承担排版/对齐作用而 delete；输出 delete
+前必须确认 target 含有最终模板不应出现的可见说明或纯示例语义，而不只是布局字符。
+--- END output_contract ---
