@@ -4,20 +4,20 @@
 - Source plan: `docs/plans/docfit-development-plan.md`
 - Child plan: `docs/plans/docfit-m1-tools-v1.md`
 - Latest user intent: 保持已完成 M2 基线，按
-  `docs/plans/docfit-o0-local-observability.md` 分阶段实施 O0；当前进入 O0.5，执行状态见
+  `docs/plans/docfit-o0-local-observability.md` 分阶段实施 O0；当前进入 O0.6，执行状态见
   `docs/status/active/docfit-o0-local-observability.md`，M3 继续延期
 - Current slice: M0–M2 产品链路及其非评测支撑已完成；当前计划无剩余开发项
 - Frozen baseline: `7cd72fc`（`feat: complete DocFit M2 conversion baseline`）；该提交
   已在提交前通过全量确定性、doctor、live 产品门和凭据值扫描
-- Follow-on status: 06 第 6.6 节的核心转换优化边界与 O0 可执行计划已经批准；O0.0–O0.4
-  已完成，当前执行 O0.5；
+- Follow-on status: 06 第 6.6 节的核心转换优化边界与 O0 可执行计划已经批准；O0.0–O0.5
+  已完成，当前执行 O0.6；
   不改变本 capsule 的 COMPLETED 状态，也不构成 M3 恢复或通过
 - Approved follow-on design: `docs/docfit-local-observability-design.md` 定义薄壳内本地
-  只读观测页；当前已有 privacy-safe 逐事件投影、runtime 接线、直接关联/指标聚合和
-  有界 SQLite 历史索引，无认证网站实现
+  只读观测页；当前已有 privacy-safe 逐事件投影、runtime 接线、直接关联/指标聚合、
+  有界 SQLite 历史索引、认证 loopback 安全壳和会话内证据重挂载，核心页面尚未实现
 - Approved execution plan: `docs/plans/docfit-o0-local-observability.md` 按 O0.0–O0.7
   锁定 transcript/report、projector、关联、存储、Web 安全、页面和最终验收的实施顺序；
-  当前状态为 IN_PROGRESS / O0.5
+  当前状态为 IN_PROGRESS / O0.6
 - Required first slice: O0 先以来源级 allowlist projector 在原始载荷入队前完成脱敏，
   采集 SDK 实际 Agent/Skill/Tool/Subagent/权限事件；Tool use/result 通过 `tool_use_id`，
   Subagent 通过 `parent_tool_use_id + child tool_use_id + agent_id`，本地证据通过重验
@@ -78,4 +78,4 @@
 - Stop condition: 当前计划已完成；任何第六 Tool、第三引擎、第二 Agent loop、恢复 M3
   或长期合同冲突须先请求决定；开始核心转换优化时先另建可执行计划并完成 O0
 - No-touch scope: M4/M5、面向转换用户的 GUI/API/任务队列、学校规则持久化、通用
-  Provider 抽象；O0.5–O0.7 必须继续按已批准计划顺序实施
+  Provider 抽象；O0.6–O0.7 必须继续按已批准计划顺序实施

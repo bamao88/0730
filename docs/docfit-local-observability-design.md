@@ -1,7 +1,7 @@
 # DocFit 本地运行观测与问题定位界面
 
-> 状态：目标设计已批准；O0.0–O0.4 已完成，O0.5 实施中
-> 日期：2026-08-03
+> 状态：目标设计已批准；O0.0–O0.5 已完成，O0.6 实施中
+> 日期：2026-08-04
 > 所属范围：M2 后核心转换优化的 O0 观测面
 > 上位契约：`docfit-00-index.md`–`docfit-06-development-roadmap.md`
 > 实施计划：`plans/docfit-o0-local-observability.md`
@@ -21,11 +21,10 @@ Claude Agent SDK 实际发生的 Agent loop、Tool 调用、权限判断和 Suba
 > 轨迹、汇总隐私安全的运行指标、定位 Tool 与 Subagent 问题，并通过稳定引用连接到
 > 本地任务证据；它不保存论文正文、不执行文档操作，也不参与 Agent 决策和调度。
 
-本文定义目标产品、数据边界和验收要求，不表示这些能力已经实现。当前 schema v1
-`conversion-report.json` 保存最终状态、会话 ID、Tool 名称序列、版本/hash 与产物摘要，
-既有字段还可能包含 artifact 绝对路径和 warning/detail 文本；逐事件输入输出摘要、耗时、
-Subagent 树、历史比较和实时页面仍属于后续 O0 实现。O0 reader 必须先按第 10.3 节做
-allowlist 投影，不能把现有报告完整复制进观测索引。
+本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.5 已实现 schema v2 report、
+逐事件安全投影、直接关联、有界 SQLite 历史、认证 loopback 安全壳和会话内证据重新
+挂载；原始 report 中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。运行
+总览、Transcript/树/时间线、调试上下文页面和跨运行比较仍属于 O0.6–O0.7。
 
 O0 的核心不是先画页面，而是先满足四份可验证合同：
 
@@ -104,27 +103,23 @@ DocFit Tools         负责确定性取证、修改、渲染、视觉证据读�
 runtime。它复用 Claude Agent SDK 已公开的消息流和 hooks、DocFit Tool 结构化结果、
 薄应用壳最终报告，以及本地任务证据。
 
-### 3.1 当前基线与 O0 差距
+### 3.1 当前实现边界与剩余 O0 差距
 
-本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。当前实现只在 SDK 响应流中
-读取 `AssistantMessage` 的 `ToolUseBlock`，收集 Tool 名称和
-Skill 名称；结束时读取 `ResultMessage` 的 `session_id` 与结构化最终结果。现有
-schema v1 `conversion-report.json` 保存最终状态、版本/hash、Tool 名称序列和产物摘要，
-同时可能带 artifact 绝对路径及 warning/detail 文本。权限审计只为 `Agent` Tool 保存
-Subagent 类型与 allow/deny 结果。
+本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.5 已实现 SDK
+message/hook、权限、App/Tool/report 的字段 allowlist projector，Tool/Subagent 直接 ID
+关联，运行级临时 `CLAUDE_CONFIG_DIR` 与 report v2，有界 queue/SQLite 历史，以及
+loopback session/同源/CSRF/CSP 和显式目录重挂载。Web 核心只接收注入的 selector/
+capability；macOS picker/opener 只由本地调试组合根延迟加载。
 
-当前实现还没有：
+当前仍未实现：
 
-- `PreToolUse`/`PostToolUse`/`PostToolUseFailure` 的通用逐调用采集；
-- `ToolUseBlock.id` 与 `ToolResultBlock.tool_use_id` 的持久化关联；
-- `SubagentStart`/`SubagentStop` 与 `agent_id` 的生命周期采集；
-- Tool 输入输出的字段级脱敏投影；
-- 单调耗时、丢弃计数、观测覆盖率或本地历史索引；
-- 运行级临时 `CLAUDE_CONFIG_DIR` 与 SDK transcript 清理；
-- report v2、历史目录显式挂载、本地 Web 会话/同源安全与 O0 资源预算；
-- 实时网站。
+- 面向人的运行总览、单次运行页和 Transcript；
+- Agent/Subagent 树、时间线、事件详情和调试上下文导出；
+- SSE/有界轮询刷新、页面可访问性与空/冲突状态人工 UI 验证；
+- 跨运行 comparability、O0 总门和观测默认启用。
 
-因此下述采集链路是 O0 必须新增的目标设计，不是当前代码已经具备的能力。
+因此下述完整链路仍是 O0 总体目标；其中采集、关联、存储和安全重挂载已具备，页面与
+比较仍须按 O0.6–O0.7 完成。
 SDK 升级时必须先用合成 message/hook fixture 重新证明字段存在性与关联链，不能假设
 私有 transcript 格式或历史 hook 语义保持不变。
 
@@ -302,6 +297,13 @@ P0 至少保留 128 个槽位，压力下先丢 P2、再丢 P1。存储执行单
 30 天/500 completed run 和磁盘低水位硬边界，删除按小事务 checkpoint 且只影响观测行。
 busy、只读、损坏、配额、低水位或 writer 故障只产生安全 drop/failure code，不改变转换；
 任务文件系统写失败继续是独立 App storage failure。
+
+O0.5 在该索引外建立只绑定 `127.0.0.1` 的认证安全壳。一次性登录码只输出到交互 TTY，
+同源 POST 交换服务端 session；Host、Origin、CSRF、CSP、无 CORS 和无副作用 GET 由合同
+测试锁定。历史证据默认 unmounted，只有目录 selector 返回的 server-side capability
+通过 v2 run/task/session/hash 或 v1 session/input-hash 检查后才可打开；路径不进入浏览器
+或数据库，挂载在 Web 重启后消失。可选 macOS picker/opener 不被核心转换或 Web factory
+导入，也不是核心完成门。
 
 ### 4.3 事件类型
 
@@ -643,7 +645,8 @@ loopback 只是网络可达性限制，不是完整认证。首版 Web 安全合
 
 - 只绑定明确的 `127.0.0.1` 和/或 `::1`，拒绝非 loopback socket；启动时生成至少 128 bit
   随机的一次性本地登录码，由发起 CLI 直接显示在当前 TTY，用户通过同源 POST 交换
-  短期会话；登录码 5 分钟过期或连续失败 5 次后立即轮换；
+  短期会话；登录码 5 分钟过期或连续失败 5 次后失效，只有重启服务才能在当前 TTY
+  取得新码；
 - 登录码和会话 secret 不进入 URL、查询参数、fragment、浏览器 local storage、应用日志、
   观测数据库或导出；一次性码使用后立即失效，服务重启后全部轮换；
 - 没有交互 TTY 时不能降级为无认证服务；实现计划只能采用受保护的本地 IPC/文件描述符
@@ -988,7 +991,7 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
 - 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
 - 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.4，认证网站与页面仍待后续阶段；
+- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.5，核心监控页面与比较仍待后续阶段；
 - 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务

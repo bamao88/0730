@@ -1,7 +1,7 @@
 # DocFit 测试与迭代（02）
 
 > 状态：最终方案
-> 日期：2026-08-03
+> 日期：2026-08-04
 > 前提：测试与 Eval 是开发系统，不进入正常论文转换的运行路径。
 
 本文件保留长期 Eval 设计。当前开发范围只要求 M0–M2 的单元、契约、集成和 live
@@ -250,7 +250,8 @@ O0 在页面开发前先建立以下非 Eval 产品合同测试：
   但真实 GUI 可用性不阻塞 O0，也不得使核心模块导入 AppleScript/GUI 实现；
 - 对一次性登录/session、Host、Origin、CORS、CSRF、GET side effect、未授权 `task_ref`、
   path traversal、symlink 和挂载后替换建立安全测试；secret 不得进入 URL、日志或导出，
-  登录码/session 的失败次数、idle/absolute expiry 与轮换生效，无交互 TTY/受保护 IPC 时
+  登录码/session 的失败次数、idle/absolute expiry、失效与服务重启轮换生效，无交互
+  TTY/受保护 IPC 时
   必须 fail closed；
 - schema v2 的随机 run/task ID、最终文档 hash 与 coverage/privacy 字段、v1 读取、v1
   unavailable/null、无效 v2、未知版本和 observation summary provider 异常必须有契约
@@ -409,10 +410,11 @@ Token 更低或耗时更短本身不能替代最终证据和质量断言。
 3. 使用当前任务学校材料的端到端样本通过且无内容静默丢失；
 4. 人工打开最终 DOCX 并检查规定的高风险页面。
 
-M2 后已批准先建设本地只读运行观测界面，当前已完成 O0.0–O0.4 的平台无关骨架、SDK
+M2 后已批准先建设本地只读运行观测界面，当前已完成 O0.0–O0.5 的平台无关骨架、SDK
 runtime privacy/report v2、字段级安全 projector、直接 ID 关联、覆盖维度和带来源指标，
-以及有界 SQLite 历史、保留/删除与非阻断降级；认证网站尚未实现。它服务核心转换问题
-定位和性能比较，不是 M3 Eval 平台。并发 runner、实验平台、集中式
+以及有界 SQLite 历史、保留/删除与非阻断降级、Web 安全合同和会话内证据重挂载；核心
+监控页面尚未实现。它服务核心转换问题定位和性能比较，不是 M3 Eval 平台。并发 runner、
+实验平台、集中式
 trace 服务和正式性能平台仍等真实规模与成本增长后再选择。
 
 ## 10. 最小指标
