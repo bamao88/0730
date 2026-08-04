@@ -53,6 +53,13 @@ DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个�
 `docfit-unit-analyst`，以 SDK 原生隔离上下文执行局部分析；它不是新的产品资产、
 单元专家目录或固定工作流节点。
 
+主 Agent 的 SDK 内置能力面固定为 `Skill`、受路径权限约束的 `Read/Glob/Grep`、
+`AskUserQuestion` 与 `Agent`，并继续直接调用五个 DocFit Tool。`Read/Glob/Grep` 只读取
+项目 `.claude/skills/**`、产品 Knowledge Package 和当前任务 input/work/output；权限
+判断先解析真实绝对路径，再拒绝敏感文件、项目外/其他任务路径与 symlink 逃逸。
+任意 `Bash`、`Write`、`Edit` 和网络工具不开放。`docfit-unit-analyst` 不继承这组主
+Agent 文件工具，仍只拥有 inspect + visual-review。
+
 第一版在五个 Tool 内只适配两个职责不重叠的具体后端：OfficeCLI 负责
 inspect、edit、validate 和高频截图，Adobe PDF Services API 负责 `baseline` 与
 `candidate_verification` 的 DOCX→PDF 服务转换。Agent 只表达 `baseline`、
@@ -115,11 +122,11 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回 | 固定调度图、持久化状态机、真实工具权限实现 |
+| Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回；通过明确项目相对路径指引按需读取 references | 固定调度图、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
 | Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
-| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实 Subagent 上下文隔离和最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、用监控事件控制或精确回放 Agent |
+| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实主 Agent 路径只读权限与 Subagent 上下文隔离/最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、任意 shell、用监控事件控制或精确回放 Agent |
 
 Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、
 阶段、checkpoint、Subagent 或恢复协议。`AgentDefinition` 只是 SDK 接线配置，不与

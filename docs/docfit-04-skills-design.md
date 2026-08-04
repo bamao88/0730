@@ -1,7 +1,7 @@
 # DocFit Skill 设计（04）
 
 > 状态：最终方案
-> 日期：2026-08-03
+> 日期：2026-08-04
 > 原则：Skill 是 Agent 的论文领域操作手册，不是工作流定义。
 
 本文定义已经批准并在 Provider-independent P1 落地的两个领域 Skill。当前实现已从
@@ -9,6 +9,10 @@ M0 discovery marker 重写 `convert-thesis`，并从零增加只产生当前任�
 `docfit-school-extract`。五个真实 DOCX Tool 与 `docfit convert` 薄应用壳现已接入；
 Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独立验证；凭据、额度、
 网络或 backend 失败时必须保留缺口。本地锁屏不属于产品依赖。
+
+两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标与判断入口，并用项目相对路径
+指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联文件不会由
+Skill 工具自动带入，Bash 也不属于读取或执行 Skill 的能力面。
 
 ## 1. Skill 在架构中的位置
 
@@ -26,6 +30,11 @@ Skill 把论文转换经验交给 Claude Agent，但执行权始终留在 Claude
 - 哪些行为绝对禁止。
 
 Skill 不定义固定阶段、状态转换、checkpoint、任务队列或工具调用图，也不保存学校具体字号、页边距和固定文案。
+
+较长的冲突处理、模板文字分类、委派任务包、视觉复核和完成 schema 可以进入
+`references/`，但 `SKILL.md` 必须说明在什么判断下读取哪一份明确路径。Agent 可以使用
+Read/Glob/Grep 在批准根内发现相关材料；Skill 不应假定关联文件自动加载，也不能要求
+任意 Bash、管道、重定向或网络。
 
 ## 2. 批准的领域 Skill
 
@@ -284,8 +293,9 @@ Subagent 不继承父对话、父系统提示词或父 Tool 结果。未显式�
 - `mcp__docfit__docx_visual_review`。
 
 它不拥有 `Agent`、`Skill`、`AskUserQuestion`、`docx_edit`、`docx_render` 或
-`docx_validate`，也不启用持久记忆。缺少页面或其他证据时，它返回证据请求，由主
-Agent 决定是否生成证据和是否再次委派。
+`docx_validate`，也不拥有 Read/Glob/Grep、Bash 或持久记忆。缺少页面或其他证据时，
+它返回证据请求，由主 Agent 决定是否生成证据和是否再次委派。主 Agent 必须把选中的
+Knowledge/reference 结论与当前任务证据显式放入任务包，不能让 Subagent 自行遍历项目。
 
 ### 5.5 结构化返回
 
@@ -349,8 +359,7 @@ format_instruction  只用于说明格式、最终应清理的文字
 ```text
 <skill>/
 ├── SKILL.md
-├── references/       # 按需加载的通用方法、场景和示例
-└── scripts/          # 仅在确有轻量辅助脚本时存在
+└── references/       # 由 SKILL.md 通过明确项目相对路径按需加载
 ```
 
 Tool 实现不复制到 Skill。两个领域 Skill 的 references 保存任务操作指引；Knowledge Package
@@ -371,6 +380,18 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
 - 对象引用失效、定位漂移和 Provider 伪成功。
 
 这些经验帮助 Agent 判断，不扩展 Tool 数量，也不定义固定路线。
+
+首批 references 围绕真实消费拆分：学校提取 Skill 使用证据/冲突、模板文字分类、Tool
+恢复、场景边界、本地委派说明和输出 schema；转换 Skill 使用任务证据/冲突、Tool 恢复、
+结构/视觉证据、场景边界、本地委派说明以及编辑/验证/完成说明。第 5 节定义共同的
+Subagent 运行时字段和权限边界；每份 Skill 只在自己的 `references/` 中解释本领域何时
+拆分、任务包携带哪些本领域证据以及怎样合并返回，不跨目录引用另一份 Skill 或项目级
+共享操作手册。文件名不是新的运行时协议；`SKILL.md` 必须逐个引用真实存在的本地
+reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
+
+当前两个 Skill 不包含可执行脚本。未来若确有确定性脚本需求，不开放任意 Bash；必须
+另行设计只允许随产品发布固定脚本、固定解释器、结构化参数、授权任务输入输出、无
+shell expansion/管道/重定向/网络且不传 Agent API 凭据的执行面。
 
 ## 9. Skill 评审问题
 
@@ -395,5 +416,6 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
   `AgentDefinition.skills` 的虚假契约？
 - Subagent 是否只分析，所有 render、edit、validate、用户询问和跨范围合并是否仍由
   主 Agent 负责？
+- `SKILL.md` 是否以明确项目相对路径按需读取 references，而不是依赖自动加载或 Bash？
 
 如果 Skill 需要复杂状态图才能解释，说明设计已经偏离 Agent-first 架构。

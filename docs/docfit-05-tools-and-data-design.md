@@ -100,6 +100,11 @@ Knowledge 不保存学校数值，也不提供默认学校格式。通用示例�
 材料和 Tools 一起交给主 Agent。`load_knowledge()` 不接收学校名、任务路径或版本
 选择参数，也不决定一次委派使用哪些模块。
 
+主 Agent 也可以通过路径受限的 Read/Glob/Grep 按需读取产品 Knowledge 文档；允许根
+固定为产品 Knowledge Package，不能读取历史学校资产、项目其他文件或仓库外目录。
+这只是渐进式上下文选择，不新增 Knowledge runtime，也不改变 `load_knowledge()` 的
+完整性校验和唯一产品包事实。
+
 Agent 使用 Knowledge 的方法理解当前任务证据；Tool 只消费当前任务已经确认的
 操作参数和证据引用。没有学校包发现、模糊匹配、历史学校规则回退或自动积累。
 当前规模不建设 `KnowledgeService`、向量数据库或学校资产发布系统。
@@ -765,16 +770,35 @@ expected_fingerprint: ...
 
 ### 3.3 单一写入权限
 
-薄应用壳对主 Agent 暴露五个 Tool，但 `docfit-unit-analyst` 的 SDK Tool allowlist 只
-包含 `docx_inspect` 和 `docx_visual_review`。`docx_edit`、`docx_render` 与
-`docx_validate` 不出现在 Subagent 上下文中；`Agent`、`Skill` 和
-`AskUserQuestion` 也不可见。主 Agent 合并跨范围约束后串行写入，文档 hash 变化后
-重新 inspect 并丢弃旧 ref。
+薄应用壳对主 Agent 暴露五个 Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面；
+`docfit-unit-analyst` 的 SDK Tool allowlist 仍只包含 `docx_inspect` 和
+`docx_visual_review`。`docx_edit`、`docx_render` 与 `docx_validate` 不出现在 Subagent
+上下文中；`Agent`、`Skill`、`Read/Glob/Grep`、`AskUserQuestion` 和 Bash 也不可见。
+主 Agent 合并跨范围约束后串行写入，文档 hash 变化后重新 inspect 并丢弃旧 ref。
 
 `Agent` 对主 Agent 可见但不以裸工具名通用自动批准。SDK 0.2.128 的 live 证据表明
 `Agent` 调用不是 `can_use_tool` 的可靠必经路径，因此薄应用壳用 SDK 原生
 `PreToolUse` 权限钩子检查 `subagent_type`，只允许 `docfit-unit-analyst`，拒绝 SDK
 内置 `general-purpose` 与未知类型。`can_use_tool` 继续处理用户追问与防御性拒绝。
+
+### 3.4 主 Agent 路径只读权限
+
+主 Agent 的内置工具面固定为 `Skill`、`Read`、`Glob`、`Grep`、`AskUserQuestion` 与
+类型受限的 `Agent`；五个 `mcp__docfit__...` Tool 继续直接调用。Read/Glob/Grep 不加入
+自动批准集合，SDK `PreToolUse` hook 与 `can_use_tool` 使用同一策略：
+
+1. 把相对路径按项目 cwd 解析并 canonicalize 为真实绝对路径；
+2. 只允许项目 `.claude/skills/**`、产品 Knowledge Package、当前任务 `input/**`、
+   `work/**` 与 output 根；
+3. `Glob/Grep` 必须提供显式搜索根；Glob pattern 和 Grep 的可选 glob filter 不允许
+   绝对路径、`~` 或 `..`，Grep 正则只作为内容模式；
+4. 拒绝 `~/.config/docfit/**`、`.env`、`.git/**`、常见凭据文件、其他任务、项目外路径、
+   非普通文件和 symlink 逃逸；搜索树含 symlink 或敏感文件时整次搜索失败；
+5. 允许时把 canonical path 写回 Tool input，拒绝时只返回固定安全原因，不记录路径或正文。
+
+Read/Glob/Grep 不能修改文件，也不能取代五个 DocFit Tool 的 inspect/render/edit/
+visual-review/validate 契约。Bash、Write、Edit 与网络工具继续默认拒绝；Agent SDK 子进程
+中的后端凭据不会因此对模型可读。
 
 ## 4. 工具错误语义
 
@@ -918,6 +942,11 @@ task-work/
 只有最终交付和调试实际需要的文件长期保留。临时 OOXML、渲染缓存和中间副本可由工具管理。
 
 第三方引擎只能访问本次调用明确授权的输入、临时目录和输出路径。若其自带网络、脚本执行或任意文件访问能力，适配层应关闭这些非必要能力；运行时不得自动下载未锁定版本。
+
+主 Agent 可以用 Read/Glob/Grep 搜索上述任务目录中的文本证据和 Tool 已发布摘要，不能
+读取其他任务或凭据。Skill references 和 Knowledge 同样只读。当前不开放任意 Bash；
+未来固定 Skill 脚本如果获得独立批准，必须使用固定解释器、结构化参数、授权输入输出、
+无 shell expansion/管道/重定向/网络，并从脚本环境移除 Agent API 凭据。
 
 这不是 Run Bundle 协议；应用或测试不应依赖每个中间文件都存在。
 

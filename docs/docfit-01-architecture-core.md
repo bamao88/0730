@@ -5,8 +5,9 @@
 > 核心路线：**Claude Agent SDK runtime + Skill + Knowledge + Tools + Eval + thin app**
 
 本文定义已经批准的目标架构；当前实现状态与里程碑完成判定以 06 为准。当前代码已
-接线唯一只读 `docfit-unit-analyst`、两个领域 Skill、最小 Knowledge 选择投影、五个
-真实 DOCX Tool、固定 OfficeCLI/Adobe PDF Services 薄适配和 `docfit convert`。M3 的确定性 core Eval
+接线路径受限的主 Agent Read/Glob/Grep、唯一只读 `docfit-unit-analyst`、两个渐进披露
+领域 Skill、最小 Knowledge 选择投影、五个真实 DOCX Tool、固定 OfficeCLI/Adobe PDF
+Services 薄适配和 `docfit convert`。M3 的确定性 core Eval
 也已落地为可选开发资产。第二个固定后端是 Adobe PDF Services API，不是本地 Word；
 核心转换与云端运行不导入或依赖 AppleScript、桌面 GUI、用户电脑或本地 Word。
 本地调试壳可以按平台提供可选适配能力，但缺少该能力不能改变转换或阻塞核心验收；
@@ -87,6 +88,7 @@ flowchart LR
     SDK --> S["Skills"]
     SDK --> K["Knowledge"]
     SDK --> T["Tools"]
+    SDK -."受路径约束的只读发现".-> R["Read / Glob / Grep<br/>Skill references + Knowledge + 当前任务"]
     SDK -."按 Skill 判断可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
     SA --> RT["只读 Tool 子集<br/>inspect + visual-review"]
     T --> F["DOCX / PDF / 图片 / 检查结果"]
@@ -115,6 +117,8 @@ Claude Agent SDK 负责通用 Agent runtime，包括：
 - 工具发现与调用；
 - Skill 装载；
 - SDK 原生支持的权限、hooks、流式输出与会话恢复；
+- SDK 原生 `Read`、`Glob`、`Grep`，由 DocFit 权限策略限定为项目 Skill references、
+  产品 Knowledge Package 和当前任务 input/work/output；
 - SDK 原生 `Agent` Tool、Subagent 独立上下文和 `AgentDefinition` 工具限制；
 - Agent 需要用户确认时的对话延续。
 
@@ -134,6 +138,10 @@ Skill 是 DocFit 的主要产品逻辑。它包含：
 - 何时调用哪类 Tool；
 - 遇到不确定性时如何继续、回看或询问用户；
 - 禁止行为和常见陷阱。
+
+`SKILL.md` 保留目标、边界、判断入口与完成条件；较长的冲突处理、分类、委派任务包、
+视觉/验证方法可以放入同目录 `references/`。主文件必须以明确项目相对路径说明何时读取
+每一份 reference，不能依赖 Skill 工具自动加载关联文件。
 
 Skill 不是：
 
@@ -262,6 +270,12 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
   数量/字节上限；
 - 配置一个通用只读 `docfit-unit-analyst`，并用 SDK 原生 `PreToolUse` 权限钩子只允许
   这个 `subagent_type`；`can_use_tool` 继续承担 `AskUserQuestion` 转发和防御性默认拒绝；
+- 向主 Agent 暴露 `Skill`、`Read`、`Glob`、`Grep`、`AskUserQuestion`、`Agent` 和五个
+  DocFit Tool；五个 DocFit Tool 继续直接调用，`Read/Glob/Grep` 不进入自动批准集合；
+- 对 `Read/Glob/Grep` 先 canonicalize 为真实绝对路径，再只允许项目
+  `.claude/skills/**`、产品 Knowledge Package、当前任务 input/work/output；拒绝
+  `~/.config/docfit/**`、`.env`、`.git/**`、凭据文件、其他任务/项目外路径与 symlink
+  逃逸；
 - 把用户任务交给 SDK；
 - 转发需要用户回答的问题；
 - 展示最终回复和产物链接；
@@ -290,6 +304,7 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 判断论文是否符合某校要求；
 - 从观测页面启动、重试或调度 Agent、Subagent 或 Tool；
 - 保存论文正文、完整页面图片、完整模型历史或隐藏思维链。
+- 向主 Agent 或 Subagent 开放任意 Bash、重定向、管道或不受控脚本执行。
 
 命令行、API 或图形界面都只是应用壳的可替换入口，不改变上述边界。
 
@@ -407,9 +422,25 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 ### 6.8 Subagent 只分析，主 Agent 单一写入
 
 `docfit-unit-analyst` 不拥有 `docx_edit`、`docx_render`、`docx_validate`、
-`Agent`、`Skill` 或 `AskUserQuestion`。它提出 finding、依赖、证据请求和候选操作，
+`Agent`、`Skill`、`Read`、`Glob`、`Grep`、`Bash` 或 `AskUserQuestion`。它提出 finding、
+依赖、证据请求和候选操作，
 但不修改或发布文档。主 Agent 统一合并跨范围约束、生成缺失证据、串行调用
 `docx_edit` 并在修改后重新取证。单一写入是权限和内容安全不变量，不是固定阶段。
+
+### 6.9 主 Agent 可发现但不能越界读取
+
+主 Agent 可以用 `Read/Glob/Grep` 按需读取 Skill references、产品 Knowledge 和当前
+任务证据，以支持渐进式披露与自主判断。这三项是只读判断面，不是新的文档副作用面：
+DOCX 分析、渲染、修改与验证仍只通过五个 DocFit Tool。
+
+应用壳对每次调用解析真实绝对路径并按允许根判断。相对路径以项目 cwd 解析；搜索调用
+必须提供显式根，拒绝 `..` 逃逸、敏感路径、其他任务、项目外路径和搜索树中的 symlink。
+主 Agent 不获得 Bash；若未来需要确定性 Skill 脚本，必须另行审批一个不携带 Agent
+凭据、只运行随产品发布固定脚本、使用结构化参数且无 shell expansion/网络的执行面。
+
+`docfit-unit-analyst` 不与主 Agent 等权。它没有 Skill、Read/Glob/Grep、Agent、
+AskUserQuestion、render/edit/validate 或 Bash，仍只消费主 Agent 显式放入任务包的范围、
+Knowledge 与证据，并只调用 inspect + visual-review。
 
 ## 7. 最小运行产物
 
@@ -456,6 +487,7 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 12. `docfit-unit-analyst` 是否仍只有最小只读 Tool，且 `general-purpose` 与未知
     Subagent 默认拒绝？
 13. 本地观测是否仍然只读、无正文、不可控制运行，并在证据失效时明确报告不可用？
+14. 主 Agent 的 `Read/Glob/Grep` 是否仍先 realpath、只进入批准根，且 Bash 继续拒绝？
 
 如果第 1、第 6 或第 9 个问题答案是否定的，DocFit 很可能又开始复制 Agent runtime 或变成工作流系统。
 
@@ -487,3 +519,6 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 18. Subagent 只分析，主 Agent 负责跨单元合并、证据生成、唯一写入和最终验证。
 19. M2 后本地观测界面属于薄应用壳的只读投影；它展示 SDK 实际轨迹并通过 hash/ref
     定位任务证据，但不保存任务正文、不参与调度，也不提供 exact replay。
+20. 主 Agent 直接拥有 `Skill`、路径受限的 `Read/Glob/Grep`、`AskUserQuestion`、
+    类型受限的 `Agent` 和五个 DocFit Tool；五个 Tool 是唯一文档副作用面。Subagent
+    只保留 inspect + visual-review，任意 Bash 对两者都不可见。

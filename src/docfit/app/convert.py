@@ -493,6 +493,9 @@ def build_conversion_prompt(prepared: PreparedConversion) -> str:
     return (
         "Complete this one DocFit thesis conversion using the current-task evidence below. "
         "Load both project Skills with Skill and let them guide your semantic decisions. "
+        "Use path-bounded Read, Glob, and Grep when a Skill directs you to an explicit "
+        "reference, when you need a product Knowledge document, or when you need to search "
+        "the authorized current-task input/work/output evidence. "
         "Use only the five DocFit Tools for document operations. Inspect the student and "
         "template; establish Adobe PDF Services baseline evidence before layout-sensitive "
         "edits; "
@@ -517,9 +520,12 @@ def _conversion_system_prompt() -> str:
         "schema; all thesis semantics, Knowledge selection, optional delegation, edits, render "
         "choices, visual judgment, and recovery decisions are yours. Use convert-thesis and "
         "docfit-school-extract as adaptive guidance, not a fixed workflow. The input directory "
-        "is read-only. Only DocFit Tools may read or mutate DOCX. Adobe baseline and candidate "
-        "routes never fall back to OfficeCLI. Complete only with current official-service "
-        "conversion evidence, full final-page observation, independent validation, and zero "
+        "is read-only. Read, Glob, and Grep are limited to canonical project Skill references, "
+        "product Knowledge, and this task's input/work/output roots; arbitrary Bash is denied. "
+        "Only DocFit Tools may mutate DOCX or produce document evidence. Adobe baseline and "
+        "candidate routes never fall back to OfficeCLI. Complete only with current "
+        "official-service conversion evidence, full final-page observation, independent "
+        "validation, and zero "
         "blocking findings."
     )
 
@@ -574,6 +580,7 @@ async def _run_backend(
     options = build_agent_options(
         terminal_ask_user,
         cwd=project_root(),
+        task_root=prepared.task_root,
         agent_env=environment,
         model=backend.model,
         permission_audit=observe_permission if observation_run.enabled else None,

@@ -33,6 +33,12 @@ Services API。核心转换和云端运行链路不依赖本地 Word、AppleScri
 投影，以及有界 SQLite 历史、保留/删除与非阻断降级、认证 loopback 安全壳与会话内
 证据重新挂载、核心监控页面与跨运行比较；O0 总门已通过，O1 尚未开始。
 
+随后批准的主 Agent 渐进式披露权限切片不改变 M2 转换行为：主 Agent 新增路径受限的
+Read/Glob/Grep，以按需读取 Skill references、产品 Knowledge 和当前任务证据；五个
+DocFit Tool 继续直接调用，任意 Bash 不开放，`docfit-unit-analyst` 仍只拥有 inspect +
+visual-review。该切片的合同、权限测试、`path-tools` live smoke 和两个 Skill references
+结构在第 6.7 节锁定。
+
 ## 1. 路线原则
 
 开发阶段与产品运行时是两件事。本文的 M0–M5 只表示工程交付顺序，不进入 DocFit 在线运行逻辑，也不形成新的工作流状态机。
@@ -61,7 +67,7 @@ Services API。核心转换和云端运行链路不依赖本地 Word、AppleScri
 | Skill 装载 | Provider-independent P1 已在仓库内实现 `docfit-school-extract` 与 `convert-thesis` 两个领域 Skill | 需要跨项目安装或发布时再封装 Plugin |
 | 测试 | `pytest` | 无 |
 | 静态检查 | `ruff` + `mypy` | 无 |
-| SDK 内置工具 | P1 暴露 `Skill`、`AskUserQuestion` 与 `Agent`；`Agent` 由 SDK 原生 `PreToolUse` 权限钩子按 `subagent_type` 精确白名单，且不进入自动批准列表 | 再扩大内置工具或 Subagent 权限时重新审批 |
+| SDK 内置工具 | 主 Agent 暴露 `Skill`、路径受限的 `Read/Glob/Grep`、`AskUserQuestion` 与 `Agent`；`Agent` 按 `subagent_type` 精确白名单，Read/Glob/Grep 按 realpath 根授权，二者都不进入自动批准列表；Bash 拒绝 | 再扩大路径根、引入脚本执行或增加 Subagent 权限时重新审批 |
 | Tool 接入 | SDK in-process MCP server 只注册五个高层 Tool；公开 schema 使用扁平兼容子集，结构化结果镜像为 Agent 可见 JSON text，视觉审查返回图片 content block；SDK buffer 为 16 MiB | 出现必须独立部署或跨进程复用的真实消费者 |
 | 文档执行与渲染 | OfficeCLI 1.0.143 负责 inspect/edit/validate/`edit_feedback`；Adobe PDF Services API（`pdfservices-sdk==4.2.0`）负责 `baseline` 与 `candidate_verification` DOCX→PDF | 服务 API 不可用，或真实样本证明固定职责不可行 |
 | Adobe 凭据与额度 | 凭据只放仓库外 `~/.config/docfit/agent.env` 且 mode 0600；缓存未命中的转换按一个 Document Transaction 计，开发免费额度按每月 500 次规划 | Adobe 官方套餐或凭据格式变化 |
@@ -175,6 +181,10 @@ CLI
 
 ### 4.3 SDK 权限基线
 
+以下代码块记录 M0 当时的验收基线；当前运行合同已由第 4.7 节增加受限 Agent，并由
+第 6.7 节增加路径受限 Read/Glob/Grep。后续切片没有开放 Bash，也没有改变五个 DocFit
+Tool 的直接调用与默认拒绝。
+
 ```text
 内置工具可见集合：Skill、AskUserQuestion
 MCP server：只注册五个 DocFit Tool
@@ -192,6 +202,10 @@ MCP server：只注册五个 DocFit Tool
 Tool 返回 `needs_input` 后，由 Agent 根据现有证据决定重新 inspect 或调用 `AskUserQuestion`。应用壳不自行解释 `needs_input`，也不建设第二套问答协议。权限测试必须同时验证可见工具集合、自动批准集合和默认拒绝行为；只配置 `allowed_tools` 不能代替工具可见性限制。
 
 ### 4.4 验收标准
+
+本节记录 M0 当时的历史验收门；当时主 Agent 尚未接入 Subagent 与路径只读工具。
+当前累计的五项 live 产品门由第 4.7 节和第 6.7 节定义，不能把后续 case 混入本节后
+仍把这里解释为当前完整权限面。
 
 必需的确定性门：
 
@@ -298,7 +312,8 @@ Provider 抽象、学校资产/检索/自动晋升、发布状态机或真实学
   `subagent_type`，拒绝 `general-purpose` 和未知类型；
 - 由领域 Skill 指导主 Agent 把选中 Knowledge 模块和当前任务证据写入 `Agent`
   prompt；不虚构单次调用可动态覆盖 `AgentDefinition.skills`；
-- 增加权限、上下文隔离、结构化返回、Knowledge 选择和四项 live smoke 证据。
+- 增加权限、上下文隔离、结构化返回、Knowledge 选择和 P1 原有四项 live smoke 证据；
+  第 6.7 节后续增加独立 `path-tools` 第五项。
 
 该切片不实现真实 DOCX Tool，不改变五个公开 Tool 名称，也不进入 M1。测试不得固定
 委派次数、单元枚举、并行度或调用顺序；必须分别证明复杂场景能够委派、简单场景允许
@@ -317,6 +332,7 @@ uv run docfit doctor
 uv run docfit agent-smoke --case image
 uv run docfit agent-smoke --case ask-user
 uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case path-tools
 uv run docfit agent-smoke --case subagent
 uv run docfit doctor --require agent-smoke
 ```
@@ -324,7 +340,7 @@ uv run docfit doctor --require agent-smoke
 `subagent` live smoke 必须观察到主 Agent 加载领域 Skill、唯一具名 Subagent 通过
 `PreToolUse` 类型白名单、Subagent 只调用 inspect + visual-review、图片真实进入其
 隔离上下文，并返回完整 `unit_analysis_v1`。`general-purpose`、未知类型和写入 Tool
-由同一权限钩子与契约测试拒绝。四项 live 回执只记录 SDK 版本、backend、工具名和
+由同一权限钩子与契约测试拒绝。当前五项 live 回执只记录 SDK 版本、backend、工具名和
 通过摘要，不保存 Knowledge 内容、任务证据或文档正文。凭据和配置已确认存在可运行
 backend 后，每次新 live 尝试开始前必须使该 case 的旧 PASS 回执失效，只有本次 PASS
 才发布新回执；失败、超时或中断后 `doctor --require agent-smoke` 必须保持
@@ -634,6 +650,60 @@ Adobe 固定职责、官方 candidate 真实性、独立验证、blocking/warnin
 精确版式模型或像素级自动判定；高级 Word 对象编辑、Word 桌面兼容性；Eval 平台、
 replay 和学校数据库。这里延期的是平台化能力，不包括已经批准设计的本地只读 O0。
 
+### 6.7 M2 后独立切片：主 Agent 渐进式披露与路径只读权限
+
+该切片扩大主 Agent 的判断面，不扩大文档副作用面，也不恢复 M3。五个公开 DocFit
+Tool 继续由主 Agent 直接调用并承担全部 DOCX inspect/render/edit/visual-review/validate；
+任意 Bash 不开放。
+
+截至 2026-08-04，该切片实现、全量确定性门和五项真实 SDK smoke 已通过；最新紧凑证据
+记录在 `docs/status/active/docfit-main-agent-read-permissions.md`。这不是 M3 或 O0.7
+完成声明。
+
+当前权限矩阵固定为：
+
+| 能力 | 主 Agent | `docfit-unit-analyst` |
+|---|---:|---:|
+| Skill | 是 | 否 |
+| Read/Glob/Grep：项目 Skill references | 是，限批准根 | 否 |
+| Read/Glob/Grep：产品 Knowledge | 是，限批准根 | 否 |
+| Read/Glob/Grep：当前任务 | 是，限 input/work/output | 否；只消费显式任务包 |
+| 五个 DocFit Tool | 全部直接调用 | 仅 inspect + visual-review |
+| Agent | 只能调用 `docfit-unit-analyst` | 否 |
+| AskUserQuestion | 是 | 否 |
+| render/edit/validate | 是 | 否 |
+| 任意 Bash/Write/Edit/Web | 否 | 否 |
+
+路径权限合同：
+
+1. `Read/Glob/Grep` 对主 Agent 可见但不加入自动批准集合；SDK `PreToolUse` 与
+   `can_use_tool` 采用同一判定；
+2. 调用路径先相对项目 cwd 展开，再解析为真实绝对路径；允许根仅为项目
+   `.claude/skills/**`、`src/docfit/knowledge/package/**`、当前任务 `input/**`、
+   `work/**` 和 output 根；
+3. 搜索必须提供显式根；Glob pattern 与 Grep 的可选 glob filter 不得是绝对路径、`~`
+   或包含 `..`，Grep 正则本身只匹配内容；
+4. `~/.config/docfit/**`、`.env`、`.git/**`、常见凭据名、其他任务、项目外路径、
+   非普通文件和 symlink 逃逸拒绝；搜索树含 symlink 或敏感文件时整次搜索拒绝；
+5. 允许调用将 canonical path 写回 SDK Tool input；权限事件只保存 tool/decision/
+   固定 reason code，不保存路径、pattern 或正文。
+
+两个领域 Skill 把详细方法拆入同目录 `references/`。`SKILL.md` 必须逐一使用明确项目
+相对路径说明何时读取，不能依赖 Skill 工具自动加载关联文件。学校提取 Skill 的首批
+references 为 evidence/conflicts、template text classification、Tool recovery、scenarios、
+本地委派说明与 output schema；转换 Skill 的首批 references 为 task evidence/conflicts、
+Tool recovery、evidence/visual review、scenarios、本地委派说明与
+editing/validation/completion。共同的 Subagent 字段和权限由架构合同定义；
+两棵 Skill 不跨目录引用共享操作手册或彼此的 references，契约测试验证本地引用完整性和
+领域隔离；当前不提供 scripts 目录。
+
+确定性门新增：权限契约逐项覆盖允许根、其他任务、`.env`、`.git`、凭据、`..`、缺失
+路径、搜索树敏感文件与 symlink 逃逸；Skill 契约证明每个 reference 都被 `SKILL.md`
+显式引用；doctor 检查主 Agent 可见面、双权限 hook、Subagent 最小面和 Bash 拒绝。
+live `path-tools` smoke 必须实际调用 Read/Glob/Grep 读取授权 canary，并证明任务外 canary
+内容不可见；原 image、ask-user、denied-tools、subagent smoke 继续通过。该切片不调用
+OfficeCLI/Adobe，不消耗 Adobe Document Transaction。
+
 ## 7. M3：达到可试用 MVP
 
 > 当前范围说明：M3 的 Eval、Gold、授权/脱敏真实样本资格验证和外部人工复核不在
@@ -768,6 +838,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 | M0 | CLI、doctor、SDK smoke | 开发环境和 Agent runtime 已接通 | 能处理论文 |
 | M1 | 五个 Tool 可独立运行 | 合成 DOCX 可安全检查、修改、渲染、返回图片证据并验证 | Agent 已能完成转换 |
 | M2 | 一条 `docfit convert` 命令 | 合成样本上的 OfficeCLI + Adobe 混合链路及交付转换门已跑通 | 已达到复杂真实论文交付质量 |
+| M2 后权限/Skill 渐进披露切片 | 主 Agent 可按需读取 Skill references、产品 Knowledge 与当前任务证据 | realpath 受限 Read/Glob/Grep、五 Tool 直调和不等权 Subagent 权限已验证 | 已开放任意 Bash 或所有 Agent 等权 |
 | M2 后观测/优化切片 | 本地只读运行观测页，以及同一转换链路在既有安全门下减少可测量的重复工作 | 已观测的实际轨迹、有效本地证据定位，以及已证明的单项耗时、调用或载荷改善 | 精确 replay、M3、MVP 或真实论文质量已通过 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
@@ -789,8 +860,13 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
   版本/digest 和任务证据写入通用 Subagent prompt；
 - **Skill 可独立迭代**：`docfit-school-extract` 与 `convert-thesis` 可以在不修改 Tool
   实现的情况下演进；
+- **Skill 可渐进披露**：`SKILL.md` 以明确项目相对路径按需读取 references；主 Agent
+  的 Read/Glob/Grep 只进入项目 Skill、产品 Knowledge 和当前任务批准根；
 - **Subagent 配置最小**：只有一个 SDK 接线级 `docfit-unit-analyst`，类型白名单和
-  只读 Tool 面可验证；委派逻辑不进入应用壳；
+  inspect + visual-review Tool 面可验证；它不继承主 Agent 的 Skill/Read/Glob/Grep；
+  委派逻辑不进入应用壳；
+- **Shell 继续拒绝**：主 Agent 与 Subagent 均没有任意 Bash；确定性脚本执行需要未来
+  独立、无凭据且无 shell expansion/网络的受控合同；
 - **失败可回归**：每个重要缺陷都有 fixture 和对应层级的断言；
 - **应用壳保持薄**：CLI 只配置 SDK、输入、权限和输出，不包含论文语义；
 - **本地观测只读**：O0 只投影 SDK 实际事件、Tool 脱敏摘要和本地证据 ref；观测失败

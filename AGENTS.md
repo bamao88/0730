@@ -35,13 +35,13 @@
   verified. The current product-development scope is complete at the M2 `docfit convert`
   chain, including the non-Eval safety, evidence, and reporting support required by that
   chain.
-- The frozen M2 baseline is recorded in the active development capsule. The documented
-  next development direction is a separate post-M2 core-conversion optimization slice;
-  it has not started and is not an M3 completion claim. Before changing conversion
-  behavior, add privacy-safe runtime observability to `conversion-report.json`, keep the
-  existing deterministic and live product gates, and give each optimization one measured
-  target. Ordinary unit, contract, integration, doctor, and live smoke gates are not M3
-  Eval and remain required.
+- The frozen M2 baseline is recorded in the active development capsule. The post-M2 O0.0–O0.7
+  privacy-safe runtime-observability prerequisite is complete; the documented next
+  conversion-behavior direction is the separate O1 optimization slice, which has not started
+  and is not an M3 completion claim. Before starting O1, preserve the observability contract in
+  `conversion-report.json`, keep the existing deterministic and live product gates, and give
+  the optimization one measured target. Ordinary unit, contract, integration, doctor, and live
+  smoke gates are not M3 Eval and remain required.
 - M3 Eval expansion, authorized/deidentified real-sample qualification, Gold work, and
   external manual review are explicitly outside the current development scope. Keep M3 as
   a future milestone in `docs/docfit-06-development-roadmap.md`; do not claim that it passed,
@@ -62,12 +62,13 @@ uv run pytest -q
 uv run docfit doctor
 ```
 
-Live M0 proof additionally requires:
+Current cumulative live Agent proof additionally requires:
 
 ```bash
 uv run docfit agent-smoke --case image
 uv run docfit agent-smoke --case ask-user
 uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case path-tools
 uv run docfit agent-smoke --case subagent
 uv run docfit doctor --require agent-smoke
 ```
@@ -88,6 +89,10 @@ an input that is outside the current task authorization or log its document body
 
 - Preserve the five public `mcp__docfit__...` Tool names and the default-deny
   permission boundary unless the long-term contract is explicitly revised.
+- The main Agent may use path-bounded Read/Glob/Grep only for project Skill references,
+  product Knowledge, and the current task input/work/output roots after canonical path
+  checks. Arbitrary Bash remains denied, and `docfit-unit-analyst` does not inherit these
+  file tools.
 - Communicate decisions directly and concretely. State fixed responsibilities and
   observable behavior first; do not complicate settled facts with speculative
   implementation details, unnecessary fallback scenarios, or invented status terms.

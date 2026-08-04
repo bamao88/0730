@@ -13,7 +13,9 @@ two domain Skills (`docfit-school-extract` and `convert-thesis`), one modular un
 Knowledge Package, five DocFit MCP Tools, and one SDK-wiring-level read-only
 `docfit-unit-analyst`. Delegation remains a Skill-guided Agent decision; the application
 shell only enforces context isolation and permissions. The five Tool names remain the only
-Agent-visible document surface; no second workflow or Provider-selection layer is added.
+Agent-visible DOCX operation and side-effect surface. The main Agent additionally has
+path-bounded Read/Glob/Grep for project Skill references, product Knowledge, and current-task
+evidence; arbitrary Bash remains denied. No second workflow or Provider-selection layer is added.
 
 The approved M2-follow-on design for a local, read-only runtime observability UI is documented
 in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
@@ -92,13 +94,16 @@ chmod 600 ~/.config/docfit/agent.env
 uv run docfit agent-smoke --case image
 uv run docfit agent-smoke --case ask-user
 uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case path-tools
 uv run docfit agent-smoke --case subagent
 uv run docfit doctor --require agent-smoke
 ```
 
-The four cases verify that the Agent can inspect an actual MCP Tool image, can route
+The five cases verify that the Agent can inspect an actual MCP Tool image, can route
 `AskUserQuestion` through the CLI within the same session, and cannot execute hidden or
-unregistered tools. The Subagent case additionally proves that only the named read-only
+unregistered tools. The path case proves that Read/Glob/Grep can access only canonical
+project Skill references, product Knowledge, and current-task roots while an outside file
+remains unreadable. The Subagent case additionally proves that only the named read-only
 Agent definition receives explicit task context, uses inspect + visual-review, and returns
 `unit_analysis_v1`. Receipts under `.docfit/smoke/` contain metadata only and record
 which backend passed; they never contain API keys. Starting a new runnable live attempt

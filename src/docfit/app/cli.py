@@ -41,7 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
     smoke_parser.add_argument(
         "--case",
         required=True,
-        choices=("image", "ask-user", "denied-tools", "subagent"),
+        choices=("image", "ask-user", "denied-tools", "path-tools", "subagent"),
         dest="case_name",
     )
 

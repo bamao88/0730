@@ -39,7 +39,7 @@ _DOCFIT_TOOLS = {
     "mcp__docfit__docx_visual_review": "docx_visual_review",
     "mcp__docfit__docx_validate": "docx_validate",
 }
-_BUILTIN_TOOLS = {"Skill", "Agent", "AskUserQuestion"}
+_BUILTIN_TOOLS = {"Skill", "Read", "Glob", "Grep", "Agent", "AskUserQuestion"}
 _KNOWN_TOOLS = set(_DOCFIT_TOOLS) | _BUILTIN_TOOLS
 _KNOWN_SKILLS = {"convert-thesis", "docfit-school-extract"}
 _KNOWN_SUBAGENTS = {"docfit-unit-analyst"}

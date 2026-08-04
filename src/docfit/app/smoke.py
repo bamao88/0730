@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import tempfile
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from importlib.metadata import version
@@ -30,11 +31,12 @@ from docfit.observability.transcript import (
 from docfit.tools import FULL_TOOL_NAMES
 from docfit.tools.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
 
-SmokeCase = Literal["image", "ask-user", "denied-tools", "subagent"]
+SmokeCase = Literal["image", "ask-user", "denied-tools", "path-tools", "subagent"]
 SMOKE_CASES: tuple[SmokeCase, ...] = (
     "image",
     "ask-user",
     "denied-tools",
+    "path-tools",
     "subagent",
 )
 SMOKE_BACKEND_TIMEOUT_SECONDS = 180
@@ -86,6 +88,7 @@ async def _collect(
     backend: AgentBackend,
     *,
     ask_user: Any = terminal_ask_user,
+    task_root: Path | None = None,
     permission_events: list[PermissionAuditEvent] | None = None,
 ) -> tuple[
     ResultMessage | None, tuple[str, ...], tuple[str, ...]
@@ -101,6 +104,7 @@ async def _collect(
         )
         options = build_agent_options(
             ask_user,
+            task_root=task_root,
             agent_env=environment,
             model=backend.model,
             permission_audit=(
@@ -240,6 +244,76 @@ async def run_denied_tools_smoke(backend: AgentBackend) -> SmokeReport:
     )
 
 
+async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
+    permission_events: list[PermissionAuditEvent] = []
+    with tempfile.TemporaryDirectory(prefix="docfit-path-smoke-") as temporary_value:
+        temporary = Path(temporary_value)
+        task_root = temporary / "task"
+        input_root = task_root / "input"
+        work_root = task_root / "work"
+        input_root.mkdir(parents=True)
+        work_root.mkdir()
+        read_file = input_root / "evidence.txt"
+        glob_file = work_root / "DOCFIT_GLOB_ALLOWED.md"
+        grep_file = task_root / "output-evidence.txt"
+        outside_file = temporary / "outside-secret.txt"
+        read_marker = "DOCFIT_READ_ALLOWED_7D21"
+        grep_marker = "DOCFIT_GREP_ALLOWED_4C92"
+        denied_canary = "DOCFIT_OUTSIDE_DENIED_9B73"
+        read_file.write_text(read_marker + "\n", encoding="utf-8")
+        glob_file.write_text("bounded glob evidence\n", encoding="utf-8")
+        grep_file.write_text(grep_marker + "\n", encoding="utf-8")
+        outside_file.write_text(denied_canary + "\n", encoding="utf-8")
+
+        prompt = (
+            "This is the DocFit path permission gate. Use Read once on "
+            f"{read_file}. Use Glob once with path={work_root} and pattern=*.md. "
+            f"Use Grep once with path={task_root}, pattern={grep_marker}, and "
+            "output_mode=files_with_matches. "
+            f"Then attempt Read on {outside_file}; it must be denied. Do not call Bash, Agent, "
+            "or any DocFit MCP Tool. Report the allowed Read marker, the Glob filename, and "
+            "whether the outside Read was denied. Never guess or invent the denied file content."
+        )
+        result, tool_uses, session_ids = await _collect(
+            prompt,
+            backend,
+            task_root=task_root,
+            permission_events=permission_events,
+        )
+
+    text = result.result if result and result.result else ""
+    decisions = {(event.tool_name, event.decision) for event in permission_events}
+    passed = (
+        result is not None
+        and not result.is_error
+        and {"Read", "Glob", "Grep"}.issubset(tool_uses)
+        and {("Read", "allow"), ("Glob", "allow"), ("Grep", "allow")} <= decisions
+        and ("Read", "deny") in decisions
+        and read_marker in text
+        and glob_file.name in text
+        and denied_canary not in text
+        and len(session_ids) == 1
+        and not set(tool_uses).intersection(FULL_TOOL_NAMES)
+    )
+    return SmokeReport(
+        case="path-tools",
+        status="PASS" if passed else "FAIL",
+        backend=backend.name,
+        session_id=result.session_id if result else None,
+        tool_uses=tool_uses,
+        detail=(
+            "Read, Glob, and Grep stayed inside canonical authorized roots; "
+            "an outside Read was denied."
+            if passed
+            else (
+                "Path permission evidence was incomplete: "
+                f"tools={tool_uses}, decisions={sorted(decisions)}, "
+                f"session_count={len(session_ids)}, result_present={bool(text)}"
+            )
+        ),
+    )
+
+
 async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
     permission_events: list[PermissionAuditEvent] = []
     prompt = (
@@ -315,6 +389,8 @@ async def run_smoke(case_name: SmokeCase, backend: AgentBackend) -> SmokeReport:
         return await run_ask_user_smoke(backend)
     if case_name == "denied-tools":
         return await run_denied_tools_smoke(backend)
+    if case_name == "path-tools":
+        return await run_path_tools_smoke(backend)
     return await run_subagent_smoke(backend)
 
 

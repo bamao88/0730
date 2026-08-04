@@ -27,8 +27,8 @@ DocFit 不建设通用评测平台。测试发现、并发、报告和 CI 使用
 代码测试目录固定为：
 
 - `tests/unit/`：不依赖 SDK 或真实 Provider 的纯逻辑测试；
-- `tests/contract/`：五个公开 Tool 契约、固定路由、SDK Subagent 权限/上下文边界，
-  以及两个后端各自职责范围内的契约测试；
+- `tests/contract/`：五个公开 Tool 契约、固定路由、主 Agent 路径只读权限、SDK
+  Subagent 权限/上下文边界，以及两个后端各自职责范围内的契约测试；
 - `tests/integration/`：真实 OfficeCLI、CLI 与薄转换壳集成测试；真实 SDK 和 Adobe API
   使用仓库外凭据作为独立 live 产品门，不混入默认 pytest。
 
@@ -90,6 +90,13 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
   live 尝试后才先使旧回执失效；
 - Tool 结果大小声明、SDK transport buffer 和视觉图片预算能够承载受控真实页面批次，
   不会在图片进入 Agent 前触发默认 1 MiB 消息截断；
+- 主 Agent 可见 `Skill/Read/Glob/Grep/AskUserQuestion/Agent`，五个 DocFit Tool 仍可直接
+  调用；`Read/Glob/Grep` 不自动批准，且只接受 realpath 后位于项目 Skill references、
+  产品 Knowledge Package 或当前任务 input/work/output 的路径；
+- `~/.config/docfit/**`、`.env`、`.git/**`、凭据、其他任务、项目外路径、`..` 与 symlink
+  逃逸均被拒绝；搜索根中的 symlink/敏感文件使整个搜索调用失败；
+- 主 Agent 与 `docfit-unit-analyst` 均不能调用 Bash；Subagent 仍只看到 inspect +
+  visual-review，不继承主 Agent 的 Read/Glob/Grep；
 - 整页、裁剪、contact sheet 和 compare 模式的图片变换、页码、候选对象和元数据一致；
 - `docx_visual_review` 不调用 Adobe PDF Services API 或 CLI，不产生新的 `render_ref`；派生视图只产生
   visual evidence/image hash，多次读取同一 ref 不构成新一轮；
@@ -110,6 +117,8 @@ Tool test 的基本标准是确定性、可重复、源文件只读、失败不�
 Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材料和受控 Tool 结果，观察 Agent 是否：
 
 - 在模板提取与论文转换目标下分别触发 `docfit-school-extract` 或 `convert-thesis`；
+- `SKILL.md` 根据当前判断通过明确项目相对路径按需读取 references，不依赖 Skill 工具
+  自动加载关联文件，也不使用 Bash 执行 references 或脚本；
 - 读取随当前产品发布的通用 Knowledge 版本；
 - 由当前 Skill 决定是否委派、如何划定分析范围、选择哪些 Knowledge 模块以及传递
   哪些任务证据；
@@ -184,6 +193,9 @@ limit      成本或重复调用上限
   选中 Knowledge 与显式证据，返回结果可追溯到当前文档；
 - `general-purpose`、未知 Subagent、Subagent 写入/渲染/验证/继续委派均被权限边界
   拒绝；
+- live `path-tools` smoke 证明主 Agent 能用 Read/Glob/Grep 读取/搜索授权任务和 Skill
+  证据，同时任务外 canary 文件内容不可见；`denied-tools` 继续证明 Bash/Write/Edit/
+  Web 与未注册 Tool 不可执行；
 - 主 Agent 仍是跨范围依赖、证据生成、`docx_edit` 和最终发布的唯一所有者；
 - 修改前、布局变化后和最终交付前的视觉审查证据绑定正确文档版本；
 - 最终全部页面已经分批视觉审查，高风险页面完成规定的 Agent 与人工检查；

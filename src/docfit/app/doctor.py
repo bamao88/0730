@@ -15,6 +15,7 @@ from docfit.app.agent import (
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
     LOGGING_POLICY,
+    MAIN_AGENT_READ_POLICY,
     READ_ONLY_SUBAGENT_TOOLS,
     SKILL_NAMES,
     SUBAGENT_NAME,
@@ -200,8 +201,9 @@ def run_doctor(
             and tuple(options.agents) == (SUBAGENT_NAME,)
             and options.agents[SUBAGENT_NAME] == unit_analyst
             and tuple(hooks) == ("PreToolUse",)
-            and len(agent_hooks) == 1
-            and agent_hooks[0].matcher == "Agent"
+            and len(agent_hooks) == 2
+            and agent_hooks[0].matcher == "Read|Glob|Grep"
+            and agent_hooks[1].matcher == "Agent"
             and tuple(unit_analyst.tools or ()) == READ_ONLY_SUBAGENT_TOOLS
             and unit_analyst.skills == []
             and unit_analyst.memory is None
@@ -213,8 +215,9 @@ def run_doctor(
             "sdk_configuration",
             "PASS" if config_ok else "FAIL",
             (
-                "Skill, AskUserQuestion, and Agent are visible; Agent is type-gated to one "
-                "read-only definition and the DocFit server exposes five pre-approved names."
+                "Skill, path-bounded Read/Glob/Grep, AskUserQuestion, and Agent are visible; "
+                "Agent is type-gated to one read-only definition and the DocFit server exposes "
+                "five pre-approved names."
                 if config_ok
                 else "SDK permission or discovery configuration does not match the P1 contract."
             ),
@@ -232,6 +235,26 @@ def run_doctor(
             "directory_policy",
             "PASS" if policy_ok else "FAIL",
             ("The Tool boundary fixes input as read-only and work/output as writable."),
+            ("base", "agent-smoke", "provider"),
+        )
+    )
+    read_policy_ok = MAIN_AGENT_READ_POLICY == (
+        "project_skill_references_read_only",
+        "product_knowledge_package_read_only",
+        "current_task_input_read_only",
+        "current_task_work_read_only",
+        "current_task_output_read_only",
+        "realpath_before_authorization",
+        "sensitive_outside_and_symlink_escape_denied",
+    )
+    checks.append(
+        DoctorCheck(
+            "main_agent_read_policy",
+            "PASS" if read_policy_ok else "FAIL",
+            (
+                "Read, Glob, and Grep require canonical paths under project Skill references, "
+                "product Knowledge, or the current task; sensitive and escaping paths are denied."
+            ),
             ("base", "agent-smoke", "provider"),
         )
     )
