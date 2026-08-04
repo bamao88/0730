@@ -19,3 +19,8 @@ visual-review/validate、快照 ref、原子发布、独立 package 检查、模
 bridge 不把 `structuredContent` 保留给 Agent，因此 Tool 同时返回语义相同的紧凑 JSON
 text；图片仍是原生 image block。Adobe adapter 使用固定 30 秒 connect 与 120 秒
 read/upload timeout，visual-review 继续受图片数量/字节预算约束。
+
+O0 观测面只读取五个 Tool 已发布的安全状态、耗时、错误码、hash/ref、cache 和 Provider
+摘要，不改变 Tool schema、调用权限或执行顺序，也不从页面触发 Tool。比较页不会为了
+补指标重新 render、读取正文或调用 Adobe；观测启用、关闭或失败时，五个 Tool 的公开
+结果与 Adobe Document Transaction 事实保持不变。

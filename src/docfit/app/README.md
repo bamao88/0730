@@ -22,3 +22,9 @@ inspect + visual-review。`can_use_tool` 继续处理 `AskUserQuestion` 与防�
 content block；Tool 自身的图片数量与字节预算仍是更窄的业务边界。convert 在某个
 backend route 超时后不会仅因 credential 不同而重复等待同一 name/base URL/model
 路由，其他错误仍可按既定 credential 顺序恢复。
+
+O0 本地观测已完成。`docfit convert` 默认使用 `--observation auto`，也可显式传
+`--observation off` 取得无观测基线；`docfit observe` 只在 loopback 提供认证后的只读
+运行、Agent loop、Tool/Subagent 详情、证据状态和跨运行比较。观测失败不改变转换事实，
+比较缺少关键条件时不产生性能结论。Web 核心只接收平台无关 capability；可选本地
+picker/opener 由调试组合根延迟加载，不被核心转换或云端路径导入，也不构成完成门。

@@ -1,6 +1,6 @@
 # DocFit 本地运行观测与问题定位界面
 
-> 状态：目标设计已批准；O0.0–O0.6 已完成，O0.7 实施中
+> 状态：目标设计已批准；O0.0–O0.7 已完成
 > 日期：2026-08-04
 > 所属范围：M2 后核心转换优化的 O0 观测面
 > 上位契约：`docfit-00-index.md`–`docfit-06-development-roadmap.md`
@@ -21,11 +21,11 @@ Claude Agent SDK 实际发生的 Agent loop、Tool 调用、权限判断和 Suba
 > 轨迹、汇总隐私安全的运行指标、定位 Tool 与 Subagent 问题，并通过稳定引用连接到
 > 本地任务证据；它不保存论文正文、不执行文档操作，也不参与 Agent 决策和调度。
 
-本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.6 已实现 schema v2 report、
+本文定义目标产品、数据边界和验收要求。当前 O0.0–O0.7 已实现 schema v2 report、
 逐事件安全投影、直接关联、有界 SQLite 历史、认证 loopback 安全壳和会话内证据重新
 挂载，以及运行总览、Transcript/树/时间线、Tool/Subagent/事件详情、SSE/轮询和调试
-上下文页面；原始 report 中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。
-跨运行比较、默认启用和 O0 总门仍属于 O0.7。
+上下文页面，并完成跨运行可比性判定、指标差异页、默认 `auto` 与 O0 总门；原始 report
+中的 path、warning/detail 和未知字段仍只经过 allowlist 投影。
 
 O0 的核心不是先画页面，而是先满足四份可验证合同：
 
@@ -104,22 +104,19 @@ DocFit Tools         负责确定性取证、修改、渲染、视觉证据读�
 runtime。它复用 Claude Agent SDK 已公开的消息流和 hooks、DocFit Tool 结构化结果、
 薄应用壳最终报告，以及本地任务证据。
 
-### 3.1 当前实现边界与剩余 O0 差距
+### 3.1 当前实现边界
 
-本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.6 已实现 SDK
+本文按仓库锁定的 `claude-agent-sdk==0.2.128` 定义来源字段。O0.0–O0.7 已实现 SDK
 message/hook、权限、App/Tool/report 的字段 allowlist projector，Tool/Subagent 直接 ID
 关联，运行级临时 `CLAUDE_CONFIG_DIR` 与 report v2，有界 queue/SQLite 历史，以及
 loopback session/同源/CSRF/CSP 和显式目录重挂载。Web 核心只接收注入的 selector/
 capability；macOS picker/opener 只由本地调试组合根延迟加载。核心页面使用打包的本地
 HTML/CSS/JavaScript，按安全事件投影运行列表、四维状态、Transcript/时间线、verified
 直接关系树、显式关系缺口、Tool/Subagent/事件详情、SSE 更新和 allowlist 调试上下文。
+比较页只在输入、路由/版本、任务授权与验证证据合同可判断时给出差异；输入或验证门
+不同，以及关键条件未知时，都禁止性能结论。`docfit convert` 默认 `--observation auto`，
+并保留 `--observation off` 作为显式无观测基线。
 
-当前仍未实现：
-
-- 跨运行 comparability、O0 总门和观测默认启用。
-
-因此下述完整链路仍是 O0 总体目标；其中采集、关联、存储、安全重挂载和核心页面已
-具备，比较与总门仍须按 O0.7 完成。
 SDK 升级时必须先用合成 message/hook fixture 重新证明字段存在性与关联链，不能假设
 私有 transcript 格式或历史 hook 语义保持不变。
 
@@ -951,13 +948,45 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
     节预算；关闭网站、清空索引或完全禁用 O0 不改变 `docfit convert`，也不增加 Adobe
     Document Transaction。
 
+### 11.1 O0 完成回执
+
+2026-08-04 的 O0.7 总门对上述 18 项给出以下回执；详细阶段提交与命令记录见
+`plans/docfit-o0-local-observability.md` 和 active capsule。
+
+| 验收项 | 完成证据 |
+|---:|---|
+| 1 | synthetic `run_conversion` 真实写 report v2、SQLite、运行列表和详情页；独立真实 loopback HTTP/SSE 测试验证登录、读取和流式更新。 |
+| 2 | SDK message/hook fixture、相关性合同和五项 live smoke 共同覆盖 Skill、Tool、权限、结果与顺序；use/result 只按 `tool_use_id` 连接。 |
+| 3 | 交错、重复、乱序、缺桥和冲突 fixture 覆盖 `parent_tool_use_id + child tool_use_id + agent_id`，并验证 `verified/partial/conflict`。 |
+| 4 | Tool、Subagent 和事件详情只使用各来源 allowlist；unknown 保持 `null`，未知字段被丢弃。 |
+| 5 | 在 observer DB/WAL、report、HTML、JSON API、SSE、debug export 与捕获日志七个表面扫描隐私 canary，命中数为 0。 |
+| 6 | 正常 live SDK 运行使用私有配置目录；真实强制终止探针留下 1 个 owned residual，下一次 preflight 清理后为 0；持活动锁的其他合法 attempt 不计作本 run residual；全程不读 transcript 内容、不输出路径。 |
+| 7 | projector、queue、database busy/read-only/corrupt、collector 与 UI 故障测试证明转换事实不变，coverage/drop 原因保持独立。 |
+| 8 | observer 低水位只停止观测写入；独立任务文件系统写满测试仍以 App `conversion_report_write_failed` 失败。 |
+| 9 | collector 不可用时转换继续并生成安全 coverage；无 report 的终态保持 unknown，report 对账只来自会话内显式挂载。 |
+| 10 | 相关性 fixture 对重复、乱序、缺失和矛盾 ID 给出确定性去重/缺口/冲突，不按时间或 Tool 名称补链。 |
+| 11 | v2 按 run/task/session/hash 重验，v1 最多 partial；重启后 capability 清空，历史回到 unmounted。 |
+| 12 | Host、Origin、CORS、CSRF、GET side effect、session、task ref、穿越、symlink 与挂载后替换均有拒绝合同。 |
+| 13 | report v1/v2、无效/未知 schema、缺字段和 summary provider 异常均有契约测试；缺失值为 unavailable/null，基础 v2 仍写出。 |
+| 14 | available、stale、missing、unauthorized、conflict 与 locator/hash 失效均由授权和重验结果驱动，不显示或持久化绝对路径。 |
+| 15 | `/compare` 与 `/api/compare` 覆盖 strict/conditional/not_comparable；关键条件或 metric 缺失时为 unknown 且 `winner=null`。 |
+| 16 | `denied-tools` live smoke 与权限合同通过直接类型/ID 拒绝 general-purpose、未知 Subagent 和越权 Tool。 |
+| 17 | 删除单 run/全部历史只删除 observer rows；任务产物与 SDK transcript 不在删除 API 参数或目标中。 |
+| 18 | 三次固定 synthetic benchmark：wall P95 增量 19.10 ms、CPU 增量 1.39%、peak RSS 增量 1.5 MiB，均低于预算；实际卷可用率约 4% 时安全进入 `observer_storage_low_space`。enabled/off 对照的状态、最终 hash、Tool facts 与文件字节一致，O0 验证没有发起 Adobe 调用。 |
+
+页面另外在 375 px、768 px 和 1280 px 宽度完成手工检查；比较表在窄屏使用可聚焦的横向
+滚动容器，长 ID、unknown、条件差异和禁止结论均可读。O0 只锁定 O1 候选基线字段，
+没有修改 Agent 调用策略，也没有为了取得基线制造 Adobe Document Transaction。
+最终确定性回归为 299 个测试通过；lock、build、Ruff、mypy、base doctor 和五项 live
+receipt doctor 同时通过。
+
 ## 12. 实现顺序与复用原则
 
-本文只锁定产品边界。后续 O0 可执行计划按以下顺序落地：
+本文锁定产品边界；O0 已按以下顺序完成。未来优化必须继续复用这些边界：
 
-已批准的阶段、技术基线和逐阶段成功标准见
+已完成的阶段、技术基线和逐阶段成功标准见
 `plans/docfit-o0-local-observability.md`。下列顺序继续作为专题设计层的强制依赖关系；
-实施计划只能细化，不能倒置或绕过。
+后续计划只能细化，不能倒置或绕过。
 
 1. **SDK runtime privacy 与 report v2**：先建立运行级临时 `CLAUDE_CONFIG_DIR`、正常/崩溃
    清理、`run_id/task_ref` 和 v1/v2 report reader/writer；
@@ -983,15 +1012,16 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 - 不让第三方 trace schema 反向成为 DocFit 的 Tool、Skill 或任务目录合同；
 - 不要求外部 SaaS、云端 collector 或完整 prompt capture 才能运行本地页面。
 
-具体 Web 框架、数据库、实时传输方式和开源 UI 选型留给 O0 实现计划。选型必须服从
-本文件的只读、离线、脱敏、可删除与不干扰转换原则。
+O0 已选择 Starlette/Uvicorn、SQLite、Jinja2 与本地原生 CSS/JavaScript；这些是薄壳内部
+实现，不升级为公共 Tool 或 Agent 协议。后续替换仍须服从本文件的只读、离线、脱敏、
+可删除与不干扰转换原则。
 
 ## 13. 与 00–06 的关系
 
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
 - 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
 - 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前已完成 O0.0–O0.6，跨运行比较与总门仍待 O0.7；
+- 06 把它放在 M2 后优化轨道的 O0；当前 O0.0–O0.7 已完成，O1 尚未开始；
 - 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务

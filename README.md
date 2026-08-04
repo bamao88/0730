@@ -18,13 +18,14 @@ Agent-visible document surface; no second workflow or Provider-selection layer i
 The approved M2-follow-on design for a local, read-only runtime observability UI is documented
 in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
 It projects actual SDK Agent/Tool/Subagent events, redacted metrics, and stable local
-evidence references without storing thesis text or controlling the conversion. O0.0–O0.6 now
+evidence references without storing thesis text or controlling the conversion. O0.0–O0.7 now
 provide the platform-neutral skeleton, SDK transcript/report v2 privacy boundary, synchronous
 field-allowlist projectors, direct-ID correlation, coverage dimensions, safe metrics, and a
 bounded background SQLite history writer, plus the authenticated loopback security shell and
 session-only evidence remount. The offline run overview, Transcript/timeline, verified Agent tree,
-Tool/Subagent/event details, SSE refresh, debug-context copy, and evidence states are implemented;
-cross-run comparison and the O0 total gate remain O0.7.
+Tool/Subagent/event details, SSE refresh, debug-context copy, evidence states, and evidence-aware
+cross-run comparison are implemented. The O0 privacy, security, fault, resource, benchmark, live
+SDK, and documentation gates are complete; O1 optimization has not started.
 
 “Without storing thesis text” applies to the observability index. The SDK's own local session
 transcript is a separate data plane; O0 requires a private per-run `CLAUDE_CONFIG_DIR`, explicit
@@ -163,7 +164,10 @@ The local observer security shell can be started from an interactive terminal wi
 and fails closed when no interactive TTY is available. The server-rendered monitoring pages use
 only packaged local CSS/JavaScript, show privacy-safe stored events and unknown values without
 inventing facts, and expose local evidence actions only after the current session reauthorizes and
-verifies a task directory. Cross-run comparison remains the O0.7 slice.
+verifies a task directory. `docfit convert` now uses `--observation auto` by default; pass
+`--observation off` for the explicit no-observer baseline. The comparison page distinguishes
+strict, conditional, and not-comparable runs and never turns missing metrics into zero or declares
+a winner.
 
 ## Test layout
 
