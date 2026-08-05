@@ -33,24 +33,27 @@ Skill 内置脚本负责校验并把你已经完成的语义判断编译为规�
    文件。
 2. 调用 `template_observe` 建立不可变快照。观察结构、可见对象、最终有效格式、槽位候选、
    PDF 页面和不支持内容。
-3. 将模板内容分类为 fixed、fill、generate、repeat、conditional、manual、remove 或
-   unresolved。
-4. 删除说明或示例前，先把其中仍需保留的格式、基数、生成或放置责任迁移到槽位或区域
+3. 按“当前可见角色、存续责任、责任修饰字段、证据状态”分别记录模板语义。不要把
+   fixed、fill、generate、repeat、conditional、manual、remove、unresolved 写进同一个
+   `classification` 枚举。
+4. 根据语义决定需要保留、建立槽位、登记 manual 区域或删除哪些当前内容。只有明确形成
+   `remove_content` 操作后才选择删除模式；内容责任本身不能写成 `remove`。
+5. 删除说明或示例前，先把其中仍需保留的格式、基数、生成或放置责任迁移到槽位或区域
    决定中。
-5. 将文字要求与模板最终有效格式交叉验证。保留重要冲突；不要仅凭样式名、历史学校或
+6. 将文字要求与模板最终有效格式交叉验证。保留重要冲突；不要仅凭样式名、历史学校或
    惯例裁决冲突。
-6. 为每项修改选择精确目标、预期指纹、删除模式和必要的槽位语义。当歧义会实质改变
+7. 为每项修改选择精确目标、预期指纹、删除模式和必要的槽位语义。当歧义会实质改变
    可复用模板时，询问用户。
-7. 写入 `mutation-decisions.yaml`，然后运行 `scripts/compile_mutation_plan.py`。把生成的
+8. 写入 `mutation-decisions.yaml`，然后运行 `scripts/compile_mutation_plan.py`。把生成的
    `mutation-plan.json` 交给 `template_mutate`。不要单独使用页码或文本作为编辑身份。
    如果编译或修改因为目标过期或歧义而被拒绝，重新观察并重新判断。
-8. 调用 `template_compare`。检查它返回的预期变化、意外变化和原生图片，判断结果是否
+9. 调用 `template_compare`。检查它返回的预期变化、意外变化和原生图片，判断结果是否
    合理、是否需要继续修改，或是否需要用户输入。
-9. 把图片判断写入 `review-decisions.yaml`，运行 `scripts/compile_review_record.py`。完成
+10. 把图片判断写入 `review-decisions.yaml`，运行 `scripts/compile_review_record.py`。完成
    最终快照全页审查后，使用已确认的语义清单和审查记录运行
    `scripts/compile_artifact_spec.py`。把 `artifact-spec.json` 交给 `template_build`，并且
    只把其输出视为 candidate。
-10. 把 candidate 提交给 `template_freeze`。根据 findings 继续修正；只有这个独立 Tool
+11. 把 candidate 提交给 `template_freeze`。根据 findings 继续修正；只有这个独立 Tool
     返回 `status: frozen`，并且你确认最终结果满足任务语义和视觉要求后，才能交付。
 
 ## 核心判断规则
@@ -102,7 +105,78 @@ Skill 内置脚本负责校验并把你已经完成的语义判断编译为规�
 准备三份决定文件或解释编译错误前，阅读
 [references/decision-compilation.md](references/decision-compilation.md)。
 
+## 分开语义字段与修改字段
+
+不要使用 `classification: fixed | fill | generate | repeat | conditional | manual | remove |
+unresolved`。这些值回答的不是同一个问题。对每个相关区域分别记录：
+
+| 字段 | 回答的问题 | 允许值或结构 |
+|---|---|---|
+| `observed_roles` | 当前可见对象是什么 | `fixed_content`、`placeholder`、`instruction`、`example`、`mechanism`、`structural_container`、`unknown`；可多选 |
+| `responsibilities[].kind` | 清理后仍必须由模板 Interface 承担什么 | `fixed`、`fill` 或 `generate`；可有多项 |
+| `responsibilities[].content_kind` | fill/generate 责任承载什么内容 | `scalar`、`paragraph_stream` 或 `composite` |
+| `responsibilities[].cardinality` | 该责任出现多少次 | 独立的 `min`/`max`；重复由基数表达，不使用 `repeat` kind |
+| `responsibilities[].condition` | 该责任何时出现 | 可选条件；条件性由此表达，不使用 `conditional` kind |
+| `responsibilities[].handling` | 该责任能否自动履行 | `automatic` 或 `manual`；manual 是处理方式，不是内容 kind |
+| `resolution` | 当前证据是否足以支持决定 | `resolved` 或 `unresolved`；未决是证据状态，不是内容 kind |
+| `operations[].action` | 要对当前文档做什么 | `materialize_slot`、`register_manual_region` 或 `remove_content`；纯保留不产生 mutate operation |
+| `operations[].removal_mode` | 已决定删除时，怎样保持物理边界 | 仅当 `action: remove_content` 时必填，从下节六种模式中选择 |
+
+同一区域可以有多项当前角色和存续责任；如果不同片段需要不同操作，应拆成可独立定位的
+目标。删除模式不能从 `fill` 或 `instruction` 自动推导：同样的题目占位文字位于普通段落
+和表格单元格时，会分别需要不同模式。
+
+例如，删除“请填写论文标题”不等于删除题目责任。应保留 `kind: fill`，把题目责任迁移到
+新槽位，再为当前提示文字形成 `action: remove_content`，根据其物理容器选择
+`clear_text_preserve_container` 等模式。若一个说明或示例没有存续责任，也要明确记录空的
+存续责任、证据与理由，不能用 `responsibility: remove` 代替判断。
+
+一个标题提示的决定可以表达为：
+
+```yaml
+decision_id: title-placeholder
+target_ref: object-ref-from-current-snapshot
+observed_roles: [placeholder, instruction]
+resolution: resolved
+responsibilities:
+  - responsibility_id: title-fill
+    kind: fill
+    content_kind: scalar
+    cardinality: {min: 1, max: 1}
+    condition: null
+    handling: automatic
+operations:
+  - operation_id: slot-title
+    action: materialize_slot
+    responsibility_refs: [title-fill]
+    slot_id: thesis_title
+  - operation_id: remove-title-hint
+    action: remove_content
+    removal_mode: clear_text_preserve_container
+    migrated_responsibility_refs: [title-fill]
+    migration_targets: [slot:thesis_title]
+evidence_refs: [observation-ref, requirement-ref]
+```
+
+这个例子中，`fill` 在清理后继续存在，`remove_content` 只作用于当前提示文字，
+`removal_mode` 只控制该操作怎样保留段落容器。
+
 ## 谨慎选择删除模式
+
+删除模式只描述 `remove_content` 的物理执行方式，不回答内容为什么可删。选择模式前必须
+先完成上述语义记录，并确认所有存续责任已有目标；`resolution: unresolved` 的区域不得
+形成破坏性删除操作。编译器应拒绝非删除操作携带 `removal_mode`，也应拒绝删除操作缺少
+`removal_mode`。删除带 fixed 责任的内容还必须有当前任务的明确授权，并说明该责任被替代、
+迁移或明确终止；否则编译失败。
+
+| 已确认的语义 | 与删除操作的关系 |
+|---|---|
+| fixed 内容或结构 | 默认保留；没有明确授权以及责任的替代、迁移或终止决定时不得删除 |
+| fill 占位文字 | 先 materialize 完整槽位，再只删除占位文字并保留槽位容器 |
+| instruction/example | 先迁移其约束；若没有存续责任，显式记录空责任和理由后才可删除 |
+| generate mechanism | 保留生成机制；只可删除已确认无责任的说明、示例或缓存表现 |
+| `handling: manual` | 先登记 manual region；可删除说明文字，但不能删除人工履行目标 |
+| `resolution: unresolved` | 不允许破坏性删除；继续观察、询问或保留 |
 
 | 意图 | 模式 |
 |---|---|
@@ -125,7 +199,8 @@ Skill 内置脚本负责校验并把你已经完成的语义判断编译为规�
 - 不从示例数量推断的最小与最大基数；
 - 必须保留的物理容器或边界；
 - 最终有效样式观测，以及独立存在的文字要求；
-- 责任属于 fill、generate、repeat 还是 conditional。
+- `kind` 是 fill 还是 generate；重复性写入 `cardinality`，条件性写入 `condition`，能否
+  自动履行写入 `handling`。
 
 当下游工作需要人工或语义放置，且无法唯一、安全地自动执行时，使用 manual 区域。当
 当前证据完全无法定义责任时，记录 gap。

@@ -772,7 +772,8 @@ M3。学校模板端采用绿地 Tool 面，不为兼容当前 `docx_*` Tool 而
 学校模板 + 文字要求 + 可选官方示例
   → docfit-school-extract
   → template_observe
-  → Agent 决定内容责任、删除模式、槽位语义和来源冲突
+  → Agent 分开决定可见角色、存续责任、修饰字段、证据状态、修改动作和来源冲突
+  → 仅为 remove_content 动作选择删除模式
   → Skill script 编译 mutation plan
   → template_mutate
   → template_compare（结构对账 + 原生图片）
@@ -802,9 +803,16 @@ compare 发现误伤、build/freeze 拒绝或 freeze 成功后仍发现语义/�
 回到相应环节修正并重新执行。只有缺少必要用户裁决、授权材料或不可替代外部能力且没有
 安全修正路径时，才报告真实阻塞。
 
+模板语义 schema 不使用 fixed/fill/generate/repeat/conditional/manual/remove/unresolved 的
+单一分类枚举。`responsibilities[].kind` 只允许 fixed/fill/generate；repeat 进入
+`cardinality`，conditional 进入 `condition`，manual 进入 `handling`，unresolved 进入
+`resolution`，remove 进入 operation action。`removal_mode` 仅在 `action: remove_content`
+时存在，不能作为删除理由或内容责任。
+
 `template_mutate` 必须支持清文字保留容器、删除行内片段、删除完整容器、删除稳定边界块、
 清空单元格保留网格、解包内容控件保留内容六种删除模式，以及段落/单元格/段落流/物理
-锚点槽位和 manual 区域。Agent 选择目标、模式、内容种类、基数和责任；Tool 只执行。
+锚点槽位和 manual 区域。Agent 选择目标、动作、删除动作的 `removal_mode`、内容种类、
+responsibility kind 及其修饰字段；Tool 只执行。
 
 冻结输出是一个不可拆换的 artifact bundle：
 
@@ -817,9 +825,10 @@ frozen-template-artifact/
 ```
 
 manifest 至少表达模板与来源 hash、固定内容指纹、自动槽位唯一 locator、scalar/
-paragraph stream/composite 内容种类、基数、fill/generate/repeat/conditional 责任、manual、
-gap、样式观测/要求/冲突和未决项。生成机制不压成缓存文字，示例数量不冻结为重复基数，
-页码/bbox/单个近似文字不作为唯一 locator。模板变化后旧引用失效。
+paragraph stream/composite 内容种类、fixed/fill/generate kind、cardinality、condition、
+handling、manual/gap、样式观测/要求/冲突和 resolution。生成机制不压成缓存文字，示例
+数量不冻结为重复基数，页码/bbox/单个近似文字不作为唯一 locator。模板变化后旧引用
+失效。
 
 生产 Skill 包含 `compile_mutation_plan.py`、`compile_review_record.py` 和
 `compile_artifact_spec.py`。它们使用与 Tool 共享的版本化类型模型，把 Agent 写出的
@@ -840,8 +849,10 @@ references 和行为用例位于 `docs/plans/docfit-school-extract-v2-draft/`，
 7. 以原子变更替换生产 `docfit-school-extract` 及应用壳任务域 Tool 注册；
 8. 另行设计转换端如何消费新 artifact；本切片不顺带重写其 Tool 面。
 
-普通产品门至少包括：不可变 snapshot/hash 和旧引用拒绝；文字查询返回全部候选；六种
-删除模式的保留边界与失败不发布；槽位唯一性、内容种类、基数、manual/gap；固定内容、
+普通产品门至少包括：不可变 snapshot/hash 和旧引用拒绝；文字查询返回全部候选；语义
+字段不混层，删除模式只属于删除动作，unresolved 不被破坏性删除，存续责任删除前已迁移；
+fixed 删除具有当前任务授权和责任替代/迁移/终止决定；六种删除模式的保留边界与失败不发布；槽位
+唯一性、内容种类、基数、manual/gap；固定内容、
 表格、分节、页眉页脚和分页误伤；expected/unexpected diff 与自动图片范围；build 不得
 发布 frozen；freeze 能独立拒绝 hash 不一致、来源变化、旧 snapshot、缺页审查、blocking
 finding 和不完整 bundle。Skill eval 观察 Agent 是否迁移说明语义、交叉验证样式、正确

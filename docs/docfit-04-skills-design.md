@@ -80,8 +80,10 @@ Skill 明确指导 Agent：
 
 1. 盘点来源、冲突、缺口和不可修改的源文件；
 2. 用 `template_observe` 建立不可变快照并查询全部候选、有效样式和页面证据；
-3. 分类 fixed、fill、generate、repeat、conditional、manual、remove、unresolved 责任；
-4. 在删除说明或示例前迁移仍需保留的格式、基数、生成和放置语义；
+3. 分开记录当前可见角色、fixed/fill/generate 存续责任、基数/条件/处理方式和证据状态；
+   不把 repeat/conditional/manual/remove/unresolved 混入责任 kind；
+4. 先决定保留、槽位、manual 或删除动作；仅为删除动作选择删除模式，并在删除说明或
+   示例前迁移仍需保留的格式、基数、生成和放置语义；
 5. 交叉验证文字要求与模板最终有效格式，材料不能裁决的高影响冲突询问用户；
 6. 选择最小安全删除模式和完整槽位语义，用 Skill script 编译 canonical mutation plan，
    再由 `template_mutate` 原子执行；
@@ -104,9 +106,10 @@ Skill 明确指导 Agent：
 个语义单元以及使用哪种模式。
 
 每个自动槽位至少表达任务内唯一 `slot_id`、最终快照唯一 locator、内容种类
-（scalar、paragraph stream 或 composite）、基数、物理边界、样式观测和 fill/generate/
-repeat/conditional 责任。示例数量不是重复基数，生成对象不是缓存文字。不能唯一自动
-处理的区域标为 manual；证据无法定义的责任进入 gap/unresolved。
+（scalar、paragraph stream 或 composite）、基数、条件、handling、物理边界和样式观测。
+责任 `kind` 只使用 fill/generate；重复由基数表示，条件性由条件字段表示，manual 由
+handling 和 manual region 表示。示例数量不是重复基数，生成对象不是缓存文字。不能唯一
+自动处理的区域标为 manual；证据无法定义的责任进入 gap/unresolved。
 
 样式判断区分命名样式、直接格式、继承链、最终有效值、文字要求、适用范围、来源、
 冲突和未决属性。Tool 返回所有“标题”等文本候选及格式事实，不替 Agent 判断哪个候选
@@ -420,28 +423,33 @@ Subagent 只分析。主 Agent 合并目录与正文标题、引用与参考文�
 通用概念、识别方法、解释原则或处理模式作为产品 Knowledge 的候选变更；该变更
 仍需独立评审、测试并随新的产品版本发布。
 
-## 7. 模板责任模型
+## 7. 模板语义与动作模型
 
-`docfit-school-extract` 不只给可见文字分类，而是把学校材料中的具体表达转换为模板责任：
+`docfit-school-extract` 不把不同问题压进一个分类枚举，而是把学校材料中的具体表达转换为
+以下正交字段：
 
-```text
-fixed        学校拥有、后续不得随意改写的内容和结构
-fill         等待后续内容进入的稳定接口
-generate     由标题、题注或其他关系生成的区域
-repeat       承接可变数量同构内容的区域
-conditional  只在已记录条件成立时出现的区域
-manual       签字、盖章、审批等人工责任
-remove       不进入成稿、但删除前必须先迁移其有效语义的示例或说明
-unresolved   当前材料或能力不足以可靠解释的内容
-```
+| 字段 | 含义 |
+|---|---|
+| `observed_roles[]` | 当前对象是 fixed content、placeholder、instruction、example、mechanism、structural container 还是 unknown；可多选 |
+| `responsibilities[].kind` | 清理后模板 Interface 仍承担的 fixed、fill 或 generate 责任 |
+| `responsibilities[].content_kind` | fill/generate 责任的 scalar、paragraph stream 或 composite 内容种类 |
+| `responsibilities[].cardinality` | `min`/`max`；重复性在这里表达 |
+| `responsibilities[].condition` | 可选且有来源的出现条件 |
+| `responsibilities[].handling` | automatic 或 manual 的履行方式 |
+| `resolution` | resolved 或 unresolved 的证据状态 |
+| `operations[].action` | materialize slot、register manual region 或 remove content；纯保留不产生修改 operation |
+| `operations[].removal_mode` | 仅属于 remove content 动作的物理删除方式 |
 
-这是一种通用处理模型，不是阶段或固定分类器。同一区域可以组合多种责任；例如表单可以
-同时具有 fixed、fill、conditional 和 manual 部分。颜色、括号、下划线、空白或源文件中
-出现了几个示例，都不能单独决定责任。
+同一区域可以有多个可见角色和存续责任；需要不同操作的片段必须拆成可独立定位的目标。
+`repeat`、`conditional`、`manual` 是责任修饰字段，`unresolved` 是证据状态，`remove` 是动作，
+都不是 responsibility kind。颜色、括号、下划线、空白或源文件中出现了几个示例，都不能
+单独决定任何字段。
 
-无法可靠解释时保留原文或结构并进入 unresolved，不猜测性删除。说明和示例只有在其
-承载的结构、格式、顺序、必填性和生成规则已经迁移后才能进入 remove。`convert-thesis`
-不重新分类学校模板，只消费冻结模板索引已经表达的责任。
+无法可靠解释时保留原文或结构并标记 unresolved，不猜测性删除。说明和示例只有在其
+承载的结构、格式、顺序、必填性和生成规则已经迁移后才能获得 remove content 动作；若
+确实没有存续责任，也要显式记录空责任、证据和理由。删除模式只回答如何安全修改物理
+容器，不能证明内容为什么可删。同一个 fill 占位符可因位于段落或表格单元格而使用不同
+模式。`convert-thesis` 不重新解释这些字段，只消费冻结模板 Interface。
 
 ## 8. Skill 内容组织
 

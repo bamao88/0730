@@ -74,8 +74,9 @@ DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调�
 单元专家目录或固定工作流节点。
 
 两个 Skill 的目标职责不同：学校提取 Skill 产出冻结模板 Interface，转换 Skill 消费
-该 Interface 并产出最终论文。Skill 可以给出可调整的操作步骤，说明何时观察、如何选择
-删除模式和槽位语义、怎样解释比较结果；其 bundled scripts 把 Agent 已完成的语义决定
+该 Interface 并产出最终论文。Skill 可以给出可调整的操作步骤，说明何时观察、如何把
+可见角色、存续责任、修饰字段、证据状态和修改动作分开记录、如何仅为删除动作选择删除
+模式和定义槽位语义、怎样解释比较结果；其 bundled scripts 把 Agent 已完成的语义决定
 确定性编译为 Tool typed input，但不替 Agent 判断或操作 DOCX。主 Agent 是任务和最终
 产物的 owner：它检查每次脚本/Tool 结果，发现失败、误伤或结果不合理时修正并重新执行；
 Tool 的单次成功/失败不是任务终态。Skill 不把这套自适应返工变成持久化状态机。模板 hash
@@ -190,8 +191,9 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 但精确修改仍通过绑定当前 DOCX 快照的 opaque `object_ref` 完成。
 
 冻结模板产物也不是全局 Artifact 系统。其 `slot_id` 只在一份明确 hash 的冻结模板
-快照内成立；索引必须区分固定、填充、生成、重复、条件、人工和未决责任。自动区域必须
-能够在该快照中唯一定位，并声明期望内容种类与基数；人工区域和无法表达的 gap 显式。
+快照内成立；索引的责任 kind 必须区分 fixed、fill 和 generate，并分别记录 cardinality、
+condition、automatic/manual handling 与 resolved/unresolved 状态。自动区域必须能够在该
+快照中唯一定位，并声明期望内容种类与基数；人工区域和无法表达的 gap 显式。
 模板一经修改，旧槽位 locator 不得继续作为当前事实。
 转换完成时，学生源内容清单中的每一项必须已经放置，或具有明确且可审计的不放置原因；
 该任务级覆盖合同不升级为跨任务 Content Ledger。

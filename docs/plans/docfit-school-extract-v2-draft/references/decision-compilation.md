@@ -21,13 +21,25 @@ contains:
 
 - unique decision and operation IDs;
 - current `snapshot_ref` and target ref;
+- current `observed_roles`, surviving responsibilities, and `resolution`;
+- for each responsibility, `kind: fixed | fill | generate`, required content kind for fill/generate,
+  cardinality, optional condition, and `handling: automatic | manual`;
 - expected text/fingerprint;
-- action and, for deletion, one supported removal mode;
+- `action: materialize_slot | register_manual_region | remove_content`; preserving a target emits no
+  mutation operation;
+- only for `remove_content`, one supported `removal_mode`;
+- migration destination refs for every responsibility carried by removed instructions/examples, or an
+  explicit empty surviving-responsibility decision with evidence and rationale;
 - complete slot semantics when materializing a slot;
 - rationale and supporting observation/source refs.
 
 Run `compile_mutation_plan.py` to produce `mutation-plan.json`. Compilation rejects duplicate IDs, unknown
-modes, incomplete slot semantics, cross-snapshot refs, and page/bbox/bare text used as edit identity.
+modes, incomplete slot semantics, cross-snapshot refs, and page/bbox/bare text used as edit identity. It also
+rejects `repeat`, `conditional`, `manual`, `remove`, or `unresolved` used as a responsibility kind;
+`removal_mode` on a non-removal action; removal without a mode; destructive removal of unresolved content;
+removal whose surviving responsibilities have no migration destination; and removal of fixed content without
+an explicit current-task authorization plus a decision that replaces, migrates, or retires that fixed
+responsibility.
 
 ## Review decisions
 

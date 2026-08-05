@@ -3,20 +3,27 @@
 Use this reference to decide what a visible template element means and which responsibility must survive
 cleanup. Keep school-specific conclusions in the current artifact, not in this reference.
 
-## Content responsibilities
+## Do not flatten different questions into one classification
 
-Classify each relevant region by its downstream responsibility:
+Record the current visible role separately from the responsibility that must survive cleanup:
 
-| Responsibility | Meaning |
-|---|---|
-| fixed | Must remain unchanged in the reusable template |
-| fill | Downstream content replaces an empty or placeholder value |
-| generate | A program or Word feature must generate the result |
-| repeat | A structural unit may occur a task-dependent number of times |
-| conditional | Presence depends on a stated condition |
-| manual | Meaning is known, but safe automatic placement is not |
-| remove | Content is disposable after its surviving semantics are migrated |
-| unresolved | Evidence cannot yet establish the responsibility |
+| Field | Meaning | Values |
+|---|---|---|
+| `observed_roles` | What the current object visibly does | `fixed_content`, `placeholder`, `instruction`, `example`, `mechanism`, `structural_container`, `unknown` |
+| `responsibilities[].kind` | What the reusable interface must continue to provide | `fixed`, `fill`, `generate` |
+| `responsibilities[].content_kind` | What a fill/generate responsibility carries | `scalar`, `paragraph_stream`, `composite` |
+| `responsibilities[].cardinality` | How many instances the responsibility allows | independent `min` and `max` |
+| `responsibilities[].condition` | When the responsibility is present | an optional, sourced condition |
+| `responsibilities[].handling` | Whether fulfillment can be automated safely | `automatic`, `manual` |
+| `resolution` | Whether current evidence supports the decision | `resolved`, `unresolved` |
+
+The first two fields may contain multiple entries. Split a target when different fragments need different
+operations.
+
+`repeat`, `conditional`, and `manual` are not responsibility kinds: they are cardinality, condition, and
+handling properties. `unresolved` is an evidence state. `remove` is a mutation action, not a semantic
+responsibility. A disposable instruction can have no surviving responsibility after migration, while the
+fill or generate responsibility it described continues at another target.
 
 Classification is a semantic decision, not text matching. The same phrase can be fixed content in one
 location and an instruction in another.
@@ -35,7 +42,9 @@ demonstrates:
 - a repeated container or composite structure.
 
 Move each surviving responsibility into the cleaned template structure, slot manifest, fixed-region record,
-manual region, or gap. Only then may the visible instruction/example be removed.
+manual region, or gap. A removal decision references those migration destinations. If nothing survives,
+record an explicit empty responsibility list with evidence and rationale. Only then may the visible
+instruction/example receive a `remove_content` operation.
 
 ## Logical units and physical pages
 
@@ -57,8 +66,9 @@ Treat the following as mechanisms rather than plain cached text:
 - headers, footers, page numbers, and section-linked content;
 - content controls and other wrapper/container relationships.
 
-If the reusable template must preserve the behavior, classify it as generate, repeat, conditional, or fixed
-as appropriate. Do not replace the mechanism with its current display value.
+If the reusable template must preserve the behavior, record `kind: generate` or `kind: fixed` as appropriate;
+express repetition through cardinality and conditional presence through `condition`. Do not replace the
+mechanism with its current display value.
 
 ## Source conflicts
 

@@ -58,6 +58,14 @@
       "files": [
         "input/title-line-template.docx"
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "‘请填写论文标题’已经分类成 fill，我准备把 responsibility 改成 remove，再用 remove_container 删除整段。这样分类和删除模式就对应上了吧？",
+      "expected_output": "拒绝把责任和动作混成一个枚举：当前文字的 observed role 是 placeholder/instruction，存续 responsibility kind 仍是 fill；repeat/conditional/manual 分别由 cardinality/condition/handling 表达，unresolved 是 resolution，remove_content 才是动作。先把 fill 责任迁移到完整且唯一的标题槽位，再为提示文字建立 remove_content；removal_mode 只在该删除动作中出现，并按物理容器选择最小安全模式，不能从 fill 直接推导，也不能用 remove_container 顺带删除需保留的槽位容器。",
+      "files": [
+        "input/title-placeholder-template.docx"
+      ]
     }
   ]
 }

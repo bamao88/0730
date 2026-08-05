@@ -2,6 +2,27 @@
 
 Use this reference after observation has produced a current snapshot and stable target candidates.
 
+## Removal is an operation, not a content responsibility
+
+First record the target's `observed_roles`, surviving `responsibilities`, responsibility modifiers, and
+`resolution`. Then decide the operation. `removal_mode` is required only for `action: remove_content`; it
+answers how to alter the physical document safely, not whether or why the content may be removed.
+
+There is no one-to-one mapping from semantic responsibility to removal mode:
+
+| Semantic case | Required treatment before removal | Typical operation relationship |
+|---|---|---|
+| fixed content or structure | Preserve unless current-task evidence explicitly authorizes replacement | No destructive removal by default |
+| fill placeholder | Bind the surviving fill responsibility to a complete slot | Remove only the placeholder text; preserve the slot container |
+| instruction or example | Migrate every sourced constraint, or explicitly record that none survives | Remove the visible source only after migration |
+| generate mechanism | Preserve the live mechanism and its generate responsibility | Cached/example text may be removable; the mechanism is not |
+| manually fulfilled responsibility | Register the manual region and required action | Instruction text may be removable; the manual target remains |
+| unknown or unresolved region | Obtain more evidence or preserve the region | No destructive removal |
+
+The same semantic case can require different modes because the physical container differs. Conversely, the
+same mode can remove placeholders, instructions, or examples after their different semantic preconditions
+have been satisfied.
+
 ## Select the smallest safe deletion
 
 | Mode | Use when | Required preservation check |

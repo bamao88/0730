@@ -56,8 +56,8 @@ template_freeze
 ```text
 盘点来源
   → 观察不可变模板快照
-  → Agent 分类内容责任并解决关键歧义
-  → Agent 选择删除模式和槽位语义
+  → Agent 分开记录可见角色、存续责任、修饰字段与证据状态
+  → Agent 决定修改动作；仅为删除动作选择删除模式
   → Skill script 编译 mutation plan
   → Tool 原子修改
   → Tool 对账并返回原生图片
@@ -72,9 +72,11 @@ Agent 在这个过程中应完成以下工作：
 
 1. 盘点模板、文字要求、官方示例及其来源状态，记录冲突和无法确认的内容。
 2. 观察模板结构、可见对象、有效样式、槽位候选和页面证据，不把页码当成编辑身份。
-3. 把内容分类为固定内容、待填槽位、生成责任、重复结构、条件区域、人工区域、应删除
-   内容或未决内容。
-4. 删除说明或示例前，先迁移其中仍需保留的格式、基数、生成机制或填写责任。
+3. 不使用混合的单一内容分类。分别记录当前可见角色，清理后存续的 fixed/fill/generate
+   责任，基数、条件与 automatic/manual 处理方式，以及 resolved/unresolved 证据状态。
+4. 先依据语义决定保留、槽位、manual 或 `remove_content` 操作；只有删除操作才选择
+   `removal_mode`。删除说明或示例前，先迁移其中仍需保留的格式、基数、生成机制或填写
+   责任。
 5. 将文字要求与模板的最终有效格式交叉验证；冲突不能靠样式名、历史经验或常识消解。
 6. 对每个修改给出明确目标、前置指纹、删除模式或槽位合同，由 Skill script 编译并校验
    mutation plan，再交给 Tool 执行。
@@ -93,11 +95,16 @@ Agent 在这个过程中应完成以下工作：
 ### 4.1 `compile_mutation_plan.py`
 
 输入是 Agent 写出的 `mutation-decisions.yaml`，包含当前 `snapshot_ref`、decision/operation
-ID、目标 ref、expected text/fingerprint、删除模式、槽位语义、理由和证据 ref。
+ID、目标 ref、当前可见角色、存续责任、责任的内容种类/基数/条件/处理方式、证据状态、
+expected text/fingerprint、动作、删除动作的 `removal_mode`、槽位语义、迁移目标、理由和
+证据 ref。
 
-脚本检查 operation ID 唯一、action/mode 合法、必填前置条件存在、自动槽位语义完整、
-页码/bbox/裸文本未被冒充 locator，并输出 `mutation-plan.json`，供
-`template_mutate` 直接消费。
+脚本检查 operation ID 唯一、action/`removal_mode` 合法、必填前置条件存在、自动槽位
+语义完整、页码/bbox/裸文本未被冒充 locator，并输出 `mutation-plan.json`，供
+`template_mutate` 直接消费。它拒绝把 repeat/conditional/manual/remove/unresolved 写成
+责任 kind，拒绝非删除动作携带删除模式、删除动作缺少模式、未决内容被破坏性删除、
+删除前存续责任没有迁移目标，以及没有当前任务明确授权和责任替代/迁移/终止决定的 fixed
+删除。
 
 ### 4.2 `compile_review_record.py`
 
@@ -161,7 +168,7 @@ operations:
   - operation_id: clean-title
     action: remove_content
     target_ref: ...
-    mode: clear_text_preserve_container
+    removal_mode: clear_text_preserve_container
     expected_text: 请填写论文标题
   - operation_id: slot-title
     action: materialize_slot
@@ -273,7 +280,8 @@ candidate-template-artifact/
 - 模板精确 hash 与来源 hash；
 - 固定区域及其指纹；
 - 自动槽位的 `slot_id`、唯一 locator、内容种类和基数；
-- 生成责任、重复责任和条件责任，而不是只保存当前缓存文字；
+- fixed/fill/generate responsibility kind，以及独立的 cardinality、condition、handling 和
+  resolution，而不是只保存当前缓存文字或把不同维度压进一个枚举；
 - manual 区域、gap、冲突和未决项；
 - 样式的观测值、要求值、来源、覆盖范围与冲突状态；
 - 绑定最终模板 hash 的逐页视觉审查记录；
@@ -339,8 +347,10 @@ src/docfit/template/
 - 定义槽位和 artifact 格式；
 - 决定 candidate 是否能发布为 frozen。
 
-Skill script tests 还要覆盖 canonical 输出、schema 版本、无部分写入、非法 mode/ref、
-槽位字段缺失、review 证据未覆盖、跨 snapshot 引用和 blocking finding 保留。
+Skill script tests 还要覆盖 canonical 输出、schema 版本、无部分写入、非法
+`removal_mode`/ref、语义字段混层、非删除动作携带删除模式、删除动作缺少模式、未决内容
+删除、存续责任未迁移、未获授权的 fixed 删除、槽位字段缺失、review 证据未覆盖、跨
+snapshot 引用和 blocking finding 保留。
 
 ## 9. 最小验证集
 
@@ -348,7 +358,8 @@ Tool contract tests 至少覆盖：
 
 - 不可变 snapshot/hash、旧引用拒绝和查询返回全部同文候选；
 - 六种删除模式的保留/删除边界与失败不发布；
-- 槽位唯一性、内容种类、基数、manual/gap 和复合/重复/生成责任；
+- 槽位唯一性、内容种类、fixed/fill/generate kind、cardinality/condition/handling、
+  resolution、manual/gap 和复合/生成机制；
 - expected/unexpected diff、分节/表格/固定内容误伤和自动图片范围；
 - build 只能产生 candidate；
 - freeze 独立发现 hash 不一致、旧快照、缺页审查、blocking finding 和来源变化。

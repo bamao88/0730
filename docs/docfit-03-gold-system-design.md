@@ -85,9 +85,10 @@ manual_review: [cover_page, toc_pagination]
 
 模板提取目标使用 `docfit-school-extract`，其 Gold 只保存 frozen artifact 的稳定事实、
 带来源引用的当前任务事实、冲突与不确定性：冻结模板 hash、区域责任、自动定位唯一性、
-内容种类与基数、manual 区域、gap、绑定最终 hash 的逐页审查和 freeze 结果。区域责任
-至少能够区分固定、填充、生成、重复、条件、人工和未决。Gold 不把 build candidate 或
-Agent 自报当作 frozen。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
+内容种类与基数、manual 区域、gap、绑定最终 hash 的逐页审查和 freeze 结果。责任 kind
+至少能够区分 fixed、fill 和 generate，并把重复性、条件性、人工处理和未决状态分别保存
+在 cardinality、condition、handling 和 resolution 中。Gold 不把 build candidate 或 Agent
+自报当作 frozen。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
 就成为产品 Knowledge 或可自动复用的学校包。提供合格冻结模板产物和学生论文并要求
 交付转换的用例属于 `convert-thesis`。
 测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
@@ -100,8 +101,9 @@ Agent 自报当作 frozen。运行时产出的学校模板仍是当前任务资�
 - 转换候选以目标模板为主干，学生 DOCX 只作为只读内容来源；
 - placement 明确学生内容进入的模板槽位或区域；“学生副本导入了模板节”不是等价结果；
 - 槽位索引绑定精确冻结模板 hash，自动槽位在该快照内唯一定位；
-- 每个区域声明固定、填充、生成、重复、条件、人工或未决责任；自动区域同时声明预期
-  内容种类和基数，manual 与无法安全表达的 gap 显式保留；
+- 每个区域声明 fixed/fill/generate responsibility kind，并分别声明 cardinality、condition、
+  handling 和 resolution；自动区域同时声明预期内容种类和基数，manual 与无法安全表达的
+  gap 显式保留；
 - 生成机制没有被压成当前缓存文字，重复区域没有把示例数量冻结成实例基数；
 - 转换不依赖模板产物由哪个 Skill 或适配器生产；
 - 标题和章节层级；

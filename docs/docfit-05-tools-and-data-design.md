@@ -193,7 +193,9 @@ Tool 不自动判断说明、示例、论文标题、来源优先级或视觉合
 槽位操作可以在既有段落、表格单元格、段落流边界或受支持物理锚点 materialize slot，
 也可以登记 manual 区域。Tool 校验 snapshot 所属、目标 ref、expected text/fingerprint，
 全部操作原子执行，重开输出并检查需保留容器和非目标内容；成功返回新 hash、after
-snapshot 与 `mutation_ref`，失败不发布。Tool 不选择 target、mode 或 slot 语义。
+snapshot 与 `mutation_ref`，失败不发布。Tool 不选择 target、`removal_mode` 或 slot 语义。
+删除模式只允许出现在 `action: remove_content` 的 operation 中；它描述物理修改方式，
+不充当内容责任或删除授权。
 
 `template_compare` 接受 before/after snapshot 与 mutation ref，同时比较对象增删改、固定
 文字、样式签名、表格网格、节、页眉页脚、分页边界、槽位容器、页数和视觉布局。输出
@@ -228,14 +230,17 @@ Agent 的语义判断不能直接停留在自然语言中，也不能由 Tool �
 
 | 脚本 | 输入 | 输出 | Tool 消费方 |
 |---|---|---|---|
-| `compile_mutation_plan.py` | Agent 的目标、前置指纹、删除模式和槽位决定 | `mutation-plan.json` | `template_mutate` |
+| `compile_mutation_plan.py` | Agent 的可见角色、存续责任、修饰字段、证据状态、目标、前置指纹、动作、删除模式和槽位决定 | `mutation-plan.json` | `template_mutate` |
 | `compile_review_record.py` | compare metadata 与 Agent 对 finding/图片的判断 | `review-record.json` | build/freeze 证据 |
 | `compile_artifact_spec.py` | 最终来源、责任、槽位、样式、manual/gap 和 review record | `artifact-spec.json` | `template_build` |
 
 脚本与 Tool 共享版本化类型模型，负责字段完整性、ID/ref/hash 一致性、canonical 序列化和
 失败时不写部分输出。它们只读取当前任务中的决策 YAML/JSON 和 Tool 已返回的结构化
 metadata；不读取或修改 DOCX、不调用 Tool、不生成语义决定、不解释图片、不发布产物。
-消费方 Tool 必须重新校验，不能把“脚本执行成功”当作权威文档事实。
+`compile_mutation_plan.py` 还拒绝混层的责任 kind、`removal_mode` 与 action 不匹配、破坏性
+删除 unresolved 内容、删除前存续责任没有迁移目标，以及没有当前任务授权和责任替代/
+迁移/终止决定的 fixed 删除。消费方 Tool 必须重新校验，不能把“脚本执行成功”当作权威
+文档事实。
 
 Tool 内部实现可以拆成 `observation.py`、`mutation.py`、`comparison.py`、`artifact.py` 和
 `validation.py`。另有开发脚本仅用于原型、fixture 和人工调试，不与生产 Skill scripts
@@ -414,8 +419,8 @@ analysis_path: /path/analysis.json
 Tool 将完整结果保存在任务临时目录，只向 Agent 返回摘要、风险和按需查询入口。相同输入 hash 的后续 `focus` 查询可以复用解析结果；这只是 Tool 内部缓存，不是新的运行时对象。Tool 只报告事实，不自行判定“这是一级标题”或“这是学生正文”。
 
 冻结模板 Interface 实施后，`docx_inspect` 还必须为产物校验提供客观事实：冻结模板
-hash、固定内容指纹、候选区域 locator 的唯一命中数、内容种类/基数约束，以及生成、
-重复、条件、manual、unresolved 和 gap 的结构证据。它不自行决定区域责任或某段学生
+hash、固定内容指纹、候选区域 locator 的唯一命中数、内容种类、fixed/fill/generate kind、
+cardinality、condition、handling、resolution 和 gap 的结构证据。它不自行决定区域责任或某段学生
 内容应进入哪个槽位；也不能用页码、bbox
 或单个近似文字命中冒充唯一 locator。本段是目标合同，当前 schema 与实现状态以 06
 第 6.9 节为准。
@@ -853,8 +858,9 @@ OfficeCLI 的 OpenXML 校验、DocFit 独立后置检查、当前任务已确认
 
 学校模板生产端的 package/hash/槽位/固定内容/逐页审查和来源检查由
 `template_freeze` 独立完成，`docx_validate` 不能替代 frozen 发布。转换端消费 frozen
-artifact 后，`docx_validate` 仍需核对输入 artifact ref/hash，固定、填充、生成、重复、
-条件、人工和未决责任没有被越过，固定内容未被未经证据改写；学生源内容清单中每个任务级 `source_item_id` 恰有一个
+artifact 后，`docx_validate` 仍需核对输入 artifact ref/hash，fixed/fill/generate 责任及其
+cardinality、condition、handling、resolution 约束没有被越过，固定内容未被未经证据改写；
+学生源内容清单中每个任务级 `source_item_id` 恰有一个
 明确 disposition（已放置到槽位，或有明确不放置原因）；不存在缺项、重复放置、无理由
 消失或越过 manual/gap 的自动处理。覆盖未闭合是 blocking issue，而不是普通 warning。
 这是当前转换验证职责，不改变学校模板五 Tool 合同。
@@ -877,11 +883,13 @@ frozen-template-artifact/
 ```
 
 这些文件共同组成一个 artifact；消费者不能把 manifest、视觉审查或 freeze report 与另
-一个模板任意组合。`template-artifact.json` 绑定 DOCX 精确 SHA-256 和来源 hash，表达固定、
-填充、生成、重复、条件、人工与未决责任。自动区域至少具有任务内唯一 `slot_id`、冻结
-快照唯一 locator、期望内容种类和基数；内容种类为 scalar、paragraph stream 或 composite，
-manual 是区域责任而不是伪内容类型。生成区域保留生成关系，重复区域不从示例数量推导
-基数，条件区域保留适用条件。locator 由 snapshot-bound 结构引用及前置指纹/上下文支持；
+一个模板任意组合。`template-artifact.json` 绑定 DOCX 精确 SHA-256 和来源 hash；
+`responsibilities[].kind` 只允许 fixed、fill、generate，重复性写入 `cardinality`，条件性
+写入 `condition`，automatic/manual 写入 `handling`，未决状态写入 `resolution`。自动区域
+至少具有任务内唯一 `slot_id`、冻结快照唯一 locator、期望内容种类和基数；内容种类为
+scalar、paragraph stream 或 composite。manual region 是 handling 的产物表达，不是内容
+类型或责任 kind。生成区域保留生成关系，重复区域不从示例数量推导基数，条件区域保留
+适用条件。locator 由 snapshot-bound 结构引用及前置指纹/上下文支持；
 页码、bbox 或近似文字只能作为视觉辅助。索引不承诺跨模板修改、跨任务或跨运行稳定。
 
 manifest 还记录固定内容指纹、manual/gap、来源与冲突、样式观测值与要求值、适用范围、

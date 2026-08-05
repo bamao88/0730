@@ -66,8 +66,9 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
   页码、坐标或近似文字匹配静默重绑；
 - 每个自动槽位在冻结快照内唯一可定位，并声明内容种类与基数；人工区域和无法表达的
   gap 显式存在，不能被伪装成自动槽位；
-- 索引区分固定、填充、生成、重复、条件、人工和未决责任；生成区域不被压成缓存文字，
-  重复区域不把示例数量冻结为实例基数；
+- 索引的责任 kind 区分 fixed、fill 和 generate，cardinality、condition、handling、resolution
+  分别表达重复性、条件性、人工处理和未决状态；生成区域不被压成缓存文字，重复区域不把
+  示例数量冻结为实例基数；
 - 跨 run 文本和占位符能被准确定位；
 - 跨文档模板组合复制完整依赖闭包、重映射冲突 ID，并在任一操作失败时不发布部分结果；
 - 一组编辑要么全部发布，要么全部不发布；
@@ -132,16 +133,17 @@ Tool test 的基本标准是确定性、可重复、源文件只读、失败不�
   命名样式、直接格式、继承链、最终有效值、作用范围、缺失与冲突可区分；
 - `template_mutate` 的六种删除模式分别证明应保留容器/网格/内容和应删除范围，歧义、
   fingerprint 失效或后置重读失败时不发布；
-- 自动槽位唯一定位，scalar/paragraph stream/composite、基数、fill/generate/repeat/
-  conditional、manual/gap 可表达，示例数量不成为重复基数；
+- 自动槽位唯一定位，scalar/paragraph stream/composite、fixed/fill/generate kind、独立
+  cardinality/condition/handling、manual/gap 可表达，示例数量不成为重复基数；
 - `template_compare` 能发现固定内容、表格网格、分节、页眉页脚、分页和槽位容器误伤，
   正确区分 expected/unexpected changes，并按风险返回原生 crop/整页/contact sheet；
 - compare 不输出视觉 pass/fail；图片与 before/after hash、页码和图片 hash 绑定；
 - `template_build` 只输出 candidate，拒绝重复 slot、旧 ref 和字段不完整；
 - `template_freeze` 独立重读，拒绝 package/hash 不一致、槽位多命中、固定指纹变化、来源
   变化、旧 snapshot、缺少最终逐页审查、blocking finding 和不完整 bundle；失败不发布；
-- `compile_mutation_plan.py` 对 operation ID、mode、ref/fingerprint 和槽位字段做确定性编译，
-  拒绝页码/bbox/裸文本 locator；
+- `compile_mutation_plan.py` 对 operation ID、语义字段、action/`removal_mode`、ref/fingerprint
+  和槽位字段做确定性编译，拒绝页码/bbox/裸文本 locator、混层的责任 kind、模式与动作
+  不匹配、破坏性删除 unresolved 内容、存续责任未迁移和未获授权的 fixed 删除；
 - `compile_review_record.py` 保留 blocking finding，拒绝跨 hash 图片和缺少必需审查；
 - `compile_artifact_spec.py` 拒绝重复 slot、缺失责任/基数/来源、隐式 manual/gap 和旧 ref；
 - 三个生产 Skill scripts 输出 canonical JSON、失败不写部分文件，且不读取/修改 DOCX、
@@ -181,9 +183,12 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
 - 面对多个同文候选时读取全部候选、上下文、有效格式和视觉位置，不以首个文字匹配
   决定语义目标；
-- 删除说明前迁移其中有效的格式、基数、生成或放置责任，并选择最小安全删除模式；
-- 为槽位明确内容种类、基数、物理边界和 fill/generate/repeat/conditional 责任；不能
-  唯一自动化时使用 manual/gap；
+- 分开记录当前可见角色、fixed/fill/generate 存续责任、cardinality/condition/handling
+  修饰字段和 resolution；不把 repeat/conditional/manual/remove/unresolved 当作责任 kind；
+- 删除说明前迁移其中有效的格式、基数、生成或放置责任；仅为 `remove_content` 动作选择
+  最小安全删除模式，不能从内容分类直接推导模式；
+- 为槽位明确内容种类、基数、条件、handling、物理边界和 fill/generate kind；不能唯一
+  自动化时使用 manual/gap；
 - 把语义判断写入可审阅 decision file，并通过 Skill scripts 编译 canonical Tool input；
   编译失败时补齐决定或证据，不手写 JSON 绕过结构校验；
 - 调用 `template_compare` 后读取 expected/unexpected changes 和它直接返回的原生图片，
@@ -248,7 +253,7 @@ limit      成本或重复调用上限
   有效值、冲突或未决，且未决属性没有被静默写入文档；
 - 必填模板内容或槽位已处理；
 - 冻结模板 hash 与槽位索引绑定有效，自动槽位唯一，manual/gap 没有被隐式越过；
-- 生成、重复、条件和未决区域保持各自责任，没有被降级为有限普通槽位；
+- generate 责任、重复基数、出现条件和未决状态均被保留，没有被降级为有限普通槽位；
 - 模板固定内容未被未经证据修改，学生源内容清单中的每一项已放置或有明确不放置原因；
 - 不应出现的占位符和说明文字已清理；
 - PDF 或页面预览可生成；
