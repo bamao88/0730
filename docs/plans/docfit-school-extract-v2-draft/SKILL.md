@@ -18,8 +18,9 @@ Do not fill student content. Do not promote school-specific conclusions into pro
 You decide meaning: which material is authoritative, what visible content is an instruction or example,
 which responsibility must survive deletion, what a slot means, and whether a visual change is reasonable.
 
+The bundled scripts validate and compile your completed semantic decisions into canonical Tool inputs.
 The template Tools establish facts, execute explicit operations, compare actual changes, compile a
-candidate, and independently freeze it. A Tool result is evidence, not a substitute for semantic judgment.
+candidate, and independently freeze it. Neither a script nor a Tool result substitutes for semantic judgment.
 
 ## Recommended method
 
@@ -36,12 +37,15 @@ Adapt the following sequence to the evidence. It is a working method, not a fixe
    do not resolve them from style names, prior schools, or convention alone.
 6. For each intended change, choose an exact target, expected fingerprint, removal mode, and any slot
    semantics. Ask the user when the ambiguity can materially change the reusable template.
-7. Call `template_mutate` with the explicit operation plan. Never use page numbers or text alone as edit
-   identity. If the Tool rejects a stale or ambiguous target, observe again and reconsider the decision.
+7. Write `mutation-decisions.yaml`, then run `scripts/compile_mutation_plan.py`. Give the resulting
+   `mutation-plan.json` to `template_mutate`. Never use page numbers or text alone as edit identity. If
+   compilation or mutation rejects a stale or ambiguous target, observe again and reconsider the decision.
 8. Call `template_compare`. Inspect its expected and unexpected changes and the native images it returns.
    Decide whether the result is reasonable, needs another edit, or requires user input.
-9. After the final snapshot and all pages are reviewed, call `template_build` with the confirmed semantic
-   inventory. Treat its output only as a candidate.
+9. Record your image judgments in `review-decisions.yaml` and run `scripts/compile_review_record.py`.
+   After the final snapshot and all pages are reviewed, run `scripts/compile_artifact_spec.py` over the
+   confirmed semantic inventory and review record. Give `artifact-spec.json` to `template_build` and treat
+   its output only as a candidate.
 10. Submit the candidate to `template_freeze`. Deliver it only when that independent Tool returns
     `status: frozen`.
 
@@ -59,6 +63,24 @@ Adapt the following sequence to the evidence. It is a working method, not a fixe
 - Automatic slots must be uniquely locatable in the final template snapshot. Otherwise mark the region
   manual or unresolved.
 - A successful mutation or build is not a frozen artifact. Only `template_freeze` can publish one.
+
+## Compile decisions before Tool execution
+
+Resolve `scripts/` relative to this `SKILL.md`; do not recreate the compilers ad hoc.
+
+| Script | Agent-authored input | Canonical output | Consumer |
+|---|---|---|---|
+| `compile_mutation_plan.py` | `mutation-decisions.yaml` | `mutation-plan.json` | `template_mutate` |
+| `compile_review_record.py` | compare result + `review-decisions.yaml` | `review-record.json` | artifact compilation and freeze evidence |
+| `compile_artifact_spec.py` | final semantic inventory + review record | `artifact-spec.json` | `template_build` |
+
+Write the semantic decision and its evidence first; the script only checks and serializes it. Treat compiler
+errors as missing or inconsistent decisions, not as permission to weaken the schema. Scripts must produce
+canonical output atomically and must not read or modify the DOCX, call a Tool, infer document meaning, or
+claim that a review/freeze passed. Tools revalidate every compiled request.
+
+Read [references/decision-compilation.md](references/decision-compilation.md) before preparing the three
+decision files or interpreting compiler failures.
 
 ## Choose the removal mode deliberately
 

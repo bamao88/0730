@@ -78,13 +78,15 @@ Skill 明确指导 Agent：
 3. 分类 fixed、fill、generate、repeat、conditional、manual、remove、unresolved 责任；
 4. 在删除说明或示例前迁移仍需保留的格式、基数、生成和放置语义；
 5. 交叉验证文字要求与模板最终有效格式，材料不能裁决的高影响冲突询问用户；
-6. 选择最小安全删除模式和完整槽位语义，再由 `template_mutate` 原子执行；
+6. 选择最小安全删除模式和完整槽位语义，用 Skill script 编译 canonical mutation plan，
+   再由 `template_mutate` 原子执行；
 7. 用 `template_compare` 对账结构变化并直接查看它返回的原生图片，由 Agent 解释结果；
-8. 只把确认后的最终快照交给 `template_build` 生成 candidate；
+8. 用 Skill scripts 把 Agent 的视觉判断编译为 review record，把最终语义清单编译为
+   artifact spec，再交给 `template_build` 生成 candidate；
 9. 由 `template_freeze` 独立重读并发布 frozen artifact。
 
-这是可按证据回退或重复的推荐方法，不是应用壳的固定调用图。Agent 做语义判断；Tool
-做事实、执行、对账和发布。生产 Skill 不包含脚本。
+这是可按证据回退或重复的推荐方法，不是应用壳的固定调用图。Agent 做语义判断；Skill
+scripts 把决定校验、规范化并序列化；Tool 做事实、执行、对账和发布。
 
 ### 3.3 删除、槽位与样式判断
 
@@ -102,7 +104,22 @@ repeat/conditional 责任。示例数量不是重复基数，生成对象不是�
 冲突和未决属性。Tool 返回所有“标题”等文本候选及格式事实，不替 Agent 判断哪个候选
 具有论文标题语义。Agent 不从历史任务、常识或样式名补值。
 
-### 3.4 比较与完成
+### 3.4 决策编译脚本
+
+生产 Skill 携带三个确定性脚本：
+
+- `compile_mutation_plan.py`：把 Agent 的目标、前置指纹、删除模式和槽位决定编译为
+  `mutation-plan.json`，供 `template_mutate` 消费；
+- `compile_review_record.py`：把 Agent 对 compare finding/原生图片的解释编译为绑定
+  after snapshot 的 `review-record.json`；
+- `compile_artifact_spec.py`：把最终来源、fixed/slot/manual/gap、样式和 review 决定编译为
+  `artifact-spec.json`，供 `template_build` 消费。
+
+脚本使用与 Tool 共享的版本化类型模型，检查 ID、字段、ref、snapshot/hash、覆盖和
+canonical 序列化；失败时不写部分输出。它们不读写 DOCX、不调用 Tool、不推导语义、
+不替 Agent 判断视觉合理性，也不能发布 candidate/frozen。Tool 必须再次验证脚本输出。
+
+### 3.5 比较与完成
 
 `template_compare` 报告 expected/unexpected changes，并根据改动风险直接返回 crop、整页、
 相邻页或 contact sheet。Tool 不输出视觉 pass/fail；Agent 必须解释分页、固定内容、表格、
@@ -450,9 +467,10 @@ reference 应围绕问题机制组织，例如模板内容责任如何表达、�
 `SKILL.md` 直接指向；只有真实文件数量和导航收益证明需要时才增加 index。契约测试验证
 所有引用存在和两棵 Skill 的领域隔离，不把某种目录形状永久写死。
 
-`docfit-school-extract` 的生产目录不包含可执行脚本。决定允许哪些文档变化、检查误伤、
-编译 artifact 或决定冻结的逻辑属于有类型 Tool 合同。开发期原型、fixture 生成和人工
-调试脚本可以位于开发/测试目录，但不向 Agent 暴露，不能成为生产步骤或合同真值。
+`docfit-school-extract` 的生产目录包含上述三个决策编译脚本。脚本属于 Skill bundled
+resources，负责把 Agent 已完成的判断变成稳定结构；文档观察、修改、对账、candidate
+构建和 frozen 发布仍属于有类型 Tool。开发期原型、fixture 生成和人工调试脚本另放在
+开发/测试目录，不能冒充生产编译器或发布边界。
 
 冻结模板 Interface 的候选 Skill 采用以下目标 reference 树；它是
 `docs/plans/docfit-school-extract-v2.md` 中的实施草案，也不表示当前
@@ -461,15 +479,21 @@ reference 应围绕问题机制组织，例如模板内容责任如何表达、�
 ```text
 docfit-school-extract/
 ├── SKILL.md
+├── scripts/
+│   ├── compile_mutation_plan.py
+│   ├── compile_review_record.py
+│   └── compile_artifact_spec.py
 └── references/
+    ├── decision-compilation.md
     ├── template-semantics.md
     ├── deletion-and-slot-decisions.md
     ├── style-reconciliation.md
     └── visual-regression.md
 ```
 
-Skill 正文说明 Agent 必须理解和判断的完成语义；hash、locator、原子发布和固定内容
-保护由 Tool/App 强制。完整字段 schema 不复制到 Skill。
+Skill 正文说明 Agent 必须理解和判断的完成语义；scripts 编译决定结构；hash、locator、
+文档后置检查、原子发布和固定内容保护由 Tool/App 强制。完整字段 schema 不复制到
+SKILL.md 或 script 源码，而由共享类型模型维护。
 
 ## 9. Skill 评审问题
 
@@ -478,8 +502,8 @@ Skill 正文说明 Agent 必须理解和判断的完成语义；hash、locator�
 - 学校事实是否被误写进通用 Skill？
 - OOXML 细节是否泄漏到 Skill？
 - 是否出现固定阶段、状态或 checkpoint？
-- 学校模板生产是否只通过五个 `template_*` Tool，而没有退回生产脚本或一个自动做完
-  全部语义判断的大 Tool？
+- 学校模板生产是否由三个 Skill 决策编译脚本衔接五个 `template_*` Tool，同时没有让
+  脚本或一个大 Tool 自动做完语义判断？
 - 是否在修改前、布局变化后和最终交付前使用了当前图片证据，而不是只看结构数据或旧截图？
 - 是否错误地把页码当成稳定编辑身份，或把 Adobe 与 CLI 的同页码当成同一内容范围？
 - Adobe 转换是否遵守缓存和调用额度，只用于首次 baseline 与必要的 candidate verification？

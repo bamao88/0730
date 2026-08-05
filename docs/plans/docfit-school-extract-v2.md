@@ -29,17 +29,20 @@ template_freeze
 删除意图、槽位责任、来源冲突和视觉合理性的判断；Tool 负责可重复的文档事实、修改、
 验证和原子发布。
 
-生产 Skill 不包含脚本。原型、fixture 生成和人工调试脚本可以存在于开发目录，但它们
-不是 Agent 能力面，不能定义公开合同，也不能成为生产任务的必经步骤。
+生产 Skill 包含三个确定性“决策编译”脚本，把 Agent 的语义判断规范化为 Tool 可稳定
+消费的 typed JSON：mutation plan、visual review record 和 artifact spec。脚本不读取或
+修改 DOCX，不替 Agent 做语义判断，也不发布 candidate/frozen；五个 Tool 仍是文档事实、
+副作用、对账和冻结的权威边界。
 
 ## 2. 四类资产各自负责什么
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 推荐做法、判断步骤、删除与槽位决策原则、冲突处理、视觉解释、询问用户的时机 | 实现 DOCX 操作、复制 Tool schema、宣称机器验证成功 |
+| Skill | 推荐做法、判断步骤、删除与槽位决策原则、冲突处理、视觉解释、询问用户的时机 | 实现 DOCX 操作、宣称机器验证成功 |
+| Skill scripts | 把 Agent 已完成的语义决定校验、规范化并编译为版本化 Tool 输入 | 观察/修改 DOCX、生成语义决定、证明视觉正确、发布产物 |
 | Tool | 不可变观察、带前置条件的原子修改、结构与视觉差异、候选编译、独立冻结 | 判断哪个“标题”是论文标题、决定说明是否该删、解释版式是否合理 |
-| references | 多场景复用但不宜全部放在主文件的判断方法 | 学校事实、Tool 手册、脚本命令、固定工作流状态机 |
-| 开发脚本 | 原型验证、fixture 生成、人工调试 | 生产执行、发布、公开合同和 Agent 路由 |
+| references | 多场景复用但不宜全部放在主文件的判断方法，以及决策文件/编译器的使用合同 | 学校事实、脚本实现源码、完整 Tool 手册、固定工作流状态机 |
+| 开发脚本 | 原型验证、fixture 生成、人工调试 | 冒充生产决策编译器或 frozen 发布边界 |
 
 `Skill` 可以明确告诉 Agent 通常先做什么、后做什么，以及每一步的判断标准。这是一种
 可调整的操作方法，不是由程序强制的工作流状态机。Agent 可以按证据需要回到观察、修改
@@ -52,9 +55,11 @@ template_freeze
   → 观察不可变模板快照
   → Agent 分类内容责任并解决关键歧义
   → Agent 选择删除模式和槽位语义
+  → Skill script 编译 mutation plan
   → Tool 原子修改
   → Tool 对账并返回原生图片
   → Agent 解释视觉结果
+  → Skill script 编译 review record 与 artifact spec
   → Tool 编译 candidate
   → Tool 独立验证并发布 frozen
 ```
@@ -67,14 +72,51 @@ Agent 在这个过程中应完成以下工作：
    内容或未决内容。
 4. 删除说明或示例前，先迁移其中仍需保留的格式、基数、生成机制或填写责任。
 5. 将文字要求与模板的最终有效格式交叉验证；冲突不能靠样式名、历史经验或常识消解。
-6. 对每个修改给出明确目标、前置指纹、删除模式或槽位合同，然后交给 Tool 执行。
+6. 对每个修改给出明确目标、前置指纹、删除模式或槽位合同，由 Skill script 编译并校验
+   mutation plan，再交给 Tool 执行。
 7. 阅读结构差异和 Tool 直接返回的图片，判断变化是合理结果、需要继续修改，还是必须
    询问用户。
-8. 只把已经确认的最终快照编译为 candidate；只有独立冻结通过后才交付 frozen artifact。
+8. 把视觉解释编译为 review record，把最终内容责任编译为 artifact spec；只将这些绑定
+   已确认最终快照的结构化输入交给 build。只有独立冻结通过后才交付 frozen artifact。
 
-## 4. 五个生产 Tool
+## 4. 三个生产 Skill 脚本
 
-### 4.1 `template_observe`
+三个脚本随 Skill 发布，由 Agent 在当前任务 work 目录中运行。它们使用与 Tool 共享的
+版本化类型模型，输入支持人可编辑的 YAML/JSON，输出为 canonical JSON；验证失败时不
+覆盖旧输出，也不生成部分文件。
+
+### 4.1 `compile_mutation_plan.py`
+
+输入是 Agent 写出的 `mutation-decisions.yaml`，包含当前 `snapshot_ref`、decision/operation
+ID、目标 ref、expected text/fingerprint、删除模式、槽位语义、理由和证据 ref。
+
+脚本检查 operation ID 唯一、action/mode 合法、必填前置条件存在、自动槽位语义完整、
+页码/bbox/裸文本未被冒充 locator，并输出 `mutation-plan.json`，供
+`template_mutate` 直接消费。
+
+### 4.2 `compile_review_record.py`
+
+输入是 `template_compare` 的结构化结果和 Agent 写出的 `review-decisions.yaml`。每项判断
+必须引用 comparison finding 或原生图片证据，并给出 `accepted | blocking | needs_edit`
+及理由。
+
+脚本检查 before/after snapshot 绑定、必需图片均有判断、blocking finding 未被静默清除、
+最终页面覆盖属于同一 hash，并输出 `review-record.json`。脚本只记录 Agent 判断，不决定
+视觉结果是否正确。
+
+### 4.3 `compile_artifact_spec.py`
+
+输入是最终 snapshot、内容责任/来源/样式决定、槽位、fixed/manual/gap 清单和
+`review-record.json`。脚本检查 `slot_id` 唯一、责任和内容种类/基数完整、来源与样式状态
+可追溯、manual/gap 显式、所有 ref 属于最终 snapshot，并输出 `artifact-spec.json`，供
+`template_build` 直接消费。
+
+脚本输出不是权威事实。`template_mutate` 和 `template_build` 必须按自己的 typed schema
+再次验证；`template_freeze` 更不能相信脚本的成功返回。
+
+## 5. 五个生产 Tool
+
+### 5.1 `template_observe`
 
 职责是建立不可变模板证据快照，或查询已有快照。
 
@@ -102,9 +144,9 @@ sheet、页面与对象映射，以及无法观察的内容。
 
 查询“标题”时，Tool 返回全部候选及其上下文和样式事实，不判断哪个候选具有论文标题语义。
 
-### 4.2 `template_mutate`
+### 5.2 `template_mutate`
 
-职责是安全执行 Agent 已经决定的显式操作计划。
+职责是安全执行 Agent 已经决定、并由 `compile_mutation_plan.py` 编译的显式操作计划。
 
 ```yaml
 snapshot_ref: ...
@@ -140,7 +182,7 @@ Tool 校验引用属于当前快照、expected text/fingerprint 成立；全部�
 `mutation_ref`。任何前置或后置检查失败时不发布输出。Tool 不替 Agent 选择目标、模式或
 槽位语义。
 
-### 4.3 `template_compare`
+### 5.3 `template_compare`
 
 职责是把修改计划与实际前后变化对账，并把 Agent 需要看的原生图片直接放入结果。
 
@@ -164,9 +206,10 @@ visual_scope: automatic
 
 Tool 不输出视觉 `pass`/`fail`。是否合理仍由 Agent 结合语义和图片判断。
 
-### 4.4 `template_build`
+### 5.4 `template_build`
 
-职责是把 Agent 已确认的最终快照和语义判断编译成候选产物。
+职责是把 Agent 已确认、并由 `compile_artifact_spec.py` 编译的最终快照与语义判断编译成
+候选产物。
 
 ```yaml
 final_snapshot_ref: ...
@@ -191,7 +234,7 @@ candidate-template-artifact/
 
 `template_build` 只能生成 `candidate`，不能宣布冻结完成。
 
-### 4.5 `template_freeze`
+### 5.5 `template_freeze`
 
 职责是独立重读候选产物并原子发布。它不直接相信 mutate/compare/build 的成功返回，也
 不接受 Agent 的“已检查”作为机器事实。
@@ -212,7 +255,7 @@ candidate-template-artifact/
 `status: blocked`、`published: false` 和 findings，不发布半成品。只有这个 Tool 能把
 `candidate` 变为 `frozen`。
 
-## 5. 冻结产物的最小语义
+## 6. 冻结产物的最小语义
 
 `template-artifact.json` 的物理 schema 由 Tool 合同定义，长期必须表达以下语义：
 
@@ -228,7 +271,7 @@ candidate-template-artifact/
 逻辑责任不能被物理分页替代；源模板中的示例数量不能自动成为重复区域的实例基数；
 生成对象不能退化为当前缓存结果。
 
-## 6. Skill 与 references 目录
+## 7. Skill、scripts 与 references 目录
 
 唯一候选目录为：
 
@@ -237,24 +280,31 @@ docs/plans/docfit-school-extract-v2-draft/
 ├── SKILL.md
 ├── evals/
 │   └── evals.json
+├── scripts/
+│   ├── compile_mutation_plan.py
+│   ├── compile_review_record.py
+│   └── compile_artifact_spec.py
 └── references/
+    ├── decision-compilation.md
     ├── template-semantics.md
     ├── deletion-and-slot-decisions.md
     ├── style-reconciliation.md
     └── visual-regression.md
 ```
 
-四份 reference 分别负责：
+五份 reference 分别负责：
 
+- `decision-compilation.md`：三份 Agent 决策输入、脚本调用、canonical 输出和失败语义；
 - `template-semantics.md`：内容责任、逻辑单元、说明语义迁移、复合/生成对象和来源冲突；
 - `deletion-and-slot-decisions.md`：删除模式、选择条件、槽位内容种类、基数、manual/gap；
 - `style-reconciliation.md`：命名/直接/继承/有效格式，以及文字要求与模板事实的交叉验证；
 - `visual-regression.md`：预期与意外变化、图片范围、Agent 视觉解释和最终全页审查。
 
-主文件直接给出通用操作方法和高频判断规则；只有遇到相应问题时才加载 reference。
-references 不保存学校具体要求，不复述 Tool schema，也不提供 Tool 路由/错误恢复手册。
+主文件直接给出通用操作方法、脚本使用点和高频判断规则；只有遇到相应问题时才加载
+reference。references 不保存学校具体要求，不复述完整 Tool schema，也不提供 Tool
+路由/错误恢复手册。
 
-## 7. 开发期实现形态
+## 8. 实现形态
 
 生产 Tool 的内部实现可以按职责拆分：
 
@@ -267,15 +317,21 @@ src/docfit/template/
 └── validation.py
 ```
 
-开发脚本只允许放在开发或测试目录，用于原型、fixture 和人工调试。满足下列任一条件的
-逻辑必须进入有类型 Tool 或其内部模块，而不是留在脚本里：
+生产 Skill scripts 只编译 Agent 决定；共享类型模型和真实校验逻辑由产品包提供，避免
+脚本复制一套会漂移的 schema。另有开发脚本可以放在开发或测试目录，用于原型、fixture
+和人工调试。
+
+满足下列任一条件的逻辑必须进入有类型 Tool 或其内部模块，而不是留在 Skill script：
 
 - 决定允许哪些文档变化；
 - 判定是否发生误伤；
 - 定义槽位和 artifact 格式；
 - 决定 candidate 是否能发布为 frozen。
 
-## 8. 最小验证集
+Skill script tests 还要覆盖 canonical 输出、schema 版本、无部分写入、非法 mode/ref、
+槽位字段缺失、review 证据未覆盖、跨 snapshot 引用和 blocking finding 保留。
+
+## 9. 最小验证集
 
 Tool contract tests 至少覆盖：
 
@@ -295,9 +351,10 @@ Skill eval 至少观察 Agent 是否：
 - 阅读 compare 返回的原生图片并解释变化；
 - 不把 candidate、局部视觉检查或 Tool 成功自报成 frozen。
 
-## 9. 实施边界
+## 10. 实施边界
 
-本次提交只确定长期架构、候选 Skill 和 references，不实现五个 Tool，也不切换当前生产
-Skill。后续实现应先冻结五个 Tool 的 typed schema 和 artifact schema，再完成 Tool contract
-tests，最后以一次原子变更替换生产 Skill。论文转换端的目标 Tool 面属于另一项设计；本
-方案不为兼容旧的 `docx_*` Tool 而扭曲学校模板领域合同。
+本次提交只确定长期架构、候选 Skill、scripts 接口和 references，不实现三个脚本或五个
+Tool，也不切换当前生产 Skill。后续实现应先冻结共享 typed schema，再实现三个决策编译
+脚本和五个 Tool，完成 script/Tool contract tests，最后以一次原子变更替换生产 Skill。
+论文转换端的目标 Tool 面属于另一项设计；本方案不为兼容旧的 `docx_*` Tool 而扭曲学校
+模板领域合同。

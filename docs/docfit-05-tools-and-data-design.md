@@ -213,9 +213,27 @@ manual regions、gaps 和 visual findings。它绑定最终模板 hash，检查 
 findings。它是唯一 frozen 发布边界。
 
 这五项不是一个隐藏语义工作流。`template_compare` 只报告事实，`template_build` 只编译，
-`template_freeze` 只验证；Agent 仍在 observe/mutate/compare 之间做开放式判断。生产 Skill
-没有脚本；内部实现可以拆成 `observation.py`、`mutation.py`、`comparison.py`、
-`artifact.py` 和 `validation.py`，开发脚本仅用于原型、fixture 和人工调试。
+`template_freeze` 只验证；Agent 仍在 observe/mutate/compare 之间做开放式判断。
+
+#### Skill 决策编译层
+
+Agent 的语义判断不能直接停留在自然语言中，也不能由 Tool 猜回去。生产 Skill 携带三个
+确定性脚本：
+
+| 脚本 | 输入 | 输出 | Tool 消费方 |
+|---|---|---|---|
+| `compile_mutation_plan.py` | Agent 的目标、前置指纹、删除模式和槽位决定 | `mutation-plan.json` | `template_mutate` |
+| `compile_review_record.py` | compare metadata 与 Agent 对 finding/图片的判断 | `review-record.json` | build/freeze 证据 |
+| `compile_artifact_spec.py` | 最终来源、责任、槽位、样式、manual/gap 和 review record | `artifact-spec.json` | `template_build` |
+
+脚本与 Tool 共享版本化类型模型，负责字段完整性、ID/ref/hash 一致性、canonical 序列化和
+失败时不写部分输出。它们只读取当前任务中的决策 YAML/JSON 和 Tool 已返回的结构化
+metadata；不读取或修改 DOCX、不调用 Tool、不生成语义决定、不解释图片、不发布产物。
+消费方 Tool 必须重新校验，不能把“脚本执行成功”当作权威文档事实。
+
+Tool 内部实现可以拆成 `observation.py`、`mutation.py`、`comparison.py`、`artifact.py` 和
+`validation.py`。另有开发脚本仅用于原型、fixture 和人工调试，不与生产 Skill scripts
+混用。
 
 #### 当前论文转换实现
 

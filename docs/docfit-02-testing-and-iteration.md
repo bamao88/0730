@@ -140,7 +140,13 @@ Tool test 的基本标准是确定性、可重复、源文件只读、失败不�
 - `template_build` 只输出 candidate，拒绝重复 slot、旧 ref 和字段不完整；
 - `template_freeze` 独立重读，拒绝 package/hash 不一致、槽位多命中、固定指纹变化、来源
   变化、旧 snapshot、缺少最终逐页审查、blocking finding 和不完整 bundle；失败不发布；
-- 生产 Skill 目录无脚本依赖，开发脚本不出现在 Agent Tool 面或产品完成门中。
+- `compile_mutation_plan.py` 对 operation ID、mode、ref/fingerprint 和槽位字段做确定性编译，
+  拒绝页码/bbox/裸文本 locator；
+- `compile_review_record.py` 保留 blocking finding，拒绝跨 hash 图片和缺少必需审查；
+- `compile_artifact_spec.py` 拒绝重复 slot、缺失责任/基数/来源、隐式 manual/gap 和旧 ref；
+- 三个生产 Skill scripts 输出 canonical JSON、失败不写部分文件，且不读取/修改 DOCX、
+  不调用 Tool；消费方 Tool 对输出重新验证；
+- 开发原型/fixture/debug 脚本不冒充生产决策编译器或产品完成门。
 
 这些门不依赖 M3 Eval，也不因 M3 延期而延后；本段不表示当前实现已经通过。
 
@@ -178,6 +184,8 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 删除说明前迁移其中有效的格式、基数、生成或放置责任，并选择最小安全删除模式；
 - 为槽位明确内容种类、基数、物理边界和 fill/generate/repeat/conditional 责任；不能
   唯一自动化时使用 manual/gap；
+- 把语义判断写入可审阅 decision file，并通过 Skill scripts 编译 canonical Tool input；
+  编译失败时补齐决定或证据，不手写 JSON 绕过结构校验；
 - 调用 `template_compare` 后读取 expected/unexpected changes 和它直接返回的原生图片，
   由 Agent 解释视觉合理性；分节、页数或映射异常未解决时不继续冻结；
 - 只在最终 hash 全页审查后 build，并只以 `template_freeze status: frozen` 作为发布依据；

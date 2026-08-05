@@ -157,6 +157,7 @@ Skill 是 DocFit 的论文转换任务说明。它包含：
 - 输入与稳定交付边界；
 - 推荐的模板提取或论文转换方法与判断标准；
 - 从真实任务错误中归纳的 Word/论文处理风险与按需 reference；
+- 需要重复、确定性完成的 Agent 决策结构编译脚本；
 - 禁止行为和最终回复。
 
 `SKILL.md` 保留任务、输入输出、推荐方法、常用判断和少量真正影响行为的高风险规则。
@@ -167,6 +168,11 @@ reference。
 Tool 的完整参数、返回 schema 和错误码由 Claude Agent SDK 注册信息提供。Skill 可以
 点名稳定的领域 Tool，并说明它在推荐方法中的责任边界以及 Agent 应如何解释结果；它
 不复制字段级 schema，也不维护与真实注册信息竞争的命令手册。
+
+Skill script 是 Skill 的 bundled resource，不是第六类产品资产。它可以读取当前任务中
+Agent 写出的决策 YAML/JSON和 Tool 已返回的结构化 metadata，使用与 Tool 共享的版本化
+类型模型输出 canonical request。它不得读取或修改 DOCX、调用 Tool、推导语义、解释
+图片或宣布 candidate/frozen；消费方 Tool 对脚本输出重新执行完整校验。
 
 Skill 不是：
 
@@ -196,9 +202,11 @@ Knowledge。它与 `convert-thesis` 都可以直接分析，或按当前任务�
 模板 Interface 可以由该 Skill、人工或其他受控适配器生产，只要通过同一契约门。
 
 Skill 的主要信息按四层披露：L0 `SKILL.md` 保存任务、输入输出、推荐操作方法、常用
-判断标准与高频风险；L1 同目录 references 按可复用判断问题展开；L2 产品
+判断标准与高频风险；L1 同目录 references 按可复用判断问题展开，bundled scripts 把
+Agent 决定编译为 Tool typed input；L2 产品
 Knowledge 保存跨学校通用概念；L3 当前任务材料、冻结模板产物和 Tool 证据保存具体
-事实。机器可强制的不变量下沉到 Tool、应用壳和测试。生产 Skill 脚本不承载产品合同。
+事实。Skill script 只强制决策结构；文档事实、副作用和发布不变量下沉到 Tool、应用壳
+和测试。
 
 ### 4.3 Knowledge
 
@@ -252,8 +260,9 @@ Tools 是 Agent 可调用的受控能力。Tool 面按任务域注册，而不�
   blocking findings，并作为唯一的 frozen 发布边界。
 
 这五项是新的目标合同，当前代码尚未实现。它们不是对 `docx_*` Tool 的兼容扩展；论文
-转换端未来采用什么目标 Tool 面属于独立设计。生产 Skill 不携带用于替代这些 Tool 的
-脚本，开发脚本只能用于原型、fixture 和人工调试。
+转换端未来采用什么目标 Tool 面属于独立设计。生产 Skill 同时携带三个决策编译脚本：
+mutation plan、review record、artifact spec。它们使用共享类型模型，把 Agent 判断变成
+canonical JSON，但不读取/修改 DOCX、不调用 Tool、不发布产物；Tool 必须再次验证输出。
 
 学校模板目标面中，模板样式观测封装在 `template_observe` 内部。Tool 负责展开命名样式、
 直接格式和继承后有效值，并报告覆盖、

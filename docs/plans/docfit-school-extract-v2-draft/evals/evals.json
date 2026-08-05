@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "模板中的蓝色括号文字是填写说明，每处只出现一次。请清理模板并做成可安全填写的冻结产物。",
-      "expected_output": "先观察当前快照；删除前迁移说明中仍有效的填写和格式责任；选择保留容器的删除模式；比较实际变化并查看图片；build 只作为 candidate，freeze 通过后才交付。",
+      "expected_output": "先观察当前快照；删除前迁移说明中仍有效的填写和格式责任；把语义决定写入 mutation-decisions 并通过 Skill script 编译后再调用 mutate；比较实际变化并查看图片；把审查与 artifact 决定编译为结构化输入；build 只作为 candidate，freeze 通过后才交付。",
       "files": [
         "input/school-template.docx",
         "input/requirements.pdf"
@@ -41,6 +41,14 @@
       "expected_output": "不把 build 成功或局部审查当作 frozen；补齐绑定最终模板 hash 的所有页面审查并调用 template_freeze；freeze 拒绝时报告 findings 且不交付 candidate。",
       "files": [
         "input/candidate-template-artifact/"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我已经决定删除两个说明段并建立标题槽位。你直接把这些自然语言复制到 template_mutate 参数里就行，不用生成中间文件。",
+      "expected_output": "把 Agent 判断写成带 snapshot/ref/fingerprint/理由的 mutation-decisions，运行 Skill 内 compile_mutation_plan.py 得到 canonical mutation-plan.json；编译失败时补齐决定或证据，不手写绕过，也不让脚本代替语义判断。",
+      "files": [
+        "input/school-template.docx"
       ]
     }
   ]

@@ -42,7 +42,7 @@ visual-review。当前合同、权限测试、`path-tools` live smoke 和两个 
 
 2026-08-05 又批准了学校模板 frozen artifact（干净模板、hash 绑定 manifest、visual
 review、freeze report）作为两个 Skill 之间的目标产物 Interface，并确定学校模板端使用
-五个绿地 `template_*` Tool。它纠正的是下一版职责和完成门，不改写 M2 历史：当前提取 Skill、
+三个 Skill 决策编译脚本衔接五个绿地 `template_*` Tool。它纠正的是下一版职责和完成门，不改写 M2 历史：当前提取 Skill、
 `docfit convert` 参数、候选主干声明和验证仍未实现完整槽位唯一性、固定内容保护与
 源内容覆盖。第 6.9 节把这项修订记录为待单独计划和实施的 M2 后候选切片。
 
@@ -734,11 +734,11 @@ Agent 直接文件写入的 sandbox。
    命令、路径或内容，但这不是文件系统 sandbox；Subagent 不继承 Bash/Write。
 
 当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为主文件提供推荐
-操作方法、删除/槽位/样式/视觉判断标准，并直接引用同目录四份问题型 reference。不要求
+操作方法、删除/槽位/样式/视觉判断标准，并直接引用同目录五份问题型 reference。不要求
 额外 index，也不按目录、封面、声明等输入部件枚举文件。Skill 可以点名稳定领域 Tool
 并解释结果使用边界，不复制字段级 schema。两棵 Skill 不跨目录引用彼此的 references，
-契约测试验证引用完整性和领域隔离。学校模板生产不使用 Skill script；确定性重复工作
-由 6.9 的 Tool 合同承担。
+契约测试验证引用完整性和领域隔离。学校模板生产 Skill 携带三个决策编译脚本，将 Agent
+判断变成 canonical Tool input；DOCX 事实、副作用、对账和发布仍由 6.9 的 Tool 合同承担。
 
 确定性门新增：权限契约逐项覆盖直接读取允许根、input/其他任务、`.env`、`.git`、
 凭据、`..`、缺失路径、搜索树敏感文件与 symlink 逃逸，并证明主 Agent Bash/Write
@@ -773,9 +773,11 @@ M3。学校模板端采用绿地 Tool 面，不为兼容当前 `docx_*` Tool 而
   → docfit-school-extract
   → template_observe
   → Agent 决定内容责任、删除模式、槽位语义和来源冲突
+  → Skill script 编译 mutation plan
   → template_mutate
   → template_compare（结构对账 + 原生图片）
   → Agent 解释视觉结果
+  → Skill scripts 编译 review record 与 artifact spec
   → template_build（candidate）
   → template_freeze（唯一 frozen 发布边界）
 ```
@@ -811,20 +813,24 @@ paragraph stream/composite 内容种类、基数、fill/generate/repeat/conditio
 gap、样式观测/要求/冲突和未决项。生成机制不压成缓存文字，示例数量不冻结为重复基数，
 页码/bbox/单个近似文字不作为唯一 locator。模板变化后旧引用失效。
 
-生产 Skill 没有 `scripts/`。清理计划、误伤比较、artifact 编译和冻结决定必须是有类型
-Tool 合同；开发脚本只用于原型、fixture 和人工调试，不向 Agent 暴露。候选 Skill、四份
+生产 Skill 包含 `compile_mutation_plan.py`、`compile_review_record.py` 和
+`compile_artifact_spec.py`。它们使用与 Tool 共享的版本化类型模型，把 Agent 写出的
+decisions 编译为 canonical JSON，检查 ID/ref/hash/字段/覆盖并在失败时不写部分输出。
+脚本不读写 DOCX、不调用 Tool、不推导语义、不解释图片、不发布产物；消费方 Tool 必须
+再次验证。另有开发脚本只用于原型、fixture 和人工调试。候选 Skill、scripts 接口、五份
 references 和行为用例位于 `docs/plans/docfit-school-extract-v2-draft/`，总体决定见
 `docs/plans/docfit-school-extract-v2.md`。
 
 实施顺序固定为：
 
-1. 锁定五个 Tool typed schema、snapshot/mutation refs 和 candidate/frozen artifact schema；
-2. 实现 observe 与查询、六种 mutate 模式及 after-snapshot；
-3. 实现 compare 的结构差异与原生图片选择；
-4. 实现 build 与完全独立的 freeze；
-5. 完成 Tool unit/contract/integration tests；
-6. 以原子变更替换生产 `docfit-school-extract` 及应用壳任务域 Tool 注册；
-7. 另行设计转换端如何消费新 artifact；本切片不顺带重写其 Tool 面。
+1. 锁定共享 typed schema、五个 Tool schema、snapshot/mutation refs 和 artifact schema；
+2. 实现三个 Skill 决策编译脚本及 canonical/失败不写入 tests；
+3. 实现 observe 与查询、六种 mutate 模式及 after-snapshot；
+4. 实现 compare 的结构差异与原生图片选择；
+5. 实现 build 与完全独立的 freeze；
+6. 完成 script/Tool unit/contract/integration tests；
+7. 以原子变更替换生产 `docfit-school-extract` 及应用壳任务域 Tool 注册；
+8. 另行设计转换端如何消费新 artifact；本切片不顺带重写其 Tool 面。
 
 普通产品门至少包括：不可变 snapshot/hash 和旧引用拒绝；文字查询返回全部候选；六种
 删除模式的保留边界与失败不发布；槽位唯一性、内容种类、基数、manual/gap；固定内容、
