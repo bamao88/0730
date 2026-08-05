@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "请根据 input/school-template.docx 和 input/requirements.pdf 清理学校模板。要求文件明确说明蓝色括号文字是填写提示，模板中每个提示只出现一次。请生成当前任务可用的冻结干净模板和槽位索引，不要填入任何论文内容。",
-      "expected_output": "生成绑定最终模板 hash 的候选产物；只清理有双重证据且唯一定位的说明文字；保留固定内容；列出槽位、manual、gap 和验证状态。",
+      "prompt": "模板中的蓝色括号文字是填写说明，每处只出现一次。请清理模板并做成可安全填写的冻结产物。",
+      "expected_output": "先观察当前快照；删除前迁移说明中仍有效的填写和格式责任；选择保留容器的删除模式；比较实际变化并查看图片；build 只作为 candidate，freeze 通过后才交付。",
       "files": [
         "input/school-template.docx",
         "input/requirements.pdf"
@@ -12,21 +12,35 @@
     },
     {
       "id": 2,
-      "prompt": "这个学校模板里有三处完全相同的“在此填写”，还有一段红色文字，但学校要求没有解释红色文字的作用。请把模板整理成后续能安全填写的版本。",
-      "expected_output": "不根据颜色删除内容，不把重复文字当作唯一 locator；把无法区分的区域记录为 manual/gap 或提出最小问题，不虚构完整冻结产物。",
+      "prompt": "模板里有三处完全相同的‘标题’，请删除论文题目位置的提示并建立题目槽位。",
+      "expected_output": "查询并保留全部候选，结合上下文、结构、有效格式和视觉位置识别语义目标；不能凭文本首个匹配修改；无法唯一确认时询问用户或保留为 manual/unresolved。",
       "files": [
-        "input/ambiguous-template.docx",
-        "input/requirements.pdf"
+        "input/repeated-title-template.docx"
       ]
     },
     {
       "id": 3,
-      "prompt": "模板和书面要求对封面题目位置说法不一致。我还放了一份 student.docx，请顺便把学生题目填进去并给我最终论文。",
-      "expected_output": "保留模板与要求冲突并请求最小裁决；拒绝填入待转换论文内容或生成最终论文；只处理学校模板产物边界。",
+      "prompt": "书面要求说封面题目为小二号黑体，模板最终有效格式是二号宋体。请以模板为准直接冻结。",
+      "expected_output": "逐属性记录文字要求与模板有效格式及来源，显式识别冲突；在没有任务级优先规则时不擅自采用模板或常识，必要时询问用户并阻止冻结。",
       "files": [
-        "input/school-template.docx",
-        "input/requirements.pdf",
-        "input/student.docx"
+        "input/style-conflict-template.docx",
+        "input/requirements.pdf"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "清理说明段落后，比较结果显示目标文字已删除，但还出现了未计划的分节边界变化和少一页。继续发布即可。",
+      "expected_output": "把未计划的分节和页数变化视为 blocking finding，检查 Tool 返回的相关 section、边界页和 contact sheet；在解释并解决之前不 build/freeze。",
+      "files": [
+        "input/section-sensitive-template.docx"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "candidate 已经生成，只有封面和目录做过图片检查，其他页看起来应该没问题。请直接给我冻结结果。",
+      "expected_output": "不把 build 成功或局部审查当作 frozen；补齐绑定最终模板 hash 的所有页面审查并调用 template_freeze；freeze 拒绝时报告 findings 且不交付 candidate。",
+      "files": [
+        "input/candidate-template-artifact/"
       ]
     }
   ]

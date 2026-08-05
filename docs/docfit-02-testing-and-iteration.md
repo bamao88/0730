@@ -17,7 +17,7 @@ doctor 和 live 产品门，并使用同一合成链路做前后测量；这些�
 
 测试与 Eval 只解决三个问题：
 
-1. 五个 DocFit Tool 及 OfficeCLI、Adobe PDF Services API 各自承担的能力是否可靠；
+1. 当前转换五个 `docx_*` Tool、目标学校模板五个 `template_*` Tool，以及各自底层能力是否可靠；
 2. 两个领域 Skill、模块化 Knowledge、可选只读 Subagent 和 Tools 的组合能否完成
    代表性模板提取与论文转换；
 3. 一次修改是否修复目标问题，同时没有破坏已知正确行为。
@@ -27,7 +27,7 @@ DocFit 不建设通用评测平台。测试发现、并发、报告和 CI 使用
 代码测试目录固定为：
 
 - `tests/unit/`：不依赖 SDK 或真实 Provider 的纯逻辑测试；
-- `tests/contract/`：五个公开 Tool 契约、固定路由、主 Agent 直接读取路径权限与受信任
+- `tests/contract/`：按任务域注册的公开 Tool 契约、当前转换固定路由、主 Agent直接读取路径权限与受信任
   Bash/Write 配置、SDK
   Subagent 权限/上下文边界，以及两个后端各自职责范围内的契约测试；
 - `tests/integration/`：真实 OfficeCLI、CLI 与薄转换壳集成测试；真实 SDK 和 Adobe API
@@ -44,7 +44,9 @@ Skill 范围及一个合成端到端合同。`docfit eval --suite core` 只运�
 
 ### 2.1 Tool tests
 
-Tool tests 不调用 Agent，直接验证 `docx_inspect`、`docx_edit`、`docx_render`、`docx_visual_review`、`docx_validate` 的公开契约，以及 OfficeCLI、Adobe PDF Services API 的薄适配。
+Tool tests 不调用 Agent。当前测试直接验证 `docx_inspect`、`docx_edit`、`docx_render`、
+`docx_visual_review`、`docx_validate` 的公开契约，以及 OfficeCLI、Adobe PDF Services API
+的薄适配；06 第 6.9 节实施后，另行验证五个 `template_*` Tool，不要求两组 Tool 共享 schema。
 
 两个后端不需要通过一套假想的可互换 Provider 契约。OfficeCLI 只通过 inspect、
 edit、validate 和高频截图的职责契约；Adobe PDF Services API 只通过分页基线与候选验证
@@ -124,31 +126,34 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
 
 Tool test 的基本标准是确定性、可重复、源文件只读、失败不产生伪成功产物。
 
-当 06 中“样式观测与确定性补全”候选切片获得独立实施批准时，还必须新增以下
-普通 Tool/契约测试；本段不表示这些门当前已经通过：
+当 06 第 6.9 节实施时，学校模板 Tool 的普通 unit/contract/integration 门至少覆盖：
 
-- 模板观测能区分命名样式、直接格式、继承链、最终有效值、覆盖、缺失与冲突；
-- 解析器不把 Word 继承或缺省值误标为国家标准补全，也不把观测值误标为目标要求；
-- 规则解析器只接受已批准的标准标识、版本和适用性证据，且只补当前任务证据
-  未规定的单个属性；
-- 当前任务来源冲突、标准不适用、条款无规定或多条规则冲突时，结果为未决而非默认值；
-- 每个解析后属性保留来源类型、来源 hash/ref，以及适用时的标准版本、条款和适用性；
-- 不向 Agent 或 Subagent 载入国家标准样式值表、缺省补全表或历史学校样式。
+- `template_observe` 的 snapshot/hash 不可变、旧引用拒绝、同文查询返回全部候选，且
+  命名样式、直接格式、继承链、最终有效值、作用范围、缺失与冲突可区分；
+- `template_mutate` 的六种删除模式分别证明应保留容器/网格/内容和应删除范围，歧义、
+  fingerprint 失效或后置重读失败时不发布；
+- 自动槽位唯一定位，scalar/paragraph stream/composite、基数、fill/generate/repeat/
+  conditional、manual/gap 可表达，示例数量不成为重复基数；
+- `template_compare` 能发现固定内容、表格网格、分节、页眉页脚、分页和槽位容器误伤，
+  正确区分 expected/unexpected changes，并按风险返回原生 crop/整页/contact sheet；
+- compare 不输出视觉 pass/fail；图片与 before/after hash、页码和图片 hash 绑定；
+- `template_build` 只输出 candidate，拒绝重复 slot、旧 ref 和字段不完整；
+- `template_freeze` 独立重读，拒绝 package/hash 不一致、槽位多命中、固定指纹变化、来源
+  变化、旧 snapshot、缺少最终逐页审查、blocking finding 和不完整 bundle；失败不发布；
+- 生产 Skill 目录无脚本依赖，开发脚本不出现在 Agent Tool 面或产品完成门中。
 
-当 06 中“冻结模板产物 Interface”候选切片获得独立实施批准时，上述 hash、唯一槽位、
-manual/gap、固定内容和源内容覆盖测试必须作为普通 unit/contract/integration 门落地。
-它们不依赖 M3 Eval，也不因 M3 延期而延后；本段不表示当前实现已经通过这些门。
+这些门不依赖 M3 Eval，也不因 M3 延期而延后；本段不表示当前实现已经通过。
 
 ### 2.2 Skill eval
 
 Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材料和受控 Tool 结果，观察 Agent 是否：
 
-- 在学校提取目标下用 `docfit-school-extract` 只产出冻结干净模板和 hash 绑定槽位索引；
-  证据/未决项写入索引，不填学生内容、不生成学校 Knowledge；
+- 在学校提取目标下用 `docfit-school-extract` 产出原子 frozen artifact；不填学生内容、
+  不生成学校 Knowledge，也不把 candidate 当作 frozen；
 - 在论文转换目标下让 `convert-thesis` 消费合格的冻结模板产物与学生 DOCX；不要求
   同一运行先触发提取 Skill，不依赖生产者名称，也不重新解释学校原始要求；
-- `SKILL.md` 本身提供足够的通用任务模型和真实高风险规则；references 按模板模型、
-  Word 行为和已验证失败机制组织，不按处理步骤或论文部件逐一绑定，也不强制额外 index；
+- `SKILL.md` 本身提供推荐操作方法、删除/槽位/样式/视觉判断标准和真实高风险规则；
+  references 按四类可复用判断问题组织，不按论文部件逐一绑定，也不强制额外 index；
 - 读取随当前产品发布的通用 Knowledge 版本；
 - 由主 Agent 决定是否委派、如何划定分析范围、选择哪些 Knowledge 模块以及传递哪些
   任务证据；
@@ -165,11 +170,17 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 不把当前任务提取出的学校规则、模板或精确参数写入长期 Knowledge；
 - 只把 Tool 观测到的模板样式绑定到语义角色，不从 Knowledge、历史任务或常识生成
   未观测的样式值；
-- 样式属性仍缺失时，请求程序的确定性解析结果或显式保留未决，不在 prompt 中
-  读取国家标准数值表后自行决定；
+- 样式属性仍缺失或文字要求与有效格式冲突时，显式保留来源与未决/冲突；不从国家标准
+  数值表、样式名、历史任务或常识自行补值；
 - 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
-- 歧义 locator、快照失效和无理由内容消失由 Tool/App 合同拒绝；Skill eval 只观察最终
-  产物是否保留内容并正确暴露未解决项，不要求 Agent 复述判断阈值；
+- 面对多个同文候选时读取全部候选、上下文、有效格式和视觉位置，不以首个文字匹配
+  决定语义目标；
+- 删除说明前迁移其中有效的格式、基数、生成或放置责任，并选择最小安全删除模式；
+- 为槽位明确内容种类、基数、物理边界和 fill/generate/repeat/conditional 责任；不能
+  唯一自动化时使用 manual/gap；
+- 调用 `template_compare` 后读取 expected/unexpected changes 和它直接返回的原生图片，
+  由 Agent 解释视觉合理性；分节、页数或映射异常未解决时不继续冻结；
+- 只在最终 hash 全页审查后 build，并只以 `template_freeze status: frozen` 作为发布依据；
 - 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
 - 分页敏感且 Adobe 服务可用时，修改前建立输入与模板的服务转换分页基线；不可用时保留明确的能力缺口；
 - 把 Adobe 页面当作视觉观察窗口而不是编辑身份，不用 Adobe 第 N 页直接定位近似 Provider 第 N 页或驱动 `docx_edit`；
@@ -194,8 +205,8 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 不把“第几轮”写入 Tool 状态或 Gold，也不把 baseline/candidate 的确切调用次数作为
   通用行为断言；只验证缓存、parent ref、后端路由和当前证据绑定；
 - 在最终答复中如实说明产物、验证结果和未解决问题；
-- `SKILL.md` 保留 L0 任务、输入、两个产物、通用任务模型、必要任务步骤和真实高风险
-  规则；Tool 注册信息、参数、错误恢复和机器检查不进入 Skill。
+- `SKILL.md` 保留任务、输入输出、推荐方法、必要判断和真实高风险规则；可以说明稳定
+  Tool 的职责和结果解释边界，但字段级 schema、错误码和机器实现不进入 Skill。
 
 Skill eval 以可观察结果为主。除安全底线和必要先后关系外，不要求 Agent 复现固定工具调用序列。
 也不把 Subagent 数量、调用顺序、并行/串行选择、论文单元枚举或“每个单元必须委派”
@@ -222,7 +233,7 @@ limit      成本或重复调用上限
 - 支持范围内的学生内容和对象仍存在且顺序正确；
 - 目标学校关键格式断言满足；
 - 对每个被确定的目标样式属性，可区分当前任务明确要求、模板观测、继承后
-  有效值、适用国家级标准或未决，且未决属性没有被静默写入文档；
+  有效值、冲突或未决，且未决属性没有被静默写入文档；
 - 必填模板内容或槽位已处理；
 - 冻结模板 hash 与槽位索引绑定有效，自动槽位唯一，manual/gap 没有被隐式越过；
 - 生成、重复、条件和未决区域保持各自责任，没有被降级为有限普通槽位；
@@ -445,7 +456,7 @@ Token 更低或耗时更短本身不能替代最终证据和质量断言。
 
 | 归因 | 典型问题 | 修复位置 |
 |---|---|---|
-| Skill | 任务边界、两个产物、通用处理模型或高风险规则错误 | `.claude/skills/` |
+| Skill | 任务边界、稳定产物、推荐方法、判断标准或高风险规则错误 | `.claude/skills/` |
 | Knowledge | 通用概念、识别方法、解释原则或处理模式错误 | 产品内置 Knowledge Package |
 | 当前任务证据 | 学校材料缺失、来源冲突、适用范围或确认不足 | 当前任务输入、任务 fixture 或用户确认 |
 | Tool | 解析、修改、渲染、图片证据传递、缓存或验证错误 | Tool 实现与 Adapter |

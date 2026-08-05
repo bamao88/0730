@@ -40,8 +40,9 @@ Services API。核心转换和云端运行链路不依赖本地 Word、AppleScri
 visual-review。当前合同、权限测试、`path-tools` live smoke 和两个 Skill references 结构
 在第 6.7 节锁定。
 
-2026-08-05 又批准了“冻结干净模板 + hash 绑定槽位索引”作为两个 Skill 之间的目标
-产物 Interface。它纠正的是下一版职责和完成门，不改写 M2 历史：当前提取 Skill、
+2026-08-05 又批准了学校模板 frozen artifact（干净模板、hash 绑定 manifest、visual
+review、freeze report）作为两个 Skill 之间的目标产物 Interface，并确定学校模板端使用
+五个绿地 `template_*` Tool。它纠正的是下一版职责和完成门，不改写 M2 历史：当前提取 Skill、
 `docfit convert` 参数、候选主干声明和验证仍未实现完整槽位唯一性、固定内容保护与
 源内容覆盖。第 6.9 节把这项修订记录为待单独计划和实施的 M2 后候选切片。
 
@@ -54,8 +55,9 @@ visual-review。当前合同、权限测试、`path-tools` live smoke 和两个 
 1. **先有真实可运行结果**：每个阶段都必须增加一个可执行命令、可检查产物或可重复测试，不能只增加目录和抽象。
 2. **先跑一条窄链路**：第一版只支持一个入口、一组当前任务学校材料、唯一产品
    Knowledge Package、OfficeCLI 与 Adobe PDF Services API 两个固定后端，以及少量合成样本。
-3. **先复用再重写**：现有 `convert-thesis`、学校提取 Skill、DOCX 检查与渲染脚本先做迁移评估，能满足新契约的能力优先复用。
-4. **接口由当前消费者驱动**：五个 DocFit Tool 契约、通用 Knowledge Package 和
+3. **复用服从目标合同**：当前转换实现可以继续服务已完成的 M2；学校模板绿地合同不为
+   兼容旧 Skill、旧 Tool 或旧脚本而扭曲。
+4. **接口由当前消费者驱动**：按任务域版本化的 Tool 契约、通用 Knowledge Package 和
    Eval case 是稳定边界；当前任务学校事实不升级为长期数据模型。
 5. **失败必须可见**：源文件覆盖、内容静默丢失、无法验证的 Provider 结果和偏离已批准
    权限矩阵的 SDK 配置都属于停止项。
@@ -119,8 +121,9 @@ Knowledge Package 的静态加载与完整性校验。真实 DOCX 行为和两�
 后端职责不同，只在五个 Tool 内做薄适配，不抽取共享 Provider 接口。只有
 未来真实接入第三个引擎，并且确实需要动态选择或故障转移时，才重新评估该接口。
 
-目标职责修订后，学校提取仍只产生当前任务资产，并且只交付冻结干净模板和 hash 绑定
-槽位索引；证据/未决项写入索引。转换只消费该 Interface，并且只交付最终 DOCX 和
+目标职责修订后，学校提取仍只产生当前任务资产，并且只交付一个原子 frozen artifact；
+其中包含干净模板、hash 绑定 manifest、visual review 和 freeze report。转换只消费该
+Interface，并且只交付最终 DOCX 和
 `conversion-report.json`。该目标尚未在 P1/M2 代码中
 实现，不能把本段误读为当前完成声明。
 
@@ -730,12 +733,12 @@ Agent 直接文件写入的 sandbox。
    input、文档产物与后端凭据。系统提示要求不输出凭据/正文，观测 projector 不保留
    命令、路径或内容，但这不是文件系统 sandbox；Subagent 不继承 Bash/Write。
 
-当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为主文件提供完整
-通用任务模型，并直接引用同目录中按模板模型、Word 行为和失败机制组织的少量 reference。
-不要求额外 index，也不按目录、封面、声明等输入部件枚举文件。Skill 不重复 SDK 已注册
-的 Tool 名称、参数或错误恢复说明。两棵 Skill 不跨目录引用彼此的 references，契约测试
-验证引用完整性和领域隔离。确定性重复工作可
-由现有 Tool/App 或经测试的 Skill script 承担，但不新增第六类产品资产。
+当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为主文件提供推荐
+操作方法、删除/槽位/样式/视觉判断标准，并直接引用同目录四份问题型 reference。不要求
+额外 index，也不按目录、封面、声明等输入部件枚举文件。Skill 可以点名稳定领域 Tool
+并解释结果使用边界，不复制字段级 schema。两棵 Skill 不跨目录引用彼此的 references，
+契约测试验证引用完整性和领域隔离。学校模板生产不使用 Skill script；确定性重复工作
+由 6.9 的 Tool 合同承担。
 
 确定性门新增：权限契约逐项覆盖直接读取允许根、input/其他任务、`.env`、`.git`、
 凭据、`..`、缺失路径、搜索树敏感文件与 symlink 逃逸，并证明主 Agent Bash/Write
@@ -749,84 +752,91 @@ ask-user、denied-tools、subagent smoke 继续通过，其中 denied-tools 只�
 未注册 Tool 拒绝。该切片不调用
 OfficeCLI/Adobe，不消耗 Adobe Document Transaction。
 
-### 6.8 M2 后候选切片：样式观测与确定性补全（仅长期合同，未实现）
+### 6.8 M2 后设计决定：样式观测并入学校模板 Tool 面（未实现）
 
-该候选切片用属性级合同稳定模板提取、Agent 语义判断与下游写入之间的耦合。
-它不要求 Agent 服从固定内容树或样式模型，也不把可直接套用的样式值交给 Agent。
-目标范围只包括：
+样式观测不再作为“扩展现有 `docx_*` Tool”的独立候选。它是 6.9 中
+`template_observe` 的核心合同：完整返回命名样式、直接格式、继承链、最终有效值、作用
+范围、缺失和冲突；文字要求作为独立来源与这些事实逐属性交叉验证。Tool 不判断哪个
+“标题”候选是论文标题，Agent 不从历史任务、常识、样式名或内置国家标准表补值。无
+明确当前任务来源、适用范围不明或来源冲突时保持未决。
 
-- 扩展现有 Tool 内部观测，完整报告命名样式、直接格式、继承链、有效值、覆盖、
-  缺失和冲突；
-- Agent/Skill 只完成语义角色识别、观测绑定、冲突解释和未决项暴露，不生成
-  缺失样式值；
-- 缺失属性只由程序使用经明确选定、版本化且适用性可验证的国家级标准明文解析；
-- 每个属性保留当前任务要求、模板观测、继承后有效值、国家级标准或未决的来源，
-  以及标准版本、条款、适用性和规则集 digest；
-- 无明文、不适用或来源冲突时保持未决，不增加通用默认样式、学校 profile、第六个 Tool
-  或 Agent 可读的国家标准数值表。
+该决定不表示当前代码已具备上述能力，也不改变 M2 已完成状态。实现与 contract tests
+统一进入 6.9，不再维护第二套样式候选计划。
 
-开始实现前必须另行批准计划，并先确认标准来源的授权/维护方式、精确标识与版本、
-适用性输入、条款映射、冲突语义、属性级来源和合成契约测试。任何公开 Tool schema
-调整都必须单独审批并保持五个 Tool 名称。本节不启动 O1、M3 或 M4，不改变 M2 已完成
-状态，也不声称当前代码已具备该能力。
+### 6.9 M2 后候选切片：学校模板冻结 Tool 与产物 Interface（设计已批准，未实现）
 
-### 6.9 M2 后候选切片：冻结模板产物 Interface（目标已批准，未实现）
-
-该切片把学校材料解释与论文内容放置分成两个可独立验收的产物边界。它不重开 M2，
-不启动 O1 或 M3，也不增加 Harness、工作流节点、第六个 Tool、全局 ArtifactRef 或
-Content Ledger。目标数据流固定为：
+该切片把学校材料解释与论文内容放置分成两个产物边界，不重开 M2，也不启动 O1 或
+M3。学校模板端采用绿地 Tool 面，不为兼容当前 `docx_*` Tool 而扩展 action：
 
 ```text
-学校模板 + 要求 + 可选官方示例
+学校模板 + 文字要求 + 可选官方示例
   → docfit-school-extract
-  → 冻结干净模板 + hash 绑定槽位索引
-
-冻结模板产物 + 只读学生 DOCX
-  → convert-thesis
-  → final.docx + conversion-report.json
+  → template_observe
+  → Agent 决定内容责任、删除模式、槽位语义和来源冲突
+  → template_mutate
+  → template_compare（结构对账 + 原生图片）
+  → Agent 解释视觉结果
+  → template_build（candidate）
+  → template_freeze（唯一 frozen 发布边界）
 ```
 
-两个 Skill 只通过产物合同耦合。转换端不要求同一运行先触发提取 Skill，也不读取
-生产者名称或隐藏调用历史；人工或其他受控适配器准备的产物通过同一合同即可消费。
-学校提取不填学生内容、不生成跨任务学校资产、不默认补造缺失样式；转换不重新解释
-原始学校要求、不改写模板固定内容、不编造学生内容。
+这是一种可调整的 Agent 操作方法，不是应用壳状态机。五个 Tool 各自合同为：
 
-本切片冻结以下 Interface 语义，不提前冻结序列化细节：
+- `template_observe` 建立/查询不可变 snapshot，返回结构、可见对象、有效样式、PDF/图片、
+  页面映射和不支持内容，不替 Agent 做语义选择；
+- `template_mutate` 原子执行显式删除与槽位计划，校验当前引用和 expected fingerprint，
+  重开输出并检查保留容器/非目标内容，失败不发布；
+- `template_compare` 对账 expected/unexpected changes，按风险直接返回 crop、整页、相邻页
+  或 contact sheet，不输出视觉 pass/fail；
+- `template_build` 绑定最终 hash、语义清单、样式来源和视觉 findings，只编译 candidate；
+- `template_freeze` 独立重读 candidate 与来源，验证 package、hash、槽位、固定内容、
+  manual/gap、最终逐页审查、blocking findings、旧引用和 bundle 完整性，原子发布 frozen。
 
-- 冻结模板 DOCX 可独立打开且以精确 SHA-256 标识；
-- 槽位索引绑定该 hash；每个 `slot_id` 只在该快照内成立，locator 唯一，内容种类与
-  基数明确；manual 区域和无法安全表达的 gap 显式；
-- 索引能够区分固定、填充、生成、重复、条件、人工和未决责任；生成机制不被压成缓存
-  文本槽位，源示例数量不被误当作固定实例基数；
-- 页码、bbox 或单个近似文字命中不能单独证明槽位唯一；模板变化后旧 locator 失效；
-- 模板固定内容与可填区域可确定性区分，未经当前证据不得修改固定内容；
-- 学生源内容形成绑定 source hash 的任务级清单；每项必须放置到明确槽位，或有明确且
-  可审计的不放置原因；缺项、重复、无理由消失和越过 manual/gap 阻止完成；
-- Skill 说明论文转换任务、两个产物、通用任务模型、必要任务步骤和真实高风险规则；
-  不维护判断阶段，也不复制 Tool 使用说明。hash、唯一 locator、内容覆盖、原子发布和
-  失败不发布由程序合同强制。
+`template_mutate` 必须支持清文字保留容器、删除行内片段、删除完整容器、删除稳定边界块、
+清空单元格保留网格、解包内容控件保留内容六种删除模式，以及段落/单元格/段落流/物理
+锚点槽位和 manual 区域。Agent 选择目标、模式、内容种类、基数和责任；Tool 只执行。
 
-开始实现前必须新建并批准执行计划，完成以下 Preflight 决策：在不改变五个公开 Tool
-名称的前提下，确定产物文件名与 schema 版本、槽位 locator 的最小可实现形态、冻结
-快照到工作副本的安全解析/失效方式、源内容清单粒度、人工产物 adapter、CLI 参数迁移
-和旧 P1/M2 Skill 的替换策略。不得用精确 schema 设计重新引入工作流状态或学校 profile。
+冻结输出是一个不可拆换的 artifact bundle：
 
-当前候选 Skill 文字、reference 目录、manifest 草案、原子迁移范围和首批行为用例记录在
-`docs/plans/docfit-school-extract-v2.md` 及独立的
-`docfit-school-extract-v2-fresh-draft/` 目录。
-它们是可删除、可评审的实施输入，不是第八份长期架构合同；在本节产品门通过前不得
-复制到生产 Skill 后宣称完成。
+```text
+frozen-template-artifact/
+├── clean-template.docx
+├── template-artifact.json
+├── visual-review.json
+└── freeze-report.json
+```
 
-普通产品门至少包括：产物 schema/hash 契约；槽位零命中/多命中/快照失效；manual/gap；
-固定内容保护；源内容缺项、重复与不放置原因；同一产物由 Skill 与人工 adapter 生产时
-的消费者等价性；`convert-thesis` 不要求两个 Skill 同时加载；源 hash、Adobe candidate、
-全页视觉审查和现有独立验证不退化。合成 fixture 上“覆盖未闭合却被接受完成”的拒绝率
-必须为 100%，作为该切片的单一主要质量目标。这些是 unit/contract/integration/live
-产品门，不是延期的 M3 Eval。
+manifest 至少表达模板与来源 hash、固定内容指纹、自动槽位唯一 locator、scalar/
+paragraph stream/composite 内容种类、基数、fill/generate/repeat/conditional 责任、manual、
+gap、样式观测/要求/冲突和未决项。生成机制不压成缓存文字，示例数量不冻结为重复基数，
+页码/bbox/单个近似文字不作为唯一 locator。模板变化后旧引用失效。
 
-完成上述实现和证据之前，只能声称目标 Interface 已写入长期合同；不得声称当前
-`docfit-school-extract` 已发布冻结模板、当前 `docfit convert` 已消费槽位索引，或当前
-验证已经阻止所有内容静默丢失。
+生产 Skill 没有 `scripts/`。清理计划、误伤比较、artifact 编译和冻结决定必须是有类型
+Tool 合同；开发脚本只用于原型、fixture 和人工调试，不向 Agent 暴露。候选 Skill、四份
+references 和行为用例位于 `docs/plans/docfit-school-extract-v2-draft/`，总体决定见
+`docs/plans/docfit-school-extract-v2.md`。
+
+实施顺序固定为：
+
+1. 锁定五个 Tool typed schema、snapshot/mutation refs 和 candidate/frozen artifact schema；
+2. 实现 observe 与查询、六种 mutate 模式及 after-snapshot；
+3. 实现 compare 的结构差异与原生图片选择；
+4. 实现 build 与完全独立的 freeze；
+5. 完成 Tool unit/contract/integration tests；
+6. 以原子变更替换生产 `docfit-school-extract` 及应用壳任务域 Tool 注册；
+7. 另行设计转换端如何消费新 artifact；本切片不顺带重写其 Tool 面。
+
+普通产品门至少包括：不可变 snapshot/hash 和旧引用拒绝；文字查询返回全部候选；六种
+删除模式的保留边界与失败不发布；槽位唯一性、内容种类、基数、manual/gap；固定内容、
+表格、分节、页眉页脚和分页误伤；expected/unexpected diff 与自动图片范围；build 不得
+发布 frozen；freeze 能独立拒绝 hash 不一致、来源变化、旧 snapshot、缺页审查、blocking
+finding 和不完整 bundle。Skill eval 观察 Agent 是否迁移说明语义、交叉验证样式、正确
+选择删除/槽位、解释图片并拒绝把 candidate 自报为 frozen。这些是普通产品门，不是延期
+的 M3 Eval。
+
+完成上述实现和证据之前，只能声称设计合同已批准；不得声称当前
+`docfit-school-extract` 已注册 `template_*` Tool、已发布 frozen artifact，或当前
+`docfit convert` 已消费该产物。
 
 ## 7. M3：达到可试用 MVP
 
@@ -964,8 +974,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 | M2 | 一条 `docfit convert` 命令 | 合成样本上的 OfficeCLI + Adobe 混合链路及交付转换门已跑通 | 已达到复杂真实论文交付质量 |
 | M2 后权限/Skill 渐进披露切片 | 主 Agent 可按需直接读取 Skill references、产品 Knowledge 与当前任务证据，并使用受信任 Bash/Write | realpath 受限的直接 Read/Glob/Grep、无路径 gate 的自动批准 Bash/Write、五 Tool 直调和不等权 Subagent 权限已验证 | Bash/Write 是 sandbox、所有 Agent 等权或 M3 已通过 |
 | M2 后观测/优化切片 | 本地只读运行观测页，以及同一转换链路在既有安全门下减少可测量的重复工作 | 已观测的实际轨迹、有效本地证据定位，以及已证明的单项耗时、调用或载荷改善 | 精确 replay、M3、MVP 或真实论文质量已通过 |
-| M2 后样式观测/补全候选切片 | 属性级模板观测、缺口和可追溯的确定性解析 | 仅在独立计划实施并通过契约门后，可声称已覆盖的属性可追溯解析 | Agent 可以杜撰样式、已覆盖任意国家标准，或当前能力已实现 |
-| M2 后冻结模板 Interface 候选切片 | 可由不同生产者准备、由转换端统一消费的冻结模板与槽位合同 | 仅在独立计划实施并通过普通产品门后，可声称槽位/hash/固定内容/源内容覆盖合同已实现 | 当前 P1/M2 已实现、Skill 必须串行调用，或已经达到 M3 质量 |
+| M2 后学校模板冻结候选切片 | 五个 `template_*` Tool、candidate/frozen 分离和原子冻结 artifact | 仅在独立实施并通过普通产品门后，可声称模板观察、删除/槽位、对账、逐页审查和冻结合同已实现 | 当前 P1/M2 已实现、新 Tool 已注册、转换端已消费，或已经达到 M3 质量 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
 | M5 | 按需求增加的产品能力 | 对应能力已产品化 | 可以跳过证据直接扩平台 |
@@ -974,7 +983,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 
 项目达到 M2 时，必须已经具备以下扩展接口，而不是等以后重构：
 
-- **Tool 契约稳定**：Agent 只依赖五个版本化 Tool schema，不依赖 Provider 私有接口；
+- **当前转换 Tool 契约稳定**：转换 Agent 只依赖五个版本化 `docx_*` Tool schema，不依赖 Provider 私有接口；
 - **视觉证据可追溯**：每张送入 Agent 的图片都绑定文档、render、Provider、字体、页码和图片 hash；
 - **页面身份受限**：页码只在对应 render ref 内有效；同一文档 hash 的跨后端页面可通过当前 opaque `object_ref`、节引用或文字锚点关联；文档 hash 变化后重新 inspect，并用新旧快照的节、文字锚点或显式内容指纹对照；
 - **渲染意图可扩展**：同一个 Tool 契约区分 `baseline`、`edit_feedback` 与
@@ -984,10 +993,10 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 - **Knowledge 可版本化**：通用包随产品发布并具有 manifest、文档 hash 和 digest；学校事实只在当前任务证据中；
 - **Knowledge 可选择投影**：主 Agent 选择委派所需模块，并把模块内容、
   版本/digest 和任务证据写入通用 Subagent prompt；
-- **样式来源可扩展**：未来可在不向 Agent Knowledge 增加样式值的前提下，在现有 Tool
-  内部增加属性级观测、标准解析、来源和未决状态；这是扩展点，不是 M2 已实现声明；
-- **Skill 可独立迭代**：`docfit-school-extract` 与 `convert-thesis` 可以在不修改 Tool
-  实现的情况下演进；
+- **样式来源可扩展**：学校模板目标面由 `template_observe` 返回属性级观测、来源和未决
+  状态，不向 Agent Knowledge 增加样式值；这是 6.9 设计，不是 M2 已实现声明；
+- **Skill/Tool 合同可独立版本化**：`docfit-school-extract` 与 `convert-thesis` 各自使用
+  任务域 Tool 面，修改一方不要求另一方共享同名 Tool；
 - **Skill 以产物解耦**：目标修订实施后，提取端生产冻结模板 Interface，转换端只消费
   Interface，不依赖生产者 Skill 名称或调用顺序；当前这是 6.9 的待实施扩展点；
 - **槽位身份受限**：`slot_id` 和 locator 只在绑定 hash 的冻结模板快照内有效；模板

@@ -1,90 +1,115 @@
 ---
 name: docfit-school-extract
-description: 当用户需要清理、冻结或解释学校论文模板，识别固定内容、可填槽位、说明文字、冲突和人工区域，或为后续转换准备当前任务的冻结模板产物时使用；不要用于填入待转换论文内容或生成最终论文。
+description: Prepare a school thesis Word template as a frozen, safely fillable template artifact. Use when the user supplies a school template, formatting requirements, or official examples and wants a clean reusable template plus a hash-bound slot manifest.
 ---
 
-# 生成冻结学校模板产物
+# School Template Extraction
 
-把当前任务的学校模板、书面要求和可选官方示例整理成可安全填写的冻结模板产物。
-保留不确定性比猜测性清理更重要，因为下游会把这份产物当作固定主干。
+Turn the current task's school materials into exactly two deliverables:
 
-## 输入与产物
+1. a clean template DOCX that preserves required structure, fixed content, styles, and Word behavior;
+2. a frozen artifact manifest bound to that exact template hash, with automatic slots, manual regions,
+   gaps, sources, and review findings.
 
-输入是当前任务授权的学校模板 DOCX、正式要求，以及可选的官方示例、适用性说明和
-用户确认。来源文件保持只读；所有修改只发生在新的工作副本和输出文件。
+Do not fill student content. Do not promote school-specific conclusions into product Knowledge.
 
-完整产物包括：
+## Responsibility split
 
-- 可独立打开的冻结干净模板 DOCX；
-- 绑定该模板精确 hash 的槽位索引；
-- 固定内容边界、来源证据、冲突和未决项；
-- manual 区域与无法安全表达的 gap；
-- 绑定冻结模板 hash 的全页视觉检查与确定性验证摘要。
+You decide meaning: which material is authoritative, what visible content is an instruction or example,
+which responsibility must survive deletion, what a slot means, and whether a visual change is reasonable.
 
-槽位的语义合同见
-`.claude/skills/docfit-school-extract/references/artifact-interface.md`。
+The template Tools establish facts, execute explicit operations, compare actual changes, compile a
+candidate, and independently freeze it. A Tool result is evidence, not a substitute for semantic judgment.
 
-## 边界
+## Recommended method
 
-- 只使用当前任务来源，不从历史任务、文件名或常见学校格式补事实。
-- 不接收或填入待转换论文内容，不生成最终论文。
-- 不创建学校 profile、学校目录、跨任务模板包或 Knowledge 写入请求。
-- 不用 Knowledge、经验或国家标准数值表补造材料中没有依据的学校样式。
-- 不覆盖来源文件，不直接修改 OOXML，不把工作副本冒充冻结产物。
-- 冲突、manual 区域、gap 和能力缺口必须留在产物中，不能用“已完成”掩盖。
+Adapt the following sequence to the evidence. It is a working method, not a fixed state machine.
 
-## 两个判断
+1. Inventory every template, written requirement, and official example. Record provenance, conflicts,
+   missing inputs, and files that must remain read-only.
+2. Call `template_observe` to establish an immutable snapshot. Observe structure, visible objects,
+   effective formatting, slot candidates, PDF pages, and unsupported content.
+3. Classify template content as fixed, fill, generate, repeat, conditional, manual, remove, or unresolved.
+4. Before deleting an instruction or example, migrate any surviving formatting, cardinality, generation,
+   or placement responsibility into a slot or region decision.
+5. Reconcile written requirements with the template's effective formatting. Preserve material conflicts;
+   do not resolve them from style names, prior schools, or convention alone.
+6. For each intended change, choose an exact target, expected fingerprint, removal mode, and any slot
+   semantics. Ask the user when the ambiguity can materially change the reusable template.
+7. Call `template_mutate` with the explicit operation plan. Never use page numbers or text alone as edit
+   identity. If the Tool rejects a stale or ambiguous target, observe again and reconsider the decision.
+8. Call `template_compare`. Inspect its expected and unexpected changes and the native images it returns.
+   Decide whether the result is reasonable, needs another edit, or requires user input.
+9. After the final snapshot and all pages are reviewed, call `template_build` with the confirmed semantic
+   inventory. Treat its output only as a candidate.
+10. Submit the candidate to `template_freeze`. Deliver it only when that independent Tool returns
+    `status: frozen`.
 
-### 目标足够唯一才行动
+## Core judgment rules
 
-编辑、清理或建立槽位前，要求至少两个相互独立的信号共同指向当前快照中的唯一目标。
-结构引用、前置指纹、相邻语义和来源说明可以相互印证；页码、bbox、颜色或单个近似
-文字命中只能缩小候选范围。零命中、多命中或快照失效时重新取证或保留 gap。
+- Instruction text may carry requirements. Migrate the requirement before removing the text.
+- A logical unit is not a physical page. Page numbers are visual evidence, not durable edit locators.
+- A style name is not effective formatting. Include direct formatting, inheritance, section settings,
+  and other applicable Word behavior.
+- A generated object is not its cached display text. Preserve the generation responsibility when needed.
+- The number of examples is not the cardinality of a repeating region.
+- Fixed content stays fixed unless current-task evidence explicitly authorizes a change.
+- Unknown or unsupported content stays preserved and unresolved; absence of evidence is not permission to
+  delete it.
+- Automatic slots must be uniquely locatable in the final template snapshot. Otherwise mark the region
+  manual or unresolved.
+- A successful mutation or build is not a frozen artifact. Only `template_freeze` can publish one.
 
-### 内容消失需要更强证据
+## Choose the removal mode deliberately
 
-删除说明文字、示例值或其他可见内容，需要比保留它更强的证据。只有当前材料能够
-支持其功能、适用范围和唯一目标时才清理；否则保留原状并标记 unknown、manual 或 gap。
-
-详细分类方法见
-`.claude/skills/docfit-school-extract/references/template-cleaning-and-slots.md`。
-
-## 根据证据选择参考
-
-| 当前判断 | 行动 | 读取参考 |
-|---|---|---|
-| 来源身份、版本、适用范围或优先关系不清 | 建立来源清单并保留冲突 | `.claude/skills/docfit-school-extract/references/evidence-and-conflicts.md` |
-| 需要分类固定文字、条件文字、槽位或说明文字 | 判断功能与删除证据 | `.claude/skills/docfit-school-extract/references/template-cleaning-and-slots.md` |
-| 需要建立槽位、固定区域、manual 或 gap | 按产物 Interface 组织 | `.claude/skills/docfit-school-extract/references/artifact-interface.md` |
-| 需要选择 Tool、重新取证或处理失败 | 根据当前快照和错误语义恢复 | `.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md` |
-| 材料量大且局部范围可独立分析 | 可选委派只读分析 | `.claude/skills/docfit-school-extract/references/delegation-task-packet.md` |
-| 遇到重复占位符、签名区、文本框或其他长尾 | 对照风险场景 | `.claude/skills/docfit-school-extract/references/scenarios-and-edge-cases.md` |
-
-## Tool 路由
-
-| 目的 | Tool |
+| Intent | Mode |
 |---|---|
-| 读取来源与工作副本的结构、样式、对象和 hash | `mcp__docfit__docx_inspect` |
-| 在新工作副本上原子清理或建立安全锚点 | `mcp__docfit__docx_edit` |
-| 建立基线、按需取得编辑反馈或冻结候选页面证据 | `mcp__docfit__docx_render` |
-| 查看已有 render 的整页、裁剪或对比图片 | `mcp__docfit__docx_visual_review` |
-| 从来源和冻结候选重新核对 package、固定内容和产物合同 | `mcp__docfit__docx_validate` |
+| Empty a placeholder while retaining its paragraph/run container and formatting | `clear_text_preserve_container` |
+| Remove only a known inline phrase inside mixed content | `remove_inline_fragment` |
+| Remove an entire paragraph, row, or other addressed container | `remove_container` |
+| Remove a confirmed continuous logical block between stable boundaries | `remove_bounded_block` |
+| Empty cell content while preserving table grid and cell properties | `clear_cell_preserve_grid` |
+| Remove a content-control wrapper while retaining its approved content | `unwrap_control_preserve_content` |
 
-这些是能力路由，不是固定调用序列。具体 intent、前置条件、失败恢复和能力缺口见
-`.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md`。
+Do not select a broader mode for convenience. If the intended unit cannot be expressed by one safe target
+or bounded range, preserve it or split the operation after further observation.
 
-## 冻结与完成
+## Define slot responsibility
 
-最后一次写入后重新 inspect 工作副本，只在最终 hash 上建立槽位和固定区域 locator。
-随后查看该 hash 的全部页面，并要求程序核对模板可打开、索引绑定、唯一定位、固定内容
-和 gap。任何后续写入都会使索引、视觉证据和验证结论失效。
+For every automatic slot, determine:
 
-只有应用壳或 Tool 已实际验证这些硬条件时，状态才是 `complete`。证据不足时返回
-`needs_input`；现有 Tool 不能验证 hash、唯一性、固定内容或发布原子性时返回 `blocked`
-并列出 capability gap。不要用 Agent 自报结果代替程序完成门。
+- a stable `slot_id` and unique locator in the final snapshot;
+- whether content is `scalar`, `paragraph_stream`, or `composite`;
+- minimum and maximum cardinality without inferring it from examples;
+- the physical container or boundaries that must remain;
+- effective style observations and any separate written requirement;
+- whether the responsibility is fill, generate, repeat, or conditional.
 
-## 最终回复
+Use a manual region when downstream work requires human or semantic placement that cannot be uniquely and
+safely automated. Record a gap when current evidence cannot define the responsibility at all.
 
-说明状态、冻结模板与 manifest 的位置和 hash、槽位/manual/gap 数量、使用过的来源、
-视觉与确定性验证摘要，以及仍需确认或当前能力无法证明的事项。不要复制材料正文或
-把任务产物描述成可跨任务复用的学校资产。
+## Interpret comparison evidence
+
+`template_compare` reports facts and selects relevant images; it does not decide visual correctness.
+
+Confirm that every expected change matches an operation, every unexpected change is explained or resolved,
+fixed content and containers remain intact, pagination changes make sense, and visual crops agree with the
+full-page context. Expand review when page count changes, object-to-page mapping fails, or section behavior is
+affected. The final review must cover every page of the exact snapshot submitted for build.
+
+## Use references when needed
+
+- Read [references/template-semantics.md](references/template-semantics.md) for ownership,
+  logical-unit, instruction-migration, generated-object, and source-conflict decisions.
+- Read [references/deletion-and-slot-decisions.md](references/deletion-and-slot-decisions.md) when choosing
+  a removal mode, slot content kind, cardinality, manual region, or gap.
+- Read [references/style-reconciliation.md](references/style-reconciliation.md) when resolving effective
+  formatting or comparing a written requirement with template evidence.
+- Read [references/visual-regression.md](references/visual-regression.md) when interpreting structural or
+  visual changes and deciding the review scope.
+
+## Completion
+
+Return the frozen artifact location, template hash, a concise summary of automatic slots and manual/gap
+regions, and any non-blocking findings the downstream consumer must know. If freeze is blocked, report the
+specific findings and do not present the candidate as deliverable.

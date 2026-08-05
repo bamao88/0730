@@ -83,10 +83,11 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-模板提取目标使用 `docfit-school-extract`，其 Gold 只保存冻结模板产物的稳定事实、
+模板提取目标使用 `docfit-school-extract`，其 Gold 只保存 frozen artifact 的稳定事实、
 带来源引用的当前任务事实、冲突与不确定性：冻结模板 hash、区域责任、自动定位唯一性、
-内容种类与基数、manual 区域和 gap。区域责任至少能够区分固定、填充、生成、重复、
-条件、人工和未决。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
+内容种类与基数、manual 区域、gap、绑定最终 hash 的逐页审查和 freeze 结果。区域责任
+至少能够区分固定、填充、生成、重复、条件、人工和未决。Gold 不把 build candidate 或
+Agent 自报当作 frozen。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
 就成为产品 Knowledge 或可自动复用的学校包。提供合格冻结模板产物和学生论文并要求
 交付转换的用例属于 `convert-thesis`。
 测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
@@ -107,8 +108,7 @@ manual_review: [cover_page, toc_pagination]
 - 学生正文关键文本；
 - 表格、图片、公式及其他支持对象的数量和必要顺序；
 - 目标有效样式；
-- 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、
-  适用的版本化国家级标准或未决；
+- 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、冲突或未决；
 - 必填字段内容；
 - 模板固定内容没有被未经证据修改；
 - 学生源内容清单逐项具有放置结果或明确不放置原因，没有静默缺失或重复；
@@ -155,18 +155,17 @@ Gold 只从已经实际运行并人工确认的结果产生：
 
 1. 用当前 Skill、Knowledge 和 Tools 处理样本；
 2. 运行确定性断言；
-3. 查看 `docx_render` 随结果返回的有限预览，或通过 `docx_visual_review` 按需读取与
-   当前文档绑定的已有页面图片；
+3. 转换用例查看 `docx_render` / `docx_visual_review` 的当前页面图片；学校模板用例查看
+   `template_compare` 直接返回、绑定 before/after snapshot 的 crop、整页或 contact sheet；
 4. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
 5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
 6. 必要时保存参考 `final.docx` 或少量页面图片；
-7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
-   hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因；
-   若使用确定性样式补全，还记录每个属性的标准标识、版本、条款、适用性与规则集 digest。
+7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料 hash，
+   以及适用的 snapshot/render ref、fidelity、Provider、字体环境、页面锚点和原因。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
-国家级标准的样式值补全表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存必要的
-标识、版本、条款引用、digest 和人工确认事实。
+样式缺省值表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存当前任务来源、观测、
+冲突、未决和人工确认事实。
 
 ## 6. Gold 的更新
 
