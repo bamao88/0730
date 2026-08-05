@@ -1,137 +1,135 @@
 ---
 name: docfit-school-extract
-description: Prepare a school thesis Word template as a frozen, safely fillable template artifact. Use when the user supplies a school template, formatting requirements, or official examples and wants a clean reusable template plus a hash-bound slot manifest.
+description: 将学校论文 Word 模板整理为冻结且可安全填写的模板产物。当用户提供学校模板、格式要求或官方示例，并希望获得干净的可复用模板及与模板 hash 绑定的槽位 manifest 时，使用本 Skill。
 ---
 
-# School Template Extraction
+# 学校模板提取
 
-Turn the current task's school materials into exactly two deliverables:
+将当前任务的学校材料整理为两个核心交付内容：
 
-1. a clean template DOCX that preserves required structure, fixed content, styles, and Word behavior;
-2. a frozen artifact manifest bound to that exact template hash, with automatic slots, manual regions,
-   gaps, sources, and review findings.
+1. 一份干净的模板 DOCX，保留必需结构、固定内容、样式和 Word 行为；
+2. 一份与该模板精确 hash 绑定的冻结产物 manifest，包含自动槽位、人工区域、gap、来源
+   和审查发现。
 
-Do not fill student content. Do not promote school-specific conclusions into product Knowledge.
+不要填入学生论文内容。不要把学校专属结论提升为产品 Knowledge。
 
-## Responsibility split
+## 职责划分
 
-You decide meaning: which material is authoritative, what visible content is an instruction or example,
-which responsibility must survive deletion, what a slot means, and whether a visual change is reasonable.
+你负责判断语义：哪些材料具有权威性，哪些可见内容是说明或示例，删除前必须保留哪些
+责任，槽位表示什么，以及视觉变化是否合理。
 
-The bundled scripts validate and compile your completed semantic decisions into canonical Tool inputs.
-The template Tools establish facts, execute explicit operations, compare actual changes, compile a
-candidate, and independently freeze it. Neither a script nor a Tool result substitutes for semantic judgment.
+Skill 内置脚本负责校验并把你已经完成的语义判断编译为规范的 Tool 输入。模板 Tool
+负责建立事实、执行显式操作、比较实际变化、编译候选产物和独立冻结。脚本或 Tool 的
+返回结果都不能代替语义判断。
 
-## Recommended method
+## 推荐方法
 
-Adapt the following sequence to the evidence. It is a working method, not a fixed state machine.
+根据实际证据调整以下顺序。这是操作方法，不是固定状态机。
 
-1. Inventory every template, written requirement, and official example. Record provenance, conflicts,
-   missing inputs, and files that must remain read-only.
-2. Call `template_observe` to establish an immutable snapshot. Observe structure, visible objects,
-   effective formatting, slot candidates, PDF pages, and unsupported content.
-3. Classify template content as fixed, fill, generate, repeat, conditional, manual, remove, or unresolved.
-4. Before deleting an instruction or example, migrate any surviving formatting, cardinality, generation,
-   or placement responsibility into a slot or region decision.
-5. Reconcile written requirements with the template's effective formatting. Preserve material conflicts;
-   do not resolve them from style names, prior schools, or convention alone.
-6. For each intended change, choose an exact target, expected fingerprint, removal mode, and any slot
-   semantics. Ask the user when the ambiguity can materially change the reusable template.
-7. Write `mutation-decisions.yaml`, then run `scripts/compile_mutation_plan.py`. Give the resulting
-   `mutation-plan.json` to `template_mutate`. Never use page numbers or text alone as edit identity. If
-   compilation or mutation rejects a stale or ambiguous target, observe again and reconsider the decision.
-8. Call `template_compare`. Inspect its expected and unexpected changes and the native images it returns.
-   Decide whether the result is reasonable, needs another edit, or requires user input.
-9. Record your image judgments in `review-decisions.yaml` and run `scripts/compile_review_record.py`.
-   After the final snapshot and all pages are reviewed, run `scripts/compile_artifact_spec.py` over the
-   confirmed semantic inventory and review record. Give `artifact-spec.json` to `template_build` and treat
-   its output only as a candidate.
-10. Submit the candidate to `template_freeze`. Deliver it only when that independent Tool returns
-    `status: frozen`.
+1. 盘点所有模板、文字要求和官方示例。记录来源、冲突、缺失输入，以及必须保持只读的
+   文件。
+2. 调用 `template_observe` 建立不可变快照。观察结构、可见对象、最终有效格式、槽位候选、
+   PDF 页面和不支持内容。
+3. 将模板内容分类为 fixed、fill、generate、repeat、conditional、manual、remove 或
+   unresolved。
+4. 删除说明或示例前，先把其中仍需保留的格式、基数、生成或放置责任迁移到槽位或区域
+   决定中。
+5. 将文字要求与模板最终有效格式交叉验证。保留重要冲突；不要仅凭样式名、历史学校或
+   惯例裁决冲突。
+6. 为每项修改选择精确目标、预期指纹、删除模式和必要的槽位语义。当歧义会实质改变
+   可复用模板时，询问用户。
+7. 写入 `mutation-decisions.yaml`，然后运行 `scripts/compile_mutation_plan.py`。把生成的
+   `mutation-plan.json` 交给 `template_mutate`。不要单独使用页码或文本作为编辑身份。
+   如果编译或修改因为目标过期或歧义而被拒绝，重新观察并重新判断。
+8. 调用 `template_compare`。检查它返回的预期变化、意外变化和原生图片，判断结果是否
+   合理、是否需要继续修改，或是否需要用户输入。
+9. 把图片判断写入 `review-decisions.yaml`，运行 `scripts/compile_review_record.py`。完成
+   最终快照全页审查后，使用已确认的语义清单和审查记录运行
+   `scripts/compile_artifact_spec.py`。把 `artifact-spec.json` 交给 `template_build`，并且
+   只把其输出视为 candidate。
+10. 把 candidate 提交给 `template_freeze`。只有这个独立 Tool 返回 `status: frozen` 后
+    才能交付。
 
-## Core judgment rules
+## 核心判断规则
 
-- Instruction text may carry requirements. Migrate the requirement before removing the text.
-- A logical unit is not a physical page. Page numbers are visual evidence, not durable edit locators.
-- A style name is not effective formatting. Include direct formatting, inheritance, section settings,
-  and other applicable Word behavior.
-- A generated object is not its cached display text. Preserve the generation responsibility when needed.
-- The number of examples is not the cardinality of a repeating region.
-- Fixed content stays fixed unless current-task evidence explicitly authorizes a change.
-- Unknown or unsupported content stays preserved and unresolved; absence of evidence is not permission to
-  delete it.
-- Automatic slots must be uniquely locatable in the final template snapshot. Otherwise mark the region
-  manual or unresolved.
-- A successful mutation or build is not a frozen artifact. Only `template_freeze` can publish one.
+- 说明文字可能承载要求。删除文字前先迁移要求。
+- 逻辑单元不等于物理页面。页码是视觉证据，不是持久编辑 locator。
+- 样式名不等于最终有效格式。还要考虑直接格式、继承、分节设置和其他适用的 Word 行为。
+- 生成对象不等于当前缓存的显示文字。需要时保留生成责任。
+- 示例数量不等于重复区域的基数。
+- 除非当前任务证据明确授权修改，否则固定内容保持不变。
+- 未知或不支持的内容应保留并标为 unresolved；缺少证据不代表允许删除。
+- 自动槽位必须能在最终模板快照中唯一定位，否则将区域标为 manual 或 unresolved。
+- 修改成功或 build 成功都不代表产物已经冻结。只有 `template_freeze` 可以发布 frozen
+  产物。
 
-## Compile decisions before Tool execution
+## 在调用 Tool 前编译决定
 
-Resolve `scripts/` relative to this `SKILL.md`; do not recreate the compilers ad hoc.
+相对于当前 `SKILL.md` 解析 `scripts/` 路径；不要临时重新实现这些编译器。
 
-| Script | Agent-authored input | Canonical output | Consumer |
+| 脚本 | Agent 编写的输入 | 规范输出 | 消费方 |
 |---|---|---|---|
 | `compile_mutation_plan.py` | `mutation-decisions.yaml` | `mutation-plan.json` | `template_mutate` |
-| `compile_review_record.py` | compare result + `review-decisions.yaml` | `review-record.json` | artifact compilation and freeze evidence |
-| `compile_artifact_spec.py` | final semantic inventory + review record | `artifact-spec.json` | `template_build` |
+| `compile_review_record.py` | compare 结果 + `review-decisions.yaml` | `review-record.json` | artifact 编译与冻结证据 |
+| `compile_artifact_spec.py` | 最终语义清单 + review record | `artifact-spec.json` | `template_build` |
 
-Write the semantic decision and its evidence first; the script only checks and serializes it. Treat compiler
-errors as missing or inconsistent decisions, not as permission to weaken the schema. Scripts must produce
-canonical output atomically and must not read or modify the DOCX, call a Tool, infer document meaning, or
-claim that a review/freeze passed. Tools revalidate every compiled request.
+先写清语义决定及其证据，再运行脚本；脚本只负责检查和序列化。编译错误表示决定缺失或
+互相矛盾，不代表可以弱化 schema。脚本必须原子生成规范输出，不得读取或修改 DOCX、
+调用 Tool、推导文档语义，也不得宣称审查或冻结已经通过。Tool 会重新验证每一份编译结果。
 
-Read [references/decision-compilation.md](references/decision-compilation.md) before preparing the three
-decision files or interpreting compiler failures.
+准备三份决定文件或解释编译错误前，阅读
+[references/decision-compilation.md](references/decision-compilation.md)。
 
-## Choose the removal mode deliberately
+## 谨慎选择删除模式
 
-| Intent | Mode |
+| 意图 | 模式 |
 |---|---|
-| Empty a placeholder while retaining its paragraph/run container and formatting | `clear_text_preserve_container` |
-| Remove only a known inline phrase inside mixed content | `remove_inline_fragment` |
-| Remove an entire paragraph, row, or other addressed container | `remove_container` |
-| Remove a confirmed continuous logical block between stable boundaries | `remove_bounded_block` |
-| Empty cell content while preserving table grid and cell properties | `clear_cell_preserve_grid` |
-| Remove a content-control wrapper while retaining its approved content | `unwrap_control_preserve_content` |
+| 清空占位文字，同时保留段落/run 容器及其格式 | `clear_text_preserve_container` |
+| 只删除混合内容中已确认的行内片段 | `remove_inline_fragment` |
+| 删除整个段落、行或其他已定位容器 | `remove_container` |
+| 删除两个稳定边界之间已确认的连续逻辑块 | `remove_bounded_block` |
+| 清空单元格内容，同时保留表格网格和单元格属性 | `clear_cell_preserve_grid` |
+| 删除内容控件包装，同时保留已经批准的内部内容 | `unwrap_control_preserve_content` |
 
-Do not select a broader mode for convenience. If the intended unit cannot be expressed by one safe target
-or bounded range, preserve it or split the operation after further observation.
+不要为了方便而选择范围更大的模式。如果一个安全目标或有界范围不能表达预期逻辑单元，
+就先保留它，或在进一步观察后拆分操作。
 
-## Define slot responsibility
+## 定义槽位责任
 
-For every automatic slot, determine:
+为每个自动槽位确定：
 
-- a stable `slot_id` and unique locator in the final snapshot;
-- whether content is `scalar`, `paragraph_stream`, or `composite`;
-- minimum and maximum cardinality without inferring it from examples;
-- the physical container or boundaries that must remain;
-- effective style observations and any separate written requirement;
-- whether the responsibility is fill, generate, repeat, or conditional.
+- 稳定的 `slot_id` 和最终快照中的唯一 locator；
+- 内容属于 `scalar`、`paragraph_stream` 还是 `composite`；
+- 不从示例数量推断的最小与最大基数；
+- 必须保留的物理容器或边界；
+- 最终有效样式观测，以及独立存在的文字要求；
+- 责任属于 fill、generate、repeat 还是 conditional。
 
-Use a manual region when downstream work requires human or semantic placement that cannot be uniquely and
-safely automated. Record a gap when current evidence cannot define the responsibility at all.
+当下游工作需要人工或语义放置，且无法唯一、安全地自动执行时，使用 manual 区域。当
+当前证据完全无法定义责任时，记录 gap。
 
-## Interpret comparison evidence
+## 解释比较证据
 
-`template_compare` reports facts and selects relevant images; it does not decide visual correctness.
+`template_compare` 报告事实并选择相关图片，但不判断视觉是否正确。
 
-Confirm that every expected change matches an operation, every unexpected change is explained or resolved,
-fixed content and containers remain intact, pagination changes make sense, and visual crops agree with the
-full-page context. Expand review when page count changes, object-to-page mapping fails, or section behavior is
-affected. The final review must cover every page of the exact snapshot submitted for build.
+确认每项预期变化都能对应到一个 operation，每项意外变化都已经解释或解决，固定内容和
+容器保持完整，分页变化符合预期，而且局部裁剪与整页上下文一致。页数变化、对象到页面
+的映射失败或分节行为受影响时，扩大审查范围。最终审查必须覆盖提交给 build 的精确快照
+中的全部页面。
 
-## Use references when needed
+## 按需读取 references
 
-- Read [references/template-semantics.md](references/template-semantics.md) for ownership,
-  logical-unit, instruction-migration, generated-object, and source-conflict decisions.
-- Read [references/deletion-and-slot-decisions.md](references/deletion-and-slot-decisions.md) when choosing
-  a removal mode, slot content kind, cardinality, manual region, or gap.
-- Read [references/style-reconciliation.md](references/style-reconciliation.md) when resolving effective
-  formatting or comparing a written requirement with template evidence.
-- Read [references/visual-regression.md](references/visual-regression.md) when interpreting structural or
-  visual changes and deciding the review scope.
+- 处理内容责任、逻辑单元、说明语义迁移、生成对象或来源冲突时，阅读
+  [references/template-semantics.md](references/template-semantics.md)。
+- 选择删除模式、槽位内容种类、基数、manual 区域或 gap 时，阅读
+  [references/deletion-and-slot-decisions.md](references/deletion-and-slot-decisions.md)。
+- 解析最终有效格式，或比较文字要求与模板证据时，阅读
+  [references/style-reconciliation.md](references/style-reconciliation.md)。
+- 解释结构/视觉变化或决定审查范围时，阅读
+  [references/visual-regression.md](references/visual-regression.md)。
 
-## Completion
+## 完成与回复
 
-Return the frozen artifact location, template hash, a concise summary of automatic slots and manual/gap
-regions, and any non-blocking findings the downstream consumer must know. If freeze is blocked, report the
-specific findings and do not present the candidate as deliverable.
+返回 frozen artifact 的位置、模板 hash、自动槽位与 manual/gap 区域的简要摘要，以及
+下游消费者需要知道的非阻断发现。如果冻结被阻止，报告具体 findings，不要把 candidate
+描述为可交付产物。
