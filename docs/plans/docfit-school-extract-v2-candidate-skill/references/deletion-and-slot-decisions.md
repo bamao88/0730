@@ -23,6 +23,10 @@ The same semantic case can require different modes because the physical containe
 same mode can remove placeholders, instructions, or examples after their different semantic preconditions
 have been satisfied.
 
+Manual region and gap records belong to artifact decisions/spec and are not no-op mutation actions. If a
+removal migrates responsibility to a new automatic slot, `materialize_slot` must appear earlier in the
+mutation plan and the removal declares it in `depends_on` and `migration_targets`.
+
 ## Select the smallest safe deletion
 
 | Mode | Use when | Required preservation check |

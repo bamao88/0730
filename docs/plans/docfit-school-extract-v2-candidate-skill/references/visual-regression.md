@@ -15,14 +15,17 @@ change occurred and protected surroundings did not change without explanation.
 
 ## Review scope
 
-The comparison Tool selects at least:
+The comparison Tool has `mutation_review` and `final_review` modes. Mutation review selects at least:
 
 - text clear: before/after crop and the resulting full page;
 - paragraph/container removal: target page and adjacent pages;
 - bounded block or table change: before/after contact sheet and boundary pages;
 - section, header/footer, or pagination change: all affected section pages;
-- page-count change or mapping failure: expanded pages or full-document review;
-- final candidate: every page of the exact final template hash.
+- page-count change or mapping failure: expanded pages or full-document review.
+
+Final review is a separate call bound to the exact final snapshot and selects every authoritative page,
+including when the source needs zero mutation. A complete comparison is immutable. Fetch its native images
+in cursor batches until `next_cursor` is absent; transfer limits never justify missing a required page.
 
 Ask for a broader observation only when the supplied evidence cannot resolve the visual question. Do not
 replace an existing authoritative rendering with a different backend and compare page numbers across them.
@@ -37,4 +40,10 @@ replace an existing authoritative rendering with a different backend and compare
 - Are all unexpected differences explained by an authorized operation?
 
 Record the reviewed page/image refs, the final template hash, the Agent finding, and any blocking status.
-Review evidence from an earlier hash cannot satisfy final freeze.
+Write those dispositions directly into `artifact-decisions.yaml`; `compile_artifact_spec.py` normalizes them
+as the embedded typed review record, and `template_build` emits `visual-review.json`. Review evidence from an
+earlier hash cannot satisfy final freeze.
+
+Tool facts use `machine_blocking: true | false`; Agent interpretation uses
+`disposition: accepted | blocking | needs_edit`. An accepted disposition cannot override a machine-blocking
+finding. Correct the document or decision and create a new comparison instead.
