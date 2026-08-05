@@ -800,8 +800,9 @@ Content Ledger。目标数据流固定为：
 - 模板固定内容与可填区域可确定性区分，未经当前证据不得修改固定内容；
 - 学生源内容形成绑定 source hash 的任务级清单；每项必须放置到明确槽位，或有明确且
   可审计的不放置原因；缺项、重复、无理由消失和越过 manual/gap 阻止完成；
-- Skill 保留两个语义判断：行动目标需要至少两个独立信号共同支持唯一性；删除或
-  不放置需要比保留更强证据。hash、覆盖、原子发布和失败不发布由程序合同强制。
+- Skill 提供从材料盘点到冻结发布的可调整默认工作方法，并保留两个不可放宽的语义
+  阈值：行动目标需要至少两个独立信号共同支持唯一性；删除或不放置需要比保留更强
+  证据。hash、覆盖、原子发布和失败不发布由程序合同强制。
 
 开始实现前必须新建并批准执行计划，完成以下 Preflight 决策：在不改变五个公开 Tool
 名称的前提下，确定产物文件名与 schema 版本、槽位 locator 的最小可实现形态、冻结
@@ -809,7 +810,8 @@ Content Ledger。目标数据流固定为：
 和旧 P1/M2 Skill 的替换策略。不得用精确 schema 设计重新引入工作流状态或学校 profile。
 
 当前候选 Skill 文字、reference 目录、manifest 草案、原子迁移范围和首批行为用例记录在
-`docs/plans/docfit-school-extract-v2.md` 及其 `docfit-school-extract-v2-draft/` 同名目录。
+`docs/plans/docfit-school-extract-v2.md` 及独立的
+`docfit-school-extract-v2-fresh-draft/` 目录。
 它们是可删除、可评审的实施输入，不是第八份长期架构合同；在本节产品门通过前不得
 复制到生产 Skill 后宣称完成。
 

@@ -194,7 +194,7 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 不把“第几轮”写入 Tool 状态或 Gold，也不把 baseline/candidate 的确切调用次数作为
   通用行为断言；只验证缓存、parent ref、后端路由和当前证据绑定；
 - 在最终答复中如实说明产物、验证结果和未解决问题；
-- `SKILL.md` 只保留 L0 目标、边界、关键判断、路由与能力缺口，按需读取 L1
+- `SKILL.md` 保留 L0 目标、边界、可调整的默认工作方法、关键判断、路由与能力缺口，按需读取 L1
   references、L2 通用 Knowledge 和 L3 当前任务证据，不重复 Tool 已强制的机器检查表。
 
 Skill eval 以可观察结果为主。除安全底线和必要先后关系外，不要求 Agent 复现固定工具调用序列。

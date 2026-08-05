@@ -102,7 +102,11 @@ validation:
 是否需要单独 `slot-index.json`，由消费者实现和 fixture 证明后再决定；首选把槽位索引
 放在一个 manifest 内，避免两个 JSON 的 hash/版本漂移。
 
-## 5. Skill 中保留的两个判断
+## 5. Skill 中不可放宽的两个核心判断
+
+这两项是语义安全阈值，不是 `SKILL.md` 的全部内容。主文件还应直接提供从来源盘点、
+模板观察、内容分类、清理与槽位设计、修改后复查到冻结发布的默认工作方法，并说明
+何时回看、询问或停止；references 只承载复杂案例、详细 schema 和错误恢复。
 
 ### 5.1 行动目标是否足够唯一
 
@@ -148,18 +152,19 @@ DOCX、槽位表或视觉观察称为冻结产物。
 
 ## 8. Reference 目录方案
 
-候选树位于 `docs/plans/docfit-school-extract-v2-draft/`：
+全新候选树位于 `docs/plans/docfit-school-extract-v2-fresh-draft/`；旧草稿保留供比较，
+不在其文字和章节上继续增量修改：
 
 ```text
 docfit-school-extract/
 ├── SKILL.md
 ├── references/
-│   ├── artifact-interface.md
-│   ├── evidence-and-conflicts.md
-│   ├── template-cleaning-and-slots.md
-│   ├── tool-usage-and-error-recovery.md
-│   ├── scenarios-and-edge-cases.md
-│   └── delegation-task-packet.md
+│   ├── artifact-contract.md
+│   ├── source-decisions.md
+│   ├── template-analysis-and-slot-design.md
+│   ├── tools-and-recovery.md
+│   ├── complex-template-cases.md
+│   └── delegation.md
 └── evals/
     └── evals.json
 ```
@@ -175,7 +180,7 @@ Tool/App，不应藏在 Skill 脚本里。只有多轮 Eval 证明存在稳定�
 - 不再要求学校提取 Skill “不修改任何文档”；改为来源只读、只写工作/输出副本；
 - Tool 集合允许五个公开 DocFit Tool，但不固定完整调用顺序；
 - 删除 `body.count("- [ ]")` 一类 checklist 形状断言；
-- 断言 L0 含两个判断、产物边界、能力缺口和明确 reference 路由；
+- 断言 L0 含默认工作方法、两个核心判断、产物边界、能力缺口和明确 reference 路由；
 - 断言不出现学生内容填充、学校 Knowledge、跨任务 profile 或另一个 Skill 名称；
 - 断言所有 reference 都存在且只属于本 Skill。
 

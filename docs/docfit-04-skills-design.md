@@ -16,10 +16,10 @@ Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独�
 源内容覆盖门；实施必须遵循 06 的独立候选切片。本文件以下部分描述目标合同，不能
 用来声称当前实现已经完成该修订。
 
-两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标与判断入口，并用项目相对路径
-指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联文件不会由
-Skill 工具自动带入。主 Agent 虽拥有受信任 Bash，但 Skill references 的稳定加载契约
-仍是明确路径的 Read，而不是 shell 行为。
+两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标、默认工作方法与判断入口，并用
+项目相对路径指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联
+文件不会由 Skill 工具自动带入。主 Agent 虽拥有受信任 Bash，但 Skill references 的
+稳定加载契约仍是明确路径的 Read，而不是 shell 行为。
 
 ## 1. Skill 在架构中的位置
 
@@ -29,6 +29,7 @@ Skill 把论文转换经验交给 Claude Agent，但执行权始终留在 Claude
 
 - 用户要完成什么；
 - 输入与产物分别是什么；
+- 通常可以把任务分成哪些工作部分，哪些顺序来自真实依赖，何时应调整、回看或分支；
 - 哪些事实不足以支持行动；
 - 何时读取 Knowledge；
 - 何时调用五个 DocFit Tool；
@@ -39,6 +40,11 @@ Skill 把论文转换经验交给 Claude Agent，但执行权始终留在 Claude
 
 Skill 不定义固定阶段、状态转换、checkpoint、任务队列或工具调用图，也不保存学校具体字号、页边距和固定文案。hash 绑定、唯一性校验、原子发布、固定内容保护和源内容覆盖等
 机器可强制事实不复制成 L0 检查清单。
+
+这里禁止的是运行时编排，不是领域操作说明。`SKILL.md` 应给 Agent 一条不依赖
+references 也能理解的完整任务主线，并写清通用规则、判断标准和注意事项；Agent 可以
+根据当前文件改变粒度、重复局部检查或跳过不适用分支。references 负责复杂案例、详细
+schema 和错误恢复，不负责替主文件补上一条缺失的基本做法。
 
 较长的冲突处理、模板文字分类、委派任务包、视觉复核和完成 schema 可以进入
 `references/`，但 `SKILL.md` 必须说明在什么判断下读取哪一份明确路径。Agent 可以使用
@@ -216,7 +222,8 @@ blocking finding；DOCX 能打开、Adobe 转换成功或结构验证通过都�
 - 结构检查和页面渲染冲突时保留两类证据，不静默选择其中一个。
 
 这些是长期设计中的支撑判断，不是必须按顺序执行的阶段，也不应逐条复制进 L0
-`SKILL.md`。L0 只保留会改变 Agent 决策的边界和上述两个判断；具体方法按需进入 L1。
+`SKILL.md`。L0 应把它们收束成一套简明、可调整的默认工作方法，并保留会改变 Agent
+决策的边界和上述两个不可放宽的判断；复杂案例和操作细节按需进入 L1。
 
 ### 4.6 Tool 使用
 
@@ -428,10 +435,11 @@ format_instruction  只用于说明格式、最终应清理的文字
 
 ## 8. Skill 内容组织
 
-信息按消费成本分为四层：L0 是 `SKILL.md` 中的选择、输入/产物、边界、两个关键判断、
-路由和能力缺口；L1 是同目录 `references/` 中按判断加载的详细方法；L2 是随产品发布的
-通用 Knowledge；L3 是当前任务材料、冻结模板产物和 Tool 证据。下层可以更具体，但
-不得把学校事实向上晋升，也不得把 Tool 已经强制的机器不变量重复成 L0 checklist。
+信息按消费成本分为四层：L0 是 `SKILL.md` 中的选择、输入/产物、边界、默认工作方法、
+关键判断、路由和能力缺口；L1 是同目录 `references/` 中按判断加载的复杂案例与详细
+方法；L2 是随产品发布的通用 Knowledge；L3 是当前任务材料、冻结模板产物和 Tool
+证据。下层可以更具体，但不得把学校事实向上晋升，也不得把 Tool 已经强制的机器
+不变量重复成 L0 checklist。
 
 ```text
 <skill>/
@@ -472,7 +480,7 @@ reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
 必须明确命令、输入输出、凭据处理和测试边界，且不能把 shell 输出、凭据或文档正文写入
 观测事件。该能力没有 DocFit sandbox，不能把提示词约束描述成强制隔离。
 
-冻结模板 Interface 的候选生产 Skill 采用以下目标 reference 树；它是
+冻结模板 Interface 的全新候选生产 Skill 采用以下目标 reference 树；它是
 `docs/plans/docfit-school-extract-v2.md` 中的实施草案，不替代本文件的长期语义合同，
 也不表示当前 `.claude/skills/docfit-school-extract/**` 已经切换：
 
@@ -480,12 +488,12 @@ reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
 docfit-school-extract/
 ├── SKILL.md
 └── references/
-    ├── artifact-interface.md
-    ├── evidence-and-conflicts.md
-    ├── template-cleaning-and-slots.md
-    ├── tool-usage-and-error-recovery.md
-    ├── scenarios-and-edge-cases.md
-    └── delegation-task-packet.md
+    ├── artifact-contract.md
+    ├── source-decisions.md
+    ├── template-analysis-and-slot-design.md
+    ├── tools-and-recovery.md
+    ├── complex-template-cases.md
+    └── delegation.md
 ```
 
 候选树不增加 `scripts/` 或 `assets/`。hash、locator、原子发布、固定内容保护和完成门
@@ -494,7 +502,7 @@ docfit-school-extract/
 
 ## 9. Skill 评审问题
 
-- Agent 是否知道目标、证据和完成条件，而不只是知道步骤？
+- Agent 不读 references 时，是否仍知道目标、默认工作方法、判断标准和完成条件？
 - 当前用户模板、学校规则或精确参数是否被写入长期 Knowledge？
 - 学校事实是否被误写进通用 Skill？
 - OOXML 细节是否泄漏到 Skill？
@@ -523,8 +531,8 @@ docfit-school-extract/
   顺序或共享隐藏状态？
 - 每个自动槽位是否在冻结模板 hash 内唯一，manual/gap 是否显式，快照变化后旧 locator
   是否失效？
-- Skill 是否只保留“行动目标唯一”和“内容消失需更强证据”这类判断，而把 hash、覆盖、
-  原子发布等硬门留给 Tool/应用壳？
+- Skill 是否把“行动目标唯一”和“内容消失需更强证据”作为不可放宽的核心阈值，同时
+  提供足够的通用操作指导，并把 hash、覆盖、原子发布等硬门留给 Tool/应用壳？
 - 转换是否闭合学生源内容清单，并对每个不放置项给出理由，而不是只检查最终文档中
   看得见的内容？
 
