@@ -1,7 +1,7 @@
 # DocFit 架构总览（01）
 
 > 状态：架构基线
-> 日期：2026-08-05
+> 日期：2026-08-04
 > 核心路线：**Claude Agent SDK runtime + Skill + Knowledge + Tools + Eval + thin app**
 
 本文定义已经批准的目标架构；当前实现状态与里程碑完成判定以 06 为准。当前代码已
@@ -14,9 +14,6 @@ Services 薄适配和 `docfit convert`。M3 的确定性 core Eval
 本地调试壳可以按平台提供可选适配能力，但缺少该能力不能改变转换或阻塞核心验收；
 当前产品开发范围在 M2 链路完成。授权/脱敏复杂样本、Gold、M3 Skill/E2E Eval 和外部
 人工页面复核属于后续独立质量范围，不由近似渲染或 mock 替代，也不阻塞当前范围完成。
-冻结干净模板、槽位索引、固定内容保护和源内容覆盖已经批准为目标架构修订，但尚未
-进入当前代码；它们必须按 06 的 M2 后独立候选切片实施和验收，不能反向改写 M2 已完成
-事实。
 
 ## 1. 核心定位
 
@@ -48,7 +45,7 @@ App         用尽可能薄的方式把它们交给用户
 
 一次真实失败应优先沉淀为：
 
-- Skill 中更清楚的任务模型或由真实失败提炼的高风险规则；
+- Skill 中更清楚的判断规则；
 - Knowledge 中更清楚、经过跨任务验证的通用概念、识别方法或处理模式；
 - Tool 中更可靠的确定性能力；
 - Eval 中一个可重复的失败样本和断言。
@@ -57,27 +54,19 @@ App         用尽可能薄的方式把它们交给用户
 
 ### 2.3 Deterministic operations, adaptive decisions
 
-Agent 负责理解论文内容、给出转换意图、检查实际结果并修正错误，工具负责精确执行：
+Agent 负责语义判断，工具负责精确执行：
 
 ```text
 Agent：这段是一级标题，应该使用学校规则 A
 Tool：定位该段，应用规则 A，另存并返回检查结果
 ```
 
-Agent 不直接拼写 OOXML；工具不自主决定某段是不是标题。Agent 是任务结果 owner，Tool
-只对单次调用的事实、执行和校验负责。Tool 返回错误、blocking finding，或返回成功但
-结果仍不符合语义/视觉目标时，Agent 必须修改决定或文档并重新执行；不能把 Tool 结果
-直接当作任务终态。
+Agent 不直接拼写 OOXML；工具不自主决定某段是不是标题。
 
 候选文档的构建方向不是自适应项。干净、可填写的目标模板工作副本固定为候选与最终
 DOCX 的主干；只读学生论文固定为内容真值来源。Agent 可以动态决定检查、映射、分批
 写入和复核顺序，但不得把学生论文工作副本当作候选主干，也不得以“导入模板前置页”
 代替把学生内容放入模板槽位或区域。
-
-目标合同进一步把模板主干冻结成可消费产物：学校提取端发布不可变的干净模板快照，
-以及与该快照 hash 绑定的槽位索引；转换端只把它视为输入，不依赖生产它的 Skill 名称
-或调用历史。槽位索引描述“哪里可以填、填什么形态、允许多少项、哪里必须人工处理”，
-不解释学生论文内容，也不把学校资产升级为跨任务 Knowledge。
 
 ### 2.4 Knowledge is a universal domain asset
 
@@ -104,16 +93,12 @@ Eval 用于开发、回归和版本比较。用户运行一次论文转换时，
 flowchart LR
     U["用户"] --> A["薄应用壳"]
     A --> SDK["Claude Agent SDK"]
-    SDK --> S1["docfit-school-extract"]
-    SDK --> S2["convert-thesis"]
-    S1 --> I["冻结模板产物 Interface<br/>clean template + slot index"]
-    H["人工 / 受控适配器"] -.同一合同.-> I
-    I --> S2
+    SDK --> S["Skills"]
     SDK --> K["Knowledge"]
     SDK --> T["Tools"]
     SDK -."受路径约束的只读发现".-> R["Read / Glob / Grep<br/>Skill references + Knowledge + 当前任务"]
     SDK -."受信任且自动批准".-> W["Bash / Write<br/>无 DocFit 路径 gate"]
-    SDK -."Agent 可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
+    SDK -."按 Skill 判断可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
     SA --> RT["只读 Tool 子集<br/>inspect + visual-review"]
     T --> F["DOCX / PDF / 图片 / 检查结果"]
     RT --> F
@@ -154,28 +139,20 @@ DocFit 可以配置和使用这些能力，但不复制它们。
 
 ### 4.2 Skill
 
-Skill 是 DocFit 的论文转换任务说明。它包含：
+Skill 是 DocFit 的主要产品逻辑。它包含：
 
 - 任务适用范围；
-- 输入与稳定交付边界；
-- 推荐的模板提取或论文转换方法与判断标准；
-- 从真实任务错误中归纳的 Word/论文处理风险与按需 reference；
-- 需要重复、确定性完成的 Agent 决策结构编译脚本；
-- 禁止行为和最终回复。
+- 目标与完成条件；
+- 推荐的观察顺序；
+- 领域判断原则；
+- 何时读取哪类 Knowledge；
+- 何时调用哪类 Tool；
+- 遇到不确定性时如何继续、回看或询问用户；
+- 禁止行为和常见陷阱。
 
-`SKILL.md` 保留任务、输入输出、推荐方法、常用判断和少量真正影响行为的高风险规则。
-references 按可复用问题机制组织，而不是按处理阶段或封面、目录等输入部件枚举；主文件
-可以直接指向少量真实文件，不要求再增加只有导航作用的 index，也不为每个步骤安排一份
-reference。
-
-Tool 的完整参数、返回 schema 和错误码由 Claude Agent SDK 注册信息提供。Skill 可以
-点名稳定的领域 Tool，并说明它在推荐方法中的责任边界以及 Agent 应如何解释结果；它
-不复制字段级 schema，也不维护与真实注册信息竞争的命令手册。
-
-Skill script 是 Skill 的 bundled resource，不是第六类产品资产。它可以读取当前任务中
-Agent 写出的决策 YAML/JSON和 Tool 已返回的结构化 metadata，使用与 Tool 共享的版本化
-类型模型输出 canonical request。它不得读取或修改 DOCX、调用 Tool、推导语义、解释
-图片或宣布 candidate/frozen；消费方 Tool 对脚本输出重新执行完整校验。
+`SKILL.md` 保留目标、边界、判断入口与完成条件；较长的冲突处理、分类、委派任务包、
+视觉/验证方法可以放入同目录 `references/`。主文件必须以明确项目相对路径说明何时读取
+每一份 reference，不能依赖 Skill 工具自动加载关联文件。
 
 Skill 不是：
 
@@ -183,33 +160,17 @@ Skill 不是：
 - 阶段状态表；
 - 可持久化的工作流实例；
 - 一组必须逐项执行的系统任务；
-- Tool 或应用壳已经能够强制执行的机器检查清单；
 - 学校具体格式数值的存放位置。
 
-Skill 可以明确给出通常的处理步骤、每步应完成的语义判断以及返回前必须满足的条件，
-但不把 Agent 的自然推理持久化为程序状态，也不把论文部件强行对应到固定节点。确定性
-的先后依赖、hash、引用失效和失败不发布由 Tool 或应用壳执行和验证。
+批准的目标架构维护两个用户目标型 Skill：
 
-批准的目标架构维护两个产物边界清楚的用户目标型 Skill：
-
-- `docfit-school-extract`：清理当前任务模板，只发布原子 frozen artifact；其中干净 DOCX、
-  hash 绑定 manifest、visual review 和 freeze report 必须彼此一致；它不填学生内容，也不生产跨任务学校包；
-- `convert-thesis`：消费符合该 Interface 的冻结模板产物与只读学生论文，把源内容
-  放入槽位，只发布最终 DOCX 和 `conversion-report.json`；视觉/验证结果、源内容覆盖和
-  未执行项包含在 report 中；它不重新解释学校要求，
-  不改写模板固定内容，也不编造学生内容。
+- `docfit-school-extract`：解释当前任务模板、要求与示例，形成带来源引用、只对当前
+  任务有效的模板事实、冲突、不确定性和候选参数；
+- `convert-thesis`：使用通用 Knowledge 和当前任务证据，把当前论文转换成目标格式。
 
 `docfit-school-extract` 不生成可跨任务复用的学校包，也不把学校事实写入产品
 Knowledge。它与 `convert-thesis` 都可以直接分析，或按当前任务需要调用同一个
-`docfit-unit-analyst`；两者通过产物合同而不是 Skill 名称或固定委派顺序耦合。冻结
-模板 Interface 可以由该 Skill、人工或其他受控适配器生产，只要通过同一契约门。
-
-Skill 的主要信息按四层披露：L0 `SKILL.md` 保存任务、输入输出、推荐操作方法、常用
-判断标准与高频风险；L1 同目录 references 按可复用判断问题展开，bundled scripts 把
-Agent 决定编译为 Tool typed input；L2 产品
-Knowledge 保存跨学校通用概念；L3 当前任务材料、冻结模板产物和 Tool 证据保存具体
-事实。Skill script 只强制决策结构；文档事实、副作用和发布不变量下沉到 Tool、应用壳
-和测试。
+`docfit-unit-analyst`；两者不定义固定委派顺序。
 
 ### 4.3 Knowledge
 
@@ -222,7 +183,8 @@ Knowledge 是产品级通用参考，并按真实消费范围组织成可组合�
 - 不包含学校值的合成示例和常见 Word 版式陷阱。
 
 样式相关 Knowledge 只解释观测、继承、覆盖、语义绑定、冲突和未决状态。
-它不携带字号、字体、行距、边距等目标值或缺省补全表。
+它不携带字号、字体、行距、边距等目标值，也不向 Agent 暴露供程序补全使用的
+国家级标准规则数据。
 
 Knowledge Package 随产品版本发布并保持只读。模块可以围绕 `core`、封面、摘要、
 目录、正文、参考文献、附录或以后出现的通用消费场景组织，但这些模块不是论文类型
@@ -232,15 +194,14 @@ Knowledge Package 随产品版本发布并保持只读。模块可以围绕 `cor
 自动升级为长期 Knowledge。
 
 Knowledge 是 DocFit 的资产分类，不是 Claude Agent SDK 中独立的 Knowledge Base
-runtime。应用壳把当前产品包交给主 Agent；主 Agent 决定一次委派需要哪些模块，并将
-选中模块的内容、ID、版本和 digest 与任务证据一起写入 `Agent` Tool
+runtime。应用壳把当前产品包交给主 Agent；当前 Skill 决定一次委派需要哪些模块，
+主 Agent 将选中模块的内容、ID、版本和 digest 与任务证据一起写入 `Agent` Tool
 prompt。当前 SDK 的单次 `Agent` 调用不接收动态 `skills` 参数，因此长期契约不把
 这条数据流描述成动态覆盖 `AgentDefinition.skills`。
 
 ### 4.4 Tools
 
-Tools 是 Agent 可调用的受控能力。Tool 面按任务域注册，而不是要求两个不同目标共享
-一套名称。当前已经实现的论文转换链只向 Agent 暴露五个稳定 Tool：
+Tools 是 Agent 可调用的受控能力。当前只向 Agent 暴露五个稳定 Tool：
 
 - `docx_inspect`：读取结构、有效样式、可见对象和风险；
 - `docx_edit`：在工作副本上执行一组受控修改；
@@ -250,29 +211,12 @@ Tools 是 Agent 可调用的受控能力。Tool 面按任务域注册，而不�
   contact sheet 或前后对比图送入当前 Agent 上下文；
 - `docx_validate`：独立检查源文件、最终文件和适用规则。
 
-学校模板提取的绿地目标同样只向该任务 Agent 暴露五个稳定 Tool：
-
-- `template_observe`：建立或查询不可变模板快照，返回结构、有效样式、可见对象和原生
-  页面证据，但不解释对象语义；
-- `template_mutate`：原子执行 Agent 已决定的删除与槽位操作，校验当前快照、前置指纹、
-  保留容器和非目标内容，失败不发布；
-- `template_compare`：对账计划与实际结构/视觉变化，并直接返回按风险选择的原生图片，
-  不输出视觉通过判断；
-- `template_build`：把最终快照和 Agent 的语义清单编译为 `candidate` artifact；
-- `template_freeze`：独立重读 candidate，验证 hash、槽位、固定内容、逐页审查、来源和
-  blocking findings，并作为唯一的 frozen 发布边界。
-
-这五项是新的目标合同，当前代码尚未实现。它们不是对 `docx_*` Tool 的兼容扩展；论文
-转换端未来采用什么目标 Tool 面属于独立设计。生产 Skill 同时携带三个决策编译脚本：
-mutation plan、review record、artifact spec。它们使用共享类型模型，把 Agent 判断变成
-canonical JSON，但不读取/修改 DOCX、不调用 Tool、不发布产物；Tool 必须再次验证输出。
-
-学校模板目标面中，模板样式观测封装在 `template_observe` 内部。Tool 负责展开命名样式、
-直接格式和继承后有效值，并报告覆盖、
+目标架构中，模板样式观测和缺失属性的确定性补全仍封装在这五个 Tool 及其
+adapter 内部。Tool 负责展开命名样式、直接格式和继承后有效值，并报告覆盖、
 缺失与冲突；Agent 只把这些事实绑定到语义对象，不生成缺失样式值。若要补全，
-必须由当前任务明确提供要求值及适用范围；无规则、不适用或来源冲突时保持未决。本次
-绿地合同不自动套用国家级缺省值。该能力的实现与公开 schema 必须按 06 的独立切片
-验收，不因本段而视为已实现。
+调用方必须给出明确的规则集标识、版本和适用性证据；程序仅对当前任务证据未规定的
+属性应用国家级标准明文规则。无规则、不适用或来源冲突时保持未决。该能力的实现
+与公开 schema 变更必须按 06 的独立候选切片另行批准，不因本段而视为已实现。
 
 Tool 的输入输出应小而清晰，使用 SDK 支持的工具 schema。工具内部可以有复杂 OOXML 代码，但复杂性不扩散到 Agent runtime。
 
@@ -281,7 +225,7 @@ Tool 的输入输出应小而清晰，使用 SDK 支持的工具 schema。工具
 动作校验，不使用 `oneOf` / `anyOf` / `allOf`；Tool adapter 还把完整结构化结果镜像为
 紧凑 JSON text，确保当前 Agent 实际看见对象引用、产物和证据。图片继续作为原生
 image content block 返回，SDK transport 缓冲与 Tool 图片预算共同限制单次批量。
-这只是当前 `docx_*` Tool 的传输约束，不是学校模板目标 schema 的设计依据。
+这只是既有五 Tool 的传输兼容约束，不是新的公共协议。
 
 `docx_render` 是渲染证据生产 Tool；每次未命中缓存的调用都通过固定后端产生一个新的
 渲染快照。`docx_visual_review` 是已有视觉证据的读取与投递 Tool；它可以选择、裁剪、
@@ -343,17 +287,14 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 
 - 接收用户输入和文件；
 - 挂载产品内置 Knowledge、必要 Skill 与 Tools，并把当前任务材料交给 SDK；
-- 在冻结模板 Interface 切片实施后，校验产物 shape、合同版本、模板 hash 和授权路径，
-  但不解释槽位语义、不要求特定生产者，也不编排两个 Skill；
 - 配置 Claude Agent SDK；
 - 配置足以承载受控多页 image content block 的 SDK 消息缓冲，并保持 Tool 自身图片
   数量/字节上限；
 - 配置一个通用只读 `docfit-unit-analyst`，并用 SDK 原生 `PreToolUse` 权限钩子只允许
   这个 `subagent_type`；`can_use_tool` 继续承担 `AskUserQuestion` 转发和防御性的未匹配工具默认拒绝；
 - 向主 Agent 暴露 `Skill`、`Read`、`Glob`、`Grep`、`Bash`、`Write`、
-  `AskUserQuestion`、`Agent` 和当前任务域 Tool；当前转换链的五个 `docx_*` Tool 继续
-  直接调用，学校模板目标运行切换为五个 `template_*` Tool；`Bash/Write` 与任务域 Tool
-  进入自动批准集合，`Read/Glob/Grep` 不进入；
+  `AskUserQuestion`、`Agent` 和五个 DocFit Tool；五个 DocFit Tool 继续直接调用，
+  `Bash/Write` 与五个 DocFit Tool 进入自动批准集合，`Read/Glob/Grep` 不进入；
 - 对 `Read/Glob/Grep` 先 canonicalize 为真实绝对路径，再只允许项目
   `.claude/skills/**`、产品 Knowledge Package、当前任务 input/work/output；拒绝
   `~/.config/docfit/**`、`.env`、`.git/**`、凭据文件、其他任务/项目外路径与 symlink
@@ -386,7 +327,6 @@ Eval 使用样本、断言和必要的人工参考结果判断能力组合是否
 - 判断是否委派、拆分论文范围或选择 Knowledge 模块；
 - 复制 SDK 会话；
 - 判断论文是否符合某校要求；
-- 根据生产者 Skill 名、历史调用顺序或隐藏状态决定冻结模板是否可消费；
 - 从观测页面启动、重试或调度 Agent、Subagent 或 Tool；
 - 保存论文正文、完整页面图片、完整模型历史或隐藏思维链。
 - 在 SDK 已提供的主 Agent Bash 之外再实现第二套 shell、脚本 runner 或命令工作流。
@@ -422,12 +362,9 @@ AppleScript、GUI toolkit 或具体桌面实现。本地调试壳可以在组合
 
 ## 5. 一次任务如何运行
 
-应用壳把产品内置通用 Knowledge、用户任务、只读学生论文和通过契约检查的冻结模板
-产物交给 Claude Agent SDK。该原子 artifact 包含冻结干净模板、hash 绑定 manifest、
-visual review 和 freeze report；应用壳
-只校验 shape、hash 与授权边界，不解释学校语义，也不要求它来自某个特定 Skill。
-Agent 使用 Knowledge 中的方法解释当前证据，以冻结模板工作副本为候选主干，
-把只读学生论文中的内容按槽位合同放入对应区域，并根据 Skill、任务证据和
+应用壳把产品内置通用 Knowledge、用户任务和当前任务文件交给 Claude Agent SDK。
+Agent 使用 Knowledge 中的方法解释当前学校材料，以目标模板工作副本为候选主干，
+把只读学生论文中的内容按当前任务绑定放入模板槽位或区域，并根据 Skill、任务证据和
 Tool 返回的结构化事实与页面图片动态决定行为，必要时回看、修改、重新渲染、视觉
 复核、重试或询问用户，最后返回产物和仍需注意的事项。这是一条数据流，不是阶段流程。
 
@@ -461,7 +398,7 @@ DOCX
 
 ### 6.1 源文件只读
 
-当前转换 Tool 与正常转换路线把所有修改写入新的工作文件或最终文件，不覆盖学生原始
+五个 DocFit Tool 与正常转换路线把所有修改写入新的工作文件或最终文件，不覆盖学生原始
 DOCX；完成门重新校验源快照 hash，变化时本次转换失败且不发布成功。由于主 Agent 的
 Bash/Write 是无 DocFit 路径 gate 的信任能力，这不是对主 Agent 的文件系统 sandbox 保证。
 
@@ -470,42 +407,29 @@ Bash/Write 是无 DocFit 路径 gate 的信任能力，这不是对主 Agent 的
 
 ### 6.2 学生内容不得静默丢失
 
-工具应从只读学生快照生成任务级源内容清单，并在完成时核对每一项的 disposition：
-已经放置到明确槽位，或具有明确且可审计的不放置原因。缺项、重复放置、原因缺失或
-无法识别/无法安全处理的可见对象必须向 Agent 明示，并阻止无条件完成声明。
+工具应提供足以比较关键内容对象的分析与验证能力。无法识别或无法安全处理的可见对象必须向 Agent 明示，由 Agent解释、询问或停止。
 
 这里不强制全系统共享一套 Content Ledger 协议。对象身份、定位与血缘可以先作为 DOCX 工具内部设计，在确有第二个消费者前不升级为架构组件。
 
-### 6.3 冻结模板产物必须自洽
-
-冻结模板 Interface 的最小不变量是：模板 DOCX 可独立打开；索引绑定其精确 hash；
-责任 kind 能够区分 fixed、fill 和 generate，重复性、条件性、人工处理和未决状态分别由
-cardinality、condition、handling 和 resolution 表达；每个自动区域在该快照内唯一定位，
-并声明期望内容种类与基数；人工区域显式标记；无法安全表达的区域进入 gap，
-而不是伪造可自动填充槽位。固定内容与可填区域必须可区分，
-转换不得在没有当前证据时修改固定内容。模板快照变化后，旧槽位 locator 全部失效。
-
-这是一项任务级产物合同，不是新的运行时组件、全局 ArtifactRef 或跨任务学校资产。
-
-### 6.4 学校事实只来自当前任务证据
+### 6.3 学校事实只来自当前任务证据
 
 每个学校专属结论必须能指向当前任务中的模板、要求文件、官方示例或用户确认。
 没有来源或未经确认的猜测不能伪装成学校要求。任务结束后，这些结论不会自动
 写入产品 Knowledge；跨任务复用必须由下一任务重新提供并核对证据。
 
-### 6.5 精确修改只通过 Tool
+### 6.4 精确修改只通过 Tool
 
 Skill 可以指导 Agent 做语义选择，但不得指导 Agent 绕过工具直接修改 OOXML。
 
 每个被采用的样式属性都必须能区分其来源：当前任务明确要求、模板观测、
-Word 继承后有效值、冲突或未决。继承是源文档观测逻辑，
+Word 继承后有效值、适用的版本化国家级标准，或未决。继承是源文档观测逻辑，
 不是目标样式的默认补全。Agent 不得用 Knowledge、历史任务或常识填充未决属性。
 
-### 6.6 不确定性必须显式呈现
+### 6.5 不确定性必须显式呈现
 
 如果 Tool 报告不支持对象、渲染不可信或 Agent 无法确定内容边界，最终回复必须说明影响和建议，不得用“已完成”掩盖未知项。
 
-### 6.7 视觉判断必须绑定证据
+### 6.6 视觉判断必须绑定证据
 
 Agent 的视觉结论必须引用当前文档 hash、渲染 Provider、版本、可见的环境证据、页码
 和图片 hash。修改前的旧图片不能证明修改后的结果；近似渲染不能伪装成 Adobe
@@ -519,7 +443,7 @@ Tool 负责保证图片与文档快照、页面和渲染环境的绑定关系。
 inspect 取得新引用，只能通过新旧快照的节、文字锚点或显式内容指纹建立历史
 对照。旧页面证据可以作为历史参考，但不能继续定义当前内容位于哪一页。
 
-### 6.8 渲染可信度不得被静默升级
+### 6.7 渲染可信度不得被静默升级
 
 DOCX / OOXML 是内容与结构事实；`edit_feedback` 是页面外观的高效近似；Adobe PDF
 Services 产生的 candidate render 只有在 Agent 已查看必要页面、没有继续修改且验证
@@ -531,7 +455,7 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 `verification_gap`，不能静默回退或通过第一版端到端交付门，也不能声称已取得 Adobe
 交付转换证据。
 
-### 6.9 Subagent 只分析，主 Agent 统一合并与发布
+### 6.8 Subagent 只分析，主 Agent 统一合并与发布
 
 `docfit-unit-analyst` 不拥有 `docx_edit`、`docx_render`、`docx_validate`、
 `Agent`、`Skill`、`Read`、`Glob`、`Grep`、`Write`、`Bash` 或 `AskUserQuestion`。它提出 finding、
@@ -540,7 +464,7 @@ Adobe PDF Services API 暂时不可用时，系统仍可运行 OfficeCLI 编辑�
 `docx_edit` 并在修改后重新取证。Subagent 无写权限是固定边界；主 Agent 的 Bash/Write
 是显式信任能力，因此“所有物理写入只能经过 docx_edit”不再是 sandbox 不变量。
 
-### 6.10 主 Agent 直接读取受限，Bash/Write 按信任开放
+### 6.9 主 Agent 直接读取受限，Bash/Write 按信任开放
 
 主 Agent 可以用 `Read/Glob/Grep` 按需读取 Skill references、产品 Knowledge 和当前
 任务证据，以支持渐进式披露与自主判断。主 Agent 同时拥有自动批准的 `Bash/Write`，
@@ -561,11 +485,7 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 
 ## 7. 最小运行产物
 
-一次学校模板提取只交付一个不可拆换的 frozen artifact；其目录内包含干净模板、manifest、
-visual review 和 freeze report。一次论文转换只交付最终 DOCX 和
-`conversion-report.json`。其他预览、页面图片和中间验证文件属于工作目录或 Tool 内部
-数据。未决项和 gap 写入模板 artifact；学生源内容覆盖、不放置原因和验证摘要写入
-conversion report。
+一次转换通常返回最终 DOCX、预览、结构化视觉审查结果，以及简短的确定性验证结果和未解决事项。具体目录、文件名和调试产物由应用与 Tool 设计决定，不属于稳定架构。
 
 只有当一个新产物被真实调试或 Eval 反复消费时，才把它提升为稳定接口。
 
@@ -604,17 +524,14 @@ conversion report。
 8. 质量问题是否能通过 Eval 重现？
 9. 应用壳是否仍然不包含领域编排？
 10. 新增组件是否解决了已经发生的问题？
-11. 委派策略和 Knowledge 选择是否仍由主 Agent 决定，而不是应用壳或 AgentDefinition？
+11. 委派策略和 Knowledge 选择是否仍在领域 Skill，而不是应用壳或 AgentDefinition？
 12. `docfit-unit-analyst` 是否仍只有最小只读 Tool，且 `general-purpose` 与未知
     Subagent 默认拒绝？
 13. 本地观测是否仍然只读、无正文、不可控制运行，并在证据失效时明确报告不可用？
 14. 主 Agent 的 `Read/Glob/Grep` 是否仍先 realpath、只进入批准根；`Bash/Write` 是否仍
     明确标注为无 DocFit 路径 gate 的信任能力，而没有把直接 Read allowlist 冒充 sandbox？
-15. Agent 是否只绑定样式观测与当前任务明文要求而不杜撰缺失值，并保留属性级来源、
-    作用范围、冲突和未决状态？
-16. 转换是否只依赖冻结模板产物合同，而没有依赖生产者 Skill 名、隐藏调用顺序或
-    未经 hash 绑定的槽位定位？
-17. 删除或不放置学生内容是否比保留它需要更强证据，且源内容覆盖缺口会阻止完成？
+15. Agent 是否只绑定样式观测而不杜撰缺失值，确定性补全是否保留了属性级来源、
+    标准版本/条款、适用性和未决状态？
 
 如果第 1、第 6 或第 9 个问题答案是否定的，DocFit 很可能又开始复制 Agent runtime 或变成工作流系统。
 
@@ -637,24 +554,18 @@ conversion report。
 13. 页码是单个 render 内的视觉证据，不是跨后端稳定身份；同一文档 hash 的高频
     OfficeCLI 预览与 Adobe 交付转换通过当前快照的对象引用和锚点关联。
 14. 两个具体后端只在五个 Tool 内做职责固定的薄适配；不建设通用 Provider 平台。只有未来真实接入第三个引擎，并且需要动态选择或故障转移时，才考虑抽取通用 Provider 接口。
-15. 用户目标型 Skill 是 `docfit-school-extract` 与 `convert-thesis`；前者产生原子冻结
-    模板 artifact（干净 DOCX、hash 绑定 manifest、visual review、freeze report），不生产学校 Knowledge 包；后者只产生最终 DOCX 和
-    `conversion-report.json`，并且只消费产物合同，不依赖生产者 Skill 名称。
+15. 用户目标型 Skill 是 `docfit-school-extract` 与 `convert-thesis`；前者只产生
+    当前任务证据，不生产学校 Knowledge 包。
 16. 两个 Skill 可按当前任务需要调用同一个 SDK 原生 `docfit-unit-analyst`；不维护
     文档单元专家目录或固定委派图。
 17. Knowledge Package 是模块化产品资产。当前 Skill 选择模块，主 Agent 通过
     `Agent` prompt 传递选中内容和任务证据；`AgentDefinition` 只落实静态权限与隔离。
-18. Subagent 只分析，主 Agent 负责跨单元合并、证据生成、发布与最终验证；按任务域
-    注册的 Tool 是证据绑定的权威文档操作面，而主 Agent Bash/Write 是显式信任能力。
+18. Subagent 只分析，主 Agent 负责跨单元合并、证据生成、发布与最终验证；五个 Tool
+    是证据绑定的权威文档操作面，而主 Agent Bash/Write 是显式信任能力。
 19. M2 后本地观测界面属于薄应用壳的只读投影；它展示 SDK 实际轨迹并通过 hash/ref
     定位任务证据，但不保存任务正文、不参与调度，也不提供 exact replay。
 20. 主 Agent 直接拥有 `Skill`、路径受限的 `Read/Glob/Grep`、受信任且自动批准的
-    `Bash/Write`、`AskUserQuestion`、类型受限的 `Agent` 和当前任务域 Tool；当前转换面
-    是五个 `docx_*`，学校模板目标面是五个 `template_*`。Subagent 的当前转换配置只保留
-    inspect + visual-review，没有 Bash/Write。
-21. 样式经验值不进入 Agent Knowledge。Tool 先确定性观测模板；Agent 将当前任务明文
-    要求与有效格式逐属性交叉验证并保留来源；无据可依或冲突未裁决时保持未决。
-22. 槽位定位只在冻结模板快照内有效；人工区域和 gap 必须显式，模板变化使旧 locator
-    失效，不建设跨任务 ArtifactRef。
-23. 转换完成必须闭合学生源内容清单；删除或不放置采用比保留更强的证据门，未知时
-    保留、询问或报告，不静默消失。
+    `Bash/Write`、`AskUserQuestion`、类型受限的 `Agent` 和五个 DocFit Tool；五个 Tool
+    是权威的文档证据面。Subagent 只保留 inspect + visual-review，没有 Bash/Write。
+21. 样式经验值不进入 Agent Knowledge。Tool/程序先确定性观测模板；缺失属性只能
+    由适用的版本化国家级标准明文补全，并保留属性级来源；无据可依时保持未决。

@@ -1,7 +1,7 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-05
+> 日期：2026-08-04
 
 本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
 合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
@@ -39,9 +39,7 @@ Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只�
 evals/e2e/hunannongye-basic-001/
 ├── case.yaml
 ├── input/
-│   ├── student.docx
-│   ├── clean-template.docx
-│   └── slot-index.yaml
+│   └── student.docx
 ├── expected/
 │   ├── facts.yaml
 │   ├── visual-findings.yaml # 可选，人工确认的页面视觉问题与 evidence 定位
@@ -59,13 +57,11 @@ knowledge:
   package_id: docfit-thesis-format
   version: v1
   content_digest: sha256:...
-template_artifact:
-  clean_template: input/clean-template.docx
-  template_sha256: ...
-  slot_index: input/slot-index.yaml
-student:
-  path: input/student.docx
-  sha256: ...
+school_materials:
+  - path: input/official-template.docx
+    sha256: ...
+  - path: input/official-requirements.pdf
+    sha256: ...
 task: 按目标学校要求转换论文
 assertions:
   - type: docx_opens
@@ -74,7 +70,7 @@ assertions:
     expected_from: expected/facts.yaml
   - type: style_fact
     target: heading_level_1
-    expected_from: expected/facts.yaml
+    expected: school_profile.heading_1
   - type: text_absent
     values: ["小二黑体加粗", "在此填写"]
   - type: visual_review_coverage
@@ -83,14 +79,8 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-模板提取目标使用 `docfit-school-extract`，其 Gold 只保存 frozen artifact 的稳定事实、
-带来源引用的当前任务事实、冲突与不确定性：冻结模板 hash、区域责任、自动定位唯一性、
-内容种类与基数、manual 区域、gap、绑定最终 hash 的逐页审查和 freeze 结果。责任 kind
-至少能够区分 fixed、fill 和 generate，并把重复性、条件性、人工处理和未决状态分别保存
-在 cardinality、condition、handling 和 resolution 中。Gold 不把 build candidate 或 Agent
-自报当作 frozen。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
-就成为产品 Knowledge 或可自动复用的学校包。提供合格冻结模板产物和学生论文并要求
-交付转换的用例属于 `convert-thesis`。
+模板提取目标使用 `docfit-school-extract`，其 Gold 只保存带来源引用的当前任务事实、
+冲突与不确定性；同时提供模板和论文并要求交付转换的用例属于 `convert-thesis`。
 测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
 调用轨迹、Subagent transcript、委派图或命名的中间阶段资产。
 
@@ -100,26 +90,19 @@ manual_review: [cover_page, toc_pagination]
 
 - 转换候选以目标模板为主干，学生 DOCX 只作为只读内容来源；
 - placement 明确学生内容进入的模板槽位或区域；“学生副本导入了模板节”不是等价结果；
-- 槽位索引绑定精确冻结模板 hash，自动槽位在该快照内唯一定位；
-- 每个区域声明 fixed/fill/generate responsibility kind，并分别声明 cardinality、condition、
-  handling 和 resolution；自动区域同时声明预期内容种类和基数，manual 与无法安全表达的
-  gap 显式保留；
-- 生成机制没有被压成当前缓存文字，重复区域没有把示例数量冻结成实例基数；
-- 转换不依赖模板产物由哪个 Skill 或适配器生产；
 - 标题和章节层级；
 - 学生正文关键文本；
 - 表格、图片、公式及其他支持对象的数量和必要顺序；
 - 目标有效样式；
-- 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、冲突或未决；
+- 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、
+  适用的版本化国家级标准或未决；
 - 必填字段内容；
-- 模板固定内容没有被未经证据修改；
-- 学生源内容清单逐项具有放置结果或明确不放置原因，没有静默缺失或重复；
 - 页面数量或允许范围；
 - 不应残留的占位符和说明文字；
 - 人工确认的溢出、遮挡、空白页、孤行、图表错位和页眉页脚异常；
 - 视觉 finding 所对应的文档 hash、页码、render intent、fidelity、Provider、字体环境、
   parent render ref、evidence ref，以及可用的 `object_ref`、节引用或文字锚点；
-- 需要人工检查的高风险页面；
+- 需要人工检查的高风险页面。
 - 可选 Subagent 返回中的事实、依赖、证据请求和最终被主 Agent 接受/拒绝的结论；
   不保存隐藏思维、完整 Subagent 历史或“正确调用了几次 Agent”的轨迹 Gold。
 
@@ -157,17 +140,18 @@ Gold 只从已经实际运行并人工确认的结果产生：
 
 1. 用当前 Skill、Knowledge 和 Tools 处理样本；
 2. 运行确定性断言；
-3. 转换用例查看 `docx_render` / `docx_visual_review` 的当前页面图片；学校模板用例查看
-   `template_compare` 直接返回、绑定 before/after snapshot 的 crop、整页或 contact sheet；
+3. 查看 `docx_render` 随结果返回的有限预览，或通过 `docx_visual_review` 按需读取与
+   当前文档绑定的已有页面图片；
 4. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
 5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
 6. 必要时保存参考 `final.docx` 或少量页面图片；
-7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料 hash，
-   以及适用的 snapshot/render ref、fidelity、Provider、字体环境、页面锚点和原因。
+7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
+   hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因；
+   若使用确定性样式补全，还记录每个属性的标准标识、版本、条款、适用性与规则集 digest。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
-样式缺省值表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存当前任务来源、观测、
-冲突、未决和人工确认事实。
+国家级标准的样式值补全表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存必要的
+标识、版本、条款引用、digest 和人工确认事实。
 
 ## 6. Gold 的更新
 
@@ -191,11 +175,7 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 旧目录、空附录标题和双语图题；
 - 缺少摘要或参考文献；
 - 占位符未清理；
-- 对象引用失效和 Provider 伪成功；
-- 冻结模板 hash 变化后旧槽位 locator 失效；
-- 多重槽位命中、manual/gap 越界和源内容覆盖未闭合。
-- 说明文字删除后规则丢失、同构示例被固化、源块覆盖完整但逻辑所有权错误；
-- 目录等生成对象缓存正常但重建失真。
+- 对象引用失效和 Provider 伪成功。
 
 真实样本适合验证组合效果和页面观感。
 

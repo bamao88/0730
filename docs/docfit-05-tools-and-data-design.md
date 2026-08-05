@@ -1,7 +1,7 @@
 # DocFit Knowledge 与 Tools 设计（05）
 
 > 状态：最终方案
-> 日期：2026-08-05
+> 日期：2026-08-04
 > 原则：Knowledge 保持可读，Tools 保持确定性，复杂性不进入 Agent runtime。
 
 ## 1. Knowledge
@@ -134,8 +134,7 @@ Agent 为一次可选委派选择模块；主 Agent 把模块内容、ID、版�
 
 ## 2. Tools
 
-Tool 面按任务域注册。当前实现已注册且只注册论文转换链的五个 `docx_*` Tool；学校模板
-提取的目标运行将改为五个 `template_*` Tool，当前尚未实现。OfficeCLI 1.0.143 负责 inspect、edit、
+当前实现已注册且只注册下面五个公开 Tool。OfficeCLI 1.0.143 负责 inspect、edit、
 validate 与 `edit_feedback`，Adobe PDF Services SDK 4.2.0 adapter 负责 `baseline` 和
 `candidate_verification`；Pillow 与 Poppler 只派生受控图片证据。公开 schema 不接受
 Provider selector，固定后端失败时不回退。Adobe 路由使用
@@ -157,98 +156,9 @@ Tool 应满足：
 - 可以脱离 Agent 独立测试；
 - 不擅自做论文语义判断。
 
-### 2.2 领域 Tool 面与复用策略
+### 2.2 最终工具方案与复用策略
 
-#### 学校模板目标面
-
-`docfit-school-extract` 的绿地生产合同只暴露：
-
-```text
-template_observe  → 不可变事实和原生页面证据
-template_mutate   → Agent 已决定操作的原子执行
-template_compare  → 计划与实际变化对账并返回原生图片
-template_build    → 编译 candidate artifact
-template_freeze   → 独立验证并原子发布 frozen artifact
-```
-
-Tool 不自动判断说明、示例、论文标题、来源优先级或视觉合理性。Agent 是任务结果 owner，
-负责语义决定、检查 Tool 实际结果、根据 error/finding 修正决定或文档并重新执行；Tool
-负责确定性事实、单次执行和机器门。五项合同如下。
-
-`template_observe` 接受新 DOCX 或已有 `snapshot_ref` 查询。新观察可以选择
-`visual_level: quick | authoritative | none` 和 structure/visible objects/styles/slots focus；
-输出文档 hash、不可变 snapshot、稳定对象引用、命名/直接/继承/最终有效格式、表格/
-文本框/内容控件、域/书签/分节/页眉页脚、PDF/逐页图片/contact sheet、对象页面映射和
-不支持内容。查询文字时返回全部候选、上下文、格式解析和视觉位置，不做语义选择。
-
-`template_mutate` 接受当前 snapshot 与显式 operation plan。删除操作只允许六种模式：
-
-- `clear_text_preserve_container`；
-- `remove_inline_fragment`；
-- `remove_container`；
-- `remove_bounded_block`；
-- `clear_cell_preserve_grid`；
-- `unwrap_control_preserve_content`。
-
-槽位操作可以在既有段落、表格单元格、段落流边界或受支持物理锚点 materialize slot，
-也可以登记 manual 区域。Tool 校验 snapshot 所属、目标 ref、expected text/fingerprint，
-全部操作原子执行，重开输出并检查需保留容器和非目标内容；成功返回新 hash、after
-snapshot 与 `mutation_ref`，失败不发布。Tool 不选择 target、`removal_mode` 或 slot 语义。
-删除模式只允许出现在 `action: remove_content` 的 operation 中；它描述物理修改方式，
-不充当内容责任或删除授权。
-
-`template_compare` 接受 before/after snapshot 与 mutation ref，同时比较对象增删改、固定
-文字、样式签名、表格网格、节、页眉页脚、分页边界、槽位容器、页数和视觉布局。输出
-`expected_changes`、`unexpected_changes` 和 `visual_review`。图片直接作为原生 image
-content 返回：短文字清空包含 crop 与修改后整页；容器删除包含目标/相邻页；连续块或
-表格包含 contact sheet 与边界页；分节、页眉页脚、页数变化或映射失败扩大检查；最终
-候选覆盖全部页面。Tool 不输出视觉 pass/fail，Agent 解释图片是否合理。
-
-`template_build` 接受最终 snapshot 以及 Agent 确认的 sources、fixed regions、slots、
-manual regions、gaps 和 visual findings。它绑定最终模板 hash，检查 `slot_id`、字段完整性、
-引用时效和样式来源，输出 `clean-template.docx`、`template-artifact.json`、
-`visual-review.json`、`build-report.json`。状态只能是 `candidate`。
-
-`template_freeze` 独立重读 candidate，不信任前序 Tool 或 Agent 自报。它验证 DOCX package、
-模板/manifest hash、自动槽位唯一定位、内容种类与基数、固定内容指纹、manual/gap、绑定
-最终 hash 的全部页面审查、blocking findings、来源未变化、无旧 snapshot 引用和 bundle
-完整性。成功才返回 `status: frozen` 与 `artifact_ref`；失败返回 `published: false` 和
-findings。它是唯一 frozen 发布边界。
-
-Tool 的 `ok`、`error` 或 `blocked` 都是单次调用结果，不是对整个任务的终态裁决。
-`template_mutate` 成功但 compare 显示误伤时，Agent 必须继续修改；build/freeze 拒绝时，
-Agent 必须依据 finding 回到相应决定、审查或文档操作点修正并重新提交。只有确实缺少
-必要用户裁决、授权输入或不可替代外部能力时，Agent 才把任务作为阻塞交回用户。
-
-这五项不是一个隐藏语义工作流。`template_compare` 只报告事实，`template_build` 只编译，
-`template_freeze` 只验证；Agent 仍在 observe/mutate/compare 之间做开放式判断。
-
-#### Skill 决策编译层
-
-Agent 的语义判断不能直接停留在自然语言中，也不能由 Tool 猜回去。生产 Skill 携带三个
-确定性脚本：
-
-| 脚本 | 输入 | 输出 | Tool 消费方 |
-|---|---|---|---|
-| `compile_mutation_plan.py` | Agent 的可见角色、存续责任、修饰字段、证据状态、目标、前置指纹、动作、删除模式和槽位决定 | `mutation-plan.json` | `template_mutate` |
-| `compile_review_record.py` | compare metadata 与 Agent 对 finding/图片的判断 | `review-record.json` | build/freeze 证据 |
-| `compile_artifact_spec.py` | 最终来源、责任、槽位、样式、manual/gap 和 review record | `artifact-spec.json` | `template_build` |
-
-脚本与 Tool 共享版本化类型模型，负责字段完整性、ID/ref/hash 一致性、canonical 序列化和
-失败时不写部分输出。它们只读取当前任务中的决策 YAML/JSON 和 Tool 已返回的结构化
-metadata；不读取或修改 DOCX、不调用 Tool、不生成语义决定、不解释图片、不发布产物。
-`compile_mutation_plan.py` 还拒绝混层的责任 kind、`removal_mode` 与 action 不匹配、破坏性
-删除 unresolved 内容、删除前存续责任没有迁移目标，以及没有当前任务授权和责任替代/
-迁移/终止决定的 fixed 删除。消费方 Tool 必须重新校验，不能把“脚本执行成功”当作权威
-文档事实。
-
-Tool 内部实现可以拆成 `observation.py`、`mutation.py`、`comparison.py`、`artifact.py` 和
-`validation.py`。另有开发脚本仅用于原型、fixture 和人工调试，不与生产 Skill scripts
-混用。
-
-#### 当前论文转换实现
-
-下面定义的五个 `docx_*` Tool 是当前论文转换链面向 Agent 的稳定契约，不表示底层 DOCX 能力必须由 DocFit 从零实现，也不构成学校模板目标面的兼容约束。
+下面定义的五个 Tool 是 DocFit 面向 Agent 的稳定契约，不表示底层 DOCX 能力必须由 DocFit 从零实现。
 
 ```text
 Claude Agent SDK 中的主 Agent / 受限只读 Subagent
@@ -267,7 +177,7 @@ MCP / CLI / library / cloud API
 | 通用格式概念、识别方法与处理模式 | 产品内置 Knowledge Package |
 | 学校规则、模板证据与精确参数 | 当前任务材料、Agent 当前会话与 Tool 调用参数 |
 | 模板样式的属性级观测 | `docx_inspect` 内部 |
-| 文字要求与有效样式的逐属性交叉验证 | Agent 解释当前任务来源；Tool 返回可追溯观测事实和作用范围 |
+| 缺失样式属性的国家级标准解析 | 现有 Tool/adapter 内部的版本化确定性规则；不向 Agent 加载数值表 |
 | 批量、安全、原子写回 | `docx_edit` 内部 |
 | 分页和页面证据 | `docx_render` 内部 |
 | 把指定页面图片送入调用它的当前 Agent 并建立前后对比 | `docx_visual_review` |
@@ -347,7 +257,7 @@ PoC 阶段可以直接调用底层命令验证能力；产品路径只向 Agent 
 高层 Tool，避免 Skill 绑定 OfficeCLI 或 Adobe PDF Services API 的私有命令。固定后端的薄适配
 发生变化时不应要求修改 Skill 或 Knowledge。
 
-### 2.3 当前论文转换最小工具面
+### 2.3 最小工具面
 
 优先提供少量、能力清楚的工具，避免 Agent 在大量细粒度工具中选择：
 
@@ -359,14 +269,13 @@ docx_visual_review  将指定页面、裁剪图或对比图作为图片证据返
 docx_validate   对源文件、最终文件和学校要求做确定性检查
 ```
 
-本段只约束当前论文转换面。它不要求学校模板目标能力塞进现有 Tool 的 `action` 或
-`focus` 参数；学校模板采用 2.2 已确定的绿地五 Tool 合同。
+新工具只有在职责明显独立、参数和失败语义更清楚时才增加。否则给现有工具增加明确的 `action` 或 `focus` 参数。
 
 公开 schema 使用兼容 backend 已验证的扁平 JSON Schema 子集：对象、数组、枚举、
 `required` 和 `additionalProperties` 可以使用，但不使用 `oneOf`、`anyOf` 或 `allOf`。
 不同 action 的专属必填字段由 Tool runtime 在执行前校验，错误仍归一为 DocFit
 `needs_input` / `error`。这避免兼容模型把 composition 关键字误生成为普通参数，同时
-保留当前转换五个 Tool 名称和语义，不为每种 conversion operation 拆新 Tool。
+保留五个 Tool 名称和语义，不为每种 operation 拆新 Tool。
 
 ### 2.4 `docx_inspect`
 
@@ -418,32 +327,34 @@ analysis_path: /path/analysis.json
 
 Tool 将完整结果保存在任务临时目录，只向 Agent 返回摘要、风险和按需查询入口。相同输入 hash 的后续 `focus` 查询可以复用解析结果；这只是 Tool 内部缓存，不是新的运行时对象。Tool 只报告事实，不自行判定“这是一级标题”或“这是学生正文”。
 
-冻结模板 Interface 实施后，`docx_inspect` 还必须为产物校验提供客观事实：冻结模板
-hash、固定内容指纹、候选区域 locator 的唯一命中数、内容种类、fixed/fill/generate kind、
-cardinality、condition、handling、resolution 和 gap 的结构证据。它不自行决定区域责任或某段学生
-内容应进入哪个槽位；也不能用页码、bbox
-或单个近似文字命中冒充唯一 locator。本段是目标合同，当前 schema 与实现状态以 06
-第 6.9 节为准。
+#### 2.4.1 样式观测与确定性补全合同
 
-#### 2.4.1 样式观测与来源交叉验证合同
+这个合同用来稳定上游识别与下游写入的耦合点，不是要求 Agent 按一张固定内容树或
+一套固定样式执行。当该能力按 06 的独立候选切片实现后，程序应对每个样式属性输出：
 
-当前 `docx_inspect` 保留转换侧已有观测能力；学校模板目标实现由 `template_observe`
-承担完整合同。程序对每个相关属性输出：
+- 语义对象或可绑定范围；
+- 观测值、直接格式、命名样式、继承链和最终有效值；
+- `observed`、`missing`、`conflict` 或 `unresolved` 覆盖状态；
+- 解析值及其属性级来源：`current_task_requirement`、`template_observation`、
+  `inherited`、`national_standard` 或 `unresolved`；
+- 来源 hash/ref，以及适用时的标准标识、版本、条款、适用性与规则集 digest。
 
-- 可绑定对象、语义候选和作用范围；
-- 命名样式、直接格式、继承链、文档默认值和最终有效值；
-- `observed`、`missing`、`conflict` 或 `unresolved` 状态；
-- 来源 hash/ref 和与页面/对象的绑定。
+这里的“属性”既可以是字体、字号、行距、边距等标量样式，也可以是图、表、
+中英文题名、题注与注释的附着关系、上下位置和相对顺序等有限编排字段。建模只声明这些
+字段可被观测、绑定、解析和追溯，不预先指定它们必须取什么值或出现在哪里。
 
-Agent 将当前任务文字要求、用户确认与这些观测逐属性交叉验证，并记录
-`current_task_requirement`、`template_observation`、`inherited`、`conflict` 或
-`unresolved`。字体、字号、行距、边距等标量，以及附着关系、相对顺序和有限编排字段，
-都必须带明确作用范围。
+解析顺序固定为：
 
-Word 继承和文档默认值只解释模板当前如何生效，不是目标值补全来源。要求与观测冲突时
-不静默排序；缺少当前任务明文、适用范围不明或多来源冲突时保持 `unresolved`，不使用
-产品经验、历史学校、样式名或内置国家标准值。Tool 返回事实，Agent 判断语义角色并在
-高影响冲突时询问用户。
+1. 保留当前任务文字要求、用户确认和模板观测的原始事实；它们冲突时不静默排序，
+   而是返回 `conflict` 交给 Agent 询问或保留未决；
+2. 对仍缺失的单个属性，只有当调用上下文已给出经批准的国家级标准标识、版本和
+   适用性证据，且对应条款有明文规定时，才应用该值；
+3. 标准无明文、不适用、条款冲突或规则数据不可验证时，保持 `unresolved`，不使用产品经验默认值。
+
+Word 的样式继承和文档默认值是“源文档最终如何生效”的观测事实，不是对目标要求
+的补全根据。国家级标准规则作为现有 Tool/adapter 内部的版本化确定性数据维护：它不进入
+Agent prompt，不形成学校 profile，不新增第六个 Tool。本节定义目标合同；当前五个 Tool
+的公开 schema 和 M2 完成状态不因本节改变。
 
 ### 2.5 `docx_edit`
 
@@ -856,66 +767,11 @@ OfficeCLI 的 OpenXML 校验、DocFit 独立后置检查、当前任务已确认
 
 验证必须从源文件和最终文件重新读取事实，不能把 `docx_edit` 的成功返回、旧分析缓存或旧截图当成验证结论。内容与对象保留、有效样式、package 关系、占位符、视觉审查覆盖和高风险页面分别检查；任何无法独立确认的事项明确返回 warning 或人工复核要求。
 
-学校模板生产端的 package/hash/槽位/固定内容/逐页审查和来源检查由
-`template_freeze` 独立完成，`docx_validate` 不能替代 frozen 发布。转换端消费 frozen
-artifact 后，`docx_validate` 仍需核对输入 artifact ref/hash，fixed/fill/generate 责任及其
-cardinality、condition、handling、resolution 约束没有被越过，固定内容未被未经证据改写；
-学生源内容清单中每个任务级 `source_item_id` 恰有一个
-明确 disposition（已放置到槽位，或有明确不放置原因）；不存在缺项、重复放置、无理由
-消失或越过 manual/gap 的自动处理。覆盖未闭合是 blocking issue，而不是普通 warning。
-这是当前转换验证职责，不改变学校模板五 Tool 合同。
-
 ## 3. 内容安全的实现边界
 
 “内容不得静默丢失”是产品不变量，但不要求先建设全局内容身份平台。
 
-### 3.1 冻结模板产物 Interface
-
-学校提取端与转换端通过任务级产物合同耦合，而不是通过 Skill 名称、调用轨迹或共享
-内存耦合。稳定交付是一个原子目录：
-
-```text
-frozen-template-artifact/
-├── clean-template.docx
-├── template-artifact.json
-├── visual-review.json
-└── freeze-report.json
-```
-
-这些文件共同组成一个 artifact；消费者不能把 manifest、视觉审查或 freeze report 与另
-一个模板任意组合。`template-artifact.json` 绑定 DOCX 精确 SHA-256 和来源 hash；
-`responsibilities[].kind` 只允许 fixed、fill、generate，重复性写入 `cardinality`，条件性
-写入 `condition`，automatic/manual 写入 `handling`，未决状态写入 `resolution`。自动区域
-至少具有任务内唯一 `slot_id`、冻结快照唯一 locator、期望内容种类和基数；内容种类为
-scalar、paragraph stream 或 composite。manual region 是 handling 的产物表达，不是内容
-类型或责任 kind。生成区域保留生成关系，重复区域不从示例数量推导基数，条件区域保留
-适用条件。locator 由 snapshot-bound 结构引用及前置指纹/上下文支持；
-页码、bbox 或近似文字只能作为视觉辅助。索引不承诺跨模板修改、跨任务或跨运行稳定。
-
-manifest 还记录固定内容指纹、manual/gap、来源与冲突、样式观测值与要求值、适用范围、
-未决项以及 visual findings。`visual-review.json` 记录绑定最终 template hash 的逐页审查；
-`freeze-report.json` 记录独立冻结检查与最终 artifact ref。
-
-`template_build` 先输出相同形状的 candidate bundle，但 `build-report.json` 不能替代
-`freeze-report.json`，candidate 不能作为冻结输入交付。`template_freeze` 必须独立重读
-bundle、模板 package 与来源，验证 hash、槽位、固定内容、逐页审查、blocking finding、
-旧 snapshot 引用和目录完整性，然后原子发布上述 frozen 目录。失败时不发布。
-
-转换以冻结模板的字节副本开始。若多个放置操作会改变文档 hash，Tool 必须先验证并
-原子提交同一快照上的整组操作，或为后续操作显式重新 inspect 并产生经过验证的新引用；
-不得把旧槽位 locator 静默套到新快照。模板固定内容与可填区域必须可确定性区分，
-未经当前证据不得改写固定内容。
-
-转换端还为只读学生快照生成任务级源内容清单。每项使用绑定学生 source hash 的 opaque
-`source_item_id`、类型、顺序和指纹参与覆盖验证；最终 disposition 只能是放置到明确
-槽位，或附明确理由的不放置。它不要求公开完整正文，也不形成跨任务 Content Ledger。
-
-产物可以由 `docfit-school-extract`、人工或其他受控适配器准备 candidate，但只有同一
-`template_freeze` 合同能发布 frozen。应用壳只验证 artifact ref、shape、hash、授权路径
-和合同版本，不解释学校语义。字段级 typed schema 必须在 06 第 6.9 节实施前用消费者和
-fixture 锁定；当前 M2 代码尚未实现本合同。
-
-### 3.2 Tool 间的对象引用
+### 3.1 Tool 间的对象引用
 
 `docx_inspect` 返回、`docx_edit` 消费的 `object_ref` 至少包含：
 
@@ -933,7 +789,7 @@ expected_fingerprint: ...
 
 这个小型 Tool 契约只服务指定 DOCX 快照的安全定位。跨文档模板组合可以同时携带分别绑定来源模板与目标文档 hash 的引用，但每个引用仍只在自己的文档快照内有效；它不定义跨文件类型、跨任务或跨运行的全局对象身份。
 
-### 3.3 最小策略
+### 3.2 最小策略
 
 当前实现采用以下最小策略：
 
@@ -953,9 +809,9 @@ expected_fingerprint: ...
 - 事件溯源；
 - 全仓库 schema registry。
 
-### 3.4 文档操作权威路线与 Subagent 写入边界
+### 3.3 文档操作权威路线与 Subagent 写入边界
 
-当前转换薄应用壳对主 Agent 暴露五个 `docx_*` Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面
+薄应用壳对主 Agent 暴露五个 Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面
 与受信任的 Bash/Write；
 `docfit-unit-analyst` 的 SDK Tool allowlist 仍只包含 `docx_inspect` 和
 `docx_visual_review`。`docx_edit`、`docx_render` 与 `docx_validate` 不出现在 Subagent
@@ -969,10 +825,10 @@ Bash/Write 没有 DocFit 路径 gate，因而不能再声称它们在文件系�
 `PreToolUse` 权限钩子检查 `subagent_type`，只允许 `docfit-unit-analyst`，拒绝 SDK
 内置 `general-purpose` 与未知类型。`can_use_tool` 继续处理用户追问与防御性拒绝。
 
-### 3.5 主 Agent 直接读取权限与受信任 Bash/Write
+### 3.4 主 Agent 直接读取权限与受信任 Bash/Write
 
 主 Agent 的内置工具面固定为 `Skill`、`Read`、`Glob`、`Grep`、`Bash`、`Write`、
-`AskUserQuestion` 与类型受限的 `Agent`；当前任务域的 `mcp__docfit__...` Tool 直接调用。
+`AskUserQuestion` 与类型受限的 `Agent`；五个 `mcp__docfit__...` Tool 继续直接调用。
 Read/Glob/Grep 不加入自动批准集合；SDK `PreToolUse` hook 与 `can_use_tool` 使用同一策略：
 
 1. 把相对路径按项目 cwd 解析并 canonicalize 为真实绝对路径；
@@ -984,13 +840,13 @@ Read/Glob/Grep 不加入自动批准集合；SDK `PreToolUse` hook 与 `can_use_
    非普通文件和 symlink 逃逸；搜索树含 symlink 或敏感文件时整次搜索失败；
 5. 允许时把 canonical path 写回 Tool input，拒绝时只返回固定安全原因，不记录路径或正文。
 
-Bash/Write 与当前任务域 Tool 加入自动批准集合；Bash/Write 不安装 DocFit 路径 hook，
+Bash/Write 与五个 DocFit Tool 加入自动批准集合；Bash/Write 不安装 DocFit 路径 hook，
 可访问 Agent SDK 子进程本来可访问的路径和环境，包括直接 Read allowlist 之外的文件与
 后端凭据。系统提示要求不输出凭据或文档正文，观测 projector 丢弃命令、路径和内容，
 但这是一项显式信任决策，不是 sandbox。Edit 与网络工具继续默认拒绝。
 
-Read/Glob/Grep 本身不能修改文件；Bash/Write 的存在不改变任务域 Tool 契约或完成门。
-Bash/Write 的参数与结果只记录
+Read/Glob/Grep 本身不能修改文件；Bash/Write 的存在不改变五个 DocFit Tool 的
+inspect/render/edit/visual-review/validate 契约或完成门。Bash/Write 的参数与结果只记录
 无载荷生命周期元数据，不进入权限事件或观测索引。
 
 ## 4. 工具错误语义
@@ -1155,8 +1011,7 @@ Skill references 和产品 Knowledge。受信任 Bash/Write 可绕过这项直�
 | 新的通用消费范围反复需要独立知识 | 增加 Knowledge 模块；不因此增加 Agent 类型或固定文档分类 |
 | DOCX 之外的多个工具确实需要共享对象引用 | 评估最小跨格式 ref；没有真实消费者时不泛化 |
 | 同一 Tool 操作反复出现定位歧义 | 强化 Tool 内部 locator |
-| 转换反复出现漏章、重复放置或固定模板内容漂移 | 实施 3.1 的任务级冻结模板/覆盖合同；不建设全局 ArtifactRef 或 Content Ledger |
-| 模板样式缺口或来源冲突反复出现 | 强化 `template_observe` 的有效格式与作用范围事实，以及 artifact 中的来源/冲突表达；不增加 Knowledge 默认值 |
+| 模板样式缺口反复出现，且已明确选定可授权维护的国家级标准 | 按 2.4.1 扩展现有 Tool 内部观测/解析器与属性级来源；不增加 Knowledge 默认值或第六个 Tool |
 | Eval case 多到串行运行太慢 | 接入现成并发 runner |
 | 产品需要多人权限和正式发布 | 在产品需求明确后设计对应服务 |
 | 已真实接入第三个引擎，并且同一职责需要动态选择或故障转移 | 再评估最小通用 Provider 接口；两个职责不同的现有后端本身不构成抽象证据 |

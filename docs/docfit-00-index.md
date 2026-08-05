@@ -1,7 +1,7 @@
 # DocFit 设计文档索引（00）
 
 > 状态：最终架构索引
-> 日期：2026-08-05
+> 日期：2026-08-04
 
 本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
 M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
@@ -31,16 +31,6 @@ DOCX 的唯一主干；学生 DOCX 始终只读，只提供内容真值和来源
 其中。底层仍可保留兼容性的跨文档模板组合操作，但它不是 `convert-thesis` 的默认路线，
 也不能替代学生内容到目标模板的位置映射。
 
-已批准的下一版目标把这条方向收紧为显式的任务级产物合同：
-`docfit-school-extract` 负责把学校材料整理成“冻结干净模板 + 与该模板 hash 绑定的
-artifact manifest”，`convert-thesis` 只消费这份模板产物与只读学生 DOCX，并交付“最终
-DOCX + conversion report”。模板产物内部可以包含 visual review 与 freeze report，但
-对消费者仍是一个原子 artifact，不增加独立交付类型。
-两者通过产物 Interface 耦合，不通过 Skill 名称、调用顺序或共享隐藏状态耦合；同一
-Interface 也允许人工或其他受控适配器准备。当前 M2 实现只具备模板主干和跨文档内容
-导入基础，尚未实现完整槽位索引、固定内容保护与源内容覆盖完成门；实施状态和进入条件
-以 06 的独立候选切片为准。
-
 该轨道的 O0 已进一步批准为一个薄应用壳内的本地只读观测界面，详细目标见
 `docfit-local-observability-design.md`。它只投影 SDK 实际运行事件、脱敏 Tool 摘要与
 本地证据引用，不控制 Agent、不复制任务文件，也不建立第二套 loop、工作流或 replay。
@@ -64,38 +54,23 @@ Skill + Knowledge + Tools + Eval + 薄应用壳
 DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问、
 原生 Subagent 与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
 
-批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）说明
-论文转换目标、输入输出、推荐操作方法、判断标准与已经验证的高风险机制，一个模块化
-通用 Knowledge Package 提供可选择的知识内容，领域 Tool 面提供确定性文档能力。当前
-转换链使用五个 `docx_*` Tool；学校模板目标面使用五个职责独立的 `template_*` Tool，
-只在该 Skill 的生产运行中暴露。论文转换目标 Tool 面若需重设计，另行确定，不由学校
-模板方案兼容性倒推。薄应用壳只额外配置一个通用只读
+批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）负责
+任务判断与可选委派，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
+DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个通用只读
 `docfit-unit-analyst`，以 SDK 原生隔离上下文执行局部分析；它不是新的产品资产、
 单元专家目录或固定工作流节点。
 
-两个 Skill 的目标职责不同：学校提取 Skill 产出冻结模板 Interface，转换 Skill 消费
-该 Interface 并产出最终论文。Skill 可以给出可调整的操作步骤，说明何时观察、如何把
-可见角色、存续责任、修饰字段、证据状态和修改动作分开记录、如何仅为删除动作选择删除
-模式和定义槽位语义、怎样解释比较结果；其 bundled scripts 把 Agent 已完成的语义决定
-确定性编译为 Tool typed input，但不替 Agent 判断或操作 DOCX。主 Agent 是任务和最终
-产物的 owner：它检查每次脚本/Tool 结果，发现失败、误伤或结果不合理时修正并重新执行；
-Tool 的单次成功/失败不是任务终态。Skill 不把这套自适应返工变成持久化状态机。模板 hash
-绑定、槽位唯一定位、原子写入、固定内容保护、源内容覆盖与“失败不发布”属于 Tool/
-应用壳的确定性合同。把这些机制放进现有五类资产，不新增 Harness 或工作流节点。
-
 主 Agent 的 SDK 内置能力面固定为 `Skill`、受路径权限约束的 `Read/Glob/Grep`、受信任且
-自动批准的 `Bash/Write`、`AskUserQuestion` 与 `Agent`，并直接调用当前任务域注册的
-DocFit Tool。当前转换链仍注册五个 `docx_*` Tool；学校模板目标运行注册五个
-`template_*` Tool。
+自动批准的 `Bash/Write`、`AskUserQuestion` 与 `Agent`，并继续直接调用五个 DocFit Tool。
 `Read/Glob/Grep` 只直接读取
 项目 `.claude/skills/**`、产品 Knowledge Package 和当前任务 input/work/output；权限
 判断先解析真实绝对路径，再拒绝敏感文件、项目外/其他任务路径与 symlink 逃逸。
 `Bash/Write` 不经过 DocFit 路径 hook，可访问 Agent 进程本来可访问的路径和环境；因此
 前述直接 Read allowlist 不是 sandbox，也不再声称 input、任务外路径或文档产物对主 Agent
-不可写。`Edit` 和网络工具仍不开放。`docfit-unit-analyst` 不继承这组主 Agent 能力；其
-当前转换只读 Tool 子集保持不变。生产文档修改、对账和发布只通过任务域注册的权威 Tool。
+不可写。`Edit` 和网络工具仍不开放。`docfit-unit-analyst` 不继承这组主 Agent 能力，仍只
+拥有 inspect + visual-review；五个 DocFit Tool 仍是证据绑定、可验证的权威文档操作面。
 
-当前转换实现的五个 `docx_*` Tool 只适配两个职责不重叠的具体后端：OfficeCLI 负责
+第一版在五个 Tool 内只适配两个职责不重叠的具体后端：OfficeCLI 负责
 inspect、edit、validate 和高频截图，Adobe PDF Services API 负责 `baseline` 与
 `candidate_verification` 的 DOCX→PDF 服务转换。Agent 只表达 `baseline`、
 `edit_feedback` 或
@@ -112,9 +87,9 @@ Claude Agent SDK 兼容边界也属于薄应用壳与 Tool adapter：公开 Tool
 backend 能稳定消费的扁平 JSON Schema 子集；Tool 的完整结构化结果同时以紧凑 JSON
 text 对当前 Agent 可见，图片仍使用原生 image content block。应用壳为真实页面批次
 配置足够的 SDK 消息缓冲，但单次视觉返回仍受图片数量和字节预算限制。这些兼容处理
-不增加第二套协议或新的 Agent loop。
+不增加第六个 Tool、第二套协议或新的 Agent loop。
 
-在当前转换 Tool 面中，`docx_render` 是新渲染证据的生产边界；`docx_visual_review` 只读取有效
+`docx_render` 是新渲染证据的生产边界；`docx_visual_review` 只读取有效
 `render_ref` 的已有页面产物并将图片投递给 Agent，不调用任何渲染后端，也不产生新
 的文档 render。Tool 不维护编辑轮次，是否继续由 Agent 判断。
 
@@ -154,17 +129,14 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
    `docfit-local-observability-design.md` → 02 第 2.4、10 节。
 6. 设计样式观测与缺口补全：读 01 的 Knowledge/Tool 边界 → 05 第 2.4.1 节 →
    04 的 Skill 边界 → 02 的后续契约门 → 06 第 6.8 节。
-7. 实现冻结模板产物 Interface：读 01 的 Skill/产物不变量 → 04 第 2–4 节 →
-   05 的任务级产物合同 → 02 的普通契约门 → 06 第 6.9 节；候选 Skill 文字、reference
-   树和原子迁移范围见非权威实施草案 `plans/docfit-school-extract-v2.md`。
 
 ## 五类资产的权威边界
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 论文转换目标、输入输出、推荐操作方法、语义判断标准、真实失败提炼的高风险规则和最终答复；bundled scripts 将 Agent 决定编译为版本化 Tool 输入 | 观察/修改 DOCX、替 Agent 生成语义决定、实现冻结发布、持久化状态机、真实工具权限实现 |
+| Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回；通过明确项目相对路径指引按需读取 references | 固定调度图、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
-| Tools | 不可变文档事实、受控修改、结构/视觉证据、候选编译和独立验证等确定性能力；具体 Tool 面按任务域注册 | 在 Tool 内启动第二个 Agent、把近似渲染冒充权威证据，或替当前 Agent 做学校材料语义判断 |
+| Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
 | 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实主 Agent 直接读取路径策略、受信任 Bash/Write 与 Subagent 上下文隔离/最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、第二套 shell/runtime、用监控事件控制或精确回放 Agent |
 
@@ -173,8 +145,8 @@ Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制�
 Skill、Knowledge、Tools、Eval 或薄应用壳并列为第六类产品资产。
 
 Claude Agent SDK 没有一个与 Skill、Tool 并列的 DocFit Knowledge Base runtime。
-稳定通用知识由产品 Knowledge Package 提供；主 Agent 选择本次委派所需模块，并将
-选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
+稳定通用知识由产品 Knowledge Package 提供；当前 Skill 选择本次委派所需模块，主
+Agent 将选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
 
 Knowledge Package 随产品发布且必须保持通用。学校事实只来自当前任务提供的
 模板、要求、示例和用户确认；Agent 在任务中提取或推导的学校结论不会因此自动
@@ -182,21 +154,14 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 
 样式值也遵守同一边界：Agent 可以使用 Knowledge 中的通用概念识别语义角色、
 绑定模板观测与暴露缺口，但不读取或杜撰可直接套用的“样式经验表”。模板的
-有效样式由任务域 Tool 确定性观测；学校模板目标面把当前任务文字要求作为独立来源与
-观测事实逐属性交叉验证。缺少当前任务明文、适用范围不清或来源冲突时保持未决，不从
-历史学校、常识、样式名或内置国家标准值自动补全。当前实现状态与后续实现门以 06 为准。
+有效样式由 Tool 确定性观测；只有当某一属性缺失且一份经产品明确选定、版本化、
+适用性可验证的国家级标准对它有明文规定时，程序才可逐属性确定性补全；否则保持
+未决。这类版本化规则数据属于现有 Tool/adapter 的内部确定性参考，不是 Agent
+Knowledge、学校 profile 或第六类产品资产；当前实现状态与后续实现门以 06 为准。
 
 页面不是新的架构资产或稳定编辑身份。页码只在某次 `render_ref` 内有意义；
 不同 Provider 的同页码不得被视为同一内容范围。Agent 使用页面图片观察版式，
 但精确修改仍通过绑定当前 DOCX 快照的 opaque `object_ref` 完成。
-
-冻结模板产物也不是全局 Artifact 系统。其 `slot_id` 只在一份明确 hash 的冻结模板
-快照内成立；索引的责任 kind 必须区分 fixed、fill 和 generate，并分别记录 cardinality、
-condition、automatic/manual handling 与 resolved/unresolved 状态。自动区域必须能够在该
-快照中唯一定位，并声明期望内容种类与基数；人工区域和无法表达的 gap 显式。
-模板一经修改，旧槽位 locator 不得继续作为当前事实。
-转换完成时，学生源内容清单中的每一项必须已经放置，或具有明确且可审计的不放置原因；
-该任务级覆盖合同不升级为跨任务 Content Ledger。
 
 ## 明确不建设
 
