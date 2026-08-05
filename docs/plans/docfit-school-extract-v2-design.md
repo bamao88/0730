@@ -295,7 +295,7 @@ candidate-template-artifact/
 唯一候选目录为：
 
 ```text
-docs/plans/docfit-school-extract-v2-draft/
+docs/plans/docfit-school-extract-v2-candidate-skill/
 ├── SKILL.md
 ├── evals/
 │   └── evals.json
