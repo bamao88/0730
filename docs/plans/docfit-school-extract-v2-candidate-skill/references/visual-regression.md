@@ -39,7 +39,8 @@ replace an existing authoritative rendering with a different backend and compare
 - Does each slot's visual location agree with its semantic role and structural locator?
 - Are all unexpected differences explained by an authorized operation?
 
-Record the reviewed page/image refs, the final template hash, the Agent finding, and any blocking status.
+Record each comparison manifest's stable `required_image_id`, its affected pages, the final template hash,
+the Agent finding, and any blocking status.
 Write those dispositions directly into `artifact-decisions.yaml`; `compile_artifact_spec.py` normalizes them
 as the embedded typed review record, and `template_build` emits `visual-review.json`. Review evidence from an
 earlier hash cannot satisfy final freeze.

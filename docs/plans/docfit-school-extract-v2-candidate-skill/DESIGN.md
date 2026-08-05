@@ -6,6 +6,9 @@
 > 候选设计优化与获批实现期间，本目录是 Agent、Skill scripts、Tool、产物和验证责任的
 > 临时权威。现有生产实现和长期文档不能反向削弱本合同；生产切换前再统一更新受影响的
 > 长期文档。
+>
+> 五个 Tool 的实现级接口见 `TOOL-DESIGN.md`；两份决定文件和两个脚本的实现级合同见
+> `SCRIPT-DESIGN.md`。
 
 ## 1. 设计结论
 
@@ -115,6 +118,7 @@ Agent 在这个过程中应完成以下工作：
 覆盖旧输出，也不生成部分文件。两个脚本都显式接收 `--task-root`、输入和输出路径；成功、
 决定/schema 错误、环境/I/O 错误分别使用退出码 `0`、`2`、`1`。输出携带 schema/compiler
 版本、输入 hash 和绑定的 snapshot/hash。完整 CLI 与原子写合同见 `PLAN.md` 第 4.2 节。
+字段模型、canonical bytes、拒绝码和测试矩阵以 `SCRIPT-DESIGN.md` 为实现依据。
 
 ### 4.1 `compile_mutation_plan.py`
 
@@ -161,6 +165,9 @@ Tool 调用状态统一使用 `call_status: ok | needs_input | error`。领域�
 与失败语义见 `PLAN.md` 第 3–6 节。
 
 ## 5. 五个生产 Tool
+
+本节固定职责和主要数据流；公开输入/输出 schema、稳定错误码、原子性、图片 cursor 和逐
+Tool 验收矩阵以 `TOOL-DESIGN.md` 为实现依据。
 
 ### 5.1 `template_observe`
 
@@ -222,9 +229,13 @@ operations:
     action: remove_content
     target_ref: ...
     removal_mode: clear_text_preserve_container
-    expected_text: 请填写论文标题
+    expected_text_sha256: ...
     depends_on: [slot-title]
-    migration_targets: [slot:thesis_title]
+    migration_targets:
+      - responsibility_ref: thesis-title
+        target_kind: materialized_slot
+        slot_id: thesis_title
+        object_ref: null
 ```
 
 删除模式固定为：
@@ -362,6 +373,8 @@ frozen_output_dir: output/frozen-template-artifact
 docs/plans/docfit-school-extract-v2-candidate-skill/
 ├── DESIGN.md
 ├── PLAN.md
+├── TOOL-DESIGN.md
+├── SCRIPT-DESIGN.md
 ├── SKILL.md
 ├── evals/
 │   └── evals.json

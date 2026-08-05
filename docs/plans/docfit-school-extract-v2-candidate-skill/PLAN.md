@@ -15,9 +15,11 @@
 
 1. `DESIGN.md`：目标架构、领域边界和不可违反的不变量；
 2. `PLAN.md`：实施顺序、文件责任、验收门和发布边界；
-3. `SKILL.md`：未来生产 Agent 实际读取的操作指导；
-4. `references/*.md`：按需加载的判断与编译细节；
-5. `evals/evals.json`：Agent 行为场景，不得覆盖确定性合同。
+3. `TOOL-DESIGN.md` 与 `SCRIPT-DESIGN.md`：五个 Tool、两份决定文件和两个脚本的实现级
+   schema、错误、原子性与测试合同；
+4. `SKILL.md`：未来生产 Agent 实际读取的操作指导；
+5. `references/*.md`：按需加载的判断与编译细节；
+6. `evals/evals.json`：Agent 行为场景，不得覆盖确定性合同。
 
 如这些文件互相冲突，先在候选目录内统一合同，再实施；不能借用当前生产实现或长期文档
 替任一方“解释通过”。生产切换前再单独把已获批候选合同同步到受影响的长期文档。
@@ -108,6 +110,7 @@ failure: null | {origin, code, retryable, message, suggested_actions}
 ### 4.2 两个 Skill scripts 的统一 CLI
 
 脚本相对于活跃 `SKILL.md` 定位，并作为很薄的入口导入产品包中的共享模型/编译逻辑：
+决定文件的完整字段、canonical bytes、拒绝码和 golden tests 见 `SCRIPT-DESIGN.md`。
 
 ```text
 uv run python <skill-root>/scripts/compile_mutation_plan.py \
@@ -178,7 +181,8 @@ Tool 的机器 finding 使用 `machine_blocking: true | false`；Agent 的判断
 ## 5. 五个 Tool 的可实施接口
 
 下列是 v1 的逻辑输入。公开 schema 使用扁平对象和 `action` 鉴别，运行时做 action-specific
-校验；不依赖 `oneOf`/`anyOf`/`allOf`。
+校验；完整字段、envelope、错误码、图片 cursor 与逐 Tool 测试见 `TOOL-DESIGN.md`。
+公开 schema 不依赖 `oneOf`/`anyOf`/`allOf`。
 
 | Tool | action/核心输入 | 成功产物 | 失败副作用 |
 |---|---|---|---|

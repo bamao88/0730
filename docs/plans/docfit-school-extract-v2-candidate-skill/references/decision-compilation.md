@@ -28,7 +28,7 @@ contains:
 - current `observed_roles`, surviving responsibilities, and `resolution`;
 - for each responsibility, `kind: fixed | fill | generate`, required content kind for fill/generate,
   cardinality, optional condition, and `handling: automatic | manual`;
-- expected text/fingerprint;
+- expected text hash/fingerprint; document text is never written to compiler logs;
 - `action: materialize_slot | remove_content`; preserving a target, registering a manual region, or
   recording a gap emits no mutation operation;
 - operation order is executable order; `depends_on` may reference only an earlier operation, and a removal
