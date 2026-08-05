@@ -290,29 +290,46 @@ def build_core_fixtures(repository: Path) -> JsonObject:
         "overwrite": True,
         "operations": [
             {
-                "action": "apply_style",
-                "target_ref": _object_ref(student_inspection, text="1 Introduction"),
-                "style": "Heading1",
-            },
-            {
                 "action": "replace_text",
-                "target_ref": _object_ref(student_inspection, text="NAME_SLOT"),
+                "target_ref": _object_ref(template_inspection, text="NAME_SLOT"),
                 "expected_text": "NAME_SLOT",
                 "replacement": "Synthetic Student",
             },
             {
-                "action": "import_template_sections",
-                "template_docx": str(template.relative_to(repository)),
-                "template_sha256": sha256_file(template),
+                "action": "replace_text",
+                "target_ref": _object_ref(
+                    template_inspection,
+                    text="INSTRUCTION_TEXT_REMOVE_BEFORE_DELIVERY",
+                ),
+                "expected_text": "INSTRUCTION_TEXT_REMOVE_BEFORE_DELIVERY",
+                "replacement": "",
+            },
+            {
+                "action": "replace_text",
+                "target_ref": _object_ref(template_inspection, text="Heading Example"),
+                "expected_text": "Heading Example",
+                "replacement": "",
+            },
+            {
+                "action": "import_content_objects",
+                "source_docx": str(student.relative_to(repository)),
+                "source_sha256": sha256_file(student),
                 "source_refs": [
-                    _object_ref(template_inspection, text="SYNTHETIC UNIVERSITY")
+                    _object_ref(student_inspection, text="Synthetic Thesis Title"),
+                    _object_ref(student_inspection, text="1 Introduction"),
+                    _object_ref(
+                        student_inspection,
+                        text="Synthetic student body content must be preserved.",
+                    ),
+                    _object_ref(student_inspection, kind="table"),
+                    _object_ref(student_inspection, text="Second Page Boundary Marker"),
                 ],
-                "insert_anchor_ref": _object_ref(
-                    student_inspection,
-                    text="Synthetic Thesis Title",
+                "target_anchor_ref": _object_ref(
+                    template_inspection,
+                    text="Heading Example",
                 ),
                 "position": "before",
-                "include_final_section_properties": False,
+                "include_source_final_section_properties": False,
             },
         ],
     }

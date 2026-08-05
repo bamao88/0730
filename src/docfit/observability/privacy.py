@@ -63,6 +63,7 @@ _EDIT_ACTIONS = {
     "replace_text",
     "apply_style",
     "set_properties",
+    "import_content_objects",
     "import_template_sections",
 }
 _RENDER_INTENTS = {"baseline", "edit_feedback", "candidate_verification"}
@@ -312,6 +313,7 @@ def _tool_input_summary(
                     actions.append(action)
                 references.extend(_object_refs(operation.get("target_ref")))
                 references.extend(_object_refs(operation.get("insert_anchor_ref")))
+                references.extend(_object_refs(operation.get("target_anchor_ref")))
                 source_refs = operation.get("source_refs")
                 if isinstance(source_refs, list):
                     for reference in source_refs[:256]:

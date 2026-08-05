@@ -160,6 +160,7 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
     student = Path(str(fixtures["student"]))
     template = Path(str(fixtures["template"]))
     source_hash = str(fixtures["student_sha256"])
+    template_hash = str(fixtures["template_sha256"])
     state: dict[str, Any] = {}
 
     def tool_happy_path() -> JsonObject:
@@ -176,13 +177,14 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
         edit = service.edit(
             {
                 "task_root": str(repository),
-                "input_docx": str(student),
+                "input_docx": str(template),
                 "output_docx": str(output),
                 "operations": plan["operations"],
             }
         )
         _assert(edit["status"] == "ok" and edit["committed"] is True, "edit failed")
         _assert(sha256_file(student) == source_hash, "source changed")
+        _assert(sha256_file(template) == template_hash, "template changed")
         edited = service.inspect(
             {"task_root": str(repository), "input_docx": str(output)}
         )
@@ -192,6 +194,21 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
                 for item in edited["objects"]
             ),
             "cross-run replacement is absent",
+        )
+        edited_text = {
+            item.get("text")
+            for item in edited["objects"]
+            if isinstance(item, dict) and item.get("text")
+        }
+        _assert("SYNTHETIC UNIVERSITY" in edited_text, "template backbone is absent")
+        _assert("Synthetic Thesis Title" in edited_text, "student title was not placed")
+        _assert(
+            "Synthetic student body content must be preserved." in edited_text,
+            "student body was not placed",
+        )
+        _assert(
+            "INSTRUCTION_TEXT_REMOVE_BEFORE_DELIVERY" not in edited_text,
+            "template instruction remains",
         )
         render = service.render(
             {
@@ -240,7 +257,7 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
         )
         state.update({"inspection": inspection, "edited": output})
         return {
-            "assertions": 13,
+            "assertions": 18,
             "tool_calls": 7,
             "rendered_pages": page_count,
             "reviewed_pages": len(images),
@@ -378,7 +395,8 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
             "## 最终回复要求",
         )
         required_conversion_phrases = (
-            "依据当前任务证据修改一份论文 DOCX",
+            "以当前任务的干净目标模板为候选主干",
+            "不得从学生论文副本构建候选后导入模板节",
             "所有 DOCX 修改只通过",
             "原始论文保持只读",
             "先说明可交付、不可交付或缺少证据",

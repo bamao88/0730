@@ -76,6 +76,21 @@ def test_real_docx_tools_expose_versioned_m1_schemas_without_backend_selector() 
         "baseline_render_ref",
     }
     assert not {"provider", "backend", "engine"}.intersection(render_properties)
+    edit_actions = docx_edit.input_schema["properties"]["operations"]["items"]["properties"][
+        "action"
+    ]["enum"]
+    assert "import_content_objects" in edit_actions
+    assert "import_template_sections" in edit_actions
+    edit_operation_properties = docx_edit.input_schema["properties"]["operations"]["items"][
+        "properties"
+    ]
+    assert set(edit_operation_properties) >= {
+        "source_docx",
+        "source_sha256",
+        "source_refs",
+        "target_anchor_ref",
+        "include_source_final_section_properties",
+    }
 
 
 def test_visual_review_returns_a_real_image_without_leaking_marker_in_text() -> None:

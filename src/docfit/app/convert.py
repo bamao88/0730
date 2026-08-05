@@ -119,6 +119,10 @@ CONVERSION_OUTPUT_SCHEMA: JsonObject = {
     "properties": {
         "schema_version": {"const": 1},
         "status": {"type": "string", "enum": ["completed", "needs_input", "error"]},
+        "candidate_backbone": {
+            "type": ["string", "null"],
+            "enum": ["school_template_work_copy", None],
+        },
         "final_docx": {"type": ["string", "null"]},
         "candidate_render_ref": {"type": ["string", "null"]},
         "visual_review": {
@@ -188,6 +192,7 @@ CONVERSION_OUTPUT_SCHEMA: JsonObject = {
     "required": [
         "schema_version",
         "status",
+        "candidate_backbone",
         "final_docx",
         "candidate_render_ref",
         "visual_review",
@@ -486,6 +491,12 @@ def build_conversion_prompt(prepared: PreparedConversion) -> str:
             "sha256": prepared.template_sha256,
             "read_only": True,
         },
+        "conversion_direction": {
+            "candidate_backbone": "school_template_work_copy",
+            "content_source": "student_docx_read_only",
+            "placement": "student_content_to_template_slots_or_regions",
+            "student_copy_as_candidate": "forbidden",
+        },
         "school_requirements": {
             "path": str(prepared.requirements_file),
             "sha256": prepared.requirements_sha256,
@@ -511,8 +522,12 @@ def build_conversion_prompt(prepared: PreparedConversion) -> str:
         "operations. "
         "Use only the five DocFit Tools for document operations. Inspect the student and "
         "template; establish Adobe PDF Services baseline evidence before layout-sensitive "
-        "edits; "
-        "apply supported school rules on work copies; use OfficeCLI feedback when useful; "
+        "edits. The school template work copy is the only candidate backbone: begin editing "
+        "with the template as docx_edit input_docx, place student content into its confirmed "
+        "slots or regions, and use import_content_objects for cross-document objects. Never "
+        "start the candidate from a student-document copy or import template sections into "
+        "one. Apply supported school rules on the template-backed work copy; use OfficeCLI "
+        "feedback when useful; "
         "produce the exact required final.docx; generate an Adobe delivery candidate bound to "
         "it; observe "
         "every final page through docx_visual_review in bounded batches; and call docx_validate. "
@@ -538,7 +553,9 @@ def _conversion_system_prompt() -> str:
         "auto-approved capabilities without a DocFit path gate and can access any resource "
         "available to this process. Use them deliberately and never expose credentials or "
         "document bodies in logs. The five DocFit Tools remain the authoritative route for "
-        "document mutations and document evidence. Adobe baseline and "
+        "document mutations and document evidence. A clean school-template work copy is the "
+        "candidate backbone; the student DOCX is only the read-only content source. Adobe "
+        "baseline and "
         "candidate routes never fall back to OfficeCLI. Complete only with current "
         "official-service conversion evidence, full final-page observation, independent "
         "validation, and zero "
@@ -856,6 +873,16 @@ def _finalize_conversion(
             execution.tool_uses,
             tuple(str(item) for item in output.get("warnings", [])),
             str(output.get("summary", "Agent did not complete conversion.")),
+        )
+    if output.get("candidate_backbone") != "school_template_work_copy":
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="candidate_backbone_invalid",
+            message=(
+                "The Agent did not declare the school-template work copy as candidate "
+                "backbone."
+            ),
         )
     missing_tools = REQUIRED_CONVERSION_TOOLS - set(execution.tool_uses)
     if missing_tools:

@@ -366,7 +366,9 @@ backend 后，每次新 live 尝试开始前必须使该 case 的旧 PASS 回执
   专属字段由 runtime 校验；
 - 统一 `status`、`checks`、`warnings`、`failure`、`committed` 和 Provider 证据；
 - 明确 `object_ref` 的输入 hash、对象 ID、指纹和失效规则；
-- 在 `docx_edit` 中实现一个最小跨文档模板组合操作，例如 `import_template_sections`；它仍属于 `docx_edit`，不新增第六个 Tool；
+- 在 `docx_edit` 中实现最小跨文档内容放置操作 `import_content_objects`，把学生源对象写入
+  目标模板工作副本；它仍属于 `docx_edit`，不新增第六个 Tool；旧
+  `import_template_sections` 仅保留兼容性，不作为转换主路线；
 - 在 `docx_render` 契约中固定 `baseline` / `edit_feedback` /
   `candidate_verification` 三个 intent、fidelity、parent ref、转换 profile 和可选 layout map；
 - 明确页码只在单个 render ref 内有效；同一文档 hash 的跨后端页面可通过当前快照的 opaque `object_ref`、节引用或文字锚点关联，文档 hash 变化后必须重新 inspect；不得把页面升级为编辑身份；
@@ -382,7 +384,10 @@ backend 后，每次新 live 尝试开始前必须使该 case 的旧 PASS 回执
 render ref 的已有页面产物并传递、组织视觉证据；它不调用任何渲染后端、不产生新的
 render ref，也不在 Tool 内启动另一个模型或生成版式结论。
 
-`import_template_sections` 的详细字段在 OfficeCLI PoC 后锁定。M1 契约至少覆盖来源模板 hash 与来源对象引用、目标文档 hash 与插入锚点、样式/编号/媒体/relationships/页眉页脚/节属性的依赖闭包、ID 冲突重映射、all-or-nothing 发布，以及合并后重新打开、内容保留和非目标内容检查。
+`import_content_objects` 的字段锁定为来源学生文档 hash 与来源对象引用、目标模板工作副本
+hash 与放置锚点，以及可选来源末节属性开关。M1 契约至少覆盖样式/编号/媒体/
+relationships/页眉页脚/节属性的依赖闭包、ID 冲突重映射、来源与目标不变、
+all-or-nothing 发布，以及合并后重新打开、内容保留和非目标内容检查。
 
 ### 5.3 双后端验证矩阵
 
@@ -392,7 +397,8 @@ render ref，也不在 Tool 内启动另一个模型或生成版式结论。
 - 段落、样式、表格、图片、公式、节、页眉页脚和编号能被发现；
 - 跨 run 文字和占位符可以定位；
 - 修改只影响目标对象；
-- 跨文档模板组合能够复制完整依赖闭包、重映射冲突 ID，并保持非目标内容不变；
+- 学生内容进入目标模板工作副本时能够复制完整依赖闭包、重映射冲突 ID，并保持模板
+  非目标内容与学生来源不变；
 - 失效引用被拒绝；
 - 一组修改满足 all-or-nothing；
 - 输出能重新打开并通过 package 检查；
@@ -442,7 +448,8 @@ uv run docfit tools render .tmp/smoke/edited.docx --intent candidate_verificatio
 - 源文件 hash 在成功、失败和超时路径都不变化；
 - `docx_inspect` 返回输入 hash、摘要、风险和可复用的 opaque refs；
 - `docx_edit` 至少完成一个格式修改和一个跨 run 占位符替换；
-- `docx_edit` 至少完成一次 `import_template_sections`，并证明来源/目标 hash、插入锚点、依赖闭包、冲突重映射和原子发布符合契约；
+- `docx_edit` 至少以目标模板为 `input_docx` 完成一次 `import_content_objects`，并证明
+  学生来源/模板目标 hash、放置锚点、依赖闭包、冲突重映射和原子发布符合契约；
 - 错误 ref、错误前置文本和输出路径等于输入路径都安全失败；
 - 多操作中任一项失败时没有可被误认成成功的输出；
 - OfficeCLI `edit_feedback` 生成逐页截图和 intent/fidelity/Provider/字体证据，并明确
@@ -489,6 +496,8 @@ uv run docfit tools render .tmp/smoke/edited.docx --intent candidate_verificatio
   `.claude/skills/convert-thesis/SKILL.md`；
 - 自动加载随当前产品发布的唯一模块化通用 Knowledge Package；
 - 接收一组当前任务学校模板、要求文件、官方示例或用户确认；
+- 固定以干净、可填写目标模板工作副本作为候选主干，以只读学生 DOCX 作为内容来源；
+  主 Agent 按当前任务绑定把学生内容放入模板槽位或区域，不得从学生副本构建候选；
 - 向主 Agent 暴露五个 DocFit Tool，并配置一个可选的 SDK 原生
   `docfit-unit-analyst`；
 - 复用 P1 已完成的 `Agent` 可见性与 SDK `PreToolUse` 类型白名单；只允许
@@ -541,6 +550,8 @@ uv run pytest tests/integration -q
 - `final.docx` 能通过独立 package 检查并由 OfficeCLI 重新读取；在 Microsoft Word
   桌面版中的人工打开只能是可选兼容性观察，不是产品运行依赖或完成前提；
 - 源文件 hash 不变；
+- `final.docx` 从目标模板工作副本构建，保留模板固定结构；不存在以学生副本为主干再
+  导入模板节的转换路径；
 - 合成论文中的关键文本、表格、图片和必要对象未丢失、重复或错序；
 - 目标学校的一个标题规则、一个正文规则和一个模板/占位符规则真实生效；
 - Agent 修改前通过图片观察输入与模板，影响布局的修改后通过图片复核变化页和相邻页；

@@ -440,17 +440,20 @@ def _remap_local_ids(copied: list[ET.Element], target_document: ET.Element) -> i
 def _write_package(path: Path, parts: dict[str, bytes]) -> None:
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for name in sorted(parts):
-            archive.writestr(name, parts[name])
+            entry = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            entry.compress_type = zipfile.ZIP_DEFLATED
+            entry.external_attr = 0o600 << 16
+            archive.writestr(entry, parts[name])
 
 
-def import_template_sections(
+def import_content_objects(
     *,
     target_docx: Path,
-    template_docx: Path,
+    source_docx: Path,
     source_locators: list[str],
     anchor_locator: str | None,
     position: str,
-    include_final_section_properties: bool,
+    include_source_final_section_properties: bool,
     output_docx: Path,
 ) -> JsonObject:
     """Copy selected body objects and their concrete package dependencies."""
@@ -459,25 +462,25 @@ def import_template_sections(
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="template_sources_empty",
-            message="import_template_sections requires at least one source object ref.",
+            code="content_sources_empty",
+            message="import_content_objects requires at least one source object ref.",
         )
     if position not in {"before", "after", "end"}:
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="invalid_insert_position",
-            message="Template insertion position must be before, after, or end.",
+            message="Content insertion position must be before, after, or end.",
         )
     if position != "end" and anchor_locator is None:
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="insert_anchor_required",
-            message="Template insertion before or after requires a target anchor ref.",
+            message="Content insertion before or after requires a target anchor ref.",
         )
 
-    source_parts = _read_package(template_docx)
+    source_parts = _read_package(source_docx)
     target_parts = _read_package(target_docx)
     source_document = _xml(source_parts, "word/document.xml")
     target_document = _xml(target_parts, "word/document.xml")
@@ -488,12 +491,12 @@ def import_template_sections(
             status="error",
             origin="document",
             code="document_body_missing",
-            message="Template import requires readable source and target document bodies.",
+            message="Content import requires readable source and target document bodies.",
         )
     copied = [
         copy.deepcopy(_find_body_element(source_document, value)) for value in source_locators
     ]
-    if include_final_section_properties:
+    if include_source_final_section_properties:
         final_section = source_body.find(_q(W_NS, "sectPr"))
         if final_section is not None:
             paragraph = ET.Element(_q(W_NS, "p"))
@@ -525,8 +528,8 @@ def import_template_sections(
                     raise ToolFailure(
                         status="error",
                         origin="document",
-                        code="template_relationship_missing",
-                        message="A selected template object contains an unresolved relationship.",
+                        code="source_relationship_missing",
+                        message="A selected source object contains an unresolved relationship.",
                     )
                 new_id = _next_relationship_id(target_document_rels)
                 clone = copy.deepcopy(source_relationship)
@@ -537,8 +540,8 @@ def import_template_sections(
                         raise ToolFailure(
                             status="error",
                             origin="document",
-                            code="template_relationship_target_missing",
-                            message="A template dependency relationship has no target.",
+                            code="source_relationship_target_missing",
+                            message="A source dependency relationship has no target.",
                         )
                     source_part = _resolve("word/document.xml", source_target)
                     target_part = closure.copy_part(source_part)

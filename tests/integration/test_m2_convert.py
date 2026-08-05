@@ -36,6 +36,7 @@ from docfit.observability.storage import (
 from docfit.observability.transcript import SDKTranscriptManager
 from docfit.observability.web import create_observer_app
 from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
+from docfit.tools.service import DocFitToolService
 
 
 def _officecli(*arguments: str) -> None:
@@ -95,8 +96,37 @@ async def _fake_completed_agent(
     assert prepared.template_sha256 in prompt
     assert prepared.requirements_sha256 in prompt
     assert prepared.knowledge_digest in prompt
-    shutil.copy2(prepared.source_docx, prepared.final_docx)
-    prepared.final_docx.chmod(0o644)
+    assert '"candidate_backbone": "school_template_work_copy"' in prompt
+    assert "Never start the candidate from a student-document copy" in prompt
+    service = DocFitToolService()
+    student = service.inspect(
+        {
+            "task_root": str(prepared.task_root),
+            "input_docx": str(prepared.source_docx),
+        }
+    )
+    source_refs = [
+        item["object_ref"]
+        for item in student["objects"]
+        if isinstance(item, dict) and isinstance(item.get("object_ref"), dict)
+    ]
+    service.edit(
+        {
+            "task_root": str(prepared.task_root),
+            "input_docx": str(prepared.template_docx),
+            "output_docx": str(prepared.final_docx),
+            "operations": [
+                {
+                    "action": "import_content_objects",
+                    "source_docx": str(prepared.source_docx),
+                    "source_sha256": prepared.source_sha256,
+                    "source_refs": source_refs,
+                    "position": "end",
+                    "include_source_final_section_properties": False,
+                }
+            ],
+        }
+    )
     final_hash = sha256_file(prepared.final_docx)
     candidate_directory = prepared.work_directory / "candidate-adobe"
     pages_directory = candidate_directory / "pages"
@@ -179,6 +209,7 @@ async def _fake_completed_agent(
     structured = {
         "schema_version": 1,
         "status": "completed",
+        "candidate_backbone": "school_template_work_copy",
         "final_docx": str(prepared.final_docx),
         "candidate_render_ref": str(render_ref),
         "visual_review": visual_review,

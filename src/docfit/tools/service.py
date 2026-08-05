@@ -36,7 +36,7 @@ from docfit.tools.inspection import (
 )
 from docfit.tools.layout import measure_html_layout
 from docfit.tools.officecli import OfficeCliAdapter
-from docfit.tools.ooxml import import_template_sections
+from docfit.tools.ooxml import import_content_objects
 from docfit.tools.package import validate_docx_package
 from docfit.tools.runtime import (
     JsonObject,
@@ -465,54 +465,82 @@ class DocFitToolService:
                     {"command": "set", "path": target.locator, "props": properties}
                 )
                 continue
-            if action != "import_template_sections":
+            if action not in {"import_content_objects", "import_template_sections"}:
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
                     code="unsupported_edit_action",
                     message="An edit operation uses an unsupported M1 action.",
                 )
-            template_docx = _document_path(operation, "template_docx", root)
-            template_hash = sha256_file(template_docx)
-            if operation.get("template_sha256") != template_hash:
+            legacy_template_import = action == "import_template_sections"
+            document_field = "template_docx" if legacy_template_import else "source_docx"
+            hash_field = "template_sha256" if legacy_template_import else "source_sha256"
+            source_docx = _document_path(operation, document_field, root)
+            if source_docx == input_docx:
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
-                    code="template_hash_mismatch",
-                    message="The template snapshot hash does not match template_sha256.",
-                    suggested_actions=("inspect_template_again",),
+                    code="cross_document_source_required",
+                    message=(
+                        "Cross-document content import requires distinct source and target "
+                        "documents."
+                    ),
                 )
-            template_inspection = inspect_document(template_docx, self.office)
-            source_refs = operation.get("source_refs")
-            if not isinstance(source_refs, list):
+            imported_source_hash = sha256_file(source_docx)
+            if operation.get(hash_field) != imported_source_hash:
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
-                    code="invalid_template_source_refs",
-                    message="source_refs must be an array of template object refs.",
+                    code=(
+                        "template_hash_mismatch"
+                        if legacy_template_import
+                        else "content_source_hash_mismatch"
+                    ),
+                    message=f"The source snapshot hash does not match {hash_field}.",
+                    suggested_actions=("inspect_source_again",),
+                )
+            source_inspection = inspect_document(source_docx, self.office)
+            source_refs = operation.get("source_refs")
+            if not isinstance(source_refs, list) or not source_refs:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="invalid_content_source_refs",
+                    message="source_refs must be a non-empty array of source object refs.",
                 )
             source_objects = [
-                resolve_object_ref(reference, template_inspection) for reference in source_refs
+                resolve_object_ref(reference, source_inspection) for reference in source_refs
             ]
             position = operation.get("position", "end")
-            anchor_ref = operation.get("insert_anchor_ref")
+            anchor_ref = operation.get(
+                "insert_anchor_ref" if legacy_template_import else "target_anchor_ref"
+            )
             anchor = resolve_object_ref(anchor_ref, inspection) if anchor_ref is not None else None
-            include_section = operation.get("include_final_section_properties", False)
+            include_section = operation.get(
+                (
+                    "include_final_section_properties"
+                    if legacy_template_import
+                    else "include_source_final_section_properties"
+                ),
+                False,
+            )
             if not isinstance(position, str) or not isinstance(include_section, bool):
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
-                    code="invalid_template_import_options",
-                    message="Template import position or section option is invalid.",
+                    code="invalid_content_import_options",
+                    message="Content import position or section option is invalid.",
                 )
             import_plans.append(
                 {
-                    "template_docx": template_docx,
-                    "template_sha256": template_hash,
+                    "action": action,
+                    "source_docx": source_docx,
+                    "source_sha256": imported_source_hash,
                     "source_locators": [item.locator for item in source_objects],
+                    "source_texts": [item.text for item in source_objects if item.text],
                     "anchor_locator": anchor.locator if anchor else None,
                     "position": position,
-                    "include_final_section_properties": include_section,
+                    "include_source_final_section_properties": include_section,
                 }
             )
 
@@ -531,20 +559,23 @@ class DocFitToolService:
                 self.office.batch(temporary, office_commands)
             for index, plan in enumerate(import_plans):
                 imported = temporary.with_name(f"{temporary.stem}-import-{index}.docx")
-                evidence = import_template_sections(
+                evidence = import_content_objects(
                     target_docx=temporary,
-                    template_docx=plan["template_docx"],
+                    source_docx=plan["source_docx"],
                     source_locators=plan["source_locators"],
                     anchor_locator=plan["anchor_locator"],
                     position=plan["position"],
-                    include_final_section_properties=plan["include_final_section_properties"],
+                    include_source_final_section_properties=plan[
+                        "include_source_final_section_properties"
+                    ],
                     output_docx=imported,
                 )
                 os.replace(imported, temporary)
                 import_evidence.append(
                     {
                         **evidence,
-                        "template_sha256": plan["template_sha256"],
+                        "action": plan["action"],
+                        "source_sha256": plan["source_sha256"],
                         "target_sha256_before": source_hash,
                     }
                 )
@@ -608,12 +639,36 @@ class DocFitToolService:
                     code="non_target_content_changed",
                     message="A non-target text object was lost during editing.",
                 )
+            imported_text = Counter(
+                text for plan in import_plans for text in plan["source_texts"]
+            )
+            missing_imported = imported_text - resulting_text
+            if missing_imported:
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="imported_content_missing",
+                    message="One or more selected source text objects are absent after import.",
+                )
             if sha256_file(input_docx) != source_hash:
                 raise ToolFailure(
                     status="error",
                     origin="postcondition",
                     code="source_document_changed",
                     message="The source document changed during editing; output was not published.",
+                )
+            if any(
+                sha256_file(plan["source_docx"]) != plan["source_sha256"]
+                for plan in import_plans
+            ):
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="import_source_document_changed",
+                    message=(
+                        "A content source document changed during editing; output was not "
+                        "published."
+                    ),
                 )
             output_hash = sha256_file(temporary)
             os.replace(temporary, output_docx)
@@ -638,7 +693,12 @@ class DocFitToolService:
                     {"index": index, "action": operation.get("action"), "result": "applied"}
                     for index, operation in enumerate(operations)
                 ],
-                "template_imports": import_evidence,
+                "content_imports": import_evidence,
+                "template_imports": [
+                    item
+                    for item in import_evidence
+                    if item.get("action") == "import_template_sections"
+                ],
                 "provider": self.office.evidence(),
             }
         finally:

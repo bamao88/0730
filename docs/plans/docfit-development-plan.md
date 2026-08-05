@@ -28,7 +28,9 @@
 - Unknown-unknown scout: 自动 `autoplan` 因当前宿主没有 AskUserQuestion 能力不可运行；已执行
   等价的本地人工 scout。OfficeCLI 1.0.143 的结构化读写、validate、原子 batch 与 HTML
   screenshot 合成 PoC 通过；其 `dump` 不携带 styles/numbering/theme 等兄弟依赖，因此
-  `import_template_sections` 采用 DocFit 最小 OOXML 依赖闭包；Adobe service-principal
+  当时的兼容操作 `import_template_sections` 采用 DocFit 最小 OOXML 依赖闭包；当前转换
+  主路线已改为以模板为主干的 `import_content_objects`，前者不再代表产品策略；Adobe
+  service-principal
   bundle、SDK 4.2.0 与 Poppler 已发现，凭据已安全迁移到仓库外 0600 环境文件；两份
   授权样本已按 SHA-256 找到并完成只读真实链路；样本质量未通过，不能据此宣称 MVP。
 

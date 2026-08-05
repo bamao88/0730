@@ -392,37 +392,41 @@ operations:
 
 Tool 应先验证全部 operation，再写入临时文件；临时文件能够重新打开并通过基础结构检查后，才发布到 `output_docx`。任一操作失败时，不留下可被误认成成功的输出文件。
 
-普通 allowlist operation、跨 run 文本和格式属性由 OfficeCLI 完成。跨文档模板组合
+普通 allowlist operation、跨 run 文本和格式属性由 OfficeCLI 完成。跨文档内容放置
 所需的样式、编号、relationship、媒体、页眉页脚与节属性依赖闭包由 DocFit 的最小
 OOXML helper 在同一 `docx_edit` 临时副本内完成。adapter 统一执行前置检查、引擎错误、
 重读效果和原子发布；这些细节不进入 Skill。
 
 为了降低定位漂移风险，Tool 在真正写入前重新核对输入 hash、对象指纹和预期文本；同一容器内会影响位置的操作由 Tool 内部按安全顺序执行，通常从后向前。写入结束后从新文件重新解析，而不是相信 OfficeCLI 的修改清单。
 
-`docx_edit` 已支持最小跨文档模板组合操作 `import_template_sections`；它仍属于
-`docx_edit`，不新增第六个 Tool。现行输入字段固定为：
+B 路线使用 `import_content_objects` 把学生源对象放入以目标模板为输入的工作副本；它仍
+属于 `docx_edit`，不新增第六个 Tool。输入字段为：
 
 ```yaml
-action: import_template_sections
-template_docx: /authorized/task/template.docx
-template_sha256: <64 lowercase hex>
-source_refs: [<template object_ref>, ...]
-insert_anchor_ref: <target object_ref> # position 为 before/after 时提供
+action: import_content_objects
+source_docx: /authorized/task/student.docx
+source_sha256: <64 lowercase hex>
+source_refs: [<student object_ref>, ...]
+target_anchor_ref: <template-work-copy object_ref> # position 为 before/after 时提供
 position: before | after | end
-include_final_section_properties: false
+include_source_final_section_properties: false
 ```
 
-`template_docx`、`template_sha256` 与至少一个 `source_ref` 必填；`position` 缺省为
-`end`，节属性开关缺省为 `false`。每个 ref 只绑定自己的文档快照。实现继续证明：
+`source_docx`、`source_sha256` 与至少一个 `source_ref` 必填；`position` 缺省为 `end`，
+节属性开关缺省为 `false`。每个 ref 只绑定自己的文档快照。`input_docx` 是目标模板
+工作副本，来源学生 DOCX 与目标模板都必须保持不变。实现继续证明：
 
-- 来源模板 hash 与来源对象引用；
-- 目标文档 hash 与插入锚点；
+- 来源学生文档 hash 与来源对象引用；
+- 目标模板工作副本 hash 与放置锚点；
 - 样式、编号、媒体、relationships、页眉页脚和节属性的依赖闭包；
 - 内部 ID 与关系 ID 的冲突重映射；
 - all-or-nothing 发布；
 - 合并后重新打开、内容保留和非目标内容检查。
 
-OfficeCLI 只支持简单段落复制、无法复制完整依赖闭包时，必须把能力缺口报告为不支持或 `verification_gap`，不能把部分合并发布为成功结果。
+旧的 `import_template_sections` action 为既有调用保留兼容性，只能用于明确的模板资产组装
+任务；它不是 `convert-thesis` 的默认路线，也不能用于把模板节导入学生论文副本后声称完成
+B 路线。OfficeCLI 只支持简单段落复制、无法复制完整依赖闭包时，必须把能力缺口报告为
+不支持或 `verification_gap`，不能把部分合并发布为成功结果。
 
 ### 2.6 `docx_render`
 

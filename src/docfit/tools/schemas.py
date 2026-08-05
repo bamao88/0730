@@ -62,6 +62,7 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
                 "replace_text",
                 "apply_style",
                 "set_properties",
+                "import_content_objects",
                 "import_template_sections",
             ],
         },
@@ -76,14 +77,18 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
         },
         "template_docx": {"type": "string"},
         "template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_docx": {"type": "string"},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "source_refs": {
             "type": "array",
             "items": OBJECT_REF_SCHEMA,
             "minItems": 1,
         },
         "insert_anchor_ref": OBJECT_REF_SCHEMA,
+        "target_anchor_ref": OBJECT_REF_SCHEMA,
         "position": {"type": "string", "enum": ["before", "after", "end"]},
         "include_final_section_properties": {"type": "boolean"},
+        "include_source_final_section_properties": {"type": "boolean"},
     },
     # The runtime validates the action-specific required fields. Keeping one
     # flat schema avoids composition keywords that the supported compatible

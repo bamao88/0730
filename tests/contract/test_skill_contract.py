@@ -114,6 +114,9 @@ def test_convert_thesis_uses_only_the_five_public_docfit_tools() -> None:
     assert "损坏的域或交叉引用结果" in body
     assert "阻断性发现" in body
     assert "所有 DOCX 修改只通过 `mcp__docfit__docx_edit` 完成" in body
+    assert "第一个候选工作副本必须从目标模板产生" in body
+    assert "不得从学生论文副本构建候选后导入模板节" in body
+    assert "`import_content_objects`" in body
     assert "Bash/Write 已完全" in body
     assert "没有 DocFit 路径 gate" in body
     assert "在主/子 Agent 分工中，主 Agent 统一承担写入" in body

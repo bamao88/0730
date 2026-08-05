@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from PIL import Image
 
 from docfit.tools import docx_inspect, docx_visual_review
 from docfit.tools.image_smoke import make_smoke_png
@@ -49,6 +50,19 @@ def _make_student(path: Path) -> None:
         "text=原始标题",
         "--prop",
         "style=Title",
+    )
+    marker = path.with_name("student-marker.png")
+    Image.new("RGB", (48, 48), "red").save(marker, format="PNG")
+    _officecli(
+        "add",
+        str(path),
+        "/body/p[1]",
+        "--type",
+        "picture",
+        "--prop",
+        f"src={marker}",
+        "--prop",
+        "width=2cm",
     )
     _officecli("add", str(path), "/body", "--type", "paragraph")
     _officecli(
@@ -130,6 +144,7 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
     _make_student(student)
     _make_template(template)
     source_hash = sha256_file(student)
+    template_hash = sha256_file(template)
     student.chmod(0o444)
     template.chmod(0o444)
     service = DocFitToolService(office=OfficeCliAdapter())
@@ -162,17 +177,12 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
     edit_result = service.edit(
         {
             "task_root": str(tmp_path),
-            "input_docx": student.name,
+            "input_docx": template.name,
             "output_docx": edited.name,
             "operations": [
                 {
-                    "action": "apply_style",
-                    "target_ref": _ref(student_result, "原始标题"),
-                    "style": "Heading1",
-                },
-                {
                     "action": "set_properties",
-                    "target_ref": _ref(student_result, "原始标题"),
+                    "target_ref": _ref(template_result, "学校封面"),
                     "properties": {
                         "alignment": "center",
                         "spaceAfter": "12pt",
@@ -181,18 +191,26 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
                 },
                 {
                     "action": "replace_text",
-                    "target_ref": _ref(student_result, "在此填写正文"),
-                    "expected_text": "在此填写",
-                    "replacement": "已经填写",
+                    "target_ref": _ref(template_result, "模板说明"),
+                    "expected_text": "模板说明",
+                    "replacement": "",
                 },
                 {
-                    "action": "import_template_sections",
-                    "template_docx": template.name,
-                    "template_sha256": template_result["document"]["sha256"],
-                    "source_refs": [_ref(template_result, "学校封面")],
-                    "insert_anchor_ref": _ref(student_result, "原始标题"),
+                    "action": "import_content_objects",
+                    "source_docx": student.name,
+                    "source_sha256": student_result["document"]["sha256"],
+                    "source_refs": [
+                        _ref(student_result, "原始标题"),
+                        _ref(student_result, "在此填写正文"),
+                        next(
+                            item["object_ref"]
+                            for item in student_result["objects"]
+                            if item["type"] == "table"
+                        ),
+                    ],
+                    "target_anchor_ref": _ref(template_result, "模板说明"),
                     "position": "before",
-                    "include_final_section_properties": True,
+                    "include_source_final_section_properties": True,
                 },
             ],
         }
@@ -201,17 +219,20 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
     assert edit_result["committed"] is True
     assert student.stat().st_mode & 0o777 == 0o444
     assert sha256_file(student) == source_hash
-    assert edit_result["template_imports"][0]["dependency_closure_complete"] is True
-    assert edit_result["template_imports"][0]["package_parts_copied"] >= 1
-    assert edit_result["template_imports"][0]["relationships_copied"] >= 1
+    assert sha256_file(template) == template_hash
+    assert edit_result["content_imports"][0]["dependency_closure_complete"] is True
+    assert edit_result["content_imports"][0]["package_parts_copied"] >= 1
+    assert edit_result["content_imports"][0]["relationships_copied"] >= 1
     edited_result = service.inspect({"task_root": str(tmp_path), "input_docx": edited.name})
     edited_text = [item["text"] for item in edited_result["objects"]]
     assert "学校封面" in edited_text
-    assert "已经填写正文" in edited_text
-    edited_title = next(item for item in edited_result["objects"] if item["text"] == "原始标题")
-    assert edited_title["format"]["alignment"] == "center"
-    assert edited_title["format"]["spaceAfter"] == "12pt"
-    assert edited_title["format"]["keepWithNext"] is True
+    assert "原始标题" in edited_text
+    assert "在此填写正文" in edited_text
+    assert "模板说明" not in edited_text
+    edited_cover = next(item for item in edited_result["objects"] if item["text"] == "学校封面")
+    assert edited_cover["format"]["alignment"] == "center"
+    assert edited_cover["format"]["spaceAfter"] == "12pt"
+    assert edited_cover["format"]["keepWithNext"] is True
     assert set(edited_result["document"]) >= {
         "headers",
         "footers",
