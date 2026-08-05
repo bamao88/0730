@@ -780,9 +780,12 @@ M3。学校模板端采用绿地 Tool 面，不为兼容当前 `docx_*` Tool 而
   → Skill scripts 编译 review record 与 artifact spec
   → template_build（candidate）
   → template_freeze（唯一 frozen 发布边界）
+  ↺ 任一步错误或结果不合理时，由 Agent 修正决定/操作并回到相应步骤
 ```
 
-这是一种可调整的 Agent 操作方法，不是应用壳状态机。五个 Tool 各自合同为：
+这是一种可调整的 Agent 操作方法，不是应用壳状态机。Agent 是任务和最终产物 owner：
+检查每次脚本/Tool 输出，根据 error/finding 或自己的语义/视觉判断继续修正；Tool 只负责
+单次调用合同。五个 Tool 各自合同为：
 
 - `template_observe` 建立/查询不可变 snapshot，返回结构、可见对象、有效样式、PDF/图片、
   页面映射和不支持内容，不替 Agent 做语义选择；
@@ -793,6 +796,11 @@ M3。学校模板端采用绿地 Tool 面，不为兼容当前 `docx_*` Tool 而
 - `template_build` 绑定最终 hash、语义清单、样式来源和视觉 findings，只编译 candidate；
 - `template_freeze` 独立重读 candidate 与来源，验证 package、hash、槽位、固定内容、
   manual/gap、最终逐页审查、blocking findings、旧引用和 bundle 完整性，原子发布 frozen。
+
+Tool 返回 `ok` 不等于任务完成，返回 `blocked` 也不自动等于任务无法继续。mutate 成功但
+compare 发现误伤、build/freeze 拒绝或 freeze 成功后仍发现语义/视觉错误时，Agent 必须
+回到相应环节修正并重新执行。只有缺少必要用户裁决、授权材料或不可替代外部能力且没有
+安全修正路径时，才报告真实阻塞。
 
 `template_mutate` 必须支持清文字保留容器、删除行内片段、删除完整容器、删除稳定边界块、
 清空单元格保留网格、解包内容控件保留内容六种删除模式，以及段落/单元格/段落流/物理
@@ -837,7 +845,8 @@ references 和行为用例位于 `docs/plans/docfit-school-extract-v2-draft/`，
 表格、分节、页眉页脚和分页误伤；expected/unexpected diff 与自动图片范围；build 不得
 发布 frozen；freeze 能独立拒绝 hash 不一致、来源变化、旧 snapshot、缺页审查、blocking
 finding 和不完整 bundle。Skill eval 观察 Agent 是否迁移说明语义、交叉验证样式、正确
-选择删除/槽位、解释图片并拒绝把 candidate 自报为 frozen。这些是普通产品门，不是延期
+选择删除/槽位、解释图片、在 Tool error/finding 后继续修正，并拒绝把 candidate 自报为
+frozen。这些是普通产品门，不是延期
 的 M3 Eval。
 
 完成上述实现和证据之前，只能声称设计合同已批准；不得声称当前

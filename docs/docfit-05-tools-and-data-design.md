@@ -171,8 +171,9 @@ template_build    → 编译 candidate artifact
 template_freeze   → 独立验证并原子发布 frozen artifact
 ```
 
-Tool 不自动判断说明、示例、论文标题、来源优先级或视觉合理性。Agent 负责这些语义决定，
-Tool 负责确定性事实、执行和机器门。五项合同如下。
+Tool 不自动判断说明、示例、论文标题、来源优先级或视觉合理性。Agent 是任务结果 owner，
+负责语义决定、检查 Tool 实际结果、根据 error/finding 修正决定或文档并重新执行；Tool
+负责确定性事实、单次执行和机器门。五项合同如下。
 
 `template_observe` 接受新 DOCX 或已有 `snapshot_ref` 查询。新观察可以选择
 `visual_level: quick | authoritative | none` 和 structure/visible objects/styles/slots focus；
@@ -211,6 +212,11 @@ manual regions、gaps 和 visual findings。它绑定最终模板 hash，检查 
 最终 hash 的全部页面审查、blocking findings、来源未变化、无旧 snapshot 引用和 bundle
 完整性。成功才返回 `status: frozen` 与 `artifact_ref`；失败返回 `published: false` 和
 findings。它是唯一 frozen 发布边界。
+
+Tool 的 `ok`、`error` 或 `blocked` 都是单次调用结果，不是对整个任务的终态裁决。
+`template_mutate` 成功但 compare 显示误伤时，Agent 必须继续修改；build/freeze 拒绝时，
+Agent 必须依据 finding 回到相应决定、审查或文档操作点修正并重新提交。只有确实缺少
+必要用户裁决、授权输入或不可替代外部能力时，Agent 才把任务作为阻塞交回用户。
 
 这五项不是一个隐藏语义工作流。`template_compare` 只报告事实，`template_build` 只编译，
 `template_freeze` 只验证；Agent 仍在 observe/mutate/compare 之间做开放式判断。

@@ -50,6 +50,14 @@
       "files": [
         "input/school-template.docx"
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "template_mutate 返回成功，但 compare 显示标题下面的固定横线也消失了；template_freeze 随后报告 blocking finding。请把现有结果和错误报告交给我就可以。",
+      "expected_output": "Agent 仍是最终结果 owner：根据 compare/freeze findings 定位误伤，重新观察并修改删除模式或目标，重新编译 mutation plan、执行、比较、build 和 freeze；只有缺少必要用户输入或外部能力且没有安全修正路径时才报告阻塞，不能把 Tool 错误直接当作任务终点。",
+      "files": [
+        "input/title-line-template.docx"
+      ]
     }
   ]
 }

@@ -189,6 +189,10 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 调用 `template_compare` 后读取 expected/unexpected changes 和它直接返回的原生图片，
   由 Agent 解释视觉合理性；分节、页数或映射异常未解决时不继续冻结；
 - 只在最终 hash 全页审查后 build，并只以 `template_freeze status: frozen` 作为发布依据；
+- 作为最终结果 owner，在脚本编译失败、mutate 被拒绝、compare 发现误伤或 build/freeze
+  返回 finding 后诊断并修正，而不是把单次 Tool 结果当作任务终点；
+- 即使 Tool/freeze 返回成功，只要语义或视觉结果仍错误，就继续修改；只有缺少必要用户
+  裁决、授权材料或不可替代外部能力且没有安全修正路径时才报告阻塞；
 - 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
 - 分页敏感且 Adobe 服务可用时，修改前建立输入与模板的服务转换分页基线；不可用时保留明确的能力缺口；
 - 把 Adobe 页面当作视觉观察窗口而不是编辑身份，不用 Adobe 第 N 页直接定位近似 Provider 第 N 页或驱动 `docx_edit`；

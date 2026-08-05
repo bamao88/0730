@@ -25,9 +25,11 @@ template_build
 template_freeze
 ```
 
-它们分别负责观察、执行修改、前后对账、编译候选产物和独立冻结。Agent 负责材料语义、
-删除意图、槽位责任、来源冲突和视觉合理性的判断；Tool 负责可重复的文档事实、修改、
-验证和原子发布。
+它们分别负责观察、执行修改、前后对账、编译候选产物和独立冻结。Agent 是任务和最终
+产物的 owner：既负责材料语义、删除意图、槽位责任、来源冲突和视觉判断，也负责检查
+每次脚本/Tool 结果；发现失败、误伤或不符合目标时，修改决定或操作并重新执行，直到
+产物正确冻结或出现当前范围内无法解决的真实阻塞。Tool 负责可重复的文档事实、修改、
+验证和原子发布，不承担最终任务结果。
 
 生产 Skill 包含三个确定性“决策编译”脚本，把 Agent 的语义判断规范化为 Tool 可稳定
 消费的 typed JSON：mutation plan、visual review record 和 artifact spec。脚本不读取或
@@ -38,7 +40,7 @@ template_freeze
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 推荐做法、判断步骤、删除与槽位决策原则、冲突处理、视觉解释、询问用户的时机 | 实现 DOCX 操作、宣称机器验证成功 |
+| Skill | 推荐做法、判断步骤、结果检查、错误诊断、返工规则、删除与槽位决策原则、冲突处理和询问用户的时机 | 实现 DOCX 操作、把 Tool 成功等同于任务完成 |
 | Skill scripts | 把 Agent 已完成的语义决定校验、规范化并编译为版本化 Tool 输入 | 观察/修改 DOCX、生成语义决定、证明视觉正确、发布产物 |
 | Tool | 不可变观察、带前置条件的原子修改、结构与视觉差异、候选编译、独立冻结 | 判断哪个“标题”是论文标题、决定说明是否该删、解释版式是否合理 |
 | references | 多场景复用但不宜全部放在主文件的判断方法，以及决策文件/编译器的使用合同 | 学校事实、脚本实现源码、完整 Tool 手册、固定工作流状态机 |
@@ -46,7 +48,8 @@ template_freeze
 
 `Skill` 可以明确告诉 Agent 通常先做什么、后做什么，以及每一步的判断标准。这是一种
 可调整的操作方法，不是由程序强制的工作流状态机。Agent 可以按证据需要回到观察、修改
-或询问用户，但不能绕过冻结验证取得 `frozen` 状态。
+或询问用户；Tool/脚本错误和 compare/freeze findings 是返工输入，不是自动终点。Agent
+不能绕过冻结验证取得 `frozen` 状态，也不能仅凭 freeze 成功忽略仍可见的语义或视觉错误。
 
 ## 3. Skill 的推荐操作方法
 
@@ -62,6 +65,7 @@ template_freeze
   → Skill script 编译 review record 与 artifact spec
   → Tool 编译 candidate
   → Tool 独立验证并发布 frozen
+  ↺ 任一步发现错误时，Agent 回到相应决定、观察或修改点继续修正
 ```
 
 Agent 在这个过程中应完成以下工作：
@@ -74,10 +78,11 @@ Agent 在这个过程中应完成以下工作：
 5. 将文字要求与模板的最终有效格式交叉验证；冲突不能靠样式名、历史经验或常识消解。
 6. 对每个修改给出明确目标、前置指纹、删除模式或槽位合同，由 Skill script 编译并校验
    mutation plan，再交给 Tool 执行。
-7. 阅读结构差异和 Tool 直接返回的图片，判断变化是合理结果、需要继续修改，还是必须
-   询问用户。
+7. 阅读结构差异和 Tool 直接返回的图片；预期变化缺失、出现误伤或视觉结果不合理时，
+   修改决定/操作并重新执行，不能只把 finding 记录下来。
 8. 把视觉解释编译为 review record，把最终内容责任编译为 artifact spec；只将这些绑定
-   已确认最终快照的结构化输入交给 build。只有独立冻结通过后才交付 frozen artifact。
+   已确认最终快照的结构化输入交给 build。build/freeze 拒绝时根据 findings 返回对应环节
+   修正；只有独立冻结通过且 Agent 确认最终结果正确后才交付 frozen artifact。
 
 ## 4. 三个生产 Skill 脚本
 
@@ -255,6 +260,12 @@ candidate-template-artifact/
 `status: blocked`、`published: false` 和 findings，不发布半成品。只有这个 Tool 能把
 `candidate` 变为 `frozen`。
 
+`blocked` 是本次冻结调用的机器结果，不自动等于任务无法继续。Agent 必须把 finding
+定位到观察、语义决定、mutation、视觉审查或 artifact spec，修正后重新 build/freeze。
+同理，任一 Tool 返回 `ok` 只表示调用成功；如果 Agent 仍发现语义或视觉错误，必须继续
+修改。只有缺少用户裁决、授权输入或不可替代外部能力，并且没有安全修正路径时，才把
+任务报告为真正阻塞。
+
 ## 6. 冻结产物的最小语义
 
 `template-artifact.json` 的物理 schema 由 Tool 合同定义，长期必须表达以下语义：
@@ -350,6 +361,8 @@ Skill eval 至少观察 Agent 是否：
 - 选择与意图匹配的删除模式和槽位语义；
 - 阅读 compare 返回的原生图片并解释变化；
 - 不把 candidate、局部视觉检查或 Tool 成功自报成 frozen。
+- 在 mutate/compare/build/freeze 返回错误或不符合目标的结果后继续诊断和修正，而不是
+  把 Tool finding 直接交付给用户。
 
 ## 10. 实施边界
 

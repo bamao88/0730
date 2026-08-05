@@ -69,6 +69,11 @@ Knowledge，但使用按任务域注册的 Tool 面，并且只通过冻结模�
 artifact，其中包含可独立打开的干净模板、绑定精确 hash 的 manifest、逐页视觉审查和
 freeze report。对下游而言这是一个产物 Interface，而不是四个可分别替换的交付物。
 
+主 Agent 是学校模板任务和最终产物的 owner。它不仅形成语义决定，还要检查每次脚本和
+Tool 的实际结果；编译失败、修改被拒绝、compare 发现误伤、build/freeze 返回 finding，
+或 Tool 成功但结果仍不合理时，Agent 必须诊断原因、修正决定/操作并重新执行。Tool
+保证单次调用合同，不承担最终任务结果。
+
 ### 3.2 推荐操作方法
 
 Skill 明确指导 Agent：
@@ -80,13 +85,16 @@ Skill 明确指导 Agent：
 5. 交叉验证文字要求与模板最终有效格式，材料不能裁决的高影响冲突询问用户；
 6. 选择最小安全删除模式和完整槽位语义，用 Skill script 编译 canonical mutation plan，
    再由 `template_mutate` 原子执行；
-7. 用 `template_compare` 对账结构变化并直接查看它返回的原生图片，由 Agent 解释结果；
+7. 用 `template_compare` 对账结构变化并直接查看它返回的原生图片；结果错误时由 Agent
+   形成纠正决定并重新修改/比较；
 8. 用 Skill scripts 把 Agent 的视觉判断编译为 review record，把最终语义清单编译为
    artifact spec，再交给 `template_build` 生成 candidate；
-9. 由 `template_freeze` 独立重读并发布 frozen artifact。
+9. 由 `template_freeze` 独立重读；根据 findings 返回相应环节修正，直到发布正确的
+   frozen artifact，或出现当前范围内无法解决的真实阻塞。
 
-这是可按证据回退或重复的推荐方法，不是应用壳的固定调用图。Agent 做语义判断；Skill
-scripts 把决定校验、规范化并序列化；Tool 做事实、执行、对账和发布。
+这是可按证据回退或重复的推荐方法，不是应用壳的固定调用图。Agent 负责语义判断、结果
+检查、错误诊断、返工和最终交付；Skill scripts 把决定校验、规范化并序列化；Tool 做
+事实、执行、对账和机器发布门。
 
 ### 3.3 删除、槽位与样式判断
 
@@ -128,7 +136,9 @@ canonical 序列化；失败时不写部分输出。它们不读写 DOCX、不�
 `template_build` 只能产生 candidate。只有 `template_freeze` 独立验证 package、hash、槽位
 唯一性与基数、固定内容指纹、manual/gap、最终逐页审查、blocking findings、来源未变化、
 引用时效和 bundle 完整性后，才能原子发布 frozen。失败时不发布，Agent 不能用最终文本
-或先前 Tool 成功代替这一结果。
+或先前 Tool 成功代替这一结果。freeze 失败后 Agent 应根据 finding 修正并重试；freeze
+成功但 Agent 仍发现语义/视觉错误时也不得交付。只有缺少必要用户裁决、授权材料或不可
+替代外部能力且没有安全修正路径时，才报告阻塞。
 
 ## 4. `convert-thesis`
 
@@ -504,6 +514,8 @@ SKILL.md 或 script 源码，而由共享类型模型维护。
 - 是否出现固定阶段、状态或 checkpoint？
 - 学校模板生产是否由三个 Skill 决策编译脚本衔接五个 `template_*` Tool，同时没有让
   脚本或一个大 Tool 自动做完语义判断？
+- Agent 是否作为最终结果 owner，在脚本/Tool 失败、compare 误伤或 freeze finding 后继续
+  诊断和修正，而不是把单次 Tool 结果当作任务终点？
 - 是否在修改前、布局变化后和最终交付前使用了当前图片证据，而不是只看结构数据或旧截图？
 - 是否错误地把页码当成稳定编辑身份，或把 Adobe 与 CLI 的同页码当成同一内容范围？
 - Adobe 转换是否遵守缓存和调用额度，只用于首次 baseline 与必要的 candidate verification？

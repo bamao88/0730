@@ -76,7 +76,9 @@ DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调�
 两个 Skill 的目标职责不同：学校提取 Skill 产出冻结模板 Interface，转换 Skill 消费
 该 Interface 并产出最终论文。Skill 可以给出可调整的操作步骤，说明何时观察、如何选择
 删除模式和槽位语义、怎样解释比较结果；其 bundled scripts 把 Agent 已完成的语义决定
-确定性编译为 Tool typed input，但不替 Agent 判断或操作 DOCX。Skill 不把这些建议变成持久化状态机。模板 hash
+确定性编译为 Tool typed input，但不替 Agent 判断或操作 DOCX。主 Agent 是任务和最终
+产物的 owner：它检查每次脚本/Tool 结果，发现失败、误伤或结果不合理时修正并重新执行；
+Tool 的单次成功/失败不是任务终态。Skill 不把这套自适应返工变成持久化状态机。模板 hash
 绑定、槽位唯一定位、原子写入、固定内容保护、源内容覆盖与“失败不发布”属于 Tool/
 应用壳的确定性合同。把这些机制放进现有五类资产，不新增 Harness 或工作流节点。
 
