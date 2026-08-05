@@ -16,9 +16,9 @@ Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独�
 源内容覆盖门；实施必须遵循 06 的独立候选切片。本文件以下部分描述目标合同，不能
 用来声称当前实现已经完成该修订。
 
-两个 Skill 采用显式渐进式披露：`SKILL.md` 保留任务、输入、两个产物和通用规则，并
-指向同目录 `references/index.md`。索引按目录、封面、声明、页眉页脚等论文部件组织，
-主 Agent 只加载当前文档实际包含的特殊部件，不按处理阶段逐一读取 reference。
+两个 Skill 采用显式渐进式披露：`SKILL.md` 保留任务、输入、两个产物、通用任务模型和
+真实失败提炼的高风险规则；同目录 references 只展开模板模型、Word 行为或其他可复用
+问题机制，不按处理阶段或封面、目录等输入部件逐一枚举。
 
 ## 1. Skill 在架构中的位置
 
@@ -28,8 +28,8 @@ Skill 把论文转换经验交给 Claude Agent，但执行权始终留在 Claude
 
 - 用户要完成什么；
 - 输入和两个稳定交付产物分别是什么；
-- 模板提取或论文转换要遵守哪些通用规则；
-- 当前论文包含哪些需要特殊处理的部件；
+- 模板提取或论文转换采用什么通用任务模型；
+- 哪些已经发生过的高风险错误需要特别避免；
 - 哪些行为禁止，以及最终回复提供什么。
 
 Skill 不定义固定阶段、判断状态、checkpoint、任务队列或工具调用图，也不保存学校具体
@@ -37,8 +37,8 @@ Skill 不定义固定阶段、判断状态、checkpoint、任务队列或工具�
 由脚本、Tool/App 与测试强制，不复制成 L0 检查清单。
 
 五个 DocFit Tool 的名称、用途、参数和错误语义已经通过 Claude Agent SDK 注册给 Agent；
-Skill 不重复 Tool 路由或恢复手册。references 只补充目录、封面、表单、页眉页脚等论文
-部件的特殊处理。
+Skill 不重复 Tool 路由或恢复手册。references 只展开主文件不宜完整承载、但仍属于当前
+任务操作手册的模板模型、Word 行为和失败机制。
 
 ## 2. 批准的领域 Skill
 
@@ -72,8 +72,10 @@ Skill 使用模块化通用 Knowledge 解释当前材料并清理模板；它不
 输出只有两个：可独立打开的冻结干净模板 DOCX，以及绑定该模板精确 hash 的槽位索引。
 来源 hash、必要证据、冲突、不确定性、manual 和 gap 都是槽位索引中的字段，不形成
 额外交付文件。每个槽位至少表达任务内唯一
-`slot_id`、冻结快照中的唯一 locator、预期内容种类（标量、段落流、复合内容或
-manual）和基数。只能人工处理的区域必须显式标记，无法安全表达的区域进入 gap。
+`slot_id`、冻结快照中的唯一 locator、预期内容种类（标量、段落流或复合内容）和基数。
+索引同时区分固定、填充、生成、重复、条件、人工和未决责任；只能人工处理的区域必须
+显式标记，无法安全表达的区域进入 gap。生成区域不被压成缓存文字槽位，重复区域不把
+源示例数量冻结成最终实例基数。
 
 这里冻结的是 Interface 的语义不变量，不在 Skill 中锁定尚未经过实现 Preflight 的
 JSON 字段布局。Skill 不创建 `school profile`、学校目录、跨任务规则包或 Knowledge
@@ -205,8 +207,8 @@ blocking finding；DOCX 能打开、Adobe 转换成功或结构验证通过都�
 - 结构检查和页面渲染冲突时保留两类证据，不静默选择其中一个。
 
 这些是实现和质量设计中的行为约束，不逐条复制进 L0 `SKILL.md`。Skill 说明转换任务；
-Tool 注册信息说明能力；脚本、Tool/App 和测试保证执行正确性；special-part references
-只说明目录、前置页、页眉页脚等内容怎样进入两个最终产物。
+Tool 注册信息说明能力；脚本、Tool/App 和测试保证执行正确性；references 只展开模板
+语义和 Word 风险，不重复确定性执行合同。
 
 ### 4.6 Tool 能力来源
 
@@ -378,34 +380,42 @@ Subagent 只分析。主 Agent 合并目录与正文标题、引用与参考文�
 通用概念、识别方法、解释原则或处理模式作为产品 Knowledge 的候选变更；该变更
 仍需独立评审、测试并随新的产品版本发布。
 
-## 7. 模板文字分类
+## 7. 模板责任模型
 
-`docfit-school-extract` 使用产品通用 Knowledge 来理解并标注模板文字：
+`docfit-school-extract` 不只给可见文字分类，而是把学校材料中的具体表达转换为模板责任：
 
 ```text
-fixed_content       最终必须保留的学校固定文字
-conditional_content 根据学生类型决定是否出现
-slot_placeholder    等待学生内容填入的位置
-format_instruction  只用于说明格式、最终应清理的文字
+fixed        学校拥有、后续不得随意改写的内容和结构
+fill         等待后续内容进入的稳定接口
+generate     由标题、题注或其他关系生成的区域
+repeat       承接可变数量同构内容的区域
+conditional  只在已记录条件成立时出现的区域
+manual       签字、盖章、审批等人工责任
+remove       不进入成稿、但删除前必须先迁移其有效语义的示例或说明
+unresolved   当前材料或能力不足以可靠解释的内容
 ```
 
-这是一种 Agent 判断方法，不是处理阶段。无法可靠分类时保留原文并询问，不猜测性
-删除；分类结果作为冻结模板产物的证据进入转换端。`convert-thesis` 不重新分类学校
-模板，只在学生内容与已标注槽位/固定内容冲突时使用非对称证据门决定保留、询问或报告。
+这是一种通用处理模型，不是阶段或固定分类器。同一区域可以组合多种责任；例如表单可以
+同时具有 fixed、fill、conditional 和 manual 部分。颜色、括号、下划线、空白或源文件中
+出现了几个示例，都不能单独决定责任。
+
+无法可靠解释时保留原文或结构并进入 unresolved，不猜测性删除。说明和示例只有在其
+承载的结构、格式、顺序、必填性和生成规则已经迁移后才能进入 remove。`convert-thesis`
+不重新分类学校模板，只消费冻结模板索引已经表达的责任。
 
 ## 8. Skill 内容组织
 
-信息按消费成本分为四层：L0 是 `SKILL.md` 中的任务、输入、两个产物和通用规则；L1
-是同目录 `references/` 中按论文部件组织的特殊处理；L2 是随产品发布的通用 Knowledge；
-L3 是当前任务材料、冻结模板产物和 Tool 证据。下层可以更具体，但不得把学校事实向上
-晋升，也不得把 Tool 注册说明或机器不变量重复进 Skill。
+信息按消费成本分为四层：L0 是 `SKILL.md` 中的任务、输入、两个产物、通用任务模型和
+高频风险；L1 是同目录 `references/` 中展开的模板接口模型、Word 行为和已验证失败机制；
+L2 是随产品发布、跨 Skill 使用的通用 Knowledge；L3 是当前任务材料、冻结模板产物和
+Tool 证据。下层可以更具体，但不得把学校事实向上晋升，也不得把 Tool 注册说明或机器
+不变量重复进 Skill。
 
 ```text
 <skill>/
 ├── SKILL.md
 └── references/
-    ├── index.md      # SKILL.md 唯一入口，按论文部件导航
-    └── ...           # 目录、封面、声明、页眉页脚等部件说明
+    └── ...           # 按可复用问题机制组织，由 SKILL.md 直接指向
 ```
 
 Tool 实现不复制到 Skill。两个领域 Skill 的 references 保存任务操作指引；Knowledge Package
@@ -416,18 +426,15 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
 场景经验也不保存可直接套用的样式值、国家标准数值表或通用缺省补全表；
 这些值不进入 Agent 的 Skill/Knowledge 上下文。
 
-适合进入 references 的特殊论文部件包括：
+适合进入 references 的内容必须同时满足：它会在同一 Skill 的多类任务中复用；主文件
+完整展开会显著增加负担；它仍然是操作指引而不是跨 Skill Knowledge 或 Tool 实现。
+reference 应围绕问题机制组织，例如模板接口如何表达、Word 可见结果为何会与结构/缓存
+不同、哪些失败假设已经在真实任务中反复出现。封面、目录、声明等可以作为这些机制的
+示例，但不各自形成默认文件和固定处理路线。
 
-- 模板说明和示例文字；
-- 封面、扉页、声明、授权页与签章表单；
-- 目录、图目录和表目录；
-- 分节、页眉页脚、页码和分页边界；
-- 后续真实样本证明需要独立说明的其他论文部件。
-
-这些说明帮助 Agent 处理论文内容，不扩展 Tool 数量，也不定义固定路线。
-
-每份 Skill 只引用自己的 `references/index.md`；index 列出同目录真实存在的部件文件，
-不跨目录引用另一份 Skill。契约测试验证索引完整性和两棵 Skill 的领域隔离。
+每份 Skill 只引用自己的 references，不跨目录引用另一份 Skill。文件较少时由
+`SKILL.md` 直接指向；只有真实文件数量和导航收益证明需要时才增加 index。契约测试验证
+所有引用存在和两棵 Skill 的领域隔离，不把某种目录形状永久写死。
 
 当前两个 Skill 不包含可执行脚本。主 Agent 现已拥有受信任 Bash；未来若 Skill 增加脚本，
 必须明确命令、输入输出、凭据处理和测试边界，且不能把 shell 输出、凭据或文档正文写入
@@ -441,11 +448,9 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
 docfit-school-extract/
 ├── SKILL.md
 └── references/
-    ├── index.md
-    ├── template-text.md
-    ├── front-matter-and-forms.md
-    ├── table-of-contents.md
-    └── sections-headers-footers.md
+    ├── template-model.md
+    ├── word-behavior.md
+    └── failure-patterns.md
 ```
 
 hash、locator、原子发布、固定内容保护和完成门属于脚本或 Tool/App，不进入 Skill
@@ -476,7 +481,9 @@ hash、locator、原子发布、固定内容保护和完成门属于脚本或 To
   `AgentDefinition.skills` 的虚假契约？
 - Subagent 是否只分析，所有 render、edit、validate、用户询问和跨范围合并是否仍由
   主 Agent 负责？
-- `SKILL.md` 是否只引用本 Skill 的部件索引，索引中的 reference 是否真实存在？
+- `SKILL.md` 是否用稳定任务模型解释复杂模板，而没有按输入部件照抄处理动作？
+- references 是否按可复用问题机制组织、引用真实存在，并保持本 Skill 的领域隔离？
+- 从真实复盘吸收的内容是否已经去除学校名称、具体数值和一次性修复配方？
 - 两个 Skill 是否只通过冻结模板产物 Interface 耦合，而没有互相点名、要求固定调用
   顺序或共享隐藏状态？
 - 每个自动槽位是否在冻结模板 hash 内唯一，manual/gap 是否显式，快照变化后旧 locator

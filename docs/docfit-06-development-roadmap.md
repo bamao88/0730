@@ -730,17 +730,19 @@ Agent 直接文件写入的 sandbox。
    input、文档产物与后端凭据。系统提示要求不输出凭据/正文，观测 projector 不保留
    命令、路径或内容，但这不是文件系统 sandbox；Subagent 不继承 Bash/Write。
 
-当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为每个 Skill 只
-引用同目录 `references/index.md`，再由 index 按目录、封面、声明、页眉页脚等论文部件
-列出真实文件。Skill 不重复 SDK 已注册的 Tool 名称、参数或错误恢复说明。两棵 Skill
-不跨目录引用彼此的 references，契约测试验证索引完整性和领域隔离。确定性重复工作可
+当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为主文件提供完整
+通用任务模型，并直接引用同目录中按模板模型、Word 行为和失败机制组织的少量 reference。
+不要求额外 index，也不按目录、封面、声明等输入部件枚举文件。Skill 不重复 SDK 已注册
+的 Tool 名称、参数或错误恢复说明。两棵 Skill 不跨目录引用彼此的 references，契约测试
+验证引用完整性和领域隔离。确定性重复工作可
 由现有 Tool/App 或经测试的 Skill script 承担，但不新增第六类产品资产。
 
 确定性门新增：权限契约逐项覆盖直接读取允许根、input/其他任务、`.env`、`.git`、
 凭据、`..`、缺失路径、搜索树敏感文件与 symlink 逃逸，并证明主 Agent Bash/Write
-自动批准、无路径 hook、Subagent 明确拒绝二者；Skill 契约证明 `SKILL.md` 引用本地
-index，且 index 中的每个 reference 都存在；doctor 检查主 Agent 可见面、直接读取/Agent 两类权限 hook、Bash/Write
-自动批准和 Subagent 最小面。live `path-tools` smoke 必须实际调用 Read/Glob/Grep 读取
+自动批准、无路径 hook、Subagent 明确拒绝二者；Skill 契约证明 `SKILL.md` 引用的本地
+reference 都存在且不跨 Skill 目录，但不把 index 或具体文件数量写死；doctor 检查主
+Agent 可见面、直接读取/Agent 两类权限 hook、Bash/Write 自动批准和 Subagent 最小面。
+live `path-tools` smoke 必须实际调用 Read/Glob/Grep 读取
 授权 canary，在临时 scope 中用 Write 写入 work/input/任务外 canary，并用 Bash 读取任务
 外 Write 产物；任务外 secret 只验证直接 Read 拒绝，不声称 Bash 无法读取。原 image、
 ask-user、denied-tools、subagent smoke 继续通过，其中 denied-tools 只验证 Edit/Web 与
@@ -794,13 +796,15 @@ Content Ledger。目标数据流固定为：
 - 冻结模板 DOCX 可独立打开且以精确 SHA-256 标识；
 - 槽位索引绑定该 hash；每个 `slot_id` 只在该快照内成立，locator 唯一，内容种类与
   基数明确；manual 区域和无法安全表达的 gap 显式；
+- 索引能够区分固定、填充、生成、重复、条件、人工和未决责任；生成机制不被压成缓存
+  文本槽位，源示例数量不被误当作固定实例基数；
 - 页码、bbox 或单个近似文字命中不能单独证明槽位唯一；模板变化后旧 locator 失效；
 - 模板固定内容与可填区域可确定性区分，未经当前证据不得修改固定内容；
 - 学生源内容形成绑定 source hash 的任务级清单；每项必须放置到明确槽位，或有明确且
   可审计的不放置原因；缺项、重复、无理由消失和越过 manual/gap 阻止完成；
-- Skill 只说明论文转换任务、两个产物、通用规则和特殊论文部件；不维护判断阶段，也不
-  复制 Tool 使用说明。hash、唯一 locator、内容覆盖、原子发布和失败不发布由程序合同
-  强制。
+- Skill 说明论文转换任务、两个产物、通用任务模型、必要任务步骤和真实高风险规则；
+  不维护判断阶段，也不复制 Tool 使用说明。hash、唯一 locator、内容覆盖、原子发布和
+  失败不发布由程序合同强制。
 
 开始实现前必须新建并批准执行计划，完成以下 Preflight 决策：在不改变五个公开 Tool
 名称的前提下，确定产物文件名与 schema 版本、槽位 locator 的最小可实现形态、冻结
@@ -990,7 +994,8 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
   变化后不得静默重绑，manual/gap 必须显式；
 - **内容覆盖可阻断**：目标修订实施后，学生源内容逐项具有放置或明确不放置结果，
   覆盖未闭合不能完成；这不升级为全局 Content Ledger；
-- **Skill 可渐进披露**：`SKILL.md` 以明确项目相对路径按需读取 references；主 Agent
+- **Skill 可渐进披露**：`SKILL.md` 自身提供通用任务模型，并以明确项目相对路径按需读取
+  按问题机制组织的 references；主 Agent
   的直接 Read/Glob/Grep 只进入项目 Skill、产品 Knowledge 和当前任务批准根；受信任
   Bash/Write 可绕过这项直接读取边界，文档必须如实说明；
 - **Subagent 配置最小**：只有一个 SDK 接线级 `docfit-unit-analyst`，类型白名单和
