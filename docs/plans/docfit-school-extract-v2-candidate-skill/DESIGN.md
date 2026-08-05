@@ -296,6 +296,7 @@ candidate-template-artifact/
 
 ```text
 docs/plans/docfit-school-extract-v2-candidate-skill/
+├── DESIGN.md
 ├── SKILL.md
 ├── evals/
 │   └── evals.json
