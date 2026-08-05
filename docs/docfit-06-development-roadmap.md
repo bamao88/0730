@@ -119,8 +119,9 @@ Knowledge Package 的静态加载与完整性校验。真实 DOCX 行为和两�
 后端职责不同，只在五个 Tool 内做薄适配，不抽取共享 Provider 接口。只有
 未来真实接入第三个引擎，并且确实需要动态选择或故障转移时，才重新评估该接口。
 
-目标职责修订后，学校提取仍只产生当前任务资产，但资产形态将扩展为冻结干净模板、
-hash 绑定槽位索引和证据/未决项；转换只消费该 Interface。该目标尚未在 P1/M2 代码中
+目标职责修订后，学校提取仍只产生当前任务资产，并且只交付冻结干净模板和 hash 绑定
+槽位索引；证据/未决项写入索引。转换只消费该 Interface，并且只交付最终 DOCX 和
+`conversion-report.json`。该目标尚未在 P1/M2 代码中
 实现，不能把本段误读为当前完成声明。
 
 测试目录的职责固定为：
@@ -496,7 +497,8 @@ uv run docfit tools render .tmp/smoke/edited.docx --intent candidate_verificatio
 
 ### 6.1 目标
 
-用户通过一条 CLI 命令，实际获得最终 DOCX、预览和验证结果。这是“整个项目已经跑起来”的判定点。
+用户通过一条 CLI 命令，实际获得最终 DOCX 和 `conversion-report.json`。预览和验证数据
+留在工作目录或 report 引用中，不增加稳定交付产物。这是“整个项目已经跑起来”的判定点。
 
 ### 6.2 范围
 
@@ -728,20 +730,16 @@ Agent 直接文件写入的 sandbox。
    input、文档产物与后端凭据。系统提示要求不输出凭据/正文，观测 projector 不保留
    命令、路径或内容，但这不是文件系统 sandbox；Subagent 不继承 Bash/Write。
 
-两个领域 Skill 把详细方法拆入同目录 `references/`。`SKILL.md` 必须逐一使用明确项目
-相对路径说明何时读取，不能依赖 Skill 工具自动加载关联文件。学校提取 Skill 的首批
-references 为 evidence/conflicts、template text classification、Tool recovery、scenarios、
-本地委派说明与 output schema；转换 Skill 的首批 references 为 task evidence/conflicts、
-Tool recovery、evidence/visual review、scenarios、本地委派说明与
-editing/validation/completion。共同的 Subagent 字段和权限由架构合同定义；
-两棵 Skill 不跨目录引用共享操作手册或彼此的 references，契约测试验证本地引用完整性和
-领域隔离；当前不提供 scripts 目录。
+当前 P1 生产 Skill 仍使用逐文件 reference 路由；冻结模板候选切换时改为每个 Skill 只
+引用同目录 `references/index.md`，再由 index 按目录、封面、声明、页眉页脚等论文部件
+列出真实文件。Skill 不重复 SDK 已注册的 Tool 名称、参数或错误恢复说明。两棵 Skill
+不跨目录引用彼此的 references，契约测试验证索引完整性和领域隔离。确定性重复工作可
+由现有 Tool/App 或经测试的 Skill script 承担，但不新增第六类产品资产。
 
 确定性门新增：权限契约逐项覆盖直接读取允许根、input/其他任务、`.env`、`.git`、
 凭据、`..`、缺失路径、搜索树敏感文件与 symlink 逃逸，并证明主 Agent Bash/Write
-自动批准、无路径 hook、Subagent 明确拒绝二者；Skill
-契约证明每个 reference 都被 `SKILL.md`
-显式引用；doctor 检查主 Agent 可见面、直接读取/Agent 两类权限 hook、Bash/Write
+自动批准、无路径 hook、Subagent 明确拒绝二者；Skill 契约证明 `SKILL.md` 引用本地
+index，且 index 中的每个 reference 都存在；doctor 检查主 Agent 可见面、直接读取/Agent 两类权限 hook、Bash/Write
 自动批准和 Subagent 最小面。live `path-tools` smoke 必须实际调用 Read/Glob/Grep 读取
 授权 canary，在临时 scope 中用 Write 写入 work/input/任务外 canary，并用 Bash 读取任务
 外 Write 产物；任务外 secret 只验证直接 Read 拒绝，不声称 Bash 无法读取。原 image、
@@ -779,11 +777,11 @@ Content Ledger。目标数据流固定为：
 ```text
 学校模板 + 要求 + 可选官方示例
   → docfit-school-extract
-  → 冻结干净模板 + hash 绑定槽位索引 + 证据/未决项/gap
+  → 冻结干净模板 + hash 绑定槽位索引
 
 冻结模板产物 + 只读学生 DOCX
   → convert-thesis
-  → final.docx + visual/validation + 源内容覆盖/未执行项
+  → final.docx + conversion-report.json
 ```
 
 两个 Skill 只通过产物合同耦合。转换端不要求同一运行先触发提取 Skill，也不读取
@@ -800,9 +798,9 @@ Content Ledger。目标数据流固定为：
 - 模板固定内容与可填区域可确定性区分，未经当前证据不得修改固定内容；
 - 学生源内容形成绑定 source hash 的任务级清单；每项必须放置到明确槽位，或有明确且
   可审计的不放置原因；缺项、重复、无理由消失和越过 manual/gap 阻止完成；
-- Skill 提供从材料盘点到冻结发布的可调整默认工作方法，并保留两个不可放宽的语义
-  阈值：行动目标需要至少两个独立信号共同支持唯一性；删除或不放置需要比保留更强
-  证据。hash、覆盖、原子发布和失败不发布由程序合同强制。
+- Skill 只说明论文转换任务、两个产物、通用规则和特殊论文部件；不维护判断阶段，也不
+  复制 Tool 使用说明。hash、唯一 locator、内容覆盖、原子发布和失败不发布由程序合同
+  强制。
 
 开始实现前必须新建并批准执行计划，完成以下 Preflight 决策：在不改变五个公开 Tool
 名称的前提下，确定产物文件名与 schema 版本、槽位 locator 的最小可实现形态、冻结
@@ -980,7 +978,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 - **视觉定位可增强**：layout map 作为可选渲染产物绑定 opaque `object_ref`，后续增加 bbox 能力不修改 Skill 或 Tool 名称；
 - **固定后端被封装**：Tool 结果包含实际后端与环境证据，但 Skill 和 Agent 不依赖 OfficeCLI / Adobe SDK 私有接口；第一版不建设通用 Provider 平台；
 - **Knowledge 可版本化**：通用包随产品发布并具有 manifest、文档 hash 和 digest；学校事实只在当前任务证据中；
-- **Knowledge 可选择投影**：当前领域 Skill 选择委派所需模块，主 Agent 把模块内容、
+- **Knowledge 可选择投影**：主 Agent 选择委派所需模块，并把模块内容、
   版本/digest 和任务证据写入通用 Subagent prompt；
 - **样式来源可扩展**：未来可在不向 Agent Knowledge 增加样式值的前提下，在现有 Tool
   内部增加属性级观测、标准解析、来源和未决状态；这是扩展点，不是 M2 已实现声明；

@@ -48,7 +48,7 @@ App         用尽可能薄的方式把它们交给用户
 
 一次真实失败应优先沉淀为：
 
-- Skill 中更清楚的判断规则；
+- Skill 中更清楚的任务规则或特殊论文部件说明；
 - Knowledge 中更清楚、经过跨任务验证的通用概念、识别方法或处理模式；
 - Tool 中更可靠的确定性能力；
 - Eval 中一个可重复的失败样本和断言。
@@ -57,7 +57,7 @@ App         用尽可能薄的方式把它们交给用户
 
 ### 2.3 Deterministic operations, adaptive decisions
 
-Agent 负责语义判断，工具负责精确执行：
+Agent 负责理解论文内容并给出转换意图，工具负责精确执行：
 
 ```text
 Agent：这段是一级标题，应该使用学校规则 A
@@ -103,14 +103,14 @@ flowchart LR
     A --> SDK["Claude Agent SDK"]
     SDK --> S1["docfit-school-extract"]
     SDK --> S2["convert-thesis"]
-    S1 --> I["冻结模板产物 Interface<br/>clean template + slot index + evidence/gaps"]
+    S1 --> I["冻结模板产物 Interface<br/>clean template + slot index"]
     H["人工 / 受控适配器"] -.同一合同.-> I
     I --> S2
     SDK --> K["Knowledge"]
     SDK --> T["Tools"]
     SDK -."受路径约束的只读发现".-> R["Read / Glob / Grep<br/>Skill references + Knowledge + 当前任务"]
     SDK -."受信任且自动批准".-> W["Bash / Write<br/>无 DocFit 路径 gate"]
-    SDK -."按 Skill 判断可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
+    SDK -."Agent 可选委派".-> SA["docfit-unit-analyst<br/>只读隔离上下文"]
     SA --> RT["只读 Tool 子集<br/>inspect + visual-review"]
     T --> F["DOCX / PDF / 图片 / 检查结果"]
     RT --> F
@@ -151,23 +151,20 @@ DocFit 可以配置和使用这些能力，但不复制它们。
 
 ### 4.2 Skill
 
-Skill 是 DocFit 的主要领域判断入口。它包含：
+Skill 是 DocFit 的论文转换任务说明。它包含：
 
 - 任务适用范围；
-- 目标与完成条件；
-- 一套可随当前证据调整的默认工作方法，包括通常怎样拆分任务、哪些必要先后关系必须
-  保留，以及何时回看、分支或缩小范围；
-- 少量真正需要模型判断的原则；
-- 何时读取哪类 Knowledge；
-- 何时调用哪类 Tool；
-- 遇到不确定性时如何保留、回看或询问用户；
-- 禁止行为和常见陷阱。
+- 输入与两个稳定交付产物；
+- 通用转换规则；
+- 目录、封面、声明、页眉页脚等特殊论文部件的 reference 索引；
+- 禁止行为和最终回复。
 
-`SKILL.md` 保留目标、输入/产物、边界、默认工作方法、关键判断入口与完成条件；较长的
-冲突处理、分类示例、委派任务包、视觉/验证细节可以放入同目录 `references/`。主文件
-必须以明确项目相对路径说明何时读取每一份 reference，不能依赖 Skill 工具自动加载
-关联文件。Agent 即使尚未读取 reference，也应能从 `SKILL.md` 理解从接收材料到形成
-合格产物的完整主线。
+`SKILL.md` 保留任务、输入、两个产物、通用规则和一个明确的 reference 索引入口。
+references 按论文部件而不是处理阶段组织；索引再列出真实存在的部件文件。Agent 只读
+当前文档实际包含的特殊部件，不要求主文件为每个步骤安排一份 reference。
+
+Tool 名称、用途、参数和错误语义由 Claude Agent SDK 注册信息提供。Skill 不复制 Tool
+说明，也不维护一套可能与真实 schema 漂移的 Tool 路由表。
 
 Skill 不是：
 
@@ -178,17 +175,17 @@ Skill 不是：
 - Tool 或应用壳已经能够强制执行的机器检查清单；
 - 学校具体格式数值的存放位置。
 
-“不是工作流”不等于“不写步骤”。Skill 可以给出自然语言的任务分解、推荐顺序、条件
-分支、判断标准和注意事项；禁止的是把这些建议升级为由 DocFit 维护的固定运行阶段、
-状态转换或 Tool 调度图。像“修改前先观察”“最后一次写入后再建立 hash 绑定索引”这样
-由事实依赖决定的先后关系，应直接写清楚。
+Skill 可以简要说明需要完成的任务内容，但不把 Agent 的自然推理拆成判断阶段，也不把
+特殊论文部件强行对应到某个处理步骤。确定性的先后依赖、hash、引用失效和失败恢复由
+脚本、Tool 或应用壳执行和验证。
 
 批准的目标架构维护两个产物边界清楚的用户目标型 Skill：
 
-- `docfit-school-extract`：清理当前任务模板，发布冻结干净模板、与其 hash 绑定的槽位
-  索引，以及证据、冲突、未决项和显式 gap；它不填学生内容，也不生产跨任务学校包；
+- `docfit-school-extract`：清理当前任务模板，只发布冻结干净模板和与其 hash 绑定的槽位
+  索引；证据、冲突、未决项和 gap 包含在索引中；它不填学生内容，也不生产跨任务学校包；
 - `convert-thesis`：消费符合该 Interface 的冻结模板产物与只读学生论文，把源内容
-  放入槽位并发布最终 DOCX、视觉/验证结果和源内容覆盖结果；它不重新解释学校要求，
+  放入槽位，只发布最终 DOCX 和 `conversion-report.json`；视觉/验证结果、源内容覆盖和
+  未执行项包含在 report 中；它不重新解释学校要求，
   不改写模板固定内容，也不编造学生内容。
 
 `docfit-school-extract` 不生成可跨任务复用的学校包，也不把学校事实写入产品
@@ -196,10 +193,10 @@ Knowledge。它与 `convert-thesis` 都可以直接分析，或按当前任务�
 `docfit-unit-analyst`；两者通过产物合同而不是 Skill 名称或固定委派顺序耦合。冻结
 模板 Interface 可以由该 Skill、人工或其他受控适配器生产，只要通过同一契约门。
 
-Skill 的主要信息按四层披露：L0 `SKILL.md` 保存选择、边界、默认工作方法和关键判断；
-L1 同目录 references 保存复杂案例与详细领域方法；L2 产品 Knowledge 保存跨学校通用
-概念；L3 当前任务材料、冻结模板产物和 Tool 证据保存具体事实。机器可强制的不变量应
-下沉到 Tool、应用壳和测试，不在 L0 重复成长清单。
+Skill 的主要信息按四层披露：L0 `SKILL.md` 保存任务、输入、两个产物与通用规则；L1
+同目录 references 按目录、封面、声明、页眉页脚等论文部件保存特殊处理；L2 产品
+Knowledge 保存跨学校通用概念；L3 当前任务材料、冻结模板产物和 Tool 证据保存具体
+事实。机器可强制的不变量下沉到脚本、Tool、应用壳和测试。
 
 ### 4.3 Knowledge
 
@@ -223,8 +220,8 @@ Knowledge Package 随产品版本发布并保持只读。模块可以围绕 `cor
 自动升级为长期 Knowledge。
 
 Knowledge 是 DocFit 的资产分类，不是 Claude Agent SDK 中独立的 Knowledge Base
-runtime。应用壳把当前产品包交给主 Agent；当前 Skill 决定一次委派需要哪些模块，
-主 Agent 将选中模块的内容、ID、版本和 digest 与任务证据一起写入 `Agent` Tool
+runtime。应用壳把当前产品包交给主 Agent；主 Agent 决定一次委派需要哪些模块，并将
+选中模块的内容、ID、版本和 digest 与任务证据一起写入 `Agent` Tool
 prompt。当前 SDK 的单次 `Agent` 调用不接收动态 `skills` 参数，因此长期契约不把
 这条数据流描述成动态覆盖 `AgentDefinition.skills`。
 
@@ -395,7 +392,8 @@ AppleScript、GUI toolkit 或具体桌面实现。本地调试壳可以在组合
 ## 5. 一次任务如何运行
 
 应用壳把产品内置通用 Knowledge、用户任务、只读学生论文和通过契约检查的冻结模板
-产物交给 Claude Agent SDK。该产物包含冻结干净模板、槽位索引和证据/未决项；应用壳
+产物交给 Claude Agent SDK。该产物只包含冻结干净模板和槽位索引，证据/未决项是索引
+字段；应用壳
 只校验 shape、hash 与授权边界，不解释学校语义，也不要求它来自某个特定 Skill。
 Agent 使用 Knowledge 中的方法解释当前证据，以冻结模板工作副本为候选主干，
 把只读学生论文中的内容按槽位合同放入对应区域，并根据 Skill、任务证据和
@@ -530,11 +528,10 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 
 ## 7. 最小运行产物
 
-一次转换通常返回最终 DOCX、预览、结构化视觉审查结果，以及简短的确定性验证结果和未解决事项。具体目录、文件名和调试产物由应用与 Tool 设计决定，不属于稳定架构。
-
-学校提取目标的稳定语义产物是冻结干净模板、与其 hash 绑定的槽位索引，以及证据、
-未决项和 gap；转换目标的稳定语义产物还包括学生源内容的覆盖/不放置结果。这里冻结的
-是 Interface 语义和不变量，不是尚未通过实施 Preflight 的文件名或 JSON 字段布局。
+一次学校模板提取只交付冻结干净模板和槽位索引；一次论文转换只交付最终 DOCX 和
+`conversion-report.json`。预览、页面图片、结构化视觉审查和确定性验证文件属于工作
+目录或 Tool 内部数据，不是额外交付产物。未决项和 gap 写入槽位索引；学生源内容覆盖、
+不放置原因和验证摘要写入 conversion report。
 
 只有当一个新产物被真实调试或 Eval 反复消费时，才把它提升为稳定接口。
 
@@ -573,7 +570,7 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 8. 质量问题是否能通过 Eval 重现？
 9. 应用壳是否仍然不包含领域编排？
 10. 新增组件是否解决了已经发生的问题？
-11. 委派策略和 Knowledge 选择是否仍在领域 Skill，而不是应用壳或 AgentDefinition？
+11. 委派策略和 Knowledge 选择是否仍由主 Agent 决定，而不是应用壳或 AgentDefinition？
 12. `docfit-unit-analyst` 是否仍只有最小只读 Tool，且 `general-purpose` 与未知
     Subagent 默认拒绝？
 13. 本地观测是否仍然只读、无正文、不可控制运行，并在证据失效时明确报告不可用？
@@ -606,9 +603,9 @@ Knowledge 与证据，并只调用 inspect + visual-review。
 13. 页码是单个 render 内的视觉证据，不是跨后端稳定身份；同一文档 hash 的高频
     OfficeCLI 预览与 Adobe 交付转换通过当前快照的对象引用和锚点关联。
 14. 两个具体后端只在五个 Tool 内做职责固定的薄适配；不建设通用 Provider 平台。只有未来真实接入第三个引擎，并且需要动态选择或故障转移时，才考虑抽取通用 Provider 接口。
-15. 用户目标型 Skill 是 `docfit-school-extract` 与 `convert-thesis`；前者产生冻结干净
-    模板、hash 绑定槽位索引和当前任务证据，不生产学校 Knowledge 包；后者只消费
-    产物合同，不依赖生产者 Skill 名称。
+15. 用户目标型 Skill 是 `docfit-school-extract` 与 `convert-thesis`；前者只产生冻结干净
+    模板和 hash 绑定槽位索引，不生产学校 Knowledge 包；后者只产生最终 DOCX 和
+    `conversion-report.json`，并且只消费产物合同，不依赖生产者 Skill 名称。
 16. 两个 Skill 可按当前任务需要调用同一个 SDK 原生 `docfit-unit-analyst`；不维护
     文档单元专家目录或固定委派图。
 17. Knowledge Package 是模块化产品资产。当前 Skill 选择模块，主 Agent 通过

@@ -16,10 +16,9 @@ Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独�
 源内容覆盖门；实施必须遵循 06 的独立候选切片。本文件以下部分描述目标合同，不能
 用来声称当前实现已经完成该修订。
 
-两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标、默认工作方法与判断入口，并用
-项目相对路径指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联
-文件不会由 Skill 工具自动带入。主 Agent 虽拥有受信任 Bash，但 Skill references 的
-稳定加载契约仍是明确路径的 Read，而不是 shell 行为。
+两个 Skill 采用显式渐进式披露：`SKILL.md` 保留任务、输入、两个产物和通用规则，并
+指向同目录 `references/index.md`。索引按目录、封面、声明、页眉页脚等论文部件组织，
+主 Agent 只加载当前文档实际包含的特殊部件，不按处理阶段逐一读取 reference。
 
 ## 1. Skill 在架构中的位置
 
@@ -28,28 +27,18 @@ Skill 把论文转换经验交给 Claude Agent，但执行权始终留在 Claude
 一个 Skill 只回答：
 
 - 用户要完成什么；
-- 输入与产物分别是什么；
-- 通常可以把任务分成哪些工作部分，哪些顺序来自真实依赖，何时应调整、回看或分支；
-- 哪些事实不足以支持行动；
-- 何时读取 Knowledge；
-- 何时调用五个 DocFit Tool；
-- 哪些判断可以自主完成；
-- 哪些情况应回看、重试、询问或停止；
-- 哪些判断仍需 Agent 完成，以及什么结果可以称为完成；
-- 哪些行为绝对禁止。
+- 输入和两个稳定交付产物分别是什么；
+- 模板提取或论文转换要遵守哪些通用规则；
+- 当前论文包含哪些需要特殊处理的部件；
+- 哪些行为禁止，以及最终回复提供什么。
 
-Skill 不定义固定阶段、状态转换、checkpoint、任务队列或工具调用图，也不保存学校具体字号、页边距和固定文案。hash 绑定、唯一性校验、原子发布、固定内容保护和源内容覆盖等
-机器可强制事实不复制成 L0 检查清单。
+Skill 不定义固定阶段、判断状态、checkpoint、任务队列或工具调用图，也不保存学校具体
+字号、页边距和固定文案。hash 绑定、唯一性校验、原子发布、固定内容保护和源内容覆盖
+由脚本、Tool/App 与测试强制，不复制成 L0 检查清单。
 
-这里禁止的是运行时编排，不是领域操作说明。`SKILL.md` 应给 Agent 一条不依赖
-references 也能理解的完整任务主线，并写清通用规则、判断标准和注意事项；Agent 可以
-根据当前文件改变粒度、重复局部检查或跳过不适用分支。references 负责复杂案例、详细
-schema 和错误恢复，不负责替主文件补上一条缺失的基本做法。
-
-较长的冲突处理、模板文字分类、委派任务包、视觉复核和完成 schema 可以进入
-`references/`，但 `SKILL.md` 必须说明在什么判断下读取哪一份明确路径。Agent 可以使用
-Read/Glob/Grep 在批准根内发现相关材料；Skill 不应假定关联文件自动加载，也不应把
-Bash、管道、重定向或网络作为读取 references 的必要条件。
+五个 DocFit Tool 的名称、用途、参数和错误语义已经通过 Claude Agent SDK 注册给 Agent；
+Skill 不重复 Tool 路由或恢复手册。references 只补充目录、封面、表单、页眉页脚等论文
+部件的特殊处理。
 
 ## 2. 批准的领域 Skill
 
@@ -57,8 +46,8 @@ Bash、管道、重定向或网络作为读取 references 的必要条件。
 
 | Skill | 用户目标 | 主要产物 |
 |---|---|---|
-| `docfit-school-extract` | 把当前任务学校材料整理成可安全填写的模板 | 冻结干净模板 DOCX、hash 绑定槽位索引、证据/未决项/gap |
-| `convert-thesis` | 把学生论文内容放入合格的冻结模板产物 | 最终 DOCX、视觉/确定性验证、源内容覆盖与未执行项 |
+| `docfit-school-extract` | 把当前任务学校材料整理成可安全填写的模板 | 冻结干净模板 DOCX、hash 绑定槽位索引 |
+| `convert-thesis` | 把学生论文内容放入合格的冻结模板产物 | 最终 DOCX、`conversion-report.json` |
 
 模板提取可以作为独立用户目标，也可以服务当前转换任务。两个 Skill 共享通用
 Knowledge 和五个 Tool，但只通过冻结模板产物 Interface 耦合，不要求按“先提取、
@@ -80,8 +69,9 @@ Skill 使用模块化通用 Knowledge 解释当前材料并清理模板；它不
 
 ### 3.2 输出边界
 
-输出包括：可独立打开的冻结干净模板 DOCX；绑定该模板精确 hash 的槽位索引；来源
-hash、证据位置、观察事实、冲突、不确定性和适用范围。每个槽位至少表达任务内唯一
+输出只有两个：可独立打开的冻结干净模板 DOCX，以及绑定该模板精确 hash 的槽位索引。
+来源 hash、必要证据、冲突、不确定性、manual 和 gap 都是槽位索引中的字段，不形成
+额外交付文件。每个槽位至少表达任务内唯一
 `slot_id`、冻结快照中的唯一 locator、预期内容种类（标量、段落流、复合内容或
 manual）和基数。只能人工处理的区域必须显式标记，无法安全表达的区域进入 gap。
 
@@ -179,20 +169,13 @@ Agent 根据上下文、页面、样式和相邻内容判断语义。Tool 只提
 blocking finding；DOCX 能打开、Adobe 转换成功或结构验证通过都不能覆盖这些视觉事实。
 记录类别和 evidence ref 即可，不在日志或报告中复制周围学生正文。
 
-### 4.4 两个必须留在 Skill 的判断
+### 4.4 程序强制的内容安全
 
-第一个判断是“目标是否足够唯一，可以行动”。操作前至少需要两个相互独立的信号，
-并且它们共同指向当前文档快照中的唯一目标；例如槽位 locator 与对象指纹/结构上下文
-相互印证。页码、bbox、单个近似文本命中或 Provider 的成功声明都不能单独证明唯一性。
-编辑产生新 hash 后，旧 `object_ref`、槽位 locator 和页面证据不再是当前事实，必须
-重新取证。Tool 可以收窄候选集和拒绝歧义，但“现有证据是否足以行动”仍由 Agent 判断。
+目标 locator 必须唯一、文档变化后旧引用必须失效、固定内容不得被非授权修改、学生
+内容不得无理由消失。这些事实由 Tool/App 的 hash、前置条件、固定内容比较和源内容
+覆盖合同强制。Agent 只完成论文转换任务，不在 Skill 中维护“判断阈值”或错误状态机。
 
-第二个判断是“某项内容是否真的可以消失”。删除、清理或不放置需要比保留更强的证据；
-缺少证据时应保留、询问或显式报告，而不是把“未观察到”解释成“应当删除”。Tool/
-应用壳负责固定内容 hash、源内容清单、放置结果和 blocking coverage 检查；Skill 负责
-在歧义中采用这一非对称阈值。这条原则同时约束模板说明文字清理和学生内容不放置。
-
-### 4.5 支撑判断原则
+### 4.5 实现行为约束
 
 - 先观察再修改，不凭段落序号或文件名定位；
 - 始终从干净、可填写的目标模板产生候选工作副本，不以学生论文副本作为候选主干；
@@ -221,39 +204,17 @@ blocking finding；DOCX 能打开、Adobe 转换成功或结构验证通过都�
   `candidate_verification` 证据，明确人工复核要求和 `verification_gap`；
 - 结构检查和页面渲染冲突时保留两类证据，不静默选择其中一个。
 
-这些是长期设计中的支撑判断，不是必须按顺序执行的阶段，也不应逐条复制进 L0
-`SKILL.md`。L0 应把它们收束成一套简明、可调整的默认工作方法，并保留会改变 Agent
-决策的边界和上述两个不可放宽的判断；复杂案例和操作细节按需进入 L1。
+这些是实现和质量设计中的行为约束，不逐条复制进 L0 `SKILL.md`。Skill 说明转换任务；
+Tool 注册信息说明能力；脚本、Tool/App 和测试保证执行正确性；special-part references
+只说明目录、前置页、页眉页脚等内容怎样进入两个最终产物。
 
-### 4.6 Tool 使用
+### 4.6 Tool 能力来源
 
-- `docx_inspect`：通过 OfficeCLI 读取模板与论文事实，复用相同输入的分析缓存；
-- `docx_edit`：通过 OfficeCLI 一次提交一组带前置条件的修改，只使用当前文档的有效对象引用；
-- `docx_render`：用 `render_intent` 区分首次 Adobe 基线、OfficeCLI 编辑反馈和 Adobe 候选
-  验证；产生新的 `render_ref`，或在缓存命中时返回已有 ref，并记录 fidelity、实际
-  后端/SDK、转换 profile、环境可见性、parent ref、分页差异和可选元素映射；
-- `docx_visual_review`：只读取已有 `render_ref`，把指定页面、裁剪图、contact sheet
-  或前后对比图送入当前 Agent 上下文；它不调用 Adobe PDF Services API 或 CLI 渲染，不产生新的
-  文档 render，也不返回 `pass` / `fail`；Agent 以受控批次覆盖整页，并在小字或域错误
-  无法辨认时请求 crop；
-- `docx_validate`：通过 OfficeCLI 与 DocFit 后置检查从源文件和最终文件重新取证，独立检查内容保留、适用格式、占位符、结构和渲染，不把 OfficeCLI 的成功声明当作唯一 oracle。
+Agent 从 Claude Agent SDK 注册信息获得可用 Tool、用途、输入 schema 和错误语义；两个
+Skill 都不复制这些说明。五个 Tool 的确定性合同、固定后端和失败语义只在 05 与实现
+测试中维护。
 
-`docx_visual_review` 不替 Agent 做视觉判断。Agent 根据图片形成带页码和 evidence ref 的结构化 finding；应用壳保存这些 findings，`docx_validate` 只核对它们是否对应当前文档、是否覆盖必查页面，以及是否存在 blocking finding。
-
-Agent 不直接修改 OOXML，也不能仅凭底层 MCP 返回成功、输出文件存在或确定性结构检查通过就宣布完成。
-
-### 4.7 Tool 失败时
-
-- `needs_input` 或引用失效：根据现有证据修正调用或重新 inspect；
-- 文档定位歧义或对象不支持：缩小范围，可能损坏内容时停止并询问；
-- 后端或环境错误：仅在输入、调用方式、范围或环境有实际变化时重试固定后端；
-- Adapter 或后置检查失败：不消费该产物，停止并说明；首版不切换到另一职责的后端补位；
-- Adobe PDF Services API 不可用时：可以继续 OfficeCLI 编辑迭代，但保留 `verification_gap`，不得把近似预览作为 Adobe 交付证据或宣布完成；
-- 相同错误在没有新证据时不循环重试；
-- 五个 DocFit Tool 发布的写入产物必须是 `committed: true`，并通过必要后置检查；
-  Bash/Write 支持性产物不产生该 Tool 状态，也不能替代它。
-
-### 4.8 完成条件
+### 4.7 完成条件
 
 只有以下事实成立时，Agent 才能报告转换完成：
 
@@ -277,29 +238,28 @@ Agent 不直接修改 OOXML，也不能仅凭底层 MCP 返回成功、输出文
 - 严重 Tool 错误已解决；
 - 无法自动确认的事项已在最终回复中明确说明。
 
-### 4.9 Agent 最终回复
+### 4.8 Agent 最终回复
 
 最终回复至少说明：
 
-- 最终 DOCX 和可用预览的实际位置；
-- 使用的通用 Knowledge 版本、冻结模板 hash，以及产物中保留的学校材料证据 refs/hash；
-- 内容保留、格式、占位符、结构和渲染的验证摘要；
-- Agent 已审查的页面范围、视觉 finding 摘要和对应 evidence refs；
-- 实际使用的 render intent、fidelity、Provider、parent ref 和重要 warning；
-- 仍需人工复核或用户补充的事项；
-- 源内容覆盖摘要，以及每个未放置内容项、manual 区域和 gap 的明确状态。
+- 最终 DOCX 的实际位置；
+- `conversion-report.json` 的实际位置；
+- 仍需人工复核或用户补充的事项。
 
-## 5. 两个 Skill 共享的可选委派契约
+Knowledge 版本、模板 hash、内容覆盖、视觉/验证摘要、Provider 信息、warning、未放置项、
+manual 和 gap 都写入 `conversion-report.json`，不形成额外交付产物。
 
-### 5.1 Skill 与 SDK 配置的责任
+## 5. 主 Agent 的可选委派契约
 
-Skill 负责：
+### 5.1 主 Agent 与 SDK 配置的责任
+
+主 Agent 负责：
 
 - 为什么和何时委派；
 - 如何划定一个或多个分析范围；
 - 选择模块化 Knowledge Package 中的哪些通用模块；
 - 传递哪些当前任务证据与依赖；
-- 期待什么结构化返回，以及如何把返回合并进主 Agent 判断。
+- 期待什么结构化返回，以及如何把返回合并进任务结果。
 
 Claude Agent SDK 配置只负责把安全边界落实为真实权限和上下文隔离。薄应用壳配置一个
 具名 `docfit-unit-analyst`；技术上可以使用内联 `AgentDefinition`，但它不是领域
@@ -307,7 +267,7 @@ Claude Agent SDK 配置只负责把安全边界落实为真实权限和上下文
 `subagent_type`，拒绝 SDK 内置 `general-purpose` 和未知类型；普通
 `can_use_tool` 回调不被当作 `Agent` 调用必经边界。
 
-### 5.2 委派判断维度
+### 5.2 委派考虑因素
 
 主 Agent 根据当前证据判断，而不是执行阈值表：
 
@@ -324,7 +284,7 @@ Claude Agent SDK 配置只负责把安全边界落实为真实权限和上下文
 ### 5.3 Knowledge 与任务包
 
 Knowledge 是 DocFit 的模块化产品资产，不是 SDK 中独立的 Knowledge Base runtime。
-应用壳把当前产品包交给主 Agent；当前 Skill 选择本次委派所需模块。由于当前 Python
+应用壳把当前产品包交给主 Agent；主 Agent 选择本次委派所需模块。由于当前 Python
 SDK 的 `Agent` Tool 单次输入不支持动态覆盖 `AgentDefinition.skills`，主 Agent 将
 选中模块的内容、ID、版本和 digest 与当前任务证据一起写入 `Agent` prompt。
 
@@ -390,14 +350,14 @@ Subagent 只分析。主 Agent 合并目录与正文标题、引用与参考文�
 `docx_edit`，并在修改后重新取证和验证。这是取得可审计文档证据的产品完成条件，不是
 固定执行阶段，也不是唯一物理写入权限。这里的固定安全边界是 Subagent 不写入。
 主 Agent 可以用自动批准且无 DocFit 路径 gate 的 Bash/Write 保存支持性产物或执行命令。
-五个 DocFit Tool 仍是证据绑定、可验证的文档操作路线；Skill 应优先通过 `docx_edit`
-修改 DOCX，但这不是对受信任主 Agent 的文件系统 sandbox。
+五个 DocFit Tool 仍是证据绑定、可验证的文档操作路线；其使用方式来自 SDK 注册信息，
+不由 Skill 另行说明。这不是对受信任主 Agent 的文件系统 sandbox。
 
 ## 6. 当前任务学校材料
 
 学校模板、PDF/文字要求、官方示例、适用范围和人工确认都属于当前任务输入。
-学校提取 Skill 可以据此形成冻结模板产物、结构化分析、来源 hash、冲突记录和本次
-任务所需的精确参数，并可用 Bash/Write 保存支持性结果；转换 Skill 只消费通过合同的
+学校提取 Skill 可以据此形成冻结模板和槽位索引；结构化分析、来源 hash、冲突记录和
+精确参数写入索引或作为工作数据保存。转换 Skill 只消费通过合同的
 冻结模板产物，不把这些原始材料重新纳入规则解释。无论路径位于何处，这些内容仍是
 任务证据或中间产物，不是 Knowledge Package，也不得自动晋升到产品 Knowledge。
 
@@ -435,16 +395,17 @@ format_instruction  只用于说明格式、最终应清理的文字
 
 ## 8. Skill 内容组织
 
-信息按消费成本分为四层：L0 是 `SKILL.md` 中的选择、输入/产物、边界、默认工作方法、
-关键判断、路由和能力缺口；L1 是同目录 `references/` 中按判断加载的复杂案例与详细
-方法；L2 是随产品发布的通用 Knowledge；L3 是当前任务材料、冻结模板产物和 Tool
-证据。下层可以更具体，但不得把学校事实向上晋升，也不得把 Tool 已经强制的机器
-不变量重复成 L0 checklist。
+信息按消费成本分为四层：L0 是 `SKILL.md` 中的任务、输入、两个产物和通用规则；L1
+是同目录 `references/` 中按论文部件组织的特殊处理；L2 是随产品发布的通用 Knowledge；
+L3 是当前任务材料、冻结模板产物和 Tool 证据。下层可以更具体，但不得把学校事实向上
+晋升，也不得把 Tool 注册说明或机器不变量重复进 Skill。
 
 ```text
 <skill>/
 ├── SKILL.md
-└── references/       # 由 SKILL.md 通过明确项目相对路径按需加载
+└── references/
+    ├── index.md      # SKILL.md 唯一入口，按论文部件导航
+    └── ...           # 目录、封面、声明、页眉页脚等部件说明
 ```
 
 Tool 实现不复制到 Skill。两个领域 Skill 的 references 保存任务操作指引；Knowledge Package
@@ -455,26 +416,18 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
 场景经验也不保存可直接套用的样式值、国家标准数值表或通用缺省补全表；
 这些值不进入 Agent 的 Skill/Knowledge 上下文。
 
-适合进入 references 的场景经验包括：
+适合进入 references 的特殊论文部件包括：
 
-- 学校前置页与学生正文的边界；
-- 旧目录、空附录标题和双语图题；
-- 跨 run 的说明文字与占位符；
-- 合并单元格、脚注尾注、文本框、域和内容控件；
-- 页眉页脚、编号和节属性；
-- 不同渲染器造成的分页差异；
-- Adobe 服务分页基线、CLI 高频反馈、候选证据继承和页面锚点；
-- 对象引用失效、定位漂移和 Provider 伪成功。
+- 模板说明和示例文字；
+- 封面、扉页、声明、授权页与签章表单；
+- 目录、图目录和表目录；
+- 分节、页眉页脚、页码和分页边界；
+- 后续真实样本证明需要独立说明的其他论文部件。
 
-这些经验帮助 Agent 判断，不扩展 Tool 数量，也不定义固定路线。
+这些说明帮助 Agent 处理论文内容，不扩展 Tool 数量，也不定义固定路线。
 
-首批 references 围绕真实消费拆分：学校提取 Skill 使用证据/冲突、模板文字分类、Tool
-恢复、场景边界、本地委派说明和输出 schema；转换 Skill 使用任务证据/冲突、Tool 恢复、
-结构/视觉证据、场景边界、本地委派说明以及编辑/验证/完成说明。第 5 节定义共同的
-Subagent 运行时字段和权限边界；每份 Skill 只在自己的 `references/` 中解释本领域何时
-拆分、任务包携带哪些本领域证据以及怎样合并返回，不跨目录引用另一份 Skill 或项目级
-共享操作手册。文件名不是新的运行时协议；`SKILL.md` 必须逐个引用真实存在的本地
-reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
+每份 Skill 只引用自己的 `references/index.md`；index 列出同目录真实存在的部件文件，
+不跨目录引用另一份 Skill。契约测试验证索引完整性和两棵 Skill 的领域隔离。
 
 当前两个 Skill 不包含可执行脚本。主 Agent 现已拥有受信任 Bash；未来若 Skill 增加脚本，
 必须明确命令、输入输出、凭据处理和测试边界，且不能把 shell 输出、凭据或文档正文写入
@@ -488,21 +441,19 @@ reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
 docfit-school-extract/
 ├── SKILL.md
 └── references/
-    ├── artifact-contract.md
-    ├── source-decisions.md
-    ├── template-analysis-and-slot-design.md
-    ├── tools-and-recovery.md
-    ├── complex-template-cases.md
-    └── delegation.md
+    ├── index.md
+    ├── template-text.md
+    ├── front-matter-and-forms.md
+    ├── table-of-contents.md
+    └── sections-headers-footers.md
 ```
 
-候选树不增加 `scripts/` 或 `assets/`。hash、locator、原子发布、固定内容保护和完成门
-继续属于 Tool/App；多轮 Eval 证明存在稳定重复的纯机械工作前，不把它们下放为 Skill
-脚本。
+hash、locator、原子发布、固定内容保护和完成门属于脚本或 Tool/App，不进入 Skill
+正文。是否增加 `scripts/` 由确定性实现需要和测试决定，不把脚本当作新的运行时资产。
 
 ## 9. Skill 评审问题
 
-- Agent 不读 references 时，是否仍知道目标、默认工作方法、判断标准和完成条件？
+- Agent 是否清楚任务、输入和两个产物，而没有被要求维护判断阶段？
 - 当前用户模板、学校规则或精确参数是否被写入长期 Knowledge？
 - 学校事实是否被误写进通用 Skill？
 - OOXML 细节是否泄漏到 Skill？
@@ -514,9 +465,9 @@ docfit-school-extract/
 - Agent 是否只表达 `render_intent`，而没有选择具体后端或要求跨职责回退？
 - OfficeCLI 与 Adobe PDF Services API 是否仍只承担各自固定职责，没有在 Skill 中出现通用 Provider 平台逻辑？
 - 学生内容是否仍以原始 DOCX 和 hash 为真值？
-- Tool 失败是否根据实际错误语义处理？
+- Tool 使用说明是否只来自 SDK 注册信息，而没有在 Skill 中复制？
 - 新增 Knowledge 是否已经去除学校值，并有多个任务或跨学校 Eval 支持其通用性？
-- 委派原因、范围、Knowledge 选择和返回解释是否仍由两个领域 Skill 指导？
+- 委派原因、范围、Knowledge 选择和返回解释是否仍由主 Agent 负责？
 - Skill 是否要求 Agent 获取模板可观测的全部样式事实，同时禁止它读取经验值或
   杜撰缺失值？国家级标准补全是否仍是程序的确定性职责？
 - 应用壳是否只落实 `docfit-unit-analyst` 的上下文隔离和最小权限，而没有识别论文
@@ -525,14 +476,13 @@ docfit-school-extract/
   `AgentDefinition.skills` 的虚假契约？
 - Subagent 是否只分析，所有 render、edit、validate、用户询问和跨范围合并是否仍由
   主 Agent 负责？
-- `SKILL.md` 是否以明确项目相对路径按需读取 references，而不是依赖自动加载或临时
-  shell 约定？
+- `SKILL.md` 是否只引用本 Skill 的部件索引，索引中的 reference 是否真实存在？
 - 两个 Skill 是否只通过冻结模板产物 Interface 耦合，而没有互相点名、要求固定调用
   顺序或共享隐藏状态？
 - 每个自动槽位是否在冻结模板 hash 内唯一，manual/gap 是否显式，快照变化后旧 locator
   是否失效？
-- Skill 是否把“行动目标唯一”和“内容消失需更强证据”作为不可放宽的核心阈值，同时
-  提供足够的通用操作指导，并把 hash、覆盖、原子发布等硬门留给 Tool/应用壳？
+- hash、唯一定位、内容覆盖和原子发布是否全部由程序硬门保证，而没有要求 Agent 在
+  Skill 中自证执行正确？
 - 转换是否闭合学生源内容清单，并对每个不放置项给出理由，而不是只检查最终文档中
   看得见的内容？
 

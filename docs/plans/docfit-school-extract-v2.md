@@ -7,8 +7,9 @@
 ## 1. 目标
 
 把当前“只读学校材料证据提取”改造成“冻结模板产物生产”能力：读取当前任务的学校
-模板、书面要求和可选官方示例，在不覆盖来源文件的前提下，发布可填写的干净模板、
-绑定该模板 hash 的槽位索引，以及证据、未决项、manual 区域和 gap。
+模板、书面要求和可选官方示例，在不覆盖来源文件的前提下，只发布可填写的干净模板和
+绑定该模板 hash 的槽位索引。来源、manual 区域、未决项和验证摘要都属于槽位索引内容，
+不形成额外交付产物。
 
 本草案不直接替换 `.claude/skills/docfit-school-extract/**`。当前应用仍强制在
 `docfit convert` 中加载两个 Skill，当前契约测试仍把学校提取锁成只读；在 Tool/App
@@ -41,9 +42,8 @@
 语义产物：
 
 1. 可独立打开且不再原地修改的冻结干净模板 DOCX；
-2. 绑定冻结模板精确 SHA-256 的槽位索引；
-3. 来源证据、固定内容边界、清理决定、冲突、未决项、manual 区域和 gap；
-4. 全页视觉检查与确定性验证摘要。
+2. 绑定冻结模板精确 SHA-256 的槽位索引，其中包含固定内容边界、manual 区域、未决项、
+   必要来源和验证结果。
 
 产物只在当前任务内有效，不包含学生内容，不自动晋升为产品 Knowledge。
 
@@ -54,12 +54,10 @@
 ```text
 output/template-artifact/
 ├── clean-template.docx
-├── template-artifact.json
-├── visual-review.json
-└── validation.json
+└── slot-index.json
 ```
 
-`template-artifact.json` 的候选最小形态：
+`slot-index.json` 的候选最小形态：
 
 ```yaml
 schema_version: 1
@@ -102,25 +100,17 @@ validation:
 是否需要单独 `slot-index.json`，由消费者实现和 fixture 证明后再决定；首选把槽位索引
 放在一个 manifest 内，避免两个 JSON 的 hash/版本漂移。
 
-## 5. Skill 中不可放宽的两个核心判断
+## 5. Skill 内容边界
 
-这两项是语义安全阈值，不是 `SKILL.md` 的全部内容。主文件还应直接提供从来源盘点、
-模板观察、内容分类、清理与槽位设计、修改后复查到冻结发布的默认工作方法，并说明
-何时回看、询问或停止；references 只承载复杂案例、详细 schema 和错误恢复。
+`SKILL.md` 只说明论文模板整理任务、两个输出、通用转换规则和特殊论文部件。Agent 在
+完成任务时自然理解学校材料和模板结构，不把“判断”设计成独立阶段、状态或额外产物。
 
-### 5.1 行动目标是否足够唯一
-
-编辑或分类目标至少需要两个相互独立的信号共同支持，并且在当前文档快照中只有一个
-候选。Tool 可以拒绝零命中或多命中，Agent 决定现有证据是否足以行动。
-
-### 5.2 内容是否真的可以消失
-
-删除说明文字、示例值或其他可见内容，需要比保留更强的证据。无法确认时保留原状，
-并记录为 manual、gap 或未决项。没有观察到某项内容，不等于有证据删除它。
+hash、locator、唯一命中、原子修改、固定内容保护、验证和失败不发布由脚本、Tool 或
+应用壳强制。Skill 不重复 Tool 名称、参数、错误恢复或注册时已经提供的使用说明。
 
 ## 6. 冻结点
 
-Skill 不定义固定阶段图，但产物必须满足一个必要先后关系：
+该关系由 Tool/App 实现，不要求 Agent 在 Skill 中手工维护：
 
 ```text
 最后一次模板编辑
@@ -159,30 +149,25 @@ DOCX、槽位表或视觉观察称为冻结产物。
 docfit-school-extract/
 ├── SKILL.md
 ├── references/
-│   ├── artifact-contract.md
-│   ├── source-decisions.md
-│   ├── template-analysis-and-slot-design.md
-│   ├── tools-and-recovery.md
-│   ├── complex-template-cases.md
-│   └── delegation.md
+│   ├── index.md
+│   ├── template-text.md
+│   ├── front-matter-and-forms.md
+│   ├── table-of-contents.md
+│   └── sections-headers-footers.md
 └── evals/
     └── evals.json
 ```
-
-不增加 `scripts/` 或 `assets/`。hash、locator、原子发布和固定内容保护属于产品
-Tool/App，不应藏在 Skill 脚本里。只有多轮 Eval 证明存在稳定且重复的纯机械工作后，
-才重新评估脚本。
 
 ## 9. 契约测试与行为用例
 
 生产切换时更新 `tests/contract/test_skill_contract.py`：
 
 - 不再要求学校提取 Skill “不修改任何文档”；改为来源只读、只写工作/输出副本；
-- Tool 集合允许五个公开 DocFit Tool，但不固定完整调用顺序；
+- 不断言 Skill 出现任何 Tool 名称；Tool 能力由 SDK 注册信息提供；
 - 删除 `body.count("- [ ]")` 一类 checklist 形状断言；
-- 断言 L0 含默认工作方法、两个核心判断、产物边界、能力缺口和明确 reference 路由；
+- 断言 L0 只定义任务、两个产物、通用规则和一个特殊部件索引入口；
 - 断言不出现学生内容填充、学校 Knowledge、跨任务 profile 或另一个 Skill 名称；
-- 断言所有 reference 都存在且只属于本 Skill。
+- 断言 `references/index.md` 中列出的部件 reference 都存在且只属于本 Skill。
 
 首批行为用例：
 

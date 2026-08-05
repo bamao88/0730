@@ -33,7 +33,9 @@ DOCX 的唯一主干；学生 DOCX 始终只读，只提供内容真值和来源
 
 已批准的下一版目标把这条方向收紧为显式的任务级产物合同：
 `docfit-school-extract` 负责把学校材料整理成“冻结干净模板 + 与该模板 hash 绑定的
-槽位索引 + 证据/未决项”，`convert-thesis` 只消费这份模板产物与只读学生 DOCX。
+槽位索引”，`convert-thesis` 只消费这份模板产物与只读学生 DOCX，并交付“最终 DOCX +
+conversion report”。每个 Skill 只有两个稳定交付产物；证据、未决项和验证结果作为对应
+JSON 产物的字段或工作目录临时数据存在，不增加第三类交付。
 两者通过产物 Interface 耦合，不通过 Skill 名称、调用顺序或共享隐藏状态耦合；同一
 Interface 也允许人工或其他受控适配器准备。当前 M2 实现只具备模板主干和跨文档内容
 导入基础，尚未实现完整槽位索引、固定内容保护与源内容覆盖完成门；实施状态和进入条件
@@ -62,14 +64,15 @@ Skill + Knowledge + Tools + Eval + 薄应用壳
 DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问、
 原生 Subagent 与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
 
-批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）负责
-任务判断与可选委派，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
+批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）说明
+论文转换目标、输入输出、通用规则与特殊部件处理，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
 DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个通用只读
 `docfit-unit-analyst`，以 SDK 原生隔离上下文执行局部分析；它不是新的产品资产、
 单元专家目录或固定工作流节点。
 
 两个 Skill 的目标职责不同：学校提取 Skill 产出冻结模板 Interface，转换 Skill 消费
-该 Interface 并产出最终论文。Skill 负责语义判断阈值、证据需求和不确定性处置；模板
+该 Interface 并产出最终论文。Skill 不把 Agent 的自然推理建模成判断阶段，也不重复
+SDK 已注册的 Tool 说明；模板
 hash 绑定、槽位唯一定位、原子写入、固定内容保护、源内容覆盖与“失败不发布”属于
 Tools/应用壳的确定性合同。把这些机制放进现有五类资产，不新增 Harness、工作流节点
 或第六个 Tool。
@@ -151,7 +154,7 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 领域目标、可调整的默认工作方法、关键判断阈值、证据需求、工具使用、为什么/何时委派，以及能力缺口和最终答复；通过明确项目相对路径指引按需读取 references | 固定调度图、逐项机器检查清单、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
+| Skill | 论文转换目标、输入、两个稳定产物、通用处理规则、特殊论文部件索引和最终答复 | Tool 名称/参数/错误说明、固定调度图、逐项机器检查清单、持久化状态机、真实工具权限实现 |
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
 | Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
@@ -162,8 +165,8 @@ Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制�
 Skill、Knowledge、Tools、Eval 或薄应用壳并列为第六类产品资产。
 
 Claude Agent SDK 没有一个与 Skill、Tool 并列的 DocFit Knowledge Base runtime。
-稳定通用知识由产品 Knowledge Package 提供；当前 Skill 选择本次委派所需模块，主
-Agent 将选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
+稳定通用知识由产品 Knowledge Package 提供；主 Agent 选择本次委派所需模块，并将
+选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
 
 Knowledge Package 随产品发布且必须保持通用。学校事实只来自当前任务提供的
 模板、要求、示例和用户确认；Agent 在任务中提取或推导的学校结论不会因此自动
