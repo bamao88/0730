@@ -1,7 +1,7 @@
 # DocFit Knowledge 与 Tools 设计（05）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-05
 > 原则：Knowledge 保持可读，Tools 保持确定性，复杂性不进入 Agent runtime。
 
 ## 1. Knowledge
@@ -326,6 +326,12 @@ analysis_path: /path/analysis.json
 - package parts、relationships、输入 hash 和不支持的可见对象。
 
 Tool 将完整结果保存在任务临时目录，只向 Agent 返回摘要、风险和按需查询入口。相同输入 hash 的后续 `focus` 查询可以复用解析结果；这只是 Tool 内部缓存，不是新的运行时对象。Tool 只报告事实，不自行判定“这是一级标题”或“这是学生正文”。
+
+冻结模板 Interface 实施后，`docx_inspect` 还必须为产物校验提供客观事实：冻结模板
+hash、固定内容指纹、候选槽位 locator 的唯一命中数、内容种类/基数约束，以及 manual
+区域和 gap 的结构证据。它不自行决定某段学生内容应进入哪个槽位；也不能用页码、bbox
+或单个近似文字命中冒充唯一 locator。本段是目标合同，当前 schema 与实现状态以 06
+第 6.9 节为准。
 
 #### 2.4.1 样式观测与确定性补全合同
 
@@ -767,11 +773,46 @@ OfficeCLI 的 OpenXML 校验、DocFit 独立后置检查、当前任务已确认
 
 验证必须从源文件和最终文件重新读取事实，不能把 `docx_edit` 的成功返回、旧分析缓存或旧截图当成验证结论。内容与对象保留、有效样式、package 关系、占位符、视觉审查覆盖和高风险页面分别检查；任何无法独立确认的事项明确返回 warning 或人工复核要求。
 
+冻结模板 Interface 实施后，最终验证还必须独立核对：槽位索引绑定的原始冻结模板
+hash；固定内容未被未经证据改写；学生源内容清单中每个任务级 `source_item_id` 恰有一个
+明确 disposition（已放置到槽位，或有明确不放置原因）；不存在缺项、重复放置、无理由
+消失或越过 manual/gap 的自动处理。覆盖未闭合是 blocking issue，而不是普通 warning。
+这仍属于现有 `docx_validate` 和 adapter，不新增第六个 Tool。
+
 ## 3. 内容安全的实现边界
 
 “内容不得静默丢失”是产品不变量，但不要求先建设全局内容身份平台。
 
-### 3.1 Tool 间的对象引用
+### 3.1 冻结模板产物 Interface
+
+学校提取端与转换端通过任务级产物合同耦合，而不是通过 Skill 名称、调用轨迹或共享
+内存耦合。语义上，该产物由三部分组成：
+
+1. 可独立打开且不再原地修改的冻结干净模板 DOCX；
+2. 绑定该 DOCX 精确 SHA-256 的槽位索引；
+3. 来源证据、冲突、未决项、manual 区域和无法安全表达的 gap。
+
+每个槽位至少具有任务内唯一 `slot_id`、冻结快照内的 locator、期望内容种类和基数。
+首版内容种类只需要表达标量、段落流、复合内容和 manual；这是一组 Interface 语义，
+不是让 Skill 维护新的类型系统。locator 必须由至少一个 snapshot-bound 结构引用及其
+前置指纹/上下文支持，并在合同检查时唯一命中；页码、bbox 或近似文字只能作为辅助
+信号。槽位索引不得承诺跨模板修改、跨任务或跨运行稳定。
+
+转换以冻结模板的字节副本开始。若多个放置操作会改变文档 hash，Tool 必须先验证并
+原子提交同一快照上的整组操作，或为后续操作显式重新 inspect 并产生经过验证的新引用；
+不得把旧槽位 locator 静默套到新快照。模板固定内容与可填区域必须可确定性区分，
+未经当前证据不得改写固定内容。
+
+转换端还为只读学生快照生成任务级源内容清单。每项使用绑定学生 source hash 的 opaque
+`source_item_id`、类型、顺序和指纹参与覆盖验证；最终 disposition 只能是放置到明确
+槽位，或附明确理由的不放置。它不要求公开完整正文，也不形成跨任务 Content Ledger。
+
+产物可以由 `docfit-school-extract`、人工或其他受控适配器生成；应用壳只验证 shape、
+hash、授权路径和合同版本，不解释学校语义。本文冻结语义不变量；精确文件名、序列化
+字段和是否复用现有 Tool action 必须在 06 第 6.9 节的实施 Preflight 中以真实消费者和
+fixture 锁定。当前 M2 代码尚未实现完整合同。
+
+### 3.2 Tool 间的对象引用
 
 `docx_inspect` 返回、`docx_edit` 消费的 `object_ref` 至少包含：
 
@@ -789,7 +830,7 @@ expected_fingerprint: ...
 
 这个小型 Tool 契约只服务指定 DOCX 快照的安全定位。跨文档模板组合可以同时携带分别绑定来源模板与目标文档 hash 的引用，但每个引用仍只在自己的文档快照内有效；它不定义跨文件类型、跨任务或跨运行的全局对象身份。
 
-### 3.2 最小策略
+### 3.3 最小策略
 
 当前实现采用以下最小策略：
 
@@ -809,7 +850,7 @@ expected_fingerprint: ...
 - 事件溯源；
 - 全仓库 schema registry。
 
-### 3.3 文档操作权威路线与 Subagent 写入边界
+### 3.4 文档操作权威路线与 Subagent 写入边界
 
 薄应用壳对主 Agent 暴露五个 Tool，并另外暴露只读的 Skill/Knowledge/任务证据发现面
 与受信任的 Bash/Write；
@@ -825,7 +866,7 @@ Bash/Write 没有 DocFit 路径 gate，因而不能再声称它们在文件系�
 `PreToolUse` 权限钩子检查 `subagent_type`，只允许 `docfit-unit-analyst`，拒绝 SDK
 内置 `general-purpose` 与未知类型。`can_use_tool` 继续处理用户追问与防御性拒绝。
 
-### 3.4 主 Agent 直接读取权限与受信任 Bash/Write
+### 3.5 主 Agent 直接读取权限与受信任 Bash/Write
 
 主 Agent 的内置工具面固定为 `Skill`、`Read`、`Glob`、`Grep`、`Bash`、`Write`、
 `AskUserQuestion` 与类型受限的 `Agent`；五个 `mcp__docfit__...` Tool 继续直接调用。
@@ -1011,6 +1052,7 @@ Skill references 和产品 Knowledge。受信任 Bash/Write 可绕过这项直�
 | 新的通用消费范围反复需要独立知识 | 增加 Knowledge 模块；不因此增加 Agent 类型或固定文档分类 |
 | DOCX 之外的多个工具确实需要共享对象引用 | 评估最小跨格式 ref；没有真实消费者时不泛化 |
 | 同一 Tool 操作反复出现定位歧义 | 强化 Tool 内部 locator |
+| 转换反复出现漏章、重复放置或固定模板内容漂移 | 实施 3.1 的任务级冻结模板/覆盖合同；不建设全局 ArtifactRef 或 Content Ledger |
 | 模板样式缺口反复出现，且已明确选定可授权维护的国家级标准 | 按 2.4.1 扩展现有 Tool 内部观测/解析器与属性级来源；不增加 Knowledge 默认值或第六个 Tool |
 | Eval case 多到串行运行太慢 | 接入现成并发 runner |
 | 产品需要多人权限和正式发布 | 在产品需求明确后设计对应服务 |

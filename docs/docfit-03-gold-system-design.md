@@ -1,7 +1,7 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-05
 
 本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
 合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
@@ -39,7 +39,9 @@ Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只�
 evals/e2e/hunannongye-basic-001/
 ├── case.yaml
 ├── input/
-│   └── student.docx
+│   ├── student.docx
+│   ├── clean-template.docx
+│   └── slot-index.yaml
 ├── expected/
 │   ├── facts.yaml
 │   ├── visual-findings.yaml # 可选，人工确认的页面视觉问题与 evidence 定位
@@ -57,11 +59,13 @@ knowledge:
   package_id: docfit-thesis-format
   version: v1
   content_digest: sha256:...
-school_materials:
-  - path: input/official-template.docx
-    sha256: ...
-  - path: input/official-requirements.pdf
-    sha256: ...
+template_artifact:
+  clean_template: input/clean-template.docx
+  template_sha256: ...
+  slot_index: input/slot-index.yaml
+student:
+  path: input/student.docx
+  sha256: ...
 task: 按目标学校要求转换论文
 assertions:
   - type: docx_opens
@@ -70,7 +74,7 @@ assertions:
     expected_from: expected/facts.yaml
   - type: style_fact
     target: heading_level_1
-    expected: school_profile.heading_1
+    expected_from: expected/facts.yaml
   - type: text_absent
     values: ["小二黑体加粗", "在此填写"]
   - type: visual_review_coverage
@@ -79,8 +83,11 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-模板提取目标使用 `docfit-school-extract`，其 Gold 只保存带来源引用的当前任务事实、
-冲突与不确定性；同时提供模板和论文并要求交付转换的用例属于 `convert-thesis`。
+模板提取目标使用 `docfit-school-extract`，其 Gold 只保存冻结模板产物的稳定事实、
+带来源引用的当前任务事实、冲突与不确定性：冻结模板 hash、槽位唯一性、内容种类与
+基数、manual 区域和 gap。运行时产出的学校模板仍是当前任务资产，不因进入 Eval case
+就成为产品 Knowledge 或可自动复用的学校包。提供合格冻结模板产物和学生论文并要求
+交付转换的用例属于 `convert-thesis`。
 测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
 调用轨迹、Subagent transcript、委派图或命名的中间阶段资产。
 
@@ -90,6 +97,9 @@ manual_review: [cover_page, toc_pagination]
 
 - 转换候选以目标模板为主干，学生 DOCX 只作为只读内容来源；
 - placement 明确学生内容进入的模板槽位或区域；“学生副本导入了模板节”不是等价结果；
+- 槽位索引绑定精确冻结模板 hash，自动槽位在该快照内唯一定位；
+- 每个槽位声明预期内容种类和基数，manual 区域与无法安全表达的 gap 显式保留；
+- 转换不依赖模板产物由哪个 Skill 或适配器生产；
 - 标题和章节层级；
 - 学生正文关键文本；
 - 表格、图片、公式及其他支持对象的数量和必要顺序；
@@ -97,12 +107,14 @@ manual_review: [cover_page, toc_pagination]
 - 目标样式的属性级来源：当前任务明确要求、模板观测、继承后有效值、
   适用的版本化国家级标准或未决；
 - 必填字段内容；
+- 模板固定内容没有被未经证据修改；
+- 学生源内容清单逐项具有放置结果或明确不放置原因，没有静默缺失或重复；
 - 页面数量或允许范围；
 - 不应残留的占位符和说明文字；
 - 人工确认的溢出、遮挡、空白页、孤行、图表错位和页眉页脚异常；
 - 视觉 finding 所对应的文档 hash、页码、render intent、fidelity、Provider、字体环境、
   parent render ref、evidence ref，以及可用的 `object_ref`、节引用或文字锚点；
-- 需要人工检查的高风险页面。
+- 需要人工检查的高风险页面；
 - 可选 Subagent 返回中的事实、依赖、证据请求和最终被主 Agent 接受/拒绝的结论；
   不保存隐藏思维、完整 Subagent 历史或“正确调用了几次 Agent”的轨迹 Gold。
 
@@ -175,7 +187,9 @@ Gold 只从已经实际运行并人工确认的结果产生：
 - 旧目录、空附录标题和双语图题；
 - 缺少摘要或参考文献；
 - 占位符未清理；
-- 对象引用失效和 Provider 伪成功。
+- 对象引用失效和 Provider 伪成功；
+- 冻结模板 hash 变化后旧槽位 locator 失效；
+- 多重槽位命中、manual/gap 越界和源内容覆盖未闭合。
 
 真实样本适合验证组合效果和页面观感。
 

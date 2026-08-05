@@ -1,7 +1,7 @@
 # DocFit 测试与迭代（02）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-05
 > 前提：测试与 Eval 是开发系统，不进入正常论文转换的运行路径。
 
 本文件保留长期 Eval 设计。当前开发范围只要求 M0–M2 的单元、契约、集成和 live
@@ -51,7 +51,8 @@ edit、validate 和高频截图的职责契约；Adobe PDF Services API 只通�
 PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、错误
 与安全语义。
 
-重点覆盖：
+重点覆盖；其中冻结模板 Interface 与源内容覆盖条目是 06 第 6.9 节实施后的新增门，
+不是当前 M2 已通过事实：
 
 - DOCX 能正确打开、无操作另存和重新打开；
 - 段落、表格、合并单元格、图片、公式、脚注尾注、文本框、域、内容控件、页眉页脚和编号能够被发现；
@@ -59,6 +60,10 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
 - 原始 run 与逻辑文本之间的字符映射正确；
 - 不支持的可见对象被明确报告；
 - 对象引用绑定输入 hash，失效引用被安全拒绝；
+- 冻结模板槽位索引绑定精确模板 hash；模板字节变化后旧 locator 被安全拒绝，不能用
+  页码、坐标或近似文字匹配静默重绑；
+- 每个自动槽位在冻结快照内唯一可定位，并声明内容种类与基数；人工区域和无法表达的
+  gap 显式存在，不能被伪装成自动槽位；
 - 跨 run 文本和占位符能被准确定位；
 - 跨文档模板组合复制完整依赖闭包、重映射冲突 ID，并在任一操作失败时不发布部分结果；
 - 一组编辑要么全部发布，要么全部不发布；
@@ -104,6 +109,8 @@ PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、�
 - 修改后的文档不能继续使用旧 render ref 证明视觉结果；
 - 单次图片页数和字节上限生效，Tool 不返回视觉 `pass` / `fail` 判断；
 - 验证从源文件与最终文件重新读取事实；
+- 验证重新生成或核对学生源内容清单，缺项、重复放置、无理由不放置和模板固定内容
+  被改写均形成 blocking issue；每个源内容项必须有放置结果或显式原因；
 - 占位符、有效格式、内容对象、package 关系、视觉审查覆盖和渲染警告返回清晰结果；
 - 超时、凭据缺失、额度耗尽、服务失败和不支持对象都有可行动的错误。
 - Adobe 大文件上传使用固定且可测试的 connect/read timeout；真实上传超时仍返回
@@ -126,11 +133,18 @@ Tool test 的基本标准是确定性、可重复、源文件只读、失败不�
 - 每个解析后属性保留来源类型、来源 hash/ref，以及适用时的标准版本、条款和适用性；
 - 不向 Agent 或 Subagent 载入国家标准样式值表、缺省补全表或历史学校样式。
 
+当 06 中“冻结模板产物 Interface”候选切片获得独立实施批准时，上述 hash、唯一槽位、
+manual/gap、固定内容和源内容覆盖测试必须作为普通 unit/contract/integration 门落地。
+它们不依赖 M3 Eval，也不因 M3 延期而延后；本段不表示当前实现已经通过这些门。
+
 ### 2.2 Skill eval
 
 Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材料和受控 Tool 结果，观察 Agent 是否：
 
-- 在模板提取与论文转换目标下分别触发 `docfit-school-extract` 或 `convert-thesis`；
+- 在学校提取目标下用 `docfit-school-extract` 产出冻结干净模板、hash 绑定槽位索引和
+  证据/未决项；不填学生内容、不生成学校 Knowledge、不把 gap 伪装成可自动处理；
+- 在论文转换目标下让 `convert-thesis` 消费合格的冻结模板产物与学生 DOCX；不要求
+  同一运行先触发提取 Skill，不依赖生产者名称，也不重新解释学校原始要求；
 - `SKILL.md` 根据当前判断通过明确项目相对路径按需读取 references，不依赖 Skill 工具
   自动加载关联文件，也不使用 Bash 执行 references 或脚本；
 - 读取随当前产品发布的通用 Knowledge 版本；
@@ -145,13 +159,17 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
   合并回主 Agent 判断；
 - 在 Subagent 请求页面或其他证据时，由主 Agent 决定调用 render/inspect 并可选择
   再次委派，而不是让 Subagent 越权生成证据；
-- 只从当前任务模板、要求、示例和用户确认中形成学校事实；
+- 学校提取端只从当前任务模板、要求、示例和用户确认中形成学校事实；
 - 不把当前任务提取出的学校规则、模板或精确参数写入长期 Knowledge；
 - 只把 Tool 观测到的模板样式绑定到语义角色，不从 Knowledge、历史任务或常识生成
   未观测的样式值；
 - 样式属性仍缺失时，请求程序的确定性解析结果或显式保留未决，不在 prompt 中
   读取国家标准数值表后自行决定；
 - 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
+- 只有在操作目标由至少两个相互独立的信号支持、并能在当前快照唯一定位时才行动；
+  页码、bbox 或单个近似文字命中不能单独充当唯一性证明，快照变化后重新取证；
+- 对删除、不放置或清理采用比保留更强的证据门；无法确认时优先保留、询问或显式
+  报告，不把“没有看到”当作“应当消失”；
 - 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
 - 分页敏感且 Adobe 服务可用时，修改前建立输入与模板的服务转换分页基线；不可用时保留明确的能力缺口；
 - 把 Adobe 页面当作视觉观察窗口而不是编辑身份，不用 Adobe 第 N 页直接定位近似 Provider 第 N 页或驱动 `docx_edit`；
@@ -175,7 +193,9 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
   candidate 可以作为下一 candidate 的 baseline ref，不额外调用 Adobe PDF Services API 制造轮次；
 - 不把“第几轮”写入 Tool 状态或 Gold，也不把 baseline/candidate 的确切调用次数作为
   通用行为断言；只验证缓存、parent ref、后端路由和当前证据绑定；
-- 在最终答复中如实说明产物、验证结果和未解决问题。
+- 在最终答复中如实说明产物、验证结果和未解决问题；
+- `SKILL.md` 只保留 L0 目标、边界、关键判断、路由与能力缺口，按需读取 L1
+  references、L2 通用 Knowledge 和 L3 当前任务证据，不重复 Tool 已强制的机器检查表。
 
 Skill eval 以可观察结果为主。除安全底线和必要先后关系外，不要求 Agent 复现固定工具调用序列。
 也不把 Subagent 数量、调用顺序、并行/串行选择、论文单元枚举或“每个单元必须委派”
@@ -185,7 +205,7 @@ Skill eval 以可观察结果为主。除安全底线和必要先后关系外，
 允许的行为断言只有：
 
 ```text
-must       必须发生，例如读取产品内置 Knowledge 和当前任务学校材料
+must       必须发生，例如按需读取产品内置 Knowledge 和本 Skill 所需的当前任务证据
 must_not   禁止发生，例如覆盖源文件
 before     必要先后，例如修改前先检查输入
 limit      成本或重复调用上限
@@ -204,6 +224,8 @@ limit      成本或重复调用上限
 - 对每个被确定的目标样式属性，可区分当前任务明确要求、模板观测、继承后
   有效值、适用国家级标准或未决，且未决属性没有被静默写入文档；
 - 必填模板内容或槽位已处理；
+- 冻结模板 hash 与槽位索引绑定有效，自动槽位唯一，manual/gap 没有被隐式越过；
+- 模板固定内容未被未经证据修改，学生源内容清单中的每一项已放置或有明确不放置原因；
 - 不应出现的占位符和说明文字已清理；
 - PDF 或页面预览可生成；
 - render ref 明确记录 intent、fidelity、Provider/SDK、转换 profile、环境可见性、parent ref 和可选元素映射；
@@ -316,6 +338,11 @@ doctor，以及受影响的真实合成产品 smoke。只有改动确实可能�
 | 场景 | Tool test | Skill eval | 端到端 |
 |---|---:|---:|---:|
 | 学生内容正确放入模板槽位或正文区域，候选保持模板主干 | 是 | 是 | 是 |
+| 冻结模板被修改后继续使用旧槽位索引或快照 locator | 是 | 是 | 是 |
+| 槽位只有页码/坐标或多个近似命中，Agent 仍猜测性写入 | 是 | 是 | 是 |
+| 人工区域或无法表达的区域被伪装成自动槽位 | 是 | 是 | 是 |
+| 学生源内容缺章、缺对象或重复放置，但最终报告仍声称内容完整 | 是 | 是 | 是 |
+| 学生内容不放置没有理由，或模板固定内容被转换过程改写 | 是 | 是 | 是 |
 | 模板旧目录不被当作学生正文 |  | 是 | 是 |
 | 空附录标题不会吞掉相邻内容 |  | 是 | 是 |
 | 中英文图题及图片关系保持 | 是 | 是 | 是 |
@@ -355,15 +382,18 @@ id: hunannongye-basic-001
 skill: convert-thesis
 task: 将学生论文转换为湖南农业大学格式
 inputs:
-  document: input/student.docx
+  student_document: input/student.docx
   knowledge_version: v1
-  school_materials:
-    - input/official-template.docx
-    - input/official-requirements.pdf
+  template_artifact:
+    clean_template: input/clean-template.docx
+    template_sha256: ...
+    slot_index: input/slot-index.yaml
 assertions:
   - final_docx_opens
   - source_file_unchanged
   - required_text_preserved
+  - source_inventory_closed
+  - frozen_fixed_content_preserved
   - no_template_instruction_text
   - required_styles_match
 manual_review:
@@ -371,8 +401,9 @@ manual_review:
   - toc_pagination
 ```
 
-用例可以附带输入、产品 Knowledge 版本、当前任务学校材料、结构化期望、少量人工
-确认的参考产物和失败说明。学校材料是 Eval fixture，不是运行时 Knowledge。
+学校提取用例可以附带原始学校材料；转换用例附带符合合同的冻结模板产物。两类用例
+还可以包含产品 Knowledge 版本、结构化期望、少量人工确认的参考产物和失败说明。
+学校材料和冻结模板产物都是 Eval fixture，不是运行时 Knowledge。
 
 ## 5. 样本组合
 

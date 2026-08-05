@@ -1,0 +1,33 @@
+{
+  "skill_name": "docfit-school-extract",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请根据 input/school-template.docx 和 input/requirements.pdf 清理学校模板。要求文件明确说明蓝色括号文字是填写提示，模板中每个提示只出现一次。请生成当前任务可用的冻结干净模板和槽位索引，不要填入任何论文内容。",
+      "expected_output": "生成绑定最终模板 hash 的候选产物；只清理有双重证据且唯一定位的说明文字；保留固定内容；列出槽位、manual、gap 和验证状态。",
+      "files": [
+        "input/school-template.docx",
+        "input/requirements.pdf"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "这个学校模板里有三处完全相同的“在此填写”，还有一段红色文字，但学校要求没有解释红色文字的作用。请把模板整理成后续能安全填写的版本。",
+      "expected_output": "不根据颜色删除内容，不把重复文字当作唯一 locator；把无法区分的区域记录为 manual/gap 或提出最小问题，不虚构完整冻结产物。",
+      "files": [
+        "input/ambiguous-template.docx",
+        "input/requirements.pdf"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "模板和书面要求对封面题目位置说法不一致。我还放了一份 student.docx，请顺便把学生题目填进去并给我最终论文。",
+      "expected_output": "保留模板与要求冲突并请求最小裁决；拒绝填入待转换论文内容或生成最终论文；只处理学校模板产物边界。",
+      "files": [
+        "input/school-template.docx",
+        "input/requirements.pdf",
+        "input/student.docx"
+      ]
+    }
+  ]
+}
