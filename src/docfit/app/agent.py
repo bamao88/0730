@@ -431,6 +431,7 @@ def make_permission_callback(
     *,
     read_path_policy: ReadPathPolicy | None = None,
     audit: PermissionAudit | None = None,
+    registered_tool_names: tuple[str, ...] = FULL_TOOL_NAMES,
 ) -> CanUseTool:
     def record(event: PermissionAuditEvent) -> None:
         if audit is not None:
@@ -475,7 +476,7 @@ def make_permission_callback(
                 )
             )
             return PermissionResultAllow()
-        if tool_name == "Skill" or tool_name in FULL_TOOL_NAMES:
+        if tool_name == "Skill" or tool_name in registered_tool_names:
             record(
                 PermissionAuditEvent(
                     tool_name,

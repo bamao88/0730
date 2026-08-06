@@ -9,7 +9,11 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from docfit.template.compile_artifact import _load_object, _objects, _registry
+from docfit.template.decision_contracts import (
+    decision_objects,
+    load_decision_object,
+    resolve_registry,
+)
 from docfit.template.runtime.atomic import write_json_file
 from docfit.template.runtime.paths import task_file
 from docfit.template.runtime.store import EvidenceStore
@@ -99,7 +103,7 @@ def compile_mutation_decisions(
 ) -> JsonObject:
     root = task_root.resolve(strict=True)
     source_path, output = _compiler_paths(root, input_path, output_path)
-    decisions_file = _load_object(source_path)
+    decisions_file = load_decision_object(source_path)
     if decisions_file.get("schema_version") != 1 or set(decisions_file) != _TOP_LEVEL_KEYS:
         raise ToolFailure(
             status="needs_input",
@@ -124,8 +128,8 @@ def compile_mutation_decisions(
             code="document_hash_mismatch",
             message="The mutation document hash does not match its snapshot.",
         )
-    registry_ref, field_ids = _registry(decisions_file, task_root=root)
-    sources = _objects(decisions_file.get("sources"), "sources")
+    registry_ref, field_ids = resolve_registry(decisions_file, task_root=root)
+    sources = decision_objects(decisions_file.get("sources"), "sources")
     source_ids: set[str] = set()
     for source in sources:
         source_id = source.get("source_id")
@@ -157,7 +161,7 @@ def compile_mutation_decisions(
     for item in raw_objects:
         if isinstance(item, dict) and isinstance(item.get("object_id"), str):
             objects[item["object_id"]] = item
-    decisions = _objects(decisions_file.get("decisions"), "decisions")
+    decisions = decision_objects(decisions_file.get("decisions"), "decisions")
     decision_by_id: dict[str, JsonObject] = {}
     for decision in decisions:
         decision_id = decision.get("decision_id")
@@ -177,7 +181,7 @@ def compile_mutation_decisions(
                 message="A mutation decision is incomplete or references an unknown source.",
             )
         decision_by_id[decision_id] = decision
-    operations = _objects(decisions_file.get("operations"), "operations")
+    operations = decision_objects(decisions_file.get("operations"), "operations")
     operation_ids: set[str] = set()
     materialized_slots: set[str] = set()
     for operation in operations:

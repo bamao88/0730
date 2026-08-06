@@ -23,6 +23,29 @@ REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fiel
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
+def _add_label_before_placeholder(source: Path) -> None:
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    paragraph = list(root.iter(f"{W}p"))[1]
+    original_run = paragraph.find(f"{W}r")
+    assert original_run is not None
+    original_text = original_run.find(f"{W}t")
+    assert original_text is not None
+    original_text.text = "姓名："
+    placeholder_run = ET.SubElement(paragraph, f"{W}r")
+    ET.SubElement(placeholder_run, f"{W}t").text = "请在此填写"
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+
 def test_materialize_then_remove_commits_one_safe_docx_and_evidence(tmp_path: Path) -> None:
     task_root = tmp_path / "task"
     (task_root / "input").mkdir(parents=True)
@@ -33,6 +56,7 @@ def test_materialize_then_remove_commits_one_safe_docx_and_evidence(tmp_path: Pa
     source = task_root / "input/template.docx"
     registry = task_root / "input/content-fields.yaml"
     shutil.copyfile(FIXTURE, source)
+    _add_label_before_placeholder(source)
     shutil.copyfile(REGISTRY, registry)
     source_hash = sha256_file(source)
     observed = TemplateObservationService().create(
@@ -43,7 +67,11 @@ def test_materialize_then_remove_commits_one_safe_docx_and_evidence(tmp_path: Pa
         },
         task_root=task_root,
     )
-    target = next(item for item in observed["objects"] if item["text"] == "请在此填写")
+    target = next(
+        item
+        for item in observed["objects"]
+        if item["kind"] == "run" and item["text"] == "请在此填写"
+    )
     execution_locator = {
         "snapshot_ref": observed["snapshot_ref"],
         "object_id": target["object_id"],
@@ -183,6 +211,8 @@ def test_materialize_then_remove_commits_one_safe_docx_and_evidence(tmp_path: Pa
     assert managed.find(f"{W}sdtPr/{W}alias").get(f"{W}val") == "thesis.title.zh"
     assert "".join(item.text or "" for item in managed.iter(f"{W}t")) == ""
     assert "请在此填写" not in "".join(item.text or "" for item in root.iter(f"{W}t"))
+    assert "姓名：" in "".join(item.text or "" for item in paragraphs[1].iter(f"{W}t"))
+    assert "姓名：" not in "".join(item.text or "" for item in managed.iter(f"{W}t"))
 
     comparison_request = {
         "schema_version": 1,

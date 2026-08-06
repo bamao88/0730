@@ -74,6 +74,27 @@ def snapshot_document(document: Path, document_sha256: str, source_path: str) ->
                             "expected_fingerprint": sha256_json(identity),
                         }
                     )
+                    for run_index, run in enumerate(paragraph.iter(f"{_W}r")):
+                        run_text = _text(run)
+                        run_identity = {
+                            "part": part,
+                            "kind": "run",
+                            "paragraph_index": index,
+                            "run_index": run_index,
+                            "text": run_text,
+                        }
+                        objects.append(
+                            {
+                                "object_id": f"obj-{sha256_json(run_identity)[:24]}",
+                                "kind": "run",
+                                "story": story,
+                                "part": part,
+                                "paragraph_index": index,
+                                "run_index": run_index,
+                                "text": run_text,
+                                "expected_fingerprint": sha256_json(run_identity),
+                            }
+                        )
                 for control in root.iter(f"{_W}sdt"):
                     properties = control.find(f"{_W}sdtPr")
                     item: JsonObject = {
@@ -217,21 +238,31 @@ class TemplateObservationService:
         snapshot_ref = args.get("snapshot_ref")
         snapshot = EvidenceStore(task_root).resolve(snapshot_ref, expected_kind="snapshot")
         query = args.get("query")
-        if not isinstance(query, dict) or set(query) - {"text", "match", "include"}:
+        if not isinstance(query, dict) or set(query) - {
+            "text",
+            "match",
+            "kinds",
+            "include",
+        }:
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
                 code="invalid_query",
-                message="query must contain only text, match, and include.",
+                message="query must contain only text, match, kinds, and include.",
             )
         text = query.get("text")
         match_mode = query.get("match")
+        kinds = query.get("kinds", ["paragraph"])
         include = query.get("include", [])
         if (
             not isinstance(text, str)
             or not text
             or len(text) > 256
             or match_mode not in {"exact", "casefold", "regex"}
+            or not isinstance(kinds, list)
+            or not kinds
+            or len(kinds) != len(set(kinds))
+            or any(item not in {"paragraph", "run"} for item in kinds)
             or not isinstance(include, list)
             or any(
                 item not in {"context", "effective_style", "visual_location"}
@@ -282,6 +313,8 @@ class TemplateObservationService:
         for item in raw_objects:
             if not isinstance(item, dict) or not isinstance(item.get("text"), str):
                 continue
+            if item.get("kind") not in kinds:
+                continue
             if not matches(item["text"]):
                 continue
             result: JsonObject = {
@@ -296,7 +329,10 @@ class TemplateObservationService:
                 },
             }
             if "context" in include:
-                result["context"] = {"paragraph_index": item.get("paragraph_index")}
+                result["context"] = {
+                    "paragraph_index": item.get("paragraph_index"),
+                    "run_index": item.get("run_index"),
+                }
             if "effective_style" in include:
                 result["effective_style"] = item.get("effective_style")
             if "visual_location" in include:
@@ -306,6 +342,7 @@ class TemplateObservationService:
             key=lambda item: (
                 str(item.get("part")),
                 int(item.get("context", {}).get("paragraph_index") or 0),
+                int(item.get("context", {}).get("run_index") or 0),
                 str(item.get("object_ref", {}).get("object_id")),
             )
         )

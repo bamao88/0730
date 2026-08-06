@@ -160,6 +160,22 @@ a completion gate for the implemented M2 product chain.
 The exploratory authorized real-sample run is retained only as historical engineering
 evidence. It is not a current completion blocker and does not make M3 complete.
 
+The development-stage school-template preparation command is:
+
+```bash
+uv run docfit prepare-template \
+  --school-template path/to/school-template.docx \
+  --school-requirements path/to/school-requirements.pdf \
+  --field-registry docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml \
+  --output .tmp/template-preparation-task
+```
+
+The output argument must identify a new task directory. A successful run publishes exactly
+`clean-template.docx`, `fill-contract.json`, `visual-review.json`, and `build-report.json` below
+`<output>/output/template-artifact/`. The `built` status proves the development artifact is
+complete and mechanically revalidated; it does not claim Human acceptance, a fixed template,
+formal quality scoring, or M3 completion.
+
 The public conversion command is:
 
 ```bash

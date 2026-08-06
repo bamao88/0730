@@ -100,7 +100,7 @@ docfit prepare-template \
 2. 把输入作为只读任务材料挂载或复制到 `input/`，记录精确 hash；
 3. 使用现有 `ClaudeSDKClient` 启动一个 SDK query/session；
 4. 向 Agent 暴露候选 Skill、四个 Tool、允许的基础文件 Tool 和 structured output schema；
-5. 把成功产物发布到 `<output>/template-artifact/`；
+5. 把成功产物发布到 `<output>/output/template-artifact/`；
 6. 根据机器 structured output 返回稳定退出码和 JSON 摘要。
 
 任务目录逻辑结构为：

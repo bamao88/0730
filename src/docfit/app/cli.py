@@ -107,6 +107,15 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    prepare_parser = subparsers.add_parser(
+        "prepare-template",
+        help="run one development-stage school template preparation Agent",
+    )
+    prepare_parser.add_argument("--school-template", required=True)
+    prepare_parser.add_argument("--school-requirements", required=True)
+    prepare_parser.add_argument("--field-registry", required=True)
+    prepare_parser.add_argument("--output", required=True, dest="output_directory")
+
     observe_parser = subparsers.add_parser(
         "observe",
         help="start the local DocFit observation website",
@@ -283,6 +292,37 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 2
         print(json.dumps(asdict(conversion_report), ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if conversion_report.status == "COMPLETED" else 2
+    if args.command == "prepare-template":
+        from dataclasses import asdict
+
+        from docfit.app.prepare_template import PrepareTemplateRequest, run_prepare_template
+        from docfit.tools.runtime import ToolFailure
+
+        prepare_request = PrepareTemplateRequest(
+            school_template=Path(args.school_template),
+            school_requirements=Path(args.school_requirements),
+            field_registry=Path(args.field_registry),
+            output_directory=Path(args.output_directory),
+        )
+        try:
+            report = asyncio.run(run_prepare_template(prepare_request))
+        except (OSError, ToolFailure) as error:
+            payload = (
+                error.result()
+                if isinstance(error, ToolFailure)
+                else {
+                    "schema_version": 1,
+                    "status": "error",
+                    "failure": {
+                        "code": "prepare_template_io_failed",
+                        "message": "Template task files could not be prepared.",
+                    },
+                }
+            )
+            print(json.dumps(payload, ensure_ascii=False, indent=2), file=sys.stderr)
+            return 2
+        print(json.dumps(asdict(report), ensure_ascii=False, indent=2, sort_keys=True))
+        return 0 if report.status == "built" else 2
     if args.command == "eval":
         from dataclasses import asdict
 

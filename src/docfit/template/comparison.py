@@ -71,12 +71,12 @@ class TemplateComparisonService:
         before_by_position = {
             (item.get("part"), item.get("paragraph_index")): item
             for item in before_objects
-            if isinstance(item, dict)
+            if isinstance(item, dict) and item.get("kind") == "paragraph"
         }
         after_by_position = {
             (item.get("part"), item.get("paragraph_index")): item
             for item in after_objects
-            if isinstance(item, dict)
+            if isinstance(item, dict) and item.get("kind") == "paragraph"
         }
         expected_changes: list[JsonObject] = []
         unexpected_changes: list[JsonObject] = []

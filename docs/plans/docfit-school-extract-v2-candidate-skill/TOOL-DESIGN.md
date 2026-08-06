@@ -152,11 +152,13 @@ snapshot_ref: snapshot:v1:...
 query:
   text: 姓名
   match: exact | casefold | regex
+  kinds: [paragraph] | [run] | [paragraph, run]  # 省略时默认 paragraph
   include: [context, effective_style, visual_location]
 ```
 
 返回全部匹配并稳定排序；零匹配仍是成功。重复匹配不能由 Tool 静默选一个。regex 有长度、
-复杂度和 timeout 限制。
+复杂度和 timeout 限制。标签与填写区共享段落时应查询 `run`，避免把学校固定标签一起物化；
+run match 的 context 同时返回 `paragraph_index` 与 `run_index`。
 
 每个 match 返回 task-local execution locator：
 

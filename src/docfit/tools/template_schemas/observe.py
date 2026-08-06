@@ -25,7 +25,31 @@ TEMPLATE_OBSERVE_SCHEMA: JsonObject = {
             },
         },
         "snapshot_ref": {"type": "string", "minLength": 1},
-        "query": {"type": "object"},
+        "query": {
+            "type": "object",
+            "properties": {
+                "text": {"type": "string", "minLength": 1, "maxLength": 256},
+                "match": {"type": "string", "enum": ["exact", "casefold", "regex"]},
+                "kinds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "uniqueItems": True,
+                    "items": {"type": "string", "enum": ["paragraph", "run"]},
+                },
+                "include": {
+                    "type": "array",
+                    "maxItems": 3,
+                    "uniqueItems": True,
+                    "items": {
+                        "type": "string",
+                        "enum": ["context", "effective_style", "visual_location"],
+                    },
+                },
+            },
+            "required": ["text", "match", "include"],
+            "additionalProperties": False,
+        },
         "render_ref": {"type": "string", "minLength": 1},
         "pages": {
             "type": "array",

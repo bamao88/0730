@@ -41,8 +41,9 @@ Tool 负责确定性 DOCX 事实、受控修改、比较和原子构建。compil
 2. 读取 Registry ID/version/hash，理解可用 `field_id`、类型、字段基数和 value source。
 3. 调用 `template_observe.create` 建立结构 snapshot；根据任务需要选择 structure、visible
    objects、styles 和 slot candidates。
-4. 需要定位文字或对象时使用 `template_observe.query`。保留全部匹配；不要凭页码、段落序号
-   或相似文字静默选一个。
+4. 需要定位文字或对象时使用 `template_observe.query`。默认查询 paragraph；当标签与填写区共享
+   段落、必须只物化局部内容时，显式使用 `kinds: [run]` 查询 run，并保留标签和其他同段内容。
+   保留全部匹配；不要凭页码、段落序号或相似文字静默选一个。
 5. 用 `quick` 页面证据检查复杂结构或修改范围。图片通过 `template_observe.images` 分批读取。
 6. 区分四类身份：Registry `field_id`、模板 `slot_id/region_id`、task-local execution locator、
    最终 artifact locator。不要把它们互相替代。
@@ -153,6 +154,9 @@ uv run python <skill-root>/scripts/<script>.py \
   --task-root <task-root> --input <decision.yaml> --output <new-output.json>
 ```
 
+由 `docfit prepare-template` 启动时，应用会在 `DOCFIT_PYTHON` 提供当前产品解释器；此时用
+`"$DOCFIT_PYTHON" <skill-root>/scripts/<script>.py ...`，不要在任务目录创建另一套 uv 环境。
+
 脚本只允许 task root `work/` 内路径，不覆盖已有输出。编译错误是返工输入，不是任务终点。
 
 ## 按需读取 references
@@ -171,7 +175,7 @@ uv run python <skill-root>/scripts/<script>.py \
 
 ```yaml
 status: built | blocked
-artifact_path: <path> | null
+artifact_path: output/template-artifact | null
 template_sha256: <sha256> | null
 fill_contract_sha256: <sha256> | null
 counts:

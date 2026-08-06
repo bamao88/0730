@@ -3,7 +3,9 @@ from __future__ import annotations
 import asyncio
 import base64
 import shutil
+import zipfile
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 from PIL import Image
 
@@ -18,6 +20,7 @@ FIXTURE_ROOT = (
     / "template-extraction"
     / "fixtures"
 )
+W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
 def _task(tmp_path: Path, fixture: str = "S00-minimal-pass") -> tuple[Path, Path]:
@@ -27,6 +30,31 @@ def _task(tmp_path: Path, fixture: str = "S00-minimal-pass") -> tuple[Path, Path
     (task_root / "output").mkdir()
     source = task_root / "input" / "school-template.docx"
     shutil.copyfile(FIXTURE_ROOT / fixture / "actual-template.docx", source)
+    return task_root, source
+
+
+def _mixed_run_task(tmp_path: Path) -> tuple[Path, Path]:
+    task_root, source = _task(tmp_path, "S08-forbidden-residue")
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    paragraph = list(root.iter(f"{W}p"))[1]
+    original_run = paragraph.find(f"{W}r")
+    assert original_run is not None
+    original_text = original_run.find(f"{W}t")
+    assert original_text is not None
+    original_text.text = "姓名："
+    placeholder_run = ET.SubElement(paragraph, f"{W}r")
+    ET.SubElement(placeholder_run, f"{W}t").text = "请在此填写"
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
     return task_root, source
 
 
@@ -127,6 +155,50 @@ def test_observe_query_returns_zero_or_all_matches_without_silent_selection(
     assert missing["call_status"] == "ok"
     assert missing["match_count"] == 0
     assert missing["matches"] == []
+
+
+def test_observe_query_can_select_a_run_without_selecting_its_label_paragraph(
+    tmp_path: Path,
+) -> None:
+    task_root, _ = _mixed_run_task(tmp_path)
+    created = TemplateObservationService().create(
+        {
+            "input_docx": "input/school-template.docx",
+            "visual_level": "none",
+            "focus": ["slot_candidates"],
+        },
+        task_root=task_root,
+    )
+
+    paragraph = TemplateObservationService().query(
+        {
+            "snapshot_ref": created["snapshot_ref"],
+            "query": {
+                "text": "姓名：请在此填写",
+                "match": "exact",
+                "include": ["context"],
+            },
+        },
+        task_root=task_root,
+    )
+    run = TemplateObservationService().query(
+        {
+            "snapshot_ref": created["snapshot_ref"],
+            "query": {
+                "text": "请在此填写",
+                "match": "exact",
+                "kinds": ["run"],
+                "include": ["context"],
+            },
+        },
+        task_root=task_root,
+    )
+
+    assert paragraph["match_count"] == 1
+    assert paragraph["matches"][0]["kind"] == "paragraph"
+    assert run["match_count"] == 1
+    assert run["matches"][0]["kind"] == "run"
+    assert run["matches"][0]["context"]["run_index"] == 1
 
 
 class _ThreePageRenderer:
