@@ -1,0 +1,577 @@
+{
+  "status": "PASS",
+  "source_sha256": "720372f4e70b75ade60a302e95abc870e47d47ac7e6cbf0e5a16ceef4d619e14",
+  "output_docx_sha256": "2328d529eef8eedc110783c106d8a9dbcf54eb230f5105c4e7d3fb88c64992d8",
+  "word_pdf_sha256": "0b8e5d42f4f471e70c8c6e57a1b97ac8f52643b006c9bf3794749d7707405ef6",
+  "anonymous_word_pdf_sha256": "4b92caada7f2ae2caa10b696bb79b0abcc2d32371697f6c67bcb5610530455be",
+  "libreoffice_pdf_sha256": "cf18655f5aac089b801266d13e7ec9d12ad19e5c1a2bd3f087a87aaaafa3d713",
+  "check_count": 40,
+  "failed_check_count": 0,
+  "checks": [
+    {
+      "name": "source_sha256_bound",
+      "passed": true,
+      "detail": "720372f4e70b75ade60a302e95abc870e47d47ac7e6cbf0e5a16ceef4d619e14"
+    },
+    {
+      "name": "zip_integrity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all_xml_well_formed",
+      "passed": true,
+      "detail": 37
+    },
+    {
+      "name": "tutorial_example_changelog_removed",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "only_cover_logo_media_retained",
+      "passed": true,
+      "detail": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "name": "no_external_relationships",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "no_tracked_changes_or_comments",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "global_auto_field_update_disabled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "generation_and_reference_fields_preserved",
+      "passed": true,
+      "detail": [
+        "TOC \\o \"3-3\" \\h \\z \\t \"",
+        "标题",
+        "1,1,",
+        "标题",
+        "2,2,PKU",
+        "正文前标题",
+        ",9,PKU",
+        "正文尾标题",
+        ",9\"",
+        "PAGEREF _Toc172543416 \\h",
+        "PAGEREF _Toc172543417 \\h",
+        "PAGEREF _Toc172543418 \\h",
+        "PAGEREF _Toc172543419 \\h",
+        "PAGEREF _Toc172543420 \\h",
+        "PAGEREF _Toc172543421 \\h",
+        "PAGEREF _Toc172543422 \\h",
+        "PAGEREF _Toc172543425 \\h",
+        "PAGEREF _Toc172543429 \\h",
+        "PAGEREF _Toc172543430 \\h",
+        "PAGEREF _Toc172543431 \\h",
+        "PAGEREF _Toc172543441 \\h",
+        "PAGEREF _Toc172543449 \\h",
+        "PAGEREF _Toc172543450 \\h",
+        "PAGEREF _Toc172543451 \\h",
+        "PAGEREF _Toc172543452 \\h",
+        "TOC \\h \\z \\t \"PKU",
+        "图题",
+        "\" \\c",
+        "PAGEREF _Toc187356116 \\h",
+        "TOC \\h \\z \\t \"PKU",
+        "表题",
+        "\" \\c",
+        "PAGEREF _Toc187356125 \\h",
+        "",
+        "QUOTE \"",
+        "一九一一年一月",
+        "STYLEREF 1 \\s",
+        "二",
+        "日",
+        "\" \\@\"D\"",
+        "",
+        "SEQ",
+        "图",
+        "\\* ARABIC \\S 1",
+        "",
+        "REF _Ref100407643 \\h",
+        "",
+        "",
+        "QUOTE \"",
+        "一九一一年一月",
+        "STYLEREF 1 \\s",
+        "二",
+        "日",
+        "\" \\@\"D\"",
+        "",
+        "SEQ",
+        "公式",
+        "\\* ARABIC \\s 1",
+        "REF _Ref57047867 \\h",
+        "\\* MERGEFORMAT",
+        "",
+        "QUOTE \"",
+        "一九一一年一月",
+        "STYLEREF 1 \\s",
+        "二",
+        "日",
+        "\" \\@\"D\"",
+        "",
+        "",
+        "SEQ",
+        "表",
+        "\\* ARABIC \\s 1",
+        "",
+        "",
+        "REF _Ref100267170 \\h",
+        ""
+      ]
+    },
+    {
+      "name": "document_has_no_eager_dirty_fields",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "clean_pageref_caches_locked_until_whole_table_update",
+      "passed": true,
+      "detail": {
+        "pageref_fields": 18,
+        "locked_begin_fields": 18
+      }
+    },
+    {
+      "name": "full_element_fill_slots_present",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "heading_list_quote_style_instances",
+      "passed": true,
+      "detail": {
+        "1": 1,
+        "2": 5,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "PKU": 2,
+        "PKUf3": 1
+      }
+    },
+    {
+      "name": "pku_emphasis_character_style_instance",
+      "passed": true,
+      "detail": 1
+    },
+    {
+      "name": "one_portrait_chapter_example_only",
+      "passed": true,
+      "detail": {
+        "heading_1_count": 1,
+        "residual_terms": []
+      }
+    },
+    {
+      "name": "conditional_reviewer_page_real_footnote",
+      "passed": true,
+      "detail": {
+        "references": 1,
+        "text": " 参与实名评审的博士论文需要附加此页，参与匿名评审的博士论文无需附加此页，以实际教务要求为准。"
+      }
+    },
+    {
+      "name": "cross_reference_bookmarks_preserved",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "clean_main_toc_cache_has_16_entries",
+      "passed": true,
+      "detail": 18
+    },
+    {
+      "name": "main_toc_excludes_levels_four_and_five",
+      "passed": true,
+      "detail": "目录摘要IABSTRACTII目录III图目录IV表目录V第一章    【章标题】11.1    【二级标题：文字层级与正文示例】11.1.1    【三级标题】11.2    【二级标题：图示例】11.3    【二级标题：公式示例】21.4    【二级标题：表示例】21.5    【横向页面标题（可选）】3参考文献4附录 A  博士期间工作成果5致谢6北京大学学位论文原创性声明和使用授权说明7"
+    },
+    {
+      "name": "main_toc_cache_matches_clean_structure",
+      "passed": true,
+      "detail": "目录摘要IABSTRACTII目录III图目录IV表目录V第一章    【章标题】11.1    【二级标题：文字层级与正文示例】11.1.1    【三级标题】11.2    【二级标题：图示例】11.3    【二级标题：公式示例】21.4    【二级标题：表示例】21.5    【横向页面标题（可选）】3参考文献4附录 A  博士期间工作成果5致谢6北京大学学位论文原创性声明和使用授权说明7"
+    },
+    {
+      "name": "clean_figure_list_cache",
+      "passed": true,
+      "detail": "图 1.1    【图名】1"
+    },
+    {
+      "name": "clean_table_list_cache",
+      "passed": true,
+      "detail": "表 1.1    【表名】2"
+    },
+    {
+      "name": "different_odd_and_even_headers_enabled",
+      "passed": true,
+      "detail": "w:evenAndOddHeaders"
+    },
+    {
+      "name": "pku_dynamic_header_field_contract",
+      "passed": true,
+      "detail": {
+        "word/header5.xml": "STYLEREFPKU正文前标题\\*MERGEFORMAT",
+        "word/header7.xml": "STYLEREF\"标题1\"\\n\\*MERGEFORMATSTYLEREF\"标题1\"\\*MERGEFORMAT",
+        "word/header8.xml": "STYLEREFPKU正文尾标题\\*MERGEFORMAT"
+      }
+    },
+    {
+      "name": "dynamic_header_fields_not_eagerly_marked_dirty",
+      "passed": true,
+      "detail": 0
+    },
+    {
+      "name": "all_three_header_regimes_linked",
+      "passed": true,
+      "detail": [
+        {
+          "even": "header1.xml",
+          "default": "header2.xml",
+          "first": "header3.xml"
+        },
+        {},
+        {},
+        {
+          "even": "header4.xml",
+          "default": "header5.xml"
+        },
+        {
+          "even": "header6.xml"
+        },
+        {},
+        {},
+        {},
+        {
+          "default": "header7.xml"
+        },
+        {},
+        {
+          "default": "header8.xml"
+        },
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "name": "fourteen_source_owned_sections",
+      "passed": true,
+      "detail": [
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "ODD_PAGE (4)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 297.0,
+          "height_mm": 210.01,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        },
+        {
+          "width_mm": 210.01,
+          "height_mm": 297.0,
+          "start_type": "NEW_PAGE (2)"
+        }
+      ]
+    },
+    {
+      "name": "thirteen_portrait_one_landscape_sections",
+      "passed": true,
+      "detail": {
+        "portrait": 13,
+        "landscape": 1
+      }
+    },
+    {
+      "name": "expected_four_tables",
+      "passed": true,
+      "detail": 4
+    },
+    {
+      "name": "microsoft_word_render_17_pages",
+      "passed": true,
+      "detail": {
+        "Custom Metadata": "no",
+        "Metadata Stream": "no",
+        "Tagged": "no",
+        "UserProperties": "no",
+        "Suspects": "no",
+        "Form": "none",
+        "JavaScript": "no",
+        "Pages": "17",
+        "Encrypted": "no",
+        "Page    1 size": "595.2 x 841.92 pts (A4)",
+        "Page    1 rot": "0",
+        "Page    2 size": "595.2 x 841.92 pts (A4)",
+        "Page    2 rot": "0",
+        "Page    3 size": "595.2 x 841.92 pts (A4)",
+        "Page    3 rot": "0",
+        "Page    4 size": "595.2 x 841.92 pts (A4)",
+        "Page    4 rot": "0",
+        "Page    5 size": "595.2 x 841.92 pts (A4)",
+        "Page    5 rot": "0",
+        "Page    6 size": "595.2 x 841.92 pts (A4)",
+        "Page    6 rot": "0",
+        "Page    7 size": "595.2 x 841.92 pts (A4)",
+        "Page    7 rot": "0",
+        "Page    8 size": "595.2 x 841.92 pts (A4)",
+        "Page    8 rot": "0",
+        "Page    9 size": "595.2 x 841.92 pts (A4)",
+        "Page    9 rot": "0",
+        "Page   10 size": "595.2 x 841.92 pts (A4)",
+        "Page   10 rot": "0",
+        "Page   11 size": "595.2 x 841.92 pts (A4)",
+        "Page   11 rot": "0",
+        "Page   12 size": "595.2 x 841.92 pts (A4)",
+        "Page   12 rot": "0",
+        "Page   13 size": "841.92 x 595.2 pts (A4)",
+        "Page   13 rot": "0",
+        "Page   14 size": "595.2 x 841.92 pts (A4)",
+        "Page   14 rot": "0",
+        "Page   15 size": "595.2 x 841.92 pts (A4)",
+        "Page   15 rot": "0",
+        "Page   16 size": "595.2 x 841.92 pts (A4)",
+        "Page   16 rot": "0",
+        "Page   17 size": "595.2 x 841.92 pts (A4)",
+        "Page   17 rot": "0",
+        "File size": "3212796 bytes",
+        "Optimized": "no",
+        "PDF version": "1.4"
+      }
+    },
+    {
+      "name": "microsoft_word_page_13_landscape",
+      "passed": true,
+      "detail": "841.92 x 595.2 pts (A4)"
+    },
+    {
+      "name": "anonymous_word_render_17_pages",
+      "passed": true,
+      "detail": {
+        "Custom Metadata": "no",
+        "Metadata Stream": "no",
+        "Tagged": "no",
+        "UserProperties": "no",
+        "Suspects": "no",
+        "Form": "none",
+        "JavaScript": "no",
+        "Pages": "17",
+        "Encrypted": "no",
+        "Page    1 size": "595.2 x 841.92 pts (A4)",
+        "Page    1 rot": "0",
+        "Page    2 size": "595.2 x 841.92 pts (A4)",
+        "Page    2 rot": "0",
+        "Page    3 size": "595.2 x 841.92 pts (A4)",
+        "Page    3 rot": "0",
+        "Page    4 size": "595.2 x 841.92 pts (A4)",
+        "Page    4 rot": "0",
+        "Page    5 size": "595.2 x 841.92 pts (A4)",
+        "Page    5 rot": "0",
+        "Page    6 size": "595.2 x 841.92 pts (A4)",
+        "Page    6 rot": "0",
+        "Page    7 size": "595.2 x 841.92 pts (A4)",
+        "Page    7 rot": "0",
+        "Page    8 size": "595.2 x 841.92 pts (A4)",
+        "Page    8 rot": "0",
+        "Page    9 size": "595.2 x 841.92 pts (A4)",
+        "Page    9 rot": "0",
+        "Page   10 size": "595.2 x 841.92 pts (A4)",
+        "Page   10 rot": "0",
+        "Page   11 size": "595.2 x 841.92 pts (A4)",
+        "Page   11 rot": "0",
+        "Page   12 size": "595.2 x 841.92 pts (A4)",
+        "Page   12 rot": "0",
+        "Page   13 size": "841.92 x 595.2 pts (A4)",
+        "Page   13 rot": "0",
+        "Page   14 size": "595.2 x 841.92 pts (A4)",
+        "Page   14 rot": "0",
+        "Page   15 size": "595.2 x 841.92 pts (A4)",
+        "Page   15 rot": "0",
+        "Page   16 size": "595.2 x 841.92 pts (A4)",
+        "Page   16 rot": "0",
+        "Page   17 size": "595.2 x 841.92 pts (A4)",
+        "Page   17 rot": "0",
+        "File size": "3010411 bytes",
+        "Optimized": "no",
+        "PDF version": "1.4"
+      }
+    },
+    {
+      "name": "anonymous_word_page_13_landscape",
+      "passed": true,
+      "detail": "841.92 x 595.2 pts (A4)"
+    },
+    {
+      "name": "libreoffice_render_18_pages",
+      "passed": true,
+      "detail": {
+        "Title": "北京大学博士研究生学位论文干净模板",
+        "Subject": "从说明文字、脚注、样式与固定结构独立提取的全要素可填写模板",
+        "Author": "任 翔",
+        "Creator": "Writer",
+        "Producer": "LibreOffice 26.2.3.2 (AARCH64)",
+        "CreationDate": "Tue Aug  4 22:47:28 2026 CST",
+        "Custom Metadata": "no",
+        "Metadata Stream": "yes",
+        "Tagged": "yes",
+        "UserProperties": "no",
+        "Suspects": "no",
+        "Form": "none",
+        "JavaScript": "no",
+        "Pages": "18",
+        "Encrypted": "no",
+        "Page    1 size": "595.304 x 841.89 pts (A4)",
+        "Page    1 rot": "0",
+        "Page    2 size": "595.304 x 841.89 pts (A4)",
+        "Page    2 rot": "0",
+        "Page    3 size": "595.304 x 841.89 pts (A4)",
+        "Page    3 rot": "0",
+        "Page    4 size": "595.304 x 841.89 pts (A4)",
+        "Page    4 rot": "0",
+        "Page    5 size": "595.304 x 841.89 pts (A4)",
+        "Page    5 rot": "0",
+        "Page    6 size": "595.304 x 841.89 pts (A4)",
+        "Page    6 rot": "0",
+        "Page    7 size": "595.304 x 841.89 pts (A4)",
+        "Page    7 rot": "0",
+        "Page    8 size": "595.304 x 841.89 pts (A4)",
+        "Page    8 rot": "0",
+        "Page    9 size": "595.304 x 841.89 pts (A4)",
+        "Page    9 rot": "0",
+        "Page   10 size": "595.304 x 841.89 pts (A4)",
+        "Page   10 rot": "0",
+        "Page   11 size": "595.304 x 841.89 pts (A4)",
+        "Page   11 rot": "0",
+        "Page   12 size": "595.304 x 841.89 pts (A4)",
+        "Page   12 rot": "0",
+        "Page   13 size": "841.89 x 595.304 pts (A4)",
+        "Page   13 rot": "0",
+        "Page   14 size": "595.304 x 841.89 pts (A4)",
+        "Page   14 rot": "0",
+        "Page   15 size": "595.304 x 841.89 pts (A4)",
+        "Page   15 rot": "0",
+        "Page   16 size": "595.304 x 841.89 pts (A4)",
+        "Page   16 rot": "0",
+        "Page   17 size": "595.304 x 841.89 pts (A4)",
+        "Page   17 rot": "0",
+        "Page   18 size": "595.304 x 841.89 pts (A4)",
+        "Page   18 rot": "0",
+        "File size": "389185 bytes",
+        "Optimized": "no",
+        "PDF version": "1.7"
+      }
+    },
+    {
+      "name": "libreoffice_page_13_landscape",
+      "passed": true,
+      "detail": "841.89 x 595.304 pts (A4)"
+    },
+    {
+      "name": "word_logical_blank_pages_declared",
+      "passed": true,
+      "detail": [
+        4,
+        10
+      ]
+    },
+    {
+      "name": "word_render_has_no_field_errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "word_render_has_no_stale_tutorial_entries",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "anonymous_word_virtual_blank_pages",
+      "passed": true,
+      "detail": [
+        2,
+        4,
+        10
+      ]
+    },
+    {
+      "name": "anonymous_word_front_matter_anchors",
+      "passed": true,
+      "detail": [
+        "博士研究生学位论文题目：【请填写论文题目】姓名：【姓名】学号：【学号】院系：【院系】专业：【专业】研究方向：【研究方向】导师姓名：【导师姓名】□学术学位□专业学位二〇年月",
+        "",
+        "版权声明任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。【正式提交图书馆时：本版权声明页和文末原创性声明页均须替换为个人门户下载的带二维码版本；完成替换后删除本提示。】",
+        "",
+        "摘要摘要【请填写中文摘要】关键词：【请填写中文关键词，关键词之间用分号分隔】I"
+      ]
+    }
+  ],
+  "renderer_note": "Microsoft Word is canonical: both real-name and anonymous modes render as 17 pages, with the optional landscape section on physical page 13. Real-name mode uses page 2 for the reviewer list; anonymous mode leaves pages 2 and 4 as virtual duplex blanks while copyright remains on page 3 and the Chinese abstract remains on page 5. LibreOffice is a compatibility render and paginates the same content as 18 pages, with the landscape section on page 13. The DOCX stores clean TOC/list caches, disables eager global field refresh, and locks nested PAGEREF caches until each outer TOC/list is updated as a whole."
+}
