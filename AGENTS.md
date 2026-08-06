@@ -27,6 +27,42 @@
 - There is currently no project Serena or gbrain memory store. Do not claim
   memory was synchronized to one unless it is actually configured and checked.
 
+## User collaboration profile
+
+- The user is a product manager and founder, and is the combined product and
+  technical decision owner. The user understands product, business, and Agent
+  systems well, but is not a programmer and is less familiar with traditional
+  software-development implementation details.
+- Give the user serious, professional technical material at its natural level.
+  Do not dilute implementation details, architecture, failure modes, or evidence
+  or rely on overly simplified analogies; the user can work with technical depth.
+- In technical decisions, task summaries, reviews, and ordinary answers, add the
+  relevant software-engineering system view and the key product-decision view.
+  Help the user see effects on user value, scope, maintainability, architecture,
+  delivery risk, operating cost, reversibility, and future options.
+- Communicate as a CTO reporting to a CEO: explain the available choices,
+  tradeoffs, and consequences first, then the recommended implementation path.
+- Keep this additional perspective decision-useful rather than generic. Separate
+  established facts, the technical recommendation, and the wider product/
+  engineering implications when that distinction improves the decision.
+
+## Collaboration and delivery discipline
+
+- During plan or design discussion, remain read-only. Do not modify code,
+  documentation, configuration, tests, generated artifacts, or repository state
+  until the user explicitly asks to implement or make the change.
+- After an implementation change is verified usable, immediately stage only the
+  task-scoped changes, create a commit, and push the current branch. Never include
+  unrelated pre-existing working-tree changes. If commit or push cannot complete,
+  report the exact blocker and the remaining repository state.
+- Before implementing any Agent-related fix or new capability, first locate the
+  local Claude Agent SDK docs directory and read the relevant official SDK
+  documentation. This is mandatory because the SDK evolves faster than model
+  training knowledge. Project documents, installed type definitions, and memory
+  are supplementary evidence, not substitutes for the relevant official docs.
+  If the local docs directory or the relevant official documentation is missing,
+  stop before coding and report the documentation gap to the user.
+
 ## Current execution boundary
 
 - The canonical milestone contract is
