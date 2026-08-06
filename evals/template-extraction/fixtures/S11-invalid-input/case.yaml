@@ -1,0 +1,22 @@
+schema_version: docfit-template-extraction-case/v1
+case_id: s11-invalid-input
+description: Actual lacks the main DOCX part and has an invalid contract
+gold:
+  template: gold-template.docx
+  contract: gold-contract.yaml
+field_registry_ref:
+  path: ../field-registry.yaml
+  id: docfit.thesis.content_fields
+  version: 0.1.0
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+eval_config:
+  path: ../eval-config.yaml
+  id: synthetic-v1
+  version: docfit-template-extraction-eval-config/v1
+  sha256: db84fa7472513c35c55b87516e0235e2ce7c4c398a4259a7e207a3a908156cfb
+scoring_version: docfit-template-extraction-scoring/v1
+expected_verdict: INPUT_ERROR
+gold_review:
+  status: synthetic
+  reviewer: null
+  reviewed_at: null

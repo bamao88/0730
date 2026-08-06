@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docfit.local/schemas/template-extraction-eval-config-v1.json",
+  "title": "DocFit template extraction Eval configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "config_id", "marker_protocol", "tolerances", "scoring_ref"],
+  "properties": {
+    "schema_version": {"const": "docfit-template-extraction-eval-config/v1"},
+    "config_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "marker_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "field_identity_property", "slot_identity_property", "internal_id_property"],
+      "properties": {
+        "version": {"const": "docfit-content-control-marker/v1"},
+        "field_identity_property": {"const": "w:alias"},
+        "slot_identity_property": {"const": "w:tag"},
+        "internal_id_property": {"const": "w:id"}
+      }
+    },
+    "tolerances": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["font_size_pt", "distance_pt", "color_channel"],
+      "properties": {
+        "font_size_pt": {"type": "number", "minimum": 0, "maximum": 1},
+        "distance_pt": {"type": "number", "minimum": 0, "maximum": 2},
+        "color_channel": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    },
+    "normalization": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["ignore_zip_timestamps", "ignore_word_internal_sdt_id", "merge_equivalent_runs"]}
+    },
+    "scoring_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "version", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "version": {"const": "docfit-template-extraction-scoring/v1"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

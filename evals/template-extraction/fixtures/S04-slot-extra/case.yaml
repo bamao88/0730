@@ -1,0 +1,22 @@
+schema_version: docfit-template-extraction-case/v1
+case_id: s04-slot-extra
+description: one undeclared slot is added
+gold:
+  template: gold-template.docx
+  contract: gold-contract.yaml
+field_registry_ref:
+  path: ../field-registry.yaml
+  id: docfit.thesis.content_fields
+  version: 0.1.0
+  sha256: 3e62d68c9f26f95039cddcec7f14c58ff075a3a59097282dfec85e1cb2f69583
+eval_config:
+  path: ../eval-config.yaml
+  id: synthetic-v1
+  version: docfit-template-extraction-eval-config/v1
+  sha256: db84fa7472513c35c55b87516e0235e2ce7c4c398a4259a7e207a3a908156cfb
+scoring_version: docfit-template-extraction-scoring/v1
+expected_verdict: FAIL
+gold_review:
+  status: synthetic
+  reviewer: null
+  reviewed_at: null

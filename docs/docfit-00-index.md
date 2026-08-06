@@ -1,7 +1,7 @@
 # DocFit 设计文档索引（00）
 
 > 状态：最终架构索引
-> 日期：2026-08-04
+> 日期：2026-08-06
 
 本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
 M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
@@ -13,6 +13,32 @@ M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX T
 批准的产品开发范围已在 M2 结束并完成；M3 的
 Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
 宣称 M3 已通过，也不再作为当前计划 blocker。
+
+模板提取静态产物 Eval 已有一份独立的顶层设计：
+`docs/plans/docfit-template-extraction-eval/DESIGN.md`。该切片只读取已经生成的模板与
+填写契约，并与 Gold 模板、Gold 填写契约比较；它不依赖上游提取运行状态，也不规定
+Agent 轨迹。当前已完成 G1 schema/config/合成 fixture 和三校 candidate case 的最终目录
+物化；三校仍固定为 `INPUT_ERROR`，Actual—Gold 评分 runner、Human-accepted Gold 与
+学校评分回归尚未完成，因此不构成 M3 通过或可试用 MVP 声明。
+
+该静态设计只覆盖连接链的一侧。长期 M3 数据合同还必须把三类 Human-confirmed
+任务事实连到同一语义基线：开放且版本化的 Content Field Registry 快照定义
+共享 `field_id`；模板提取结果用
+`slot_id` / `region_id → field_id` 和绑定模板 hash 的目标 locator 表达可填写位置；
+学生内容提取结果用 `content_id → field_id`、内容值/对象引用和绑定学生源 hash 的
+source locator 表达来源内容；当前任务 `placement` 再把一个或多个 `content_id`
+显式连接到具体 `slot_id` / `region_id`，并在需要时记录可追溯的拆分、组合或
+目标显示投影。相同 `field_id` 只能生成候选连接，不能在
+多目标、复合、条件、生成或来源冲突时自动授权写入。
+
+当前 Registry 研发权威是
+`docs/plans/docfit-content-field-registry/DESIGN.md` 和固定的
+`content-fields-v0.1.yaml`。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
+Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval/Gold
+数据。二者都不是产品 Knowledge、全局学校 profile、运行时 Content Ledger 或新的第六类
+产品资产。v0.1 保留 54 个字段的开发基线，但尚未完成字段级 Human 签署、
+完整 Student/Placement schema 或 M3。后续审查仍必须区分学生源可提取值、任务输入、
+系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
 M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
 06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
@@ -129,6 +155,9 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
    `docfit-local-observability-design.md` → 02 第 2.4、10 节。
 6. 设计样式观测与缺口补全：读 01 的 Knowledge/Tool 边界 → 05 第 2.4.1 节 →
    04 的 Skill 边界 → 02 的后续契约门 → 06 第 6.8 节。
+7. 设计字段槽定位、学生内容提取和 placement/Eval：读 01 的双侧连接合同 →
+   05 的当前任务字段与放置数据边界 → 04 的两个 Skill 输出边界 → 02、03 的
+   Eval/Gold 合同 → 06 第 6.9 节。
 
 ## 五类资产的权威边界
 
@@ -137,7 +166,7 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 | Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回；通过明确项目相对路径指引按需读取 references | 固定调度图、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
 | Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
-| Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
+| Eval | 离线样本、断言、回归与质量比较；在未来 M3 中保存相互 hash/版本绑定的字段、模板、学生内容与 placement 真值 | 在线运行编排、交付状态管理，或把 oracle 默认暴露给被测对象 |
 | 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实主 Agent 直接读取路径策略、受信任 Bash/Write 与 Subagent 上下文隔离/最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、第二套 shell/runtime、用监控事件控制或精确回放 Agent |
 
 Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、

@@ -1,0 +1,2229 @@
+schema_version: docfit-template-fill-contract/v1
+contract_id: njau-undergraduate.fill-contract
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+template_id: njau-undergraduate.clean-template
+revision: 2026-08-06.2
+contract_version: docfit-template-truth-pack-draft-2
+school_id: njau-undergraduate
+school_name: 南京农业大学本科
+template_path: template.docx
+template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+field_registry_ref:
+  path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.1.0
+  sha256: 9779d0272fc395245002184d43e8356b0722a6821e8ca0a36ced0db6d26d522d
+marker_protocol:
+  version: docfit-content-control-marker/v1
+  field_identity_property: w:alias
+  field_identity_rule: w:alias must equal the canonical field_id
+  slot_identity_property: w:tag
+  slot_identity_rule: w:tag must be unique within the DOCX snapshot
+  word_internal_id_property: w:id
+  word_internal_id_semantics: non_business_identity
+canonical_renderer: microsoft_word
+provenance:
+  source_candidate_path: ../../../../../temp/manual-gold-preparation/school-template-nannong-undergraduate-clean.docx
+  source_candidate_sha256: 102bfca1cf158ee47fecab45fdcca123df0ea5fd7bf50c8c4a30affee42d4ef6
+  upstream_source_ref: ../../../../../temp/manual-gold-preparation/gold/00-inputs/schools/njau-undergraduate__source-template.docx
+  logical_unit_evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  derivation_method: copy_source_then_normalize_content_control_alias_to_field_id
+  metadata_transform:
+    version: docfit-content-control-marker/v1
+    changed_part: word/document.xml
+    changed_property: w:sdtPr/w:alias/@w:val
+    source_docx_mutated: false
+  candidate_spec_sha256: 927fb26072807caa037c60d83e8a6f09daf3d19bbfff44430e61190672d06d13
+  candidate_validation_report_sha256: e1ad8d96729ce663c0d316ca41e1fa7fb56201df2054d0fb540b107777d164e0
+locator_contract:
+  snapshot_binding: template_sha256
+  preferred_locator_order:
+  - content_control_tag
+  - bookmark
+  - placeholder_anchor
+  current_template_locator_mode: content_control_tag
+  uniqueness_rule: every declared automatic locator must match exactly once in the bound DOCX snapshot
+  stale_policy: reject_on_template_hash_mismatch
+regions:
+- region_id: region.generated.toc
+  field_ids:
+  - generated.toc
+  label: 主目录生成区
+  start_locator:
+    type: placeholder_anchor
+    value: 目  录
+    match_mode: exact_paragraph
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  end_locator:
+    type: placeholder_anchor
+    value: 目  录
+    match_mode: exact_paragraph
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  placement_mode: retain_in_place_and_update_existing_field_or_cache
+  style_map: {}
+  repeat_policy: single_generated_section
+  evidence_refs:
+  - type: template_visible_anchor
+    value: 目  录
+    status: candidate_pending_field_structure_review
+  owner: slot
+  required: true
+slots:
+- slot_id: slot.cover.title
+  field_id: thesis.title.zh
+  label: 论文题目
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.title
+    alias: thesis.title.zh
+    placeholder_text: 【请填写论文题目】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.author_name
+  field_id: author.name.zh
+  label: 姓名
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.author_name
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.author_name
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.author_name
+    alias: author.name.zh
+    placeholder_text: 【请填写姓名】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.student_id
+  field_id: author.student_id
+  label: 学号
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.student_id
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.student_id
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.student_id
+    alias: author.student_id
+    placeholder_text: 【请填写学号】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.college
+  field_id: author.department
+  label: 学院
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.college
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.college
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.college
+    alias: author.department
+    placeholder_text: 【请填写学院】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.major
+  field_id: author.major
+  label: 专业
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.major
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.major
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.major
+    alias: author.major
+    placeholder_text: 【请填写专业】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.advisor_name
+  field_id: advisor.name.zh
+  label: 指导教师姓名
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.advisor_name
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.cover.advisor_name
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.advisor_name
+    alias: advisor.name.zh
+    placeholder_text: 【姓名】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.advisor_title
+  field_id: advisor.title
+  label: 指导教师职称
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.advisor_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: false
+  cardinality: optional
+  fill_mode: replace_content_control_content
+  style_id: style.cover.advisor_title
+  placeholder_policy: remove_after_fill
+  empty_policy: placeholder_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.advisor_title
+    alias: advisor.title
+    placeholder_text: 【职称】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      first_line_indent_pt: 64.0
+      line_spacing_rule: exact
+      line_value: 700
+    container: {}
+    page: {}
+- slot_id: slot.cover.year_suffix
+  field_id: submission.date
+  label: 年份后两位
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.cover.year_suffix
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: fill_composite_content_controls
+  style_id: style.cover.year_suffix
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.cover.year_suffix
+    alias: submission.date
+    placeholder_text: XX
+  component_locators:
+  - role: year_suffix
+    locator:
+      type: content_control_tag
+      value: docfit.slot.cover.year_suffix
+      part: word/document.xml
+      expected_match_count: 1
+      story: document
+  - role: month
+    locator:
+      type: content_control_tag
+      value: docfit.slot.cover.month
+      part: word/document.xml
+      expected_match_count: 1
+      story: document
+  - role: day
+    locator:
+      type: content_control_tag
+      value: docfit.slot.cover.day
+      part: word/document.xml
+      expected_match_count: 1
+      story: document
+  value_contract:
+    components:
+    - year_suffix
+    - month
+    - day
+    preserve_fixed_date_labels: true
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Courier New
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: center
+      line_spacing_rule: auto
+      line_value: 300
+    container: {}
+    page: {}
+- slot_id: slot.abstract_cn.title
+  field_id: thesis.title.zh
+  label: 中文论文题目
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_cn.title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_cn.title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_cn.title
+    alias: thesis.title.zh
+    placeholder_text: 【请填写中文论文题目】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 18.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: center
+      space_before_pt: 24.0
+      space_after_pt: 18.0
+    container: {}
+    page: {}
+- slot_id: slot.abstract_cn.body
+  field_id: abstract.zh
+  label: 中文摘要正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_cn.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_cn.body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_cn.body
+    alias: abstract.zh
+    placeholder_text: 【请填写中文摘要正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.abstract_cn.keywords
+  field_id: keywords.zh
+  label: 中文关键词
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_cn.keywords
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_cn.keywords
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_cn.keywords
+    alias: keywords.zh
+    placeholder_text: 【关键词1；关键词2；关键词3】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 楷体_GB2312
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.abstract_en.title
+  field_id: thesis.title.en
+  label: 英文论文题目
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_en.title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_en.title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_en.title
+    alias: thesis.title.en
+    placeholder_text: 【ENTER ENGLISH TITLE】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: Times New Roman
+      hansi: Times New Roman
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 16.0
+      bold: true
+      color: '767676'
+      latin: Times New Roman
+    paragraph:
+      alignment: center
+      line_spacing_rule: exact
+      line_value: 400
+      space_before_pt: 24.0
+      space_after_pt: 18.0
+    container: {}
+    page: {}
+- slot_id: slot.abstract_en.body
+  field_id: abstract.en
+  label: 英文摘要正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_en.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_en.body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_en.body
+    alias: abstract.en
+    placeholder_text: 【Enter English abstract】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.abstract_en.keywords
+  field_id: keywords.en
+  label: 英文关键词
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.abstract_en.keywords
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: one
+  fill_mode: replace_content_control_content
+  style_id: style.abstract_en.keywords
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.abstract_en.keywords
+    alias: keywords.en
+    placeholder_text: 【keyword 1; keyword 2; keyword 3】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 楷体_GB2312
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.literature_review.body
+  field_id: body.paragraph
+  label: 文献综述正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.literature_review.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.literature_review.body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.literature_review.body
+    alias: body.paragraph
+    placeholder_text: 【请填写文献综述正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 21.0
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.literature_review.section_title
+  field_id: body.heading.level2
+  label: 文献综述一级节标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.literature_review.section_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.literature_review.section_title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.literature_review.section_title
+    alias: body.heading.level2
+    placeholder_text: 1 章节标题
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 14.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+      outline_level: 1
+    container: {}
+    page: {}
+- slot_id: slot.literature_review.section_body
+  field_id: body.paragraph
+  label: 文献综述一级节正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.literature_review.section_body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.literature_review.section_body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.literature_review.section_body
+    alias: body.paragraph
+    placeholder_text: 【请填写本节正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      first_line_indent_pt: 28.0
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+    container: {}
+    page: {}
+- slot_id: slot.literature_review.subsection_title
+  field_id: body.heading.level3
+  label: 文献综述二级节标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.literature_review.subsection_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.literature_review.subsection_title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.literature_review.subsection_title
+    alias: body.heading.level3
+    placeholder_text: 1.1 小节标题
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+      outline_level: 2
+    container: {}
+    page: {}
+- slot_id: slot.literature_review.subsection_body
+  field_id: body.paragraph
+  label: 文献综述二级节正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.literature_review.subsection_body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.literature_review.subsection_body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.literature_review.subsection_body
+    alias: body.paragraph
+    placeholder_text: 【请填写本小节正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      bold: true
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      first_line_indent_pt: 28.0
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+    container: {}
+    page: {}
+- slot_id: slot.body.chapter_title
+  field_id: body.heading.level1
+  label: 正文章标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.chapter_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.chapter_title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.chapter_title
+    alias: body.heading.level1
+    placeholder_text: 第 X 章 章节标题
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: center
+      line_spacing_rule: exact
+      line_value: 400
+      space_before_pt: 24.0
+      space_after_pt: 18.0
+      keep_lines: true
+      keep_next: true
+      widow_control: false
+      outline_level: 0
+    container: {}
+    page: {}
+- slot_id: slot.body.chapter_body
+  field_id: body.paragraph
+  label: 章节正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.chapter_body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.chapter_body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.chapter_body
+    alias: body.paragraph
+    placeholder_text: 【请填写章节正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 21.0
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.body.section_title
+  field_id: body.heading.level2
+  label: 正文一级节标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.section_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.section_title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.section_title
+    alias: body.heading.level2
+    placeholder_text: 1 章节标题
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 14.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+      outline_level: 1
+    container: {}
+    page: {}
+- slot_id: slot.body.section_body
+  field_id: body.paragraph
+  label: 正文一级节正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.section_body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.section_body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.section_body
+    alias: body.paragraph
+    placeholder_text: 【请填写本节正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      first_line_indent_pt: 28.0
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+    container: {}
+    page: {}
+- slot_id: slot.body.subsection_title
+  field_id: body.heading.level3
+  label: 正文二级节标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.subsection_title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.subsection_title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.subsection_title
+    alias: body.heading.level3
+    placeholder_text: 1.1 小节标题
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+      outline_level: 2
+    container: {}
+    page: {}
+- slot_id: slot.body.subsection_body
+  field_id: body.paragraph
+  label: 正文二级节正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.body.subsection_body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.body.subsection_body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.body.subsection_body
+    alias: body.paragraph
+    placeholder_text: 【请填写本小节正文】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      bold: true
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      first_line_indent_pt: 28.0
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: false
+    container: {}
+    page: {}
+- slot_id: slot.conclusion.title
+  field_id: body.heading.level1
+  label: 结论与展望标题
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.conclusion.title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.conclusion.title
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.conclusion.title
+    alias: body.heading.level1
+    placeholder_text: 第 X 章 结论与展望
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: center
+      line_spacing_rule: exact
+      line_value: 400
+      space_before_pt: 24.0
+      space_after_pt: 18.0
+      keep_lines: true
+      keep_next: true
+      widow_control: false
+      outline_level: 0
+    container: {}
+    page: {}
+- slot_id: slot.conclusion.body
+  field_id: body.paragraph
+  label: 结论与展望正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.conclusion.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.conclusion.body
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_pending_human_confirmation
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.conclusion.body
+    alias: body.paragraph
+    placeholder_text: 【请填写结论与展望】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.references.entries
+  field_id: references.entries
+  label: 参考文献条目
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.references.entries
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: true
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.references.entries
+  placeholder_policy: remove_after_fill
+  empty_policy: blocking_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.references.entries
+    alias: references.entries
+    placeholder_text: 【请填写参考文献条目】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Arial
+      language: zh-CN
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      alignment: left
+      first_line_indent_pt: 24.0
+      line_spacing_rule: exact
+      line_value: 400
+      widow_control: true
+    container: {}
+    page: {}
+- slot_id: slot.appendix.title
+  field_id: appendix.title
+  label: 附录名称
+  content_type: text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.appendix.title
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: false
+  cardinality: optional
+  fill_mode: replace_content_control_content
+  style_id: style.appendix.title
+  placeholder_policy: remove_after_fill
+  empty_policy: placeholder_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.appendix.title
+    alias: appendix.title
+    placeholder_text: 附录名称
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 黑体
+      ascii: 黑体
+      hansi: 黑体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 16.0
+      color: '767676'
+      latin: 黑体
+    paragraph:
+      alignment: center
+      line_spacing_rule: exact
+      line_value: 400
+      space_before_pt: 24.0
+      space_after_pt: 18.0
+      keep_lines: true
+      keep_next: true
+      widow_control: false
+      outline_level: 0
+    container: {}
+    page: {}
+- slot_id: slot.appendix.body
+  field_id: appendix.body
+  label: 附录内容
+  content_type: section
+  locator:
+    type: content_control_tag
+    value: docfit.slot.appendix.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: false
+  cardinality: optional
+  fill_mode: replace_content_control_content
+  style_id: style.appendix.body
+  placeholder_policy: remove_after_fill
+  empty_policy: placeholder_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.appendix.body
+    alias: appendix.body
+    placeholder_text: 【可选：请填写附录内容】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      bold: true
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.academic_achievements.body
+  field_id: achievements.entries
+  label: 相关学术成果
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.academic_achievements.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: false
+  cardinality: many
+  fill_mode: replace_content_control_content
+  style_id: style.academic_achievements.body
+  placeholder_policy: remove_after_fill
+  empty_policy: placeholder_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.academic_achievements.body
+    alias: achievements.entries
+    placeholder_text: 【可选：请填写相关学术成果；无内容可删除本页】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      bold: true
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+- slot_id: slot.acknowledgement.body
+  field_id: acknowledgement.body
+  label: 致谢正文
+  content_type: rich_text
+  locator:
+    type: content_control_tag
+    value: docfit.slot.acknowledgement.body
+    part: word/document.xml
+    expected_match_count: 1
+    story: document
+  required: false
+  cardinality: optional
+  fill_mode: replace_content_control_content
+  style_id: style.acknowledgement.body
+  placeholder_policy: remove_after_fill
+  empty_policy: placeholder_review
+  mapping_status: generated_high_confidence_candidate
+  evidence_refs:
+  - type: template_content_control
+    value: docfit.slot.acknowledgement.body
+    alias: acknowledgement.body
+    placeholder_text: 【请填写致谢内容】
+  owner: slot
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      ascii: 宋体
+      hansi: 宋体
+      complex_script: Times New Roman
+      language: zh-CN
+      size_pt: 12.0
+      color: '767676'
+      latin: 宋体
+    paragraph:
+      first_line_indent_pt: 23.65
+      line_spacing_rule: exact
+      line_value: 400
+    container: {}
+    page: {}
+styles:
+- style_id: style.cover.title
+  label: 论文题目有效样式
+  applies_to:
+  - thesis.title.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.author_name
+  label: 姓名有效样式
+  applies_to:
+  - author.name.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.author_name
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.student_id
+  label: 学号有效样式
+  applies_to:
+  - author.student_id
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.student_id
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.college
+  label: 学院有效样式
+  applies_to:
+  - author.department
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.college
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.major
+  label: 专业有效样式
+  applies_to:
+  - author.major
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.major
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.advisor_name
+  label: 指导教师姓名有效样式
+  applies_to:
+  - advisor.name.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.advisor_name
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.advisor_title
+  label: 指导教师职称有效样式
+  applies_to:
+  - advisor.title
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 700
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 64.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.advisor_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.cover.year_suffix
+  label: 年份后两位有效样式
+  applies_to:
+  - submission.date
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_value: 300
+    paragraph.line_rule: auto
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Courier New
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.cover.year_suffix
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_cn.title
+  label: 中文论文题目有效样式
+  applies_to:
+  - thesis.title.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.space_before_pt: 24.0
+    paragraph.space_after_pt: 18.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 18.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_cn.title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_cn.body
+  label: 中文摘要正文有效样式
+  applies_to:
+  - abstract.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_cn.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_cn.keywords
+  label: 中文关键词有效样式
+  applies_to:
+  - keywords.zh
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 楷体_GB2312
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_cn.keywords
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_en.title
+  label: 英文论文题目有效样式
+  applies_to:
+  - thesis.title.en
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.space_before_pt: 24.0
+    paragraph.space_after_pt: 18.0
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    run.font_ascii: Times New Roman
+    run.font_hansi: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.bold: true
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_en.title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_en.body
+  label: 英文摘要正文有效样式
+  applies_to:
+  - abstract.en
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_en.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.abstract_en.keywords
+  label: 英文关键词有效样式
+  applies_to:
+  - keywords.en
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 楷体_GB2312
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.abstract_en.keywords
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.literature_review.body
+  label: 文献综述正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 21.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.literature_review.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.literature_review.section_title
+  label: 文献综述一级节标题有效样式
+  applies_to:
+  - body.heading.level2
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 1
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 14.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.literature_review.section_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.literature_review.section_body
+  label: 文献综述一级节正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 28.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.literature_review.section_body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.literature_review.subsection_title
+  label: 文献综述二级节标题有效样式
+  applies_to:
+  - body.heading.level3
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 2
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.literature_review.subsection_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.literature_review.subsection_body
+  label: 文献综述二级节正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 28.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.bold: true
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.literature_review.subsection_body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.chapter_title
+  label: 正文章标题有效样式
+  applies_to:
+  - body.heading.level1
+  word_style_id: '1'
+  word_style_name: heading 1
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 0
+    paragraph.keep_next: true
+    paragraph.keep_lines: true
+    paragraph.space_before_pt: 24.0
+    paragraph.space_after_pt: 18.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.chapter_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.chapter_body
+  label: 章节正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 21.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.chapter_body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.section_title
+  label: 正文一级节标题有效样式
+  applies_to:
+  - body.heading.level2
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 1
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 14.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.section_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.section_body
+  label: 正文一级节正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 28.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.section_body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.subsection_title
+  label: 正文二级节标题有效样式
+  applies_to:
+  - body.heading.level3
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 2
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.subsection_title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.body.subsection_body
+  label: 正文二级节正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: '23'
+  word_style_name: 标题2
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 28.0
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.bold: true
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.body.subsection_body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.conclusion.title
+  label: 结论与展望标题有效样式
+  applies_to:
+  - body.heading.level1
+  word_style_id: '1'
+  word_style_name: heading 1
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 0
+    paragraph.keep_next: true
+    paragraph.keep_lines: true
+    paragraph.space_before_pt: 24.0
+    paragraph.space_after_pt: 18.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.conclusion.title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.conclusion.body
+  label: 结论与展望正文有效样式
+  applies_to:
+  - body.paragraph
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.conclusion.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.references.entries
+  label: 参考文献条目有效样式
+  applies_to:
+  - references.entries
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 24.0
+    paragraph.widow_control: true
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Arial
+    run.language: zh-CN
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.references.entries
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.appendix.title
+  label: 附录名称有效样式
+  applies_to:
+  - appendix.title
+  word_style_id: '1'
+  word_style_name: heading 1
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.widow_control: false
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.outline_level: 0
+    paragraph.keep_next: true
+    paragraph.keep_lines: true
+    paragraph.space_before_pt: 24.0
+    paragraph.space_after_pt: 18.0
+    run.font_ascii: 黑体
+    run.font_hansi: 黑体
+    run.font_east_asia: 黑体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 16.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.appendix.title
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.appendix.body
+  label: 附录内容有效样式
+  applies_to:
+  - appendix.body
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.bold: true
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.appendix.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.academic_achievements.body
+  label: 相关学术成果有效样式
+  applies_to:
+  - achievements.entries
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.bold: true
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.academic_achievements.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+- style_id: style.acknowledgement.body
+  label: 致谢正文有效样式
+  applies_to:
+  - acknowledgement.body
+  word_style_id: Normal
+  word_style_name: Normal
+  effective_properties:
+    paragraph.line_value: 400
+    paragraph.line_rule: exact
+    paragraph.first_line_indent_pt: 23.65
+    run.font_ascii: 宋体
+    run.font_hansi: 宋体
+    run.font_east_asia: 宋体
+    run.font_complex_script: Times New Roman
+    run.language: zh-CN
+    run.font_size_pt: 12.0
+    run.color: '767676'
+  evidence_refs:
+  - type: content_control_tag
+    value: docfit.slot.acknowledgement.body
+    template_sha256: 284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef
+logical_pages:
+- order: 1
+  page_id: cover
+  title: 封面
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 本科生毕业论文（设计）
+  boundary_evidence: 封面具有独立页面职责；保留源块1的表后空白分节段，并将其独立文件包装行高显式压缩为1磅，避免伪空白末页。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 2
+  page_id: declarations
+  title: 原创性声明与使用授权声明
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 南京农业大学本科生毕业论文（设计）原创性声明
+  boundary_evidence: 原创性声明与使用授权声明连续排布、共用同一声明页面；保留并显式物化声明节首页的源空白段2。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 3
+  page_id: toc
+  title: 目录
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 目 录
+  boundary_evidence: 独立目录页；同页底部规范化要求与目录共享物理页，一并保留。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 4
+  page_id: abstract_cn
+  title: 中文摘要
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 论文题目（小二号黑体）
+  boundary_evidence: 中文摘要具有独立标题、罗马页码和页面职责。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 5
+  page_id: abstract_en
+  title: 英文摘要
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: TITLE
+  boundary_evidence: 英文摘要具有独立标题、罗马页码和页面职责；文件边界替代源段首分页控制，段落与文字完整保留。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 6
+  page_id: body
+  title: 正文格式示例
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 第一章 文献综述
+  boundary_evidence: 文献综述、各正文示例章和结论均属于同一正文所有权，不按章节过度拆分。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 7
+  page_id: references
+  title: 参考文献
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 参考文献
+  boundary_evidence: 独立另页的参考文献职责。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 8
+  page_id: appendix
+  title: 附录
+  status: optional
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: placeholder_review
+  first_anchor: 附 录 附录名称
+  boundary_evidence: 明确另页的可选附录页面。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 9
+  page_id: academic_achievements
+  title: 相关的学术成果目录
+  status: optional
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: placeholder_review
+  first_anchor: 相关的学术成果目录
+  boundary_evidence: 明确另页、具有独立内容职责的可选成果目录。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+- order: 10
+  page_id: acknowledgement
+  title: 致谢
+  status: required
+  owner: target_school_template
+  source_policy: fill_or_generate_from_declared_fields
+  empty_policy: blocking_review
+  first_anchor: 致 谢
+  boundary_evidence: 明确另页的致谢页面。
+  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers:
+  - OfficeCLI schema validation 未通过；必须先修复或由 Human 明确裁决。
+  - Human 尚未逐槽位签署字段语义、必填性和样式有效值。
+  - 尚未对全部槽位完成填充、更新域、保存、重开和空值/长值往返验证。
+  - CI 使用授权尚未确认；静态 Eval 不调用 Adobe 外部处理。
+  - 当前包未附绑定该模板 hash 的 Microsoft Word 全页视觉复核。
+  prepared_by: Codex
+validation:
+  template_hash_bound: true
+  content_control_tags_must_be_unique: true
+  content_control_aliases_must_equal_field_ids: true
+  field_and_style_refs_must_resolve: true
+  word_round_trip_required_before_acceptance: true
+  all_final_pages_human_review_required_before_acceptance: true

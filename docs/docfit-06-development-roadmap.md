@@ -1,7 +1,7 @@
 # DocFit 开发路线与阶段验收（06）
 
 > 状态：开发执行基线
-> 日期：2026-08-04
+> 日期：2026-08-06
 > 核心目标：先让第一条论文转换链路真实跑通，再用稳定契约、测试样本和清晰边界支持持续迭代。
 
 当前执行证据：五个真实 Tool、固定适配、开发者 CLI、`docfit convert` 薄壳、合成
@@ -55,6 +55,35 @@ visual-review。当前合同、权限测试、`path-tools` live smoke 和两个 
 5. **失败必须可见**：源文件覆盖、内容静默丢失、无法验证的 Provider 结果和偏离已批准
    权限矩阵的 SDK 配置都属于停止项。
 6. **每个缺陷都留下回归资产**：Tool 缺陷进入单元或契约测试，Skill 缺陷进入 Skill eval，交付缺陷进入端到端 Eval。
+
+### 1.1 Gate 依赖与阶段推进
+
+02 第 1.1 节定义的 G0–G5 是每个工作包的证据链；本文件的 M0–M5 是产品/工程里程碑。
+二者正交，不能机械地把 `Gx` 解释成 `Mx`。里程碑可以由多个工作包组成，每个工作包
+必须报告自己的 Gate；一个里程碑只有在其必需工作包的证据闭包全部 PASS 后才能通过。
+
+典型依赖关系如下；“主要消费”表示该阶段最关注的证据，不表示可以跳过更早 Gate：
+
+| 路线范围 | 主要消费的 Gate 证据 | 推进约束 |
+|---|---|---|
+| 新产品/架构切片 | G0 → G1 | 先批准边界、所有权、公开面和失败语义，再冻结能力合同 |
+| M0 或基础设施切片 | G0–G3；涉及 Agent 权限/SDK 行为时还需 G4 | 真实 smoke 不能替代权限、组件或应用壳合同 |
+| M1 Tool 能力 | G0–G2 | 五个 Tool 在无 Agent 条件下通过 unit/contract/integration 和所需 Provider 门后，才可供 Agent 消费 |
+| M2 最小转换链 | G3–G4，且依赖已通过的 M1 G2 | 先证明最窄入口和产物闭环，再证明 Agent 编排；不得用 Agent 成功倒推 Tool 正确 |
+| M2 后候选/优化切片 | 按变更从受影响的最早 Gate 重新进入 | 观测或性能证据不降低安全、失败、产物与独立验证合同 |
+| M3 质量资格 | G5，且绑定通过 G3/G4 产生的精确 artifact | Eval、授权样本和 Human review 按批准范围独立执行；机械有效不等于质量合格 |
+| M4/M5 扩展 | 每个新能力重新走受影响的 G0–G5 子链 | 既有里程碑 PASS 不能自动覆盖新学校、新 Provider、新公开面或新质量声明 |
+
+后续 Gate 只能引用前一 Gate Report 中批准、版本/hash/commit 可定位且仍有效的证据。
+若实现或测试暴露早期合同缺口，停止当前 Gate，回到受影响 Gate 修订并对下游证据做
+失效分析。候选计划不得覆盖已批准合同；需要改变产品边界、公开 Tool/CLI、架构或
+里程碑范围时，先形成决策与影响，再由用户明确批准。
+
+跨上述产品、公开合同、架构或里程碑 Gate 必须等待用户批准。已经批准的模块设计若已
+明确实现范围、验收和停止门，则其中保持合同不变的实现与证据收集可自主推进；遇到
+停止门、范围扩张或早期合同错误时必须停下。每个 Gate 的当前状态、baseline commit、
+通过证据、blocker 与 `advance_requires` 只写入 `docs/status/active/**`，完整报告格式以
+02 第 1.1 节为准。
 
 ## 2. 第一版技术基线
 
@@ -761,10 +790,68 @@ OfficeCLI/Adobe，不消耗 Adobe Document Transaction。
 调整都必须单独审批并保持五个 Tool 名称。本节不启动 O1、M3 或 M4，不改变 M2 已完成
 状态，也不声称当前代码已具备该能力。
 
+### 6.9 M2 后候选切片：字段槽定位、学生内容投影与 Placement
+
+该候选切片补齐模板提取输出、学生内容提取输出和最终转换之间的数据连接，并为未来
+M3 的分层 Eval 提供同一事实基础。它不是恢复 M3 的执行批准，也不新增第三个领域 Skill、
+第六个 Tool、全局 Content Ledger、学校数据库或固定 Agent 流程。
+
+当前已建立研发设计基线
+`docs/plans/docfit-content-field-registry/DESIGN.md` 和可引用的
+`content-fields-v0.1.yaml`（`docfit.thesis.content_fields@0.1.0`）。Registry 的责任边界、
+未注册字段和版本规则，以及模板提取 Eval 的 candidate fill-contract/case schema 已完成
+G1；Student/Placement 正式 schema、产品运行时消费、Actual—Gold 评分和 M3 仍未实现。
+
+目标范围包括：
+
+- 使用开放、版本化且由 Registry ID/version/hash 绑定的 Content Field Registry，
+  至少包含 `field_id` 含义、
+  类型、语义基数、父字段/语言和值来源/学生提取策略；
+- Template Actual/Truth 使用 `slot_id/region_id → field_id`、模板 hash、稳定 target
+  locator/区域边界、责任、条件、fill/empty/placeholder 和样式合同；复合槽与连续区域
+  保留各自 locator 形态；
+- Student Content Actual/Truth 使用任务内 `content_id → field_id`/未注册状态、学生源
+  hash、值或复杂对象引用、source occurrence/locator、父子关系、顺序和冲突状态；
+- 区分一份论文级共享事实与它在源文档中的多次 occurrence；局部章节、段落、图表和
+  公式保持独立有序内容实例；
+- Placement Actual/Truth 显式连接 source content 集合与具体 `slot_id/region_id`，保存
+  action、projection/formatter、order、condition、status 和证据，并覆盖一对多、多对一、复合、连续、条件、
+  retain/exclude、generated、任务输入、外部/manual 与 unresolved；
+- template/student locator 各自绑定自己的文档 hash；`field_id` 只生成候选，不作为
+  `docx_edit` locator 或自动写入授权；
+- 默认把 Human Truth 标为 `oracle_only`，只有受控执行能力 Eval 才逐文件暴露为
+  `subject_input`；Student Content 文件继承源 DOCX 的隐私和授权边界。
+
+开始 Template/Student/Placement schema 或运行时实现前必须另行批准计划。v0.1 已可作为
+开发期相同语义输入，但下一个可升级快照仍需完成：54 字段的逐项 Human review；值来源和
+学生提取策略补全；把 `optional` 与 `one/many` 数量约束分开；移出
+`body.inline_emphasis` meaning 中的 PKU 特定样式语义；重新确认图表注的允许父对象、
+`author.cohort_class` 等复合值与原子值的关系；字段改义/别名/版本政策；
+Template、Student、Placement schema 与
+hash 绑定；共享事实 occurrence 与冲突语义；未注册/未映射内容政策；一对多/多对一和
+generated/external 表达；日期拆分、复合组装和目标显示 projection 的可追溯规则；
+Truth 可见性与隐私；最小正例和单错误反例。
+
+该切片的普通 schema/契约门必须验证字段引用闭包、locator 唯一与 stale 拒绝、Template—Registry
+双向一致、学生内容覆盖、placement 双向覆盖和确定性候选条件。实际 Template/Student/
+Placement Actual—Gold 评分、授权/脱敏真实样本和 Human Gold 晋升仍属于第 7 节 M3，
+不得用 candidate 文件或局部脚本冒充已通过。任何公开 Tool/CLI 变更另行审批并保持五个
+Tool 名称；不改变 M2、O0 或 O1 状态。
+
 ## 7. M3：达到可试用 MVP
 
 > 当前范围说明：M3 的 Eval、Gold、授权/脱敏真实样本资格验证和外部人工复核不在
 > 本轮开发范围；以下长期范围与完成门保持不变，恢复时必须新建并批准计划。
+
+模板提取静态产物 Eval 已先完成独立顶层设计，见
+`docs/plans/docfit-template-extraction-eval/DESIGN.md`。它定义 Actual 模板/填写契约与 Gold
+模板/填写契约的只读比较、两套业务断言和评分报告。当前 G1 schema/config/合成 fixture
+与三校 candidate case 目录已物化，但评分 runner 和 Human-accepted Gold 尚未完成；这些
+candidate 数据不等于恢复完整 M3，也不满足本节任何完成门。
+
+完整 M3 还必须实现第 6.9 节的 Student Content 与 Placement Eval。模板静态高分不能
+证明学生内容已正确提取或放到正确目标；相同 `field_id` 也不能替代 source/target
+locator、动作、顺序、条件和未解决状态的独立比较。
 
 ### 7.1 目标
 
@@ -773,6 +860,11 @@ OfficeCLI/Adobe，不消耗 Adobe Document Transaction。
 ### 7.2 范围
 
 - 建立 Tool test、Skill eval 和端到端 Eval 三层验证；
+- 建立经过 Human Readiness Gate 的 Registry 快照、Template Truth、Student Content Truth 与
+  Placement Truth；Registry 记录 ID/version/hash，三类 Truth 分别记录 schema/hash、review、
+  权限和 subject/oracle 可见性；
+- 分别实现 Registry 自洽检查、模板提取静态 Eval、学生内容提取 Eval 和 Placement Eval，
+  再由端到端 Eval 从最终 DOCX 重新验证内容、目标和样式；
 - 增加 1 个普通合成样本和 3–5 个单风险 fixture；
 - 在授权或脱敏前提下引入 1 个结构复杂的真实样本；
 - 把所有已发现缺陷变成自动断言；
@@ -803,12 +895,24 @@ uv run docfit eval --suite core
 
 - 五个 Tool、固定路由及两个后端各自职责范围内的契约测试全部通过；
 - 核心 Skill eval 全部通过；
+- Content Field Registry 的 ID/type/cardinality/parent/value-source/student-extraction
+  policy 自洽，模板、学生内容和 placement 引用同一 Registry ID/version/hash；
+- 每个 Template Actual/Gold 的 slot/region、target locator/边界、字段、条件、fill/style
+  policy 可比较，locator 在绑定模板 hash 内唯一且 stale 时拒绝；
+- Student Content Eval 覆盖字段归属、值/复杂对象、source locator、父子/顺序、共享
+  occurrence 冲突、未注册/不支持内容和隐私；generated/任务输入/外部字段不误计漏项；
+- Placement Eval 覆盖一对一、一对多、多对一、复合槽、连续区域、条件、retain/exclude、
+  generated/external/manual 和 unresolved；每个 in-scope source 和 required target 都有
+  明确覆盖，字段同名不会在歧义时静默自动配对；
 - 模板提取与转换 Skill eval 覆盖“复杂场景可委派、简单场景可直接处理、未匹配/复合
   范围可合并处理”，且不把具体委派轨迹作为 Gold；
 - `docfit-unit-analyst` 的类型白名单、最小 Tool、Knowledge 选择性载荷、证据请求和
   Subagent 无写权限、主 Agent 统一合并/发布边界均有回归用例；
 - 使用不同当前任务学校材料的端到端样本全部通过；
 - 没有内容静默丢失、结构破坏或源文件覆盖；
+- 最终 DOCX 重新取证证明正确 `content_id` 进入正确 slot/region，顺序、对象关系、
+  条件和目标有效样式正确；stale/ambiguous locator、字段错配、未映射必需内容或
+  required target 缺失均不能被总分掩盖；
 - Provider 伪成功、失效引用、跨 run 占位符、复杂对象、字体/渲染差异和视觉审查旧证据误用都有回归用例；
 - Agent 能在 Eval 中发现封面溢出、意外空白页、孤行和图表错位等代表性视觉问题；
 - Agent 能把可见应用错误标记、断裂域/交叉引用、未完成占位和截断必需内容保留为
@@ -898,6 +1002,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 | M2 后权限/Skill 渐进披露切片 | 主 Agent 可按需直接读取 Skill references、产品 Knowledge 与当前任务证据，并使用受信任 Bash/Write | realpath 受限的直接 Read/Glob/Grep、无路径 gate 的自动批准 Bash/Write、五 Tool 直调和不等权 Subagent 权限已验证 | Bash/Write 是 sandbox、所有 Agent 等权或 M3 已通过 |
 | M2 后观测/优化切片 | 本地只读运行观测页，以及同一转换链路在既有安全门下减少可测量的重复工作 | 已观测的实际轨迹、有效本地证据定位，以及已证明的单项耗时、调用或载荷改善 | 精确 replay、M3、MVP 或真实论文质量已通过 |
 | M2 后样式观测/补全候选切片 | 属性级模板观测、缺口和可追溯的确定性解析 | 仅在独立计划实施并通过契约门后，可声称已覆盖的属性可追溯解析 | Agent 可以杜撰样式、已覆盖任意国家标准，或当前能力已实现 |
+| M2 后字段槽/Placement 候选切片 | 固定 Registry 快照、模板 target、学生 source 与显式 placement 的数据连接 | 已建立 Registry 研发职责、v0.1 快照与 Eval 候选的显式版本/hash 引用；其他消费者只能在各自 schema/契约门通过后声称已实现 | v0.1 已完整或已是 Gold、字段同名可自动写入、M3 或学生内容 Eval 已通过 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
 | M5 | 按需求增加的产品能力 | 对应能力已产品化 | 可以跳过证据直接扩平台 |
@@ -918,6 +1023,13 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
   版本/digest 和任务证据写入通用 Subagent prompt；
 - **样式来源可扩展**：未来可在不向 Agent Knowledge 增加样式值的前提下，在现有 Tool
   内部增加属性级观测、标准解析、来源和未决状态；这是扩展点，不是 M2 已实现声明；
+- **字段语义与 locator 分离**：当前固定 Registry 快照可让 Template/Student/Placement/Eval 共享
+  `field_id`，同时让学生 `content_id + source locator`、模板 `slot_id/region_id + target
+  locator` 和 placement 各自保留作用域；当前只确立研发数据边界和 Eval 候选引用，
+  不是产品运行时或 M2 已实现声明；
+- **双侧覆盖可验证**：未来 placement 能同时证明每个 in-scope source 的处置和每个
+  required target 的满足状态，未注册、generated、external 和 unresolved 不会被静默
+  当作成功；该覆盖不升级为全局 Ledger 或固定工作流；
 - **Skill 可独立迭代**：`docfit-school-extract` 与 `convert-thesis` 可以在不修改 Tool
   实现的情况下演进；
 - **Skill 可渐进披露**：`SKILL.md` 以明确项目相对路径按需读取 references；主 Agent

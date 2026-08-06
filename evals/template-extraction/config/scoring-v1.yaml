@@ -1,0 +1,45 @@
+schema_version: docfit-template-extraction-scoring-config/v1
+scoring_version: docfit-template-extraction-scoring/v1
+total_points: 100
+views:
+  protected:
+    total_points: 50
+    dimensions:
+      protected.content: 20
+      protected.structure: 10
+      protected.style: 15
+      protected.object: 5
+  slot:
+    total_points: 50
+    dimensions:
+      slot.inventory: 15
+      slot.location_boundary: 15
+      slot.field_mapping: 10
+      slot.value_style: 10
+calculation:
+  slot.inventory: f1
+  default: passed_over_comparable
+  not_applicable: exclude_from_denominator
+  unknown: exclude_and_mark_provisional
+quality_verdict:
+  precedence:
+  - FAIL
+  - UNKNOWN
+  - PASS
+  fail_when_required_assertion_fails: true
+  unknown_when_required_assertion_unknown: true
+hard_failures:
+- actual_template_invalid
+- actual_contract_invalid
+- template_contract_marker_mismatch
+- required_protected_content_missing_or_changed
+- required_protected_object_missing_or_broken
+- required_slot_missing
+- extra_slot
+- slot_overlaps_protected
+- slot_field_mapping_invalid
+- forbidden_residue_present
+- wrong_structural_location
+analysis_coverage:
+  formula: observed_required_assertions_over_all_required_assertions
+  unknown_is_observed: false

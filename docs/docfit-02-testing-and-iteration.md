@@ -1,13 +1,27 @@
 # DocFit 测试与迭代（02）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-06
 > 前提：测试与 Eval 是开发系统，不进入正常论文转换的运行路径。
 
 本文件保留长期 Eval 设计。当前开发范围只要求 M0–M2 的单元、契约、集成和 live
 产品门；M3 Skill/E2E Eval 扩展、真实样本资格验证、Gold 与人工交付复核已延期，需
 新的用户批准计划。已经存在的 core runner 和 fixture 可以继续作为可选开发资产，
 但不作为当前产品开发完成门。
+
+模板提取结果的静态 Actual—Gold 比较已经在
+`docs/plans/docfit-template-extraction-eval/DESIGN.md` 中形成独立顶层设计。它把已经生成的
+模板和填写契约作为 Actual，把人工确认的模板和填写契约作为 Gold，通过一套共享文档
+事实分析分别评测模板保留与填写槽，并输出分项分数、总分和 `PASS/FAIL/UNKNOWN`。
+该设计不运行或约束上游 Agent，只定义离线结果断言。当前已完成 G1 schema/config/合成
+fixture 和三校 candidate case 的最终目录物化，但三校仍为 `INPUT_ERROR`，评分 runner、
+Human-accepted Gold 与学校回归尚未完成；这不改变本文件对完整 M3 和真实样本资格门的判定。
+
+完整质量闭环不能止于模板侧。未来 M3 还必须使用同一版 Content Field Registry 快照分别
+评测学生内容提取 Actual、显式 Placement Actual 和最终转换结果。模板槽与学生内容共享
+`field_id`，但模板目标 locator、学生 source locator 和 placement 动作分别比较；字段同名
+本身不构成正确映射。当前 `content-fields-v0.1.yaml` 是固定的研发语义基线；
+三校 `field-alignment.yaml` 和 `template-spec.yaml` 仍是 candidate。这些都不是 M3 已通过的证据。
 
 M2 之后的核心转换优化属于非 Eval 工程轨道。它继续运行普通单元、契约、集成、
 doctor 和 live 产品门，并使用同一合成链路做前后测量；这些检查不会因为 M3 延期而
@@ -23,6 +37,50 @@ doctor 和 live 产品门，并使用同一合成链路做前后测量；这些�
 3. 一次修改是否修复目标问题，同时没有破坏已知正确行为。
 
 DocFit 不建设通用评测平台。测试发现、并发、报告和 CI 使用现成测试框架；项目只维护论文领域的 fixture、样本和断言。
+
+### 1.1 Evidence-gated development protocol
+
+每个实现工作包在改代码前都必须声明当前证据 Gate。Gate 描述的是该工作包的合同与
+证据成熟度，不是 DocFit 产品运行时状态，也不是 M0–M5 的别名；同一时刻，不同模块
+可以处于不同 Gate。里程碑只消费已经通过的 Gate 证据，不能用计划、代码存在或口头
+完成声明替代。
+
+| Gate | 必须先回答 | PASS 证据 | 不能用来替代 |
+|---|---|---|---|
+| G0 Product contract | 用户价值、产品边界、所有者、公开面、输入输出、副作用、失败语义、非目标和延期 seam 是什么 | 用户批准的产品/架构合同，明确验收标准、未知项分类和停止门 | 候选计划、原型可运行、已有代码行为 |
+| G1 Capability contract | 当前包支持哪些能力，哪些默认不支持，消费者如何调用和判断失败 | 版本化 schema/enum/fixture、稳定错误码、接口与所有权说明、可执行的合同自检或已定义的 acceptance contract，及用户要求时的合同批准 | 内部函数签名、未绑定 fixture 的示例、Agent prompt |
+| G2 Component/Tool proof | 不依赖 Agent 时，组件与公开 Tool 是否按合同可靠工作 | 相关 unit、contract、integration 测试通过；真实 Provider 责任需要时有独立 live 证据；失败不发布伪成功或部分产物 | Agent 恰好成功一次、仅 mock 的端到端演示 |
+| G3 Minimal vertical slice | 已证明的组件能否通过最窄真实入口形成完整产物与失败闭环 | 一个可重复入口、绑定输入与产物 hash/ref 的最小链路、独立完成检查、失败与回滚证据 | 分散的组件 PASS、人工拼接产物 |
+| G4 Agent orchestration | Agent 是否正确选择、排序和消费已证明的能力 | Tool 选择与必要先后、ref/hash 传播、失败/追问处理、产物完成、报告与最终回复一致的 Agent/SDK 测试 | Tool 自测、内容质量主观判断、隐藏思维链 |
+| G5 Quality Eval | 绑定精确产物的内容与交付质量是否达到已批准标准 | 独立 Eval 使用冻结 case/Truth/Gold 和 artifact hash，输出可归因结果；需要时包含授权样本与 Human review | 文件可打开、schema 合法、Agent 自评、未绑定产物的旧截图 |
+
+Gate 依赖按工作包顺序成立：后层只能消费前层已经批准且可追溯的结果。G0/G1 发生变更
+时，所有依赖该合同的 G2–G5 证据都必须做影响分析；接口、语义或 artifact identity 已失效
+的证据必须重新运行，不能沿用旧 PASS。G2 通过前不得开始 G4；G3 不能用来绕过缺失的
+组件合同；G4 成功不能证明 G5 质量。
+
+未知项在进入实现前必须归入三类之一：`decide_now`、`bounded_experiment` 或
+`defer_behind_interface`。有界实验必须预先写明问题、变量、预算、终止条件、可接受证据
+和结果将更新哪个 Gate；实验结论在进入合同并获所需批准前仍不是稳定接口。延期项必须
+有清晰 owner、接口边界和重新打开条件，不能变成下层的隐式假设。
+
+实现发现前层合同缺失、错误或无法满足时，当前 Gate 结论为 FAIL，并返回受影响 Gate。
+不得在下层静默扩大公开 schema、增加 alias/fallback、改变所有权或弱化失败语义。跨越
+产品、公开合同、架构或里程碑边界必须获得用户明确批准；已经批准且保持合同不变的
+实现包可以在 Gate 内自主推进，并按批准范围进入下一项证明。
+
+每个 Gate 结束时，在对应 `docs/status/active/**` capsule 或其链接的耐久报告中记录
+Gate Report，至少包含：
+
+- Gate 与 PASS/FAIL 结论、合同基线（文档/版本/hash/commit）和批准来源；
+- 实际改动范围与明确未改范围；
+- acceptance criterion → test/evidence 的逐项映射；
+- 执行命令、结果、未执行项及原因；
+- 剩余 unknown、blocker、延期 seam 和下一 Gate 的进入条件；
+- 00–06、模块设计、消费者、测试与 active capsule 的漂移检查。
+
+`docs/status/active/**` 只保存当前 Gate、基线、证据、阻塞与下一步；它不定义 Gate 合同，
+也不能覆盖已批准的 00–06 或模块设计。
 
 代码测试目录固定为：
 
@@ -226,6 +284,83 @@ limit      成本或重复调用上限
 
 端到端 Eval 不生成阶段状态、调用轨迹 Gold、运行胶囊或 replay 协议。
 
+### 2.3.1 字段、双侧提取与 Placement Eval
+
+未来 M3 的一个完整业务 case 使用同一份、版本/hash 固定的 Registry 快照连接四类互补断言。
+它们可以共享 fixture 和文档事实分析器，但失败必须归到发生问题的责任层。
+
+**Registry 快照检查**验证：
+
+- `field_id` 唯一且在同一 schema 版本中不改义复用；别名或拆分有显式版本迁移；
+- `content_type`、语义 cardinality、`parent_field_id` 和 language 自洽，父字段不存在环；
+- 值 schema/规范化规则只定义语义值，不混入某校显示样式；可选性与
+  `one/many` 数量上限分开表达，不把 `optional` 当作唯一 cardinality 模型；
+- 每个字段声明允许的值来源，以及学生提取是 `required`、`optional` 还是
+  `not_applicable`；学生源、任务输入、系统生成和外部/人工资产不会混算；
+- 模板、学生内容和 placement 引用完全相同的 Registry ID、版本和 hash；只比较路径名不算绑定；
+- Registry 不含学校 locator、样式值或学生正文，也不被当作产品 Knowledge 或 Eval Gold；
+- Registry 对未注册内容保持开放；伪造正式 `field_id`、静默丢弃未知项或使用
+  `proposed_canonical_id` 自动 placement 是硬失败。
+
+**模板提取 Eval**继续按专项设计比较 Template Actual 与 Template Gold，并补充以下
+连接断言：
+
+- 每个 slot/region 的 `field_id`、类型、基数、required/condition、fill/empty/placeholder
+  policy 和目标显示/投影合同与 Gold 一致；
+- locator 绑定模板 hash，包含 locator kind/value、part/scope、预期命中数和必要的
+  Human fallback；复合槽保存 component locators，连续区域保存 start/end 边界；
+- locator 唯一、边界不吞入 `protected` 内容，模板 hash 变化后旧 locator 被拒绝；
+- 同一字段可对应多个明确 slot，三行标题等物理组件不能误计成三份语义字段；
+- 跨模板 `field-alignment` 只能由各自 `template-spec` 派生和审计，不能反向覆盖某个
+  模板的 target locator 真值。
+
+**学生内容提取 Eval**把实际学生内容投影与 Human-confirmed Student Content Truth
+比较，至少断言：
+
+- 每个 in-scope 内容项的 `content_id`、`field_id`/未注册状态、类型、规范值/原始观测值
+  或复杂对象引用、
+  source locator、父项和顺序正确；source locator 绑定学生源 hash，页码只能作辅助证据；
+- 简单文本比较规范化值；图、表、公式、脚注、文本框等比较源对象引用、结构事实和
+  必要资产 hash，不能只比较转成的纯文本；
+- 论文级共享事实与它在封面、摘要等位置的多个 occurrence 分开比较；多处观察冲突时
+  必须保留各 occurrence 与冲突状态，不能任选一处生成伪 Gold；
+- 章节、段落、图表等局部有序内容保持父子关系和顺序，不能因 `field_id` 相同而合并；
+- Registry 中未注册、没有目标槽或不支持的可见内容分别进入
+  `unregistered/unmapped/unsupported` 覆盖，而不是
+  静默消失；Accepted Truth 必须给出确认字段、显式排除或 Human 责任；
+- `generated.*`、评审/参考文献配置和二维码整页资产只按字段的 value-source policy
+  评测，不要求从学生 DOCX 中虚构提取。
+
+学生提取可以报告字段级 precision/recall/F1 和内容覆盖率，但以下情况是硬失败：必需
+内容缺失、内容被截断或错序、复杂对象降成不可恢复文本、错误字段归属会导致错误放置，
+或 source locator 与绑定 hash 不一致。能力不足且没有明确错误时为 `UNKNOWN`，不进入
+通过率分子。
+
+**Placement Eval**比较当前任务 placement Actual 与 Placement Truth：
+
+- 每条边引用有效的 source `content_id` 集合、共享 `field_id`、具体 target
+  `slot_id/region_id`、action、projection/formatter、order、condition、status 和证据；
+- 一对一、一对多、多对一、复合槽、连续正文、条件页、retain/exclude、generated 和
+  external/manual 等模式均有代表性用例；
+- 只有字段、类型、基数、目标唯一性和条件同时兼容时，系统才可自动确认候选；
+  相同 `field_id` 遇到多个目标或多个来源时不得按文字相似或位置接近静默选边；
+- 目标 locator 必须仍匹配当前模板 hash，source locator 必须仍匹配学生源 hash；写入前
+  重新解析，不能把 placement ID 或字段 ID 当作 `docx_edit` 的物理定位器；
+- 日期拆分、复合值组装、枚举到学校显示文字等 projection 保存输入、规则、
+  输出和来源；没有证据的补值、不可逆丢失或错误组合均为硬失败；
+- 每个 in-scope 学生内容都被 placed、retain、exclude 或 unresolved 覆盖，每个 required
+  target 都被满足或有 blocking 原因；无声未映射、错误目标、错误顺序或越过 protected
+  边界均为硬失败；`unresolved` 使必需结论为 `UNKNOWN`，不能自动晋升为通过。
+
+最终转换 Eval 在上述三层真值之上，从最终 DOCX 重新取证：正确内容进入正确目标、重复
+事实按确认规则同步、连续内容顺序和对象关系保持、条件/生成/外部资产行为正确、目标
+有效样式满足模板合同，且没有额外或遗漏内容。高分不能掩盖字段映射错误、必需 placement
+缺失、内容静默丢失或 stale locator。
+
+Truth 文件默认是 `oracle_only`。只有专门评测“给定结构化合同后的执行能力”时，case
+才能把其中一部分声明为 `subject_input`；否则模板规范、学生内容答案或 placement 泄漏
+给被测对象会使结果失真。
+
 ### 2.4 非 Eval 的核心转换优化验证
 
 核心转换优化不以扩大 Eval 集合为前提，也不能用性能改善替代质量验收。开始改变
@@ -316,6 +451,11 @@ doctor，以及受影响的真实合成产品 smoke。只有改动确实可能�
 | 场景 | Tool test | Skill eval | 端到端 |
 |---|---:|---:|---:|
 | 学生内容正确放入模板槽位或正文区域，候选保持模板主干 | 是 | 是 | 是 |
+| 模板槽与学生内容引用同一 Registry ID/version/hash，但各自 locator 分别绑定模板/学生源 hash | 是 | 是 | 是 |
+| 同一字段有多个来源 occurrence 或多个目标槽时保留冲突/显式 placement，不静默配对 |  | 是 | 是 |
+| 一对多、多对一、复合槽、连续正文和条件内容 placement 正确 | 是 | 是 | 是 |
+| generated、任务输入和外部资产字段没有被误计为学生内容提取漏项 |  | 是 | 是 |
+| 未注册或未映射的可见学生内容不会静默丢失 | 是 | 是 | 是 |
 | 模板旧目录不被当作学生正文 |  | 是 | 是 |
 | 空附录标题不会吞掉相邻内容 |  | 是 | 是 |
 | 中英文图题及图片关系保持 | 是 | 是 | 是 |
@@ -360,6 +500,21 @@ inputs:
   school_materials:
     - input/official-template.docx
     - input/official-requirements.pdf
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.1.0
+  sha256: 9779d0272fc395245002184d43e8356b0722a6821e8ca0a36ced0db6d26d522d
+  visibility: subject_input
+truth:
+  template:
+    path: oracle/template-spec.yaml
+    visibility: oracle_only
+  student_content:
+    path: oracle/student-content.json
+    visibility: oracle_only
+  placement:
+    path: oracle/placement-map.yaml
+    visibility: oracle_only
 assertions:
   - final_docx_opens
   - source_file_unchanged
@@ -373,6 +528,9 @@ manual_review:
 
 用例可以附带输入、产品 Knowledge 版本、当前任务学校材料、结构化期望、少量人工
 确认的参考产物和失败说明。学校材料是 Eval fixture，不是运行时 Knowledge。
+Registry 是本例的固定语义输入；模板、学生内容和 placement Truth 的可见性
+必须逐项声明为 `subject_input` 或 `oracle_only`；默认 Truth 为 oracle，且报告记录
+Registry 及每个 truth 文件的 hash 与 schema 版本。
 
 ## 5. 样本组合
 
@@ -396,6 +554,9 @@ manual_review:
 | 对象集合 | set compare |
 | 字号、页边距、坐标 | tolerance |
 | Agent 判断与最终论文 | 关键事实断言 |
+| Content Field Registry snapshot | registry/schema version/hash、ID/type/cardinality/source policy 的 normalized compare |
+| 模板槽与学生内容 | 分别比较 target/source locator，再按 `field_id` 比较语义归属 |
+| Placement | source content 集合、具体 target、action/order/condition/status 的 fact/set compare |
 | 页面视觉 | 人工复核，必要时加图像差异辅助 |
 | 非 Eval 运行性能 | 同输入/材料 hash、同版本与同验证门下比较 Tool/Agent/缓存/载荷指标 |
 

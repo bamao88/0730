@@ -1,0 +1,77 @@
+schema_version: docfit-template-fill-contract/v1
+contract_id: s02-protected-style-changed.gold
+template_sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.1.0
+  sha256: 3e62d68c9f26f95039cddcec7f14c58ff075a3a59097282dfec85e1cb2f69583
+marker_protocol: docfit-content-control-marker/v1
+regions:
+- region_id: protected.student_name_label
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    left_anchor: 姓名：
+    expected_match_count: 1
+    paragraph_index: 0
+    occurrence: 1
+  text: 姓名：
+  expected_style:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+      size_pt: 12
+      bold: false
+      italic: false
+      color: '000000'
+    paragraph:
+      alignment: null
+      line_spacing_rule: auto
+      line_spacing_pt: 12
+      space_before_pt: 0
+      space_after_pt: 0
+    container: {}
+    page:
+      page_width_pt: 595.3
+      page_height_pt: 841.9
+      margin_top_pt: 72
+      margin_bottom_pt: 72
+slots:
+- slot_id: slot.cover.student_name
+  owner: slot
+  field_id: author.name.zh
+  content_type: text
+  required: true
+  cardinality: one
+  locator:
+    type: content_control_tag
+    value: docfit.cover.student_name
+    story: document
+    part: word/document.xml
+    paragraph_index: 0
+    left_anchor: 姓名：
+    occurrence: 1
+    expected_match_count: 1
+  expected_value_style:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+      size_pt: 12
+      bold: false
+      italic: false
+      color: '000000'
+    paragraph:
+      alignment: null
+      line_spacing_rule: auto
+      line_spacing_pt: 12
+      space_before_pt: 0
+      space_after_pt: 0
+    container: {}
+    page:
+      page_width_pt: 595.3
+      page_height_pt: 841.9
+      margin_top_pt: 72
+      margin_bottom_pt: 72

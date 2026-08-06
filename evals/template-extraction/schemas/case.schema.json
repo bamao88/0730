@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docfit.local/schemas/template-extraction-case-v1.json",
+  "title": "DocFit template extraction Eval case v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "gold",
+    "field_registry_ref",
+    "eval_config",
+    "scoring_version"
+  ],
+  "properties": {
+    "schema_version": {"const": "docfit-template-extraction-case/v1"},
+    "case_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "description": {"type": "string", "minLength": 1},
+    "school_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "school_name": {"type": "string", "minLength": 1},
+    "case_status": {"enum": ["synthetic", "candidate", "accepted"]},
+    "gold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template", "contract"],
+      "properties": {
+        "template": {"$ref": "#/$defs/relativePath"},
+        "contract": {"$ref": "#/$defs/relativePath"},
+        "template_sha256": {"$ref": "#/$defs/sha256"},
+        "contract_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "field_registry_ref": {"$ref": "#/$defs/versionedFileRef"},
+    "eval_config": {"$ref": "#/$defs/versionedFileRef"},
+    "scoring_version": {"const": "docfit-template-extraction-scoring/v1"},
+    "marker_protocol": {"const": "docfit-content-control-marker/v1"},
+    "expected_verdict": {
+      "enum": ["PASS", "FAIL", "UNKNOWN", "INPUT_ERROR"]
+    },
+    "gold_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["synthetic", "accepted", "candidate"]},
+        "reviewer": {"type": ["string", "null"]},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_path": {"$ref": "#/$defs/relativePath"},
+        "blockers": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "student_personal_data", "git_storage", "ci_use"],
+      "properties": {
+        "visibility": {"enum": ["internal_candidate", "internal_gold", "public"]},
+        "student_personal_data": {"enum": ["none_known", "present_authorized", "present_restricted"]},
+        "git_storage": {"enum": ["approved", "unresolved", "denied"]},
+        "ci_use": {"enum": ["approved", "unresolved", "denied"]},
+        "external_processing": {"enum": ["not_required", "approved", "unresolved", "denied"]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["gold_review"],
+        "properties": {
+          "gold_review": {
+            "required": ["status"],
+            "properties": {"status": {"const": "candidate"}}
+          }
+        }
+      },
+      "then": {
+        "required": ["case_status", "expected_verdict"],
+        "properties": {
+          "case_status": {"const": "candidate"},
+          "expected_verdict": {"const": "INPUT_ERROR"}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["gold_review"],
+        "properties": {
+          "gold_review": {
+            "required": ["status"],
+            "properties": {"status": {"const": "accepted"}}
+          }
+        }
+      },
+      "then": {
+        "required": ["case_status"],
+        "properties": {
+          "case_status": {"const": "accepted"},
+          "gold_review": {
+            "properties": {
+              "reviewer": {"type": "string", "minLength": 1},
+              "reviewed_at": {"type": "string", "format": "date-time"}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/]).+$"
+    },
+    "versionedFileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "id", "version", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

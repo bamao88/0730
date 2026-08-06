@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docfit.local/schemas/template-fill-contract-v1.json",
+  "title": "DocFit template fill contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "template_sha256",
+    "field_registry_ref",
+    "marker_protocol",
+    "regions",
+    "slots"
+  ],
+  "properties": {
+    "schema_version": {"const": "docfit-template-fill-contract/v1"},
+    "contract_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "artifact_role": {"const": "template_fill_contract"},
+    "status": {
+      "enum": ["synthetic", "candidate_pending_human_acceptance", "accepted"]
+    },
+    "template_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "contract_version": {"type": "string", "minLength": 1},
+    "school_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "school_name": {"type": "string", "minLength": 1},
+    "template_path": {"$ref": "#/$defs/relativePath"},
+    "template_sha256": {"$ref": "#/$defs/sha256"},
+    "field_registry_ref": {"$ref": "#/$defs/registryRef"},
+    "marker_protocol": {
+      "anyOf": [
+        {"const": "docfit-content-control-marker/v1"},
+        {"$ref": "#/$defs/markerProtocol"}
+      ]
+    },
+    "canonical_renderer": {"type": "string", "minLength": 1},
+    "provenance": {"type": "object"},
+    "locator_contract": {"type": "object"},
+    "regions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/region"}
+    },
+    "slots": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/slot"}
+    },
+    "styles": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/style"}
+    },
+    "logical_pages": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "review": {"$ref": "#/$defs/review"},
+    "validation": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["status"],
+        "properties": {"status": {"const": "candidate_pending_human_acceptance"}}
+      },
+      "then": {
+        "required": ["review"],
+        "properties": {
+          "review": {
+            "properties": {
+              "status": {"const": "machine_checked_pending_human_signoff"},
+              "conclusion": {"const": "pending"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["status"],
+        "properties": {"status": {"const": "accepted"}}
+      },
+      "then": {
+        "required": ["review"],
+        "properties": {
+          "review": {
+            "properties": {
+              "status": {"const": "human_accepted"},
+              "reviewer": {"type": "string", "minLength": 1},
+              "reviewed_at": {"type": "string", "format": "date-time"},
+              "conclusion": {"const": "accepted"},
+              "blockers": {"maxItems": 0}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/]).+$"
+    },
+    "registryRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "registry_version", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "registry_id": {"const": "docfit.thesis.content_fields"},
+        "registry_version": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "markerProtocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "field_identity_property",
+        "slot_identity_property",
+        "word_internal_id_property"
+      ],
+      "properties": {
+        "version": {"const": "docfit-content-control-marker/v1"},
+        "field_identity_property": {"const": "w:alias"},
+        "field_identity_rule": {"type": "string", "minLength": 1},
+        "slot_identity_property": {"const": "w:tag"},
+        "slot_identity_rule": {"type": "string", "minLength": 1},
+        "word_internal_id_property": {"const": "w:id"},
+        "word_internal_id_semantics": {"const": "non_business_identity"}
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "story", "part", "expected_match_count"],
+      "properties": {
+        "type": {
+          "enum": [
+            "content_control_tag",
+            "text_range",
+            "text_anchor",
+            "placeholder_anchor",
+            "bookmark",
+            "table_cell"
+          ]
+        },
+        "value": {"type": "string", "minLength": 1},
+        "story": {"enum": ["document", "header", "footer", "footnote", "endnote", "textbox"]},
+        "part": {"type": "string", "pattern": "^word/[^/].+\\.xml$"},
+        "match_mode": {"enum": ["exact_paragraph", "exact_text", "contains"]},
+        "section_index": {"type": "integer", "minimum": 0},
+        "paragraph_index": {"type": "integer", "minimum": 0},
+        "table_index": {"type": "integer", "minimum": 0},
+        "row": {"type": "integer", "minimum": 0},
+        "cell": {"type": "integer", "minimum": 0},
+        "left_anchor": {"type": "string"},
+        "right_anchor": {"type": "string"},
+        "occurrence": {"type": "integer", "minimum": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "expected_match_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "fontStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "east_asia": {"type": ["string", "null"]},
+        "latin": {"type": ["string", "null"]},
+        "ascii": {"type": ["string", "null"]},
+        "hansi": {"type": ["string", "null"]},
+        "complex_script": {"type": ["string", "null"]},
+        "language": {"type": ["string", "null"]},
+        "size_pt": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "bold": {"type": ["boolean", "null"]},
+        "italic": {"type": ["boolean", "null"]},
+        "color": {"type": ["string", "null"], "pattern": "^[0-9A-F]{6}$"}
+      }
+    },
+    "paragraphStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alignment": {"type": ["string", "null"]},
+        "first_line_indent_pt": {"type": ["number", "null"]},
+        "hanging_indent_pt": {"type": ["number", "null"]},
+        "left_indent_pt": {"type": ["number", "null"]},
+        "right_indent_pt": {"type": ["number", "null"]},
+        "line_spacing_rule": {"type": ["string", "null"]},
+        "line_spacing_pt": {"type": ["number", "null"]},
+        "line_value": {"type": ["number", "null"]},
+        "space_before_pt": {"type": ["number", "null"]},
+        "space_after_pt": {"type": ["number", "null"]},
+        "keep_lines": {"type": ["boolean", "null"]},
+        "keep_next": {"type": ["boolean", "null"]},
+        "widow_control": {"type": ["boolean", "null"]},
+        "outline_level": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "effectiveStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "font": {"$ref": "#/$defs/fontStyle"},
+        "paragraph": {"$ref": "#/$defs/paragraphStyle"},
+        "container": {"type": "object"},
+        "page": {"type": "object"}
+      }
+    },
+    "evidenceRef": {"type": "object"},
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region_id", "owner", "required"],
+      "properties": {
+        "region_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "owner": {"enum": ["protected", "slot", "remove"]},
+        "required": {"type": "boolean"},
+        "field_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"}
+        },
+        "label": {"type": "string", "minLength": 1},
+        "locator": {"$ref": "#/$defs/locator"},
+        "start_locator": {"$ref": "#/$defs/locator"},
+        "end_locator": {"$ref": "#/$defs/locator"},
+        "placement_mode": {"type": "string", "minLength": 1},
+        "style_map": {"type": "object"},
+        "repeat_policy": {"type": "string", "minLength": 1},
+        "text": {"type": "string"},
+        "forbidden_text": {"type": "string", "minLength": 1},
+        "object_kind": {"enum": ["image", "formula", "field", "bookmark", "table_merge", "unsupported"]},
+        "object_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_style": {"$ref": "#/$defs/effectiveStyle"},
+        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"owner": {"const": "slot"}}},
+          "then": {"required": ["field_ids", "start_locator", "end_locator", "placement_mode"]},
+          "else": {"required": ["locator"]}
+        }
+      ]
+    },
+    "componentLocator": {
+      "anyOf": [
+        {"$ref": "#/$defs/locator"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role", "locator"],
+          "properties": {
+            "role": {"type": "string", "minLength": 1},
+            "locator": {"$ref": "#/$defs/locator"}
+          }
+        }
+      ]
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "field_id", "content_type", "required", "locator"],
+      "properties": {
+        "slot_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "owner": {"const": "slot"},
+        "field_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"},
+        "label": {"type": "string", "minLength": 1},
+        "content_type": {"enum": ["text", "rich_text", "section", "image", "table", "formula", "asset"]},
+        "required": {"type": "boolean"},
+        "cardinality": {"enum": ["one", "many", "optional"]},
+        "locator": {"$ref": "#/$defs/locator"},
+        "component_locators": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/componentLocator"}
+        },
+        "fill_mode": {"type": "string", "minLength": 1},
+        "style_id": {"type": "string", "minLength": 1},
+        "placeholder_policy": {"type": "string", "minLength": 1},
+        "empty_policy": {"type": "string", "minLength": 1},
+        "mapping_status": {"type": "string", "minLength": 1},
+        "expected_value_style": {"$ref": "#/$defs/effectiveStyle"},
+        "value_contract": {"type": "object"},
+        "layout_contract": {"type": "object"},
+        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}},
+        "notes": {"type": "string"}
+      },
+      "anyOf": [
+        {"required": ["expected_value_style"]},
+        {"required": ["style_id"]}
+      ]
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style_id", "effective_properties"],
+      "properties": {
+        "style_id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "applies_to": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "word_style_id": {"type": ["string", "null"]},
+        "word_style_name": {"type": ["string", "null"]},
+        "effective_properties": {"type": "object"},
+        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer", "reviewed_at", "conclusion", "blockers"],
+      "properties": {
+        "status": {
+          "enum": ["synthetic", "machine_checked_pending_human_signoff", "human_accepted"]
+        },
+        "reviewer": {"type": ["string", "null"]},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "conclusion": {"enum": ["pending", "accepted"]},
+        "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "prepared_by": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

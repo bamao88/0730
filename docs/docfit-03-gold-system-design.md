@@ -1,11 +1,26 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-06
 
 本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
 合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
 在新的 M3 计划获批后进行。
+
+模板提取静态产物 Eval 的 Gold 形态由
+`docs/plans/docfit-template-extraction-eval/DESIGN.md` 进一步收窄：每个 case 以人工确认的
+Gold 模板和 Gold 填写契约作为 Expected，并与已经生成的 Actual 模板和 Actual 填写
+契约比较。Gold 填写契约承载 `protected`、`slot`、`remove` 区域责任、稳定定位、字段
+映射和槽值样式契约；完整 Gold 模板只作为这些结果事实的确定性参照，不规定上游
+Agent 路径。该顶层设计已形成；G1 schema 和三校最终 case 目录已物化，但三校数据仍为
+candidate、预期 `INPUT_ERROR`，尚未成为 Human-accepted Gold；Actual—Gold 评分 runner
+和学校回归也尚未实施。
+
+完整转换 case 还需要 Human-confirmed Student Content Truth 与 Placement Truth。它们与
+Template Truth 共同引用同一版 Content Field Registry 快照，却各自保留来源 locator、
+目标 locator 和放置动作。Registry 是跨阶段研发语义依赖，后三者才是业务 case 的
+Human Prepared Truth；它们不构成多层运行 Gold、阶段胶囊或新的在线数据系统。当前
+Registry v0.1 与三校 candidate 定位文件尚待字段级 Human signoff，不能直接改名为 Gold。
 
 ## 1. Gold 的定位
 
@@ -79,10 +94,59 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-模板提取目标使用 `docfit-school-extract`，其 Gold 只保存带来源引用的当前任务事实、
-冲突与不确定性；同时提供模板和论文并要求交付转换的用例属于 `convert-thesis`。
-测试可以断言 Agent 使用了当前模板证据且没有把它写入长期 Knowledge，但不保存固定
-调用轨迹、Subagent transcript、委派图或命名的中间阶段资产。
+对需要同时评测模板提取、学生内容提取、placement 与最终转换的完整业务 case，
+`case.yaml` 固定外部 Registry 引用，并可在同一 case 下附一组 Human Prepared Truth：
+
+```yaml
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.1.0
+  sha256: <fixed snapshot sha256>
+  visibility: subject_input
+```
+
+```text
+truth/
+├── template/
+│   ├── fillable-template.docx
+│   └── template-spec.yaml
+├── student/
+│   ├── student-source.docx
+│   ├── student-content.json
+│   └── content-assets/        # 可选，只保存必要复杂对象资产
+├── placement-map.yaml
+└── reference-final.docx       # 可选；事实断言不足时使用
+```
+
+该依赖与这些 Truth 的最小责任是：
+
+| 依赖 / Truth | 必须回答 | 不回答 |
+|---|---|---|
+| Content Field Registry snapshot | `field_id` 含义、类型、语义数量约束、父子/对象关系、语言、值 schema 和值来源/学生提取策略 | 学校 locator、样式、具体学生值或 case 评分答案 |
+| Template Truth | `slot_id/region_id → field_id`、模板 hash、target locator、责任边界、fill/condition/style 和目标显示 policy | 学生内容来源和本次 placement |
+| Student Content Truth | `content_id → field_id`/未注册状态、规范值/原始观测值或对象引用、学生源 hash、source locator、父子/顺序、共享事实 occurrence | 目标模板物理位置 |
+| Placement Truth | source content 集合到具体 slot/region 的 action、projection/formatter、order、condition、status 和证据 | Tool 的 OOXML 私有 locator 或 Agent 路径 |
+
+同一共享事实可以有多个 source occurrence，也可以填入多个模板槽；Gold 必须区分“一份
+事实的多次出现”和“多个有序内容实例”。观察冲突时保留每个 occurrence 及冲突状态，
+不得先任选一处成为唯一值。一对多、多对一、复合槽、连续区域、条件内容、生成字段、
+任务输入和外部资产均由 Placement Truth 显式表达，不能只靠 `field_id` 相等猜测。
+
+每份 Truth 保存 schema/version、内容 hash、互相引用的 digest、状态和 Human review；
+同时记录完整 `field_registry_ref`，不在 case 内复制或改写 Registry。
+路径相同但 hash 不同视为不同输入版本。Student Content Truth 及其资产包含学生内容，
+继承源 DOCX 的隐私、存储、CI 和外部处理限制；不能当普通元数据写入公开仓库或日志。
+
+每个 case 对 Registry 和 Truth 分别声明 `subject_input` 或 `oracle_only`。Registry
+通常是可供被测对象读取的语义输入；默认 Template Spec、Student Content 和
+Placement 答案只供比较器/Human 使用。若某个受控能力 Eval 允许被测
+对象读取其中一部分，必须逐文件声明，且仍保留独立 Expected，避免 oracle 泄漏。
+
+模板提取的 Agent 行为 Eval 仍只保存带来源引用的当前任务事实、冲突与不确定性；
+模板提取的静态产物 Eval 则按上述专项设计保存 Gold 模板和 Gold 填写契约，比较最终
+产物而不比较行为路径。同时提供模板和论文并要求交付转换的用例属于
+`convert-thesis`。两类测试都可以断言 Agent 使用了当前模板证据且没有把它写入长期
+Knowledge，但不保存固定调用轨迹、Subagent transcript、委派图或命名的中间阶段资产。
 
 ## 3. 断言优先
 
@@ -90,6 +154,13 @@ manual_review: [cover_page, toc_pagination]
 
 - 转换候选以目标模板为主干，学生 DOCX 只作为只读内容来源；
 - placement 明确学生内容进入的模板槽位或区域；“学生副本导入了模板节”不是等价结果；
+- 模板与学生内容引用同一 Registry ID/version/hash，`field_id` 没有被改义或用作物理 locator；
+- 每个模板 slot/region 的 target locator 与模板 hash 绑定，每个 student content 的 source
+  locator 与学生源 hash 绑定，任一 stale/ambiguous locator 不会被静默采用；
+- 学生内容的字段归属、值/对象引用、父子关系、顺序和共享事实 occurrence；
+- 每个 in-scope 内容都有 placed、retain、exclude 或 unresolved 处置，每个 required
+  target 都有内容或 blocking 原因；
+- 生成字段、任务输入、外部/人工资产与学生源可提取字段按 source policy 分开评测；
 - 标题和章节层级；
 - 学生正文关键文本；
 - 表格、图片、公式及其他支持对象的数量和必要顺序；
@@ -136,16 +207,28 @@ Gold 比较。比较同一文档 hash 的 `edit_feedback` 与 Adobe candidate �
 
 ## 5. Gold 的产生
 
-Gold 只从已经实际运行并人工确认的结果产生：
+Human Prepared Truth 和 Gold 都只能来自可核对的材料与 Human 确认，模型的
+新输出不能自己成为真值。Registry 快照只能经 Human 字段审查后晋升；Template、
+Student Content 和 Placement Truth 可以由 Human 直接对受控输入和格式书评审后冻结；
+参考 `final.docx`、页面图片与运行结果 Gold
+则必须来自实际运行并经 Human 确认：
 
-1. 用当前 Skill、Knowledge 和 Tools 处理样本；
-2. 运行确定性断言；
-3. 查看 `docx_render` 随结果返回的有限预览，或通过 `docx_visual_review` 按需读取与
+1. 选定并固定 Content Field Registry ID/version/hash，对本 case 所用字段确认
+   含义、类型、语义基数、父子关系和值来源/学生提取策略；
+2. 冻结 Template Truth，逐槽/区域确认模板 hash、target locator、字段、边界和样式；
+3. 冻结 Student Content Truth，逐项确认学生源 hash、source locator、内容/对象、顺序、
+   occurrence 冲突和未注册项；
+4. 确认 Placement Truth；字段相同只能生成候选，所有多目标、复合、条件、投影、生成、外部、
+   retain/exclude 和 unresolved 情形由 Human 裁决；
+5. 用当前 Skill、Knowledge 和 Tools 处理样本；
+6. 运行确定性断言；
+7. 查看 `docx_render` 随结果返回的有限预览，或通过 `docx_visual_review` 按需读取与
    当前文档绑定的已有页面图片；
-4. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
-5. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
-6. 必要时保存参考 `final.docx` 或少量页面图片；
-7. 记录确认人、日期、产品 Knowledge 版本与 content digest、当前任务学校材料
+8. 人工检查断言覆盖不到的关键页面，并确认或修正 Agent 的 visual findings；
+9. 提取最少、稳定的事实到 `facts.yaml` 和可选 `visual-findings.yaml`；
+10. 必要时保存参考 `final.docx` 或少量页面图片；
+11. 记录确认人、日期、产品 Knowledge 版本与 content digest、Registry ID/version/hash、
+   三类 Truth 的 schema/hash、当前任务学校材料
    hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因；
    若使用确定性样式补全，还记录每个属性的标准标识、版本、条款、适用性与规则集 digest。
 
