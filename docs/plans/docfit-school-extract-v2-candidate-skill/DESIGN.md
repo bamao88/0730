@@ -352,6 +352,47 @@ disposition、缺页审查、残留 machine blocker 和已存在的不同输出�
 3. 未来 Eval 只评价 frozen 对象做得好不好，不接管上述七个入口的运行责任，也不依据
    Agent transcript 替代产物评测。
 
+### 1.2 Claude Agent SDK 原生运行合同
+
+Agent 运行层不属于本模块的自研产品能力。实现固定复用仓库现有 Claude Agent SDK 接缝：
+
+```text
+filesystem Skill（SKILL.md + scripts + references）
+  └─ setting_sources=["project"] + skills allowlist
+       └─ ClaudeSDKClient 的一个任务 query/session
+            ├─ SDK 原生 agent/tool loop、消息、compaction、turn/budget 终止
+            ├─ 现有 build_docfit_server() 中的五个 in-process MCP Tool
+            ├─ 现有 permissions / PreToolUse hooks / can_use_tool
+            └─ output_format JSON Schema → ResultMessage.structured_output
+```
+
+SDK 与领域合同的边界固定如下：
+
+- 五个 Tool 使用 SDK `@tool` 定义并由 `create_sdk_mcp_server()` 统一注册；Tool input schema、
+  handler、领域失败码和原子副作用由 DocFit 定义，MCP transport 和 tool loop 不自建。
+- Tool 返回 SDK 原生 `content`、`structuredContent` 和 error 标记；图片直接使用原生 image
+  content block。领域 `call_status`/`artifact_status` 仍在结构化 payload 内，不能用 transport
+  success/error 替代产品状态。
+- Tool 失败返回给 SDK 后，SDK 保持 Agent loop，Agent 根据稳定失败码重新观察、修正决定或
+  使用新 attempt；DocFit 不实现通用 retry engine。`retryable` 只描述领域事实，不自动重放
+  有副作用的调用。
+- 缺少必要用户裁决时使用 SDK 原生 `AskUserQuestion` 与现有 `can_use_tool` 回调；不得发明
+  question file、pause status 或另一套多轮协议。
+- 成功或阻断的最终机器结果由 SDK structured output 输出。v1 schema 固定要求
+  `status: frozen | blocked`、`frozen_path`、`template_sha256`、`artifact_ref` 和
+  `counts{slot,fixed,manual,gap,unresolved}`；除 `status` 外的交付值在尚未形成可验证 frozen 时为
+  `null`，不能伪造路径/hash/counts。Agent Gate 读取
+  `ResultMessage.structured_output` 并与磁盘重算，不解析最终自然语言。
+- 当前一次提取任务不需要自建 session registry、resume/fork 流程或 subagent scheduler。
+  SDK session 只保留对话；DocFit evidence/ref/artifact 必须独立落盘并绑定 task root/hash。
+- hooks 和 permissions 保护 Agent 可调用边界；Tool handler 仍必须独立重验路径、source hash、
+  ref lineage 和发布原子性。任何 hook 放行都不能视为领域检查通过。
+
+仓库锁定版本是 `claude-agent-sdk==0.2.128`。该版本 in-process MCP bridge 的
+`structuredContent` 可见性兼容点继续集中复用现有结果 helper：首个 text block 镜像相同的紧凑
+JSON。它不是第二套结果协议；只有升级后 contract proof 证明 Agent 可稳定直接消费
+`structuredContent`，才删除镜像。
+
 ## 2. 五类资产各自负责什么
 
 | 资产 | 负责 | 不负责 |
@@ -719,8 +760,10 @@ compare、build 和 freeze 按变化原因分开；公开 MCP schema/handler 留
 行数制造只有转发逻辑的浅模块。
 
 领域服务通过 `src/docfit/template/ports.py` 接收 OfficeCLI/Adobe 等外部边界，不反向导入
-`docfit.tools`；`template_tools.py` 作为 composition root 注入现有适配器。依赖方向、schema
-拆分和硬性文件规模上限以 TDD 子计划第 2 节为准。
+`docfit.tools`；`template_tools.py` 只保存五个原生 `@tool` 定义/handler，现有
+`src/docfit/tools/__init__.py` 中的 `build_docfit_server()` 继续作为唯一 SDK MCP composition
+root，注入适配器并汇总注册。依赖方向、schema 拆分和硬性文件规模上限以 TDD 子计划第 2 节
+为准。
 
 产品包和候选 Skill 运行脚本不得包含测试 fixture、fake、builder、pytest helper 或 Agent
 harness，也不得反向导入 `tests/`。测试辅助设施只位于 `tests/fixtures/` 与 `tests/support/`，
@@ -766,7 +809,8 @@ Tool / Code Gate 通过后，Agent Gate 只断言：
 - Tool 失败或 findings 要求返工时，不把旧 attempt/candidate 当作成功结果，并使用新输出路径
   继续处理；
 - 最终形成完整 frozen 文件集合；
-- 最终回复中的路径、hash、状态和 slot/fixed/manual/gap/unresolved 数量与磁盘产物一致。
+- SDK `ResultMessage.structured_output` 中的路径、hash、状态、`artifact_ref` 和
+  slot/fixed/manual/gap/unresolved 数量与磁盘产物一致；自然语言摘要不作为机器断言来源。
 
 本 Gate 不评价槽位、来源裁决、删除决定或视觉判断做得好不好，也不建立 transcript golden、
 行为 token 或 live/deterministic 双矩阵。

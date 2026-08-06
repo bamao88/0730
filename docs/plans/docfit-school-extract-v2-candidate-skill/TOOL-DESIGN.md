@@ -60,16 +60,24 @@ mcp__docfit__template_freeze
 逻辑名称分别是去掉 `mcp__docfit__` 前缀后的部分。W6 原子切换前不注册这些名称，也不为旧
 `docx_*` Tool 提供别名或兼容参数。
 
-| Tool | readOnlyHint | destructiveHint | idempotentHint | 说明 |
-|---|---:|---:|---:|---|
-| observe | false | false | true | 写 task-local 证据/cache，但不改输入；同 hash/profile 复用结果 |
-| mutate | false | false | false | 只创建新 DOCX，目标已存在时失败 |
-| compare | false | false | true | 写 immutable comparison/render 证据，相同输入复用 |
-| build | false | false | false | 只创建新 candidate 目录，拒绝覆盖 |
-| freeze | false | false | false | 只创建新 frozen 目录，拒绝覆盖 |
+五个 Tool 必须使用 Claude Agent SDK 原生 `@tool` 声明，并在 W6 中加入现有
+`src/docfit/tools/__init__.py::build_docfit_server()` 的单个
+`create_sdk_mcp_server(name="docfit", ...)`。`template_tools.py` 只保存五个 Tool 定义和薄
+handler，不创建第二个 MCP server、transport、dispatcher、registry 或 RPC envelope。
 
-全部 Tool 使用 `openWorldHint: false`：它们不能访问任意网络资源。authoritative render 只能
-通过产品固定的服务适配器调用，不接受 provider/backend/engine 参数。
+| Tool | readOnlyHint | destructiveHint | idempotentHint | openWorldHint | 说明 |
+|---|---:|---:|---:|---:|---|
+| observe | false | false | true | true | 写 task-local 证据/cache；`authoritative` 可经固定 Adobe adapter 访问进程外服务，同 hash/profile 复用结果 |
+| mutate | false | false | false | false | 只创建新 DOCX，目标已存在时失败 |
+| compare | false | false | true | false | 写 immutable comparison/image evidence，相同输入复用；不临时访问外部服务 |
+| build | false | false | false | false | 只创建新 candidate 目录，拒绝覆盖 |
+| freeze | false | false | false | false | 只创建新 frozen 目录，拒绝覆盖 |
+
+这些 `ToolAnnotations` 是 SDK/MCP 的执行提示，不是安全证明。observe 因同一 Tool 内包含可能
+调用固定 Adobe 服务的 `authoritative` action，只能在 Tool 粒度保守标记
+`openWorldHint: true`；它仍不接受任意 URL 或 provider/backend/engine 参数。五个 Tool 都会
+写 task-local evidence 或产物，因此不能为了 SDK 并行调度错误标记为 read-only，也不为了
+action 级注解把轻量产品拆成更多公开 Tool。
 
 结构化文本和原生图片复用应用壳现有的共享传输上限，不在本候选中定义第二套 chars/bytes
 常量。图片通过 cursor 分批返回；公开 schema 不暴露传输预算参数，边界测试读取同一组共享
@@ -167,11 +175,22 @@ suggested_actions: []
 - build 使用 `artifact_status: candidate`；
 - freeze 使用 `artifact_status: frozen | blocked` 和 `published`。
 
-MCP transport 同时返回：
+SDK Tool handler 返回原生 `CallToolResult` 形态：
 
 - `structuredContent`：上述完整 JSON object；
 - 第一项 text content：同一 object 的 JSON 序列化；
 - image action：在结构化/text 之后附加原生 image content blocks。
+
+`call_status: needs_input | error` 时 Python handler 设置 SDK 的 `is_error: true`（MCP wire 对应
+`isError`），让 SDK 将错误交回同一 Agent loop；`call_status: ok` 且
+`artifact_status: blocked` 是已完成的领域检查结果，不标 transport error。领域 payload 仍保留
+稳定失败码和 `retryable`。不能抛出自定义 transport exception 来终止整个任务，也不能在
+handler 内建立通用自动重试。
+
+第一项 text mirror 只是锁定 SDK 0.2.128 in-process bridge 的已知兼容点：当前 bridge 构造
+Agent 可见的 `CallToolResult` 时会漏掉 `structuredContent`。实现必须复用现有 `tool_result()`
+的同一序列化路径，并让该集中 helper 同时识别旧 `status` 与候选 `call_status`，不能另写第二
+套字段或错误协议；SDK 升级后先用 Tool/Agent contract 证明直接可见性，再删除镜像。
 
 ### 3.5 Check、warning 与 finding
 
@@ -773,8 +792,10 @@ blocking finding codes 至少包括：`candidate_file_missing`、`candidate_file
 未开放的 mutation mode 不提前创建空实现文件。
 
 公开注册/schema 仍放在 `src/docfit/tools/`：五个 schema 按 Tool 责任拆在
-`template_schemas/`，`template_tools.py` 只做统一注册、composition 和错误封装；领域实现
-不得复制进 Tool registration functions。
+`template_schemas/`，`template_tools.py` 只做五个 SDK `@tool` 声明、薄 handler 和对现有结果
+helper 的调用；领域实现不得复制进 Tool registration functions。唯一 composition root 仍是
+现有 `src/docfit/tools/__init__.py::build_docfit_server()`，W6 只把新的 `DOCFIT_TOOLS` 集合原子
+接入，不增加第二个 server。
 
 OfficeCLI/Adobe fake、DOCX fixture builder 和 artifact 断言只放在 `tests/support/template_v1/`；
 产品 Tool、schema、ports 和领域服务不得导入它们或读取 `tests/fixtures/`。真实适配器与测试
@@ -785,6 +806,10 @@ artifact 和 compilers 拆文件控制规模，但仍是一个 Gate。所有测�
 Tool 或真实 compiler CLI，覆盖已实现输入分支、代表性拒绝、失败不发布、DOCX 可打开、文件
 集合、cursor、cache、hash/ref binding 和 candidate/frozen 状态转换。内部模块测试可以用于
 诊断，但不形成新的产品 Gate，也不能代替公开 Tool 断言。
+
+Tool contract 沿用仓库现有做法，直接调用 `@tool` 产生的 `SdkMcpTool.handler`，断言 input
+schema/annotations、原生 content/image/structured/error 形态和磁盘副作用；不启动 Agent，也
+不通过自建 MCP client/server harness 重测 SDK transport。
 
 Agent 是否按必要顺序使用这些合同、处理失败并让最终回复与产物一致，由 `PLAN.md` 定义的
 Agent Gate 验证；槽位语义、学校要求覆盖和视觉质量由后续独立 Eval 验证。

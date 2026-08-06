@@ -38,6 +38,12 @@ artifact-decisions.yaml
 - 脚本不读取或修改 DOCX，不渲染图片，不替 Agent 接受视觉结果；
 - 脚本成功不代表 mutation、build 或 freeze 一定成功。
 
+Claude Agent SDK 不提供 DocFit 特有的责任迁移、ref lineage、artifact schema 和原子 canonical
+文件编译，因此这两个脚本是合理的领域能力，而不是对 SDK 的重复封装。它们不得导入
+`claude_agent_sdk`，不得执行 Agent query、注册 MCP Tool、管理 session、请求用户输入或实现
+重试/暂停；Agent loop、Skill 发现、用户提问和最终 structured output 全部由现有 SDK 应用层
+负责。
+
 不增加 `compile_review_record.py`。视觉审查没有独立副作用边界，规范化的
 `ReviewRecordV1` 直接嵌入 `artifact-spec.json`。
 

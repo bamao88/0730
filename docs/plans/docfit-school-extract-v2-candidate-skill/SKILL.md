@@ -101,6 +101,10 @@ Skill 内置脚本负责校验并把你已经完成的语义判断编译为规�
 只有缺少必要用户裁决、授权材料或不可替代的外部能力，并且当前范围内没有安全修正路径
 时，才报告阻塞。报告时说明已经确认的事实、阻塞原因和解除阻塞所需输入。
 
+缺少会实质改变结果的用户裁决时，使用宿主提供的原生 `AskUserQuestion`，在同一任务会话中
+等待答案；不要创建问题文件、暂停状态、session registry 或自定义问答协议。Tool 返回错误
+时，根据稳定失败码在当前 Agent loop 中修正或询问，不要由脚本自动重放有副作用的调用。
+
 Tool 的 `call_status: ok` 只说明调用完成。build 的领域状态是
 `artifact_status: candidate`；freeze 验证未通过时是 `artifact_status: blocked` 且
 `published: false`。后者仍是返工输入，不是自动的任务阻塞。
@@ -158,7 +162,9 @@ finding；必须通过新的修改和 comparison 使它消失。
 
 ## 完成与回复
 
-返回 frozen artifact 的位置、模板 hash、状态，以及 slot、fixed、manual、gap、unresolved
-的结构化数量和简要摘要；这些值必须与磁盘中的最终 manifest 一致。另列下游消费者需要
-知道的非阻断发现。如果冻结被阻止，先根据 findings 继续修正；只有确认当前范围内没有安全
-修正路径时，才报告具体阻塞和所需输入。任何情况下都不要把 candidate 描述为可交付产物。
+通过宿主要求的 structured output 返回 `status`、frozen artifact 位置、模板 hash、
+`artifact_ref`，以及 slot、fixed、manual、gap、unresolved 的结构化数量；这些值必须与磁盘
+中的最终 manifest 一致。自然语言只做简要摘要，不把 JSON 嵌进回复等待下游解析。另列下游
+消费者需要知道的非阻断发现。如果冻结被阻止，先根据 findings 继续修正；只有确认当前范围
+内没有安全修正路径时，才报告具体阻塞和所需输入。任何情况下都不要把 candidate 描述为
+可交付产物。

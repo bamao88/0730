@@ -49,8 +49,9 @@ hash/ref/`artifact_ref` 自洽，以及失败不发布半成品。该 Gate 不�
 **B. Agent Gate**
 
 只在 Tool / Code Gate 通过后运行。验证 Agent 满足合同要求的调用先后依赖、传递有效
-ref/hash、处理 Tool 失败、生成完整 frozen artifact，并确保最终回复中的路径、hash、状态和
-结构化数量与磁盘产物一致。这里断言影响正确性的顺序和结果，不绑定无关的精确调用次数、
+ref/hash、处理 Tool 失败、生成完整 frozen artifact，并确保 SDK structured output 与最终用户
+回复中的路径、hash、状态和结构化数量都与磁盘产物一致。机器断言以 structured output 为准，
+不从自然语言反向解析 JSON。这里断言影响正确性的顺序和结果，不绑定无关的精确调用次数、
 完整 transcript 文案或内部思考过程，也不承担最终内容质量评分。
 
 **后续 Quality Eval（当前不做）**
@@ -117,6 +118,33 @@ Gate，Quality Eval 是后续独立质量模块。
 - 物理解耦是代码组织和依赖规则，不新增第三个测试 Gate；其行为证明仍归属于 Tool / Code
   Gate 与 Agent Gate。
 
+### 0.7 Claude Agent SDK 原生优先
+
+- 当前实现基线固定以仓库锁定的 `claude-agent-sdk==0.2.128` 为准。设计先使用该版本已经提供
+  的 Agent loop、消息/结果类型、in-process MCP Tool、权限、hooks、Skill 加载、会话、用户
+  提问、结构化输出、turn/budget 限制和 context compaction；只有 SDK 没有提供、且确属
+  DocFit 产品责任的能力才自行实现。
+- SDK 负责运行 Agent；DocFit 只负责领域合同和安全副作用。五个 Tool 仍负责 DOCX 事实、
+  修改、比较、构建、冻结以及 ref/hash/artifact 原子性；两个编译器仍负责确定性决定预检。
+  SDK session 不能替代 task-local evidence/ref，hook 不能替代 Tool 内的路径、hash、源只读和
+  失败不发布检查。
+- 禁止为本模块新增第二套 Agent loop、Tool dispatcher/MCP transport、Skill loader/router、
+  权限引擎、提问协议、session/attempt registry、transcript 工作流、通用重试引擎或最终文本
+  JSON parser。Agent 的 Tool 失败恢复由 SDK 继续同一 loop 后结合 Tool 结果决定；文件返工仍
+  使用新的领域输出路径，不引入工作流状态机。
+- 五个领域 Tool 使用 SDK 原生 `@tool` 与 `create_sdk_mcp_server()` 接入现有
+  `build_docfit_server()`；返回 SDK 原生 text/image content、`structuredContent` 和错误标记。
+  Skill 使用 `setting_sources=["project"]` 与 `skills` allowlist 发现，不写程序化 Skill 注册层。
+- Agent 的最终交付使用 SDK `output_format` JSON Schema 和
+  `ResultMessage.structured_output`；自然语言回复可以简述结果，但测试和下游不得从回复文本
+  反向解析结构化字段。
+- 0.2.128 的 in-process MCP bridge 目前需要把紧凑 JSON 同步放入首个 text content，才能让
+  Agent 稳定看到与 `structuredContent` 相同的数据。该兼容点只允许集中复用现有结果 helper，
+  不定义第二个领域 envelope；升级 SDK 后必须先用 Tool contract 证明 bridge 行为，再决定
+  是否删除 text mirror。
+- 五个 Tool 数量很小，当前不建设自定义 Tool Search、动态 Tool 路由或 subagent scheduler。
+  SDK-native 注解、权限和 Hook 是运行提示/边界，不得为了获取并行执行而拆碎产品 Tool。
+
 ## 1. 本轮权威与裁决顺序
 
 在候选设计优化与后续获批实现期间，本目录是 Agent、Skill scripts、五个领域 Tool、候选/
@@ -152,6 +180,8 @@ Gate，Quality Eval 是后续独立质量模块。
 - TDD 子计划按公开行为执行小步 RED→GREEN→REFACTOR，给出目标文件目录、规模约束、每阶段
   目标与测试通过标准，不先水平实现全部底层模块；
 - 产品代码与测试代码目录、依赖和打包边界完全分离，测试辅助设施不会进入产品包；
+- 每项 Agent 运行能力都已经映射到锁定 SDK 的原生入口；没有重复实现 SDK 已提供的 loop、
+  Tool transport、权限、Skill/session/提问或结构化输出能力；
 - 产品决策、能力合同、Tool 证明、Agent 编排和后续 Quality Eval 的输入、产物、退出条件与
   交接关系完整，任何下游阶段都不能替代上游责任；
 - 生产切换、长期文档更新和 M3/真实样本资格不被冒充为本轮完成结果。
@@ -207,6 +237,26 @@ Tool 不要求用户直接理解 `.docfit/template-v1/` 的内部布局。每次
 新的、尚不存在的 attempt 路径；首次示例中的 `work-v2.docx`、`work/candidate-template-artifact`
 和 `output/frozen-template-artifact` 只是示例名，不是所有重试复用的固定地址。attempt 名由
 Agent 在当前任务 work/output 范围内选择即可，本方案不增加 attempt registry 或工作流状态机。
+
+### 3.4 Agent SDK 与 DocFit 的能力边界
+
+| 需求 | 使用的 SDK 原生能力 | DocFit 只补什么 |
+|---|---|---|
+| 执行一次学校模板提取任务 | 一个 `ClaudeSDKClient` 会话中的一次 query；SDK 自行运行 tool loop、compaction 和终止 | 候选 Skill、任务输入和完成条件 |
+| 暴露五个领域 Tool | `@tool`、`create_sdk_mcp_server()`、现有 `build_docfit_server()` | JSON Schema、领域 handler、OfficeCLI/Adobe adapter 注入 |
+| 控制 Tool 面与权限 | `tools`、`allowed_tools`、`disallowed_tools`、`permission_mode`、`strict_mcp_config` | 复用应用现有 allowlist 和 default-deny 配置 |
+| 强制路径/主从 Agent 安全边界 | SDK `PreToolUse` hook 和现有 `can_use_tool` | 只扩展五个新 Tool 所需映射；领域安全仍由 Tool 重验 |
+| 加载候选 Skill | `setting_sources=["project"]` 与 `skills` allowlist | 文件系统中的 `SKILL.md`、scripts、references |
+| 读取 Skill 资料、写决定文件、运行两个编译器 | SDK/Claude Code 内建 `Skill`、`Read`/`Glob`/`Grep`、`Write`/`Bash` | 复用应用现有权限与审计边界；两个编译器只实现领域编译 |
+| 获取缺失用户裁决 | SDK `AskUserQuestion` 经 `can_use_tool` 返回答案 | Skill 只决定何时确实需要用户输入，不定义新问答 schema |
+| 处理 Tool 失败 | 原生 Tool error result 后继续同一 agent loop | 稳定领域失败码、是否可重试的事实和建议动作 |
+| 交付最终机器结果 | `output_format={type: json_schema}` 与 `ResultMessage.structured_output` | 路径/hash/status/counts 的交付 schema 和磁盘一致性检查 |
+| 观察运行终止与成本 | `ResultMessage` 的 subtype、turns、usage/cost、session id | 复用现有隐私安全观测 allowlist；不保存正文/transcript |
+| 多轮会话或恢复 | SDK session id/resume/fork 已可用 | 当前切片不需要 session registry；领域 artifact/ref 独立持久化 |
+
+当前模块不新增 subagent。若生产 Agent 继续使用仓库现有 SDK `AgentDefinition`，只复用既有
+角色和权限隔离，不为模板提取创建 scheduler、消息总线或第二层编排。SDK checkpointing 也不
+替代 DocFit 的原子目录发布：前者管理 Agent 文件编辑状态，后者是 frozen artifact 的产品合同。
 
 ## 4. 共享调用与编译合同
 
@@ -396,8 +446,10 @@ freeze-report payload hash；最终 freeze-report 文件自身不直接进入 pr
 | task-root 路径规范化、SHA-256、canonical JSON、原子文件写 | 下沉为候选共享 runtime，不复制第二套 |
 | OfficeCLI inspect/edit/validate 与 Adobe 渲染/cache | 作为五个领域 Tool 的内部适配器，不暴露 backend selector |
 | DOCX package、OOXML、对象 ref、图片和布局模块 | 复用底层事实与修改原语，新增 template 领域规则 |
-| MCP Tool 注册、扁平 schema 和错误 envelope 测试 | 扩展为五个候选 Tool 的合同测试 |
-| 现有 Agent smoke 骨架 | 仅复用运行入口实现轻量 Agent Gate；不沿用 Skill Eval 评分责任 |
+| `src/docfit/tools/__init__.py` 中的 SDK `@tool` / `create_sdk_mcp_server()` 组合根、扁平 schema 和原生结果 helper | 在同一个 `build_docfit_server()` 中原子替换为五个候选 Tool；不新建 MCP transport、dispatcher 或第二个 server |
+| `build_agent_options()` 的 SDK tools/permissions/hooks/Skill 配置 | W5/W6 只替换 Tool 名称和 allowlist 映射；不新建权限层或 Skill loader |
+| 现有 `ClaudeSDKClient`、`output_format`、`ResultMessage.structured_output` 消费路径 | 复用为一次模板提取 query 和最终交付；不解析最终自然语言 JSON |
+| 现有公开 Tool handler contract 及 Agent smoke 骨架 | Tool Gate 直接调用 SDK `SdkMcpTool.handler`；Agent Gate 复用真实应用入口，不新建 Agent runner/harness |
 
 旧的五个 `docx_*` Tool、旧只读 school-extract Skill 和旧产物 schema 不作为兼容目标。
 生产切换前保持它们不变；切换时用一个受控变更同时替换注册、权限、Skill 与消费方。
@@ -490,12 +542,19 @@ Quality Eval 不在本工作包内。
 
 验收：
 
+- 每个测试任务使用现有 `ClaudeSDKClient` 的一个 query/session，由 SDK 自行完成 tool loop；
+  不创建模板提取专用 runner、session registry、retry workflow 或 transcript parser；
 - Agent 满足 observe/compile/mutate/compare/build/freeze 之间必要的先后依赖，不要求无关的
   精确调用次数或逐字 transcript；
 - 每个下游调用使用当前有效 ref/hash，返工使用新的未占用输出路径，不混用旧 attempt 证据；
 - 至少覆盖一次正常完成和一次可恢复 Tool 失败，失败后能回到对应环节并最终形成完整 frozen；
-- 最终回复中的 frozen 路径、template hash、状态及 slot/fixed/manual/gap/unresolved 数量与
-  实际文件一致；
+- 最终 `output_format` 至少要求 `status`、`frozen_path`、`template_sha256`、`artifact_ref` 和
+  slot/fixed/manual/gap/unresolved 五项 count；blocked 且尚无可验证 frozen 时交付值必须为
+  `null`。测试读取 `ResultMessage.structured_output`，并验证非空字段与磁盘实际文件一致；
+- 最终用户回复用同一 structured output 生成简要摘要并呈现路径、hash、状态和五项数量；
+  Agent Gate 只做这些最终产物断言，不对措辞和模板语义评分；
+- 缺用户授权/裁决时使用 SDK 原生 `AskUserQuestion`/`can_use_tool` 路径，不发明暂停状态或
+  问题文件；原生 Tool error 后允许同一 loop 修正并重试；
 - Agent Gate 不输出语义质量分数，也不冒充 M3 Eval 或真实样本资格。
 
 ### W6：原子生产切换与文档对齐
@@ -643,6 +702,24 @@ freeze check 失败  ─→ candidate 保留、无 frozen ─→ 回到对应阶
   明确记录本次从既有合同中开放的 action/mode 及延期项。若需要新增或改变能力，先回到产品
   决策并更新 `DESIGN.md` 第 1.1 节，不能直接进入实现；
 - W0–W6 的范围与顺序获批；
+- 锁定 SDK 版本的原生 Tool、Skill、权限、用户输入和结构化输出接缝已经由 contract/smoke
+  设计覆盖；实施者不得用自建 wrapper 替换第 0.7 与 3.4 节的映射；
 - 明确本次批准是开始候选实现，还是连同 W6 生产切换一起批准。
 
 没有新的用户批准，本轮在文档验收后结束。
+
+## 14. Claude Agent SDK 官方依据
+
+本轮原生优先边界依据以下官方文档，并以仓库实际锁定版本的 Python API/contract proof 为
+最终实施基线：
+
+- [Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview)
+- [Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop)
+- [Custom tools](https://code.claude.com/docs/en/agent-sdk/custom-tools)
+- [Permissions](https://code.claude.com/docs/en/agent-sdk/permissions)
+- [Hooks](https://code.claude.com/docs/en/agent-sdk/hooks)
+- [Skills](https://code.claude.com/docs/en/agent-sdk/skills)
+- [User input](https://code.claude.com/docs/en/agent-sdk/user-input)
+- [Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs)
+- [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions)
+- [Python reference](https://code.claude.com/docs/en/agent-sdk/python)

@@ -25,6 +25,12 @@
 实现顺序。只允许在 OfficeCLI、Adobe、Agent SDK、文件系统故障、时间/随机数等系统边界使用
 可注入 fake；fake 不能绕过真实 schema、hash、DOCX package、文件集合和原子发布逻辑。
 
+Claude Agent SDK 自带的 loop、MCP transport、Skill discovery、permission resolution、session
+和 structured-output validation 视为第三方边界，不在本模块复制实现。Tool Gate 直接调用
+`@tool` 生成的 `SdkMcpTool.handler`；Agent Gate 经现有应用入口驱动真实 SDK contract。测试可
+脚本化 SDK 边界返回原生 message/result 类型，但不得创建一套行为不同的模板专用 Agent
+runtime。
+
 当前仍只有两个产品 Gate：
 
 - Tool / Code Gate：直接调用五个 Tool 和两个编译器 CLI；
@@ -65,6 +71,7 @@ src/docfit/template/
 └── artifact_freeze.py          # 独立重验 candidate → frozen + artifact_ref
 
 src/docfit/tools/
+├── __init__.py                 # 现有唯一 SDK MCP composition root；P5/W6 原子替换 DOCFIT_TOOLS
 ├── template_schemas/
 │   ├── __init__.py             # 汇总导出五个 Tool schema，不放字段定义
 │   ├── common.py               # schema_version、task_root、路径/ref 等共享字段
@@ -72,7 +79,7 @@ src/docfit/tools/
 │   ├── mutate.py               # mutate schema 与已开放 operation/mode 枚举
 │   ├── compare.py              # compare create/images schema
 │   └── artifact.py             # build/freeze schema
-└── template_tools.py           # 薄注册/handler/envelope；只调用 template 领域入口
+└── template_tools.py           # 5 个原生 @tool 定义/handler；无自建 dispatcher/server
 
 docs/plans/docfit-school-extract-v2-candidate-skill/
 └── scripts/
@@ -90,6 +97,7 @@ tests/
 │   ├── __init__.py             # 测试辅助包；不从产品代码导入
 │   ├── docx_factory.py         # 生成最小测试 DOCX/package
 │   ├── boundary_fakes.py       # OfficeCLI/Adobe/故障注入 fake
+│   ├── sdk_boundary.py         # 原生 SDK message/result fixture；不实现 Agent loop
 │   └── artifact_assertions.py  # 文件集、schema、hash/ref 复算断言
 ├── contract/template_gate/     # 同一个 Tool / Code Gate，可拆文件但不拆责任
 │   ├── conftest.py
@@ -108,8 +116,11 @@ tests/
 
 `contracts/` 只保存跨模块领域模型，不放 resolver 或业务判断；`runtime/` 只提供路径、hash、
 原子发布和 evidence store，不识别学校语义；`template_schemas/` 只定义传输 schema，
-`template_tools.py` 不复制 schema 或领域逻辑。禁止新增 `utils.py`、`helpers.py` 或通用
-`manager.py` 作为无边界代码堆积点。
+`template_tools.py` 不复制 schema 或领域逻辑；它导出的 `SdkMcpTool` 集合由现有
+`build_docfit_server()` 汇总。现有 `src/docfit/app/agent.py::build_agent_options()` 和
+`src/docfit/app/convert.py` 的 `ClaudeSDKClient`/structured-output 消费路径只复用、不承载新的
+模板领域逻辑，也不新增模板专用 Agent runner。禁止新增
+`utils.py`、`helpers.py` 或通用 `manager.py` 作为无边界代码堆积点。
 
 ### 2.1 文件规模约束
 
@@ -123,7 +134,7 @@ tests/
   `range` 三类拆为 `mutation_modes/` 子包；未实现的候选 mode 不提前建空文件。
 - 每个 `template_schemas/*.py` 只负责表明的 Tool 或共享字段；不得把五个 schema 重新汇总成
   一个大字典文件。`template_schemas/__init__.py` 只汇总导出，公开名称仍由单一
-  `template_tools.py` 注册。
+  `template_tools.py` 声明，并由现有 `build_docfit_server()` 注册。
 - `contracts/evidence.py` 接近 400 行时，按 observation、mutation、comparison evidence 拆为
   `contracts/evidence/` 子包；ref 绑定和 schema version 仍只来自 `contracts/common.py`。
 - `observation.py` 或 `comparison.py` 接近 400 行时，优先把图片分批/manifest 逻辑拆到具名
@@ -150,15 +161,21 @@ runtime + ports
    ↑
 compiler / observation / mutation / comparison / artifact services
    ↑
-template_tools（MCP composition root）或 Skill compiler CLI
+template_tools（SDK @tool handler）或 Skill compiler CLI
+   ↑
+现有 build_docfit_server（唯一 SDK MCP composition root）
 ```
 
 - `contracts/` 不导入 runtime、服务或 `docfit.tools`；`runtime/` 最多依赖 common contract。
 - `ports.py` 只声明当前 tracer 实际需要的外部边界协议；领域服务接收协议实例，不直接导入
   `docfit.tools.officecli`、`docfit.tools.adobe` 或 Agent SDK。
-- `template_tools.py` 是五个 Tool 的唯一 composition root：注册 schema、注入现有
-  OfficeCLI/Adobe 实现并调用领域服务；现有适配器不反向导入 `docfit.template`。
+- `template_tools.py` 使用 SDK `@tool` 声明 schema/annotations 并调用领域服务；现有
+  `src/docfit/tools/__init__.py::build_docfit_server()` 是唯一 composition root，使用
+  `create_sdk_mcp_server()` 汇总 Tool 并注入现有 OfficeCLI/Adobe 实现。现有适配器不反向
+  导入 `docfit.template`。
 - 两个 Skill CLI 只组合对应 compiler，不导入 MCP handler；compiler 不导入 Tool 或 Agent。
+- `src/docfit/app/agent.py` 与 `convert.py` 继续拥有 SDK client/options/permissions/hooks/
+  structured-output 边界；领域包和 `template_tools.py` 不包装 `ClaudeSDKClient`。
 - 如果实现需要打破该方向，必须先拆出明确 owner，不能用局部 import、全局 registry 或
   `utils.py` 掩盖循环依赖。
 
@@ -169,7 +186,8 @@ template_tools（MCP composition root）或 Skill compiler CLI
 | 类型 | 唯一允许位置 | 可以依赖 | 禁止依赖/进入 |
 |---|---|---|---|
 | 产品领域与 runtime | `src/docfit/template/` | 产品 contracts、ports、现有产品适配器的注入实例 | `tests/`、pytest、fixture、fake、test-only env |
-| 产品 Tool transport | `src/docfit/tools/template_*` | 产品 schema、领域入口、现有 OfficeCLI/Adobe adapter | 测试 helper、测试数据路径 |
+| 产品 Tool transport | `src/docfit/tools/__init__.py`、`src/docfit/tools/template_*` | Claude Agent SDK 原生 `@tool`/server、产品 schema、领域入口、现有 OfficeCLI/Adobe adapter | 自建 MCP transport/dispatcher、测试 helper、测试数据路径 |
+| 产品 Agent 接缝 | 现有 `src/docfit/app/agent.py`、`src/docfit/app/convert.py` | SDK client/options、permissions/hooks、Skill 与 structured output | 模板专用 Agent loop/session registry/transcript parser、测试 harness |
 | 候选产品 Skill 脚本 | 当前候选 `<skill-root>/scripts/` | 对应产品 compiler | pytest、测试 harness、`tests/support` |
 | 测试代码 | `tests/contract/`、`tests/agent/`、`tests/support/` | 产品公开入口、测试 fixture/fake/helper | 被产品包反向导入、进入产品 wheel/Skill |
 | 测试数据与生成物 | `tests/fixtures/`、pytest `tmp_path` | 测试代码 | `src/`、候选/生产 Skill、正式 output |
@@ -242,6 +260,10 @@ observe → final_review/images → compile_artifact_spec → build → freeze
    source drift 时返回 blocked/失败且无 frozen。
 10. 通过公开入口跑完整零 mutation 链，证明各阶段 ref/hash 和文件集合可连续消费。
 
+每个 Tool 首次 GREEN 同时证明它确实是 SDK `SdkMcpTool`、名称/schema/annotations 正确，
+handler 返回原生 content/`structuredContent`/`is_error` 形态；这仍是直接 Tool contract，不
+增加 SDK transport 集成 Gate。
+
 ### 4.3 主要文件
 
 P1 只创建/实现当前循环需要的 `contracts/common.py`、`contracts/semantics.py`、
@@ -250,7 +272,8 @@ P1 只创建/实现当前循环需要的 `contracts/common.py`、`contracts/sema
 `runtime/canonical.py`、`runtime/atomic.py`、`runtime/store.py`、`ports.py`、`observation.py`、
 `comparison.py`、`compile_artifact.py`、`artifact_build.py`、`artifact_freeze.py`、两份 Tool
 transport 层（`template_tools.py` 与 P1 所需 schema 文件）和 artifact compiler CLI。不得为
-mutation mode 提前写空实现或 schema。
+mutation mode 提前写空实现或 schema。P1 不新建 MCP server；只让候选 `template_tools.py`
+导出 Tool 对象，生产 `build_docfit_server()` 的注册替换留到 P5/W6。
 
 ### 4.4 通过标准
 
@@ -408,32 +431,42 @@ frozen 及最终回复一致性；不评价槽位语义或视觉判断质量。
 
 ### 7.2 TDD 纵向循环
 
-1. RED→GREEN：零 mutation 输入最终产生完整 frozen；回复路径/hash/status/结构化数量与磁盘
-   manifest 一致。
-2. RED→GREEN：首个 mutation fixture 使用已经证明的 plan/mode，并得到连续 lineage 的 frozen。
-3. RED→GREEN：注入一次 stale ref 或目标已存在的可恢复 Tool 失败；Agent 重新观察/编译并
-   使用新 attempt 路径，最终成功，旧证据未混入。
-4. RED→GREEN：不可恢复的缺用户授权/裁决不会发布 candidate/frozen，回复说明所需输入。
-5. RED→GREEN：最终回复不输出质量分数、不声称 M3/Eval 通过，也不把 candidate 当交付物。
+1. RED→GREEN：在现有 `ClaudeSDKClient` 的一个 query/session 内，零 mutation 输入最终产生
+   完整 frozen；`ResultMessage.subtype` 成功，`structured_output` 的路径/hash/status/
+   `artifact_ref`/结构化数量与磁盘 manifest 一致。
+2. RED→GREEN：首个 mutation fixture 使用已经证明的 plan/mode，并得到连续 lineage 的 frozen；
+   只从 SDK `ToolUseBlock` 断言必要依赖和输入 ref/hash，不固定完整 transcript。
+3. RED→GREEN：让一次 Tool handler 返回原生 `is_error`（stale ref 或目标已存在）；SDK 保持同一
+   loop，Agent 重新观察/编译并使用新 attempt 路径，最终成功，旧证据未混入。不得由 harness
+   自动替 Agent 重试。
+4. RED→GREEN：缺用户授权/裁决走原生 `AskUserQuestion` + `can_use_tool`；若无答案则不发布
+   candidate/frozen，并返回结构化 blocked 结果，不创建 pause/question 文件。
+5. RED→GREEN：最终 structured output 不输出质量分数、不声称 M3/Eval 通过，也不把 candidate
+   当交付物；自然语言摘要不作为机器字段来源。
 
-Agent SDK/model 是系统边界。确定性 Gate 可使用脚本化 SDK boundary 驱动真实 Skill 与 Tool
-注册，但只能断言影响正确性的依赖顺序和传递值，不固定完整 transcript、内部推理、无关调用
-次数或逐字回复。至少保留一个真实 SDK smoke 供 P5 切换前验证，不在每个 RED/GREEN 循环中
-消耗外部调用。
+每个测试任务只启动一次 SDK query，不自建 turn loop、session registry、Skill loader、权限
+resolver、重试 workflow 或 structured-output parser。确定性 Gate 可在 `tests/support/` 脚本化
+Agent SDK 系统边界并使用原生 message/result 类型，但只能断言影响正确性的依赖顺序和传递值，
+不固定内部推理、无关调用次数或逐字回复。至少保留一个真实 SDK smoke 供 P5 切换前验证，
+不在每个 RED/GREEN 循环中消耗外部调用。
 
 ### 7.3 主要文件
 
-本阶段主要修改候选 `SKILL.md`/references、必要的候选脚本包装和 Agent harness；领域行为
-缺陷必须回到 P1–P3 owner 修复，不能写进 prompt 绕过。Skill/reference 在本阶段只把已经
-通过 Tool / Code Gate 的 mode/target/content kind 标为可调用；合同中其余候选能力继续明确
-为 unsupported。
+本阶段主要修改候选 `SKILL.md`/references，并最小更新现有应用 Agent options/query 的可注入
+接缝；测试驱动与 fake 只放在 `tests/agent/`、`tests/support/`，产品侧不创建 Agent harness。
+领域行为缺陷必须回到 P1–P3 owner 修复，不能写进 prompt 绕过。Skill/reference 在本阶段只把
+已经通过 Tool / Code Gate 的 mode/target/content kind 标为可调用；合同中其余候选能力继续
+明确为 unsupported。
 
 ### 7.4 通过标准
 
 - Tool / Code Gate 继续全绿，Agent 测试不绕过公开 Tool 或自行伪造 evidence；
 - 零 mutation、一个获批 mutation、可恢复失败和不可恢复失败四类场景均从候选 Agent 入口
   得到约定结果；
-- 成功场景的最终五文件集合完整，回复中的路径、hash、状态和结构化数量与磁盘一致；
+- 成功场景的最终五文件集合完整，structured output 与用户回复中的路径、hash、状态和
+  结构化数量都与磁盘一致；
+- `output_format` 是显式 JSON Schema，Agent Gate 直接读取
+  `ResultMessage.structured_output`，不从最终文本抽取 JSON；
 - 失败场景不发布半成品，重试不混用旧 attempt 的 ref/hash/evidence；
 - Agent 不输出语义/视觉质量分数，不声称 Quality Eval 或 M3 已通过；
 - Agent 测试文件满足第 2.1 节规模约束。
@@ -460,10 +493,13 @@ RED；随后在同一变更中替换注册、权限/观测映射、生产 Skill�
 
 主要 RED→GREEN 顺序：
 
-1. 生产 Tool contract 先期望五个新 MCP 名称和 schema，确认旧注册导致 RED；再切换注册。
+1. 生产 Tool contract 先期望五个新 SDK `SdkMcpTool` 名称、schema/annotations 和原生结果形态，
+   确认旧注册导致 RED；再在现有 `build_docfit_server()` 中原子替换 `DOCFIT_TOOLS`，不增加
+   第二个 MCP server。
 2. 生产 Skill contract 先期望新脚本、references 和五 Tool 能力，确认旧只读 Skill 导致 RED；
    再原子替换候选 Skill。
-3. 下游/权限/观测 contract 先期望新名称与状态，再替换消费者和映射。
+3. 下游/权限/观测 contract 先期望新名称与状态，再在现有 `build_agent_options()`、hooks、
+   allowlist 和 structured-output 消费路径中替换映射；不创建新权限/Agent/session 层。
 4. packaging/doctor 先证明 wheel 缺少或多带路径，再修正包内容并移除旧实现。
 5. 全绿后清理重复 adapter/schema/测试；每次清理后重跑相关公开 contract。
 
@@ -471,6 +507,8 @@ RED；随后在同一变更中替换注册、权限/观测映射、生产 Skill�
 
 - 安装包只包含一份生产 `docfit-school-extract`，两个脚本能从安装后的 Skill 根运行；
 - 只注册五个新 Tool，旧 `docx_*` 公共合同及兼容别名不存在；
+- Agent 仍由现有 `ClaudeSDKClient`、SDK Skill discovery、permissions/hooks、AskUserQuestion 和
+  `ResultMessage.structured_output` 运行，没有新增模板专用 loop/loader/parser；
 - candidate/frozen、权限、隐私、observability、convert 消费方和长期文档一次对齐；
 - Tool / Code Gate、Agent Gate、既有全量回归、provider 与真实 Agent smoke 全绿；
 - 所有新增/重构 Python 文件满足第 2.1 节规模约束。
