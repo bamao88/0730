@@ -9,7 +9,7 @@ from template_extraction_eval.sentinel import run_raw_source_sentinel
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PROJECT_ROOT.parents[1]
-DEFAULT_OUTPUT = PROJECT_ROOT / ".runs" / "raw-source-sentinel-v2"
+DEFAULT_OUTPUT = PROJECT_ROOT / ".runs" / "raw-source-sentinel-v3"
 CASES = (
     (
         "01-hunau-undergraduate",
@@ -36,17 +36,23 @@ def _markdown(results: list[dict[str, Any]]) -> str:
         "",
         "> Diagnostic only; candidate Gold is never promoted or accepted by this command.",
         "",
-        "| Case | Protected | Protected score | Slot | Slot score | Total | Coverage | Verdict |",
-        "|---|---|---:|---|---:|---:|---:|---|",
+        (
+            "| Case | Protected | Protected score | Protected atoms | Slot | "
+            "Slot score | Total | Responsibility | Analysis | Verdict |"
+        ),
+        "|---|---|---:|---:|---|---:|---:|---:|---:|---|",
     ]
     for item in results:
         result = item["result"]
         protected = result["protected"]
         slot = result["slot"]
+        protected_atoms = protected["responsibility_inventory"]["protected_atoms"]
         lines.append(
             f"| {item['case_id']} | {protected['status']} | "
-            f"{protected['score']}/{protected['weight']} | {slot['status']} | "
+            f"{protected['score']}/{protected['weight']} | {protected_atoms} | "
+            f"{slot['status']} | "
             f"{slot['score']}/{slot['weight']} | {result['score']} | "
+            f"{result['responsibility_coverage']:.0%} | "
             f"{result['analysis_coverage']:.0%} | {result['verdict']} |"
         )
     lines.extend(["", "## Warnings", ""])

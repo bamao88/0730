@@ -116,6 +116,15 @@ class SlotContract:
 
 
 @dataclass(frozen=True)
+class ResponsibilityPolicy:
+    mode: str
+    analysis_universe: str
+    protected_basis: str
+    slot_basis: str
+    remove_basis: str
+
+
+@dataclass(frozen=True)
 class FillContract:
     schema_version: str
     contract_id: str
@@ -127,6 +136,7 @@ class FillContract:
     regions: tuple[RegionContract, ...]
     slots: tuple[SlotContract, ...]
     status: str | None = None
+    responsibility_policy: ResponsibilityPolicy | None = None
 
 
 @dataclass(frozen=True)
@@ -264,6 +274,8 @@ class ContentControlFact:
     end: int
     text: str
     effective_style: EffectiveStyle
+    paragraph_indices: tuple[int, ...] = ()
+    block_level: bool = False
 
 
 @dataclass(frozen=True)
@@ -316,6 +328,36 @@ class DocumentFacts:
     @property
     def controls_by_tag(self) -> dict[str, ContentControlFact]:
         return {control.tag: control for control in self.controls if control.tag is not None}
+
+
+@dataclass(frozen=True)
+class ResponsibilityAtom:
+    atom_id: str
+    owner: Owner
+    dimension: str
+    locator: str
+    value: Any
+    analyzable: bool = True
+
+
+@dataclass(frozen=True)
+class ResponsibilityInventory:
+    policy: str
+    atoms: tuple[ResponsibilityAtom, ...]
+    protected: int
+    slot: int
+    remove: int
+    unclassified: int
+
+    @property
+    def total(self) -> int:
+        return len(self.atoms) + self.unclassified
+
+    @property
+    def coverage(self) -> float:
+        if self.total == 0:
+            return 0.0
+        return (len(self.atoms) / self.total)
 
 
 @dataclass(frozen=True)
@@ -379,6 +421,7 @@ class EvalReport:
     total_score: float
     provisional: bool
     analysis_coverage: float
+    responsibility_coverage: float
     views: tuple[ViewScore, ...]
     dimensions: tuple[DimensionScore, ...]
     issues: tuple[Issue, ...]

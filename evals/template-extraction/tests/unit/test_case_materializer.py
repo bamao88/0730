@@ -60,7 +60,14 @@ def test_cases_01_materializes_exact_three_case_tree(tmp_path: Path) -> None:
         protected = [
             region for region in contract["regions"] if region["owner"] == "protected"
         ]
-        assert len(protected) == 3
+        assert protected == []
+        assert contract["responsibility_policy"] == {
+            "mode": "exhaustive",
+            "analysis_universe": "semantic_document_facts/v1",
+            "protected_basis": "complement_of_slot_and_remove",
+            "slot_basis": "managed_content_controls_and_fill_contract",
+            "remove_basis": "declared_remove_regions",
+        }
 
 
 def test_cases_02_all_word_aliases_equal_contract_registry_fields(tmp_path: Path) -> None:

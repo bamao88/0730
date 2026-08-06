@@ -73,3 +73,9 @@ slots:
       page_height_pt: 841.9
       margin_top_pt: 72
       margin_bottom_pt: 72
+responsibility_policy:
+  mode: exhaustive
+  analysis_universe: semantic_document_facts/v1
+  protected_basis: complement_of_slot_and_remove
+  slot_basis: managed_content_controls_and_fill_contract
+  remove_basis: declared_remove_regions

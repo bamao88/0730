@@ -255,6 +255,16 @@ def _analyze_story(
         )
         content = control.find(f"{W}sdtContent")
         control_text = element_text(control if content is None else content)
+        covered_paragraphs = (
+            (control_paragraph,)
+            if ancestor_paragraph is not None
+            else descendant_paragraphs
+        )
+        paragraph_indices = tuple(
+            paragraph_contexts[item][0].paragraph_index
+            for item in covered_paragraphs
+            if item in paragraph_contexts
+        )
         start = (
             0
             if ancestor_paragraph is None
@@ -277,6 +287,8 @@ def _analyze_story(
                     control_run,
                     cell=cell,
                 ),
+                paragraph_indices=paragraph_indices,
+                block_level=ancestor_paragraph is None,
             )
         )
     return paragraphs, controls

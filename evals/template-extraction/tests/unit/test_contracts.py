@@ -65,9 +65,9 @@ def test_con_03_registry_hash_or_unknown_field_is_rejected(tmp_path: Path) -> No
 @pytest.mark.parametrize(
     ("case_id", "region_count", "component_count"),
     [
-        ("01-hunau-undergraduate", 4, 0),
-        ("02-njau-undergraduate", 4, 3),
-        ("03-pku-graduate", 6, 3),
+        ("01-hunau-undergraduate", 1, 0),
+        ("02-njau-undergraduate", 1, 3),
+        ("03-pku-graduate", 3, 3),
     ],
 )
 def test_con_04_through_06_school_contracts_close_over_runtime_model(
@@ -79,6 +79,8 @@ def test_con_04_through_06_school_contracts_close_over_runtime_model(
     assert len(contract.regions) == region_count
     assert sum(len(slot.component_locators) for slot in contract.slots) == component_count
     assert contract.marker_protocol == "docfit-content-control-marker/v1"
+    assert contract.responsibility_policy is not None
+    assert contract.responsibility_policy.mode == "exhaustive"
 
 
 def test_con_07_official_registry_equation_type_is_loadable() -> None:

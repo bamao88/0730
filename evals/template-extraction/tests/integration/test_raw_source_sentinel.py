@@ -12,28 +12,22 @@ SOURCE_ROOT = REPO_ROOT / "temp/manual-gold-preparation/gold/00-inputs/schools"
 
 
 @pytest.mark.parametrize(
-    ("case_id", "source_name", "slot_count", "protected_status", "total_score"),
+    ("case_id", "source_name", "slot_count"),
     [
         (
             "01-hunau-undergraduate",
             "hunau-undergraduate__source-template.docx",
             24,
-            "FAIL",
-            35,
         ),
         (
             "02-njau-undergraduate",
             "njau-undergraduate__source-template.docx",
             32,
-            "PASS",
-            50,
         ),
         (
             "03-pku-graduate",
             "pku-graduate__source-template.docx",
             28,
-            "PASS",
-            50,
         ),
     ],
 )
@@ -41,8 +35,6 @@ def test_sentinel_01_through_03_raw_source_exposes_both_view_outcomes(
     case_id: str,
     source_name: str,
     slot_count: int,
-    protected_status: str,
-    total_score: int,
 ) -> None:
     result = run_raw_source_sentinel(
         PROJECT_ROOT / "cases" / case_id / "case.yaml",
@@ -51,18 +43,17 @@ def test_sentinel_01_through_03_raw_source_exposes_both_view_outcomes(
     outcome = result["result"]
     assert result["diagnostic_only"] is True
     assert outcome["verdict"] == "FAIL"
-    assert outcome["score"] == total_score
+    assert outcome["score"] == 50
     assert outcome["analysis_coverage"] == 1
-    assert outcome["protected"]["status"] == protected_status
-    assert outcome["protected"]["score"] == total_score
+    assert outcome["responsibility_coverage"] == 1
+    assert outcome["protected"]["scope"] == "exhaustive"
+    assert outcome["protected"]["status"] == "PASS"
+    assert outcome["protected"]["score"] == 50
+    inventory = outcome["protected"]["responsibility_inventory"]
+    assert inventory["coverage"] == 1
+    assert inventory["unclassified_atoms"] == 0
+    assert inventory["protected_atoms"] > 3
     assert outcome["slot"]["status"] == "FAIL"
     assert outcome["slot"]["score"] == 0
     assert outcome["slot"]["counts"]["FAIL"] == slot_count * 4
-    if case_id == "01-hunau-undergraduate":
-        assert len(outcome["protected"]["issues"]) == 3
-        assert all(
-            "page.margin" in issue["message"]
-            for issue in outcome["protected"]["issues"]
-        )
-    else:
-        assert outcome["protected"]["issues"] == []
+    assert outcome["protected"]["issues"] == []

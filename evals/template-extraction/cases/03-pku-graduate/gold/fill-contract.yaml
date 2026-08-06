@@ -22,6 +22,12 @@ marker_protocol:
   slot_identity_rule: w:tag must be unique within the DOCX snapshot
   word_internal_id_property: w:id
   word_internal_id_semantics: non_business_identity
+responsibility_policy:
+  mode: exhaustive
+  analysis_universe: semantic_document_facts/v1
+  protected_basis: complement_of_slot_and_remove
+  slot_basis: managed_content_controls_and_fill_contract
+  remove_basis: declared_remove_regions
 canonical_renderer: microsoft_word
 provenance:
   source_candidate_path: ../../../../../temp/manual-gold-preparation/school-template-pku-graduate-clean.docx
@@ -121,45 +127,6 @@ regions:
     value: docfit.toc.tables
   owner: slot
   required: false
-- region_id: protected.cover.title_label
-  owner: protected
-  required: true
-  locator:
-    type: text_anchor
-    story: document
-    part: word/document.xml
-    table_index: 0
-    row: 0
-    cell: 0
-    left_anchor: 题目：
-    expected_match_count: 1
-  text: 题目：
-- region_id: protected.cover.name_label
-  owner: protected
-  required: true
-  locator:
-    type: text_anchor
-    story: document
-    part: word/document.xml
-    table_index: 1
-    row: 0
-    cell: 0
-    left_anchor: 姓    名：
-    expected_match_count: 1
-  text: 姓    名：
-- region_id: protected.cover.advisor_label
-  owner: protected
-  required: true
-  locator:
-    type: text_anchor
-    story: document
-    part: word/document.xml
-    table_index: 1
-    row: 5
-    cell: 0
-    left_anchor: 导师姓名：
-    expected_match_count: 1
-  text: 导师姓名：
 slots:
 - slot_id: slot.cover.degree_title
   field_id: degree.type

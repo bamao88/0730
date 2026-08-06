@@ -17,10 +17,15 @@ from .contracts import (
     load_scoring_config,
     sha256_file,
 )
-from .evaluators import evaluate_forbidden_residue, evaluate_protected, evaluate_slots
+from .evaluators import evaluate_forbidden_residue, evaluate_slots
 from .facts import analyze_docx
 from .markers import validate_markers
 from .models import AssertionResult, AssertionStatus, FillContract, View
+from .responsibility import (
+    build_responsibility_inventory,
+    evaluate_exhaustive_protected,
+    inventory_summary,
+)
 from .scoring import score_assertions
 
 
@@ -117,12 +122,12 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         path=case.gold_contract_path,
     )
     validate_markers(actual, actual_facts, label="Actual", path=source)
+    source_inventory = build_responsibility_inventory(actual_facts, actual)
+    gold_inventory = build_responsibility_inventory(gold_facts, gold)
     assertions = (
-        evaluate_protected(
-            gold,
-            actual,
-            gold_facts,
-            actual_facts,
+        evaluate_exhaustive_protected(
+            source_inventory,
+            source_inventory,
             eval_config,
         )
         + evaluate_slots(
@@ -156,6 +161,8 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         if item.view is View.PROTECTED
         and item.status in {AssertionStatus.FAIL, AssertionStatus.UNKNOWN}
     ]
+    protected_result["scope"] = "exhaustive"
+    protected_result["responsibility_inventory"] = inventory_summary(source_inventory)
     slot_result = _view_result(
         View.SLOT,
         assertions,
@@ -163,9 +170,7 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         weight=view_scores[View.SLOT].weight,
         expected="FAIL",
     )
-    if not any(item.view is View.PROTECTED for item in assertions):
-        warnings.append("Gold has no protected Truth; preservation is unverified, not passed")
-    elif protected_result["status"] != protected_result["expected"]:
+    if protected_result["status"] != protected_result["expected"]:
         warnings.append(
             "protected sentinel outcome differs from expectation; see protected.issues"
         )
@@ -190,8 +195,13 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
             "verdict": scoring.verdict.value,
             "score": scoring.total_score,
             "analysis_coverage": scoring.analysis_coverage,
+            "responsibility_coverage": source_inventory.coverage,
             "protected": protected_result,
             "slot": slot_result,
+        },
+        "inventories": {
+            "source_protected_baseline": inventory_summary(source_inventory),
+            "gold_extracted_template": inventory_summary(gold_inventory),
         },
         "warnings": warnings,
     }

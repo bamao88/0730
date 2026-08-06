@@ -12,15 +12,22 @@
 - `slot`：槽集合 15、位置与边界 15、字段映射 10、槽值样式契约 10。
 
 Gold 明确声明的 remove 残留作为共享硬失败检查。最终同时输出 `PASS`、`FAIL` 或
-`UNKNOWN` 门禁结论、总分、双视角分数、八个分项、分析覆盖率和可定位 issue。分数不覆盖
-硬失败；输入/schema/hash/Gold 状态错误不生成伪质量分数。
+`UNKNOWN` 门禁结论、总分、双视角分数、八个分项、文档责任覆盖率、分析覆盖率和可定位
+issue。分数不覆盖硬失败；输入/schema/hash/Gold 状态错误不生成伪质量分数。
 
 评分语义遵守以下可靠性约束：
 
 - 没有断言的维度得 0 分并使结果成为 provisional/`UNKNOWN`，不能空断言满分；
 - 显式且真实的 `NOT_APPLICABLE` 可以获得该维度分数，但缺失槽的下游维度属于 FAIL；
-- coverage 按八个维度权重计算，未生成断言和 UNKNOWN 都会降低覆盖率；
-- accepted Gold 必须同时具有非空 protected Truth 和 slot Truth。
+- `responsibility_coverage` 衡量全文事实是否全部归入 protected / slot / remove；必须为 100%；
+- `analysis_coverage` 按八个维度权重计算，未生成断言和 UNKNOWN 都会降低该覆盖率；
+- protected 不再由少量 anchor 抽样声明，而是自动取“全部语义文档事实减去 slot/remove”的补集；
+- accepted Gold 必须绑定 `semantic_document_facts/v1` 全量责任策略并具有非空 slot Truth。
+
+全量责任面以共享分析器输出的事实为边界：每个段落的文字、结构坐标和受保护 Run 有效样式，
+每个表格结构、结构化对象、关系和 DOCX part 都进入分母；块级槽内事实归 slot，行内槽内容被
+统一遮罩后再比较两侧固定内容。分析器识别但不能解释的对象仍完成责任归类，但断言必须输出
+`UNKNOWN`，不能用“已归类”冒充“已正确分析”。
 
 默认输出目录为 `.runs/<run-id>/<case-id>/`：
 
@@ -48,6 +55,7 @@ evals/template-extraction/
 │   ├── evaluators/                     # protected、slot、remove 断言
 │   ├── contracts.py                    # 输入和 Gold 资格门禁
 │   ├── markers.py                      # 主槽、组件、连续区域的标记闭包
+│   ├── responsibility.py               # 全文事实责任归类与 protected 补集比较
 │   ├── scoring.py                      # 双视角评分和覆盖率
 │   └── sentinel.py                     # diagnostic-only 哨兵编排
 ├── tests/                              # contract、unit、integration 测试
@@ -63,6 +71,7 @@ evals/template-extraction/
 | `template_extraction_eval/contracts.py` | 校验 case、Gold 状态、schema、hash、Registry 和模板—契约闭包 |
 | `template_extraction_eval/facts/` | Actual/Gold 共用的 DOCX 内容、结构、有效样式和对象事实分析 |
 | `template_extraction_eval/markers.py` | 校验主槽、组件槽、连续区域和 DOCX 标记的双向闭包 |
+| `template_extraction_eval/responsibility.py` | 枚举全文事实、完成 protected/slot/remove 归类并比较全部 protected 原子 |
 | `template_extraction_eval/evaluators/` | protected、slot 与 Gold 声明的 remove 业务断言 |
 | `template_extraction_eval/scoring.py` | 双视角、八分项、slot F1、覆盖率和硬失败结论 |
 | `template_extraction_eval/reporting.py` | 原子发布同源 JSON/Markdown 报告 |
@@ -88,13 +97,20 @@ uv run python run_eval.py \
 
 ```bash
 uv run python run_raw_source_sentinel.py \
-  --output-dir .runs/raw-source-sentinel-v2
+  --output-dir .runs/raw-source-sentinel-v3
 ```
 
-该命令明确标记 `diagnostic_only=true`。三校槽位层均为 `0/50 + FAIL`；南京农业大学和
-北京大学 protected 层为 `50/50 + PASS`。湖南农业大学 protected 层为 `35/50 + FAIL`，
-三个样本的文字和结构均通过，但页面上下边距从原始模板的 56.7pt 变成 Gold candidate 的
-72pt，因此样式维度失败。该结果证明评分虚高已消除，也暴露了尚不能接受的真实 Gold 问题。
+该命令明确标记 `diagnostic_only=true`，并使用两套互不污染的事实基线：protected 层以原始
+模板自身作为保留真值，slot 层以 Gold 提取模板与填写契约作为提取真值。最新全量结果为：
+
+| 学校 | protected 全量事实 | protected | slot 失败断言 | slot |
+|---|---:|---|---:|---|
+| 湖南农业大学 | 2301 | `50/50 + PASS` | 96 | `0/50 + FAIL` |
+| 南京农业大学 | 1227 | `50/50 + PASS` | 128 | `0/50 + FAIL` |
+| 北京大学 | 4367 | `50/50 + PASS` | 112 | `0/50 + FAIL` |
+
+三校的责任覆盖率和分析覆盖率均为 100%。此前湖南农大基于三个 anchor 得出的 `35/50` 已
+撤销：那只能证明三个样本中的页边距差异，不能代表全文保留质量，也不再进入正式口径。
 
 验证独立工程：
 

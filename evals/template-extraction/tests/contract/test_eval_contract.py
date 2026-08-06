@@ -44,6 +44,7 @@ def _valid_report() -> dict[str, Any]:
         "status": "PASS",
         "score": {"total": 100, "provisional": False},
         "analysis_coverage": 1,
+        "responsibility_coverage": 1,
         "views": [
             {"view": "protected", "weight": 50, "score": 50},
             {"view": "slot", "weight": 50, "score": 50},

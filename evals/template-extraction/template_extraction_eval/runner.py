@@ -15,13 +15,16 @@ from .contracts import (
 )
 from .evaluators import (
     evaluate_forbidden_residue,
-    evaluate_protected,
     evaluate_slots,
 )
 from .facts import PackageValidationError, analyze_docx
 from .markers import validate_markers
 from .models import EvalInputs
 from .reporting import build_report, write_report
+from .responsibility import (
+    build_responsibility_inventory,
+    evaluate_exhaustive_protected,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -111,12 +114,24 @@ def run_evaluation(
             label="Actual",
             path=inputs.actual_contract_path,
         )
+        gold_inventory = build_responsibility_inventory(
+            gold_facts,
+            inputs.gold_contract,
+        )
+        actual_inventory = build_responsibility_inventory(
+            actual_facts,
+            inputs.actual_contract,
+        )
+        if gold_inventory.coverage != 1.0:
+            raise InputContractError(
+                InputErrorCode.GOLD_NOT_ACCEPTED,
+                "Gold responsibility coverage must be 100% before formal scoring",
+                path=inputs.case.gold_contract_path,
+            )
         assertions = (
-            evaluate_protected(
-                inputs.gold_contract,
-                inputs.actual_contract,
-                gold_facts,
-                actual_facts,
+            evaluate_exhaustive_protected(
+                gold_inventory,
+                actual_inventory,
                 inputs.eval_config,
             )
             + evaluate_slots(
@@ -155,6 +170,7 @@ def run_evaluation(
                 },
             },
             scoring_config=inputs.scoring_config,
+            responsibility_coverage=gold_inventory.coverage,
         )
         destination = (
             output_dir.resolve()

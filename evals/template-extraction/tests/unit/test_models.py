@@ -67,6 +67,7 @@ def test_mod_03_unknown_report_is_provisional_and_invalid_status_is_rejected() -
         total_score=100,
         provisional=True,
         analysis_coverage=0.5,
+        responsibility_coverage=1,
         views=(ViewScore(View.PROTECTED, 50, 50), ViewScore(View.SLOT, 50, 50)),
         dimensions=(),
         issues=(),

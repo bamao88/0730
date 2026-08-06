@@ -35,6 +35,7 @@
       ]
     },
     "canonical_renderer": {"type": "string", "minLength": 1},
+    "responsibility_policy": {"$ref": "#/$defs/responsibilityPolicy"},
     "provenance": {"type": "object"},
     "locator_contract": {"type": "object"},
     "regions": {
@@ -80,7 +81,7 @@
         "properties": {"status": {"const": "accepted"}}
       },
       "then": {
-        "required": ["review"],
+        "required": ["review", "responsibility_policy"],
         "properties": {
           "review": {
             "properties": {
@@ -101,6 +102,24 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^(?!/)(?![A-Za-z]:[\\\\/]).+$"
+    },
+    "responsibilityPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "analysis_universe",
+        "protected_basis",
+        "slot_basis",
+        "remove_basis"
+      ],
+      "properties": {
+        "mode": {"const": "exhaustive"},
+        "analysis_universe": {"const": "semantic_document_facts/v1"},
+        "protected_basis": {"const": "complement_of_slot_and_remove"},
+        "slot_basis": {"const": "managed_content_controls_and_fill_contract"},
+        "remove_basis": {"const": "declared_remove_regions"}
+      }
     },
     "registryRef": {
       "type": "object",

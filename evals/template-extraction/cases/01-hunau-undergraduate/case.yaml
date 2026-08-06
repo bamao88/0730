@@ -8,7 +8,7 @@ gold:
   template: gold/template.docx
   contract: gold/fill-contract.yaml
   template_sha256: c118e574db83aeaa057e35db5eff98121ce7dee6592f4046cacd0b7fcf30d3b0
-  contract_sha256: 5a41e9bade2154a8880bc61eda1453a9d9fb6a0e788ecfb34bfa3a17a1283c58
+  contract_sha256: f33e491668853c6492e586aacbd8c0714025574ef738977a15455de93bd22d46
 field_registry_ref:
   path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
   id: docfit.thesis.content_fields

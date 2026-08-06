@@ -11,6 +11,7 @@
     "status",
     "score",
     "analysis_coverage",
+    "responsibility_coverage",
     "views",
     "dimensions",
     "issues",
@@ -32,6 +33,7 @@
       }
     },
     "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+    "responsibility_coverage": {"type": "number", "minimum": 0, "maximum": 1},
     "views": {
       "type": "array",
       "minItems": 2,

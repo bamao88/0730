@@ -121,15 +121,10 @@ def test_gold_08_synthetic_gold_with_both_views_is_truth_ready() -> None:
     validate_gold_truth_ready(load_fill_contract(path), path=path)
 
 
-def test_gold_09_missing_protected_truth_cannot_be_accepted() -> None:
+def test_gold_09_missing_exhaustive_responsibility_policy_cannot_be_accepted() -> None:
     path = PROJECT_ROOT / "fixtures" / "S00-minimal-pass" / "gold-contract.yaml"
     contract = load_fill_contract(path)
-    without_protected = replace(
-        contract,
-        regions=tuple(
-            region for region in contract.regions if region.owner.value != "protected"
-        ),
-    )
+    without_policy = replace(contract, responsibility_policy=None)
     with pytest.raises(InputContractError) as captured:
-        validate_gold_truth_ready(without_protected, path=path)
+        validate_gold_truth_ready(without_policy, path=path)
     assert captured.value.code is InputErrorCode.GOLD_NOT_ACCEPTED

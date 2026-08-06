@@ -62,6 +62,7 @@ def build_report(
     input_hashes: dict[str, str],
     report_config: dict[str, Any],
     scoring_config: ScoringConfig,
+    responsibility_coverage: float = 1.0,
 ) -> EvalReport:
     scoring = score_assertions(assertions, scoring_config)
     return EvalReport(
@@ -72,6 +73,7 @@ def build_report(
         total_score=scoring.total_score,
         provisional=scoring.provisional,
         analysis_coverage=scoring.analysis_coverage,
+        responsibility_coverage=responsibility_coverage,
         views=scoring.views,
         dimensions=scoring.dimensions,
         issues=issues_from_assertions(assertions),
@@ -102,6 +104,7 @@ def report_markdown(report: EvalReport) -> str:
         f"- Score: `{report.total_score:.4f}/100`",
         f"- Provisional: `{'yes' if report.provisional else 'no'}`",
         f"- Analysis coverage: `{report.analysis_coverage:.2%}`",
+        f"- Responsibility coverage: `{report.responsibility_coverage:.2%}`",
         f"- Run ID: `{report.run_id}`",
         "",
         "## Dimension scores",
@@ -111,7 +114,7 @@ def report_markdown(report: EvalReport) -> str:
     ]
     for offset, view in enumerate(report.views):
         lines.insert(
-            7 + offset,
+            8 + offset,
             f"- {view.view.value.capitalize()} view: `{view.score:.4f}/{view.weight:.4f}`",
         )
     for item in report.dimensions:

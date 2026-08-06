@@ -24,6 +24,7 @@ from .models import (
     Owner,
     RegionContract,
     RegistryField,
+    ResponsibilityPolicy,
     ScoringConfig,
     SlotContract,
 )
@@ -255,6 +256,18 @@ def load_fill_contract(path: Path) -> FillContract:
         )
         for item in cast(list[dict[str, Any]], value["slots"])
     )
+    policy_value = cast(dict[str, Any] | None, value.get("responsibility_policy"))
+    responsibility_policy = (
+        None
+        if policy_value is None
+        else ResponsibilityPolicy(
+            mode=str(policy_value["mode"]),
+            analysis_universe=str(policy_value["analysis_universe"]),
+            protected_basis=str(policy_value["protected_basis"]),
+            slot_basis=str(policy_value["slot_basis"]),
+            remove_basis=str(policy_value["remove_basis"]),
+        )
+    )
     _require_unique([region.region_id for region in regions], "region_id", contract_path)
     _require_unique([slot.slot_id for slot in slots], "slot_id", contract_path)
     _require_unique(
@@ -273,6 +286,7 @@ def load_fill_contract(path: Path) -> FillContract:
         regions=regions,
         slots=slots,
         status=_optional_str(value, "status"),
+        responsibility_policy=responsibility_policy,
     )
 
 
@@ -433,13 +447,18 @@ def _assert_contract_bindings(
 def validate_gold_truth_ready(contract: FillContract, *, path: Path) -> None:
     """Reject an incomplete Gold before it can produce a vacuous quality score."""
 
-    protected = tuple(
-        region for region in contract.regions if region.owner is Owner.PROTECTED
-    )
-    if not protected:
+    policy = contract.responsibility_policy
+    if policy is None or (
+        policy.mode != "exhaustive"
+        or policy.analysis_universe != "semantic_document_facts/v1"
+        or policy.protected_basis != "complement_of_slot_and_remove"
+        or policy.slot_basis != "managed_content_controls_and_fill_contract"
+        or policy.remove_basis != "declared_remove_regions"
+    ):
         _raise(
             InputErrorCode.GOLD_NOT_ACCEPTED,
-            "accepted Gold must declare non-empty protected Truth",
+            "accepted Gold must bind the exhaustive semantic-document-facts "
+            "responsibility policy",
             path,
         )
     if not contract.slots:

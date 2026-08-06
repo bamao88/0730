@@ -21,8 +21,8 @@ samples:
       sha256: 2cb179baf8d920ca85749ca556dc2b36e855cd4cbf79b9e0a74254874153067d
       size: 704
     gold-contract.yaml:
-      sha256: f71e44c67e873667a69318879fd2612381a66857dc41f5a2f713b21052b56827
-      size: 1901
+      sha256: 50532bb5104b0dc2ff10474794fa05076a3ba51ceaadf378f810df82b4392039
+      size: 2137
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -40,8 +40,8 @@ samples:
       sha256: cb7972eadeb7969efe78a4197700ad96b1d0a08b9abb041b4f5a6f96f3e22d1c
       size: 710
     gold-contract.yaml:
-      sha256: 9c93b6c115765a8d79f867ff3e8b6abc2014fc777575222448c97cc41434e144
-      size: 1911
+      sha256: 5ce645f5bb2954f4c24ef6396ac69cce2edd64b8c9b4b23903a4863137f493c2
+      size: 2147
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -59,8 +59,8 @@ samples:
       sha256: ffebfac9552fd6e845812881ec0eb1ba8ab0532772e6ec2c74fb290ae2a64e6d
       size: 715
     gold-contract.yaml:
-      sha256: eaf3027b785c0751ed2bd6e2ff9822efb31681e25db737f029c36c644aec9bbd
-      size: 1912
+      sha256: 489b64bd9fa4738e2daf8f1c1d0b7eaf01acd2392036d820af6403e95e5dd3ea
+      size: 2148
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -78,8 +78,8 @@ samples:
       sha256: aa953e0c04d68040581a0f29dcee45cfb9545e935856836dbb9febaea02c08d6
       size: 706
     gold-contract.yaml:
-      sha256: 51aba9832ed26dd939705fcae434d07d93ee4616ddb4f4dea740b0f4bd0cbf07
-      size: 1901
+      sha256: ed447eb98ace5bbf2d3435a4fef0d886849967394f1ed81a9cad777d30ed9f57
+      size: 2137
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -97,8 +97,8 @@ samples:
       sha256: 7c9616bb726b4b0880ab871789ab799b911d142411669d4f3fb80d0a8aeef369
       size: 699
     gold-contract.yaml:
-      sha256: bce88e8258c89862a6231040bd8b856e883cf770604f62a2c3e3739b026aedf6
-      size: 1899
+      sha256: c531513d7297aa8938e1a68072d2be30c6960ceb4f9621e589ae1032d31da196
+      size: 2135
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -116,8 +116,8 @@ samples:
       sha256: 03e5346624a76f7198430fab9dab366dfa1a88027873938182099d97c8aeddd1
       size: 718
     gold-contract.yaml:
-      sha256: b3feba7a3f38ce274ae6adb26fda0df81b06e8b3f58607c070842e2cb3f2c264
-      size: 1905
+      sha256: 204cd251e8377dfbd5887213face17f5f7f475e07bcc66e54cb84ec08596088b
+      size: 2141
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -135,8 +135,8 @@ samples:
       sha256: 46c559a0ff78ee061e856dcf242ea8c1c87a27fbe90ae94ff10a81889b8ed75d
       size: 738
     gold-contract.yaml:
-      sha256: 8515c40bfd99e13e9d4b9e9f3b9aa98da27f9d2dbd0faa917c936fb7ed943440
-      size: 1908
+      sha256: 3fd9a5288f0524da5291625fbc21c8255a7d6b09b02554f700f1fc0ee7742c03
+      size: 2144
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -154,8 +154,8 @@ samples:
       sha256: d714ec2f4a5c44a0c1123c9a87b30b0e568b57876133e94eb6248e56ed8cd191
       size: 734
     gold-contract.yaml:
-      sha256: 602e0d60f22c5635ba18c420c5bbd16c84d6e77d8a7e099b274e2a1a1e877b30
-      size: 1864
+      sha256: 04e245005d22093b92e22046cf31da0df8390c7c8e80cdbea04fb74f3184e584
+      size: 2100
     gold-template.docx:
       sha256: 26671196ac95c25f0e2143077064461e499a557534d3766ad801a187c6d2a7c5
       size: 1933
@@ -173,8 +173,8 @@ samples:
       sha256: 8d0cb18fd33cd8905e66dd8bcadc9077cd19cf7c35b4816c1055c92d594711a9
       size: 722
     gold-contract.yaml:
-      sha256: d0b1283863d07b372316476309e072e7a37325933a9e6eaa22c65c8c339703ef
-      size: 2166
+      sha256: b9c25891cd60889d52e6aaae40a89863bae8010302a6cab5a8703500e2087a3e
+      size: 2402
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -192,8 +192,8 @@ samples:
       sha256: f966bab6ba18044da95e9dff05b4f5fe45a8a0f9c93d819fcdb943c1536269e7
       size: 725
     gold-contract.yaml:
-      sha256: 6e64a3a8a28a89b3c96c9b8ce6b2f0ec6ca00e6f21363ffb710a8584cd4373f2
-      size: 2221
+      sha256: e9018d5068e3dd43115213d6f8f1da0e1ba2167aef2fcf5bc9116562fec6a87c
+      size: 2457
     gold-template.docx:
       sha256: ac94ee2e3ce8b7f85c7a254f7452f60a061118025044a9312a3a4869b187466a
       size: 2370
@@ -211,8 +211,8 @@ samples:
       sha256: 699b6f4328ab40f94cc21165d6bdf9f446a3b2a401eb6235446b98c3a5050150
       size: 726
     gold-contract.yaml:
-      sha256: d2c7c43dd3bd3c6bc9ce37f1315fa82e2763063cd960b6a37dd27655ccfb217e
-      size: 2145
+      sha256: 89618e1daf58e0ba89e776de6d5aa7a651628fad3a2b004e4e78002fec2ee8b9
+      size: 2381
     gold-template.docx:
       sha256: 2d090f49678a543db8c011ee5b7ded811db11631275c92190bd929d43cbd15a6
       size: 2140
@@ -230,8 +230,8 @@ samples:
       sha256: 099e17c24b773740063a8280d959ccc5ffa8234c0901cbaa59455d0e1fe2e9af
       size: 742
     gold-contract.yaml:
-      sha256: 6c2adcc403e6968f1510f29496de113bf094238fbdc729336b13e12328e47b29
-      size: 1902
+      sha256: 739579491e7777fe5b04ef0dd8ae65b30693c54dc916c0e7c4cf903604892089
+      size: 2138
     gold-template.docx:
       sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
       size: 1923
@@ -249,8 +249,8 @@ samples:
       sha256: 10e06aaa7b18e087f83fbe91782da9bf31f0fdf0d19c8baa0f29cde74ae293a4
       size: 732
     gold-contract.yaml:
-      sha256: c08d7710ea93d72ea8a4f20678e5ba04c1573b852f45befbedd69a7c30271f9e
-      size: 1911
+      sha256: 784e06b666668dfb55db2c809922bac8e7b1cc6f9497eef7e132e76ac7f3baa9
+      size: 2147
     gold-template.docx:
       sha256: fd6c38e956f139b00d2f66a27973d90dd433dc26929cce809a39f9862abd338e
       size: 2037
@@ -268,8 +268,8 @@ samples:
       sha256: ee7e6f0145c891adfcf80d64c80e16987ed96311d0f038120511e5b4c5ab7d50
       size: 728
     gold-contract.yaml:
-      sha256: 9d3cdc47af6d694c6905f866a0db5ba3f1bcae47701e46db52ce73deb3bb152d
-      size: 1918
+      sha256: 9105f6bd0160d4c6d00c10a07a72efe48722d60fad860c4deb83ab0d1bf5dd61
+      size: 2154
     gold-template.docx:
       sha256: 5dbb7de5034b5b4c1a4bae12c8d37b177e1d1ce1f448777d22c77aa2331b42ee
       size: 2048

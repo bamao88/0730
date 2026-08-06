@@ -404,6 +404,7 @@ def _contract(
     registry_sha256: str,
     options: DocumentOptions,
     boundary_override: str | None = None,
+    responsibility_policy: bool = False,
 ) -> dict[str, Any]:
     regions: list[dict[str, Any]] = [
         {
@@ -479,7 +480,7 @@ def _contract(
         extra["slot_id"] = "slot.cover.student_id"
         extra["locator"]["paragraph_index"] = 1
         slots.append(extra)
-    return {
+    contract = {
         "schema_version": "docfit-template-fill-contract/v1",
         "contract_id": contract_id,
         "template_sha256": template_sha256,
@@ -492,6 +493,15 @@ def _contract(
         "regions": regions,
         "slots": slots,
     }
+    if responsibility_policy:
+        contract["responsibility_policy"] = {
+            "mode": "exhaustive",
+            "analysis_universe": "semantic_document_facts/v1",
+            "protected_basis": "complement_of_slot_and_remove",
+            "slot_basis": "managed_content_controls_and_fill_contract",
+            "remove_basis": "declared_remove_regions",
+        }
+    return contract
 
 
 def _definitions() -> list[SampleDefinition]:
@@ -664,6 +674,7 @@ def build_samples(output_root: Path, scoring_path: Path) -> dict[str, Any]:
             template_sha256=_sha256_file(gold_template),
             registry_sha256=registry_sha256,
             options=definition.gold,
+            responsibility_policy=True,
         )
         actual_contract = _contract(
             contract_id=f"{definition.sample_id.lower()}.actual",
