@@ -367,6 +367,13 @@ style_claim_refs: [title-font, title-alignment]
 automatic slot 必须绑定已注册 field、稳定 marker、唯一 artifact locator 和 value style。manual
 区域不进入 slots。
 
+`expected_style` / `expected_value_style` 的公开输出固定为 Eval v1 effective-style 结构：顶层只允许
+`font`、`paragraph`、`container`、`page`。Agent 决定可以直接使用该结构，也可以使用 observe
+事实名（例如 `run.font_ascii`、`run.font_east_asia`、`run.font_size_pt`、`run.bold`、
+`paragraph.alignment`、`paragraph.line_rule`、`paragraph.line_value`）；compiler 必须确定性映射为
+公开嵌套结构。混合两种结构、未知字段或类型/取值非法时返回 `invalid_effective_style`，不得把
+observe 私有字段泄漏到 `fill-contract.json`；builder 独立重验 spec 决定与公开合同一致。
+
 ### 6.5 Remove region
 
 ```yaml

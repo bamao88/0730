@@ -1,9 +1,9 @@
 # `docfit-school-extract` v2 候选实施与验收计划
 
-> 状态：候选合同已定义到可实施、可验收；尚未实现，也未切换生产。
+> 状态：W0–W5 候选实现与验收已完成；已生成真实学校候选产物，尚未执行 W6 生产切换。
 >
-> 本轮当前修改范围是候选目录。生产 Skill、生产 Tool、CLI、转换链与长期文档仍保持现状；
-> 只有 W6 获得单独批准后才执行原子生产切换。
+> 当前已有开发入口 `docfit prepare-template` 和候选 Skill/Tool 组合。生产 Skill、转换链与长期
+> 架构基线仍保持现状；只有 W6 获得单独批准后才执行原子生产切换。
 
 ## 0. 用户已确认的控制原则
 
@@ -18,7 +18,7 @@
   `template_freeze`、`freeze-report.json` 或 freeze 专用 `artifact_ref`。
 - 当前成功状态是 `artifact_status: built`：只表示四文件产物机械有效并已原子发布，不表示
   Human accepted、质量合格或 M3 完成。
-- 现有独立模板 Eval 已实现并有 98 个测试通过；三校 Human Gold 仍未完成。Eval 是实际下游
+- 现有独立模板 Eval 已实现并有 129 个测试通过；三校 Human Gold 仍未完成。Eval 是实际下游
   消费者，但不成为当前 Tool/Agent Gate。
 
 ### 0.2 产品尺度与分阶段落地
@@ -293,7 +293,8 @@ Gate。
 
 完成条件：
 
-- 每个任务使用现有 `ClaudeSDKClient` 的一个 query/session；
+- 每个 backend attempt 使用现有 `ClaudeSDKClient` 的一个 query/session；超时或可重试的无效结果
+  可以切到下一个已配置 backend，但不建立自定义 resume/runtime；
 - Agent 只使用已经通过 Tool / Code Gate 的能力；
 - 正常、可恢复 Tool 失败和不可恢复阻断至少各有一个场景；
 - 返工使用新路径和当前 ref/hash，不混用旧 attempt；
@@ -384,23 +385,31 @@ build blocker         → 无 template artifact     → 回到对应环节
 
 ## 12. 当前不在范围
 
-- 实施候选代码或切换生产，除非用户另行明确批准实施；
+- W0–W5 候选实现已完成；W6 生产切换仍需用户另行明确批准；
 - 模板定版、质量认证、Human Gold 或 M3；
 - 学生内容提取、Placement 和转换端 Tool 新设计；
 - 旧 Tool 兼容层、跨任务缓存、第二 Agent runtime、动态 Provider；
 - 在产品模块中实现或 import Eval；
 - 将当前任务学校材料写入通用 Knowledge。
 
-## 13. 开始实施的准入条件
+## 13. W0–W5 完成状态与证据
 
-- 本候选目录的四 Tool、两个 compiler、四文件产物和状态名称一致；
-- 初始 slice 固定为零 mutation tracer；
-- Registry 输入与 marker protocol 已固定；
-- `docfit prepare-template` CLI/structured output 已确认；
-- W0–W5 范围获批；是否同时批准 W6 必须单独说明；
-- W6 的转换端硬依赖未满足时保持不可执行。
+- 四个公开 Tool、两个 compiler、task-local evidence、Registry/marker、原子四文件 build 已实现；
+- 零 mutation、安全 mutation、Agent/CLI、blocked/recovery 和 changed-template lineage 均有合同测试；
+- 真实 SDK 最小任务已通过一个 query/session 生成四文件产物；
+- 真实南农输入已生成 `temp/docfit-school-extract-v2-njau-real-r2/output/template-artifact/`：
+  18 个 slot、4 个 manual、3 个 gap、0 个 unresolved，12 页最终候选证据均有 disposition；
+- 产物 hash、来源 hash、Registry/marker、locator、mutation lineage、最终视觉覆盖和四文件集合
+  均由 compiler/build 独立重验，真实 `fill-contract.json` 通过独立 Eval schema；Word 内容效果仍
+  按用户约定由人工判断；
+- 根项目全量回归 348 项通过，最终受影响的 Tool/Agent/CLI 合同 42 项通过；root 的
+  lock/build、ruff、strict mypy、doctor 以及独立 Eval 的 lock/build/ruff/mypy/129 项测试均通过；
+- W6 的转换端硬依赖尚未满足，保持不可执行。
 
-没有新的实施批准，本轮在文档修改和一致性验证后结束。
+真实学校运行暴露并已修正两个合同缺口：只要最终模板 hash 与学校源模板不同，artifact spec 和
+builder 都强制要求非空、连续且比较无 blocker 的 mutation lineage；观测侧扁平样式事实必须由
+compiler 规范化为公开 `font/paragraph` 结构，并由 builder 独立重验。旧的无 lineage/旧样式合同
+构建结果均已归档，不作为交付产物。
 
 ## 14. Claude Agent SDK 官方依据
 
