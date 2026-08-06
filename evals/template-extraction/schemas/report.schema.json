@@ -11,6 +11,7 @@
     "status",
     "score",
     "analysis_coverage",
+    "views",
     "dimensions",
     "issues",
     "inputs",
@@ -31,6 +32,21 @@
       }
     },
     "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+    "views": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["view", "weight", "score"],
+        "properties": {
+          "view": {"enum": ["protected", "slot"]},
+          "weight": {"type": "number", "minimum": 0},
+          "score": {"type": "number", "minimum": 0}
+        }
+      }
+    },
     "dimensions": {
       "type": "array",
       "items": {
@@ -79,13 +95,48 @@
     "config": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["scoring_version", "eval_config_sha256", "registry_id", "registry_version", "registry_sha256"],
+      "required": [
+        "scoring_version",
+        "scoring_config_sha256",
+        "eval_config_id",
+        "eval_config_version",
+        "eval_config_sha256",
+        "marker_protocol",
+        "tolerances",
+        "normalization",
+        "registry_id",
+        "registry_version",
+        "registry_sha256",
+        "schemas"
+      ],
       "properties": {
         "scoring_version": {"const": "docfit-template-extraction-scoring/v1"},
+        "scoring_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "eval_config_id": {"type": "string", "minLength": 1},
+        "eval_config_version": {"const": "docfit-template-extraction-eval-config/v1"},
         "eval_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "marker_protocol": {"const": "docfit-content-control-marker/v1"},
+        "tolerances": {
+          "type": "object",
+          "additionalProperties": {"type": "number", "minimum": 0}
+        },
+        "normalization": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
         "registry_id": {"type": "string", "minLength": 1},
         "registry_version": {"type": "string", "minLength": 1},
-        "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "schemas": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["case", "actual_contract", "gold_contract"],
+          "properties": {
+            "case": {"const": "docfit-template-extraction-case/v1"},
+            "actual_contract": {"const": "docfit-template-fill-contract/v1"},
+            "gold_contract": {"const": "docfit-template-fill-contract/v1"}
+          }
+        }
       }
     }
   }

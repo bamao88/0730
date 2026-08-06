@@ -44,6 +44,10 @@ def _valid_report() -> dict[str, Any]:
         "status": "PASS",
         "score": {"total": 100, "provisional": False},
         "analysis_coverage": 1,
+        "views": [
+            {"view": "protected", "weight": 50, "score": 50},
+            {"view": "slot", "weight": 50, "score": 50},
+        ],
         "dimensions": [
             {
                 "dimension": "protected.content",
@@ -64,10 +68,21 @@ def _valid_report() -> dict[str, Any]:
         },
         "config": {
             "scoring_version": "docfit-template-extraction-scoring/v1",
+            "scoring_config_sha256": zero_hash,
+            "eval_config_id": "synthetic-v1",
+            "eval_config_version": "docfit-template-extraction-eval-config/v1",
             "eval_config_sha256": zero_hash,
+            "marker_protocol": "docfit-content-control-marker/v1",
+            "tolerances": {"distance_pt": 0.05},
+            "normalization": ["ignore_zip_timestamps"],
             "registry_id": "docfit.thesis.content_fields",
             "registry_version": "0.1.0",
             "registry_sha256": zero_hash,
+            "schemas": {
+                "case": "docfit-template-extraction-case/v1",
+                "actual_contract": "docfit-template-fill-contract/v1",
+                "gold_contract": "docfit-template-fill-contract/v1",
+            },
         },
     }
 

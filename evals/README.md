@@ -7,8 +7,8 @@
 - `e2e/`：从用户任务到最终产物的端到端评测。
 - `manual/`：Adobe 交付高风险页面人工复核清单。
 - `template-extraction/`：与产品代码、依赖和 CLI 解耦的模板提取静态 Actual—Gold Eval；
-  当前已建立 schema、合成 fixture 和三校正式 case 目录，三校数据仍为待 Human 验收的
-  `candidate`，不能计入 Gold 通过率。
+  当前 W0–W5 独立评分链路和 99 个模块测试已实现，三校数据仍为待 Human 验收的
+  `candidate`；比较器会拒绝评分，不能计入 Gold 通过率。
 
 `uv run docfit eval --suite core` 运行不调用模型或 Adobe API 的确定性核心回归；它会明确
 把真实 SDK、Adobe candidate、授权/脱敏真实样本和人工复核保留为独立门，而不会用
