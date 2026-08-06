@@ -1,84 +1,69 @@
 # Template semantics
 
 Use this reference to decide what a visible template element means and which responsibility must survive
-cleanup. Keep school-specific conclusions in the current artifact, not in this reference.
+cleanup. Keep school-specific conclusions in the current task artifact, not in this reusable reference.
 
-## Do not flatten different questions into one classification
+## Keep different questions separate
 
-Record the current visible role separately from the responsibility that must survive cleanup:
-
-| Field | Meaning | Values |
+| Dimension | Question | Examples |
 |---|---|---|
-| `observed_roles` | What the current object visibly does | `fixed_content`, `placeholder`, `instruction`, `example`, `mechanism`, `structural_container`, `unknown` |
-| `responsibilities[].kind` | What the reusable interface must continue to provide | `fixed`, `fill`, `generate` |
-| `responsibilities[].content_kind` | What a fill/generate responsibility carries | `scalar`, `paragraph_stream`, `composite` |
-| `responsibilities[].cardinality` | How many instances the responsibility allows | independent `min` and `max` |
-| `responsibilities[].condition` | When the responsibility is present | an optional, sourced condition |
-| `responsibilities[].handling` | Whether fulfillment can be automated safely | `automatic`, `manual` |
-| `resolution` | Whether current evidence supports the decision | `resolved`, `unresolved` |
+| observed role | What does the current object visibly do? | protected text, example, instruction, placeholder, mechanism, container, unknown |
+| responsibility kind | What must the reusable interface continue to provide? | protected, fill, generate |
+| `field_id` | What thesis-domain meaning does a fill responsibility have? | Registry-bound semantic ID |
+| template owner | How is the final template region treated? | protected, slot, remove |
+| content type | What value/object does it carry? | text, rich text, section, image, table, formula, asset |
+| required/cardinality | Is it required and how many values are allowed? | required boolean; one, many, optional |
+| condition | When is the responsibility present? | sourced optional condition |
+| handling | Can it be fulfilled safely by automation? | automatic, manual |
+| resolution | Does current evidence support one decision? | resolved, unresolved |
 
-The first two fields may contain multiple entries. Split a target when different fragments need different
-operations.
+`remove` is a template region owner and mutation operation, not a surviving semantic responsibility. `manual`
+is handling, not a field type. `unresolved` is an evidence state. The same phrase can have different roles in
+different places; text matching alone is not classification.
 
-`repeat`, `conditional`, and `manual` are not responsibility kinds: they are cardinality, condition, and
-handling properties. `unresolved` is an evidence state. `remove` is a mutation action, not a semantic
-responsibility. A disposable instruction can have no surviving responsibility after migration, while the
-fill or generate responsibility it described continues at another target.
+## Registry identity and template identity
 
-Classification is a semantic decision, not text matching. The same phrase can be fixed content in one
-location and an instruction in another.
+Registry `field_id` says what a value means. Template `slot_id/region_id` says where one template revision
+accepts or protects it. A field may map to several slots; one composite slot may have several physical component
+locators. Neither identity replaces a DOCX locator or grants write permission.
+
+Use a current snapshot execution locator for mutation and evidence. Use a persistent artifact locator plus
+`template_sha256` for the final fill contract. Page numbers are human evidence only.
 
 ## Migrate semantics before deletion
 
-An instruction or example can encode more than visible text. Before removing it, check whether it states or
-demonstrates:
+Before removing an instruction/example, determine whether it encodes:
 
-- required wording or fixed punctuation;
-- placement and ordering;
-- style, spacing, indentation, numbering, or section behavior;
-- allowed content kind;
-- minimum, maximum, or conditional cardinality;
-- a generated mechanism such as a field, index, or table of contents;
-- a repeated container or composite structure.
+- required wording/punctuation;
+- placement/order;
+- value style, spacing, numbering, or section behavior;
+- content type, required/cardinality, or a condition;
+- a generated field/index/table-of-contents mechanism;
+- a repeated or composite container.
 
-Move each surviving responsibility into the cleaned template structure, slot manifest, fixed-region record,
-manual region, or gap. A removal decision references those migration destinations. If nothing survives,
-record an explicit empty responsibility list with evidence and rationale. Only then may the visible
-instruction/example receive a `remove_content` operation.
+Move each surviving responsibility into protected structure, a registered slot, generated mechanism, manual
+record, or gap. A removal references those destinations. If nothing survives, record precise current-task
+deletion authorization and rationale before creating `remove_content`.
 
-## Logical units and physical pages
+## Logical units are not pages
 
-A title page, declaration, abstract, table of contents, chapter, appendix, or reference list is a logical
-unit. It may span several pages or share a page with another unit. Page boundaries can change after content
-or layout edits.
+Title pages, declarations, abstracts, contents, chapters, appendices, and references are logical units. They may
+span or share pages, and pagination changes after editing. Identify them through objects, stable boundaries, and
+context; use images to review appearance, never as the durable mutation/slot identity.
 
-Use structural objects, stable boundaries, and context to identify logical units. Use page images to verify
-their appearance, never as the durable identity used for mutation or slot binding.
+## Preserve mechanisms
 
-## Composite and generated objects
-
-Treat the following as mechanisms rather than plain cached text:
-
-- tables of contents and other fields;
-- numbered lists and multilevel numbering;
-- cross-references, captions, footnotes, and endnotes;
-- repeated table rows or structured sections;
-- headers, footers, page numbers, and section-linked content;
-- content controls and other wrapper/container relationships.
-
-If the reusable template must preserve the behavior, record `kind: generate` or `kind: fixed` as appropriate;
-express repetition through cardinality and conditional presence through `condition`. Do not replace the
-mechanism with its current display value.
+Treat fields, indexes, numbering, cross-references, captions, footnotes, repeated structures, headers/footers,
+page numbers, content controls, bookmarks, and section links as mechanisms rather than cached text. If reusable
+behavior must survive, preserve the mechanism and its responsibility; do not replace it with the current display
+value.
 
 ## Source conflicts
 
-Track the source of each decisive requirement. Prefer an explicitly authoritative current-task source, but
-do not invent a universal priority order when the user or material has not established one.
-
-When two sources disagree:
+Track the source and scope of each decisive claim. When two sources disagree:
 
 1. determine whether they cover the same semantic role and scope;
-2. preserve both observed claims and their provenance;
-3. apply an explicit task-specific precedence rule if one exists;
-4. otherwise ask the user when the choice changes fixed content, slot semantics, or final appearance;
-5. if work can safely continue, leave the property unresolved and prevent freeze when it is blocking.
+2. preserve both claims and provenance;
+3. apply a current task/user precedence decision if one exists;
+4. otherwise ask when the choice changes protected content, slot semantics, or final appearance;
+5. keep the property unresolved and block build when safe downstream filling requires one value.

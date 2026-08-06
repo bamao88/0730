@@ -1,79 +1,63 @@
 # Decision compilation
 
-Use the two bundled scripts to turn two Agent-authored decision files into canonical, versioned Tool inputs.
-One compiler protects the DOCX mutation boundary; the other protects the candidate build boundary. The
-scripts make a decision structurally executable; they do not decide whether it is semantically correct.
+Use the two bundled scripts to turn Agent-authored decision files into canonical, versioned Tool inputs. One
+compiler protects DOCX mutation; the other protects the single artifact build. The scripts make a decision
+structurally executable; they do not decide whether it is semantically or visually correct.
 
 ## Shared rules
 
-- Resolve every script path relative to the active `SKILL.md`.
-- Keep inputs and outputs in the current task work directory, never beside the source template.
-- Pass the current task root explicitly with `--task-root`; pass every input/output path explicitly.
-- Include `schema_version`, current snapshot/hash, stable decision IDs, rationale, and evidence refs.
-- Write decisions in YAML or JSON for review; consume the canonical JSON emitted by the script.
-- On any error, correct the decision input or obtain new evidence. Do not hand-edit canonical output to
-  bypass validation.
-- Compiler output is not trusted by Tools. Every consuming Tool validates schema, refs, and preconditions
-  again.
-- Exit `0` on success, `2` on decision/schema errors, and `1` on environment/I/O failures. A failed run
-  leaves an existing valid output byte-for-byte unchanged and creates no partial output.
-- After changing a decision, compile to a new unused attempt path. The same rule applies to subsequent
-  mutate/build/freeze outputs; do not overwrite or mix evidence from an older attempt.
+- Resolve scripts relative to the active `SKILL.md`.
+- Keep decisions and compiled outputs in the current task `work/` directory, never beside source inputs.
+- Pass `--task-root`, `--input`, and a new unused `--output` explicitly.
+- Include schema version, current snapshot/document hash, Registry ID/version/hash, stable IDs, rationale, and
+  evidence refs.
+- Write reviewable YAML/JSON decisions; only pass compiler-produced canonical JSON to Tools.
+- Correct invalid decisions or collect new evidence. Never hand-edit canonical output to bypass validation.
+- Tool consumers independently revalidate schema, digest, refs, Registry, document facts, and preconditions.
+- Exit `0` on success, `2` on input/decision errors, and `3` on environment/I/O failures. Failure creates no
+  partial output and never overwrites an existing target.
+- After any decision change, compile to a new attempt path. Apply the same rule to mutate/build outputs.
 
 ## Mutation decisions
 
-`mutation-decisions.yaml` records what the Agent has decided, not a free-form cleanup request. Each entry
-contains:
+`mutation-decisions.yaml` contains:
 
-- unique decision and operation IDs;
-- current `snapshot_ref` and target ref;
-- current `observed_roles`, surviving responsibilities, and `resolution`;
-- for each responsibility, `kind: fixed | fill | generate`, required content kind for fill/generate,
-  cardinality, optional condition, and `handling: automatic | manual`;
-- expected text hash/fingerprint; document text is never written to compiler logs;
-- `action: materialize_slot | remove_content`; preserving a target, registering a manual region, or
-  recording a gap emits no mutation operation;
-- operation order is executable order; `depends_on` may reference only an earlier operation, and a removal
-  cannot precede the slot or existing target that receives its surviving responsibility;
-- only for `remove_content`, one supported `removal_mode`;
-- migration destination refs for every responsibility carried by removed instructions/examples, or an
-  explicit empty surviving-responsibility decision with evidence and rationale;
-- complete slot semantics when materializing a slot;
-- rationale and supporting observation/source refs.
+- current snapshot/document hash and Registry binding;
+- unique decision/operation IDs and task-local execution locators;
+- responsibility `kind: protected | fill | generate`, content type, required/cardinality, condition, and
+  automatic/manual handling;
+- `materialize_slot` with registered `field_id`, stable `slot_id`, and
+  `w:alias=field_id`/`w:tag=slot_id`;
+- `remove_content` with one supported physical mode and either complete responsibility migration or precise
+  current-task deletion authorization;
+- operation order, expected post-state, rationale, and evidence refs.
 
-Run `compile_mutation_plan.py` to produce `mutation-plan.json`. Compilation rejects duplicate IDs, unknown
-modes, incomplete slot semantics, cross-snapshot refs, and page/bbox/bare text used as edit identity. It also
-rejects `repeat`, `conditional`, `manual`, `remove`, or `unresolved` used as a responsibility kind;
-`removal_mode` on a non-removal action; removal without a mode; destructive removal of unresolved content;
-removal whose surviving responsibilities have no migration destination; and removal of fixed content without
-an explicit current-task authorization plus a decision that replaces, migrates, or retires that fixed
-responsibility. Cyclic/forward operation dependencies and migration targets that do not already exist or
-come from an earlier operation are rejected.
+Compilation rejects duplicate IDs, unknown fields/modes, cross-snapshot refs, page/bbox/bare text used as edit
+identity, mismatched marker identity, forward/cyclic dependencies, deletion without authorization, and removal
+before the target receiving surviving responsibility exists.
 
-## Artifact decisions and embedded review record
+## Artifact decisions and review
 
-Write `artifact-decisions.yaml` only after the final snapshot is confirmed. It contains:
+Write `artifact-decisions.yaml` after selecting the final snapshot. It contains:
 
-- sources, fixed regions, slots, manual regions, gaps, unresolved items, and style
-  observations/requirements/conflicts;
-- `final_snapshot_ref` and the complete mutation/comparison evidence chain from source to final snapshot;
-- for each mutation review, its mutation/comparison refs and Agent disposition;
-- the final-review `comparison_ref` bound to the exact final snapshot;
-- one Agent `disposition: accepted | blocking | needs_edit` and concise reason for every required finding or
-  image group, including affected pages/section where applicable.
+- Registry/marker binding and source hashes;
+- protected/slot/remove regions;
+- each automatic slot's `field_id`, `slot_id`, content type, required/cardinality, execution locator, persistent
+  artifact locator, marker, and expected value style;
+- manual/gap/unresolved records and blocking status;
+- style observations, requirements, sources, conflicts, and resolution;
+- complete mutation/comparison lineage;
+- final `candidate_verification` comparison bound to the exact final template hash;
+- an Agent disposition for every required image/finding.
 
-Long-document image groups are read through the comparison cursor until `next_cursor` is absent. Record refs
-and dispositions, not copied image bytes or duplicated comparison payloads.
+Read long-document image groups through the comparison cursor until `next_cursor` is absent. Record refs,
+hashes, and dispositions, not image bytes or copied comparison payloads.
 
-Run `compile_artifact_spec.py` to produce `artifact-spec.json`. The compiler resolves immutable evidence refs,
-constructs a typed `ReviewRecordV1` internally, validates it, and embeds the normalized `review_record` in the
-artifact spec. It does not emit `review-decisions.yaml` or `review-record.json`.
+`compile_artifact_spec.py` resolves evidence, builds `ReviewRecordV1`, constructs a
+`docfit-template-fill-contract/v1` model, and embeds both in `artifact-spec.json`. It rejects unregistered fields,
+duplicate slots, task-local refs used as persistent locators, implicit manual/gap items, blocking unresolved
+items, stale lineage, missing page/image dispositions, hash mismatch, and attempts to clear a machine blocker
+with an Agent `accepted` disposition.
 
-Compilation rejects duplicate slot IDs, missing content kind/cardinality/responsibility, untraceable sources,
-implicit manual/gap regions, stale refs, incomplete mutation lineage, missing required image judgments, hash
-mismatch, silently cleared machine-blocking findings, or final-page coverage assembled from different
-snapshots. Tool facts use `machine_blocking`; an Agent `accepted` disposition cannot clear that property. The
-compiler records Agent judgment but never makes the judgment.
-
-`template_build` validates this spec again and produces only a candidate. `template_freeze` independently
-reopens the candidate and sources; script success has no bearing on frozen status.
+`template_build` independently reopens sources, Registry, evidence, and the final DOCX. Script success has no
+bearing on `artifact_status: built`.

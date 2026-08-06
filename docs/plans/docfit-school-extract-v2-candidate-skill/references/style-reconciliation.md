@@ -38,8 +38,8 @@ general formatting knowledge, or a style name alone.
 
 ## Decide when to ask
 
-Ask the user when a conflict changes a reusable fixed region, a high-impact semantic role, or the appearance
+Ask the user when a conflict changes a reusable protected region, a high-impact semantic role, or the appearance
 of many downstream documents and no explicit precedence rule resolves it.
 
 If the conflict is non-blocking and can be represented without choosing, keep both claims and mark it in the
-artifact. Freeze must remain blocked when downstream filling cannot be safe without a single resolved value.
+artifact. Build must remain blocked when downstream filling cannot be safe without a single resolved value.

@@ -1,82 +1,65 @@
 # Deletion and slot decisions
 
-Use this reference after observation has produced a current snapshot and stable target candidates.
+Use this reference after observation has produced a current snapshot and stable target candidates. The mode set
+is a candidate capability inventory, not a requirement to ship every mode in one increment. Only use modes that
+belong to the current approved slice and already pass the Tool / Code Gate.
 
-The table below defines the candidate v1 mode set, not a requirement to ship every mode in one increment.
-At runtime, choose only a mode/target/content kind that belongs to the current approved capability slice and
-has passed the Tool / Code Gate. Every other listed mode remains explicitly unsupported; never substitute a
-different mode or bypass the Tool to emulate it.
+## Removal is an operation
 
-## Removal is an operation, not a content responsibility
+First record visible roles, surviving responsibilities, field/slot mapping, resolution, and evidence. Then
+choose the physical operation. `remove_content` answers how to change the DOCX safely; it does not by itself
+authorize deletion.
 
-First record the target's `observed_roles`, surviving `responsibilities`, responsibility modifiers, and
-`resolution`. Then decide the operation. `removal_mode` is required only for `action: remove_content`; it
-answers how to alter the physical document safely, not whether or why the content may be removed.
+| Semantic case | Required treatment before removal |
+|---|---|
+| protected content/structure | Preserve unless current-task evidence explicitly authorizes replacement or retirement |
+| fill example/placeholder | Materialize the registered slot and migrate the fill responsibility before clearing visible example text |
+| instruction | Migrate every sourced constraint, or explicitly record that none survives |
+| generated mechanism | Preserve the live field/index/numbering mechanism; only disposable cached/example text may be removed |
+| manual responsibility | Register the manual action/region; instruction text may be removed only after the responsibility survives elsewhere |
+| unknown/unresolved region | Obtain more evidence or preserve it; do not destructively remove |
 
-There is no one-to-one mapping from semantic responsibility to removal mode:
+Manual/gap records belong to artifact decisions, not no-op mutation actions. If responsibility moves to a new
+automatic slot, `materialize_slot` appears earlier and removal references that target.
 
-| Semantic case | Required treatment before removal | Typical operation relationship |
-|---|---|---|
-| fixed content or structure | Preserve unless current-task evidence explicitly authorizes replacement | No destructive removal by default |
-| fill placeholder | Bind the surviving fill responsibility to a complete slot | Remove only the placeholder text; preserve the slot container |
-| instruction or example | Migrate every sourced constraint, or explicitly record that none survives | Remove the visible source only after migration |
-| generate mechanism | Preserve the live mechanism and its generate responsibility | Cached/example text may be removable; the mechanism is not |
-| manually fulfilled responsibility | Register the manual region and required action | Instruction text may be removable; the manual target remains |
-| unknown or unresolved region | Obtain more evidence or preserve the region | No destructive removal |
-
-The same semantic case can require different modes because the physical container differs. Conversely, the
-same mode can remove placeholders, instructions, or examples after their different semantic preconditions
-have been satisfied.
-
-Manual region and gap records belong to artifact decisions/spec and are not no-op mutation actions. If a
-removal migrates responsibility to a new automatic slot, `materialize_slot` must appear earlier in the
-mutation plan and the removal declares it in `depends_on` and `migration_targets`.
-
-## Select the smallest safe deletion
+## Choose the smallest safe mode
 
 | Mode | Use when | Required preservation check |
 |---|---|---|
-| `clear_text_preserve_container` | The text is disposable but its paragraph/run container carries layout or style | Container, properties, anchors, and neighboring content remain |
-| `remove_inline_fragment` | A precise phrase inside mixed content is disposable | Surrounding runs, spacing, fields, and punctuation remain coherent |
-| `remove_container` | The entire addressed paragraph/row/container has no surviving responsibility | Adjacent structure, numbering, pagination, and section boundaries remain valid |
-| `remove_bounded_block` | A continuous logical block is disposable and has stable start/end boundaries | Both boundaries and outside content match expected fingerprints |
-| `clear_cell_preserve_grid` | Cell content is disposable but the table layout is reusable | Grid, row height, cell properties, merges, and neighboring cells remain |
-| `unwrap_control_preserve_content` | The wrapper is disposable but approved inner content must remain | Inner content, order, formatting, and anchors remain |
+| `clear_text_preserve_container` | Visible text is disposable but paragraph/cell/container carries layout | Container, properties, anchors, punctuation, and neighbors remain |
+| `remove_paragraph` | Entire paragraph has no surviving responsibility | Numbering, adjacent paragraphs, pagination, and section boundaries remain valid |
+| `remove_table_row` | Entire row is disposable | Grid, merges, row ordering, and neighboring rows remain valid |
+| `remove_table` | Entire table is disposable | Surrounding anchors, paragraphs, sections, and relationships remain valid |
+| `remove_bounded_block` | Continuous logical block has unique start/end boundaries | Both boundaries and all outside fingerprints remain unchanged |
+| `remove_shape` | One uniquely identified shape/text box is disposable | Other drawing relationships, anchors, z-order, and nearby content remain |
 
-Do not use text alone when it appears more than once. Query all candidates, compare context and effective
-formatting, and choose a stable object reference from the current snapshot. Include expected text or a
-fingerprint so stale state fails closed.
+Do not target repeated text alone. Query every candidate, compare context/effective style, and use the current
+snapshot's execution locator plus expected fingerprint. Split heterogeneous changes into separate operations so
+comparison can account for each one.
 
-Use `remove_bounded_block` only when the intended logical unit is continuous and both boundaries are
-unambiguous. Split heterogeneous changes into separate operations so comparison can account for each one.
+## Materialize stable slots
 
-## Materialize slots without flattening responsibility
+An automatic slot must have:
 
-Choose the content kind from downstream behavior:
+- a registered Registry `field_id` compatible with the content type;
+- a unique template-scoped `slot_id`;
+- a current execution locator for safe mutation;
+- `w:alias = field_id` and `w:tag = slot_id`;
+- a persistent artifact locator that later resolves by content-control tag under the final template hash;
+- independent required/cardinality and expected value style.
 
-- `scalar`: one bounded value such as a title, author, identifier, or date;
-- `paragraph_stream`: a variable sequence of paragraphs with controlled boundaries;
-- `composite`: structured content whose internal objects or generation behavior must be preserved.
+`materialize_slot` preserves the container and current visible content and does not insert placeholder text.
+Example/instruction cleanup is a later `remove_content` operation.
 
-Record cardinality independently of the number of examples in the source template. `min: 0` expresses an
-optional slot. An absent `max` expresses an unbounded repeated responsibility only when the evidence supports
-that conclusion.
+Use component locators for one semantic slot represented by several physical elements. Use bounded start/end
+locators for paragraph streams. Never use page number, temporary object ID, or an unconstrained paragraph index
+as the only artifact identity.
 
-For v1, the mutation target must be one of the three product-defined shapes: an existing paragraph, an
-existing table cell with its grid retained, or an explicit start/end boundary for a paragraph stream.
-`materialize_slot` writes an invisible DocFit slot anchor that resolves uniquely by `slot_id`; it preserves
-the current visible content and does not insert placeholder text. If example or instruction text must be
-removed, add a separate later `remove_content` operation. Runs, text boxes, content controls, bookmarks, and
-other observed objects do not become writable slot targets unless a later approved capability slice adds
-them together with direct Tool / Code assertions.
+## Manual, gap, and unregistered fields
 
-## Manual regions and gaps
+Use manual when responsibility is known but safe automatic placement is unavailable. Use gap when current
+materials do not establish a value, rule, scope, or target. Use unresolved when evidence conflicts and no
+current precedence resolves it.
 
-Use a manual region when the desired responsibility is known but placement requires human judgment or
-cannot be uniquely automated. Include the affected region and the required action.
-
-Use a gap when the current materials do not establish the responsibility, required value, scope, or safe
-target. A gap is not an empty slot and must not be silently filled from convention.
-
-An automatic slot is invalid if it is ambiguous, resolves to multiple objects, depends on a stale snapshot,
-or cannot preserve its required container behavior. Downgrade it to manual/unresolved or obtain more evidence.
+Do not invent a `field_id`. A required automatic slot with no registered field blocks build; otherwise record
+the region in the build report with an explicit manual/gap/unresolved disposition.

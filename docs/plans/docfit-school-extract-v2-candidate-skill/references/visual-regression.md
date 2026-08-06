@@ -6,7 +6,7 @@ selects images; the Agent decides whether the result is semantically and visuall
 ## Read differences in three passes
 
 1. Match every expected change to the operation that authorized it.
-2. Investigate every unexpected structural or visual change, especially fixed content, table grid, section,
+2. Investigate every unexpected structural or visual change, especially protected content, table grid, section,
    header/footer, numbering, pagination, and slot containers.
 3. Inspect images at both local and page context before accepting the mutation.
 
@@ -23,17 +23,17 @@ The comparison Tool has `mutation_review` and `final_review` modes. Mutation rev
 - section, header/footer, or pagination change: all affected section pages;
 - page-count change or mapping failure: expanded pages or full-document review.
 
-Final review is a separate call bound to the exact final snapshot and selects every authoritative page,
+Final review is a separate call bound to the exact final snapshot and selects every `candidate_verification` page,
 including when the source needs zero mutation. A complete comparison is immutable. Fetch its native images
 in cursor batches until `next_cursor` is absent; transfer limits never justify missing a required page.
 
 Ask for a broader observation only when the supplied evidence cannot resolve the visual question. Do not
-replace an existing authoritative rendering with a different backend and compare page numbers across them.
+replace existing candidate-verification evidence with a different backend and compare page numbers across them.
 
 ## Acceptance questions
 
 - Is the intended instruction/example gone without erasing its surviving responsibility?
-- Did fixed wording, branding, declarations, headers/footers, numbering, and table geometry remain intact?
+- Did protected wording, branding, declarations, headers/footers, numbering, and table geometry remain intact?
 - Does cleared space still provide a usable fill boundary?
 - Are page breaks, blank pages, wrapping, alignment, and whitespace plausible consequences of the change?
 - Does each slot's visual location agree with its semantic role and structural locator?
@@ -43,7 +43,7 @@ Record each comparison manifest's stable `required_image_id`, its affected pages
 the Agent finding, and any blocking status.
 Write those dispositions directly into `artifact-decisions.yaml`; `compile_artifact_spec.py` normalizes them
 as the embedded typed review record, and `template_build` emits `visual-review.json`. Review evidence from an
-earlier hash cannot satisfy final freeze.
+earlier hash cannot satisfy final build.
 
 Tool facts use `machine_blocking: true | false`; Agent interpretation uses
 `disposition: accepted | blocking | needs_edit`. An accepted disposition cannot override a machine-blocking
