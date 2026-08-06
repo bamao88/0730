@@ -11,12 +11,14 @@ from pathlib import Path
 from typing import Any
 
 from docfit.template.artifact_decision_checks import (
+    require_mutation_lineage_for_changed_template,
     validate_mutation_lineage,
     validate_review,
 )
 from docfit.template.decision_contracts import (
     decision_objects,
     load_decision_object,
+    normalize_effective_style,
     resolve_registry,
 )
 from docfit.template.runtime.atomic import write_json_file
@@ -238,6 +240,11 @@ def compile_artifact_decisions(
     for region in (*protected, *remove):
         _validate_locator(region.get("artifact_locator"))
     mutation_lineage = validate_mutation_lineage(decisions, store=store)
+    require_mutation_lineage_for_changed_template(
+        decisions,
+        sources=sources,
+        lineage=mutation_lineage,
+    )
     review_record = validate_review(decisions, snapshot=snapshot, store=store)
     contract_id = (
         f"{sources[0]['source_id']}.fill-contract"
@@ -261,7 +268,12 @@ def compile_artifact_decisions(
                 "required": item["required"],
                 "locator": item["artifact_locator"],
                 **(
-                    {"expected_style": item["expected_style"]}
+                    {
+                        "expected_style": normalize_effective_style(
+                            item["expected_style"],
+                            field=f"regions.{item['region_id']}.expected_style",
+                        )
+                    }
                     if "expected_style" in item
                     else {}
                 ),
@@ -283,7 +295,10 @@ def compile_artifact_decisions(
                 "cardinality": item["cardinality"],
                 "locator": item["artifact_locator"],
                 "fill_mode": "replace_content_control_content",
-                "expected_value_style": item["expected_value_style"],
+                "expected_value_style": normalize_effective_style(
+                    item.get("expected_value_style"),
+                    field=f"slots.{item['slot_id']}.expected_value_style",
+                ),
             }
             for item in slots
         ],

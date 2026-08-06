@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,133 @@ import yaml
 
 from docfit.template.runtime.paths import task_file
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+
+_FLAT_STYLE_FIELDS = {
+    "run.font_east_asia": ("font", "east_asia"),
+    "run.font_latin": ("font", "latin"),
+    "run.font_ascii": ("font", "ascii"),
+    "run.font_hansi": ("font", "hansi"),
+    "run.font_complex_script": ("font", "complex_script"),
+    "run.language": ("font", "language"),
+    "run.font_size_pt": ("font", "size_pt"),
+    "run.bold": ("font", "bold"),
+    "run.italic": ("font", "italic"),
+    "run.color": ("font", "color"),
+    "paragraph.alignment": ("paragraph", "alignment"),
+    "paragraph.first_line_indent_pt": ("paragraph", "first_line_indent_pt"),
+    "paragraph.hanging_indent_pt": ("paragraph", "hanging_indent_pt"),
+    "paragraph.left_indent_pt": ("paragraph", "left_indent_pt"),
+    "paragraph.right_indent_pt": ("paragraph", "right_indent_pt"),
+    "paragraph.line_rule": ("paragraph", "line_spacing_rule"),
+    "paragraph.line_spacing_rule": ("paragraph", "line_spacing_rule"),
+    "paragraph.line_spacing_pt": ("paragraph", "line_spacing_pt"),
+    "paragraph.line_value": ("paragraph", "line_value"),
+    "paragraph.space_before_pt": ("paragraph", "space_before_pt"),
+    "paragraph.space_after_pt": ("paragraph", "space_after_pt"),
+    "paragraph.keep_lines": ("paragraph", "keep_lines"),
+    "paragraph.keep_next": ("paragraph", "keep_next"),
+    "paragraph.widow_control": ("paragraph", "widow_control"),
+    "paragraph.outline_level": ("paragraph", "outline_level"),
+}
+_FONT_STRING_FIELDS = {
+    "east_asia",
+    "latin",
+    "ascii",
+    "hansi",
+    "complex_script",
+    "language",
+    "color",
+}
+_FONT_BOOLEAN_FIELDS = {"bold", "italic"}
+_PARAGRAPH_STRING_FIELDS = {"alignment", "line_spacing_rule"}
+_PARAGRAPH_BOOLEAN_FIELDS = {"keep_lines", "keep_next", "widow_control"}
+_PARAGRAPH_NUMBER_FIELDS = {
+    "first_line_indent_pt",
+    "hanging_indent_pt",
+    "left_indent_pt",
+    "right_indent_pt",
+    "line_spacing_pt",
+    "line_value",
+    "space_before_pt",
+    "space_after_pt",
+}
+
+
+def _invalid_effective_style(field: str) -> ToolFailure:
+    return ToolFailure(
+        status="needs_input",
+        origin="request",
+        code="invalid_effective_style",
+        message=f"{field} does not match the v1 effective-style contract.",
+    )
+
+
+def _validate_style_leaf(group: str, key: str, value: Any, *, field: str) -> None:
+    if value is None:
+        return
+    if group == "font":
+        if key in _FONT_STRING_FIELDS and isinstance(value, str):
+            if key != "color" or re.fullmatch(r"[0-9A-F]{6}", value):
+                return
+        elif (
+            key == "size_pt"
+            and isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and value > 0
+        ) or (key in _FONT_BOOLEAN_FIELDS and isinstance(value, bool)):
+            return
+    elif group == "paragraph":
+        if key in _PARAGRAPH_STRING_FIELDS and isinstance(value, str):
+            return
+        if key in _PARAGRAPH_BOOLEAN_FIELDS and isinstance(value, bool):
+            return
+        if key in _PARAGRAPH_NUMBER_FIELDS and isinstance(
+            value, (int, float)
+        ) and not isinstance(value, bool):
+            return
+        if (
+            key == "outline_level"
+            and isinstance(value, int)
+            and not isinstance(value, bool)
+            and value >= 0
+        ):
+            return
+    raise _invalid_effective_style(field)
+
+
+def normalize_effective_style(value: Any, *, field: str) -> JsonObject:
+    """Normalize trusted observation-style facts to the public fill-contract shape."""
+    if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
+        raise _invalid_effective_style(field)
+    if not value:
+        return {}
+    public_groups = {"font", "paragraph", "container", "page"}
+    if set(value).issubset(public_groups):
+        normalized: JsonObject = {}
+        for group, raw_properties in value.items():
+            if not isinstance(raw_properties, dict) or not all(
+                isinstance(key, str) for key in raw_properties
+            ):
+                raise _invalid_effective_style(field)
+            if group in {"font", "paragraph"}:
+                for key, item in raw_properties.items():
+                    _validate_style_leaf(group, key, item, field=field)
+            normalized[group] = dict(raw_properties)
+        return normalized
+    if any(key in public_groups for key in value):
+        raise _invalid_effective_style(field)
+    normalized = {}
+    for key, item in value.items():
+        target = _FLAT_STYLE_FIELDS.get(key)
+        if target is None:
+            raise _invalid_effective_style(field)
+        group, public_key = target
+        properties = normalized.setdefault(group, {})
+        if not isinstance(properties, dict) or public_key in properties:
+            raise _invalid_effective_style(field)
+        _validate_style_leaf(group, public_key, item, field=field)
+        properties[public_key] = item
+    return normalized
 
 
 class _StrictLoader(yaml.SafeLoader):

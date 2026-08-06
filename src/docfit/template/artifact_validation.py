@@ -7,6 +7,7 @@ from typing import Any
 
 import yaml
 
+from docfit.template.decision_contracts import normalize_effective_style
 from docfit.template.runtime.paths import task_file
 from docfit.template.runtime.store import EvidenceStore
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_json
@@ -112,6 +113,10 @@ def _verify_registry_and_markers(
         marker = raw_slot.get("marker")
         locator = raw_slot.get("artifact_locator")
         contract_slot = contract_slots.get(slot_id)
+        expected_value_style = normalize_effective_style(
+            raw_slot.get("expected_value_style"),
+            field=f"slots.{slot_id}.expected_value_style",
+        )
         if (
             not isinstance(slot_id, str)
             or slot_id in seen
@@ -129,6 +134,13 @@ def _verify_registry_and_markers(
                 origin="request",
                 code="marker_protocol_mismatch",
                 message="A slot marker or fill-contract mapping is inconsistent.",
+            )
+        if contract_slot.get("expected_value_style") != expected_value_style:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_artifact_spec",
+                message="A fill-contract slot style does not match its compiled decision.",
             )
         matches = [
             item
@@ -163,13 +175,52 @@ def _verify_regions(spec: JsonObject, snapshot: JsonObject) -> None:
     }
     protected = spec.get("protected_regions")
     remove = spec.get("remove_regions")
-    if not isinstance(protected, list) or not isinstance(remove, list):
+    fill_contract = spec.get("fill_contract")
+    if (
+        not isinstance(protected, list)
+        or not isinstance(remove, list)
+        or not isinstance(fill_contract, dict)
+        or not isinstance(fill_contract.get("regions"), list)
+    ):
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="invalid_artifact_spec",
             message="The region inventory is invalid.",
         )
+    contract_regions = {
+        item.get("region_id"): item
+        for item in fill_contract["regions"]
+        if isinstance(item, dict)
+    }
+    for item in (*protected, *remove):
+        if not isinstance(item, dict):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_artifact_spec",
+                message="A fill-contract region record is invalid.",
+            )
+        contract_region = contract_regions.get(item.get("region_id"))
+        expected_style = (
+            normalize_effective_style(
+                item["expected_style"],
+                field=f"regions.{item.get('region_id')}.expected_style",
+            )
+            if "expected_style" in item
+            else None
+        )
+        if (
+            not isinstance(contract_region, dict)
+            or contract_region.get("locator") != item.get("artifact_locator")
+            or contract_region.get("expected_style") != expected_style
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_artifact_spec",
+                message="A fill-contract region does not match its compiled decision.",
+            )
     for item in protected:
         if not isinstance(item, dict):
             raise ToolFailure(
@@ -241,6 +292,29 @@ def _verify_mutation_lineage(
             origin="request",
             code="invalid_artifact_spec",
             message="The mutation lineage has an invalid shape.",
+        )
+    sources = spec.get("sources")
+    binding = spec.get("task_binding")
+    if not isinstance(sources, list) or not isinstance(binding, dict):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="invalid_artifact_spec",
+            message="The artifact source or task binding inventory is invalid.",
+        )
+    school_hashes = {
+        item.get("sha256")
+        for item in sources
+        if isinstance(item, dict)
+        and item.get("authority") == "supplied_school_template"
+        and isinstance(item.get("sha256"), str)
+    }
+    if school_hashes and binding.get("document_sha256") not in school_hashes and not lineage:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="mutation_lineage_gap",
+            message="A changed template artifact has no mutation lineage.",
         )
     previous_after: str | None = None
     for index, item in enumerate(lineage, start=1):

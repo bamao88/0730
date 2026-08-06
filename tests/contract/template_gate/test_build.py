@@ -6,6 +6,7 @@ import shutil
 import zipfile
 from pathlib import Path
 
+import pytest
 import yaml
 from jsonschema import Draft202012Validator
 from PIL import Image
@@ -14,7 +15,7 @@ from docfit.template.comparison import TemplateComparisonService
 from docfit.template.compile_artifact import compile_artifact_decisions
 from docfit.template.observation import TemplateObservationService
 from docfit.template.ports import RenderedDocument
-from docfit.tools.runtime import sha256_file, sha256_json
+from docfit.tools.runtime import ToolFailure, sha256_file, sha256_json
 from docfit.tools.template_tools import template_build
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -38,12 +39,17 @@ class _CandidateRenderer:
         return RenderedDocument((page,), {"name": "fake-boundary"})
 
 
-def _prepare_spec(task_root: Path) -> tuple[dict[str, object], Path]:
+def _prepare_spec(
+    task_root: Path,
+    *,
+    final_relative: str = "input/template.docx",
+) -> tuple[dict[str, object], Path]:
     source = task_root / "input/template.docx"
+    final_source = task_root / final_relative
     registry = task_root / "input/content-fields.yaml"
     observed = TemplateObservationService().create(
         {
-            "input_docx": "input/template.docx",
+            "input_docx": final_relative,
             "visual_level": "none",
             "focus": ["structure", "slot_candidates"],
         },
@@ -61,7 +67,7 @@ def _prepare_spec(task_root: Path) -> tuple[dict[str, object], Path]:
     decisions = {
         "schema_version": 1,
         "final_snapshot_ref": observed["snapshot_ref"],
-        "template_sha256": sha256_file(source),
+        "template_sha256": sha256_file(final_source),
         "field_registry_ref": {
             "path": "input/content-fields.yaml",
             "registry_id": "docfit.thesis.content_fields",
@@ -98,7 +104,10 @@ def _prepare_spec(task_root: Path) -> tuple[dict[str, object], Path]:
                 },
                 "expected_fingerprint": first_object["expected_fingerprint"],
                 "source_refs": ["school-template"],
-                "expected_style": {},
+                "expected_style": {
+                    "run.font_ascii": "Arial",
+                    "paragraph.alignment": "left",
+                },
             }
         ],
         "slots": [
@@ -128,7 +137,15 @@ def _prepare_spec(task_root: Path) -> tuple[dict[str, object], Path]:
                     "alias": "author.name.zh",
                     "tag": "docfit.cover.student_name",
                 },
-                "expected_value_style": {},
+                "expected_value_style": {
+                    "run.font_ascii": "Arial",
+                    "run.font_east_asia": "宋体",
+                    "run.font_size_pt": 12.0,
+                    "run.bold": False,
+                    "paragraph.alignment": "center",
+                    "paragraph.line_rule": "exact",
+                    "paragraph.line_value": 400,
+                },
                 "source_refs": ["school-template"],
                 "style_claim_refs": [],
             }
@@ -165,6 +182,64 @@ def _prepare_spec(task_root: Path) -> tuple[dict[str, object], Path]:
         output_path=spec_path,
     )
     return compiled, spec_path
+
+
+def test_compile_rejects_changed_template_without_mutation_lineage(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    (task_root / "input").mkdir(parents=True)
+    (task_root / "work/attempts").mkdir(parents=True)
+    (task_root / "output").mkdir()
+    shutil.copyfile(FIXTURE, task_root / "input/template.docx")
+    shutil.copyfile(REGISTRY, task_root / "input/content-fields.yaml")
+    changed = task_root / "work/attempts/changed.docx"
+    shutil.copyfile(FIXTURE, changed)
+    with zipfile.ZipFile(changed, "a") as archive:
+        archive.comment = b"hash-changing-valid-package"
+
+    with pytest.raises(ToolFailure, match="requires mutation lineage") as caught:
+        _prepare_spec(task_root, final_relative="work/attempts/changed.docx")
+
+    assert caught.value.code == "mutation_lineage_gap"
+
+
+def test_build_independently_rejects_changed_template_without_lineage(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    task_root = tmp_path / "task"
+    (task_root / "input").mkdir(parents=True)
+    (task_root / "work/attempts").mkdir(parents=True)
+    (task_root / "output").mkdir()
+    shutil.copyfile(FIXTURE, task_root / "input/template.docx")
+    shutil.copyfile(REGISTRY, task_root / "input/content-fields.yaml")
+    changed = task_root / "work/attempts/changed.docx"
+    shutil.copyfile(FIXTURE, changed)
+    with zipfile.ZipFile(changed, "a") as archive:
+        archive.comment = b"hash-changing-valid-package"
+    monkeypatch.setattr(
+        "docfit.template.compile_artifact.require_mutation_lineage_for_changed_template",
+        lambda *_args, **_kwargs: None,
+    )
+    compiled, spec_path = _prepare_spec(
+        task_root,
+        final_relative="work/attempts/changed.docx",
+    )
+
+    result = asyncio.run(
+        template_build.handler(
+            {
+                "schema_version": 1,
+                "task_root": str(task_root),
+                "final_snapshot_ref": compiled["task_binding"]["snapshot_ref"],
+                "artifact_spec_path": str(spec_path.relative_to(task_root)),
+                "output_dir": "output/template-artifact",
+            }
+        )
+    )["structuredContent"]
+
+    assert result["call_status"] == "needs_input"
+    assert result["failure"]["code"] == "mutation_lineage_gap"
+    assert not (task_root / "output/template-artifact").exists()
 
 
 def test_zero_mutation_build_publishes_exact_four_file_artifact(tmp_path: Path) -> None:
@@ -212,6 +287,23 @@ def test_zero_mutation_build_publishes_exact_four_file_artifact(tmp_path: Path) 
     assert contract["template_sha256"] == source_hash
     assert contract["slots"][0]["field_id"] == "author.name.zh"
     assert contract["slots"][0]["locator"]["value"] == "docfit.cover.student_name"
+    assert contract["slots"][0]["expected_value_style"] == {
+        "font": {
+            "ascii": "Arial",
+            "east_asia": "宋体",
+            "size_pt": 12.0,
+            "bold": False,
+        },
+        "paragraph": {
+            "alignment": "center",
+            "line_spacing_rule": "exact",
+            "line_value": 400,
+        },
+    }
+    assert contract["regions"][0]["expected_style"] == {
+        "font": {"ascii": "Arial"},
+        "paragraph": {"alignment": "left"},
+    }
     report = json.loads((artifact / "build-report.json").read_text())
     assert report["artifact_status"] == "built"
     assert report["file_hashes"]["fill-contract.json"] == sha256_file(
@@ -274,4 +366,39 @@ def test_build_revalidates_marker_semantics_in_digest_valid_spec(tmp_path: Path)
 
     assert result["call_status"] == "needs_input"
     assert result["failure"]["code"] == "marker_protocol_mismatch"
+    assert not (task_root / "output/template-artifact").exists()
+
+
+def test_build_revalidates_public_style_shape_in_digest_valid_spec(
+    tmp_path: Path,
+) -> None:
+    task_root = tmp_path / "task"
+    (task_root / "input").mkdir(parents=True)
+    (task_root / "work").mkdir()
+    (task_root / "output").mkdir()
+    shutil.copyfile(FIXTURE, task_root / "input/template.docx")
+    shutil.copyfile(REGISTRY, task_root / "input/content-fields.yaml")
+    compiled, _ = _prepare_spec(task_root)
+    compiled["fill_contract"]["slots"][0]["expected_value_style"] = {
+        "run.font_ascii": "Arial"
+    }
+    compiled.pop("spec_digest")
+    compiled["spec_digest"] = sha256_json(compiled)
+    bad_spec = task_root / "work/compiled/bad-style-artifact-spec.json"
+    bad_spec.write_text(json.dumps(compiled), encoding="utf-8")
+
+    result = asyncio.run(
+        template_build.handler(
+            {
+                "schema_version": 1,
+                "task_root": str(task_root),
+                "final_snapshot_ref": compiled["task_binding"]["snapshot_ref"],
+                "artifact_spec_path": str(bad_spec.relative_to(task_root)),
+                "output_dir": "output/template-artifact",
+            }
+        )
+    )["structuredContent"]
+
+    assert result["call_status"] == "needs_input"
+    assert result["failure"]["code"] == "invalid_artifact_spec"
     assert not (task_root / "output/template-artifact").exists()

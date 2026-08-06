@@ -125,3 +125,28 @@ def validate_mutation_lineage(
             message="Mutation lineage does not reach the final snapshot.",
         )
     return normalized
+
+
+def require_mutation_lineage_for_changed_template(
+    decisions: JsonObject,
+    *,
+    sources: list[JsonObject],
+    lineage: list[JsonObject],
+) -> None:
+    school_hashes = {
+        item.get("sha256")
+        for item in sources
+        if item.get("authority") == "supplied_school_template"
+        and isinstance(item.get("sha256"), str)
+    }
+    if (
+        school_hashes
+        and decisions.get("template_sha256") not in school_hashes
+        and not lineage
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="mutation_lineage_gap",
+            message="A template changed from the supplied school source requires mutation lineage.",
+        )
