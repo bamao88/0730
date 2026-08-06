@@ -2,6 +2,11 @@
 
 Use this reference after observation has produced a current snapshot and stable target candidates.
 
+The table below defines the candidate v1 mode set, not a requirement to ship every mode in one increment.
+At runtime, choose only a mode/target/content kind that belongs to the current approved capability slice and
+has passed the Tool / Code Gate. Every other listed mode remains explicitly unsupported; never substitute a
+different mode or bypass the Tool to emulate it.
+
 ## Removal is an operation, not a content responsibility
 
 First record the target's `observed_roles`, surviving `responsibilities`, responsibility modifiers, and
@@ -57,12 +62,13 @@ Record cardinality independently of the number of examples in the source templat
 optional slot. An absent `max` expresses an unbounded repeated responsibility only when the evidence supports
 that conclusion.
 
-For a slot, preserve or create the smallest physical anchor that safely expresses the semantic boundary:
-
-- an existing paragraph or run container;
-- a table cell while retaining the grid;
-- a start/end boundary for a paragraph stream;
-- a content control, bookmark, or other uniquely resolvable anchor supported by the Tool.
+For v1, the mutation target must be one of the three product-defined shapes: an existing paragraph, an
+existing table cell with its grid retained, or an explicit start/end boundary for a paragraph stream.
+`materialize_slot` writes an invisible DocFit slot anchor that resolves uniquely by `slot_id`; it preserves
+the current visible content and does not insert placeholder text. If example or instruction text must be
+removed, add a separate later `remove_content` operation. Runs, text boxes, content controls, bookmarks, and
+other observed objects do not become writable slot targets unless a later approved capability slice adds
+them together with direct Tool / Code assertions.
 
 ## Manual regions and gaps
 

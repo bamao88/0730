@@ -5,6 +5,11 @@
 > 本文固定两份 Agent 决定文件、两个编译脚本及其 canonical 输出。架构取舍以
 > `DESIGN.md` 为准，实施与验收顺序以 `PLAN.md` 为准，五个 Tool 的消费合同见
 > `TOOL-DESIGN.md`。
+>
+> **修改约束：**先检查 `PLAN.md` 第 0 节。本文件只定义两个编译器在 Tool / Code Gate 中
+> 可直接断言的输入、输出、拒绝与原子性，不增加独立测试层或当前 Eval 责任。两个脚本的
+> CLI 入口、接收对象、编译能力、成功产物、关键拒绝和非职责以 `DESIGN.md` 第 1.1 节为准，
+> 本文件不得增加 mode，也不得把它们变成公开 Tool、语义决策者或工作流节点。
 
 ## 1. 设计目标
 
@@ -139,6 +144,9 @@ task_binding:
    和 `output_exists`。
 5. output 不存在时使用同文件系统原子 rename，再 `fsync` 父目录。
 6. 任一步失败都清理本次临时文件，不改变既有 output。
+
+修改决定后重新编译时，Agent 必须按 `PLAN.md` 第 3.3 节选择新的未占用 attempt 输出路径；
+编译器不提供 overwrite 参数，也不引入 attempt registry。
 
 ## 3. 共享类型和引用规则
 
@@ -290,7 +298,10 @@ slot:
 
 - 只能绑定一个 responsibility，且两者语义完全一致；
 - v1 的 `placeholder_policy` 固定为 `empty`；脚本不生成示例占位正文；
-- automatic slot 必须有 Tool object locator 和可验证的物理容器；
+- `empty` 表示不插入可见占位文字，不表示该 action 会清空目标；清理现有示例必须另列
+  `remove_content`；
+- automatic slot 的目标只允许现有段落、表格单元格或有显式起止的段落流边界，必须有
+  Tool object locator 和可验证的物理容器；
 - manual responsibility 不得伪装成 `materialize_slot`，它进入最终 manual region；
 - 同一 `slot_id` 只能 materialize 一次。
 
@@ -299,7 +310,6 @@ slot:
 ```yaml
 removal:
   removal_mode: clear_text_preserve_container
-  migrated_responsibility_refs: [thesis-title]
   migration_targets:
     - responsibility_ref: thesis-title
       target_kind: materialized_slot
@@ -330,7 +340,8 @@ v1 六种 removal mode：
 - `materialized_slot` 必须引用更早 `materialize_slot` 创建的 `slot_id`，且 removal 的
   `depends_on` 包含该 operation；`existing_object` 必须引用当前 snapshot 中另一个唯一、未被
   删除的 object ref；
-- 每个仍存续的 responsibility 都必须恰有一个语义匹配的 migration target；
+- `operation.responsibility_refs` 是该删除涉及的存续责任全集；其中每一项都必须恰有一个
+  语义匹配的 `migration_targets[].responsibility_ref`，不再维护第二份重复列表；
 - 如果 fixed 责任被删除，`fixed_removal_authorization` 必须包含当前任务授权证据和明确的
   `replace | migrate | terminate` disposition；仅有 rationale 不算授权；
 - unresolved decision、未确认 target 或无法唯一映射的内容不能进入删除 operation。
@@ -807,34 +818,30 @@ output_exists
 - 解析 YAML/JSON、resolver 和 schema 校验都必须有 size/count/depth 上限。
 - 不执行 YAML tag、condition 文本、路径中的 shell 内容或任何外部命令。
 - 一次编译只读取所引用的 manifests；resolver 按 ref 去重并缓存 schema 验证结果。
-- 2 MiB 决定文件在常规 fixture 上的编译目标为 2 秒内；这是本地 CPU/I/O 目标，不以跳过
-  evidence 校验换取性能。
+- 本阶段不设独立性能门；只保留输入大小上限，且不得以跳过 evidence 校验换取速度。
 
 ## 11. 实现落点
 
-候选实施固定使用以下产品包与 Skill 脚本落点：
-
-```text
-src/docfit/template/
-├── models.py                 # Decision/Plan/Spec/ReviewRecordV1
-├── canonical.py              # canonical bytes 与 digest
-├── evidence_store.py         # ref resolver，只返回 typed metadata
-├── compile_mutation.py       # 纯编译逻辑
-└── compile_artifact.py       # 纯编译逻辑
-
-.claude/skills/docfit-school-extract/
-└── scripts/
-    ├── compile_mutation_plan.py
-    └── compile_artifact_spec.py
-```
+候选实施的实际产品包、Skill scripts、测试目录和文件规模边界见
+[`TDD-IMPLEMENTATION-PLAN.md`](TDD-IMPLEMENTATION-PLAN.md) 第 2 节。领域类型按 common、
+semantics、mutation、review、evidence、artifact spec 和 artifact 生命周期拆分；两个 compiler
+保持两个具名 owner 文件，不合并成通用多 mode 编译器。Skill 脚本的逻辑位置始终相对活跃
+`<skill-root>/scripts/`。
 
 Skill scripts 只负责参数、调用和输出流；schema/编译逻辑在产品包中，供 Tool 与测试复用。
-如实施前发现现有仓库布局与该落点存在实质冲突，必须先修改并重新批准候选 Plan，不能在
-实现中另选第二套目录。
+W1–W5 的 `<skill-root>` 是本候选目录；W6 才原子替换生产
+`.claude/skills/docfit-school-extract/`。实现中的文件细分可小步调整并同步本文；只有改变
+产品责任、公开边界或生产切换范围才需要重新批准。
 
-## 12. 测试矩阵
+编译器 fixture、CLI runner helper 和拒绝输入只放在 `tests/fixtures/` 或 `tests/support/`；
+两个产品 compiler 及 Skill CLI 不导入 pytest/test helper，不从 `tests/` 读取默认输入，也不
+通过测试专用参数或环境变量改变产品行为。W6 的 Skill 包只携带两份产品脚本及其产品依赖。
 
-### 12.1 两个脚本共享
+## 12. 两个编译器的 Tool / Code Gate
+
+测试直接执行两个公开 CLI；内部函数怎样拆分不构成额外 Gate。
+
+### 12.1 共享输入、输出与拒绝
 
 - YAML/JSON 等价输入得到相同语义输出；
 - 重复 key、alias、未知字段、过深/过大输入被拒绝；
@@ -844,11 +851,11 @@ Skill scripts 只负责参数、调用和输出流；schema/编译逻辑在产�
 - I/O 失败退出 `1`，决定失败退出 `2`，成功退出 `0`；
 - stdout/stderr 不泄露正文、rationale 或凭据。
 
-### 12.2 Mutation compiler
+### 12.2 `compile_mutation_plan.py`
 
 - materialize 后 remove 的合法责任迁移；
 - 删除早于 slot、未来依赖、环、重复 ID；
-- 六种 removal mode 与 object kind 的正反例；
+- 当前已经开放的 removal mode 与 object kind 的正反例；未开放的候选 mode 必须稳定拒绝；
 - 非删除 action 携带 removal 字段、删除缺 mode；
 - unresolved destructive operation；
 - fixed 删除无授权/有授权；
@@ -856,12 +863,12 @@ Skill scripts 只负责参数、调用和输出流；schema/编译逻辑在产�
 - 跨 snapshot ref 与 stale fingerprint；
 - 零 operation 合法编译。
 
-### 12.3 Artifact compiler
+### 12.3 `compile_artifact_spec.py`
 
 - 零 mutation + 完整 final review；
 - 多轮 needs-edit 被后续 accepted 边明确 supersede；
 - lineage 缺边、错序、最终 hash 不一致；
-- 1 页、160 页和多批图片的完整覆盖；
+- 单批与多批图片 manifest 的完整覆盖；
 - 缺 page/finding disposition、未知 disposition target；
 - machine blocker 不能被 accepted 静默清除；
 - style conflict resolved/unresolved；
@@ -869,21 +876,11 @@ Skill scripts 只负责参数、调用和输出流；schema/编译逻辑在产�
 - automatic slot locator、fixed fingerprint、source hash；
 - review/spec digest 可重算且无独立 review 文件。
 
-### 12.4 Contract tests
-
-至少增加：
-
-```text
-tests/unit/template/test_compile_mutation.py
-tests/unit/template/test_compile_artifact.py
-tests/unit/template/test_canonical.py
-tests/unit/template/test_evidence_store.py
-tests/contract/test_template_skill_scripts_contract.py
-tests/fixtures/template_v1/decisions/
-```
-
-golden fixture 必须保存输入、预期 canonical output、预期 digest 和预期拒绝码。测试不得依赖
-当前机器时间、文件 inode 或绝对 workspace path。
+编译器测试分别落在 `tests/contract/template_gate/test_compile_mutation.py` 与
+`tests/contract/template_gate/test_compile_artifact.py`，与其他 Tool contract 文件共同构成一个
+Tool / Code Gate。fixture 只保存最小有效输入、预期 canonical output/digest 和代表性拒绝
+输入。测试不得依赖当前机器时间、文件 inode 或绝对 workspace path，也不要求为每个内部
+validator 单独建测试文件。
 
 ## 13. 验收门
 
@@ -902,6 +899,7 @@ golden fixture 必须保存输入、预期 canonical output、预期 digest 和�
 - [架构设计](DESIGN.md)
 - [实施与验收计划](PLAN.md)
 - [五个 Tool 详细设计](TOOL-DESIGN.md)
+- [分阶段 TDD 实施计划](TDD-IMPLEMENTATION-PLAN.md)
 - [候选 Skill](SKILL.md)
 - [决定编译参考](references/decision-compilation.md)
 - [删除与槽位决定](references/deletion-and-slot-decisions.md)

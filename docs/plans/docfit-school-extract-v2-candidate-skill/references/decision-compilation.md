@@ -17,6 +17,8 @@ scripts make a decision structurally executable; they do not decide whether it i
   again.
 - Exit `0` on success, `2` on decision/schema errors, and `1` on environment/I/O failures. A failed run
   leaves an existing valid output byte-for-byte unchanged and creates no partial output.
+- After changing a decision, compile to a new unused attempt path. The same rule applies to subsequent
+  mutate/build/freeze outputs; do not overwrite or mix evidence from an older attempt.
 
 ## Mutation decisions
 

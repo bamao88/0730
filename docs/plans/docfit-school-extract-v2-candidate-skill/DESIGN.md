@@ -9,6 +9,9 @@
 >
 > 五个 Tool 的实现级接口见 `TOOL-DESIGN.md`；两份决定文件和两个脚本的实现级合同见
 > `SCRIPT-DESIGN.md`。
+>
+> **修改约束：**`PLAN.md` 第 0 节是本目录最高原则。修改本文或任何下层实施文档前必须
+> 先检查阶段、轻量产品、分阶段落地和两个当前测试 Gate；冲突的下层内容应修改或延期。
 
 ## 1. 设计结论
 
@@ -44,6 +47,310 @@ template_freeze
 artifact spec 内嵌规范化的 typed review record。脚本不读取或修改 DOCX，不替 Agent 做
 语义或视觉判断，也不发布 candidate/frozen；五个 Tool 仍是文档事实、副作用、对账和冻结
 的权威边界。
+
+### 1.1 五个 Tool 与两个脚本的产品能力合同
+
+本节固定 v1 候选产品到底提供哪些能力、能力入口、可调用 action/mode、主要输入、成功输出
+和关键拒绝。这里列出的 action/mode 才属于产品能力；未列出的能力默认不支持。分阶段实现
+可以逐项开放，但某项只有在对应 Tool / Code Gate 通过后才能称为“已支持”。
+
+`TOOL-DESIGN.md` 与 `SCRIPT-DESIGN.md` 只能细化字段和错误码，不得增加本节未定义的公开
+能力，也不得把本节的一项能力暗中转移给 Agent、脚本或另一个 Tool。
+
+| 入口 | v1 公开能力面 | 是否产生持久副作用 |
+|---|---|---|
+| `template_observe` | `create`、`query`、`images` | 只发布不可变 snapshot/render evidence，不改 DOCX |
+| `template_mutate` | 请求本身无 action；执行 plan 内的 `materialize_slot`、`remove_content`，删除有六种 mode | 原子发布新 DOCX、after snapshot 和 mutation evidence |
+| `template_compare` | `create`（`mutation_review`、`final_review`）及 `images` | 只发布不可变 comparison/image evidence，不改 DOCX |
+| `template_build` | 单一 build 入口 | 原子发布 candidate 四文件目录 |
+| `template_freeze` | 单一 freeze 入口 | 检查全绿后原子发布 frozen 五文件目录 |
+| `compile_mutation_plan.py` | 单一 CLI；无 mode | 原子发布 canonical mutation plan JSON |
+| `compile_artifact_spec.py` | 单一 CLI；无 mode | 原子发布 canonical artifact spec JSON |
+
+#### 1.1.1 统一入口与调用规则
+
+五个 Tool 通过 Agent 可见的 MCP 名称调用：
+
+```text
+mcp__docfit__template_observe
+mcp__docfit__template_mutate
+mcp__docfit__template_compare
+mcp__docfit__template_build
+mcp__docfit__template_freeze
+```
+
+调用体统一是 JSON object，至少包含 `schema_version: 1` 和 `task_root`。所有路径解析后
+必须位于当前任务根；源文件保持只读；需要写文件或目录的入口只接受尚不存在的新目标。
+snapshot/render/mutation/comparison ref 对 Agent 不透明，调用方只能原样传递，不能解析或
+自行拼接。
+
+两个脚本通过当前 Skill 根下的 CLI 调用：
+
+```text
+uv run python <skill-root>/scripts/<script>.py \
+  --task-root <task-root> --input <decision-file> --output <canonical-json>
+```
+
+脚本只有 `--task-root`、`--input`、`--output`、`--help`、`--version`，不提供 mode、overwrite、
+best-effort、provider/backend 或跳过验证参数。
+
+#### 1.1.2 `template_observe`：观察、查询和读取图片
+
+公开入口：`mcp__docfit__template_observe`。
+
+| action | 核心输入 | 产品能力 | 成功输出 |
+|---|---|---|---|
+| `create` | `input_docx`、`visual_level`、可选 `focus` | 只读解析 DOCX，建立绑定精确 hash 的不可变事实 snapshot；可按 focus 提取结构、可见对象、有效样式和槽位候选；识别不支持能力；按视觉等级建立或复用 render | `snapshot_ref`、document/source hash、objects、styles、sections、`unsupported_features`，以及可选 `render_ref`/page count |
+| `query` | `snapshot_ref`、`query{text, match, include?}` | 在既有 snapshot 中按 `exact`、`casefold` 或 `regex` 查询全部匹配；可返回周边上下文、有效样式解析和视觉位置 | 稳定排序的 `matches[]`、opaque object refs 和 `match_count`；零匹配仍是成功结果 |
+| `images` | `render_ref`；可选且互斥的 `pages`/`cursor`；可选 `max_images` | 分批读取已有 render 的原生页面图片，不重新解释文档 | 图片 metadata、原生 image blocks、`next_cursor` |
+
+`create.focus` 只支持：
+
+```text
+structure
+visible_objects
+styles
+slot_candidates
+```
+
+`create.visual_level` 只支持：
+
+- `none`：只建立结构事实；
+- `quick`：生成或复用返工定位图片；
+- `authoritative`：生成或复用可进入最终审查的权威页面证据。
+
+观察层至少能识别段落/run、表格/行/单元格、文本框、内容控件、书签、域、分节、页眉页脚、
+分页边界、命名样式、继承、直接格式和最终有效格式。它不支持判断“这是不是论文标题”、
+“该不该删除”或“应该建什么槽位”。
+
+关键拒绝：越界路径、非 DOCX/损坏 package、观察期间源 hash 变化、无效 query、跨任务或
+不存在的 ref、不可用的渲染和超出图片批次预算。失败不发布 snapshot/render 半成品。
+
+三种 action 的调用形态：
+
+```jsonl
+{"schema_version":1,"action":"create","task_root":"/task","input_docx":"input/template.docx","visual_level":"none","focus":["structure","visible_objects","styles","slot_candidates"]}
+{"schema_version":1,"action":"query","task_root":"/task","snapshot_ref":"snapshot:v1:...","query":{"text":"标题","match":"casefold","include":["surrounding_context","style_resolution","visual_location"]}}
+{"schema_version":1,"action":"images","task_root":"/task","render_ref":"render:v1:...","pages":[1,2],"max_images":8}
+```
+
+#### 1.1.3 `template_mutate`：建立槽位和删除内容
+
+公开入口：`mcp__docfit__template_mutate`。
+
+```json
+{"schema_version":1,"task_root":"/task","input_docx":"work/template-v1.docx","output_docx":"work/template-v2.docx","mutation_plan_path":"work/compiled/mutation-plan.json"}
+```
+
+Tool 不接受 inline operation 或自然语言指令，只执行编译后的 mutation plan。plan 中的公开
+operation 只有两类：
+
+| operation | 支持的能力 | 主要约束 |
+|---|---|---|
+| `materialize_slot` | 在现有段落、表格单元格或有显式起止的段落流边界写入不可见的 DocFit slot anchor，使 after snapshot 能按 `slot_id` 唯一定位；内容种类支持 `scalar`、`paragraph_stream`、`composite` | 保留容器、样式和当前可见内容；不插入占位文字，也不顺带清空示例。清理可见内容必须是单独的 `remove_content`；manual responsibility 不得自动建槽；同一 `slot_id` 只能建立一次 |
+| `remove_content` | 按下表六种物理删除方式移除已确认内容，并在删除前验证所有存续责任已经迁移 | 必须使用当前 snapshot 的精确 ref/fingerprint；删除模式必须与 object kind 匹配；fixed 删除需要当前任务明确授权 |
+
+`remove_content` 的六种候选删除能力固定为：
+
+| `removal_mode` | 实际动作 | 必须保留 |
+|---|---|---|
+| `clear_text_preserve_container` | 清空目标容器中的可见文字 | 段落/run 容器、属性、锚点和邻近内容 |
+| `remove_inline_fragment` | 删除混合内容中的精确 inline 片段 | 周边 run、空格、标点、域和顺序 |
+| `remove_container` | 删除一个完整且已定位的物理容器 | 邻接结构、编号、分页和分节保护项；容器内不得有未迁移责任 |
+| `remove_bounded_block` | 删除显式起止边界间的连续逻辑块 | 两端边界及范围外对象 fingerprints |
+| `clear_cell_preserve_grid` | 清空目标单元格内容 | cell/row、table grid、merge、行高、单元格属性和相邻单元格 |
+| `unwrap_control_preserve_content` | 移除内容控件外壳 | 控件内部获准内容、顺序、格式和锚点 |
+
+`materialize_slot` 的 v1 可修改目标只有段落、表格单元格和有显式起止的段落流边界。其他对象
+即使能被 observe 看见，也不能因此自动获得建槽能力；必须在后续阶段明确加入能力合同和
+Tool / Code 断言。slot anchor 的 OOXML 表示属于 Tool 内部实现，但公开后置条件固定为：不可见、
+不改变当前正文、绑定唯一 `slot_id`，并能在输出 DOCX 重开后由 after snapshot 唯一重解。
+
+成功结果是新 DOCX、before/after snapshot refs、`mutation_ref`、输入/输出 hash 和逐 operation
+结果；输入 DOCX 始终不变。所有 operation 在临时副本中按数组顺序执行并做后置检查，全部
+通过才原子发布；任何一步失败都不发布 output。
+
+关键拒绝：plan 非法、input hash 与 snapshot 不一致、ref 过期/歧义、依赖顺序错误、删除
+模式与对象不匹配、责任未迁移、未授权 fixed 删除、目标已存在、后置误伤或输出 DOCX 无法
+打开。尚未通过当前阶段 Code Gate 的候选 removal mode 必须返回不支持，不能静默降级。
+
+#### 1.1.4 `template_compare`：修改对账、最终覆盖和图片读取
+
+公开入口：`mcp__docfit__template_compare`。支持两个 action：
+
+| action / mode | 核心输入 | 产品能力 | 成功输出 |
+|---|---|---|---|
+| `create` + `mutation_review` | `before_snapshot_ref`、`after_snapshot_ref`、`mutation_ref` | 对账计划 operation 与实际对象/结构/样式/分页变化；区分 expected 与 unexpected；按风险选择 crop、整页或 contact sheet | `comparison_ref`、expected/unexpected changes、machine findings、required image manifest |
+| `create` + `final_review` | `final_snapshot_ref` | 为精确最终 hash 建立 authoritative 全页审查清单，覆盖零 mutation 模板 | `comparison_ref`、最终 hash/page coverage、每页 `final_full_page` required image item |
+| `images` | `comparison_ref`；可选且互斥的 `pages`/`cursor`；可选 `max_images` | 分批读取 comparison 已登记的 required images，不临时重渲染 | required image metadata、原生 image blocks、`next_cursor` |
+
+mutation diff 至少覆盖对象增删改、fixed fingerprints、有效样式、表格 grid、内容控件、域、
+书签、分节、页眉页脚、编号、分页边界、页数和 slot anchors。Tool 只产出事实和
+`machine_blocking`，不产出 Agent disposition，不判断视觉结果是否可接受。
+
+关键拒绝：before/mutation/after lineage 不一致、snapshot hash 不匹配、authoritative render
+不可用、页面映射失败、无效 cursor、请求未登记图片或混用不同 hash 的图片。
+
+两种 create mode 与 images 的调用形态：
+
+```jsonl
+{"schema_version":1,"action":"create","task_root":"/task","review_mode":"mutation_review","before_snapshot_ref":"snapshot:v1:...","after_snapshot_ref":"snapshot:v1:...","mutation_ref":"mutation:v1:..."}
+{"schema_version":1,"action":"create","task_root":"/task","review_mode":"final_review","final_snapshot_ref":"snapshot:v1:..."}
+{"schema_version":1,"action":"images","task_root":"/task","comparison_ref":"comparison:v1:...","cursor":"opaque-cursor","max_images":8}
+```
+
+#### 1.1.5 `template_build`：生成 candidate artifact
+
+公开入口：`mcp__docfit__template_build`。
+
+```json
+{"schema_version":1,"task_root":"/task","final_snapshot_ref":"snapshot:v1:...","artifact_spec_path":"work/compiled/artifact-spec.json","candidate_output_dir":"work/candidate-attempt-1"}
+```
+
+它支持把以下已编译对象与最终 DOCX 组合为 candidate：sources、fixed regions、automatic
+slots、manual regions、gaps、unresolved、style claims/conflicts、mutation evidence chain、
+final review dispositions 和内嵌 `ReviewRecordV1`。build 会重新验证最终 hash、source hash、
+slot locator 唯一性、fixed fingerprints、lineage、审查覆盖和 machine blockers。
+
+成功只原子发布四个文件：
+
+```text
+clean-template.docx
+template-artifact.json        # artifact_status: candidate
+visual-review.json
+build-report.json
+```
+
+关键拒绝：artifact spec 无效、final snapshot/hash 不一致、source 漂移、slot 重复或无法唯一
+定位、fixed 内容变化、审查缺页、存在 blocking finding、目标目录已存在或候选文件集不完整。
+build 不支持修正决定、填补 gap、降级 automatic slot、生成 freeze report 或返回 frozen。
+
+#### 1.1.6 `template_freeze`：独立验证并发布 frozen artifact
+
+公开入口：`mcp__docfit__template_freeze`。
+
+```json
+{"schema_version":1,"task_root":"/task","candidate_dir":"work/candidate-attempt-1","frozen_output_dir":"output/frozen-attempt-1"}
+```
+
+freeze 固定执行以下产品检查：
+
+1. candidate 恰好包含四个规定文件；
+2. DOCX package 可重新打开；
+3. candidate manifest、template/source/file hashes 可复算且一致；
+4. 所有 source 当前 hash 未变化；
+5. automatic slot 可在 DOCX 上唯一重解，语义和基数有效；
+6. fixed fingerprints 一致；
+7. manual/gap/unresolved 显式且没有 blocking unresolved；
+8. review record 与 `visual-review.json` 一致；
+9. authoritative final review 覆盖精确最终 hash 的全部页面；
+10. mutation lineage 连续且没有未处理 machine blocker；
+11. build report 与 candidate 文件 hashes 完整；
+12. frozen 临时目录完整写入、重读和 hash 校验成功。
+
+全部通过后原子发布五个文件：
+
+```text
+clean-template.docx
+template-artifact.json        # artifact_status: frozen
+visual-review.json
+build-report.json
+freeze-report.json
+```
+
+成功返回 `artifact_status: frozen`、`published: true`、模板 hash、frozen 路径和可复算的
+`artifact_ref`。机器检查完整执行但未通过时返回 `artifact_status: blocked`、
+`published: false`；请求或运行错误使用 `needs_input | error`。任何非成功路径都不创建 frozen
+目标。freeze 不支持修正文档、跳过检查、接受 Agent pass flag、覆盖已有目录或把 candidate
+原地改成 frozen。
+
+#### 1.1.7 `compile_mutation_plan.py`：编译修改决定
+
+调用入口：
+
+```text
+uv run python <skill-root>/scripts/compile_mutation_plan.py \
+  --task-root <task-root> \
+  --input work/decisions/mutation-decisions.yaml \
+  --output work/compiled/mutation-plan-attempt-1.json
+```
+
+输入支持 YAML/JSON，包含：当前 snapshot、Agent decisions、`fixed | fill | generate`
+responsibilities、`scalar | paragraph_stream | composite` content kinds、cardinality、condition、
+`automatic | manual` handling，以及按顺序排列的 `materialize_slot | remove_content` operations。
+删除 operation 还可包含六种 removal mode、责任迁移目标、保护项和 fixed 删除授权。
+
+脚本执行 schema/ref/fingerprint 校验、operation 依赖排序校验、action/mode 与 object kind 校验、
+责任存续/迁移校验和 canonical 序列化。成功原子生成带 digest 的 `mutation-plan.json`；相同输入
+和证据逐字节稳定。它拒绝未知字段/action/mode、跨 snapshot 或过期 ref、未决破坏性操作、
+依赖环/向后依赖、责任未迁移、未授权 fixed 删除和已存在的不同输出；失败不覆盖旧输出。
+
+脚本不读取或修改 DOCX，不调用 Tool，不生成语义决定，也不管理 attempt。
+
+#### 1.1.8 `compile_artifact_spec.py`：编译候选产物合同
+
+调用入口：
+
+```text
+uv run python <skill-root>/scripts/compile_artifact_spec.py \
+  --task-root <task-root> \
+  --input work/decisions/artifact-decisions.yaml \
+  --output work/compiled/artifact-spec-attempt-1.json
+```
+
+输入支持 YAML/JSON，固定接收：
+
+```text
+final_snapshot_ref
+sources
+fixed_regions
+slots
+manual_regions
+gaps
+unresolved
+style_claims
+mutation_evidence_chain
+final_review
+```
+
+脚本解析不可变 evidence refs，验证所有领域 ID/引用、source 与 final hash、automatic slot
+locator、manual/gap 显式性、style conflict resolution、mutation lineage、required images/
+findings dispositions、逐页覆盖和 machine blockers；然后构造内嵌 `ReviewRecordV1`。
+
+成功原子生成 canonical `artifact-spec.json`，包含上述领域对象、review record、review digest
+和 spec digest。它拒绝 stale/cross-snapshot ref、重复 ID、不完整责任、automatic slot 缺
+locator、blocking unresolved、未解决 style conflict、lineage 缺口、未审查边、非 accepted
+disposition、缺页审查、残留 machine blocker 和已存在的不同输出；失败不覆盖旧输出。
+
+脚本不打开或修改 DOCX，不渲染图片，不替 Agent 判断质量，也不 build/freeze。
+
+#### 1.1.9 七个入口共用的底层产品能力
+
+| 底层能力 | 由哪些入口使用 | 产品行为 |
+|---|---|---|
+| task-root 路径与源只读保护 | 全部入口 | 解析 canonical path/symlink 并拒绝任务根越界；直接读取 DOCX/source 的 Tool 在对应边界重查 hash，两个脚本只验证声明的路径与 evidence ref，不打开源文档 |
+| canonical JSON、SHA-256 与 digest | 两个脚本、build、freeze | 同一输入产生稳定 bytes/hash；digest 可由消费者独立重算 |
+| immutable evidence store 与 opaque refs | observe、mutate、compare、两个脚本、build、freeze | snapshot/render/mutation/comparison evidence 绑定任务根和精确文档 hash，旧/跨任务 ref 失败 |
+| DOCX 事实提取与有效样式解析 | observe，并由 compare/build/freeze 重验需要的子集 | 解析结构、对象、关系、命名/继承/直接/有效格式，不由 Agent 猜测底层文档事实 |
+| DOCX 修改原语与后置保护 | mutate | 在临时副本执行 slot/删除动作，重开并检查容器、表格、分节、页眉页脚和邻近内容 |
+| 固定渲染、缓存和图片分批 | observe、compare | `quick` 使用固定返工路由，`authoritative` 使用固定交付路由；同 key 复用，图片按 cursor 返回 |
+| 结构/视觉变化对账 | compare | 将 mutation plan 与实际对象/页面变化对应，产出 expected/unexpected 和 required evidence |
+| artifact 组装 | build | 从最终 DOCX 与已编译合同确定性生成 candidate 四文件集合 |
+| 独立冻结验证 | freeze | 不信任上游成功，重读 candidate/source/evidence 后生成 frozen 五文件集合和 artifact ref |
+| 原子文件/目录发布 | 两个脚本、mutate、build、freeze | 临时写入、重读校验、fsync/rename；失败不发布半成品且不覆盖已有目标 |
+
+底层执行固定复用 OfficeCLI 的 DOCX 观察/修改/验证能力和 Adobe 的 authoritative 转换能力；
+公开入口不接受 provider/backend 选择，也不增加第二 Agent loop 或工作流引擎。
+
+七个入口共同遵守三个产品结论：
+
+1. Tool 负责可信事实、受控副作用和发布边界；脚本只把 Agent 决定编译成 Tool 可重验输入；
+   Agent 负责语义判断、返工和最终任务结果。
+2. compiler、observe、mutate、compare 或 build 成功都只是链路中的有效中间结果；只有
+   `template_freeze` 成功发布的 frozen artifact 才具备产品交付资格，Agent 仍对最终任务结果
+   负责。
+3. 未来 Eval 只评价 frozen 对象做得好不好，不接管上述七个入口的运行责任，也不依据
+   Agent transcript 替代产物评测。
 
 ## 2. 五类资产各自负责什么
 
@@ -118,7 +425,7 @@ Agent 在这个过程中应完成以下工作：
 覆盖旧输出，也不生成部分文件。两个脚本都显式接收 `--task-root`、输入和输出路径；成功、
 决定/schema 错误、环境/I/O 错误分别使用退出码 `0`、`2`、`1`。输出携带 schema/compiler
 版本、输入 hash 和绑定的 snapshot/hash。完整 CLI 与原子写合同见 `PLAN.md` 第 4.2 节。
-字段模型、canonical bytes、拒绝码和测试矩阵以 `SCRIPT-DESIGN.md` 为实现依据。
+字段模型、canonical bytes、拒绝码和直接编译器断言以 `SCRIPT-DESIGN.md` 为实现依据。
 
 ### 4.1 `compile_mutation_plan.py`
 
@@ -152,7 +459,7 @@ Agent 判断，不替 Agent 决定视觉结果是否正确，也不生成独立 
 脚本输出不是权威事实。`template_mutate` 和 `template_build` 必须按自己的 typed schema
 再次验证；`template_freeze` 更不能相信脚本的成功返回。
 
-### 4.4 共享路径、引用和状态合同
+### 4.3 共享路径、引用和状态合同
 
 五个 Tool 与两个脚本都接收同一个 `task_root`。源材料保持只读，Agent 决定与编译输出写入
 work，Tool 的不可变 snapshot/comparison/render 证据由 task root 内的 Tool store 管理，
@@ -167,7 +474,7 @@ Tool 调用状态统一使用 `call_status: ok | needs_input | error`。领域�
 ## 5. 五个生产 Tool
 
 本节固定职责和主要数据流；公开输入/输出 schema、稳定错误码、原子性、图片 cursor 和逐
-Tool 验收矩阵以 `TOOL-DESIGN.md` 为实现依据。
+Tool 的直接输入、输出与拒绝断言以 `TOOL-DESIGN.md` 为实现依据。
 
 ### 5.1 `template_observe`
 
@@ -180,7 +487,7 @@ action: create
 task_root: ...
 input_docx: school-template.docx
 visual_level: quick | authoritative | none
-focus: [structure, visible_objects, styles, slots]
+focus: [structure, visible_objects, styles, slot_candidates]
 ```
 
 查询已有快照的核心输入：
@@ -221,7 +528,7 @@ operations:
   - operation_id: slot-title
     action: materialize_slot
     target_ref: ...
-    slot_id: thesis_title
+    slot_id: thesis-title
     content_kind: scalar
     cardinality: {min: 1, max: 1}
     depends_on: []
@@ -234,7 +541,7 @@ operations:
     migration_targets:
       - responsibility_ref: thesis-title
         target_kind: materialized_slot
-        slot_id: thesis_title
+        slot_id: thesis-title
         object_ref: null
 ```
 
@@ -247,8 +554,9 @@ operations:
 - `clear_cell_preserve_grid`
 - `unwrap_control_preserve_content`
 
-槽位动作覆盖既有段落、表格单元格、段落流边界和受支持的物理锚点。manual 区域只登记在
-artifact decisions/spec 中，不交给 mutation Tool 执行。
+槽位动作只覆盖既有段落、表格单元格和有显式起止的段落流边界；它写入不可见、可按
+`slot_id` 唯一重解的 anchor，不插入占位文字，也不清空现有内容。需要清理示例时必须另列
+`remove_content`。manual 区域只登记在 artifact decisions/spec 中，不交给 mutation Tool 执行。
 
 Tool 校验引用属于当前快照、expected text/fingerprint 成立；全部操作原子执行；修改后重新
 打开 DOCX，确认需保留的容器与非目标内容；成功返回新 hash、after snapshot 和
@@ -266,7 +574,6 @@ review_mode: mutation_review
 before_snapshot_ref: ...
 after_snapshot_ref: ...
 mutation_ref: ...
-visual_scope: automatic
 ```
 
 `review_mode: final_review` 时改为传入 `final_snapshot_ref`，不要求 before snapshot 或
@@ -367,7 +674,7 @@ frozen_output_dir: output/frozen-template-artifact
 
 ## 7. Skill、scripts 与 references 目录
 
-唯一候选目录为：
+当前候选设计目录为：
 
 ```text
 docs/plans/docfit-school-extract-v2-candidate-skill/
@@ -376,11 +683,6 @@ docs/plans/docfit-school-extract-v2-candidate-skill/
 ├── TOOL-DESIGN.md
 ├── SCRIPT-DESIGN.md
 ├── SKILL.md
-├── evals/
-│   └── evals.json
-├── scripts/
-│   ├── compile_mutation_plan.py
-│   └── compile_artifact_spec.py
 └── references/
     ├── decision-compilation.md
     ├── template-semantics.md
@@ -388,6 +690,11 @@ docs/plans/docfit-school-extract-v2-candidate-skill/
     ├── style-reconciliation.md
     └── visual-regression.md
 ```
+
+本轮没有编译脚本源码或 Eval case。W1–W5 隔离实现时，本目录本身就是候选
+`<skill-root>`，届时两个薄入口位于 `<skill-root>/scripts/`；W6 再把已验证内容原子替换到
+生产 `.claude/skills/docfit-school-extract/`。逻辑调用路径始终相对活跃 `SKILL.md`，不会同时
+加载候选与旧生产 Skill。质量 Eval 使用后续独立模块，不放回本候选 Skill 目录。
 
 五份 reference 分别负责：
 
@@ -404,19 +711,20 @@ reference。references 不保存学校具体要求，不复述完整 Tool schema
 
 ## 8. 实现形态
 
-生产 Tool 的内部实现可以按职责拆分：
+实际目标目录、文件 owner、规模阈值和按阶段创建顺序以
+[`TDD-IMPLEMENTATION-PLAN.md`](TDD-IMPLEMENTATION-PLAN.md) 第 2 节为准。实现保持一个
+`src/docfit/template/` 领域包，但把 contracts、runtime、两个 compiler、observe、mutate、
+compare、build 和 freeze 按变化原因分开；公开 MCP schema/handler 留在 `src/docfit/tools/`
+薄层。不得把全部模型、六种 mutation mode 或 build/freeze 重新堆回单个大文件，也不得为了
+行数制造只有转发逻辑的浅模块。
 
-```text
-src/docfit/template/
-├── models.py
-├── runtime.py
-├── compilers.py
-├── observation.py
-├── mutation.py
-├── comparison.py
-├── artifact.py
-└── validation.py
-```
+领域服务通过 `src/docfit/template/ports.py` 接收 OfficeCLI/Adobe 等外部边界，不反向导入
+`docfit.tools`；`template_tools.py` 作为 composition root 注入现有适配器。依赖方向、schema
+拆分和硬性文件规模上限以 TDD 子计划第 2 节为准。
+
+产品包和候选 Skill 运行脚本不得包含测试 fixture、fake、builder、pytest helper 或 Agent
+harness，也不得反向导入 `tests/`。测试辅助设施只位于 `tests/fixtures/` 与 `tests/support/`，
+通过产品公开入口和 `ports.py` 协议单向使用产品代码；产品打包不包含任何测试资产。
 
 生产 Skill scripts 只编译 Agent 决定；共享类型模型和真实校验逻辑由产品包提供，避免
 脚本复制一套会漂移的 schema。另有开发脚本可以放在开发或测试目录，用于原型、fixture
@@ -429,37 +737,46 @@ src/docfit/template/
 - 定义槽位和 artifact 格式；
 - 决定 candidate 是否能发布为 frozen。
 
-Skill script tests 还要覆盖 canonical 输出、schema 版本、无部分写入、非法
-`removal_mode`/ref、语义字段混层、非删除动作携带删除模式、删除动作缺少模式、未决内容
-删除、存续责任未迁移、未获授权的 fixed 删除、槽位字段缺失、review 证据未覆盖、跨
-snapshot 引用、操作依赖顺序、退出码、安装后导入和 blocking finding 保留。
+两个编译器的 Code Gate 直接调用 CLI，覆盖 canonical 输出、schema 版本、无部分写入、非法
+`removal_mode`/ref、语义字段混层、未决内容删除、存续责任未迁移、未获授权的 fixed 删除、
+review 证据未覆盖、跨 snapshot 引用、操作依赖顺序和退出码。是否拆分内部 helper 测试不构成
+额外验收层。
 
 ## 9. 最小验证集
 
-Tool contract tests 至少覆盖：
+### 9.1 Tool / Code Gate
+
+测试直接调用五个公开 Tool 和两个编译器，不启动 Agent。至少覆盖：
 
 - 不可变 snapshot/hash、旧引用拒绝和查询返回全部同文候选；
-- 六种删除模式的保留/删除边界与失败不发布；
-- 槽位唯一性、内容种类、fixed/fill/generate kind、cardinality/condition/handling、
-  resolution、manual/gap 和复合/生成机制；
+- 每个已经纳入当前实现的删除模式，其保留/删除边界与失败不发布；
+- 槽位唯一性及 fixed/fill/generate、cardinality/condition/handling、resolution、manual/gap
+  等 schema 的合法/非法输入；
 - expected/unexpected diff、分节/表格/固定内容误伤和自动图片范围；
 - mutation/final 两种 review mode、图片 cursor 无重复无缺页和精确 hash 全页覆盖；
 - build 只能产生 candidate；
 - freeze 独立发现 hash 不一致、旧快照、缺页审查、blocking finding 和来源变化。
 - candidate/frozen 的文件集合、manifest 状态、原子目录发布和 `artifact_ref` 可重算。
 
-Skill eval 至少观察 Agent 是否：
+### 9.2 Agent Gate
 
-- 在删除说明前迁移其中有效约束；
-- 面对多个“标题”候选时使用上下文和样式事实而不是随意选择；
-- 面对文字要求与有效格式冲突时显式保留冲突或询问用户；
-- 选择与意图匹配的删除模式和槽位语义；
-- 阅读 compare 返回的原生图片并解释变化；
-- 不把 candidate、局部视觉检查或 Tool 成功自报成 frozen。
-- 在 mutate/compare/build/freeze 返回错误或不符合目标的结果后继续诊断和修正，而不是
-  把 Tool finding 直接交付给用户。
-- 面对零 mutation 模板时不制造空修改，仍完成精确 hash 的 final review、build 和 freeze；
-- 面对长文档时使用图片 cursor 读完全部 required pages，不因传输预算省略审查。
+Tool / Code Gate 通过后，Agent Gate 只断言：
+
+- 调用满足必要先后依赖，并把当前有效的 ref/hash 传给下一边界；
+- Tool 失败或 findings 要求返工时，不把旧 attempt/candidate 当作成功结果，并使用新输出路径
+  继续处理；
+- 最终形成完整 frozen 文件集合；
+- 最终回复中的路径、hash、状态和 slot/fixed/manual/gap/unresolved 数量与磁盘产物一致。
+
+本 Gate 不评价槽位、来源裁决、删除决定或视觉判断做得好不好，也不建立 transcript golden、
+行为 token 或 live/deterministic 双矩阵。
+
+### 9.3 后续独立 Eval（当前不实施）
+
+slot、fixed、manual、gap、unresolved 的语义正确性、学校要求覆盖度、视觉质量及质量层
+blocking findings 由后续独立 Eval 负责。当前只保持接口可供该模块读取，不在本方案中实现
+case、Gold、评分器或 runner；边界见
+[模板提取静态 E2E Eval 顶层设计](../docfit-template-extraction-eval/DESIGN.md)。
 
 ## 10. 实施边界
 

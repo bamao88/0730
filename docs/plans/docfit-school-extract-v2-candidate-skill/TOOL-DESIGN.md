@@ -4,6 +4,11 @@
 >
 > 本文是五个领域 Tool 的实现级 reference。架构取舍以 `DESIGN.md` 为准，实施顺序与验收门
 > 以 `PLAN.md` 为准，两份编译器合同见 `SCRIPT-DESIGN.md`。
+>
+> **修改约束：**先检查 `PLAN.md` 第 0 节。本文件只定义五个公开 Tool 在 Tool / Code Gate
+> 中可直接断言的输入、输出、拒绝、源只读与原子发布；Agent 编排和后续质量 Eval 不在本
+> 文件扩展成额外测试层。五个 Tool 的公开入口、action/mode、必要输入、底层动作、成功
+> 产物、关键拒绝和非职责以 `DESIGN.md` 第 1.1 节为准，本文件不得增加或重新分配这些能力。
 
 ## 1. 目标和边界
 
@@ -66,8 +71,9 @@ mcp__docfit__template_freeze
 全部 Tool 使用 `openWorldHint: false`：它们不能访问任意网络资源。authoritative render 只能
 通过产品固定的服务适配器调用，不接受 provider/backend/engine 参数。
 
-单次 Agent Tool 结果上限固定为 12 MiB。结构化结果必须小于该上限；原生图片通过 cursor
-分批返回，不能压缩、降采样或省略 required pages 来绕过预算。
+结构化文本和原生图片复用应用壳现有的共享传输上限，不在本候选中定义第二套 chars/bytes
+常量。图片通过 cursor 分批返回；公开 schema 不暴露传输预算参数，边界测试读取同一组共享
+常量，避免文档数值与运行时口径漂移。
 
 ## 3. 共享请求合同
 
@@ -307,6 +313,11 @@ failure: null
 `objects[]` 至少覆盖段落、run、表格/行/单元格、文本框、内容控件、书签、域、页眉页脚、
 分节和分页边界。样式事实必须区分 named style、继承、直接格式与最终有效值。
 
+`unsupported_features[]` 每项至少包含稳定 code、受影响 object/scope 和
+`machine_blocking: true | false`。blocking 项表示当前 Tool 无法安全定位、修改或冻结对应
+范围，后续 mutate/build/freeze 必须拒绝；非 blocking 项必须由 Agent 显式归入 manual、gap
+或 unresolved，并由 build/freeze 检查其没有静默消失。这里是能力边界，不是语义质量评分。
+
 `action: images` 的结构化输出先列出本批图片 metadata，再按相同顺序附加原生 image content
 blocks：
 
@@ -408,7 +419,9 @@ failure: null
 
 不同 action 至少验证：
 
-- `materialize_slot`：locator 唯一、slot anchor 可重解、容器/样式/边界保持、责任 refs 完整。
+- `materialize_slot`：目标只能是段落、表格单元格或有显式起止的段落流边界；写入不可见且
+  按 `slot_id` 唯一的 anchor，重开后仍可重解；容器、样式、边界和当前可见内容保持，责任
+  refs 完整。该 action 不插入占位文字，也不代替 `remove_content` 清理示例。
 - `clear_text_preserve_container`：容器、属性、anchors、邻近内容保持。
 - `remove_inline_fragment`：周边 run、空格、标点、域和顺序保持。
 - `remove_container`：邻接结构、编号、分页和分节边界符合 protected invariants。
@@ -422,8 +435,9 @@ failure: null
 `ambiguous_target`、`output_exists`、`operation_dependency_failed`、`operation_failed`、
 `postcondition_failed`、`protected_content_changed`、`invalid_output_docx`。
 
-所有失败结果都必须包含 `committed: false`，且 output 不存在。测试必须覆盖两类 action、六种
-removal mode、顺序/依赖、stale ref、后置误伤、目标已存在和多操作中途失败。
+所有失败结果都必须包含 `committed: false`，且 output 不存在。测试必须覆盖两类 action、
+当前已经开放的 removal mode、顺序/依赖、stale ref、后置误伤、目标已存在和多操作中途失败；
+未开放的候选 mode 必须稳定拒绝。
 
 ## 6. `template_compare`
 
@@ -565,7 +579,7 @@ expected change 没发生、operation 范围外 fixed/grid/section/header/footer
 `invalid_image_cursor`、`requested_page_not_required`。
 
 必须测试 expected/unexpected 对账、分节/表格/fixed 误伤、风险图片范围、零 mutation final
-review、160 页 cursor、不同 hash 图片不能混用，以及 Tool 从不生成 Agent disposition。
+review、多批 cursor、不同 hash 图片不能混用，以及 Tool 从不生成 Agent disposition。
 
 ## 7. `template_build`
 
@@ -674,6 +688,11 @@ DOCX、visual review 和 build report 与 candidate 对应文件逐字节一致�
 的生命周期字段并新增 report。final manifest 记录 `freeze_report: freeze-report.json`，不包含
 `artifact_ref`，避免自引用。
 
+`build-report.json` 中的文件 hash 只证明 candidate 构建时的四文件集合。freeze 先在 candidate
+状态下用它完成校验；把 manifest 从 candidate 重建为 frozen 后，由 `freeze-report.json`
+单独记录 candidate manifest hash 与 frozen manifest hash。不得用 build report 中的旧 manifest
+hash 验证 frozen manifest。
+
 `artifact_ref` preimage 是 canonical object：
 
 ```yaml
@@ -744,47 +763,38 @@ blocking finding codes 至少包括：`candidate_file_missing`、`candidate_file
 - 所有临时文件和目录都创建在目标同一文件系统，确保原子 rename；异常退出后由安全清理器
   删除未发布临时项。
 
-## 10. 实现与测试落点
+## 10. 实现与 Tool / Code Gate 落点
 
-候选实施固定使用以下模块责任：
+候选实施的实际目录和文件规模边界见
+[`TDD-IMPLEMENTATION-PLAN.md`](TDD-IMPLEMENTATION-PLAN.md) 第 2 节。Tool owner 分别落在
+`observation.py`、`mutation.py`/`mutation_modes.py`、`comparison.py`、`artifact_build.py` 和
+`artifact_freeze.py`；contracts 与 runtime 使用各自子目录，避免单一 models/runtime 文件
+膨胀。外部 OfficeCLI/Adobe 依赖通过 `ports.py` 注入，领域服务不得反向导入 Tool 注册层；
+未开放的 mutation mode 不提前创建空实现文件。
 
-```text
-src/docfit/template/
-├── models.py        # refs、decision/plan/spec、snapshot、comparison、ReviewRecord/report
-├── canonical.py     # canonical bytes 与 digest
-├── runtime.py       # task-root、原子文件/目录发布、共享资源边界
-├── evidence_store.py # typed opaque-ref resolver 与 immutable manifests
-├── compile_mutation.py
-├── compile_artifact.py
-├── observation.py   # template_observe
-├── mutation.py      # template_mutate
-├── comparison.py    # template_compare
-├── artifact.py      # template_build
-└── validation.py    # template_freeze checks
-```
+公开注册/schema 仍放在 `src/docfit/tools/`：五个 schema 按 Tool 责任拆在
+`template_schemas/`，`template_tools.py` 只做统一注册、composition 和错误封装；领域实现
+不得复制进 Tool registration functions。
 
-公开注册/schema 仍放在 `src/docfit/tools/`，但只做 transport、扁平 schema 和统一错误封装；
-领域实现不得复制进 Tool registration functions。
+OfficeCLI/Adobe fake、DOCX fixture builder 和 artifact 断言只放在 `tests/support/template_v1/`；
+产品 Tool、schema、ports 和领域服务不得导入它们或读取 `tests/fixtures/`。真实适配器与测试
+fake 都实现同一产品 port，但只有真实适配器进入产品 composition 与安装包。
 
-验收文件：
+候选 Tool / Code Gate 位于 `tests/contract/template_gate/`，按 observe、mutate、compare、
+artifact 和 compilers 拆文件控制规模，但仍是一个 Gate。所有测试通过公开注册边界调用五个
+Tool 或真实 compiler CLI，覆盖已实现输入分支、代表性拒绝、失败不发布、DOCX 可打开、文件
+集合、cursor、cache、hash/ref binding 和 candidate/frozen 状态转换。内部模块测试可以用于
+诊断，但不形成新的产品 Gate，也不能代替公开 Tool 断言。
 
-- `tests/contract/test_template_tool_contract.py`
-- `tests/unit/template/test_observation.py`
-- `tests/unit/template/test_mutation.py`
-- `tests/unit/template/test_comparison.py`
-- `tests/unit/template/test_artifact.py`
-- `tests/unit/template/test_validation.py`
-- `tests/integration/test_template_artifact_flow.py`
-
-实现完成定义：每个输入分支、错误码、失败不发布路径、cursor、cache、hash/ref binding 和
-candidate/frozen 状态转换都有确定性测试；Skill eval 只验证 Agent 是否正确使用这些合同，
-不能替代 Tool tests。
+Agent 是否按必要顺序使用这些合同、处理失败并让最终回复与产物一致，由 `PLAN.md` 定义的
+Agent Gate 验证；槽位语义、学校要求覆盖和视觉质量由后续独立 Eval 验证。
 
 ## 11. 相关文档
 
 - [总体架构](DESIGN.md)
 - [实施与验收计划](PLAN.md)
 - [两个编译脚本详细设计](SCRIPT-DESIGN.md)
+- [分阶段 TDD 实施计划](TDD-IMPLEMENTATION-PLAN.md)
 - [内容语义](references/template-semantics.md)
 - [删除与槽位决定](references/deletion-and-slot-decisions.md)
 - [视觉回归](references/visual-regression.md)
