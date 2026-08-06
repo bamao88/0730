@@ -10,11 +10,14 @@
   以当前候选计划为准
 - Completed slice: P1 零 mutation 纵向链路；observe create/query/candidate images、final compare、
   artifact decisions compiler 和四文件 build 已从公开 Tool/产品边界贯通
-- Current slice: P2 首个安全 mutation；实现 `materialize_slot` 与独立 `remove_content`，证明只发生
-  计划内 OOXML 变化，并让 mutation comparison/lineage 回到同一 build 门
-- Next proof: 单一失败 mutation 测试 → compiler/handler 最小实现 → protected/marker/container/hash/
-  原子发布拒绝回归 → P1 全链路复用
-- Existing evidence: P1 template gate `8 passed`，新增产品代码定向 ruff 与 strict mypy 通过；生成的
+- Completed slice: P2 首个安全 mutation；`materialize_slot` 与独立
+  `clear_text_preserve_container` 已按编译顺序执行，保留外层 paragraph、非目标内容、styles、
+  sections 和源文件，after snapshot/mutation comparison/lineage 已回到同一 build 门
+- Current slice: P4 候选 Agent 与 `docfit prepare-template`；候选四 Tool server、公共 CLI 壳、
+  filesystem Skill、permissions、structured output 与磁盘重验正在接线
+- Next proof: 测试 composition 的 built/blocked/recovery → 真实 SDK 单 query/session → 实际学校
+  模板四文件产物与全页 candidate verification
+- Existing evidence: P1/P2 template gate `12 passed`，新增产品代码定向 ruff 与 strict mypy 通过；生成的
   fill contract 通过现有 Eval Draft 2020-12 schema；既有 Skill/Tool 合同 `13 passed`；模板提取
   独立 Eval 基线 `98 passed`
 - Delivery proof: 自动化合同、输入安全、原子性、SDK/Tool/CLI、静态质量门和项目回归均须通过；

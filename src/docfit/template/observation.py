@@ -43,7 +43,7 @@ def _story(name: str) -> str:
     return Path(name).stem
 
 
-def _snapshot(document: Path, document_sha256: str, source_path: str) -> JsonObject:
+def snapshot_document(document: Path, document_sha256: str, source_path: str) -> JsonObject:
     objects: list[JsonObject] = []
     controls: list[JsonObject] = []
     sections: list[JsonObject] = []
@@ -167,7 +167,7 @@ class TemplateObservationService:
         validate_docx_package(document)
         before_hash = sha256_file(document)
         relative = document.relative_to(task_root).as_posix()
-        payload = _snapshot(document, before_hash, relative)
+        payload = snapshot_document(document, before_hash, relative)
         if sha256_file(document) != before_hash:
             raise ToolFailure(
                 status="needs_input",

@@ -278,6 +278,57 @@ def _validate_review(
     return record
 
 
+def _validate_mutation_lineage(
+    decisions: JsonObject,
+    *,
+    store: EvidenceStore,
+) -> list[JsonObject]:
+    chain = _objects(decisions.get("mutation_evidence_chain"), "mutation_evidence_chain")
+    if not chain:
+        return []
+    previous_after: str | None = None
+    normalized: list[JsonObject] = []
+    for index, item in enumerate(chain, start=1):
+        if item.get("sequence") != index:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="mutation_lineage_gap",
+                message="Mutation lineage sequence numbers must be contiguous.",
+            )
+        mutation = store.resolve(item.get("mutation_ref"), expected_kind="mutation")
+        comparison = store.resolve(item.get("comparison_ref"), expected_kind="comparison")
+        before_ref = item.get("before_snapshot_ref")
+        after_ref = item.get("after_snapshot_ref")
+        if (
+            mutation.get("before_snapshot_ref") != before_ref
+            or mutation.get("after_snapshot_ref") != after_ref
+            or comparison.get("review_mode") != "mutation_review"
+            or comparison.get("mutation_ref") != item.get("mutation_ref")
+            or comparison.get("before_snapshot_ref") != before_ref
+            or comparison.get("after_snapshot_ref") != after_ref
+            or comparison.get("machine_blockers") != []
+            or comparison.get("unexpected_changes") != []
+            or (previous_after is not None and previous_after != before_ref)
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="mutation_lineage_gap",
+                message="Mutation lineage evidence is discontinuous or contains blockers.",
+            )
+        previous_after = after_ref if isinstance(after_ref, str) else None
+        normalized.append(item)
+    if previous_after != decisions.get("final_snapshot_ref"):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="mutation_lineage_gap",
+            message="Mutation lineage does not reach the final snapshot.",
+        )
+    return normalized
+
+
 def compile_artifact_decisions(
     *,
     task_root: Path,
@@ -434,6 +485,7 @@ def compile_artifact_decisions(
         slot_ids.add(slot_id)
     for region in (*protected, *remove):
         _validate_locator(region.get("artifact_locator"))
+    mutation_lineage = _validate_mutation_lineage(decisions, store=store)
     review_record = _validate_review(decisions, snapshot=snapshot, store=store)
     contract_id = (
         f"{sources[0]['source_id']}.fill-contract"
@@ -515,7 +567,7 @@ def compile_artifact_decisions(
         "gaps": decisions["gaps"],
         "unresolved": decisions["unresolved"],
         "style_claims": decisions["style_claims"],
-        "mutation_lineage": decisions["mutation_evidence_chain"],
+        "mutation_lineage": mutation_lineage,
         "review_record": review_record,
         "fill_contract": fill_contract,
     }

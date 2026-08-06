@@ -7,16 +7,19 @@ import json
 from pathlib import Path
 from typing import Any
 
-from claude_agent_sdk import tool
+from claude_agent_sdk import SdkMcpTool, create_sdk_mcp_server, tool
+from claude_agent_sdk.types import McpSdkServerConfig
 from mcp.types import ToolAnnotations
 
 from docfit.template.artifact_build import TemplateArtifactBuilder
 from docfit.template.comparison import TemplateComparisonService
+from docfit.template.mutation import TemplateMutationService
 from docfit.template.observation import TemplateObservationService
 from docfit.tools.runtime import JsonObject, ToolFailure, task_root_from_args
 from docfit.tools.template_schemas import (
     TEMPLATE_BUILD_SCHEMA,
     TEMPLATE_COMPARE_SCHEMA,
+    TEMPLATE_MUTATE_SCHEMA,
     TEMPLATE_OBSERVE_SCHEMA,
 )
 
@@ -155,7 +158,7 @@ async def template_compare(args: dict[str, Any]) -> dict[str, Any]:
                     code="invalid_compare_request",
                     message="The comparison request contains unsupported fields.",
                 )
-            return _result(TemplateComparisonService().final_review(args, task_root=task_root))
+            return _result(TemplateComparisonService().review(args, task_root=task_root))
         if action == "images":
             allowed = common | {
                 "comparison_ref",
@@ -192,6 +195,44 @@ async def template_compare(args: dict[str, Any]) -> dict[str, Any]:
                     "origin": "internal",
                     "code": "unexpected_internal_error",
                     "message": "The template comparison failed unexpectedly.",
+                    "retryable": False,
+                },
+            }
+        )
+
+
+@tool(
+    "template_mutate",
+    "Execute only a compiled mutation plan and atomically publish a new DOCX plus evidence.",
+    TEMPLATE_MUTATE_SCHEMA,
+    annotations=_WRITE_ANNOTATIONS,
+)
+async def template_mutate(args: dict[str, Any]) -> dict[str, Any]:
+    try:
+        task_root = task_root_from_args(args)
+        allowed = {"schema_version", "task_root", "mutation_plan_path", "output_docx"}
+        if set(args) != allowed:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_mutate_request",
+                message="template_mutate accepts only a compiled plan path and new output path.",
+            )
+        return _result(TemplateMutationService().mutate(args, task_root=task_root))
+    except ToolFailure as error:
+        return _failure(error)
+    except Exception:
+        return _result(
+            {
+                "schema_version": 1,
+                "call_status": "error",
+                "result_state": None,
+                "checks": [],
+                "warnings": [],
+                "failure": {
+                    "origin": "internal",
+                    "code": "unexpected_internal_error",
+                    "message": "The template mutation failed unexpectedly.",
                     "retryable": False,
                 },
             }
@@ -240,3 +281,29 @@ async def template_build(args: dict[str, Any]) -> dict[str, Any]:
                 },
             }
         )
+
+
+TEMPLATE_LOGICAL_TOOL_NAMES = (
+    "template_observe",
+    "template_mutate",
+    "template_compare",
+    "template_build",
+)
+TEMPLATE_FULL_TOOL_NAMES = tuple(
+    f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES
+)
+TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
+    template_observe,
+    template_mutate,
+    template_compare,
+    template_build,
+)
+
+
+def build_template_tool_server() -> McpSdkServerConfig:
+    """Build the one DocFit server composition used by prepare-template sessions."""
+    return create_sdk_mcp_server(
+        name="docfit",
+        version="2.0.0-candidate",
+        tools=list(TEMPLATE_TOOLS),
+    )

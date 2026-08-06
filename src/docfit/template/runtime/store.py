@@ -209,6 +209,11 @@ class EvidenceStore:
         opaque = reference.rsplit(":", 1)[-1]
         return (self.root / f"{expected_kind}s" / opaque).resolve(strict=True)
 
+    def discard(self, reference: str, *, expected_kind: str) -> None:
+        """Roll back evidence created by the current transaction only."""
+        target = self.bundle_path(reference, expected_kind=expected_kind)
+        shutil.rmtree(target)
+
     @staticmethod
     def _read_json(path: Path) -> JsonObject:
         try:

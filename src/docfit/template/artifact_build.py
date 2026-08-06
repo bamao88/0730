@@ -233,7 +233,8 @@ def _verify_regions(spec: JsonObject, snapshot: JsonObject) -> None:
                 code="protected_fingerprint_mismatch",
                 message="A protected region lacks valid locators.",
             )
-        target = by_id.get(execution.get("object_id"))
+        object_id = execution.get("object_id")
+        target = by_id.get(object_id) if isinstance(object_id, str) else None
         anchor = locator.get("left_anchor")
         occurrences = sum(
             1
@@ -272,6 +273,59 @@ def _verify_regions(spec: JsonObject, snapshot: JsonObject) -> None:
             )
 
 
+def _verify_mutation_lineage(
+    spec: JsonObject,
+    *,
+    store: EvidenceStore,
+    final_snapshot_ref: str,
+) -> None:
+    lineage = spec.get("mutation_lineage")
+    if not isinstance(lineage, list):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="invalid_artifact_spec",
+            message="The mutation lineage has an invalid shape.",
+        )
+    previous_after: str | None = None
+    for index, item in enumerate(lineage, start=1):
+        if not isinstance(item, dict) or item.get("sequence") != index:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="mutation_lineage_gap",
+                message="Mutation lineage sequence numbers are invalid.",
+            )
+        mutation = store.resolve(item.get("mutation_ref"), expected_kind="mutation")
+        comparison = store.resolve(item.get("comparison_ref"), expected_kind="comparison")
+        before_ref = item.get("before_snapshot_ref")
+        after_ref = item.get("after_snapshot_ref")
+        if (
+            mutation.get("before_snapshot_ref") != before_ref
+            or mutation.get("after_snapshot_ref") != after_ref
+            or comparison.get("mutation_ref") != item.get("mutation_ref")
+            or comparison.get("before_snapshot_ref") != before_ref
+            or comparison.get("after_snapshot_ref") != after_ref
+            or comparison.get("machine_blockers") != []
+            or comparison.get("unexpected_changes") != []
+            or (previous_after is not None and previous_after != before_ref)
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="mutation_lineage_gap",
+                message="Mutation lineage failed independent evidence validation.",
+            )
+        previous_after = after_ref if isinstance(after_ref, str) else None
+    if lineage and previous_after != final_snapshot_ref:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="mutation_lineage_gap",
+            message="Mutation lineage does not reach the final snapshot.",
+        )
+
+
 class TemplateArtifactBuilder:
     def build(self, args: dict[str, Any], *, task_root: Path) -> JsonObject:
         spec_path = task_file(
@@ -293,7 +347,8 @@ class TemplateArtifactBuilder:
                 message="The requested final snapshot does not match the artifact spec.",
             )
         store = EvidenceStore(task_root)
-        snapshot = store.resolve(args.get("final_snapshot_ref"), expected_kind="snapshot")
+        final_snapshot_ref = args.get("final_snapshot_ref")
+        snapshot = store.resolve(final_snapshot_ref, expected_kind="snapshot")
         if snapshot.get("document_sha256") != binding.get("document_sha256"):
             raise ToolFailure(
                 status="needs_input",
@@ -362,6 +417,13 @@ class TemplateArtifactBuilder:
         _verify_review_digest(review)
         _verify_registry_and_markers(spec, snapshot, task_root=task_root)
         _verify_regions(spec, snapshot)
+        if not isinstance(final_snapshot_ref, str):
+            raise AssertionError("the evidence store validated the final snapshot ref")
+        _verify_mutation_lineage(
+            spec,
+            store=store,
+            final_snapshot_ref=final_snapshot_ref,
+        )
         comparison = store.resolve(review.get("comparison_ref"), expected_kind="comparison")
         if (
             comparison.get("document_sha256") != template_hash
