@@ -24,7 +24,7 @@
           "label": {"type": "string", "minLength": 1},
           "meaning": {"type": "string", "minLength": 1},
           "content_type": {
-            "enum": ["text", "rich_text", "section", "image", "table", "formula", "asset"]
+            "enum": ["text", "rich_text", "section", "image", "table", "formula", "equation", "asset"]
           },
           "cardinality": {"enum": ["one", "many", "optional"]},
           "parent_field_id": {

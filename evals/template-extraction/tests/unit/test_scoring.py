@@ -62,7 +62,7 @@ def test_scr_02_inventory_uses_f1_and_hard_failure_wins() -> None:
     result = score_assertions(assertions, CONFIG)
     inventory = next(item for item in result.dimensions if item.dimension == "slot.inventory")
     assert inventory.score == 10
-    assert result.total_score == 95
+    assert result.total_score == 10
     assert result.verdict.value == "FAIL"
 
 
@@ -73,9 +73,9 @@ def test_scr_03_unknown_is_excluded_but_marks_provisional_and_coverage() -> None
     )
     result = score_assertions(assertions, CONFIG)
     assert result.verdict.value == "UNKNOWN"
-    assert result.total_score == 100
+    assert result.total_score == 20
     assert result.provisional is True
-    assert result.analysis_coverage == 0.5
+    assert result.analysis_coverage == 0.2
 
 
 def test_scr_04_not_applicable_dimension_keeps_full_weight() -> None:
@@ -90,3 +90,42 @@ def test_scr_04_not_applicable_dimension_keeps_full_weight() -> None:
     result = score_assertions(assertions, CONFIG)
     object_score = next(item for item in result.dimensions if item.dimension == "protected.object")
     assert object_score.score == object_score.weight == 5
+    assert result.analysis_coverage == 0.05
+    assert result.verdict.value == "UNKNOWN"
+
+
+def test_scr_05_empty_assertions_are_unobserved_not_a_vacuous_pass() -> None:
+    result = score_assertions((), CONFIG)
+    assert result.total_score == 0
+    assert result.analysis_coverage == 0
+    assert result.verdict.value == "UNKNOWN"
+
+
+def test_scr_06_unknown_only_dimension_scores_zero() -> None:
+    result = score_assertions(
+        (_assertion("unknown", "protected.content", AssertionStatus.UNKNOWN),),
+        CONFIG,
+    )
+    dimension = next(
+        item for item in result.dimensions if item.dimension == "protected.content"
+    )
+    assert dimension.score == 0
+    assert result.analysis_coverage == 0
+
+
+def test_scr_07_explicit_not_applicable_is_observed_but_missing_dimensions_are_not() -> None:
+    result = score_assertions(
+        (
+            _assertion(
+                "no-object",
+                "protected.object",
+                AssertionStatus.NOT_APPLICABLE,
+                required=False,
+            ),
+            _assertion("slot", "slot.inventory", AssertionStatus.PASS),
+        ),
+        CONFIG,
+    )
+    assert result.total_score == 20
+    assert result.analysis_coverage == 0.2
+    assert result.verdict.value == "UNKNOWN"

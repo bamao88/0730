@@ -15,6 +15,13 @@ Gold 明确声明的 remove 残留作为共享硬失败检查。最终同时输�
 `UNKNOWN` 门禁结论、总分、双视角分数、八个分项、分析覆盖率和可定位 issue。分数不覆盖
 硬失败；输入/schema/hash/Gold 状态错误不生成伪质量分数。
 
+评分语义遵守以下可靠性约束：
+
+- 没有断言的维度得 0 分并使结果成为 provisional/`UNKNOWN`，不能空断言满分；
+- 显式且真实的 `NOT_APPLICABLE` 可以获得该维度分数，但缺失槽的下游维度属于 FAIL；
+- coverage 按八个维度权重计算，未生成断言和 UNKNOWN 都会降低覆盖率；
+- accepted Gold 必须同时具有非空 protected Truth 和 slot Truth。
+
 默认输出目录为 `.runs/<run-id>/<case-id>/`：
 
 ```text
@@ -28,13 +35,34 @@ template-extraction-eval-report.md     # 从同一 report model 派生的人工�
 `pyproject.toml`、`uv.lock`、包、测试和输出目录；不 import `docfit`，不启动产品 CLI，
 也不依赖 Claude SDK、Adobe、OfficeCLI、Word GUI、网络或产品缓存。
 
+```text
+evals/template-extraction/
+├── run_eval.py                         # 正式 accepted-Gold 评分入口
+├── run_raw_source_sentinel.py          # 原始模板作为 Actual 的诊断哨兵
+├── config/                             # 评分权重和 Eval 容差
+├── schemas/                            # case、契约、Registry consumer、报告合同
+├── cases/                              # 三校 candidate Gold；不属于产品运行目录
+├── fixtures/                           # S00–S13 合成回归样本
+├── template_extraction_eval/           # 独立 Eval Python 包
+│   ├── facts/                          # 共享 DOCX/OOXML 事实分析
+│   ├── evaluators/                     # protected、slot、remove 断言
+│   ├── contracts.py                    # 输入和 Gold 资格门禁
+│   ├── markers.py                      # 主槽、组件、连续区域的标记闭包
+│   ├── scoring.py                      # 双视角评分和覆盖率
+│   └── sentinel.py                     # diagnostic-only 哨兵编排
+├── tests/                              # contract、unit、integration 测试
+└── .runs/                              # 被忽略的本地报告，不进入正式 Gold
+```
+
 核心脚本与能力责任如下：
 
 | 脚本/模块 | 责任 |
 |---|---|
 | `run_eval.py` | 唯一评分 CLI；解析四个运行参数并调用独立 runner |
+| `run_raw_source_sentinel.py` | diagnostic-only 三校哨兵；不会绕过或修改 Gold 接受状态 |
 | `template_extraction_eval/contracts.py` | 校验 case、Gold 状态、schema、hash、Registry 和模板—契约闭包 |
 | `template_extraction_eval/facts/` | Actual/Gold 共用的 DOCX 内容、结构、有效样式和对象事实分析 |
+| `template_extraction_eval/markers.py` | 校验主槽、组件槽、连续区域和 DOCX 标记的双向闭包 |
 | `template_extraction_eval/evaluators/` | protected、slot 与 Gold 声明的 remove 业务断言 |
 | `template_extraction_eval/scoring.py` | 双视角、八分项、slot F1、覆盖率和硬失败结论 |
 | `template_extraction_eval/reporting.py` | 原子发布同源 JSON/Markdown 报告 |
@@ -55,6 +83,18 @@ uv run python run_eval.py \
 
 退出码：`PASS=0`，`FAIL/UNKNOWN=2`，`INPUT_ERROR=3`。质量状态以 JSON 报告为准；
 `INPUT_ERROR` 只向 stderr 输出结构化诊断且不发布报告。
+
+运行原始学校模板哨兵：
+
+```bash
+uv run python run_raw_source_sentinel.py \
+  --output-dir .runs/raw-source-sentinel-v2
+```
+
+该命令明确标记 `diagnostic_only=true`。三校槽位层均为 `0/50 + FAIL`；南京农业大学和
+北京大学 protected 层为 `50/50 + PASS`。湖南农业大学 protected 层为 `35/50 + FAIL`，
+三个样本的文字和结构均通过，但页面上下边距从原始模板的 56.7pt 变成 Gold candidate 的
+72pt，因此样式维度失败。该结果证明评分虚高已消除，也暴露了尚不能接受的真实 Gold 问题。
 
 验证独立工程：
 

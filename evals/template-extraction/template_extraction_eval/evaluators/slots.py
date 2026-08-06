@@ -6,6 +6,7 @@ from typing import Any
 
 from ..alignment import AlignmentStatus, align_slot
 from ..facts.effective_style import style_differences
+from ..markers import managed_marker_tags
 from ..models import (
     AssertionResult,
     AssertionStatus,
@@ -61,16 +62,25 @@ def _boundary(
     )
 
 
-def _not_comparable(slot: SlotContract, dimension: str, message: str) -> AssertionResult:
+def _prerequisite_failure(
+    slot: SlotContract,
+    dimension: str,
+    message: str,
+) -> AssertionResult:
     return AssertionResult(
         assertion_id=f"{slot.slot_id}.{dimension}",
         view=View.SLOT,
         dimension=dimension,
-        status=AssertionStatus.NOT_APPLICABLE,
-        required=False,
+        status=AssertionStatus.FAIL,
+        required=slot.required,
         slot_id=slot.slot_id,
         gold_locator=slot.locator,
         message=message,
+        failure_code=(
+            "required_slot_prerequisite_missing"
+            if slot.required
+            else "optional_slot_prerequisite_missing"
+        ),
     )
 
 
@@ -103,11 +113,9 @@ def evaluate_slots(
             )
         )
 
-    declared_tags = {
-        slot.locator.value for slot in actual_contract.slots if slot.locator.value is not None
-    }
+    declared_tags = managed_marker_tags(actual_contract)
     for control in actual_facts.controls:
-        if control.tag not in declared_tags:
+        if control.tag is not None and control.tag not in declared_tags:
             assertions.append(
                 AssertionResult(
                     assertion_id=f"marker.{control.tag or 'missing-tag'}.inventory.broken",
@@ -141,6 +149,8 @@ def evaluate_slots(
                     message=alignment.detail or "required slot is missing",
                     failure_code=(
                         "required_slot_missing"
+                        if alignment.actual_slot is None and gold_slot.required
+                        else "optional_slot_missing"
                         if alignment.actual_slot is None
                         else "template_contract_marker_mismatch"
                     ),
@@ -152,7 +162,11 @@ def evaluate_slots(
                 "slot.value_style",
             ):
                 assertions.append(
-                    _not_comparable(gold_slot, dimension, "slot is missing and cannot be compared")
+                    _prerequisite_failure(
+                        gold_slot,
+                        dimension,
+                        "slot is missing, so this required dimension is not satisfied",
+                    )
                 )
             continue
         if alignment.status is AlignmentStatus.AMBIGUOUS:
@@ -175,7 +189,7 @@ def evaluate_slots(
                 "slot.value_style",
             ):
                 assertions.append(
-                    _not_comparable(
+                    _prerequisite_failure(
                         gold_slot,
                         dimension,
                         "ambiguous marker cannot be compared",

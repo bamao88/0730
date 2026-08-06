@@ -46,10 +46,13 @@ def _single_paragraph(
     facts: DocumentFacts,
     region: RegionContract,
 ) -> tuple[AlignmentStatus, ParagraphFact | None]:
-    matches = locate_paragraphs(facts.paragraphs, region.locator)
+    locator = region.locator
+    if locator is None:
+        return AlignmentStatus.MISSING, None
+    matches = locate_paragraphs(facts.paragraphs, locator)
     if not matches:
         return AlignmentStatus.MISSING, None
-    if len(matches) != region.locator.expected_match_count or len(matches) != 1:
+    if len(matches) != locator.expected_match_count or len(matches) != 1:
         return AlignmentStatus.AMBIGUOUS, None
     return AlignmentStatus.MATCHED, matches[0]
 

@@ -10,10 +10,17 @@ from template_extraction_eval.contracts import (
     InputContractError,
     InputErrorCode,
     load_eval_inputs,
+    load_field_registry,
+    load_fill_contract,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = PROJECT_ROOT / "fixtures"
+CASES = PROJECT_ROOT / "cases"
+OFFICIAL_REGISTRY = (
+    PROJECT_ROOT.parents[1]
+    / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
+)
 
 
 def _inputs(sample: str) -> tuple[Path, Path, Path]:
@@ -54,3 +61,26 @@ def test_con_03_registry_hash_or_unknown_field_is_rejected(tmp_path: Path) -> No
         )
     assert captured.value.code is InputErrorCode.HASH_MISMATCH
 
+
+@pytest.mark.parametrize(
+    ("case_id", "region_count", "component_count"),
+    [
+        ("01-hunau-undergraduate", 4, 0),
+        ("02-njau-undergraduate", 4, 3),
+        ("03-pku-graduate", 6, 3),
+    ],
+)
+def test_con_04_through_06_school_contracts_close_over_runtime_model(
+    case_id: str,
+    region_count: int,
+    component_count: int,
+) -> None:
+    contract = load_fill_contract(CASES / case_id / "gold" / "fill-contract.yaml")
+    assert len(contract.regions) == region_count
+    assert sum(len(slot.component_locators) for slot in contract.slots) == component_count
+    assert contract.marker_protocol == "docfit-content-control-marker/v1"
+
+
+def test_con_07_official_registry_equation_type_is_loadable() -> None:
+    registry = load_field_registry(OFFICIAL_REGISTRY)
+    assert registry.by_id["body.equation"].content_type == "equation"

@@ -19,6 +19,9 @@ DEFAULT_SOURCE_ROOT = (
 DEFAULT_OUTPUT_ROOT = Path(__file__).resolve().parent / "cases"
 SCHEMA_ROOT = Path(__file__).resolve().parent / "schemas"
 EVAL_CONFIG_PATH = Path(__file__).resolve().parent / "config/eval-config-v1.yaml"
+PROTECTED_TRUTH_PATH = (
+    Path(__file__).resolve().parent / "config/protected-truth-candidates.yaml"
+)
 REGISTRY_PATH = (
     REPO_ROOT
     / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
@@ -214,6 +217,7 @@ def _build_contract(
     case_id: str,
     candidate_spec_sha256: str,
     validation_sha256: str,
+    protected_regions: list[dict[str, Any]],
 ) -> dict[str, Any]:
     if candidate_spec.get("status") != "candidate":
         raise ValueError("only candidate template specs may be materialized")
@@ -236,6 +240,7 @@ def _build_contract(
     for region in regions:
         region["owner"] = "slot"
         region["required"] = region.get("field_ids") == ["generated.toc"]
+    regions.extend(copy.deepcopy(protected_regions))
 
     provenance = copy.deepcopy(candidate_spec["provenance"])
     provenance["upstream_source_ref"] = (
@@ -361,6 +366,11 @@ def _assert_destination_not_accepted(case_root: Path) -> None:
 
 def materialize_cases(source_root: Path, output_root: Path) -> list[Path]:
     registry = _read_yaml(REGISTRY_PATH)
+    protected_truth = _read_yaml(PROTECTED_TRUTH_PATH)
+    protected_by_case = cast(
+        dict[str, list[dict[str, Any]]],
+        protected_truth["cases"],
+    )
     registry_fields = {field["field_id"] for field in registry["fields"]}
     contract_validator = Draft202012Validator(_schema("fill-contract.schema.json"))
     case_validator = Draft202012Validator(_schema("case.schema.json"))
@@ -391,6 +401,7 @@ def materialize_cases(source_root: Path, output_root: Path) -> list[Path]:
             case_id,
             _sha256_path(spec_path),
             _sha256_path(validation_path),
+            protected_by_case[case_id],
         )
         referenced_fields = {
             slot["field_id"] for slot in contract["slots"]

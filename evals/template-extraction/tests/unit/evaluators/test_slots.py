@@ -54,8 +54,18 @@ def test_slot_02_through_05_mutations_have_precise_failure(
     failure_code: str,
 ) -> None:
     failed = [item for item in _assertions(sample) if item.status is AssertionStatus.FAIL]
-    assert len(failed) == 1
-    assert (failed[0].dimension, failed[0].failure_code) == (dimension, failure_code)
+    if sample == "S03-slot-missing":
+        assert {item.dimension for item in failed} == {
+            "slot.inventory",
+            "slot.location_boundary",
+            "slot.field_mapping",
+            "slot.value_style",
+        }
+        inventory = next(item for item in failed if item.dimension == "slot.inventory")
+        assert inventory.failure_code == failure_code
+    else:
+        assert len(failed) == 1
+        assert (failed[0].dimension, failed[0].failure_code) == (dimension, failure_code)
 
 
 def test_slot_06_protected_text_change_does_not_become_boundary_failure() -> None:
@@ -65,3 +75,20 @@ def test_slot_06_protected_text_change_does_not_become_boundary_failure() -> Non
         if item.status is AssertionStatus.FAIL
     ]
     assert failed == []
+
+
+@pytest.mark.parametrize(
+    "dimension",
+    ["slot.location_boundary", "slot.field_mapping", "slot.value_style"],
+)
+def test_slot_07_missing_required_slot_blocks_each_downstream_dimension(
+    dimension: str,
+) -> None:
+    assertion = next(
+        item
+        for item in _assertions("S03-slot-missing")
+        if item.dimension == dimension
+    )
+    assert assertion.status is AssertionStatus.FAIL
+    assert assertion.required is True
+    assert assertion.failure_code == "required_slot_prerequisite_missing"

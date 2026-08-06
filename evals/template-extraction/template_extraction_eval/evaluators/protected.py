@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any
 
-from ..alignment import AlignmentStatus, align_region
 from ..facts.effective_style import style_differences
+from ..facts.structure import locate_paragraphs
 from ..models import (
     AssertionResult,
     AssertionStatus,
@@ -19,23 +20,57 @@ from ..models import (
 )
 
 
-def _alignment_status(status: AlignmentStatus, required: bool) -> AssertionStatus:
-    if status is AlignmentStatus.AMBIGUOUS:
-        return AssertionStatus.UNKNOWN
-    if status is AlignmentStatus.MISSING:
-        return AssertionStatus.FAIL if required else AssertionStatus.NOT_APPLICABLE
-    return AssertionStatus.PASS
+def _locate_protected_paragraph(
+    facts: DocumentFacts,
+    region: RegionContract,
+) -> tuple[AssertionStatus, ParagraphFact | None, str | None]:
+    locator = region.locator
+    if locator is None:
+        return AssertionStatus.UNKNOWN, None, "protected region has no locator"
+    matches = locate_paragraphs(facts.paragraphs, locator)
+    if len(matches) == locator.expected_match_count == 1:
+        return AssertionStatus.PASS, matches[0], None
+    if matches:
+        return AssertionStatus.UNKNOWN, None, "protected locator is ambiguous"
+    has_structural_address = any(
+        value is not None
+        for value in (
+            locator.section_index,
+            locator.paragraph_index,
+            locator.table_index,
+            locator.row,
+            locator.cell,
+        )
+    )
+    structural_locator = (
+        replace(locator, left_anchor=None, right_anchor=None, occurrence=None)
+        if has_structural_address
+        else locator
+    )
+    structural_matches = locate_paragraphs(facts.paragraphs, structural_locator)
+    if not structural_matches:
+        return (
+            AssertionStatus.FAIL if region.required else AssertionStatus.NOT_APPLICABLE,
+            None,
+            "Gold protected locator has no match in the document",
+        )
+    if len(structural_matches) != locator.expected_match_count or len(structural_matches) != 1:
+        return AssertionStatus.UNKNOWN, None, "protected locator is ambiguous"
+    return AssertionStatus.PASS, structural_matches[0], None
 
 
-def _structure(paragraph: ParagraphFact) -> tuple[Any, ...]:
+def _structure(paragraph: ParagraphFact, region: RegionContract) -> tuple[Any, ...]:
+    locator = region.locator
+    if locator is None:
+        raise AssertionError("protected structure requires a locator")
     return (
         paragraph.story,
         paragraph.part,
-        paragraph.section_index,
-        paragraph.paragraph_index,
-        paragraph.table_index,
-        paragraph.row,
-        paragraph.cell,
+        paragraph.section_index if locator.section_index is not None else None,
+        paragraph.paragraph_index if locator.paragraph_index is not None else None,
+        paragraph.table_index if locator.table_index is not None else None,
+        paragraph.row if locator.row is not None else None,
+        paragraph.cell if locator.cell is not None else None,
     )
 
 
@@ -72,10 +107,15 @@ def evaluate_protected(
     actual_facts: DocumentFacts,
     eval_config: EvalConfig,
 ) -> tuple[AssertionResult, ...]:
+    # Preservation is document evidence against Gold Truth. The product's Actual
+    # fill contract is not authoritative for what had to be preserved.
+    _ = actual_contract
     assertions: list[AssertionResult] = []
     for region in gold_contract.regions:
         if region.owner is not Owner.PROTECTED:
             continue
+        if region.locator is None:
+            raise AssertionError("protected region must have a locator after schema validation")
         if region.object_kind is not None:
             for dimension in (
                 "protected.content",
@@ -136,8 +176,17 @@ def evaluate_protected(
                 )
             )
             continue
-        alignment = align_region(region, actual_contract, gold_facts, actual_facts)
-        base_status = _alignment_status(alignment.status, region.required)
+        gold_status, gold_paragraph, gold_detail = _locate_protected_paragraph(
+            gold_facts, region
+        )
+        actual_status, actual_paragraph, actual_detail = _locate_protected_paragraph(
+            actual_facts, region
+        )
+        base_status = (
+            gold_status
+            if gold_status is not AssertionStatus.PASS
+            else actual_status
+        )
         if base_status is not AssertionStatus.PASS:
             for dimension in (
                 "protected.content",
@@ -157,12 +206,12 @@ def evaluate_protected(
                         required=region.required,
                         region_id=region.region_id,
                         gold_locator=region.locator,
-                        actual_locator=(
-                            None
-                            if alignment.actual_region is None
-                            else alignment.actual_region.locator
+                        actual_locator=region.locator,
+                        message=(
+                            gold_detail
+                            or actual_detail
+                            or "protected region cannot be aligned from Gold Truth"
                         ),
-                        message=alignment.detail or "protected region cannot be aligned",
                         failure_code=(
                             "required_protected_content_missing_or_changed"
                             if status is AssertionStatus.FAIL
@@ -171,19 +220,19 @@ def evaluate_protected(
                     )
                 )
             continue
-        if alignment.gold_paragraph is None or alignment.actual_paragraph is None:
+        if gold_paragraph is None or actual_paragraph is None:
             raise AssertionError("matched region alignment must include both paragraphs")
-        actual_region = alignment.actual_region
-        if actual_region is None:
-            raise AssertionError("matched region alignment must include Actual contract region")
 
         expected_text = region.text
-        actual_text = actual_region.text
+        actual_text = None
         content_status = AssertionStatus.NOT_APPLICABLE
         if expected_text is not None:
+            actual_text = (
+                expected_text if expected_text in actual_paragraph.text else actual_paragraph.text
+            )
             content_status = (
                 AssertionStatus.PASS
-                if actual_text == expected_text and actual_text in alignment.actual_paragraph.text
+                if actual_text == expected_text
                 else AssertionStatus.FAIL
             )
         assertions.append(
@@ -197,7 +246,7 @@ def evaluate_protected(
                 actual=actual_text,
                 region_id=region.region_id,
                 gold_locator=region.locator,
-                actual_locator=actual_region.locator,
+                actual_locator=region.locator,
                 message=(
                     "protected text matches"
                     if content_status is AssertionStatus.PASS
@@ -211,8 +260,8 @@ def evaluate_protected(
             )
         )
 
-        expected_structure = _structure(alignment.gold_paragraph)
-        actual_structure = _structure(alignment.actual_paragraph)
+        expected_structure = _structure(gold_paragraph, region)
+        actual_structure = _structure(actual_paragraph, region)
         structure_status = (
             AssertionStatus.PASS
             if expected_structure == actual_structure
@@ -229,7 +278,7 @@ def evaluate_protected(
                 actual=actual_structure,
                 region_id=region.region_id,
                 gold_locator=region.locator,
-                actual_locator=actual_region.locator,
+                actual_locator=region.locator,
                 message=(
                     "protected structure matches"
                     if structure_status is AssertionStatus.PASS
@@ -243,8 +292,8 @@ def evaluate_protected(
             )
         )
 
-        gold_style = _region_style(alignment.gold_paragraph, region)
-        actual_style = _region_style(alignment.actual_paragraph, actual_region)
+        gold_style = _region_style(gold_paragraph, region)
+        actual_style = _region_style(actual_paragraph, region)
         differences = style_differences(gold_style, actual_style, eval_config.tolerances)
         style_status = AssertionStatus.PASS if not differences else AssertionStatus.FAIL
         assertions.append(
@@ -258,7 +307,7 @@ def evaluate_protected(
                 actual=actual_style,
                 region_id=region.region_id,
                 gold_locator=region.locator,
-                actual_locator=actual_region.locator,
+                actual_locator=region.locator,
                 message=(
                     "protected style matches"
                     if not differences
@@ -276,7 +325,7 @@ def evaluate_protected(
                 required=False,
                 region_id=region.region_id,
                 gold_locator=region.locator,
-                actual_locator=actual_region.locator,
+                actual_locator=region.locator,
                 message="text-only protected region has no object assertion",
             )
         )

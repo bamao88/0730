@@ -73,6 +73,41 @@ regions:
     status: candidate_pending_field_structure_review
   owner: slot
   required: true
+- region_id: protected.school.title
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: header
+    part: word/header6.xml
+    paragraph_index: 0
+    left_anchor: 南京农业大学本科毕业论文（设计）
+    expected_match_count: 1
+  text: 南京农业大学本科毕业论文（设计）
+- region_id: protected.document.type
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    table_index: 0
+    row: 0
+    cell: 0
+    left_anchor: 本科生毕业论文（设计）
+    expected_match_count: 1
+  text: 本科生毕业论文（设计）
+- region_id: protected.originality.heading
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    paragraph_index: 23
+    left_anchor: 南京农业大学本科生毕业论文（设计）原创性声明
+    expected_match_count: 1
+  text: 南京农业大学本科生毕业论文（设计）原创性声明
 slots:
 - slot_id: slot.cover.title
   field_id: thesis.title.zh

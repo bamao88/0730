@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import shutil
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -10,7 +11,9 @@ from template_extraction_eval.contracts import (
     InputContractError,
     InputErrorCode,
     load_eval_inputs,
+    load_fill_contract,
     sha256_file,
+    validate_gold_truth_ready,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -94,3 +97,39 @@ def test_gold_04_top_level_acceptance_cannot_bypass_candidate_contract(
         )
     assert captured.value.code is InputErrorCode.GOLD_NOT_ACCEPTED
     assert "must all be accepted" in str(captured.value)
+
+
+@pytest.mark.parametrize(
+    "case_id",
+    [
+        "01-hunau-undergraduate",
+        "02-njau-undergraduate",
+        "03-pku-graduate",
+    ],
+)
+def test_gold_05_through_07_school_gold_has_both_view_truth_but_remains_candidate(
+    case_id: str,
+) -> None:
+    path = CASES / case_id / "gold" / "fill-contract.yaml"
+    contract = load_fill_contract(path)
+    validate_gold_truth_ready(contract, path=path)
+    assert contract.status == "candidate_pending_human_acceptance"
+
+
+def test_gold_08_synthetic_gold_with_both_views_is_truth_ready() -> None:
+    path = PROJECT_ROOT / "fixtures" / "S00-minimal-pass" / "gold-contract.yaml"
+    validate_gold_truth_ready(load_fill_contract(path), path=path)
+
+
+def test_gold_09_missing_protected_truth_cannot_be_accepted() -> None:
+    path = PROJECT_ROOT / "fixtures" / "S00-minimal-pass" / "gold-contract.yaml"
+    contract = load_fill_contract(path)
+    without_protected = replace(
+        contract,
+        regions=tuple(
+            region for region in contract.regions if region.owner.value != "protected"
+        ),
+    )
+    with pytest.raises(InputContractError) as captured:
+        validate_gold_truth_ready(without_protected, path=path)
+    assert captured.value.code is InputErrorCode.GOLD_NOT_ACCEPTED

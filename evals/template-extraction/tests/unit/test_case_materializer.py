@@ -56,6 +56,11 @@ def test_cases_01_materializes_exact_three_case_tree(tmp_path: Path) -> None:
         assert case["case_status"] == "candidate"
         assert case["gold_review"]["status"] == "candidate"
         assert case["expected_verdict"] == "INPUT_ERROR"
+        contract = _yaml(case_root / "gold/fill-contract.yaml")
+        protected = [
+            region for region in contract["regions"] if region["owner"] == "protected"
+        ]
+        assert len(protected) == 3
 
 
 def test_cases_02_all_word_aliases_equal_contract_registry_fields(tmp_path: Path) -> None:

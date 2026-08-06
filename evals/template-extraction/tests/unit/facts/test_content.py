@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
+import pytest
+
 from template_extraction_eval.facts import analyze_docx
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -50,3 +52,21 @@ def test_cont_03_non_text_objects_are_tokens_not_empty_text() -> None:
     tokens = {token for paragraph in semantic.paragraphs for token in paragraph.tokens}
     assert {"OBJECT:formula", "OBJECT:field", "OBJECT:bookmark"} <= tokens
 
+
+@pytest.mark.parametrize(
+    ("case_id", "expected_controls", "expected_managed"),
+    [
+        ("01-hunau-undergraduate", 24, 24),
+        ("02-njau-undergraduate", 35, 34),
+        ("03-pku-graduate", 38, 33),
+    ],
+)
+def test_cont_04_through_06_inline_and_block_controls_are_all_visible(
+    case_id: str,
+    expected_controls: int,
+    expected_managed: int,
+) -> None:
+    template = PROJECT_ROOT / "cases" / case_id / "gold" / "template.docx"
+    controls = analyze_docx(template).controls
+    assert len(controls) == expected_controls
+    assert len({control.tag for control in controls if control.tag is not None}) == expected_managed

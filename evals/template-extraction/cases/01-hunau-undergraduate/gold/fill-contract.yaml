@@ -73,6 +73,45 @@ regions:
     status: candidate_pending_field_structure_review
   owner: slot
   required: true
+- region_id: protected.assignment.title_label
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    table_index: 1
+    row: 0
+    cell: 0
+    left_anchor: 毕业设计题目
+    expected_match_count: 1
+  text: 毕业设计题目
+- region_id: protected.schedule.heading
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    table_index: 2
+    row: 1
+    cell: 0
+    left_anchor: 工作进度安排
+    expected_match_count: 1
+  text: 工作进度安排
+- region_id: protected.summary.heading
+  owner: protected
+  required: true
+  locator:
+    type: text_anchor
+    story: document
+    part: word/document.xml
+    table_index: 8
+    row: 3
+    cell: 0
+    left_anchor: 毕业论文（设计）摘要：
+    expected_match_count: 1
+  text: 毕业论文（设计）摘要：
 slots:
 - slot_id: slot.cover.title_cn
   field_id: thesis.title.zh

@@ -1,0 +1,120 @@
+schema_version: docfit-template-extraction-protected-truth-candidates/v1
+cases:
+  01-hunau-undergraduate:
+    - region_id: protected.assignment.title_label
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 1
+        row: 0
+        cell: 0
+        left_anchor: 毕业设计题目
+        expected_match_count: 1
+      text: 毕业设计题目
+    - region_id: protected.schedule.heading
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 2
+        row: 1
+        cell: 0
+        left_anchor: 工作进度安排
+        expected_match_count: 1
+      text: 工作进度安排
+    - region_id: protected.summary.heading
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 8
+        row: 3
+        cell: 0
+        left_anchor: 毕业论文（设计）摘要：
+        expected_match_count: 1
+      text: 毕业论文（设计）摘要：
+
+  02-njau-undergraduate:
+    - region_id: protected.school.title
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: header
+        part: word/header6.xml
+        paragraph_index: 0
+        left_anchor: 南京农业大学本科毕业论文（设计）
+        expected_match_count: 1
+      text: 南京农业大学本科毕业论文（设计）
+    - region_id: protected.document.type
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 0
+        row: 0
+        cell: 0
+        left_anchor: 本科生毕业论文（设计）
+        expected_match_count: 1
+      text: 本科生毕业论文（设计）
+    - region_id: protected.originality.heading
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        paragraph_index: 23
+        left_anchor: 南京农业大学本科生毕业论文（设计）原创性声明
+        expected_match_count: 1
+      text: 南京农业大学本科生毕业论文（设计）原创性声明
+
+  03-pku-graduate:
+    - region_id: protected.cover.title_label
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 0
+        row: 0
+        cell: 0
+        left_anchor: 题目：
+        expected_match_count: 1
+      text: 题目：
+    - region_id: protected.cover.name_label
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 1
+        row: 0
+        cell: 0
+        left_anchor: 姓    名：
+        expected_match_count: 1
+      text: 姓    名：
+    - region_id: protected.cover.advisor_label
+      owner: protected
+      required: true
+      locator:
+        type: text_anchor
+        story: document
+        part: word/document.xml
+        table_index: 1
+        row: 5
+        cell: 0
+        left_anchor: 导师姓名：
+        expected_match_count: 1
+      text: 导师姓名：

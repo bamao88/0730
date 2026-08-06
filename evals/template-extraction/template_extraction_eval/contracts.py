@@ -13,6 +13,7 @@ from jsonschema import Draft202012Validator
 
 from .models import (
     CaseDefinition,
+    ComponentLocator,
     EffectiveStyle,
     EvalConfig,
     EvalInputs,
@@ -171,6 +172,26 @@ def _locator(value: dict[str, Any]) -> Locator:
     )
 
 
+def _optional_locator(value: dict[str, Any], key: str) -> Locator | None:
+    item = value.get(key)
+    return None if item is None else _locator(cast(dict[str, Any], item))
+
+
+def _component_locator(value: dict[str, Any]) -> ComponentLocator:
+    wrapped = value.get("locator")
+    locator_value = value if wrapped is None else cast(dict[str, Any], wrapped)
+    return ComponentLocator(
+        locator=_locator(locator_value),
+        role=None if wrapped is None else _optional_str(value, "role"),
+    )
+
+
+def _marker_protocol_version(value: Any) -> str:
+    if isinstance(value, dict):
+        return str(value["version"])
+    return str(value)
+
+
 def _optional_int(value: dict[str, Any], key: str) -> int | None:
     item = value.get(key)
     return None if item is None else int(item)
@@ -202,7 +223,11 @@ def load_fill_contract(path: Path) -> FillContract:
             region_id=str(item["region_id"]),
             owner=Owner(str(item["owner"])),
             required=bool(item["required"]),
-            locator=_locator(cast(dict[str, Any], item["locator"])),
+            locator=_optional_locator(item, "locator"),
+            start_locator=_optional_locator(item, "start_locator"),
+            end_locator=_optional_locator(item, "end_locator"),
+            field_ids=tuple(str(field_id) for field_id in item.get("field_ids", [])),
+            placement_mode=_optional_str(item, "placement_mode"),
             text=_optional_str(item, "text"),
             forbidden_text=_optional_str(item, "forbidden_text"),
             object_kind=_optional_str(item, "object_kind"),
@@ -220,7 +245,7 @@ def load_fill_contract(path: Path) -> FillContract:
             cardinality=str(item.get("cardinality", "one")),
             locator=_locator(cast(dict[str, Any], item["locator"])),
             component_locators=tuple(
-                _locator(component)
+                _component_locator(component)
                 for component in cast(list[dict[str, Any]], item.get("component_locators", []))
             ),
             expected_value_style=cast(
@@ -244,7 +269,7 @@ def load_fill_contract(path: Path) -> FillContract:
         registry_id=str(registry_ref["registry_id"]),
         registry_version=str(registry_ref["registry_version"]),
         registry_sha256=str(registry_ref["sha256"]),
-        marker_protocol=str(value["marker_protocol"]),
+        marker_protocol=_marker_protocol_version(value["marker_protocol"]),
         regions=regions,
         slots=slots,
         status=_optional_str(value, "status"),
@@ -405,6 +430,26 @@ def _assert_contract_bindings(
             )
 
 
+def validate_gold_truth_ready(contract: FillContract, *, path: Path) -> None:
+    """Reject an incomplete Gold before it can produce a vacuous quality score."""
+
+    protected = tuple(
+        region for region in contract.regions if region.owner is Owner.PROTECTED
+    )
+    if not protected:
+        _raise(
+            InputErrorCode.GOLD_NOT_ACCEPTED,
+            "accepted Gold must declare non-empty protected Truth",
+            path,
+        )
+    if not contract.slots:
+        _raise(
+            InputErrorCode.GOLD_NOT_ACCEPTED,
+            "accepted Gold must declare non-empty slot Truth",
+            path,
+        )
+
+
 def load_eval_inputs(
     case_path: Path,
     actual_template_path: Path,
@@ -469,6 +514,8 @@ def load_eval_inputs(
             "case, Gold review, and Gold fill contract must all be accepted",
             case.gold_contract_path,
         )
+    if accepted_closed:
+        validate_gold_truth_ready(gold_contract, path=case.gold_contract_path)
     _assert_contract_bindings(
         actual_contract,
         contract_path=actual_contract_file,
@@ -504,3 +551,17 @@ def load_eval_inputs(
         scoring_config=scoring,
         input_hashes=input_hashes,
     )
+
+
+__all__ = [
+    "InputContractError",
+    "InputErrorCode",
+    "load_case",
+    "load_eval_config",
+    "load_eval_inputs",
+    "load_field_registry",
+    "load_fill_contract",
+    "load_scoring_config",
+    "sha256_file",
+    "validate_gold_truth_ready",
+]

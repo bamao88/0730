@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -62,3 +63,36 @@ def test_pro_05_unsupported_visible_object_is_unknown() -> None:
     ]
     assert len(unknown) == 1
     assert unknown[0].dimension == "protected.object"
+
+
+def test_pro_06_actual_contract_may_omit_protected_metadata() -> None:
+    root = FIXTURES / "S00-minimal-pass"
+    inputs = load_eval_inputs(
+        root / "case.yaml", root / "actual-template.docx", root / "actual-contract.yaml"
+    )
+    assertions = evaluate_protected(
+        inputs.gold_contract,
+        replace(inputs.actual_contract, regions=()),
+        analyze_docx(inputs.case.gold_template_path),
+        analyze_docx(inputs.actual_template_path),
+        inputs.eval_config,
+    )
+    comparable = [item for item in assertions if item.status is not AssertionStatus.NOT_APPLICABLE]
+    assert comparable
+    assert all(item.status is AssertionStatus.PASS for item in comparable)
+
+
+def test_pro_07_actual_contract_text_cannot_make_a_changed_document_pass() -> None:
+    failed = [
+        item
+        for item in _assertions("S01-protected-text-changed")
+        if item.status is AssertionStatus.FAIL
+    ]
+    assert [item.dimension for item in failed] == ["protected.content"]
+
+
+def test_pro_08_gold_truth_drives_actual_content_evidence() -> None:
+    assertions = _assertions("S00-minimal-pass")
+    content = next(item for item in assertions if item.dimension == "protected.content")
+    assert content.expected == "姓名："
+    assert content.actual == "姓名："

@@ -37,11 +37,11 @@ def _dimension_score(
     not_applicable = sum(
         item.status is AssertionStatus.NOT_APPLICABLE for item in relevant
     )
-    comparable = passed + failed
+    comparable = passed + failed + unknown
     if comparable == 0:
-        ratio = 1.0
+        ratio = 1.0 if not_applicable > 0 else 0.0
     elif dimension == "slot.inventory":
-        ratio = 2 * passed / (2 * passed + failed)
+        ratio = 2 * passed / (2 * passed + failed + 2 * unknown)
     else:
         ratio = passed / comparable
     return DimensionScore(
@@ -64,27 +64,44 @@ def score_assertions(
         for dimension, weight in config.weights.items()
     )
     required = tuple(item for item in assertions if item.required)
+    assertions_by_dimension = {
+        dimension: tuple(item for item in assertions if item.dimension == dimension)
+        for dimension in config.weights
+    }
+    has_unobserved_dimension = any(
+        weight > 0 and not assertions_by_dimension[dimension]
+        for dimension, weight in config.weights.items()
+    )
     hard_failure = any(
         item.status is AssertionStatus.FAIL and item.failure_code in config.hard_failures
         for item in assertions
     )
     if hard_failure or any(item.status is AssertionStatus.FAIL for item in required):
         verdict = Verdict.FAIL
-    elif any(item.status is AssertionStatus.UNKNOWN for item in required):
+    elif has_unobserved_dimension or any(
+        item.status is AssertionStatus.UNKNOWN for item in assertions
+    ):
         verdict = Verdict.UNKNOWN
     else:
         verdict = Verdict.PASS
 
-    coverage_denominator = sum(
-        item.status
-        in {AssertionStatus.PASS, AssertionStatus.FAIL, AssertionStatus.UNKNOWN}
-        for item in required
-    )
-    observed = sum(
-        item.status in {AssertionStatus.PASS, AssertionStatus.FAIL} for item in required
-    )
-    coverage = 1.0 if coverage_denominator == 0 else observed / coverage_denominator
-    provisional = any(
+    observed_weight = 0.0
+    for dimension, weight in config.weights.items():
+        relevant = assertions_by_dimension[dimension]
+        if not relevant:
+            continue
+        observed = sum(
+            item.status
+            in {
+                AssertionStatus.PASS,
+                AssertionStatus.FAIL,
+                AssertionStatus.NOT_APPLICABLE,
+            }
+            for item in relevant
+        )
+        observed_weight += weight * observed / len(relevant)
+    coverage = observed_weight / config.total_points
+    provisional = has_unobserved_dimension or any(
         item.status is AssertionStatus.UNKNOWN for item in assertions
     )
     views = tuple(

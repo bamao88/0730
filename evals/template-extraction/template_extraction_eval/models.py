@@ -85,12 +85,22 @@ class RegionContract:
     region_id: str
     owner: Owner
     required: bool
-    locator: Locator
+    locator: Locator | None
+    start_locator: Locator | None = None
+    end_locator: Locator | None = None
+    field_ids: tuple[str, ...] = ()
+    placement_mode: str | None = None
     text: str | None = None
     forbidden_text: str | None = None
     object_kind: str | None = None
     object_sha256: str | None = None
     expected_style: EffectiveStyle | None = None
+
+
+@dataclass(frozen=True)
+class ComponentLocator:
+    locator: Locator
+    role: str | None = None
 
 
 @dataclass(frozen=True)
@@ -102,7 +112,7 @@ class SlotContract:
     locator: Locator
     expected_value_style: EffectiveStyle
     cardinality: str = "one"
-    component_locators: tuple[Locator, ...] = ()
+    component_locators: tuple[ComponentLocator, ...] = ()
 
 
 @dataclass(frozen=True)

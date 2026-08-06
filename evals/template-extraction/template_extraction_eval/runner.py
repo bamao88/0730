@@ -19,7 +19,8 @@ from .evaluators import (
     evaluate_slots,
 )
 from .facts import PackageValidationError, analyze_docx
-from .models import DocumentFacts, EvalInputs
+from .markers import validate_markers
+from .models import EvalInputs
 from .reporting import build_report, write_report
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -46,37 +47,6 @@ def _run_id(inputs: EvalInputs) -> str:
         separators=(",", ":"),
     ).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()[:16]
-
-
-def _validate_markers(
-    inputs: EvalInputs,
-    facts: DocumentFacts,
-    *,
-    gold: bool,
-) -> None:
-    contract = inputs.gold_contract if gold else inputs.actual_contract
-    contract_path = (
-        inputs.case.gold_contract_path if gold else inputs.actual_contract_path
-    )
-    label = "Gold" if gold else "Actual"
-    expected_tags = {slot.locator.value: slot for slot in contract.slots}
-    actual_tags: dict[str | None, list[object]] = {}
-    for control in facts.controls:
-        actual_tags.setdefault(control.tag, []).append(control)
-    if set(actual_tags) != set(expected_tags):
-        raise InputContractError(
-            InputErrorCode.CONTRACT_MISMATCH,
-            f"{label} template markers and contract slots do not form an exact tag set",
-            path=contract_path,
-        )
-    for tag, slot in expected_tags.items():
-        controls = actual_tags.get(tag, [])
-        if len(controls) != 1 or getattr(controls[0], "alias", None) != slot.field_id:
-            raise InputContractError(
-                InputErrorCode.CONTRACT_MISMATCH,
-                f"{label} marker {tag!r} must occur once with alias equal to field_id",
-                path=contract_path,
-            )
 
 
 def _verify_unchanged_inputs(inputs: EvalInputs) -> None:
@@ -129,8 +99,18 @@ def run_evaluation(
         )
         gold_facts = analyze_docx(inputs.case.gold_template_path)
         actual_facts = analyze_docx(inputs.actual_template_path)
-        _validate_markers(inputs, gold_facts, gold=True)
-        _validate_markers(inputs, actual_facts, gold=False)
+        validate_markers(
+            inputs.gold_contract,
+            gold_facts,
+            label="Gold",
+            path=inputs.case.gold_contract_path,
+        )
+        validate_markers(
+            inputs.actual_contract,
+            actual_facts,
+            label="Actual",
+            path=inputs.actual_contract_path,
+        )
         assertions = (
             evaluate_protected(
                 inputs.gold_contract,

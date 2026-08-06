@@ -270,7 +270,7 @@
         "owner": {"const": "slot"},
         "field_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"},
         "label": {"type": "string", "minLength": 1},
-        "content_type": {"enum": ["text", "rich_text", "section", "image", "table", "formula", "asset"]},
+        "content_type": {"enum": ["text", "rich_text", "section", "image", "table", "formula", "equation", "asset"]},
         "required": {"type": "boolean"},
         "cardinality": {"enum": ["one", "many", "optional"]},
         "locator": {"$ref": "#/$defs/locator"},

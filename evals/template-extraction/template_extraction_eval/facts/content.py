@@ -158,6 +158,10 @@ def _analyze_story(
     table_indices, row_indices, cell_indices = _index_tables(root)
     paragraphs: list[ParagraphFact] = []
     controls: list[ContentControlFact] = []
+    paragraph_contexts: dict[
+        ElementTree.Element,
+        tuple[ParagraphFact, ElementTree.Element | None],
+    ] = {}
     section_index = 0
     for paragraph in root.iter(f"{W}p"):
         table_index, row, cell_index, cell, in_textbox = _container_coordinates(
@@ -215,43 +219,64 @@ def _analyze_story(
             cell=cell_index,
         )
         paragraphs.append(fact)
-        for control in paragraph.iter(f"{W}sdt"):
-            properties = control.find(f"{W}sdtPr")
-            alias = _attribute(
-                None if properties is None else properties.find(f"{W}alias"),
-                "val",
-            )
-            tag = _attribute(
-                None if properties is None else properties.find(f"{W}tag"),
-                "val",
-            )
-            internal_id = _attribute(
-                None if properties is None else properties.find(f"{W}id"),
-                "val",
-            )
-            content = control.find(f"{W}sdtContent")
-            control_text = element_text(control if content is None else content)
-            start = len(_text_before(paragraph, control))
-            control_run = control.find(f".//{W}r")
-            controls.append(
-                ContentControlFact(
-                    alias=alias,
-                    tag=tag,
-                    internal_id=internal_id,
-                    story=story,
-                    part=story_part.part,
-                    paragraph_index=paragraph_index,
-                    start=start,
-                    end=start + len(control_text),
-                    text=control_text,
-                    effective_style=style_analyzer.effective_style(
-                        paragraph,
-                        control_run,
-                        cell=cell,
-                    ),
-                )
-            )
+        paragraph_contexts[paragraph] = (fact, cell)
         paragraph_properties = paragraph.find(f"{W}pPr")
         if paragraph_properties is not None and paragraph_properties.find(f"{W}sectPr") is not None:
             section_index += 1
+
+    for control in root.iter(f"{W}sdt"):
+        ancestor_paragraph = next(
+            (node for node in _ancestors(control, parent_map) if node.tag == f"{W}p"),
+            None,
+        )
+        descendant_paragraphs = tuple(control.iter(f"{W}p"))
+        control_paragraph = (
+            ancestor_paragraph
+            if ancestor_paragraph is not None
+            else descendant_paragraphs[0]
+            if descendant_paragraphs
+            else None
+        )
+        if control_paragraph is None:
+            continue
+        paragraph_fact, cell = paragraph_contexts[control_paragraph]
+        properties = control.find(f"{W}sdtPr")
+        alias = _attribute(
+            None if properties is None else properties.find(f"{W}alias"),
+            "val",
+        )
+        tag = _attribute(
+            None if properties is None else properties.find(f"{W}tag"),
+            "val",
+        )
+        internal_id = _attribute(
+            None if properties is None else properties.find(f"{W}id"),
+            "val",
+        )
+        content = control.find(f"{W}sdtContent")
+        control_text = element_text(control if content is None else content)
+        start = (
+            0
+            if ancestor_paragraph is None
+            else len(_text_before(control_paragraph, control))
+        )
+        control_run = control.find(f".//{W}r")
+        controls.append(
+            ContentControlFact(
+                alias=alias,
+                tag=tag,
+                internal_id=internal_id,
+                story=paragraph_fact.story,
+                part=paragraph_fact.part,
+                paragraph_index=paragraph_fact.paragraph_index,
+                start=start,
+                end=start + len(control_text),
+                text=control_text,
+                effective_style=style_analyzer.effective_style(
+                    control_paragraph,
+                    control_run,
+                    cell=cell,
+                ),
+            )
+        )
     return paragraphs, controls
