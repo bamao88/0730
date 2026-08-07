@@ -10,8 +10,10 @@ from template_extraction_eval.aligned_protected import (
 from template_extraction_eval.contracts import (
     load_case,
     load_eval_config,
+    load_field_registry,
     load_fill_contract,
 )
+from template_extraction_eval.evaluators.slots import evaluate_slots
 from template_extraction_eval.facts import analyze_docx
 from template_extraction_eval.models import AssertionStatus
 from template_extraction_eval.sentinel import run_raw_source_sentinel
@@ -36,11 +38,11 @@ SOURCE_ROOT = REPO_ROOT / "temp/manual-gold-preparation/gold/00-inputs/schools"
         (
             "01-hunau-undergraduate",
             "hunau-undergraduate__source-template.docx",
-            24,
+            31,
             1692,
-            487,
+            494,
             13,
-            647,
+            85,
             9,
         ),
         (
@@ -128,3 +130,108 @@ def test_sentinel_04_through_06_real_gold_self_comparison_is_exact(
     assert audit.responsibility_coverage == 1
     assert len(audit.assertions) == audit.gold_inventory.protected
     assert all(item.status is AssertionStatus.PASS for item in audit.assertions)
+
+
+HUNAU_BODY_TAGS = {
+    "docfit.body.chapter_title",
+    "docfit.body.chapter_body",
+    "docfit.body.section_title",
+    "docfit.body.section_body",
+    "docfit.body.subsection_title",
+    "docfit.body.subsection_body",
+    "docfit.conclusion.title",
+    "docfit.conclusion.body",
+}
+
+
+def _hunau_inputs():
+    case = load_case(PROJECT_ROOT / "cases/01-hunau-undergraduate/case.yaml")
+    contract = load_fill_contract(case.gold_contract_path)
+    config = load_eval_config(case.eval_config_ref.path)
+    registry = load_field_registry(case.registry_ref.path)
+    facts = analyze_docx(case.gold_template_path)
+    return contract, config, registry, facts
+
+
+def test_hunau_07_gold_exposes_all_granular_body_markers() -> None:
+    contract, _, _, facts = _hunau_inputs()
+    contract_tags = {
+        slot.locator.value
+        for slot in contract.slots
+        if slot.locator.value in HUNAU_BODY_TAGS
+    }
+    template_tags = {tag for tag in facts.controls_by_tag if tag in HUNAU_BODY_TAGS}
+
+    assert contract_tags == HUNAU_BODY_TAGS
+    assert template_tags == HUNAU_BODY_TAGS
+    assert "docfit.body.main" not in facts.controls_by_tag
+
+
+def test_hunau_08_body_marker_aliases_match_registry_fields() -> None:
+    contract, _, _, facts = _hunau_inputs()
+    expected_aliases = {
+        slot.locator.value: slot.field_id
+        for slot in contract.slots
+        if slot.locator.value in HUNAU_BODY_TAGS
+    }
+
+    assert {
+        tag: facts.controls_by_tag[tag].alias for tag in HUNAU_BODY_TAGS
+    } == expected_aliases
+
+
+def test_hunau_09_body_slots_and_corrected_margins_are_self_consistent() -> None:
+    contract, config, registry, facts = _hunau_inputs()
+    assertions = evaluate_slots(
+        contract,
+        contract,
+        facts,
+        facts,
+        registry,
+        config,
+    )
+    body_slot_ids = {
+        slot.slot_id for slot in contract.slots if slot.locator.value in HUNAU_BODY_TAGS
+    }
+    body_assertions = [item for item in assertions if item.slot_id in body_slot_ids]
+    document_runs = [
+        run
+        for paragraph in facts.paragraphs
+        if paragraph.part == "word/document.xml"
+        for run in paragraph.runs
+    ]
+
+    assert len(body_assertions) == len(HUNAU_BODY_TAGS) * 5
+    assert all(item.status is AssertionStatus.PASS for item in body_assertions)
+    assert {run.effective_style.page["margin_top_pt"] for run in document_runs} == {56.7}
+    assert {run.effective_style.page["margin_bottom_pt"] for run in document_runs} == {
+        56.7
+    }
+
+
+def test_hunau_10_all_managed_controls_are_word_placeholders() -> None:
+    _, _, _, facts = _hunau_inputs()
+    managed = [control for control in facts.controls if control.tag is not None]
+
+    assert len(managed) == 31
+    assert all(control.showing_placeholder for control in managed)
+
+
+def test_hunau_11_all_placeholder_text_is_visually_gray() -> None:
+    _, _, _, facts = _hunau_inputs()
+    managed = [control for control in facts.controls if control.tag is not None]
+
+    assert {control.effective_style.font.get("color") for control in managed} == {
+        "7F7F7F"
+    }
+
+
+def test_hunau_12_chinese_abstract_value_style_is_not_bold() -> None:
+    contract, _, _, facts = _hunau_inputs()
+    abstract_slot = next(slot for slot in contract.slots if slot.slot_id == "slot.abstract.cn")
+    abstract_control = facts.controls_by_tag["docfit.abstract.cn"]
+    keywords_control = facts.controls_by_tag["docfit.keywords.cn"]
+
+    assert abstract_slot.expected_value_style.font["bold"] is False
+    assert abstract_control.effective_style.font["bold"] is False
+    assert keywords_control.effective_style.font["bold"] is False

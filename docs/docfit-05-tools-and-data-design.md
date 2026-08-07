@@ -92,6 +92,8 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 ### 1.5 当前任务证据
 
 - 学校模板、要求文件、官方示例和用户确认只放在授权任务目录；
+- `prepare-template` 的 Registry 源由 task-bound Tool 私下持有；Agent 可针对同一版本中最多十六个
+  当前对象批量做精确 lookup 或每对象最多五条 search，不能读取或枚举全 Registry；
 - 每个学校专属结论必须能引用当前任务材料 hash 或当前用户确认；
 - 精确格式值可以被规范化为本次 Tool 调用参数，但不写入长期 profile；
 - 来源冲突或适用范围不明时，Agent 保留证据并询问，不用 Knowledge 补齐；
@@ -99,6 +101,13 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
   不自行补值；
 - 任务结束后，材料和推导结论按任务数据策略处理，不复制到产品 Knowledge；
 - Eval 可以保存合成、脱敏或授权的学校场景，但 Eval fixture 不是运行时 Knowledge。
+
+模板准备使用四个聚焦 Tool：`template_view` 按需返回当前页或对象的有界局部图与新引用，
+`template_registry` 只在字段含义不确定时惰性批量查询；`template_edit` 接受同一版本、同一页最多
+32 个对象决定，物化时由 Tool 生成可见填写占位，原子修改后自动返回修改页的新图与新引用；`template_publish` 只要求 Agent 已看
+到最终版本的局部反馈，不设全页覆盖门，只发布 `output/final-template.docx`。它们复用
+OfficeCLI、V2 visual evidence 与包验证，不建立第二套 Agent loop；Agent 不提交 plan path、
+compiler 输出或 Word output path。
 
 ### 1.6 加载与使用
 

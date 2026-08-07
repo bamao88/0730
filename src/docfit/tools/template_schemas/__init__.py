@@ -1,13 +1,17 @@
-"""JSON schemas for the template extraction Tool set."""
+"""Template workspace Tool schemas."""
 
-from docfit.tools.template_schemas.build import TEMPLATE_BUILD_SCHEMA
-from docfit.tools.template_schemas.compare import TEMPLATE_COMPARE_SCHEMA
-from docfit.tools.template_schemas.mutate import TEMPLATE_MUTATE_SCHEMA
-from docfit.tools.template_schemas.observe import TEMPLATE_OBSERVE_SCHEMA
+from docfit.tools.template_schemas.workspace import (
+    DOCUMENT_REF_SCHEMA,
+    TEMPLATE_EDIT_SCHEMA,
+    TEMPLATE_PUBLISH_SCHEMA,
+    TEMPLATE_REGISTRY_SCHEMA,
+    TEMPLATE_VIEW_SCHEMA,
+)
 
 __all__ = [
-    "TEMPLATE_BUILD_SCHEMA",
-    "TEMPLATE_COMPARE_SCHEMA",
-    "TEMPLATE_MUTATE_SCHEMA",
-    "TEMPLATE_OBSERVE_SCHEMA",
+    "DOCUMENT_REF_SCHEMA",
+    "TEMPLATE_EDIT_SCHEMA",
+    "TEMPLATE_PUBLISH_SCHEMA",
+    "TEMPLATE_REGISTRY_SCHEMA",
+    "TEMPLATE_VIEW_SCHEMA",
 ]

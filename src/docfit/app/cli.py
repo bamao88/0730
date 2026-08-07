@@ -102,8 +102,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("auto", "off"),
         default="auto",
         help=(
-            "local metadata-only observation "
-            "(default: auto; use off for the no-observer baseline)"
+            "local metadata-only observation (default: auto; use off for the no-observer baseline)"
         ),
     )
 
@@ -112,8 +111,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="run one development-stage school template preparation Agent",
     )
     prepare_parser.add_argument("--school-template", required=True)
-    prepare_parser.add_argument("--school-requirements", required=True)
-    prepare_parser.add_argument("--field-registry", required=True)
+    prepare_parser.add_argument("--school-requirements")
+    prepare_parser.add_argument("--field-registry")
     prepare_parser.add_argument("--output", required=True, dest="output_directory")
 
     observe_parser = subparsers.add_parser(
@@ -295,9 +294,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         prepare_request = PrepareTemplateRequest(
             school_template=Path(args.school_template),
-            school_requirements=Path(args.school_requirements),
-            field_registry=Path(args.field_registry),
             output_directory=Path(args.output_directory),
+            school_requirements=(
+                Path(args.school_requirements) if args.school_requirements else None
+            ),
+            field_registry=Path(args.field_registry) if args.field_registry else None,
         )
         try:
             report = asyncio.run(run_prepare_template(prepare_request))

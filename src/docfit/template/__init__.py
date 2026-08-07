@@ -1,5 +1,5 @@
-"""Template extraction domain services and contracts."""
+"""Object-driven school-template preparation."""
 
-from docfit.template.observation import TemplateObservationService
+from docfit.template.workspace import TemplateWorkspaceService
 
-__all__ = ["TemplateObservationService"]
+__all__ = ["TemplateWorkspaceService"]

@@ -15,7 +15,7 @@ CASES = PROJECT_ROOT / "cases"
 @pytest.mark.parametrize(
     ("case_id", "expected_tags"),
     [
-        ("01-hunau-undergraduate", 24),
+        ("01-hunau-undergraduate", 31),
         ("02-njau-undergraduate", 34),
         ("03-pku-graduate", 33),
     ],

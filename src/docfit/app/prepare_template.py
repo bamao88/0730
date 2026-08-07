@@ -1,16 +1,14 @@
-"""Development-stage application shell for one template preparation Agent session."""
+"""Application shell for one object-driven template preparation Agent session."""
 
 from __future__ import annotations
 
 import asyncio
-import json
 import shutil
-import sys
 import tempfile
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
@@ -19,20 +17,16 @@ from docfit.app.agent import (
     AGENT_SDK_MAX_BUFFER_BYTES,
     FORBIDDEN_TOOLS,
     READ_ONLY_BUILTIN_TOOLS,
-    TRUSTED_BASIC_TOOLS,
     build_read_path_policy,
+    make_docfit_schema_version_hook,
     make_permission_callback,
     make_read_path_gate_hook,
     project_root,
     terminal_ask_user,
 )
 from docfit.app.settings import AgentBackend, iter_agent_backends
-from docfit.app.template_permissions import (
-    make_docfit_schema_version_hook,
-    make_template_task_permission_callback,
-)
 from docfit.observability.transcript import isolated_sdk_environment
-from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+from docfit.tools.runtime import JsonObject, ToolFailure, atomic_write_json, sha256_file
 from docfit.tools.template_tools import (
     TEMPLATE_FULL_TOOL_NAMES,
     build_template_tool_server,
@@ -44,57 +38,69 @@ PREPARE_TEMPLATE_OUTPUT_SCHEMA: JsonObject = {
         "status": {"type": "string", "enum": ["built", "blocked"]},
         "artifact_path": {
             "type": ["string", "null"],
-            "enum": ["output/template-artifact", None],
+            "enum": ["output/final-template.docx", None],
         },
         "template_sha256": {"type": ["string", "null"]},
-        "fill_contract_sha256": {"type": ["string", "null"]},
         "counts": {
             "type": "object",
             "properties": {
                 name: {"type": "integer", "minimum": 0}
-                for name in ("slot", "protected", "remove", "manual", "gap", "unresolved")
+                for name in ("slot", "remove", "manual", "gap", "unresolved")
             },
-            "required": ["slot", "protected", "remove", "manual", "gap", "unresolved"],
+            "required": ["slot", "remove", "manual", "gap", "unresolved"],
             "additionalProperties": False,
         },
     },
-    "required": [
-        "status",
-        "artifact_path",
-        "template_sha256",
-        "fill_contract_sha256",
-        "counts",
-    ],
+    "required": ["status", "artifact_path", "template_sha256", "counts"],
     "additionalProperties": False,
+    "oneOf": [
+        {
+            "properties": {
+                "status": {"const": "built"},
+                "artifact_path": {"const": "output/final-template.docx"},
+                "template_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$",
+                },
+            }
+        },
+        {
+            "properties": {
+                "status": {"const": "blocked"},
+                "artifact_path": {"type": "null"},
+                "template_sha256": {"type": "null"},
+            }
+        },
+    ],
 }
 
 PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS = 1800
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
-    "mcp__docfit__template_observe",
-    "mcp__docfit__docx_render",
-    "mcp__docfit__docx_visual_review",
-    "mcp__docfit__template_compare",
-    "mcp__docfit__template_build",
+    "mcp__docfit__template_view",
+    "mcp__docfit__template_publish",
 }
+_DEFAULT_REGISTRY = (
+    project_root() / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
+)
 
 
 @dataclass(frozen=True, slots=True)
 class PrepareTemplateRequest:
     school_template: Path
-    school_requirements: Path
-    field_registry: Path
     output_directory: Path
+    school_requirements: Path | None = None
+    field_registry: Path | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class PreparedTemplateTask:
     task_root: Path
     template_path: Path
-    requirements_path: Path
-    registry_path: Path
+    requirements_path: Path | None
+    registry_source: Path
     template_sha256: str
-    requirements_sha256: str
+    requirements_sha256: str | None
     registry_sha256: str
 
 
@@ -105,6 +111,9 @@ class TemplateAgentExecution:
     skills_loaded: tuple[str, ...]
     session_id: str
     backend: str
+    num_turns: int
+    duration_ms: int
+    duration_api_ms: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -113,12 +122,14 @@ class PrepareTemplateReport:
     task_root: str
     artifact_path: str | None
     template_sha256: str | None
-    fill_contract_sha256: str | None
     counts: JsonObject
     backend: str
     session_id: str
     tool_uses: tuple[str, ...]
     skills_loaded: tuple[str, ...]
+    num_turns: int
+    duration_ms: int
+    duration_api_ms: int
 
 
 AgentRunner = Callable[[PreparedTemplateTask], Awaitable[TemplateAgentExecution]]
@@ -146,13 +157,17 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
         field="school_template",
         suffixes=(".docx",),
     )
-    requirements = _regular_input(
-        request.school_requirements,
-        field="school_requirements",
-        suffixes=(".txt", ".md", ".yaml", ".yml", ".json", ".pdf", ".docx"),
+    requirements = (
+        _regular_input(
+            request.school_requirements,
+            field="school_requirements",
+            suffixes=(".txt", ".md", ".yaml", ".yml", ".json", ".pdf", ".docx"),
+        )
+        if request.school_requirements is not None
+        else None
     )
     registry = _regular_input(
-        request.field_registry,
+        request.field_registry or _DEFAULT_REGISTRY,
         field="field_registry",
         suffixes=(".yaml", ".yml", ".json"),
     )
@@ -168,23 +183,19 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
     try:
         input_directory = task_root / "input"
         input_directory.mkdir()
-        (task_root / "work/decisions").mkdir(parents=True)
-        (task_root / "work/compiled").mkdir()
-        (task_root / "work/attempts").mkdir()
+        (task_root / "work").mkdir()
         (task_root / "output").mkdir()
         template_target = input_directory / "school-template.docx"
-        requirements_target = input_directory / f"school-requirements{requirements.suffix.lower()}"
-        registry_target = input_directory / f"content-fields{registry.suffix.lower()}"
-        for source, target in (
-            (template, template_target),
-            (requirements, requirements_target),
-            (registry, registry_target),
-        ):
-            shutil.copyfile(source, target)
-            target.chmod(0o444)
-        skill_source = (
-            project_root() / "docs/plans/docfit-school-extract-v2-candidate-skill"
-        )
+        shutil.copyfile(template, template_target)
+        template_target.chmod(0o444)
+        requirements_target: Path | None = None
+        if requirements is not None:
+            requirements_target = (
+                input_directory / f"school-requirements{requirements.suffix.lower()}"
+            )
+            shutil.copyfile(requirements, requirements_target)
+            requirements_target.chmod(0o444)
+        skill_source = project_root() / "docs/plans/docfit-school-extract-v2-candidate-skill"
         skill_target = task_root / ".claude/skills/docfit-school-extract"
         skill_target.parent.mkdir(parents=True)
         shutil.copytree(skill_source, skill_target)
@@ -192,10 +203,10 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
             task_root=task_root,
             template_path=template_target,
             requirements_path=requirements_target,
-            registry_path=registry_target,
+            registry_source=registry,
             template_sha256=sha256_file(template_target),
-            requirements_sha256=sha256_file(requirements_target),
-            registry_sha256=sha256_file(registry_target),
+            requirements_sha256=(sha256_file(requirements_target) if requirements_target else None),
+            registry_sha256=sha256_file(registry),
         )
     except BaseException:
         shutil.rmtree(task_root, ignore_errors=True)
@@ -203,31 +214,39 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
 
 
 def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
+    requirements = (
+        f" Optional school requirements: "
+        f"{prepared.requirements_path.relative_to(prepared.task_root)} "
+        f"(sha256 {prepared.requirements_sha256})."
+        if prepared.requirements_path is not None
+        else " No separate school-requirements file was supplied; use the template itself."
+    )
     return (
-        "Load the docfit-school-extract Skill and prepare one development-stage template artifact. "
-        f"Task root: {prepared.task_root}. "
-        f"School template: {prepared.template_path.relative_to(prepared.task_root)} "
-        f"(sha256 {prepared.template_sha256}). "
-        f"School requirements: {prepared.requirements_path.relative_to(prepared.task_root)} "
-        f"(sha256 {prepared.requirements_sha256}). "
-        f"Field Registry: {prepared.registry_path.relative_to(prepared.task_root)} "
-        f"(sha256 {prepared.registry_sha256}). "
-        "The development-stage working copy is intentionally mutable. You are authorized to "
-        "materialize content controls for required registered slots and to remove examples, "
-        "placeholders, or instructions when the supplied requirements and observed structure "
-        "establish their role and every surviving responsibility is migrated. The absence of "
-        "pre-existing content controls is not a blocker. Do not ask for authorization merely "
-        "because a required slot or content control does not yet exist. Ask only when the "
-        "available task evidence leaves a material field mapping, deletion boundary, source "
-        "priority, or visual decision genuinely unresolved. "
-        "Use the four template Tools for structural evidence and mutations, and use docx_render "
-        "plus docx_visual_review for all visual evidence. Write decisions "
-        "only below work/decisions and compiled files only below work/compiled. Invoke the Skill "
-        f"compiler scripts with the exact Python interpreter {sys.executable!s}. Inspect every "
-        "required final image before accepting it. Publish only through template_build to "
-        "output/template-artifact. Return blocked rather than guessing any material semantic, "
-        "deletion, source-priority, or visual decision. Do not claim Human acceptance, a fixed "
-        "template, a quality score, or M3 completion."
+        "Load the docfit-school-extract Skill and turn the supplied school Word into one clean, "
+        "fillable final Word. Work from the current page/object context. Start with template_view "
+        "action=open; batch up to thirty-two clear decisions visible on the same page into one "
+        "template_edit. Use a known field_id directly; when several meanings are uncertain, "
+        "query them together in one template_registry call. Judge the changed-page image returned "
+        "by template_edit before continuing. Every student-authored content region must retain a "
+        "fillable slot after its examples are removed; a structural heading by itself is not a "
+        "fillable region. When the current page/object matches one of the Skill's "
+        "knowledge-routing signals, Read only that referenced topic before deciding the batch; "
+        "never preload all references. "
+        f"Task root: {prepared.task_root}. School template: "
+        f"{prepared.template_path.relative_to(prepared.task_root)} "
+        f"(sha256 {prepared.template_sha256}).{requirements} "
+        "The Registry is Tool-private and lazily searchable; it is not a task list. Do not try to "
+        "enumerate or reproduce every Registry field. Remove template instructions, examples, "
+        "sample thesis content, and other content that should not survive in a reusable template; "
+        "preserve school-mandated fixed text and layout. The absence of existing content controls "
+        "is normal. Prior object refs still identify their immutable prior version but do not "
+        "address the new version, so normally continue from the fresh refs returned by the Tool. "
+        "Request another page or object only when the task needs it; do not review every page for "
+        "coverage and do not repeat review for a page already returned by template_edit. Publish "
+        "the exact final document_ref once with template_publish. Only "
+        "output/final-template.docx is user-visible. Return blocked only for a genuinely material "
+        "semantic ambiguity that cannot be resolved from the current object, template, optional "
+        "requirements, Tool feedback, or Skill knowledge."
     )
 
 
@@ -243,26 +262,22 @@ def build_prepare_template_options(
     )
     environment = isolated_sdk_environment(backend.sdk_environment(), config_directory)
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
-    environment["DOCFIT_PYTHON"] = sys.executable
-    builtin_tools = (
-        "Skill",
-        *READ_ONLY_BUILTIN_TOOLS,
-        *TRUSTED_BASIC_TOOLS,
-        "AskUserQuestion",
-    )
-    permission_callback = make_template_task_permission_callback(
-        make_permission_callback(
-            terminal_ask_user,
-            read_path_policy=policy,
-            registered_tool_names=TEMPLATE_FULL_TOOL_NAMES,
-        ),
-        task_root=prepared.task_root,
+    builtin_tools = ("Skill", *READ_ONLY_BUILTIN_TOOLS, "AskUserQuestion")
+    permission_callback = make_permission_callback(
+        terminal_ask_user,
+        read_path_policy=policy,
+        registered_tool_names=TEMPLATE_FULL_TOOL_NAMES,
     )
     return ClaudeAgentOptions(
         tools=list(builtin_tools),
         allowed_tools=[],
-        disallowed_tools=[*FORBIDDEN_TOOLS, "Agent"],
-        mcp_servers={"docfit": build_template_tool_server(prepared.task_root)},
+        disallowed_tools=[*FORBIDDEN_TOOLS, "Bash", "Write", "Agent"],
+        mcp_servers={
+            "docfit": build_template_tool_server(
+                prepared.task_root,
+                prepared.registry_source,
+            )
+        },
         strict_mcp_config=True,
         permission_mode="default",
         can_use_tool=permission_callback,
@@ -275,7 +290,7 @@ def build_prepare_template_options(
                 HookMatcher(
                     matcher="Read|Glob|Grep",
                     hooks=[make_read_path_gate_hook(policy)],
-                )
+                ),
             ]
         },
         setting_sources=["project"],
@@ -283,17 +298,16 @@ def build_prepare_template_options(
         cwd=prepared.task_root,
         env=environment,
         model=backend.model,
-        max_turns=160,
         max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
         output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
         system_prompt=(
-            "You are the single DocFit template-preparation Agent. The filesystem Skill is your "
-            "workflow contract; the four template MCP Tools plus the shared docx_render and "
-            "docx_visual_review Tools are the trusted DOCX evidence, mutation, comparison, and "
-            "publication boundaries. Inputs are read-only. Use SDK-native Tool "
-            "calls, permissions, AskUserQuestion, and structured output. Bash and Write are "
-            "available only for decision files and the two compiler scripts; never edit a DOCX "
-            "with them. A built artifact remains pending the user's Word content review."
+            "You are the single DocFit template-preparation Agent. Trust your semantic and visual "
+            "judgment. The SDK-native Agent loop and four focused template Tools are the entire "
+            "workflow: view one needed page/object, batch the decisions visible there, inspect "
+            "the changed-page feedback, and publish one Word without an all-page coverage gate. "
+            "Inputs are read-only. "
+            "There are no plan files, compilers, attempt paths, semantic checker, or compatibility "
+            "protocol. Tool checks are mechanical feedback, not a substitute for your judgment."
         ),
     )
 
@@ -379,6 +393,9 @@ async def _run_backend(
             skills_loaded=tuple(dict.fromkeys(skills)),
             session_id=result.session_id,
             backend=backend.name,
+            num_turns=result.num_turns,
+            duration_ms=result.duration_ms,
+            duration_api_ms=result.duration_api_ms,
         )
 
 
@@ -398,8 +415,8 @@ async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExe
                 return await _run_backend(prepared, backend)
         except TimeoutError:
             failures.append(
-                f"{backend.name}: The template Agent exceeded the "
-                f"{PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS}s backend timeout."
+                f"{backend.name}: exceeded the "
+                f"{PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS}s backend timeout"
             )
         except ToolFailure as error:
             failures.append(f"{backend.name}: {error.message}")
@@ -409,10 +426,6 @@ async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExe
         code="template_agent_backends_failed",
         message="All configured Agent backend candidates failed: " + "; ".join(failures),
         retryable=True,
-        suggested_actions=(
-            "Restore at least one backend credential or quota, then rerun with a "
-            "new output directory.",
-        ),
     )
 
 
@@ -420,16 +433,22 @@ def _validated_report(
     prepared: PreparedTemplateTask,
     execution: TemplateAgentExecution,
 ) -> PrepareTemplateReport:
-    if (
-        sha256_file(prepared.template_path) != prepared.template_sha256
-        or sha256_file(prepared.requirements_path) != prepared.requirements_sha256
-        or sha256_file(prepared.registry_path) != prepared.registry_sha256
-    ):
+    if sha256_file(prepared.template_path) != prepared.template_sha256:
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="prepare_input_changed",
-            message="A read-only task input changed during template preparation.",
+            message="The read-only school template changed during preparation.",
+        )
+    if (
+        prepared.requirements_path is not None
+        and sha256_file(prepared.requirements_path) != prepared.requirements_sha256
+    ) or sha256_file(prepared.registry_source) != prepared.registry_sha256:
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="prepare_input_changed",
+            message="A task requirement or Registry source changed during preparation.",
         )
     structured = execution.structured_output
     status = structured.get("status")
@@ -442,9 +461,9 @@ def _validated_report(
             message="The template Agent result does not match the output contract.",
         )
     if status == "blocked":
-        if any(
-            structured.get(name) is not None
-            for name in ("artifact_path", "template_sha256", "fill_contract_sha256")
+        if (
+            structured.get("artifact_path") is not None
+            or structured.get("template_sha256") is not None
         ):
             raise ToolFailure(
                 status="error",
@@ -457,19 +476,21 @@ def _validated_report(
             task_root=str(prepared.task_root),
             artifact_path=None,
             template_sha256=None,
-            fill_contract_sha256=None,
             counts=counts,
             backend=execution.backend,
             session_id=execution.session_id,
             tool_uses=execution.tool_uses,
             skills_loaded=execution.skills_loaded,
+            num_turns=execution.num_turns,
+            duration_ms=execution.duration_ms,
+            duration_api_ms=execution.duration_api_ms,
         )
-    if structured.get("artifact_path") != "output/template-artifact":
+    if structured.get("artifact_path") != "output/final-template.docx":
         raise ToolFailure(
             status="error",
             origin="agent",
             code="built_result_artifact_mismatch",
-            message="The Agent built result does not identify the canonical artifact path.",
+            message="The built result does not identify the one canonical final Word.",
         )
     if (
         "docfit-school-extract" not in execution.skills_loaded
@@ -479,67 +500,69 @@ def _validated_report(
             status="error",
             origin="postcondition",
             code="template_agent_evidence_incomplete",
-            message="The built result lacks required Skill/Tool evidence.",
+            message="The built result lacks required Skill/view/publication evidence.",
         )
-    artifact = prepared.task_root / "output/template-artifact"
-    expected_files = {
-        "clean-template.docx",
-        "fill-contract.json",
-        "visual-review.json",
-        "build-report.json",
-    }
-    if not artifact.is_dir() or {item.name for item in artifact.iterdir()} != expected_files:
+    output = prepared.task_root / "output" / "final-template.docx"
+    output_files = [item for item in (prepared.task_root / "output").iterdir()]
+    if output_files != [output] or not output.is_file():
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="built_result_artifact_mismatch",
-            message="The Agent built result does not match a complete four-file artifact.",
+            message="The output directory must contain exactly one final Word.",
         )
-    template_hash = sha256_file(artifact / "clean-template.docx")
-    contract_hash = sha256_file(artifact / "fill-contract.json")
-    try:
-        report: Any = json.loads((artifact / "build-report.json").read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
+    template_hash = sha256_file(output)
+    if structured.get("template_sha256") != template_hash:
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="built_result_artifact_mismatch",
-            message="The build report cannot be revalidated.",
-        ) from error
-    if (
-        structured.get("template_sha256") != template_hash
-        or structured.get("fill_contract_sha256") != contract_hash
-        or not isinstance(report, dict)
-        or report.get("artifact_status") != "built"
-        or report.get("counts") != counts
-    ):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="built_result_artifact_mismatch",
-            message="The Agent structured result disagrees with disk artifact hashes or counts.",
+            message="The Agent result disagrees with the final Word hash.",
         )
-    if (
-        template_hash != prepared.template_sha256
-        and "mcp__docfit__template_mutate" not in execution.tool_uses
+    if template_hash != prepared.template_sha256 and "mcp__docfit__template_edit" not in (
+        execution.tool_uses
     ):
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="template_agent_evidence_incomplete",
-            message="The changed built template lacks mutation Tool evidence.",
+            message="The changed final Word lacks direct edit Tool evidence.",
         )
     return PrepareTemplateReport(
         status="built",
         task_root=str(prepared.task_root),
-        artifact_path=str(artifact),
+        artifact_path=str(output),
         template_sha256=template_hash,
-        fill_contract_sha256=contract_hash,
         counts=counts,
         backend=execution.backend,
         session_id=execution.session_id,
         tool_uses=execution.tool_uses,
         skills_loaded=execution.skills_loaded,
+        num_turns=execution.num_turns,
+        duration_ms=execution.duration_ms,
+        duration_api_ms=execution.duration_api_ms,
+    )
+
+
+def _write_execution_trace(
+    prepared: PreparedTemplateTask,
+    execution: TemplateAgentExecution,
+) -> None:
+    """Persist metadata-only evidence even when final result validation fails."""
+
+    atomic_write_json(
+        prepared.task_root / "work/.docfit/template-agent-execution.json",
+        {
+            "schema_version": 1,
+            "backend": execution.backend,
+            "session_id": execution.session_id,
+            "num_turns": execution.num_turns,
+            "duration_ms": execution.duration_ms,
+            "duration_api_ms": execution.duration_api_ms,
+            "tool_uses": list(execution.tool_uses),
+            "skills_loaded": list(execution.skills_loaded),
+            "structured_output": execution.structured_output,
+        },
     )
 
 
@@ -550,4 +573,5 @@ async def run_prepare_template(
 ) -> PrepareTemplateReport:
     prepared = prepare_template_task(request)
     execution = await agent_runner(prepared)
+    _write_execution_trace(prepared, execution)
     return _validated_report(prepared, execution)

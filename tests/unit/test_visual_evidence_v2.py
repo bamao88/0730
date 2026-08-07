@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import zipfile
 from pathlib import Path
+from subprocess import CompletedProcess
 
 import pytest
 from PIL import Image
 
+from docfit.tools.inspection import inspect_document
 from docfit.tools.runtime import JsonObject, ToolFailure
-from docfit.visual.renderer import RendererEnvironment
+from docfit.visual.locator import locate_text
+from docfit.visual.renderer import LibreOfficeRenderer, RendererEnvironment
 from docfit.visual.service import VisualEvidenceService
 
 
@@ -103,6 +106,23 @@ class _Office:
         )
 
 
+class _ShapeOffice(_Office):
+    @staticmethod
+    def query(document: Path, selector: str) -> tuple[JsonObject, ...]:
+        assert document.is_file()
+        assert selector == "paragraph, shape"
+        return (
+            {"path": "/body/p[1]", "type": "paragraph", "text": "学生姓名"},
+            {"path": "/body/p[2]", "type": "paragraph", "text": ""},
+            {"path": "/body/p[3]", "type": "paragraph", "text": "第二页"},
+            {
+                "path": "/body/p[2]/r[1]/pict[1]/shape[1]",
+                "type": "shape",
+                "text": "隐藏的模板说明，包括本文本框",
+            },
+        )
+
+
 def _docx(path: Path) -> None:
     content_types = "<Types xmlns='http://schemas.openxmlformats.org/package/2006/content-types'/>"
     relationships = "<Relationships xmlns='http://schemas.openxmlformats.org/package/2006/relationships'/>"
@@ -154,6 +174,41 @@ def test_render_is_content_addressed_and_pages_are_generated_on_demand(tmp_path:
     assert review["evidence"][0]["evidence_ref"].startswith("visual:v2:")
 
 
+def test_renderer_resolves_a_listed_tag_to_immutable_id_when_tag_inspect_races(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    image_id = "sha256:" + "5" * 64
+    calls: list[list[str]] = []
+
+    def fake_run(arguments: list[str], **_kwargs: object) -> CompletedProcess[str]:
+        calls.append(arguments)
+        if arguments[1] == "inspect" and arguments[-1] == "locked:tag":
+            return CompletedProcess(arguments, 1, "", "No such image")
+        if arguments[1:3] == ["image", "ls"]:
+            return CompletedProcess(arguments, 0, f"{image_id}\n", "")
+        if arguments[1] == "inspect" and arguments[-1] == image_id:
+            return CompletedProcess(arguments, 0, f"{image_id}\n", "")
+        if arguments[1] == "run":
+            assert image_id in arguments
+            return CompletedProcess(
+                arguments,
+                0,
+                "version=LibreOffice 25.2.3.2 520(Build:2)\n"
+                "locale=zh_CN.UTF-8\n"
+                f"fonts={'6' * 64}\n",
+                "",
+            )
+        raise AssertionError(arguments)
+
+    monkeypatch.setattr("docfit.visual.renderer.subprocess.run", fake_run)
+
+    environment = LibreOfficeRenderer(image="locked:tag", docker="docker").environment()
+
+    assert environment.container_image == "locked:tag"
+    assert environment.container_image_digest == image_id
+    assert any(arguments[1:3] == ["image", "ls"] for arguments in calls)
+
+
 def test_regions_use_text_object_and_image_coordinate_selectors(tmp_path: Path) -> None:
     document = tmp_path / "current.docx"
     _docx(document)
@@ -183,6 +238,8 @@ def test_regions_use_text_object_and_image_coordinate_selectors(tmp_path: Path) 
         "exact_text",
         "exact_text",
     ]
+    assert review["evidence"][0]["selector"]["object_ref"] == object_ref
+    assert review["evidence"][1]["selector"]["text"] == "指导教师"
 
     page_review, _ = service.review(
         {"render_ref": rendered["render_ref"], "mode": "pages", "pages": [1]}
@@ -223,6 +280,56 @@ def test_ambiguous_text_returns_candidate_pages_instead_of_false_crop(tmp_path: 
     assert all(item["mapping_quality"] == "mapping_unavailable" for item in review["evidence"])
     assert review["warnings"][0]["candidate_pages"] == [1, 2]
     assert len(images) == 2
+
+
+def test_text_location_ignores_layout_only_toc_dot_leaders() -> None:
+    index: JsonObject = {
+        "pages": [
+            {
+                "page": 1,
+                "words": [
+                    {"text": "第一章", "bbox_pdf": [10.0, 20.0, 40.0, 30.0]},
+                    {
+                        "text": "文献综述................................",
+                        "bbox_pdf": [42.0, 20.0, 120.0, 30.0],
+                    },
+                    {"text": "1", "bbox_pdf": [122.0, 20.0, 128.0, 30.0]},
+                ],
+            }
+        ]
+    }
+
+    located = locate_text(index, "第一章 文献综述\t1")
+
+    assert located["page"] == 1
+    assert located["mapping_quality"] == "normalized_text"
+
+
+def test_non_rendered_shape_is_exposed_on_its_anchor_paragraph_candidate_pages(
+    tmp_path: Path,
+) -> None:
+    document = tmp_path / "current.docx"
+    _docx(document)
+    office = _ShapeOffice()
+    service = VisualEvidenceService(
+        tmp_path,
+        renderer=_Renderer(),  # type: ignore[arg-type]
+        pdf=_Pdf(),  # type: ignore[arg-type]
+        office=office,  # type: ignore[arg-type]
+        semantic_selector="paragraph, shape",
+    )
+    rendered, _ = service.render({"input_docx": document.name, "overview": False})
+    inspection = inspect_document(document, office, selector="paragraph, shape")  # type: ignore[arg-type]
+
+    first, _ = service.objects_on_page(
+        str(rendered["render_ref"]), inspection, 1, limit=20
+    )
+    second, _ = service.objects_on_page(
+        str(rendered["render_ref"]), inspection, 2, limit=20
+    )
+
+    assert any(item["type"] == "shape" for item in first)
+    assert any(item["type"] == "shape" for item in second)
 
 
 def test_old_render_contract_is_rejected_by_v2_service(tmp_path: Path) -> None:

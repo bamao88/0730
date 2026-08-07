@@ -23,9 +23,11 @@ _FORMAT_ALIASES = {
     "keepNext": "keepWithNext",
 }
 _PUBLIC_FORMAT_KEYS = {
+    "alias",
     "alignment",
     "bold",
     "color",
+    "editable",
     "font",
     "font.ascii",
     "font.eastAsia",
@@ -33,6 +35,7 @@ _PUBLIC_FORMAT_KEYS = {
     "font.ea",
     "font.latin",
     "height",
+    "id",
     "italic",
     "keepTogether",
     "keepWithNext",
@@ -42,6 +45,8 @@ _PUBLIC_FORMAT_KEYS = {
     "size",
     "spaceAfter",
     "spaceBefore",
+    "tag",
+    "type",
     "widowControl",
     "width",
 }
@@ -97,9 +102,7 @@ def _safe_format(value: Any) -> JsonObject:
     )
     result: JsonObject = {}
     for key, item in value.items():
-        if not isinstance(key, str) or not isinstance(
-            item, (str, int, float, bool, type(None))
-        ):
+        if not isinstance(key, str) or not isinstance(item, (str, int, float, bool, type(None))):
             continue
         public_key = _FORMAT_ALIASES.get(key, key)
         if public_key in _PUBLIC_FORMAT_KEYS or public_key.startswith(allowed_prefixes):
@@ -127,21 +130,13 @@ def _package_facts(document: Path) -> JsonObject:
         "footnotes": "word/footnotes.xml" in names,
         "endnotes": "word/endnotes.xml" in names,
         "comments": "word/comments.xml" in names,
-        "headers": sum(
-            1 for name in names if re.fullmatch(r"word/header\d+\.xml", name)
-        ),
-        "footers": sum(
-            1 for name in names if re.fullmatch(r"word/footer\d+\.xml", name)
-        ),
+        "headers": sum(1 for name in names if re.fullmatch(r"word/header\d+\.xml", name)),
+        "footers": sum(1 for name in names if re.fullmatch(r"word/footer\d+\.xml", name)),
         "numbering_part": "word/numbering.xml" in names,
         "styles_part": "word/styles.xml" in names,
         "bookmarks": len(document_root.findall(f".//{{{W_NS}}}bookmarkStart")),
         "fields": len(document_root.findall(f".//{{{W_NS}}}fldSimple"))
-        + len(
-            document_root.findall(
-                f".//{{{W_NS}}}fldChar[@{{{W_NS}}}fldCharType='begin']"
-            )
-        ),
+        + len(document_root.findall(f".//{{{W_NS}}}fldChar[@{{{W_NS}}}fldCharType='begin']")),
         "content_controls": len(document_root.findall(f".//{{{W_NS}}}sdt")),
         "hyperlinks": len(document_root.findall(f".//{{{W_NS}}}hyperlink")),
         "merged_cells": len(document_root.findall(f".//{{{W_NS}}}gridSpan"))
@@ -151,10 +146,15 @@ def _package_facts(document: Path) -> JsonObject:
     }
 
 
-def inspect_document(document: Path, office: OfficeCliAdapter) -> Inspection:
+def inspect_document(
+    document: Path,
+    office: OfficeCliAdapter,
+    *,
+    selector: str = "paragraph, table, picture",
+) -> Inspection:
     package_warnings = validate_docx_package(document)
     document_sha256 = sha256_file(document)
-    raw_objects = office.query(document, "paragraph, table, picture")
+    raw_objects = office.query(document, selector)
     objects: list[InspectedObject] = []
     counts: dict[str, int] = {}
     for raw in raw_objects:
@@ -182,7 +182,6 @@ def inspect_document(document: Path, office: OfficeCliAdapter) -> Inspection:
         }
         object_id = f"obj-{sha256_json(identity)[:24]}"
         object_ref: JsonObject = {
-            "schema_version": 1,
             "document_sha256": document_sha256,
             "object_id": object_id,
             "expected_fingerprint": fingerprint,
@@ -231,13 +230,6 @@ def resolve_object_ref(reference: Any, inspection: Inspection) -> InspectedObjec
             origin="request",
             code="invalid_object_ref",
             message="An operation target must be an object_ref object.",
-        )
-    if reference.get("schema_version") != 1:
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="unsupported_object_ref_version",
-            message="The object_ref schema version is unsupported.",
         )
     if reference.get("document_sha256") != inspection.document_sha256:
         raise ToolFailure(

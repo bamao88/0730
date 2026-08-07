@@ -98,10 +98,15 @@ Subagent。MiniMax-M3 是默认模型和首选 backend，Kimi 仅作回退。`.d
 ```bash
 uv run docfit prepare-template \
   --school-template path/to/school-template.docx \
-  --school-requirements path/to/school-requirements.pdf \
-  --field-registry docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml \
   --output .tmp/template-preparation-task
 ```
+
+`--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
+的开发期 Registry，也可显式替换。模板 Agent 用 `template_view` 按需查看一张当前页图，
+把同页已经判断清楚的对象批量交给 `template_edit`；Tool 原子修改并自动返回修改后同页图。
+`template_registry` 只在字段含义不确定时惰性查询，`template_publish` 一次性发布，不生成
+plan/compiler/attempt 文件，也不要求全页覆盖。成功目录的 `output/` 只包含
+`final-template.docx`。
 
 转换：
 

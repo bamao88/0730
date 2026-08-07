@@ -41,6 +41,13 @@ Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval
 完整 Student/Placement schema 或 M3。后续审查仍必须区分学生源可提取值、任务输入、
 系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
+学校模板在线准备已切换为按需页/对象路线：task-bound `template_view` 只提供当前需要的一张页图
+或对象局部图；同页已明确的多个对象由 `template_edit` 一次原子处理，并自动返回修改后同页图。
+`template_registry` 只在字段含义不确定时惰性查询；`template_publish` 不设全页覆盖门，只发布一份
+`final-template.docx`。旧 snapshot/decision YAML/
+compiler/mutate/compare/four-file build 协议已从开发线路移除，不保留兼容层。静态 Eval 的
+Template Truth 继续位于运行时之外，只用于生成后评分。
+
 M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
 06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
 再基于同一合成产品链路依次减少重复 Tool 调用、复用单次运行解析/渲染结果、优化

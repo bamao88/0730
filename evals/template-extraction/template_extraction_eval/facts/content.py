@@ -253,6 +253,10 @@ def _analyze_story(
             None if properties is None else properties.find(f"{W}id"),
             "val",
         )
+        showing_placeholder = (
+            properties is not None
+            and properties.find(f"{W}showingPlcHdr") is not None
+        )
         content = control.find(f"{W}sdtContent")
         control_text = element_text(control if content is None else content)
         covered_paragraphs = (
@@ -289,6 +293,7 @@ def _analyze_story(
                 ),
                 paragraph_indices=paragraph_indices,
                 block_level=ancestor_paragraph is None,
+                showing_placeholder=showing_placeholder,
             )
         )
     return paragraphs, controls

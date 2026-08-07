@@ -56,7 +56,7 @@ def test_cont_03_non_text_objects_are_tokens_not_empty_text() -> None:
 @pytest.mark.parametrize(
     ("case_id", "expected_controls", "expected_managed"),
     [
-        ("01-hunau-undergraduate", 24, 24),
+        ("01-hunau-undergraduate", 31, 31),
         ("02-njau-undergraduate", 35, 34),
         ("03-pku-graduate", 38, 33),
     ],
@@ -70,3 +70,16 @@ def test_cont_04_through_06_inline_and_block_controls_are_all_visible(
     controls = analyze_docx(template).controls
     assert len(controls) == expected_controls
     assert len({control.tag for control in controls if control.tag is not None}) == expected_managed
+
+
+def test_cont_07_extracts_word_placeholder_display_state(tmp_path: Path) -> None:
+    source = FIXTURES / "S00-minimal-pass" / "gold-template.docx"
+    target = _patched_docx(
+        source,
+        tmp_path / "showing-placeholder.docx",
+        b'<w:id w:val="1001"/><w:text/>',
+        b'<w:id w:val="1001"/><w:showingPlcHdr/><w:text/>',
+    )
+
+    assert analyze_docx(source).controls[0].showing_placeholder is False
+    assert analyze_docx(target).controls[0].showing_placeholder is True

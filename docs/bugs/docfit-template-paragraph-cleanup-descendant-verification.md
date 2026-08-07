@@ -1,9 +1,9 @@
 # Bug：段落清理被错误判定为修改受保护内容
 
-- Status: `OPEN / CONFIRMED`
+- Status: `RESOLVED / OBJECT TARGET-CLOSURE REGRESSION COVERED`
 - Severity: `P1`
 - Discovered: `2026-08-07`
-- Subsystem: `docfit.template.mutation`
+- Subsystem: historical `docfit.template.mutation`; replaced by object-driven `template_edit`
 - Error code: `protected_content_changed`
 - Affected operation: `remove_content / clear_text_preserve_container`
 
@@ -17,6 +17,16 @@ run 对象纳入允许变化范围。
 `protected_content_changed`，并丢弃本次 mutation 的全部临时结果。
 
 这会阻止 Agent 使用段落级清理能力删除模板中的说明文字、示例正文和其他明确授权删除的内容。
+
+## Resolution
+
+旧 compiled-plan mutation 模块已被删除。新 `template_edit` 直接接收一个共享 `object_ref`，
+对 paragraph target 的保护比较会排除目标 paragraph 及其 descendant object；对 run target
+则只排除该 run 与用于聚合文字的父 paragraph，兄弟/相邻对象仍保持保护。每次操作生成独立
+hash 版本、重新打开并回读目标效果，失败时不发布该版本。对应回归位于
+`tests/contract/template_gate/test_workspace_contract.py`。
+
+以下章节保留为历史根因和验收依据。
 
 ## 2. 用户影响
 

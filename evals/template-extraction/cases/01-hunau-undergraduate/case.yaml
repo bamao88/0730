@@ -7,8 +7,8 @@ case_status: candidate
 gold:
   template: gold/template.docx
   contract: gold/fill-contract.yaml
-  template_sha256: c118e574db83aeaa057e35db5eff98121ce7dee6592f4046cacd0b7fcf30d3b0
-  contract_sha256: f33e491668853c6492e586aacbd8c0714025574ef738977a15455de93bd22d46
+  template_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
+  contract_sha256: ade1c6bb0ac7e088ac574ae99e5b60b135312e4e3b8f412eea5dc95bc7d6d6d3
 field_registry_ref:
   path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
   id: docfit.thesis.content_fields
@@ -26,10 +26,9 @@ gold_review:
   status: candidate
   reviewer: null
   reviewed_at: null
-  source_sha256: c118e574db83aeaa057e35db5eff98121ce7dee6592f4046cacd0b7fcf30d3b0
-  source_path: ../../../../temp/manual-gold-preparation/eval-template-truth-candidates/01-hunau-undergraduate/fillable-template.docx
+  source_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
+  source_path: gold/template.docx
   blockers:
-  - OfficeCLI schema validation 未通过；必须先修复或由 Human 明确裁决。
   - Human 尚未逐槽位签署字段语义、必填性和样式有效值。
   - 尚未对全部槽位完成填充、更新域、保存、重开和空值/长值往返验证。
   - CI 使用授权尚未确认；静态 Eval 不调用 Adobe 外部处理。

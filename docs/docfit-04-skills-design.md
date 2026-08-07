@@ -43,7 +43,7 @@ Bash、管道、重定向或网络作为读取 references 的必要条件。
 
 | Skill | 用户目标 | 主要产物 |
 |---|---|---|
-| `docfit-school-extract` | 解释当前任务模板、要求和示例 | 带来源引用、仅对当前任务有效的模板事实、冲突、不确定性和候选参数 |
+| `docfit-school-extract` | 逐对象整理当前学校模板、要求和示例 | 一份清理完成、Registry 对齐且已根据实际修改区反馈自检的最终 Word |
 | `convert-thesis` | 使用通用 Knowledge 和当前任务学校材料，把学生论文转换成目标格式 | 最终 DOCX、预览和验证结果 |
 
 模板提取可以作为独立用户目标，也可以服务当前转换任务。两个 Skill 共享通用
@@ -55,23 +55,28 @@ Knowledge 和五个 Tool，但不要求按“先提取、再转换”的固定�
 
 ### 3.1 目标与输入
 
-当用户要求分析学校模板、解释要求文件、识别模板槽位/固定文字/说明文字、比较模板与
-文字要求，或为当前转换准备可追溯任务证据时触发。
+当用户要求分析或整理学校模板、解释要求文件、识别模板槽位/固定文字/说明文字，或产出
+可填写学校 Word 时触发。
 
 输入可以包含模板 DOCX、要求 PDF/文字、官方示例、适用范围说明和用户确认。Skill
-使用模块化通用 Knowledge 解释当前材料，输出只在授权任务目录和当前 SDK 会话中有效。
+使用模块化通用 Knowledge 解释当前材料。书面要求可选；没有时以当前模板作为任务证据。
 
 ### 3.2 输出边界
 
-输出包括来源 hash、证据位置、观察事实、冲突、不确定性、适用范围和候选 Tool 参数。
-它不创建 `school profile`、学校目录、跨任务规则包或 Knowledge 写入请求。无法由当前
-材料确认的事项保持未知，并交给当前用户确认。
+Agent 通过一个当前对象和有界局部上下文完成“判断 → 直接修改 → 回读/视觉反馈”循环。
+Registry 是 Tool 私下绑定的版本化语义词典，只有在当前对象已被判断为填写位后才做精确
+lookup 或最多五条 search；不得枚举 Registry 或把它当作学校模板的槽位待办表。
+
+成功时用户可见输出只有 `output/final-template.docx`。内部不可变 Word 版本、修改回执、
+fill contract 和视觉覆盖记录留在 `work/.docfit/**`，不作为多份候选 Word 交付。它不创建
+`school profile`、跨任务规则包或 Knowledge 写入请求。无法由当前材料确认且会实质改变
+删除/字段映射的事项才交给用户确认。
 
 对样式，输出必须区分“Tool 已观测的有效值”“当前材料明确声明的目标值”、
 覆盖范围、冲突和未决属性。Skill 不要求 Agent 从样式经验、历史任务或常识补值。
 
-当任务要求产出可填写模板合同或为未来 M3 Eval 准备 Template Actual 时，模板侧输出
-还必须能够表达：Registry ID/version/hash；模板 hash；`slot_id` / `region_id → field_id`；
+内部审计和未来 M3 Template Actual 必须能够从最终 Word/回执表达：Registry ID/version/hash；
+模板 hash；`slot_id` / `region_id → field_id`；
 内容类型、slot required 状态、字段语义基数、条件与填充策略；绑定模板快照的
 locator/区域边界；槽值
 样式；`protected/slot/remove` 责任；来源证据、覆盖和未决项。复合槽保存组件 locator，
@@ -80,14 +85,16 @@ locator/区域边界；槽值
 
 `field_id` 只表示语义，不携带学校位置或样式。Registry 中还必须区分学生源可提取值、
 任务输入、系统生成和外部/人工资产；否则目录、评审配置或二维码页会被错误要求从学生
-DOCX 中提取。当前三校 candidate 文件尚待 Human 签署和 schema 冻结，不是本 Skill
-已经稳定输出该合同的实现声明。
+DOCX 中提取。当前三校 candidate 文件仍待 Human 签署和 schema 冻结；它们是运行后 Eval
+依据，不得作为 Agent 的 requirements 或运行时待办输入。
 
-### 3.3 可选委派
+### 3.3 工具与反馈边界
 
-Skill 可以让主 Agent 直接分析，也可以把证据密集或需要专门通用知识的局部范围交给
-`docfit-unit-analyst`。复合前置结构、声明页、符号表、图表目录或学校特有结构不必
-匹配预设单元；主 Agent 可以直接处理，或把复合范围与相关 Knowledge 模块一起委派。
+`prepare-template` 会话只开放 `template_view`、`template_registry`、`template_edit`、
+`template_publish`，以及 Skill、受限只读材料和必要的用户提问。它不开放 Bash、Write、
+Agent，也不包含 semantic checker、决定文件或 compiler。Tool 机械验证引用、Registry 字段、
+内容控件、包重开、非目标文本、修改页回传和原子发布；语义/视觉是否正确由 Agent 根据反馈负责。
+同一页中已经判断清楚的多个对象可以在一次原子 batch 中处理；模板准备不设最终全页覆盖门禁。
 
 ## 4. `convert-thesis`
 

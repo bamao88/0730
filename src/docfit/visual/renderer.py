@@ -49,21 +49,73 @@ class LibreOfficeRenderer:
         self.timeout_seconds = timeout_seconds
         self.docker = docker or shutil.which("docker") or "docker"
         self._environment: RendererEnvironment | None = None
+        self._resolved_image: str | None = None
+
+    def _resolve_image(self) -> str:
+        """Resolve the configured tag once and run every container by immutable ID.
+
+        Docker Desktop can briefly list a local tag while ``image inspect <tag>``
+        returns ``No such image``.  Falling back to the exact ID from the
+        reference-filtered image list avoids making Agent runs depend on that
+        tag lookup race.
+        """
+
+        if self._resolved_image is not None:
+            return self._resolved_image
+        try:
+            image_id = self._run(
+                [
+                    self.docker,
+                    "inspect",
+                    "--type=image",
+                    "--format",
+                    "{{.Id}}",
+                    self.image,
+                ],
+                code="visual_renderer_unavailable",
+            ).stdout.strip()
+        except ToolFailure as initial_error:
+            listed = self._run(
+                [
+                    self.docker,
+                    "image",
+                    "ls",
+                    "--filter",
+                    f"reference={self.image}",
+                    "--no-trunc",
+                    "--format",
+                    "{{.ID}}",
+                ],
+                code="visual_renderer_unavailable",
+            ).stdout.splitlines()
+            candidates = [value.strip() for value in listed if value.strip()]
+            if len(candidates) != 1 or not candidates[0].startswith("sha256:"):
+                raise initial_error
+            image_id = self._run(
+                [
+                    self.docker,
+                    "inspect",
+                    "--type=image",
+                    "--format",
+                    "{{.Id}}",
+                    candidates[0],
+                ],
+                code="visual_renderer_unavailable",
+            ).stdout.strip()
+        if not image_id.startswith("sha256:"):
+            raise ToolFailure(
+                status="error",
+                origin="environment",
+                code="visual_renderer_unavailable",
+                message="The fixed Docker LibreOffice renderer has no immutable image ID.",
+            )
+        self._resolved_image = image_id
+        return image_id
 
     def environment(self) -> RendererEnvironment:
         if self._environment is not None:
             return self._environment
-        image_digest = self._run(
-            [
-                self.docker,
-                "inspect",
-                "--type=image",
-                "--format",
-                "{{.Id}}",
-                self.image,
-            ],
-            code="visual_renderer_unavailable",
-        ).stdout.strip()
+        image_digest = self._resolve_image()
         audit_command = (
             "printf 'version='; cat /opt/docfit/libreoffice-version.txt; "
             "printf 'locale=%s\\n' \"$LANG\"; "
@@ -85,7 +137,7 @@ class LibreOfficeRenderer:
                 "no-new-privileges",
                 "--tmpfs",
                 "/tmp:rw,size=128m",
-                self.image,
+                image_digest,
                 "sh",
                 "-lc",
                 audit_command,
@@ -127,6 +179,7 @@ class LibreOfficeRenderer:
 
     def render(self, input_docx: Path, output_pdf: Path) -> None:
         self.environment()
+        assert self._resolved_image is not None
         output_pdf.parent.mkdir(parents=True, exist_ok=True)
         container_name = f"docfit-visual-{uuid.uuid4().hex[:16]}"
         command = (
@@ -157,7 +210,7 @@ class LibreOfficeRenderer:
             f"{input_docx.resolve(strict=True)}:/input/document.docx:ro",
             "-v",
             f"{output_pdf.parent.resolve(strict=True)}:/output:rw",
-            self.image,
+            self._resolved_image,
             "sh",
             "-lc",
             command,

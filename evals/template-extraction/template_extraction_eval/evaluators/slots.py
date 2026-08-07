@@ -10,13 +10,42 @@ from ..markers import managed_marker_tags
 from ..models import (
     AssertionResult,
     AssertionStatus,
+    ContentControlFact,
     DocumentFacts,
+    EffectiveStyle,
     EvalConfig,
     FieldRegistry,
     FillContract,
     SlotContract,
     View,
 )
+
+
+def _marker_style_differences(
+    expected: EffectiveStyle,
+    control: ContentControlFact,
+    tolerances: dict[str, float],
+) -> tuple[tuple[str, Any, Any], ...]:
+    """Ignore only the display color of a Word placeholder.
+
+    ``w:showingPlcHdr`` marks the current control content as placeholder UI,
+    not as a filled value. Its gray font color is allowed to differ from the
+    value-style contract; all other effective style properties still apply.
+    """
+
+    if not control.showing_placeholder or "color" not in expected.font:
+        return style_differences(expected, control.effective_style, tolerances)
+    expected_without_placeholder_color = EffectiveStyle(
+        font={key: value for key, value in expected.font.items() if key != "color"},
+        paragraph=expected.paragraph,
+        container=expected.container,
+        page=expected.page,
+    )
+    return style_differences(
+        expected_without_placeholder_color,
+        control.effective_style,
+        tolerances,
+    )
 
 
 def _physical_location(control: Any) -> tuple[Any, ...]:
@@ -322,14 +351,14 @@ def evaluate_slots(
             actual_slot.expected_value_style,
             eval_config.tolerances,
         )
-        marker_differences = style_differences(
+        marker_differences = _marker_style_differences(
             actual_slot.expected_value_style,
-            actual_control.effective_style,
+            actual_control,
             eval_config.tolerances,
         )
-        gold_marker_differences = style_differences(
+        gold_marker_differences = _marker_style_differences(
             gold_slot.expected_value_style,
-            gold_control.effective_style,
+            gold_control,
             eval_config.tolerances,
         )
         value_style_status = (

@@ -276,6 +276,7 @@ class ContentControlFact:
     effective_style: EffectiveStyle
     paragraph_indices: tuple[int, ...] = ()
     block_level: bool = False
+    showing_placeholder: bool = False
 
 
 @dataclass(frozen=True)

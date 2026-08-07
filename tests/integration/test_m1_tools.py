@@ -160,7 +160,6 @@ def test_real_officecli_inspect_edit_import_render_review_validate(
     assert all(
         set(item["object_ref"])
         == {
-            "schema_version",
             "document_sha256",
             "object_id",
             "expected_fingerprint",

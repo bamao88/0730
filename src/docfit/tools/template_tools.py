@@ -1,8 +1,8 @@
-"""Claude Agent SDK Tool boundary for template extraction v2."""
+"""Claude Agent SDK Tool boundary for object-driven template preparation."""
 
 from __future__ import annotations
 
-import json
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Any
 
@@ -10,28 +10,33 @@ from claude_agent_sdk import SdkMcpTool, create_sdk_mcp_server, tool
 from claude_agent_sdk.types import McpSdkServerConfig
 from mcp.types import ToolAnnotations
 
-from docfit.template.artifact_build import TemplateArtifactBuilder
-from docfit.template.comparison import TemplateComparisonService
-from docfit.template.mutation import TemplateMutationService
-from docfit.template.observation import TemplateObservationService
-from docfit.tools import build_docfit_tools
-from docfit.tools.runtime import JsonObject, ToolFailure, task_root_from_args
+from docfit.template.workspace import TemplateWorkspaceService
+from docfit.tools.runtime import ToolFailure
+from docfit.tools.service import failure_result, tool_result, unexpected_failure_result
 from docfit.tools.template_schemas import (
-    TEMPLATE_BUILD_SCHEMA,
-    TEMPLATE_COMPARE_SCHEMA,
-    TEMPLATE_MUTATE_SCHEMA,
-    TEMPLATE_OBSERVE_SCHEMA,
+    TEMPLATE_EDIT_SCHEMA,
+    TEMPLATE_PUBLISH_SCHEMA,
+    TEMPLATE_REGISTRY_SCHEMA,
+    TEMPLATE_VIEW_SCHEMA,
 )
 
-_OBSERVE_ANNOTATIONS = ToolAnnotations.model_validate(
+_READ_ONLY = ToolAnnotations.model_validate(
+    {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
+_OBSERVE = ToolAnnotations.model_validate(
     {
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": True,
+        "openWorldHint": False,
     }
 )
-_WRITE_ANNOTATIONS = ToolAnnotations.model_validate(
+_WRITE = ToolAnnotations.model_validate(
     {
         "readOnlyHint": False,
         "destructiveHint": False,
@@ -40,251 +45,153 @@ _WRITE_ANNOTATIONS = ToolAnnotations.model_validate(
     }
 )
 
-
-def _result(structured: JsonObject) -> JsonObject:
-    content: list[JsonObject] = [
-            {
-                "type": "text",
-                "text": json.dumps(
-                    structured,
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    separators=(",", ":"),
-                ),
-            }
-        ]
-    return {
-        "content": content,
-        "structuredContent": structured,
-        "isError": structured.get("call_status") != "ok",
-    }
+TEMPLATE_LOGICAL_TOOL_NAMES = (
+    "template_view",
+    "template_registry",
+    "template_edit",
+    "template_publish",
+)
+TEMPLATE_FULL_TOOL_NAMES = tuple(f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES)
 
 
-def _failure(error: ToolFailure) -> JsonObject:
-    return _result(
-        {
-            "schema_version": 1,
-            "call_status": error.status,
-            "result_state": None,
-            "checks": [],
-            "warnings": [],
-            "failure": {
-                "origin": error.origin,
-                "code": error.code,
-                "message": error.message,
-                "retryable": error.retryable,
-            },
-        }
+async def _unbound(_args: dict[str, Any]) -> dict[str, Any]:
+    return failure_result(
+        ToolFailure(
+            status="error",
+            origin="environment",
+            code="template_task_not_bound",
+            message="Template Tools must be created by a bound prepare-template session.",
+        )
     )
 
 
 @tool(
-    "template_observe",
-    "Create or query immutable structural DOCX evidence without rendering or mutation.",
-    TEMPLATE_OBSERVE_SCHEMA,
-    annotations=_OBSERVE_ANNOTATIONS,
+    "template_view",
+    (
+        "Open one template version on its current page, request one needed page, or find/focus "
+        "one concrete object with bounded local visual context. This Tool never forces an "
+        "all-page review. Returned object_ref values are accepted unchanged by template_edit."
+    ),
+    TEMPLATE_VIEW_SCHEMA,
+    annotations=_OBSERVE,
 )
-async def template_observe(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        task_root = task_root_from_args(args)
-        action = args.get("action")
-        if action == "create":
-            structured = TemplateObservationService().create(args, task_root=task_root)
-        elif action == "query":
-            structured = TemplateObservationService().query(args, task_root=task_root)
-        else:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="unsupported_observe_action",
-                message="This implementation slice currently supports create and query.",
-            )
-        return _result(structured)
-    except ToolFailure as error:
-        return _failure(error)
-    except Exception:
-        return _result(
-            {
-                "schema_version": 1,
-                "call_status": "error",
-                "result_state": None,
-                "checks": [],
-                "warnings": [],
-                "failure": {
-                    "origin": "internal",
-                    "code": "unexpected_internal_error",
-                    "message": "The template observation failed unexpectedly.",
-                    "retryable": False,
-                },
-            }
-        )
+async def template_view(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
 
 
 @tool(
-    "template_compare",
-    "Bind structural comparison to images already reviewed through docx_visual_review.",
-    TEMPLATE_COMPARE_SCHEMA,
-    annotations=_OBSERVE_ANNOTATIONS,
+    "template_registry",
+    (
+        "For up to sixteen concrete objects from one version, look up exact Registry fields or "
+        "search at most five object-relevant candidates each. This Tool never returns the full "
+        "Registry."
+    ),
+    TEMPLATE_REGISTRY_SCHEMA,
+    annotations=_READ_ONLY,
 )
-async def template_compare(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        task_root = task_root_from_args(args)
-        action = args.get("action")
-        common = {"schema_version", "task_root", "action"}
-        if action == "create":
-            allowed = common | {
-                "review_mode",
-                "before_snapshot_ref",
-                "after_snapshot_ref",
-                "mutation_ref",
-                "final_snapshot_ref",
-                "render_ref",
-                "reviewed_pages",
-                "evidence_refs",
-                "findings",
-            }
-            if set(args) - allowed:
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="invalid_compare_request",
-                    message="The comparison request contains unsupported fields.",
-                )
-            return _result(TemplateComparisonService().review(args, task_root=task_root))
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="unsupported_compare_action",
-            message="template_compare requires action=create.",
-        )
-    except ToolFailure as error:
-        return _failure(error)
-    except Exception:
-        return _result(
-            {
-                "schema_version": 1,
-                "call_status": "error",
-                "result_state": None,
-                "checks": [],
-                "warnings": [],
-                "failure": {
-                    "origin": "internal",
-                    "code": "unexpected_internal_error",
-                    "message": "The template comparison failed unexpectedly.",
-                    "retryable": False,
-                },
-            }
-        )
+async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
 
 
 @tool(
-    "template_mutate",
-    "Execute only a compiled mutation plan and atomically publish a new DOCX plus evidence.",
-    TEMPLATE_MUTATE_SCHEMA,
-    annotations=_WRITE_ANNOTATIONS,
+    "template_edit",
+    (
+        "Atomically apply up to thirty-two materialize, clear, or remove decisions made from one "
+        "page context. No plan file or output path is needed. The Tool creates one immutable "
+        "version, checks every effect, and returns the changed page image plus fresh refs."
+    ),
+    TEMPLATE_EDIT_SCHEMA,
+    annotations=_WRITE,
 )
-async def template_mutate(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        task_root = task_root_from_args(args)
-        allowed = {"schema_version", "task_root", "mutation_plan_path", "output_docx"}
-        if set(args) != allowed:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_mutate_request",
-                message="template_mutate accepts only a compiled plan path and new output path.",
-            )
-        return _result(TemplateMutationService().mutate(args, task_root=task_root))
-    except ToolFailure as error:
-        return _failure(error)
-    except Exception:
-        return _result(
-            {
-                "schema_version": 1,
-                "call_status": "error",
-                "result_state": None,
-                "checks": [],
-                "warnings": [],
-                "failure": {
-                    "origin": "internal",
-                    "code": "unexpected_internal_error",
-                    "message": "The template mutation failed unexpectedly.",
-                    "retryable": False,
-                },
-            }
-        )
+async def template_edit(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
 
 
 @tool(
-    "template_build",
-    "Revalidate and atomically publish the four-file template artifact.",
-    TEMPLATE_BUILD_SCHEMA,
-    annotations=_WRITE_ANNOTATIONS,
+    "template_publish",
+    (
+        "Publish exactly one validated final Word from an immutable document_ref after the "
+        "Agent has seen local visual feedback for that exact version. No all-page coverage gate "
+        "is imposed. Never publishes or overwrites an intermediate Word."
+    ),
+    TEMPLATE_PUBLISH_SCHEMA,
+    annotations=_WRITE,
 )
-async def template_build(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        task_root = task_root_from_args(args)
-        allowed = {
-            "schema_version",
-            "task_root",
-            "final_snapshot_ref",
-            "artifact_spec_path",
-            "output_dir",
-        }
-        if set(args) != allowed:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_build_request",
-                message="The build request does not match the v1 contract.",
-            )
-        return _result(TemplateArtifactBuilder().build(args, task_root=task_root))
-    except ToolFailure as error:
-        return _failure(error)
-    except Exception:
-        return _result(
-            {
-                "schema_version": 1,
-                "call_status": "error",
-                "result_state": None,
-                "checks": [],
-                "warnings": [],
-                "failure": {
-                    "origin": "internal",
-                    "code": "unexpected_internal_error",
-                    "message": "The template build failed unexpectedly.",
-                    "retryable": False,
-                },
-            }
-        )
+async def template_publish(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
 
 
-TEMPLATE_LOGICAL_TOOL_NAMES = (
-    "template_observe",
-    "template_mutate",
-    "template_compare",
-    "template_build",
-)
-TEMPLATE_FULL_TOOL_NAMES = tuple(
-    f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES
-) + ("mcp__docfit__docx_render", "mcp__docfit__docx_visual_review")
 TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
-    template_observe,
-    template_mutate,
-    template_compare,
-    template_build,
+    template_view,
+    template_registry,
+    template_edit,
+    template_publish,
 )
 
+Runner = Callable[[dict[str, Any]], Awaitable[dict[str, Any]]]
 
-def build_template_tool_server(task_root: Path | None = None) -> McpSdkServerConfig:
-    """Build the one DocFit server composition used by prepare-template sessions."""
-    shared = {tool.name: tool for tool in build_docfit_tools(task_root)}
+
+def _bind(registered: SdkMcpTool[Any], runner: Runner) -> SdkMcpTool[Any]:
+    return SdkMcpTool(
+        name=registered.name,
+        description=registered.description,
+        input_schema=registered.input_schema,
+        handler=runner,
+        annotations=registered.annotations,
+    )
+
+
+def build_template_tool_server(
+    task_root: Path,
+    field_registry: Path,
+) -> McpSdkServerConfig:
+    """Build the one task-bound Tool server used by prepare-template."""
+
+    service = TemplateWorkspaceService(
+        task_root=task_root,
+        field_registry=field_registry,
+    )
+
+    async def view(args: dict[str, Any]) -> dict[str, Any]:
+        try:
+            structured, images = service.view(args)
+            return tool_result(structured, image_paths=images)
+        except ToolFailure as error:
+            return failure_result(error)
+        except Exception:
+            return unexpected_failure_result()
+
+    async def registry(args: dict[str, Any]) -> dict[str, Any]:
+        try:
+            return tool_result(service.registry_query(args))
+        except ToolFailure as error:
+            return failure_result(error)
+        except Exception:
+            return unexpected_failure_result()
+
+    async def edit(args: dict[str, Any]) -> dict[str, Any]:
+        try:
+            structured, images = service.edit(args)
+            return tool_result(structured, image_paths=images)
+        except ToolFailure as error:
+            return failure_result(error, committed=False)
+        except Exception:
+            return unexpected_failure_result(committed=False)
+
+    async def publish(args: dict[str, Any]) -> dict[str, Any]:
+        try:
+            return tool_result(service.publish(args))
+        except ToolFailure as error:
+            return failure_result(error, committed=False)
+        except Exception:
+            return unexpected_failure_result(committed=False)
+
+    runners = (view, registry, edit, publish)
     return create_sdk_mcp_server(
         name="docfit",
-        version="2.0.0",
+        version="3.0.0",
         tools=[
-            *TEMPLATE_TOOLS,
-            shared["docx_render"],
-            shared["docx_visual_review"],
+            _bind(registered, runner)
+            for registered, runner in zip(TEMPLATE_TOOLS, runners, strict=True)
         ],
     )

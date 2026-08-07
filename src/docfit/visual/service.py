@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from docfit.tools.inspection import inspect_document
 from docfit.tools.officecli import OfficeCliAdapter
@@ -25,10 +26,18 @@ from docfit.visual.pdf import PdfBackend
 from docfit.visual.renderer import LibreOfficeRenderer
 from docfit.visual.views import comparison, contact_sheet
 
+if TYPE_CHECKING:
+    from docfit.tools.inspection import Inspection
+
 _QUALITY_DPI = {"thumbnail": 72, "review": 144, "detail": 220}
 _MODES = {"contact_sheet", "pages", "regions", "compare"}
 _MAX_RETURNED_IMAGES = 4
 _CONTACT_PAGE_LIMIT = 12
+
+
+def _ancestor_paragraph_locator(locator: str) -> str | None:
+    match = re.match(r"^(.*?/p(?:\[@paraId=[^]]+]\]|\[\d+\]))(?:/.*)?$", locator)
+    return match.group(1) if match else None
 
 
 class VisualEvidenceService:
@@ -41,12 +50,14 @@ class VisualEvidenceService:
         renderer: LibreOfficeRenderer | None = None,
         pdf: PdfBackend | None = None,
         office: OfficeCliAdapter | None = None,
+        semantic_selector: str = "paragraph, table, picture",
     ) -> None:
         self.task_root = task_root.resolve(strict=True)
         self.store = EvidenceStore(self.task_root)
         self.renderer = renderer or LibreOfficeRenderer()
         self.pdf = pdf or PdfBackend()
         self._office = office
+        self.semantic_selector = semantic_selector
 
     @property
     def office(self) -> OfficeCliAdapter:
@@ -202,6 +213,88 @@ class VisualEvidenceService:
             images,
         )
 
+    def objects_on_page(
+        self,
+        render_ref: str,
+        inspection: Inspection,
+        page: int,
+        *,
+        limit: int,
+    ) -> tuple[list[JsonObject], bool]:
+        """Return bounded OfficeCLI objects anchored to one rendered page."""
+
+        render_path, manifest = self.store.resolve_render(render_ref)
+        if manifest.get("document_sha256") != inspection.document_sha256:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="render_document_mismatch",
+                message="The page render and object snapshot belong to different Word versions.",
+            )
+        page_count = manifest.get("page_count")
+        if not isinstance(page_count, int) or not 1 <= page <= page_count:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="page_out_of_range",
+                message="The requested page does not exist in this Word version.",
+            )
+        text_index = self._read_index(render_path / "indexes" / "pdf-text.json")
+        anchors = self._read_index(render_path / "indexes" / "semantic-anchors.json")
+        roots: list[str] = []
+        for item in inspection.objects:
+            if item.kind not in {"paragraph", "table", "picture", "sdt", "shape"}:
+                continue
+            located = locate_object(text_index, anchors, item.object_ref)
+            candidate_pages = located.get("candidate_pages")
+            located_on_page = located.get("page") == page or (
+                item.kind == "paragraph" and item.text.strip() and candidate_pages == [page]
+            )
+            if not located_on_page and item.kind == "shape":
+                parent_locator = _ancestor_paragraph_locator(item.locator)
+                parent = next(
+                    (
+                        value
+                        for value in inspection.objects
+                        if value.kind == "paragraph" and value.locator == parent_locator
+                    ),
+                    None,
+                )
+                if parent is not None:
+                    parent_location = locate_object(text_index, anchors, parent.object_ref)
+                    parent_candidates = parent_location.get("candidate_pages")
+                    located_on_page = parent_location.get("page") == page or (
+                        isinstance(parent_candidates, list)
+                        and 1 <= len(parent_candidates) <= 2
+                        and page in parent_candidates
+                    )
+            if located_on_page:
+                roots.append(item.locator)
+        selected = [
+            self._compact_page_object(item)
+            for item in inspection.objects
+            if any(item.locator == root or item.locator.startswith(f"{root}/") for root in roots)
+        ]
+        return selected[:limit], len(selected) > limit
+
+    @staticmethod
+    def _compact_page_object(item: Any) -> JsonObject:
+        text = item.text
+        if len(text) > 120:
+            text = f"{text[:119]}…"
+        value: JsonObject = {
+            "object_ref": item.object_ref,
+            "type": item.kind,
+            "text": text,
+        }
+        if item.kind == "sdt":
+            value["slot"] = {
+                key: item.format.get(key)
+                for key in ("alias", "tag", "type", "editable")
+                if item.format.get(key) is not None
+            }
+        return value
+
     def _create_render(
         self,
         *,
@@ -224,7 +317,11 @@ class VisualEvidenceService:
                     code="render_page_count_invalid",
                     message="LibreOffice produced no readable PDF pages.",
                 )
-            inspection = inspect_document(document, self.office)
+            inspection = inspect_document(
+                document,
+                self.office,
+                selector=self.semantic_selector,
+            )
             anchors = build_anchor_index(inspection)
             indexes = temporary / "indexes"
             indexes.mkdir()
@@ -291,8 +388,7 @@ class VisualEvidenceService:
             limit=_CONTACT_PAGE_LIMIT,
         )
         thumbnails = [
-            self._page_view(reference, pdf, index, page, "thumbnail")
-            for page in requested
+            self._page_view(reference, pdf, index, page, "thumbnail") for page in requested
         ]
         identity: JsonObject = {
             "render_ref": reference,
@@ -345,8 +441,10 @@ class VisualEvidenceService:
         quality: str,
     ) -> tuple[list[JsonObject], list[Path], str | None, list[JsonObject]]:
         regions = args.get("regions")
-        if not isinstance(regions, list) or not regions or not all(
-            isinstance(item, dict) for item in regions
+        if (
+            not isinstance(regions, list)
+            or not regions
+            or not all(isinstance(item, dict) for item in regions)
         ):
             raise ToolFailure(
                 status="needs_input",
@@ -381,7 +479,7 @@ class VisualEvidenceService:
                         ),
                     }
                 )
-                for page in candidate_pages[:_MAX_RETURNED_IMAGES - len(images)]:
+                for page in candidate_pages[: _MAX_RETURNED_IMAGES - len(images)]:
                     view = self._page_view(reference, pdf, index, int(page), "review")
                     public = self._public_view(view)
                     public["mapping_quality"] = "mapping_unavailable"
@@ -437,6 +535,7 @@ class VisualEvidenceService:
                 build=build_region,
             )
             public = self._public_view(stored)
+            public["selector"] = region
             public["mapping_quality"] = located.get("mapping_quality")
             public["mapping_basis"] = located.get("mapping_basis", [])
             evidence.append(public)
@@ -766,9 +865,7 @@ class VisualEvidenceService:
         if start < 0 or start >= len(values):
             VisualEvidenceService._invalid_cursor()
         end = min(start + limit, len(values))
-        next_cursor = (
-            f"visual-cursor:v2:{fingerprint}:{end}" if end < len(values) else None
-        )
+        next_cursor = f"visual-cursor:v2:{fingerprint}:{end}" if end < len(values) else None
         return start, next_cursor
 
     @staticmethod

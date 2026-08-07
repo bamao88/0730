@@ -1,44 +1,33 @@
 # DocFit 学校模板提取 v2 执行胶囊
 
-- Capsule status: `BLOCKED / AGENT SEMANTIC-LOCATION CONVERGENCE`
-- Source design: `docs/plans/docfit-school-extract-v2-candidate-skill/DESIGN.md`
-- Source plan: `docs/plans/docfit-school-extract-v2-candidate-skill/PLAN.md`
-- Latest user decision: 当前开发阶段充分信任 Agent 的语义判断；产品提供可执行 Tool、任务上下文、
-  before/after、全页渲染反馈、常见错误和领域知识，不使用 mutate 内置语义检查器否决 Agent 已
-  编译的决定。当前不考虑模板是否固定。
-- Credential/API status: Token Plan credential 已安装到仓库外配置；对 MiniMax M2.7 官方接口的
-  最小请求返回 HTTP 200，真实 Claude Agent SDK 调用、MCP Tool 与 filesystem Skill 均已进入
-  有效执行。此前 HTTP 402 的根因是误用了与 Token Plan 资源池分离的普通按量 key，已排除。
-- Runtime repairs: 该次历史执行的 selected credential 使用 `ANTHROPIC_AUTH_TOKEN`，模型为
-  `MiniMax-M2.7`；当前全局默认已切换为 MiniMax 优先的 `MiniMax-M3`；
-  Agent turn 上限提高到 160；MiniMax 把 JSON Schema 常量 `1` 发送成字符串 `"1"` 的传输差异
-  由 `PreToolUse` hook 规范化，不把 provider 兼容问题下沉到领域 Tool。
-- Capability/safety repairs: template task 的 `Write` 只能新增 decisions YAML/JSON，`Bash` 只能
-  调用两个既有 compiler 并写入 task-local compiled 输出；禁止绕过 `template_mutate`、直接复制
-  DOCX 或人工伪造最终产物。机械边界保留，语义决定仍由 Agent 负责。
-- Observation repair: snapshot 保留完整对象 inventory；在响应上下文过大时，南农模板的 210 个
-  paragraph object 直接内联，run/table 等对象可继续通过 `template_observe.query` 按需取得，避免
-  早期运行把“上下文省略”误当成“模板没有对象”。
-- Full CLI evidence: `temp/docfit-school-extract-v2-njau-minimax-token-plan-r6/` 已完成真实结构观察、
-  全页 render/visual review、两轮 mutate 尝试和 Agent 自检。第一轮 13 个 materialize 操作把标题、
-  专业、导师等槽位放到错误段落，Agent 根据 after/视觉反馈主动否决并从原模板重试；第二轮仅能
-  高置信定位 7 个槽位，保留 7 个 gap，`remove_content` 仍为 0，最终诚实返回 blocked。
-- Publication result: 没有调用成功的 final compare/build，没有四文件 template artifact，也没有把
-  `mutated-template-001.docx` 或 `mutated-template-004.docx` 接受为候选交付。当前反馈与发布边界能
-  阻止错误模板被误报为成功。
-- Confirmed non-blockers: Token Plan key/额度、M2.7 endpoint、基础 SDK Agent loop、Skill 装载、
-  MCP transport、render/visual review 和 mutation 执行能力。
-- Current blocker: Agent 能发现明显错误，但现有观察界面不便于稳定表达“标签旁边的空白填写区”
-  与“标题后的空正文区域”；它需要大量逐对象查询，仍无法在一次运行内为 32 个需求槽位形成可靠
-  locator，内容清理也没有发生。问题位于语义定位与反馈效率，不是隐藏 checker 或 API 额度。
-- Architecture boundary: 保持 Claude Agent SDK 原生 Agent loop、permissions、hooks、Skill、MCP
-  Tool 和 structured output；不新增语义检查器。下一步建议给观察能力增加确定性的相邻对象/空白
-  区域候选查询，Tool 只返回事实和 object ref，由 Agent 选择、mutate、渲染并自检。该公开能力
-  需要先作为产品/Tool 合同决策确认，不能在本轮静默加入。
-- Parked: 旧 Agent smoke harness 的 provider 兼容问题、Human Gold、W6 生产切换、模板
-  fixed/frozen 生命周期，以及未被真实运行证明需要的新 mutation operation。
-- Resume condition: 用户确认是否增加“相邻对象/空白区域候选”观察能力；确认后实现最小合同、
-  通过 bounded test，再用新的空 task root 重跑完整 CLI。不得续用 r1–r6 的半成品 task root，也
-  不得人工补齐产物。
-- Stop condition: API 与 transport 问题已修复，真实 Agent 反馈回路已验证，但 W5 Agent Gate 未
-  通过；当前没有合格学校模板产物，W6 保持不可执行。
+- Capsule status: `IN PROGRESS / FULL OBJECT-DRIVEN REFACTOR`
+- Latest user decision: 不做最小闭环；提交旧基线后完整重构，不保留兼容。最终验收是重新运行
+  MiniMax CLI 后只得到一份 Word，且模板清理、内容槽与可用质量相对旧运行有实质提高。
+- Baseline commit: `6660d46` 保存旧 snapshot → decisions YAML → compiler → mutate → compare →
+  four-file build 线路及 r6 失败证据。
+- Root cause: r6 把离线 Template Truth candidate 当作 requirements，驱动 Agent 尝试完成整份
+  Registry/32 槽任务；结构观察、视觉定位与 mutation 又使用不同身份，Agent 还要维护大量
+  YAML/compiled/attempt 路径。结果是耗时约 27 分钟、两轮错误物化、0 个清理操作且无最终 Word。
+- Approved contract: Agent 只拿当前需要的一张页图或一个对象局部图；同一页中已判断清楚的多个
+  OfficeCLI 对象可以一次 batch。snapshot-bound `object_ref` 统一用于结构、视觉和修改；已知
+  `field_id` 直接提交，只有含义不确定时惰性查询 Registry；修改 Tool 原子执行 batch 并自动返回
+  修改后同页图/新 `document_ref`；内部版本不对用户发布；最终 output 只允许
+  `final-template.docx`。
+- Runtime surface: `template_view`、`template_registry`、`template_edit`、`template_publish`。
+  模板会话不开放 Bash、Write、Subagent，不存在 Agent-authored YAML、compiler、attempt path 或
+  独立语义 checker。
+- Mechanical feedback retained: object hash/fingerprint、Registry exact field、content-control
+  alias/tag、包重开、OfficeCLI validation、batch 每项目标效果回读、非目标文字保护、修改页自动
+  回传、source/Registry hash 与 no-overwrite 单 Word 原子发布；已删除最终全页覆盖门。
+- Implemented evidence: 新 contract/Agent tests 已覆盖按需当前页图、同页最多 32 项原子 batch、
+  惰性批量 Registry、可见 slot 占位、container clear/remove、修改页自动反馈、共享 object_ref、版本绑定、局部反馈发布门和
+  单 Word output。旧 pipeline 模块、schema、compiler、permissions 和旧 contract tests 已删除。
+- Real CLI r1 evidence: MiniMax 正常完成 12 个 slot、7 个整对象删除和 16 个内容清空，但旧的逐项
+  Tool 调用与逐页 review 在 97 turns 触发 `max_turns`，25m07s 后未发布；Kimi fallback 随后 403。
+  这证明 API 额度不是根因，根因是 Tool 粒度与全页门禁。当前实现已移除 max_turns、全页 review
+  要求和“slot 必须先调用 Registry”的 trace checker，等待 r2 真实质量/耗时验收。
+- Official SDK basis: 保持 Claude Agent SDK 原生 Agent loop、custom in-process MCP Tools、
+  permissions/hooks、Skill 与 structured output；不在其上建立第二套工作流 runtime。
+- Next gate: 对 batch 改造跑全量 Ruff/mypy/pytest，真实 MiniMax 南农 r2 CLI，对最终 Word 做
+  结构、页面与离线 Template Truth 对比。
+- Stop condition: 未完成真实 MiniMax CLI 和最终 Word 质量对比前，不宣称重构完成或质量提高。

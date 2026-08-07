@@ -384,6 +384,9 @@ LibreOffice 视觉取证、原生图片返回和独立验证。
 - Poppler 建立页数/文字 bbox 并按需栅格化，Pillow 组合视图；
 - 统一任务内 V2 Evidence Store，opaque `render:v2:` / `visual:v2:` ref；
 - 普通 Agent 与 `prepare-template` 共用同一视觉服务。
+- `prepare-template` 采用按需页/对象的四 Tool 专用组合；同页明确决定可一次原子 batch，修改后
+  自动返回同页图，Registry 只在字段不确定时查询；最终 output 不设全页覆盖门且只发布一份
+  Word，不保留 YAML/compiler/attempt 兼容路线。
 
 ### 5.3 视觉验证矩阵
 

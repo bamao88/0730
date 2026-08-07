@@ -147,8 +147,7 @@ class ReadPathPolicy:
                 return ReadPathDecision(False, "read_pattern_missing")
             path_pattern = pattern if tool_name == "Glob" else tool_input.get("glob")
             if path_pattern is not None and (
-                not isinstance(path_pattern, str)
-                or not _search_pattern_is_safe(path_pattern)
+                not isinstance(path_pattern, str) or not _search_pattern_is_safe(path_pattern)
             ):
                 return ReadPathDecision(False, "read_pattern_escape_denied")
 
@@ -271,9 +270,7 @@ def build_read_path_policy(
             ),
         ),
     )
-    roots.extend(
-        ReadPathRoot(label, path) for label, path in project_roots if path is not None
-    )
+    roots.extend(ReadPathRoot(label, path) for label, path in project_roots if path is not None)
     if task_root is not None:
         task_path = task_root.expanduser().resolve(strict=False)
         roots.extend(
@@ -383,6 +380,37 @@ def make_read_path_gate_hook(
         return {"hookSpecificOutput": output}
 
     return gate_read_path
+
+
+def make_docfit_schema_version_hook() -> Callable[
+    [HookInput, str | None, HookContext], Awaitable[HookJSONOutput]
+]:
+    """Canonicalize a known compatible-provider transport quirk."""
+
+    async def canonicalize(
+        hook_input: HookInput,
+        _tool_use_id: str | None,
+        _context: HookContext,
+    ) -> HookJSONOutput:
+        if (
+            hook_input["hook_event_name"] != "PreToolUse"
+            or not hook_input["tool_name"].startswith("mcp__docfit__")
+            or hook_input["tool_input"].get("schema_version") != "1"
+        ):
+            return {}
+        updated_input = dict(hook_input["tool_input"])
+        updated_input["schema_version"] = 1
+        output: PreToolUseHookSpecificOutput = {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "allow",
+            "permissionDecisionReason": (
+                "DocFit canonicalized the provider's string schema version to integer v1."
+            ),
+            "updatedInput": updated_input,
+        }
+        return {"hookSpecificOutput": output}
+
+    return canonicalize
 
 
 def make_agent_gate_hook(
@@ -638,7 +666,7 @@ def build_agent_options(
             HookMatcher(
                 matcher="Agent",
                 hooks=[make_agent_gate_hook(permission_audit)],
-            )
+            ),
         ]
     }
     if observation_hook is not None:
@@ -652,9 +680,7 @@ def build_agent_options(
             "SubagentStart",
             "SubagentStop",
         ):
-            configured_hooks[event_name] = [
-                HookMatcher(matcher=None, hooks=[observation_hook])
-            ]
+            configured_hooks[event_name] = [HookMatcher(matcher=None, hooks=[observation_hook])]
     return ClaudeAgentOptions(
         tools=list(BUILTIN_TOOLS),
         allowed_tools=list(AUTO_APPROVED_TOOL_NAMES),

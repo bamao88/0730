@@ -1,549 +1,166 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import shutil
 from pathlib import Path
-
-import pytest
-from claude_agent_sdk.types import (
-    PermissionResultAllow,
-    PermissionResultDeny,
-    ResultMessage,
-    ToolPermissionContext,
-)
+from typing import Any
 
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
-    PREPARE_TEMPLATE_OUTPUT_SCHEMA,
     PrepareTemplateRequest,
     TemplateAgentExecution,
-    _validated_sdk_output,
     build_prepare_template_options,
     build_prepare_template_prompt,
     prepare_template_task,
     run_prepare_template,
-    run_template_agent,
 )
 from docfit.app.settings import AgentBackend
-from docfit.app.template_permissions import make_docfit_schema_version_hook
-from docfit.tools.runtime import ToolFailure, sha256_file
+from docfit.tools.runtime import sha256_file
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-TEMPLATE = (
-    PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
-)
+TEMPLATE = PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
 REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
-COUNTS = {"slot": 1, "protected": 1, "remove": 0, "manual": 0, "gap": 0, "unresolved": 0}
+COUNTS = {"slot": 0, "remove": 0, "manual": 0, "gap": 0, "unresolved": 0}
 
 
 def _request(tmp_path: Path) -> PrepareTemplateRequest:
-    requirements = tmp_path / "requirements.md"
-    requirements.write_text("保留学校名称，并提供姓名填写位置。", encoding="utf-8")
     return PrepareTemplateRequest(
         school_template=TEMPLATE,
-        school_requirements=requirements,
-        field_registry=REGISTRY,
         output_directory=tmp_path / "prepared-task",
     )
 
 
-def test_prepare_task_mounts_read_only_inputs_and_candidate_skill(tmp_path: Path) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-
-    assert prepared.template_path.stat().st_mode & 0o222 == 0
-    assert prepared.requirements_path.stat().st_mode & 0o222 == 0
-    assert prepared.registry_path.stat().st_mode & 0o222 == 0
-    assert prepared.template_sha256 == sha256_file(TEMPLATE)
-    assert (
-        prepared.task_root / ".claude/skills/docfit-school-extract/scripts/compile_artifact_spec.py"
-    ).is_file()
-    assert (prepared.task_root / "work/attempts").is_dir()
-    assert (prepared.task_root / "output").is_dir()
-
-
-def test_prepare_options_use_one_candidate_server_skill_and_structured_output(
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-    backend = AgentBackend(
-        name="kimi",
+def _backend() -> AgentBackend:
+    return AgentBackend(
+        name="minimax",
         base_url="https://example.invalid/",
         model="test-model",
         credential_variable="TEST_KEY",
         api_key="secret",
     )
-    config_directory = tmp_path / "sdk-config"
-    config_directory.mkdir()
 
-    options = build_prepare_template_options(prepared, backend, config_directory)
+
+def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+
+    assert prepared.template_path.stat().st_mode & 0o222 == 0
+    assert prepared.requirements_path is None
+    assert prepared.registry_source == REGISTRY.resolve()
+    assert prepared.template_sha256 == sha256_file(TEMPLATE)
+    skill = prepared.task_root / ".claude/skills/docfit-school-extract"
+    assert (skill / "SKILL.md").is_file()
+    assert not (skill / "scripts").exists()
+    assert not (prepared.task_root / "work/decisions").exists()
+    assert not (prepared.task_root / "work/compiled").exists()
+    assert not (prepared.task_root / "work/attempts").exists()
+    assert not any((prepared.task_root / "output").iterdir())
+
+
+def test_prepare_options_remove_bash_write_compilers_and_checker(tmp_path: Path) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    config = tmp_path / "config"
+    config.mkdir()
+
+    options = build_prepare_template_options(prepared, _backend(), config)
 
     assert options.skills == ["docfit-school-extract"]
     assert set(options.mcp_servers or {}) == {"docfit"}
     assert options.allowed_tools == []
-    assert "Agent" in (options.disallowed_tools or ())
-    assert options.output_format == {
-        "type": "json_schema",
-        "schema": options.output_format["schema"],
-    }
-    assert options.max_turns == 160
-    assert options.cwd == prepared.task_root
+    assert {"Bash", "Write", "Agent"} <= set(options.disallowed_tools or ())
+    assert "Bash" not in (options.tools or ())
+    assert "Write" not in (options.tools or ())
+    assert options.max_turns is None
 
 
-def test_prepare_prompt_carries_development_stage_mutation_authority(
-    tmp_path: Path,
-) -> None:
+def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
     prepared = prepare_template_task(_request(tmp_path))
 
     prompt = build_prepare_template_prompt(prepared)
 
-    assert "development-stage working copy is intentionally mutable" in prompt
-    assert "The absence of pre-existing content controls is not a blocker" in prompt
-    assert "Do not ask for authorization merely because a required slot" in prompt
+    assert "current page/object context" in prompt
+    assert "Registry is Tool-private" in prompt
+    assert "not a task list" in prompt
+    assert "batch" in prompt.casefold()
+    assert "do not review every page" in prompt.casefold()
+    assert "output/final-template.docx" in prompt
+    assert "compiler" not in prompt.casefold()
+    assert "attempt" not in prompt.casefold()
 
 
-def test_prepare_permissions_allow_only_decision_writes_and_compiler_bash(
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-    backend = AgentBackend(
-        name="minimax",
-        base_url="https://example.invalid/",
-        model="test-model",
-        credential_variable="TEST_KEY",
-        api_key="secret",
-    )
-    config_directory = tmp_path / "sdk-config"
-    config_directory.mkdir()
-    callback = build_prepare_template_options(
-        prepared, backend, config_directory
-    ).can_use_tool
-    assert callback is not None
-    context = ToolPermissionContext()
-
-    decision = prepared.task_root / "work/decisions/mutation-v1.yaml"
-    allowed_write = asyncio.run(
-        callback(
-            "Write",
-            {"file_path": str(decision), "content": "schema_version: 1\n"},
-            context,
-        )
-    )
-    denied_output_write = asyncio.run(
-        callback(
-            "Write",
-            {
-                "file_path": str(
-                    prepared.task_root / "output/template-artifact/build-report.json"
-                ),
-                "content": "{}\n",
-            },
-            context,
-        )
-    )
-    assert isinstance(allowed_write, PermissionResultAllow)
-    assert allowed_write.updated_input is not None
-    assert allowed_write.updated_input["file_path"] == str(decision)
-    assert isinstance(denied_output_write, PermissionResultDeny)
-
-    decision.write_text("schema_version: 1\n", encoding="utf-8")
-    compiler = (
-        prepared.task_root
-        / ".claude/skills/docfit-school-extract/scripts/compile_mutation_plan.py"
-    )
-    compiled = prepared.task_root / "work/compiled/mutation-v1.json"
-    allowed_compiler = asyncio.run(
-        callback(
-            "Bash",
-            {
-                "command": (
-                    f'"$DOCFIT_PYTHON" "{compiler}" '
-                    f'--task-root "{prepared.task_root}" '
-                    f'--input "{decision}" --output "{compiled}"'
-                )
-            },
-            context,
-        )
-    )
-    allowed_compiler_variant = asyncio.run(
-        callback(
-            "Bash",
-            {
-                "command": (
-                    f'cd "{prepared.task_root}" && python3 "{compiler}" '
-                    "--task-root . --input work/decisions/mutation-v1.yaml "
-                    "--output work/compiled/mutation-v2.json 2>&1"
-                )
-            },
-            context,
-        )
-    )
-    denied_copy = asyncio.run(
-        callback(
-            "Bash",
-            {
-                "command": (
-                    "cp input/school-template.docx "
-                    "output/template-artifact/clean-template.docx"
-                )
-            },
-            context,
-        )
-    )
-    assert isinstance(allowed_compiler, PermissionResultAllow)
-    assert allowed_compiler.updated_input is not None
-    assert str(compiler) in allowed_compiler.updated_input["command"]
-    assert isinstance(allowed_compiler_variant, PermissionResultAllow)
-    assert isinstance(denied_copy, PermissionResultDeny)
-
-
-def test_docfit_pre_tool_hook_canonicalizes_minimax_string_schema_version() -> None:
-    hook = make_docfit_schema_version_hook()
-    result = asyncio.run(
-        hook(
-            {
-                "hook_event_name": "PreToolUse",
-                "session_id": "session",
-                "transcript_path": "/tmp/transcript",
-                "cwd": "/tmp",
-                "tool_name": "mcp__docfit__template_observe",
-                "tool_input": {"schema_version": "1", "action": "create"},
-                "tool_use_id": "tool-use",
-            },
-            "tool-use",
-            {"signal": None},
-        )
-    )
-
-    output = result["hookSpecificOutput"]
-    assert output["updatedInput"] == {"schema_version": 1, "action": "create"}
-
-
-def test_prepare_output_schema_requires_the_canonical_relative_artifact_path() -> None:
-    artifact_path = PREPARE_TEMPLATE_OUTPUT_SCHEMA["properties"]["artifact_path"]
-
-    assert artifact_path == {
-        "type": ["string", "null"],
-        "enum": ["output/template-artifact", None],
-    }
-
-
-def test_sdk_api_error_preserves_safe_backend_diagnostics() -> None:
-    backend = AgentBackend(
-        name="minimax",
-        base_url="https://example.invalid/",
-        model="test-model",
-        credential_variable="TEST_KEY",
-        api_key="secret",
-    )
-    result = ResultMessage(
-        subtype="success",
-        duration_ms=100,
-        duration_api_ms=90,
-        is_error=True,
-        num_turns=1,
-        session_id="session-error",
-        stop_reason="stop_sequence",
-        structured_output=None,
-        api_error_status=402,
-        terminal_reason="api_error",
-    )
-
-    with pytest.raises(ToolFailure) as caught:
-        _validated_sdk_output(result, backend=backend)
-
-    assert caught.value.code == "template_agent_backend_api_error"
-    assert caught.value.retryable is False
-    assert caught.value.message == (
-        "The minimax Agent backend returned HTTP 402 "
-        "(terminal_reason=api_error, turns=1)."
-    )
-
-
-def test_prepare_cli_has_the_approved_public_arguments() -> None:
+def test_cli_requirements_and_registry_are_optional() -> None:
     parsed = build_parser().parse_args(
         [
             "prepare-template",
             "--school-template",
-            "template.docx",
-            "--school-requirements",
-            "requirements.md",
-            "--field-registry",
-            "fields.yaml",
+            "school.docx",
             "--output",
             "task",
         ]
     )
-    assert parsed.command == "prepare-template"
-    assert parsed.output_directory == "task"
+
+    assert parsed.school_requirements is None
+    assert parsed.field_registry is None
 
 
-def test_run_prepare_template_accepts_only_disk_consistent_built_result(tmp_path: Path) -> None:
-    async def fake_agent(prepared) -> TemplateAgentExecution:
-        artifact = prepared.task_root / "output/template-artifact"
-        artifact.mkdir()
-        shutil.copyfile(prepared.template_path, artifact / "clean-template.docx")
-        (artifact / "fill-contract.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "visual-review.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "build-report.json").write_text(
-            json.dumps({"artifact_status": "built", "counts": COUNTS}),
-            encoding="utf-8",
-        )
+def test_run_prepare_template_accepts_exactly_one_published_word(tmp_path: Path) -> None:
+    async def fake_agent(prepared: Any) -> TemplateAgentExecution:
+        output = prepared.task_root / "output/final-template.docx"
+        shutil.copyfile(prepared.template_path, output)
         return TemplateAgentExecution(
             structured_output={
                 "status": "built",
-                "artifact_path": "output/template-artifact",
-                "template_sha256": sha256_file(artifact / "clean-template.docx"),
-                "fill_contract_sha256": sha256_file(artifact / "fill-contract.json"),
+                "artifact_path": "output/final-template.docx",
+                "template_sha256": sha256_file(output),
                 "counts": COUNTS,
             },
             tool_uses=(
                 "Skill",
-                "mcp__docfit__template_observe",
-                "mcp__docfit__docx_render",
-                "mcp__docfit__docx_visual_review",
-                "mcp__docfit__template_compare",
-                "mcp__docfit__template_build",
+                "mcp__docfit__template_view",
+                "mcp__docfit__template_publish",
             ),
             skills_loaded=("docfit-school-extract",),
-            session_id="session-1",
-            backend="fake",
+            session_id="session-test",
+            backend="minimax",
+            num_turns=4,
+            duration_ms=1200,
+            duration_api_ms=900,
         )
 
     report = asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
 
     assert report.status == "built"
     assert report.artifact_path is not None
-    assert Path(report.artifact_path).is_dir()
-    assert report.counts == COUNTS
+    assert Path(report.artifact_path).name == "final-template.docx"
+    assert [item.name for item in (Path(report.task_root) / "output").iterdir()] == [
+        "final-template.docx"
+    ]
+    trace = Path(report.task_root) / "work/.docfit/template-agent-execution.json"
+    assert trace.is_file()
+    assert report.num_turns == 4
 
 
 def test_run_prepare_template_preserves_true_blocked_result(tmp_path: Path) -> None:
-    async def fake_agent(_prepared) -> TemplateAgentExecution:
+    async def fake_agent(_prepared: Any) -> TemplateAgentExecution:
         return TemplateAgentExecution(
             structured_output={
                 "status": "blocked",
                 "artifact_path": None,
                 "template_sha256": None,
-                "fill_contract_sha256": None,
-                "counts": {
-                    "slot": 0,
-                    "protected": 0,
-                    "remove": 0,
-                    "manual": 0,
-                    "gap": 0,
-                    "unresolved": 1,
-                },
+                "counts": {**COUNTS, "unresolved": 1},
             },
-            tool_uses=("Skill", "mcp__docfit__template_observe"),
+            tool_uses=("Skill", "mcp__docfit__template_view"),
             skills_loaded=("docfit-school-extract",),
             session_id="session-blocked",
-            backend="fake",
+            backend="minimax",
+            num_turns=3,
+            duration_ms=1000,
+            duration_api_ms=800,
         )
 
     report = asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
 
     assert report.status == "blocked"
     assert report.artifact_path is None
-    assert not (Path(report.task_root) / "output/template-artifact").exists()
-
-
-@pytest.mark.parametrize(
-    ("tool_uses", "skills_loaded"),
-    [
-        (
-            (
-                "mcp__docfit__template_observe",
-                "mcp__docfit__template_compare",
-                "mcp__docfit__template_build",
-            ),
-            (),
-        ),
-        (
-            ("Skill", "mcp__docfit__template_observe", "mcp__docfit__template_build"),
-            ("docfit-school-extract",),
-        ),
-    ],
-)
-def test_built_result_requires_skill_and_core_tool_evidence(
-    tmp_path: Path,
-    tool_uses: tuple[str, ...],
-    skills_loaded: tuple[str, ...],
-) -> None:
-    async def fake_agent(prepared) -> TemplateAgentExecution:
-        artifact = prepared.task_root / "output/template-artifact"
-        artifact.mkdir()
-        shutil.copyfile(prepared.template_path, artifact / "clean-template.docx")
-        (artifact / "fill-contract.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "visual-review.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "build-report.json").write_text(
-            json.dumps({"artifact_status": "built", "counts": COUNTS}),
-            encoding="utf-8",
-        )
-        return TemplateAgentExecution(
-            structured_output={
-                "status": "built",
-                "artifact_path": "output/template-artifact",
-                "template_sha256": sha256_file(artifact / "clean-template.docx"),
-                "fill_contract_sha256": sha256_file(artifact / "fill-contract.json"),
-                "counts": COUNTS,
-            },
-            tool_uses=tool_uses,
-            skills_loaded=skills_loaded,
-            session_id="session-incomplete",
-            backend="fake",
-        )
-
-    with pytest.raises(ToolFailure, match="required Skill/Tool evidence") as caught:
-        asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
-
-    assert caught.value.code == "template_agent_evidence_incomplete"
-
-
-def test_changed_built_template_requires_mutation_tool_evidence(tmp_path: Path) -> None:
-    async def fake_agent(prepared) -> TemplateAgentExecution:
-        artifact = prepared.task_root / "output/template-artifact"
-        artifact.mkdir()
-        changed = bytearray(prepared.template_path.read_bytes())
-        changed[-1] ^= 1
-        (artifact / "clean-template.docx").write_bytes(changed)
-        (artifact / "fill-contract.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "visual-review.json").write_text("{}\n", encoding="utf-8")
-        (artifact / "build-report.json").write_text(
-            json.dumps({"artifact_status": "built", "counts": COUNTS}),
-            encoding="utf-8",
-        )
-        return TemplateAgentExecution(
-            structured_output={
-                "status": "built",
-                "artifact_path": "output/template-artifact",
-                "template_sha256": sha256_file(artifact / "clean-template.docx"),
-                "fill_contract_sha256": sha256_file(artifact / "fill-contract.json"),
-                "counts": COUNTS,
-            },
-            tool_uses=(
-                "Skill",
-                "mcp__docfit__template_observe",
-                "mcp__docfit__docx_render",
-                "mcp__docfit__docx_visual_review",
-                "mcp__docfit__template_compare",
-                "mcp__docfit__template_build",
-            ),
-            skills_loaded=("docfit-school-extract",),
-            session_id="session-no-mutation",
-            backend="fake",
-        )
-
-    with pytest.raises(ToolFailure, match="mutation Tool evidence") as caught:
-        asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
-
-    assert caught.value.code == "template_agent_evidence_incomplete"
-
-
-def test_template_agent_timeout_moves_to_the_next_backend(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-    backends = (
-        AgentBackend("kimi", "https://kimi.invalid/", "kimi", "KIMI_KEY", "secret-1"),
-        AgentBackend(
-            "minimax",
-            "https://minimax.invalid/",
-            "minimax",
-            "MINIMAX_KEY",
-            "secret-2",
-        ),
-    )
-
-    async def fake_run_backend(_prepared, backend: AgentBackend) -> TemplateAgentExecution:
-        if backend.name == "kimi":
-            await asyncio.sleep(1)
-        return TemplateAgentExecution(
-            structured_output={},
-            tool_uses=(),
-            skills_loaded=(),
-            session_id="session-fallback",
-            backend=backend.name,
-        )
-
-    monkeypatch.setattr(
-        "docfit.app.prepare_template.iter_agent_backends", lambda: iter(backends)
-    )
-    monkeypatch.setattr("docfit.app.prepare_template._run_backend", fake_run_backend)
-    monkeypatch.setattr(
-        "docfit.app.prepare_template.PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS", 0.01
-    )
-
-    execution = asyncio.run(run_template_agent(prepared))
-
-    assert execution.backend == "minimax"
-
-
-def test_template_agent_reports_all_backend_failures(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-    backends = (
-        AgentBackend("kimi", "https://kimi.invalid/", "kimi", "KIMI_KEY", "secret-1"),
-        AgentBackend(
-            "minimax",
-            "https://minimax.invalid/",
-            "minimax",
-            "MINIMAX_KEY",
-            "secret-2",
-        ),
-    )
-
-    async def fake_run_backend(_prepared, backend: AgentBackend) -> TemplateAgentExecution:
-        status = 403 if backend.name == "kimi" else 402
-        raise ToolFailure(
-            status="error",
-            origin="agent",
-            code="template_agent_backend_api_error",
-            message=f"The {backend.name} Agent backend returned HTTP {status}.",
-        )
-
-    monkeypatch.setattr(
-        "docfit.app.prepare_template.iter_agent_backends", lambda: iter(backends)
-    )
-    monkeypatch.setattr("docfit.app.prepare_template._run_backend", fake_run_backend)
-
-    with pytest.raises(ToolFailure) as caught:
-        asyncio.run(run_template_agent(prepared))
-
-    assert caught.value.code == "template_agent_backends_failed"
-    assert "kimi: The kimi Agent backend returned HTTP 403." in caught.value.message
-    assert "minimax: The minimax Agent backend returned HTTP 402." in caught.value.message
-
-
-def test_prepare_rejects_agent_that_changes_a_read_only_input(tmp_path: Path) -> None:
-    async def fake_agent(prepared) -> TemplateAgentExecution:
-        prepared.requirements_path.chmod(0o600)
-        prepared.requirements_path.write_text("changed", encoding="utf-8")
-        return TemplateAgentExecution(
-            structured_output={
-                "status": "blocked",
-                "artifact_path": None,
-                "template_sha256": None,
-                "fill_contract_sha256": None,
-                "counts": {
-                    "slot": 0,
-                    "protected": 0,
-                    "remove": 0,
-                    "manual": 0,
-                    "gap": 0,
-                    "unresolved": 1,
-                },
-            },
-            tool_uses=("Skill",),
-            skills_loaded=("docfit-school-extract",),
-            session_id="session-mutated-input",
-            backend="fake",
-        )
-
-    with pytest.raises(ToolFailure, match="read-only task input changed") as caught:
-        asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
-
-    assert caught.value.code == "prepare_input_changed"
+    assert not any((Path(report.task_root) / "output").iterdir())

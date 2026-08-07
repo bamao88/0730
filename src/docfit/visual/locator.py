@@ -13,6 +13,13 @@ def normalize_text(value: str) -> str:
     return "".join(value.split()).casefold()
 
 
+def _normalize_match_text(value: str) -> str:
+    """Ignore layout-only leaders that LibreOffice inserts into field results."""
+
+    normalized = normalize_text(value)
+    return re.sub(r"(?:\.{3,}|…{2,}|·{3,})", "", normalized)
+
+
 def build_anchor_index(inspection: Inspection) -> JsonObject:
     anchors: list[JsonObject] = []
     objects = inspection.objects
@@ -197,7 +204,7 @@ def _all_pages(index: JsonObject) -> list[int]:
 
 
 def _matches(index: JsonObject, text: str) -> list[JsonObject]:
-    target = normalize_text(text)
+    target = _normalize_match_text(text)
     pages = index.get("pages")
     if not isinstance(pages, list):
         return []
@@ -213,7 +220,7 @@ def _matches(index: JsonObject, text: str) -> list[JsonObject]:
             for word in words[start:]:
                 if not isinstance(word, dict) or not isinstance(word.get("text"), str):
                     break
-                combined += normalize_text(word["text"])
+                combined += _normalize_match_text(word["text"])
                 raw += word["text"]
                 bbox = word.get("bbox_pdf")
                 if not isinstance(bbox, list) or len(bbox) != 4:

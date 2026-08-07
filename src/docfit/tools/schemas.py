@@ -9,13 +9,11 @@ JsonSchema = dict[str, Any]
 OBJECT_REF_SCHEMA: JsonSchema = {
     "type": "object",
     "properties": {
-        "schema_version": {"const": 1},
         "document_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "object_id": {"type": "string", "pattern": "^obj-[0-9a-f]{24}$"},
         "expected_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     },
     "required": [
-        "schema_version",
         "document_sha256",
         "object_id",
         "expected_fingerprint",

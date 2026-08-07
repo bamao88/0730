@@ -1,217 +1,134 @@
 ---
 name: docfit-school-extract
-description: 整理学校论文模板和书面要求，生成干净模板、Registry 对齐的填写契约、视觉审查与构建报告。
+description: 逐对象理解和整理学校论文 Word，直接清除说明/示例并物化必要内容槽，检查结构与页面反馈，最终只发布一份可填写 Word。
 ---
 
 # 学校模板整理
 
-把用户提供的学校模板、文字要求、官方示例和确认信息整理为开发期模板产物：
+你的目标不是复刻 Registry，也不是产出一份分析报告，而是把当前学校 Word 整理成一份真正干净、
+可填写、保留学校固定版式的最终模板：
 
 ```text
-template-artifact/
-├── clean-template.docx
-├── fill-contract.json
-├── visual-review.json
-└── build-report.json
+output/final-template.docx
 ```
 
-只有 `template_build` 返回 `call_status: ok`、`artifact_status: built`、`published: true`，且你已
-检查最终结构、页面和用户目标，才可以交付该目录。`built` 只表示本次开发期产物完整且机械
-有效，不表示模板已经定版、Human accepted、通过正式质量 Eval 或达到 M3。
+你对语义判断、修改范围和最终质量负责。Tool 提供对象、修改能力、机械回读和页面反馈；它不替你
+判断某段内容是否该删，也没有独立的语义检查器。
 
-## 结果责任
+## 核心循环
 
-你是任务和最终结果的 owner。你负责判断：
+1. 调用 `template_view open`。它只返回当前页图和这一页的精简对象，不会把整份
+   Word 的所有页面或 Registry 塞进上下文。
+2. 根据当前页图判断这页中哪些对象是学校固定内容、可填写值、应删除的说明/示例。只处理你在
+   这张图和对象列表中能够明确识别的对象。
+3. 把同一页、同一 `document_ref` 上已经判断清楚的对象合并成一次 `template_edit`：每批最多 32
+   个 `materialize_slot`、`remove_object` 或 `clear_content` 操作。不要为同页的每一小段各开一个
+   Tool 回合。
+4. 已经确信 Registry `field_id` 时直接随 `materialize_slot` 提交；只有字段含义不确定时才调用
+   `template_registry`。同一页有多个不确定对象时，在一次调用中批量查询；每个对象只返回精确
+   字段或最多五个候选。Registry 是词典，不是待办清单。
+5. `template_edit` 原子执行整批操作、重开 Word、逐项检查效果，并自动返回修改后同一页的图片和
+   新对象引用。直接检查这张结果图：正确则继续，有残留或误伤则基于新引用再处理。
+6. 只有当前任务确实需要另一页或另一个对象时，才使用 `page`、`search` 或 `focus`。`focus` 自带
+   对象局部图；不要为了“完成覆盖率”逐页加载，也不要对刚由 `template_edit` 返回的页再调用
+   一次重复 `page` 或 `focus`。
+7. 修改后旧引用仍只指向旧不可变版本。继续操作必须使用最新 Tool 结果中的引用；需要恢复时可
+   从先前正确版本重新分支。内部版本不是用户产物。
+8. 当你根据实际修改区域的反馈确认模板干净、可填写且版式正常后，直接调用 `template_publish`。
+   发布没有全页打卡门禁，最终只能发布一次、只发布一份 Word。
 
-- 哪份材料对哪个范围有效；
-- 哪些内容是学校 protected 内容、自动 slot、应删除内容或人工区域；
-- 每个自动 slot 对应哪个 Registry `field_id`；
-- 来源/样式冲突如何处理；
-- 删除前内容责任如何迁移或是否已有明确授权；
-- Tool 返回的结构/视觉证据是否符合用户目标；
-- 何时返工、何时询问用户、何时报告真实阻断。
+## 对象判断
 
-Tool 负责确定性 DOCX 事实、按计划执行修改、返回比较证据和原子构建。`template_mutate` 不对
-修改是否符合业务语义、是否误伤视觉内容作裁决；compiler 只校验并规范化你的决定。任何
-Tool/compiler 成功都不能替代你的结果检查。
+优先保留学校身份和制度责任：校名、固定封面标签、声明原文、学校表格、页眉页脚、节设置、目录
+机制和样式骨架。优先清理会污染学生成稿的内容：
 
-## 推荐方法
+- 操作说明、编写提示、格式讲解和括号中的指导文字；
+- 示例题目、示例摘要、示例关键词、示例章节、示例图表、示例参考文献；
+- 只用于展示格式的样本文本、目录缓存示例和多余占位词；
+- 删除样例后遗留的空白页、孤立标题、错误分页或无意义空段落。
 
-1. 确认当前 task root、只读输入、Registry 文件和输出目录。不要修改原始模板、要求、示例或
-   Registry。
-2. 读取 Registry ID/version/hash，理解可用 `field_id`、类型、字段基数和 value source。
-3. 调用 `template_observe.create` 建立结构 snapshot；根据任务需要选择 structure、visible
-   objects、styles 和 slot candidates。
-   如果返回 `run_inventory_omitted_use_query`，段落对象已经完整内联，run 对象仍保存在
-   snapshot；先用段落对象建立全局映射，只在同段标签/填写区等需要精确目标时 query 到 run。
-   如果返回 `object_inventory_omitted_use_query`，则按 requirements 中的字段、标签和占位文字
-   分段 query。不得把省略的 inline inventory 解释为零对象、零 slot 或零 mutation。
-4. 需要定位文字或对象时使用 `template_observe.query`。默认查询 paragraph；当标签与填写区共享
-   段落、必须只物化局部内容时，显式使用 `kinds: [run]` 查询 run，并保留标签和其他同段内容。
-   保留全部匹配；不要凭页码、段落序号或相似文字静默选一个。
-5. 用 `quick` 页面证据检查复杂结构或修改范围。图片通过 `template_observe.images` 分批读取。
-6. 区分四类身份：Registry `field_id`、模板 `slot_id/region_id`、task-local execution locator、
-   最终 artifact locator。不要把它们互相替代。
-7. 把需要修改的语义判断、字段、授权和目标写入新的 `mutation-decisions.yaml`，运行
-   `scripts/compile_mutation_plan.py`。
-8. 把 canonical mutation plan 交给 `template_mutate`。目标失效或歧义时重新 observe 和编译；
-   不手改 compiled JSON。`committed: true` 只表示计划已经执行、DOCX package 有效且新文件已
-   原子发布，不表示清理范围或槽位结果正确。
-9. 调用 `template_compare.create` 的 `mutation_review`，检查预期变化、意外变化和 required
-   images。发现误伤或目标未发生时返工并使用新的 output 路径。
-10. 修改完成后，对当前最终 snapshot 调用 `template_compare.create` 的 `final_review`，使用
-    `candidate_verification` 覆盖最终 hash 的全部页面。通过 `template_compare.images` 实际查看
-    每一张 required image，并记录 disposition/finding。
-11. 把最终 Registry、sources、protected/slot/remove、样式、manual/gap/unresolved、mutation
-    lineage 和 final review 写入新的 `artifact-decisions.yaml`，运行
-    `scripts/compile_artifact_spec.py`。
-12. 把 artifact spec 交给 `template_build`。根据 findings 回到对应的观察、字段、修改、比较或
-    决定环节修正；成功后重查四文件目录和 structured output。
+一个对象看起来像标题，不代表它就是填写槽。先判断它是固定标签、结构标题、学生值还是示例。
+若标签和值在同一段，聚焦到具体 run：保留标签 run，把值/空白 run 物化为槽。不要为了方便而
+清空整个段落。
 
-零 mutation 模板仍必须执行最终全页 review、artifact compile 和 build。局部修改成功、quick
-预览或 compiler success 都不能替代最终构建检查。
+对每个学生实际要填写的内容区，清理样例后必须留下至少一个可填写槽。不能只保留“参考文献”、
+“致谢”或“第 X 章”等标题，却把它们下面的学生内容承载位一起删掉。在同一批中，选一个格式
+最合适的样例对象物化为槽，再批量删除其余说明和样例。常见承载字段包括 `abstract.zh`、
+`abstract.en`、`body.chapters` / `body.paragraph`、`references.entries`、`appendix.body`、
+`achievements.entries` 和 `acknowledgement.body`；只根据当前对象判断，不需要遍历这个列表。
 
-## Registry、字段和槽位
+## 内容槽
 
-自动 slot 必须同时满足：
+`materialize_slot` 会内部完成 Registry 字段校验、`alias/tag`、唯一 slot ID、可见填写占位、格式保留、包重开、
+效果回读和新版本创建。你只在当前批次操作中提交 `object_ref` 与已经判断好的 `field_id`，不写
+决定文件，不调用 compiler，也不管理 DOCX 路径。
 
-- `field_id` 存在于本次绑定的 Registry；
-- content type 与 Registry 兼容；
-- `slot_id` 在当前模板中唯一；
-- content control 使用 `w:alias = field_id`、`w:tag = slot_id`；
-- 有唯一、持久且绑定最终模板 hash 的 artifact locator；
-- required、cardinality 和 expected value style 明确。
+目标已有可见示例文字或空白时，物化会用 Registry 的 Human 可读标签替换为可见填写占位，后续填充时
+整体替换。字段匹配仍由你判断。若最多五个 Registry 候选仍无法区分，结合当前标签、上下文和
+可选书面要求继续判断；确有实质歧义再询问用户。
 
-`field_id` 只表示语义，不是 DOCX locator 或写入授权。未注册字段不得猜测；把它登记为
-manual/gap/unresolved。若它是本次必须自动填写的字段，向用户说明阻断或请求先扩展 Registry。
+## 删除与清空
 
-execution locator 只在当前 task snapshot 中用于 Tool 执行。最终填写契约不能依赖 snapshot ref、
-临时 object ID、单一页码或未约束的段落序号。
+- 一整段说明或示例都不应存在：用 `remove_object`。
+- 容器、边框、行距、表格单元格或固定标签必须保留，只去掉内部示例值：聚焦更小的 run 后用
+  `clear_content`，或将该 run 直接物化为槽。
+- 删除后检查相邻对象，防止标题失去正文、分页断裂、表格行列缺口、目录或声明被误伤。
+- Tool 的“修改已提交”只代表机械执行成功；语义和视觉是否正确仍由你根据新反馈判断。
+- 目录页中的点引导线和章节列表是域的可见缓存；保留目录域代码和段落样式，对缓存结果段落批量
+  使用 `clear_content`，不把 `XXX`、`XX` 或“此项非必需项”作为最终目录内容保留。
+- 固定标题与蓝/红色字号说明在同一段时，保留标题 run，批量删除说明 run；不得因为整段也含固定标题就
+  把说明一并保留。
 
-来源模板没有预置 content control 是正常输入状态，不是结构阻断，也不天然需要再次询问用户。
-当当前 task prompt 已明确授权修改开发期工作副本时，应根据 requirements、Registry 和观察证据
-主动物化所需 slot；只有字段映射或安全 execution target 确实无法确定时才询问或登记 gap。
+## 视觉反馈
 
-## 删除与责任迁移
+- `open` 和 `page` 一次只给一张当前页图及该页对象。
+- `focus` 一次只给一个具体对象的局部图；空对象定位不唯一时结合父段落判断。
+- `template_edit` 总是把修改后同一页图片作为反馈返回。先看这张图，再决定是否继续改。
+- 没有“最终必须看完每一页”的规则。检查范围由你根据实际对象、修改影响和疑点决定；不为覆盖
+  率重复加载无关图片。
 
-`materialize_slot` 只物化 content control，不插入可见占位文字，也不自动清空示例内容。清理
-示例或说明时必须使用独立 `remove_content` operation。
+LibreOffice 页面是近似反馈，不是 Word 像素级认证；但已知视觉问题不能被忽略或用“工具通过”
+掩盖。
 
-删除前必须满足至少一个条件：
+## 常见错误
 
-- 被删内容承载的责任已经迁移到已物化 slot 或 protected target；
-- 当前用户指令或本次提供的书面要求明确授权删除，并记录精确授权摘要/hash。
+- 把 Registry 当成 54 个（或任何数量的）必做槽位；
+- 先写决定文件，再编译，再把路径交给 Tool；
+- 把旧 `object_ref` 误当成新版本对象（只有主动从旧正确版本分支时才应继续使用旧引用）；
+- 一张页图已经支持多个明确决定，却为每个对象分别 focus/edit/review；
+- 只增加内容控件，不删除说明和示例；
+- 只删除说明和示例，却没有给学生内容区留下可填写槽；
+- 把固定标签、章节标题、参考文献标题误当成学生填写值；
+- 不看 `template_edit` 自动返回的修改后页图；
+- 在全部内容完成前发布 Word，或把内部版本当作多份候选 Word 交付。
 
-不要用长期文档、最终目标描述或“看起来像说明”替代删除授权。删除范围歧义、可能吞入学校
-固定内容或影响 section/table/shape 边界时停止并询问。
+## 按当前信号加载知识
 
-## 常见错误与自我核对
+不要在开始时一次读取所有 Reference。只当当前页/对象命中下列信号时，用 `Read` 加载对应短文：
 
-- `materialize_slot` 会把目标现有内容包进 content control，不会自动插入空白占位，也不会清理
-  示例或说明；需要干净槽位时，必须另写 `remove_content`。
-- 不要把“原模板没有 content control”误判成需要用户授权。先检查当前 task prompt 的开发期修改
-  授权，再用 requirements、Registry 和当前 snapshot 决定并执行槽位物化。
-- paragraph 级 `clear_text_preserve_container` 会清空目标容器内全部可见文字。标签与填写内容
-  共段时，先 observe/query 到 run 级目标，或拆分 operation，避免把学校固定标签一起清空。
-- 每轮 mutate 后立即做 `mutation_review`，同时检查 `expected_changes`、`unexpected_changes` 和
-  实际页面；Tool 不会替你否决一个语义上过宽但技术上可执行的计划。
-- 必须按 requirements 和 Registry 逐项回查 required slot。不能因为 content control 数量增加、
-  compiler 成功或 build 可发布，就把漏槽、残留说明或示例目录降为 non-blocking。
-- 最终图片发现残留说明、示例正文、断裂字段、错误分页或空白异常时，应继续返工；不得用
-  `accepted` disposition 掩盖已知问题。
+| 当前信号 | 读取 |
+|---|---|
+| 不确定对象是固定标签、学生值还是示例，或不确定字段方向 | `references/object-decisions.md` |
+| 要删说明/样例或建立封面、摘要、正文、参考文献、致谢填写区 | `references/cleaning-and-fill-interfaces.md` |
+| 当前出现目录、点引导线、页码、题注、字段缓存或交叉引用 | `references/generated-content.md` |
+| 删除对象靠近分页/分节/表格边界，包含图表公式书签，或产生异常空白页 | `references/boundaries-and-object-safety.md` |
 
-## 样式与来源冲突
+读完只应用于当前对象/局部区域；不把 Reference 里的案例数量、学校结构或验收步骤当成每个任务的全局待办清单。
 
-区分：Tool 观测的有效值、当前材料声明的要求值、来源、适用范围和冲突状态。不要用经验或
-常识补缺失样式。
+## 完成输出
 
-当模板、书面要求和官方示例冲突时：
-
-1. 先确认是否适用于同一对象和范围；
-2. 保留各自 source/hash；
-3. 根据当前用户指令和任务材料裁决；
-4. 无法裁决时登记 gap/unresolved 或询问用户；
-5. 不把冲突静默压成一个值。
-
-## 视觉证据
-
-- `quick` 用于返工定位；
-- `candidate_verification` 用于最终候选全页证据；
-- 它们是固定渲染路由，不是模板质量认证。
-
-`template_compare` 只报告结构差异和 required images，不判断图片是否正确。你必须实际查看图片，
-检查截断、重叠、空白异常、字体/对齐错误、断裂字段、错误分页、残留说明、图片/表格/公式异常
-等，并为每张 required image 和 finding 写 disposition。
-
-如果最终图片暴露问题，即使 Tool 的其他机械检查通过，也继续返工，不能交付已知错误产物。
-
-## 失败后继续修正
-
-- compiler 拒绝：修正决定文件、Registry/field、引用、授权或 review；使用新的 output JSON。
-- mutate 拒绝 stale/ambiguous ref：重新 observe，缩小目标，重新编译；使用新的 DOCX 路径。
-- mutate 成功但 diff/图片不符合目标：不要构建该 attempt；缩小或修正 operation，并使用新的
-  DOCX 路径再次执行。
-- compare 出现 unexpected change 或缺 evidence：返工或扩大审查，不接受旧 hash 证据。
-- build 返回 blocked：根据 finding 回到 Registry、marker、locator、protected/remove、lineage 或
-  review；修正后使用新的 output directory。
-- 同一后端错误没有新证据时不要循环重试。
-
-不要覆盖旧 attempt，也不要混用不同 hash 的 snapshot、mutation、comparison、图片或决定。
-
-## 询问用户
-
-缺少会改变删除范围、字段映射、来源优先级或最终结果的必要裁决时，使用 SDK 原生
-`AskUserQuestion`/`can_use_tool` 并等待答案。不要创建 question file、pause status、session
-registry 或自定义多轮协议。
-
-用户拒绝授权或无法提供必要事实时返回真实 `blocked`，不得通过猜测得到 built。
-
-## 两个 compiler
-
-| 脚本 | 决定输入 | canonical 输出 | 下游 |
-|---|---|---|---|
-| `compile_mutation_plan.py` | snapshot、Registry、责任、字段、授权、operations | `mutation-plan.json` | `template_mutate` |
-| `compile_artifact_spec.py` | final snapshot、Registry、sources、protected/slot/remove、style、manual/gap/unresolved、lineage、review | `artifact-spec.json` | `template_build` |
-
-调用形态：
-
-```text
-uv run python <skill-root>/scripts/<script>.py \
-  --task-root <task-root> --input <decision.yaml> --output <new-output.json>
-```
-
-由 `docfit prepare-template` 启动时，应用会在 `DOCFIT_PYTHON` 提供当前产品解释器；此时用
-`"$DOCFIT_PYTHON" <skill-root>/scripts/<script>.py ...`，不要在任务目录创建另一套 uv 环境。
-
-脚本只允许 task root `work/` 内路径，不覆盖已有输出。编译错误是返工输入，不是任务终点。
-
-## 按需读取 references
-
-- 语义、protected/slot/remove/manual/gap：`references/template-semantics.md`
-- 删除授权和槽位物化：`references/deletion-and-slot-decisions.md`
-- 来源和样式冲突：`references/style-reconciliation.md`
-- 结构/视觉回归：`references/visual-regression.md`
-- 两份决定和 compiler 使用：`references/decision-compilation.md`
-
-只在相关问题出现时读取对应 reference，不一次加载全部内容。
-
-## 完成与回复
-
-最终 structured output 必须与磁盘事实一致：
+发布成功后，structured output 必须与 `template_publish` 和磁盘一致：
 
 ```yaml
-status: built | blocked
-artifact_path: output/template-artifact | null
-template_sha256: <sha256> | null
-fill_contract_sha256: <sha256> | null
+status: built
+artifact_path: output/final-template.docx
+template_sha256: <sha256>
 counts:
-  slot: 0
-  protected: 0
-  remove: 0
+  slot: <实际物化数量>
+  remove: <删除或清空数量>
   manual: 0
   gap: 0
   unresolved: 0
 ```
 
-成功回复说明四文件路径、模板/contract hash、结构化数量和仍需人工/质量验证的限制。blocked
-回复说明可定位的阻断与所需输入，不伪造产物路径或 hash，也不声称模板已经定版。
+确有无法消除的实质歧义时才返回 `blocked`，产物路径和 hash 必须为 null，不伪造 Word。
