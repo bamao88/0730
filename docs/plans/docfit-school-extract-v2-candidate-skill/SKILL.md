@@ -84,6 +84,10 @@ manual/gap/unresolved。若它是本次必须自动填写的字段，向用户�
 execution locator 只在当前 task snapshot 中用于 Tool 执行。最终填写契约不能依赖 snapshot ref、
 临时 object ID、单一页码或未约束的段落序号。
 
+来源模板没有预置 content control 是正常输入状态，不是结构阻断，也不天然需要再次询问用户。
+当当前 task prompt 已明确授权修改开发期工作副本时，应根据 requirements、Registry 和观察证据
+主动物化所需 slot；只有字段映射或安全 execution target 确实无法确定时才询问或登记 gap。
+
 ## 删除与责任迁移
 
 `materialize_slot` 只物化 content control，不插入可见占位文字，也不自动清空示例内容。清理
@@ -101,6 +105,8 @@ execution locator 只在当前 task snapshot 中用于 Tool 执行。最终填�
 
 - `materialize_slot` 会把目标现有内容包进 content control，不会自动插入空白占位，也不会清理
   示例或说明；需要干净槽位时，必须另写 `remove_content`。
+- 不要把“原模板没有 content control”误判成需要用户授权。先检查当前 task prompt 的开发期修改
+  授权，再用 requirements、Registry 和当前 snapshot 决定并执行槽位物化。
 - paragraph 级 `clear_text_preserve_container` 会清空目标容器内全部可见文字。标签与填写内容
   共段时，先 observe/query 到 run 级目标，或拆分 operation，避免把学校固定标签一起清空。
 - 每轮 mutate 后立即做 `mutation_review`，同时检查 `expected_changes`、`unexpected_changes` 和

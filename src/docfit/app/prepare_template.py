@@ -206,6 +206,14 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         f"(sha256 {prepared.requirements_sha256}). "
         f"Field Registry: {prepared.registry_path.relative_to(prepared.task_root)} "
         f"(sha256 {prepared.registry_sha256}). "
+        "The development-stage working copy is intentionally mutable. You are authorized to "
+        "materialize content controls for required registered slots and to remove examples, "
+        "placeholders, or instructions when the supplied requirements and observed structure "
+        "establish their role and every surviving responsibility is migrated. The absence of "
+        "pre-existing content controls is not a blocker. Do not ask for authorization merely "
+        "because a required slot or content control does not yet exist. Ask only when the "
+        "available task evidence leaves a material field mapping, deletion boundary, source "
+        "priority, or visual decision genuinely unresolved. "
         "Use the four DocFit template Tools for all DOCX evidence and mutations. Write decisions "
         "only below work/decisions and compiled files only below work/compiled. Invoke the Skill "
         f"compiler scripts with the exact Python interpreter {sys.executable!s}. Inspect every "
@@ -260,7 +268,7 @@ def build_prepare_template_options(
         cwd=prepared.task_root,
         env=environment,
         model=backend.model,
-        max_turns=80,
+        max_turns=160,
         max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
         output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
         system_prompt=(

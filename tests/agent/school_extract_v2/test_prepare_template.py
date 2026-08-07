@@ -15,6 +15,7 @@ from docfit.app.prepare_template import (
     TemplateAgentExecution,
     _validated_sdk_output,
     build_prepare_template_options,
+    build_prepare_template_prompt,
     prepare_template_task,
     run_prepare_template,
     run_template_agent,
@@ -79,8 +80,20 @@ def test_prepare_options_use_one_candidate_server_skill_and_structured_output(
         "type": "json_schema",
         "schema": options.output_format["schema"],
     }
-    assert options.max_turns == 80
+    assert options.max_turns == 160
     assert options.cwd == prepared.task_root
+
+
+def test_prepare_prompt_carries_development_stage_mutation_authority(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+
+    prompt = build_prepare_template_prompt(prepared)
+
+    assert "development-stage working copy is intentionally mutable" in prompt
+    assert "The absence of pre-existing content controls is not a blocker" in prompt
+    assert "Do not ask for authorization merely because a required slot" in prompt
 
 
 def test_prepare_output_schema_requires_the_canonical_relative_artifact_path() -> None:
