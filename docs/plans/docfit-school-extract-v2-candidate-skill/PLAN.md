@@ -97,7 +97,8 @@ Registry、marker、locator、hash/ref、视觉证据、文件集合与原子发
 - execution locator 只在当前 task snapshot 有效；artifact locator 写入 `fill-contract.json` 并由
   最终 `template_sha256` 约束。
 - 所有写入目标必须不存在；写临时项、fsync、重读校验后原子 rename。
-- stale/ambiguous/cross-task ref、source drift 或 post-check 失败时不发布新 DOCX/产物。
+- stale/ambiguous/cross-task ref、source drift、操作执行失败或 DOCX package 无效时不发布新
+  DOCX/产物；语义正确性由 Agent 根据 diff 和渲染证据判断。
 - 运行日志只记录 refs、hashes、counts、codes、durations 和 cache 状态，不记录文档正文、
   decision body、OOXML 或凭据。
 
@@ -373,7 +374,7 @@ W6 还必须运行 lock/build、ruff、mypy、全量 pytest、doctor、provider 
 ```text
 decision 编译失败      → 无 canonical 输出      → 修正决定/证据
 stale/ambiguous ref    → 无新 DOCX             → 重新 observe/编译
-mutation post-check 失败 → 无新 DOCX            → 缩小 operation
+mutation diff/图片不正确 → 保留 attempt 但不构建 → 缩小或修正 operation
 unexpected diff       → comparison evidence     → 返工并使用新 attempt
 final review 缺页/跨 hash → 无 artifact spec     → 补精确 hash 审查
 Registry/field/marker 错误 → 无 template artifact → 修正字段或槽标记

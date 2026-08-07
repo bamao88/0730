@@ -255,13 +255,15 @@ fingerprint、责任迁移或精确删除授权、边界、保护不变量和预
 2. 把 source 复制到同文件系统临时项；
 3. 按 plan 顺序重解 target 并验证 fingerprint；
 4. 对临时项执行 operation；
-5. 重新打开 DOCX，验证 content controls、protected content、relationships、styles、sections、
-   headers/footers 和 package 完整性；
-6. 建立 after snapshot 与 mutation evidence；
+5. 重新打开 DOCX，验证 package 完整性并建立 after snapshot 与 mutation evidence；
+6. 返回 operation results 和 before/after 证据，由 Agent 通过 `template_compare` 与页面渲染判断
+   语义正确性、范围和视觉结果；
 7. source final recheck；
 8. fsync 并原子 rename 为新 output。
 
-任何一步失败都删除临时项，不发布 output、after snapshot 或 committed mutation ref。
+任何机械执行步骤失败都删除临时项，不发布 output、after snapshot 或 committed mutation ref。
+Tool 不以内置规则判断 protected content、样式、section 或页面语义是否“改对”；
+`committed: true` 只声明 canonical plan 已执行、package 有效、源文件未变且结果已原子发布。
 
 成功：
 
@@ -281,11 +283,11 @@ operation_results: []
 稳定错误至少包括：`invalid_mutation_plan`、`plan_digest_mismatch`、`registry_hash_mismatch`、
 `snapshot_hash_mismatch`、`target_not_found`、`target_ambiguous`、`target_fingerprint_mismatch`、
 `field_not_registered`、`slot_id_not_unique`、`unsupported_operation`、
-`deletion_authority_missing`、`protected_content_changed`、`post_check_failed`、
-`output_exists`、`source_changed`。
+`deletion_authority_missing`、`invalid_docx_package`、`output_exists`、`source_changed`。
 
 测试覆盖 alias/tag、无占位文字、重复目标、每个已开放删除 mode、责任迁移、rollback、source
-只读、目标不覆盖和 committed evidence。
+只读、Agent 已授权段落清理不被语义规则否决，以及 committed evidence。语义范围和视觉质量
+通过 comparison/render 反馈给 Agent，不作为 mutate 发布前检查器。
 
 ## 6. `template_compare`
 

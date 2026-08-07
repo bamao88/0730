@@ -46,116 +46,6 @@ def _load_plan(path: Path) -> JsonObject:
         )
     return value
 
-
-
-
-def _verify_after(
-    before: JsonObject,
-    after: JsonObject,
-    operations: list[JsonObject],
-) -> None:
-    controls = after.get("content_controls")
-    if not isinstance(controls, list):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="post_check_failed",
-            message="The mutated template has no valid content-control inventory.",
-        )
-    target_ids = {
-        operation.get("execution_locator", {}).get("object_id") for operation in operations
-    }
-    before_objects = before.get("objects")
-    after_objects = after.get("objects")
-    if not isinstance(before_objects, list) or not isinstance(after_objects, list):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="post_check_failed",
-            message="The mutation object inventory cannot be revalidated.",
-        )
-    target_paragraphs = {
-        (item.get("part"), item.get("paragraph_index"))
-        for item in before_objects
-        if isinstance(item, dict) and item.get("object_id") in target_ids
-    }
-    after_by_position = {
-        (
-            item.get("part"),
-            item.get("paragraph_index"),
-            item.get("kind"),
-            item.get("run_index"),
-        ): item
-        for item in after_objects
-        if isinstance(item, dict)
-    }
-    for item in before_objects:
-        if not isinstance(item, dict) or item.get("object_id") in target_ids:
-            continue
-        if item.get("kind") == "paragraph" and (
-            item.get("part"),
-            item.get("paragraph_index"),
-        ) in target_paragraphs:
-            continue
-        current = after_by_position.get(
-            (
-                item.get("part"),
-                item.get("paragraph_index"),
-                item.get("kind"),
-                item.get("run_index"),
-            )
-        )
-        if not isinstance(current, dict) or current.get("text") != item.get("text"):
-            raise ToolFailure(
-                status="error",
-                origin="postcondition",
-                code="protected_content_changed",
-                message="A non-target paragraph changed during mutation.",
-            )
-    for operation in operations:
-        if operation.get("operation") == "materialize_slot":
-            matched = [
-                item
-                for item in controls
-                if isinstance(item, dict)
-                and item.get("alias") == operation.get("field_id")
-                and item.get("tag") == operation.get("slot_id")
-            ]
-            if len(matched) != 1:
-                raise ToolFailure(
-                    status="error",
-                    origin="postcondition",
-                    code="post_check_failed",
-                    message="A materialized slot failed its marker postcondition.",
-                )
-        if operation.get("operation") == "remove_content":
-            expected = operation.get("expected_after")
-            forbidden = (
-                expected.get("forbidden_text_absent")
-                if isinstance(expected, dict)
-                else None
-            )
-            all_text = "\n".join(
-                item.get("text", "") for item in after_objects if isinstance(item, dict)
-            )
-            if isinstance(forbidden, str) and forbidden in all_text:
-                raise ToolFailure(
-                    status="error",
-                    origin="postcondition",
-                    code="post_check_failed",
-                    message="Removed content remains visible after mutation.",
-                )
-    if before.get("styles") != after.get("styles") or before.get("sections") != after.get(
-        "sections"
-    ):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="protected_content_changed",
-            message="Styles or sections changed outside the mutation plan.",
-        )
-
-
 class TemplateMutationService:
     def mutate(self, args: dict[str, Any], *, task_root: Path) -> JsonObject:
         plan_path = task_file(
@@ -269,7 +159,6 @@ class TemplateMutationService:
                 output_hash,
                 output.relative_to(task_root).as_posix(),
             )
-            _verify_after(snapshot, after_payload, operations)
             if sha256_file(source) != source_hash:
                 raise ToolFailure(
                     status="needs_input",
@@ -306,11 +195,19 @@ class TemplateMutationService:
                 "operation_results": operation_results,
                 "checks": [
                     {"name": "source_unchanged", "result": "ok"},
-                    {"name": "planned_operations_only", "result": "ok"},
-                    {"name": "protected_content_preserved", "result": "ok"},
-                    {"name": "marker_postconditions", "result": "ok"},
+                    {"name": "compiled_plan_executed", "result": "ok"},
+                    {"name": "docx_package_valid", "result": "ok"},
+                    {"name": "output_published_atomically", "result": "ok"},
                 ],
-                "warnings": [],
+                "warnings": [
+                    {
+                        "code": "agent_semantic_review_required",
+                        "message": (
+                            "The tool does not judge semantic correctness. Review the "
+                            "mutation diff and rendered pages before building the artifact."
+                        ),
+                    }
+                ],
                 "failure": None,
             }
         except BaseException:

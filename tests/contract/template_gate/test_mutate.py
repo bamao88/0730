@@ -234,6 +234,138 @@ def test_materialize_then_remove_commits_one_safe_docx_and_evidence(tmp_path: Pa
     }
 
 
+def test_agent_authorized_paragraph_cleanup_is_not_semantically_vetoed(
+    tmp_path: Path,
+) -> None:
+    task_root = tmp_path / "task"
+    (task_root / "input").mkdir(parents=True)
+    (task_root / "work/decisions").mkdir(parents=True)
+    (task_root / "work/compiled").mkdir()
+    (task_root / "work/attempts").mkdir()
+    (task_root / "output").mkdir()
+    source = task_root / "input/template.docx"
+    registry = task_root / "input/content-fields.yaml"
+    shutil.copyfile(FIXTURE, source)
+    _add_label_before_placeholder(source)
+    shutil.copyfile(REGISTRY, registry)
+    source_hash = sha256_file(source)
+    observed = TemplateObservationService().create(
+        {
+            "input_docx": "input/template.docx",
+            "visual_level": "none",
+            "focus": ["structure"],
+        },
+        task_root=task_root,
+    )
+    target = next(
+        item
+        for item in observed["objects"]
+        if item["kind"] == "paragraph" and item["text"] == "姓名：请在此填写"
+    )
+    decisions = {
+        "schema_version": 1,
+        "snapshot_ref": observed["snapshot_ref"],
+        "document_sha256": source_hash,
+        "field_registry_ref": {
+            "path": "input/content-fields.yaml",
+            "registry_id": "docfit.thesis.content_fields",
+            "registry_version": "0.1.0",
+            "sha256": sha256_file(registry),
+        },
+        "sources": [
+            {
+                "source_id": "school-template",
+                "path": "input/template.docx",
+                "sha256": source_hash,
+                "authority": "supplied_school_template",
+                "scope": "template_structure",
+            }
+        ],
+        "decisions": [
+            {
+                "decision_id": "decision-clear-paragraph",
+                "subject": "清理 Agent 已确认的整段模板说明",
+                "responsibility": {
+                    "kind": "remove",
+                    "content_type": "text",
+                    "cardinality": "one",
+                    "required": False,
+                    "condition": None,
+                    "handling": "automatic",
+                },
+                "source_refs": ["school-template"],
+                "evidence_refs": [observed["snapshot_ref"]],
+                "rationale": "Agent 已根据任务上下文明确授权清理整个段落",
+            }
+        ],
+        "operations": [
+            {
+                "operation_id": "op-clear-paragraph",
+                "operation": "remove_content",
+                "decision_ref": "decision-clear-paragraph",
+                "execution_locator": {
+                    "snapshot_ref": observed["snapshot_ref"],
+                    "object_id": target["object_id"],
+                    "expected_fingerprint": target["expected_fingerprint"],
+                },
+                "mode": "clear_text_preserve_container",
+                "migration_targets": [],
+                "deletion_authority": {
+                    "source_ref": "school-template",
+                    "authority_sha256": source_hash,
+                },
+                "expected_after": {
+                    "forbidden_text_absent": "姓名：请在此填写",
+                    "container_preserved": True,
+                },
+            }
+        ],
+    }
+    decision_path = task_root / "work/decisions/mutation-decisions.yaml"
+    decision_path.write_text(yaml.safe_dump(decisions, allow_unicode=True), encoding="utf-8")
+    plan_path = task_root / "work/compiled/mutation-plan.json"
+    compile_mutation_decisions(
+        task_root=task_root,
+        input_path=decision_path,
+        output_path=plan_path,
+    )
+
+    result = asyncio.run(
+        template_mutate.handler(
+            {
+                "schema_version": 1,
+                "task_root": str(task_root),
+                "mutation_plan_path": "work/compiled/mutation-plan.json",
+                "output_docx": "work/attempts/template-attempt-1.docx",
+            }
+        )
+    )["structuredContent"]
+
+    assert result["call_status"] == "ok", result
+    assert result["committed"] is True
+    assert {item["name"] for item in result["checks"]} == {
+        "source_unchanged",
+        "compiled_plan_executed",
+        "docx_package_valid",
+        "output_published_atomically",
+    }
+    assert result["warnings"] == [
+        {
+            "code": "agent_semantic_review_required",
+            "message": (
+                "The tool does not judge semantic correctness. Review the mutation "
+                "diff and rendered pages before building the artifact."
+            ),
+        }
+    ]
+    assert sha256_file(source) == source_hash
+    output = task_root / result["output_docx"]
+    with zipfile.ZipFile(output) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    cleared = list(root.iter(f"{W}p"))[1]
+    assert "".join(item.text or "" for item in cleared.iter(f"{W}t")) == ""
+
+
 def test_mutate_rejects_inline_operations(tmp_path: Path) -> None:
     result = asyncio.run(
         template_mutate.handler(

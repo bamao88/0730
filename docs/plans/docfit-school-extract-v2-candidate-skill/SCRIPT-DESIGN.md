@@ -506,7 +506,7 @@ spec_digest: <sha256>
 
 | Tool | 不可信输入 | 必须重验 |
 |---|---|---|
-| `template_mutate` | mutation plan | schema/digest、snapshot/hash、Registry、field/marker、target、授权、post-check |
+| `template_mutate` | mutation plan | schema/digest、snapshot/hash、Registry、field/marker、target、授权、package 有效性；语义结果由 Agent 对比/渲染核对 |
 | `template_build` | artifact spec/review/fill contract | schema/digest、sources、final DOCX、Registry/marker、artifact locator、protected/remove、lineage、review、四文件发布 |
 
 脚本只读 evidence manifest；Tool 在实际副作用边界直接读取 DOCX/source/Registry 并重算事实。

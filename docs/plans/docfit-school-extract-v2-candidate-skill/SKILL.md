@@ -31,8 +31,9 @@ template-artifact/
 - Tool 返回的结构/视觉证据是否符合用户目标；
 - 何时返工、何时询问用户、何时报告真实阻断。
 
-Tool 负责确定性 DOCX 事实、受控修改、比较和原子构建。compiler 只校验并规范化你的决定。
-任何 Tool/compiler 成功都不能替代你的结果检查。
+Tool 负责确定性 DOCX 事实、按计划执行修改、返回比较证据和原子构建。`template_mutate` 不对
+修改是否符合业务语义、是否误伤视觉内容作裁决；compiler 只校验并规范化你的决定。任何
+Tool/compiler 成功都不能替代你的结果检查。
 
 ## 推荐方法
 
@@ -50,7 +51,8 @@ Tool 负责确定性 DOCX 事实、受控修改、比较和原子构建。compil
 7. 把需要修改的语义判断、字段、授权和目标写入新的 `mutation-decisions.yaml`，运行
    `scripts/compile_mutation_plan.py`。
 8. 把 canonical mutation plan 交给 `template_mutate`。目标失效或歧义时重新 observe 和编译；
-   不手改 compiled JSON。
+   不手改 compiled JSON。`committed: true` 只表示计划已经执行、DOCX package 有效且新文件已
+   原子发布，不表示清理范围或槽位结果正确。
 9. 调用 `template_compare.create` 的 `mutation_review`，检查预期变化、意外变化和 required
    images。发现误伤或目标未发生时返工并使用新的 output 路径。
 10. 修改完成后，对当前最终 snapshot 调用 `template_compare.create` 的 `final_review`，使用
@@ -95,6 +97,19 @@ execution locator 只在当前 task snapshot 中用于 Tool 执行。最终填�
 不要用长期文档、最终目标描述或“看起来像说明”替代删除授权。删除范围歧义、可能吞入学校
 固定内容或影响 section/table/shape 边界时停止并询问。
 
+## 常见错误与自我核对
+
+- `materialize_slot` 会把目标现有内容包进 content control，不会自动插入空白占位，也不会清理
+  示例或说明；需要干净槽位时，必须另写 `remove_content`。
+- paragraph 级 `clear_text_preserve_container` 会清空目标容器内全部可见文字。标签与填写内容
+  共段时，先 observe/query 到 run 级目标，或拆分 operation，避免把学校固定标签一起清空。
+- 每轮 mutate 后立即做 `mutation_review`，同时检查 `expected_changes`、`unexpected_changes` 和
+  实际页面；Tool 不会替你否决一个语义上过宽但技术上可执行的计划。
+- 必须按 requirements 和 Registry 逐项回查 required slot。不能因为 content control 数量增加、
+  compiler 成功或 build 可发布，就把漏槽、残留说明或示例目录降为 non-blocking。
+- 最终图片发现残留说明、示例正文、断裂字段、错误分页或空白异常时，应继续返工；不得用
+  `accepted` disposition 掩盖已知问题。
+
 ## 样式与来源冲突
 
 区分：Tool 观测的有效值、当前材料声明的要求值、来源、适用范围和冲突状态。不要用经验或
@@ -124,7 +139,8 @@ execution locator 只在当前 task snapshot 中用于 Tool 执行。最终填�
 
 - compiler 拒绝：修正决定文件、Registry/field、引用、授权或 review；使用新的 output JSON。
 - mutate 拒绝 stale/ambiguous ref：重新 observe，缩小目标，重新编译；使用新的 DOCX 路径。
-- mutate post-check 失败：不要消费 output/ref；检查 operation 范围和保护不变量。
+- mutate 成功但 diff/图片不符合目标：不要构建该 attempt；缩小或修正 operation，并使用新的
+  DOCX 路径再次执行。
 - compare 出现 unexpected change 或缺 evidence：返工或扩大审查，不接受旧 hash 证据。
 - build 返回 blocked：根据 finding 回到 Registry、marker、locator、protected/remove、lineage 或
   review；修正后使用新的 output directory。

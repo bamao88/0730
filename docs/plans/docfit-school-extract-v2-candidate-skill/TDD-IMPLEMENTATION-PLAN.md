@@ -231,12 +231,12 @@ uv run pytest -q \
 1. RED→GREEN：mutation decisions/plan 的 Registry、field、marker 和 target。
 2. RED→GREEN：slot operation 创建 `w:alias=field_id`、`w:tag=slot_id`，不插入占位文字。
 3. RED→GREEN：删除 operation 要求责任迁移或当前任务精确授权。
-4. RED→GREEN：两个 operation 按顺序在临时副本执行并 post-check。
+4. RED→GREEN：两个 operation 按顺序在临时副本执行并生成 after snapshot/mutation evidence。
 5. RED→GREEN：after snapshot/mutation evidence 只在 commit 后发布。
 6. RED→GREEN：mutation compare 报告 expected/unexpected diff 和 required images。
 7. RED→GREEN：最终 artifact spec/build 使用新的当前 ref/hash。
 8. 逐项补 duplicate target、stale ref、source changed、missing authority、protected change、
-   post-check failure 和 output exists。
+   package validation failure 和 output exists。
 
 ### 5.3 通过标准
 
@@ -265,7 +265,7 @@ remove_shape
 2. compiler schema/领域校验 RED→GREEN；
 3. Tool schema/执行 RED→GREEN；
 4. source readonly 与 rollback；
-5. protected/container/relationship/section 专属 post-check；
+5. Agent 通过 comparison/render 反馈核对 protected/container/relationship/section；
 6. compare expected/unexpected 与 required images；
 7. build/fill-contract/remove residue 回归；
 8. 一个正例、一个代表性拒绝、一个失败不发布。
