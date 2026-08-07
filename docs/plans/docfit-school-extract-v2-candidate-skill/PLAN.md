@@ -406,8 +406,11 @@ Agent backend 401–403 → 无 Agent 决定/产物       → 恢复凭据或额
   编译决定；它保留计划、路径、hash、目标定位、package 和原子发布边界，并把 after snapshot、
   mutation diff 与渲染证据反馈给 Agent 自行核对；
 - 新南农运行在空 task root 完成结构 snapshot 与 14 页初始渲染，但在写 mutation decisions 前
-  失去可用后端：三个 Kimi credential 返回 HTTP 403，MiniMax 返回 HTTP 402；未生成新 DOCX
-  或 template artifact；
+  失去可用后端。三个 Kimi credential 返回 HTTP 403；MiniMax 外部配置使用普通按量 key，针对
+  官方 M2.7 endpoint 的最小请求返回 HTTP 402 / `insufficient_balance_error`。Token Plan 与按量
+  key 资源池独立，正确 Token Plan key 尚未安装；未生成新 DOCX 或 template artifact；
+- MiniMax SDK 环境已按官方 Claude Code 合同改用 `ANTHROPIC_AUTH_TOKEN`、关闭非必要后台流量，
+  默认和本机覆盖模型均改为 `MiniMax-M2.7`；
 - 当前受影响的 Tool/Agent/CLI 合同 30 项、根项目全量 353 项通过；scoped ruff、strict mypy、
   doctor、lock 和 build 通过。全仓 ruff 只被两个既有未跟踪 `test/` 诊断脚本的 import 顺序
   阻断，本工作包未修改这些用户文件；
@@ -430,3 +433,6 @@ compiler 规范化为公开 `font/paragraph` 结构，并由 builder 独立重�
 - [Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs)
 - [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions)
 - [Python reference](https://code.claude.com/docs/en/agent-sdk/python)
+- [MiniMax Token Plan 概要](https://platform.minimaxi.com/docs/token-plan/intro)
+- [MiniMax Claude Code 接入](https://platform.minimaxi.com/docs/token-plan/claude-code)
+- [MiniMax Anthropic API 兼容](https://platform.minimaxi.com/docs/api-reference/text-anthropic-api)
