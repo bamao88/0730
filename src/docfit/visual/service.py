@@ -277,6 +277,44 @@ class VisualEvidenceService:
         ]
         return selected[:limit], len(selected) > limit
 
+    def physical_locations(
+        self,
+        render_ref: str,
+        inspection: Inspection,
+        object_refs: list[JsonObject],
+    ) -> list[JsonObject]:
+        """Locate semantic objects without creating images or assigning meaning."""
+
+        render_path, manifest = self.store.resolve_render(render_ref)
+        if manifest.get("document_sha256") != inspection.document_sha256:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="render_document_mismatch",
+                message="The render and object snapshot belong to different Word versions.",
+            )
+        text_index = self._read_index(render_path / "indexes" / "pdf-text.json")
+        anchors = self._read_index(render_path / "indexes" / "semantic-anchors.json")
+        locations: list[JsonObject] = []
+        for reference in object_refs:
+            located = locate_object(text_index, anchors, reference)
+            candidate_pages = located.get("candidate_pages")
+            page = located.get("page")
+            if page is None and isinstance(candidate_pages, list) and len(candidate_pages) == 1:
+                page = candidate_pages[0]
+            value: JsonObject = {
+                "object_ref": reference,
+                "page": page,
+                "mapping_quality": located.get("mapping_quality", "mapping_unavailable"),
+            }
+            bbox = located.get("bbox_pdf")
+            if isinstance(bbox, list) and len(bbox) == 4:
+                value["bbox_pdf"] = [float(coordinate) for coordinate in bbox]
+            if isinstance(candidate_pages, list):
+                value["candidate_pages"] = candidate_pages
+            locations.append(value)
+        return locations
+
     @staticmethod
     def _compact_page_object(item: Any) -> JsonObject:
         text = item.text
@@ -287,6 +325,34 @@ class VisualEvidenceService:
             "type": item.kind,
             "text": text,
         }
+        if item.style:
+            value["style"] = item.style
+        format_hint = {
+            key: raw
+            for key, raw in item.format.items()
+            if key
+            in {
+                "alignment",
+                "bold",
+                "color",
+                "font",
+                "font.ascii",
+                "font.eastAsia",
+                "italic",
+                "pageBreakBefore",
+                "size",
+                "effective.bold",
+                "effective.color",
+                "effective.font.ascii",
+                "effective.font.eastAsia",
+                "effective.font.hAnsi",
+                "effective.italic",
+                "effective.size",
+            }
+            and raw is not None
+        }
+        if format_hint:
+            value["format_hint"] = dict(sorted(format_hint.items()))
         if item.kind == "sdt":
             value["slot"] = {
                 key: item.format.get(key)
@@ -479,6 +545,15 @@ class VisualEvidenceService:
                         ),
                     }
                 )
+                if region.get("fallback") == "metadata_only":
+                    evidence.append(
+                        {
+                            "selector": region,
+                            "mapping_quality": "mapping_unavailable",
+                            "candidate_pages": candidate_pages,
+                        }
+                    )
+                    continue
                 for page in candidate_pages[: _MAX_RETURNED_IMAGES - len(images)]:
                     view = self._page_view(reference, pdf, index, int(page), "review")
                     public = self._public_view(view)
@@ -670,7 +745,8 @@ class VisualEvidenceService:
     ) -> JsonObject:
         selector = region.get("selector")
         allowed = {
-            "object_ref": {"selector", "object_ref", "padding"},
+            "object_ref": {"selector", "object_ref", "padding", "fallback"},
+            "object_refs": {"selector", "object_refs", "padding", "fallback"},
             "text": {"selector", "text", "occurrence", "padding"},
             "image_bbox": {"selector", "evidence_ref", "bbox_px", "padding"},
         }
@@ -680,12 +756,54 @@ class VisualEvidenceService:
                 origin="request",
                 code="invalid_region_selector",
                 message=(
-                    "A region selector must be object_ref, text, or image_bbox with only "
-                    "its supported fields."
+                    "A region selector must be object_ref, object_refs, text, or "
+                    "image_bbox with only its supported fields."
                 ),
             )
         if selector == "object_ref":
             return locate_object(index, anchors, region.get("object_ref"))
+        if selector == "object_refs":
+            object_refs = region.get("object_refs")
+            if (
+                not isinstance(object_refs, list)
+                or not 1 <= len(object_refs) <= 9
+                or not all(isinstance(item, dict) for item in object_refs)
+            ):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="invalid_region_selector",
+                    message="An object_refs region requires one through nine object refs.",
+                )
+            located = [locate_object(index, anchors, item) for item in object_refs]
+            primary = located[0]
+            if primary.get("mapping_quality") == "mapping_unavailable":
+                return primary
+            page = primary.get("page")
+            visible = [
+                item
+                for item in located
+                if item.get("page") == page
+                and item.get("mapping_quality") != "mapping_unavailable"
+                and isinstance(item.get("bbox_pdf"), list)
+            ]
+            boxes = [item["bbox_pdf"] for item in visible]
+            return {
+                "page": page,
+                "bbox_pdf": [
+                    min(float(box[0]) for box in boxes),
+                    min(float(box[1]) for box in boxes),
+                    max(float(box[2]) for box in boxes),
+                    max(float(box[3]) for box in boxes),
+                ],
+                "mapping_quality": "object_group",
+                "mapping_basis": [
+                    basis
+                    for item in visible
+                    for basis in item.get("mapping_basis", [])
+                    if isinstance(basis, str)
+                ],
+            }
         if selector == "text":
             occurrence = region.get("occurrence")
             if occurrence is not None and not isinstance(occurrence, int):

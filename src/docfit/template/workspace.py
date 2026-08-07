@@ -17,7 +17,17 @@ from pathlib import Path
 from typing import Any
 
 from docfit.fields import FieldRegistrySnapshot
-from docfit.template.object_mutation import ObjectMutation, mutate_objects
+from docfit.template.object_mutation import (
+    ObjectMutation,
+    StructureMember,
+    TocEntry,
+    mutate_objects,
+)
+from docfit.template.semantic_types import (
+    require_body_member_type,
+    require_body_structure_type,
+    semantic_object_type,
+)
 from docfit.tools.inspection import (
     InspectedObject,
     Inspection,
@@ -35,11 +45,18 @@ from docfit.tools.runtime import (
 from docfit.visual.service import VisualEvidenceService
 
 _DOCUMENT_REF = re.compile(r"^document:v1:([0-9a-f]{64})$")
+_REGION_REF = re.compile(r"^region:v1:([0-9a-f]{64}):(\d+):(obj-[0-9a-f]{24})$")
 _TEMPLATE_SELECTOR = "paragraph, table, picture, run, sdt, shape"
 _EDITABLE_KINDS = {"paragraph", "run", "table", "picture", "sdt", "shape"}
 _MAX_SEARCH_RESULTS = 5
-_MAX_PAGE_OBJECTS = 192
 _MAX_BATCH_OPERATIONS = 32
+_REGION_SOURCE_OBJECTS = 6
+_REGION_LAYOUT_STRATEGY = "page-proximity-v1"
+_REGION_MAX_HEIGHT_POINTS = 300.0
+_REGION_MAX_VERTICAL_GAP_POINTS = 120.0
+_REGION_ADJACENT_OBJECTS = 32
+_REGION_PADDING = 160
+_TOC_SAMPLE_MARKER = re.compile(r"(?:X{2,}|×{2,}|第\s*X\s*章)", re.IGNORECASE)
 
 
 def _normalize(value: str) -> str:
@@ -55,14 +72,69 @@ def _parent_paragraph_locator(locator: str) -> str | None:
     return match.group(1) if match else None
 
 
-def _brief_text(value: Any, *, limit: int = 120) -> str:
-    text = value if isinstance(value, str) else ""
-    return text if len(text) <= limit else f"{text[: limit - 1]}…"
-
-
 def _placeholder_text(field: JsonObject) -> str:
     label = str(field.get("label", field["field_id"]))
     return f"【{label}】"
+
+
+def _agent_object_ref(item: InspectedObject) -> JsonObject:
+    return {"object_id": str(item.object_ref["object_id"])}
+
+
+def _agent_object(item: InspectedObject) -> JsonObject:
+    value = VisualEvidenceService._compact_page_object(item)
+    value["object_ref"] = _agent_object_ref(item)
+    return value
+
+
+def _context_parent(
+    inspection: Inspection,
+    item: InspectedObject,
+) -> InspectedObject | None:
+    """Return the closest useful Word container for one locally exposed object."""
+
+    candidates = [
+        candidate
+        for candidate in inspection.objects
+        if candidate is not item
+        and item.locator.startswith(f"{candidate.locator}/")
+        and candidate.kind in {"paragraph", "table", "sdt", "shape"}
+    ]
+    return max(candidates, key=lambda candidate: len(candidate.locator), default=None)
+
+
+def _agent_context_object(
+    inspection: Inspection,
+    item: InspectedObject,
+) -> JsonObject:
+    """Expose one object plus only the immediate context needed to interpret it."""
+
+    value = _agent_object(item)
+    parent = _context_parent(inspection, item)
+    if parent is not None:
+        value["parent_context"] = _agent_object(parent)
+    return value
+
+
+def _with_semantic_type(field: JsonObject) -> JsonObject:
+    value = dict(field)
+    semantic = semantic_object_type(str(field.get("field_id", "")))
+    if semantic is not None:
+        value["semantic_object_type"] = semantic.public()
+    return value
+
+
+def _direct_format_properties(value: Any) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list) or any(item != "color" for item in value):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="direct_format_property_invalid",
+            message="clear_direct_format currently accepts only the explicit color property.",
+        )
+    return tuple(dict.fromkeys(str(item) for item in value))
 
 
 class TemplateWorkspaceService:
@@ -81,6 +153,7 @@ class TemplateWorkspaceService:
         self.registry = FieldRegistrySnapshot.load(field_registry)
         self.office = office or OfficeCliAdapter()
         self._visual = visual
+        self._source_region_cache: list[list[JsonObject]] | None = None
 
     @property
     def root(self) -> Path:
@@ -97,6 +170,14 @@ class TemplateWorkspaceService:
     @property
     def reviews(self) -> Path:
         return self.root / "reviews"
+
+    @property
+    def progress_path(self) -> Path:
+        return self.root / "task-progress.json"
+
+    @property
+    def region_blueprint_path(self) -> Path:
+        return self.root / "visual-regions.json"
 
     @property
     def visual(self) -> VisualEvidenceService:
@@ -134,6 +215,104 @@ class TemplateWorkspaceService:
             )
         return _document_ref(source_hash), target
 
+    def _read_progress(self, source_hash: str) -> JsonObject:
+        if not self.progress_path.exists():
+            progress: JsonObject = {
+                "schema_version": 1,
+                "source_sha256": source_hash,
+                "document_sha256": source_hash,
+                "region_index": 0,
+                "pending_object_ref": None,
+            }
+            self._write_progress(progress)
+            return progress
+        try:
+            value: Any = json.loads(self.progress_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="template_progress_invalid",
+                message="The saved template task progress is unreadable.",
+            ) from error
+        if (
+            not isinstance(value, dict)
+            or value.get("source_sha256") != source_hash
+            or not isinstance(value.get("document_sha256"), str)
+            or not isinstance(value.get("region_index"), int)
+            or value["region_index"] < 0
+            or (
+                value.get("pending_object_ref") is not None
+                and not isinstance(value.get("pending_object_ref"), dict)
+            )
+        ):
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="template_progress_invalid",
+                message="The saved template task progress failed its integrity checks.",
+            )
+        self._resolve_document(_document_ref(str(value["document_sha256"])))
+        return value
+
+    def _write_progress(self, progress: JsonObject) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
+        atomic_write_json(self.progress_path, progress)
+
+    @staticmethod
+    def _checkpoint_summary(inspection: Inspection) -> JsonObject:
+        aliases = Counter(
+            str(item.format["alias"])
+            for item in inspection.objects
+            if item.kind == "sdt" and item.format.get("alias")
+        )
+        structures = sorted(
+            alias
+            for alias in aliases
+            if (semantic := semantic_object_type(alias)) is not None
+            and semantic.parent_type is None
+        )
+        toc_objects = [
+            item
+            for item in inspection.objects
+            if item.kind == "paragraph"
+            and item.style
+            and item.style.casefold().startswith("toc")
+            and item.text.strip()
+        ]
+        toc_entries = [item.text for item in toc_objects]
+        toc_sample_entries = [text for text in toc_entries if _TOC_SAMPLE_MARKER.search(text)]
+        body_heading_values = {
+            str(item.format["alias"]): item.text
+            for item in inspection.objects
+            if item.kind == "sdt"
+            and isinstance(item.format.get("alias"), str)
+            and str(item.format["alias"]).startswith("body.heading.")
+            and item.text.strip()
+        }
+        missing_body_heading_types = sorted(
+            alias
+            for alias, text in body_heading_values.items()
+            if not any(
+                text in item.text
+                and (match := re.search(r"([1-3])$", item.style or "")) is not None
+                and int(match.group(1)) == int(alias.rsplit("level", 1)[-1])
+                for item in toc_objects
+            )
+        )
+        return {
+            "slot_count": sum(aliases.values()),
+            "materialized_fields": dict(sorted(aliases.items())),
+            "materialized_structures": structures,
+            "toc": {
+                "entry_count": len(toc_entries),
+                "sample_marker_count": len(toc_sample_entries),
+                "sample_marker_examples": toc_sample_entries[:5],
+                "missing_body_heading_types": missing_body_heading_types,
+                "refresh_needed": bool(toc_sample_entries or missing_body_heading_types),
+            },
+        }
+
     def _resolve_document(self, reference: Any) -> tuple[str, Path]:
         if not isinstance(reference, str):
             raise _document_ref_error()
@@ -154,92 +333,513 @@ class TemplateWorkspaceService:
                 code="invalid_object_ref",
                 message="An object_ref from template_view is required.",
             )
-        document_hash = reference.get("document_sha256")
-        _, document = self._resolve_document(
-            _document_ref(document_hash) if isinstance(document_hash, str) else None
-        )
+        source_hash = sha256_file(self.source)
+        progress = self._read_progress(source_hash)
+        _, document = self._resolve_document(_document_ref(str(progress["document_sha256"])))
         inspection = self._inspection(document)
-        return document, inspection, resolve_object_ref(reference, inspection)
+        object_id = reference.get("object_id")
+        selected = inspection.by_id().get(object_id) if isinstance(object_id, str) else None
+        if selected is None:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_object_ref",
+                message="The object_id is unavailable in this immutable Word version.",
+            )
+        return document, inspection, selected
 
     def _local_context(
         self,
         inspection: Inspection,
         selected: InspectedObject,
+        *,
+        region_objects: list[InspectedObject] | None = None,
     ) -> JsonObject:
-        paragraph_locator = (
-            selected.locator
-            if selected.kind == "paragraph"
-            else _parent_paragraph_locator(selected.locator)
-        )
-        paragraphs = [item for item in inspection.objects if item.kind == "paragraph"]
-        parent = next(
-            (item for item in paragraphs if item.locator == paragraph_locator),
+        paragraph_locator = _parent_paragraph_locator(selected.locator)
+        descendant_paragraph = next(
+            (
+                item
+                for item in inspection.objects
+                if item.kind == "paragraph" and item.locator.startswith(f"{selected.locator}/")
+            ),
             None,
         )
-        siblings: list[JsonObject] = []
-        if parent is not None:
-            index = paragraphs.index(parent)
-            for relative in (index - 1, index + 1):
-                if 0 <= relative < len(paragraphs):
-                    siblings.append(paragraphs[relative].public())
-        children = [
-            item.public()
-            for item in inspection.objects
-            if paragraph_locator is not None
-            and item.locator.startswith(f"{paragraph_locator}/")
-            and item.kind in {"run", "sdt"}
-        ][:12]
+        parent = _context_parent(inspection, selected)
+        candidates = self._navigation_candidates(inspection)
+        selected_index = next(
+            (
+                index
+                for index, item in enumerate(candidates)
+                if item.object_ref == selected.object_ref
+                or (paragraph_locator is not None and item.locator == paragraph_locator)
+                or (
+                    descendant_paragraph is not None
+                    and item.object_ref == descendant_paragraph.object_ref
+                )
+            ),
+            None,
+        )
+        adjacent: list[JsonObject] = []
+        context_paragraph = (
+            selected
+            if selected.kind == "paragraph"
+            else descendant_paragraph
+            or next(
+                (
+                    item
+                    for item in inspection.objects
+                    if item.kind == "paragraph" and item.locator == paragraph_locator
+                ),
+                None,
+            )
+        )
+        if context_paragraph is not None:
+            adjacent.extend(
+                _agent_context_object(inspection, item)
+                for item in inspection.objects
+                if item.kind in {"run", "sdt", "picture", "shape"}
+                and item.locator.startswith(f"{context_paragraph.locator}/")
+                and item.object_ref != selected.object_ref
+            )
+        if region_objects is not None:
+            for item in region_objects:
+                if item.object_ref != selected.object_ref:
+                    adjacent.append(_agent_context_object(inspection, item))
+                if item.kind != "paragraph" or item.object_ref == selected.object_ref:
+                    continue
+                adjacent.extend(
+                    _agent_context_object(inspection, child)
+                    for child in inspection.objects
+                    if child.kind in {"run", "sdt", "picture", "shape"}
+                    and child.locator.startswith(f"{item.locator}/")
+                )
+        elif selected_index is not None:
+            start = max(0, selected_index - 2)
+            stop = min(len(candidates), selected_index + 3)
+            adjacent.extend(
+                _agent_context_object(inspection, item)
+                for index, item in enumerate(candidates[start:stop], start=start)
+                if index != selected_index
+            )
+        unique: list[JsonObject] = []
+        seen_refs: set[str] = set()
+        for adjacent_object in adjacent:
+            reference = adjacent_object.get("object_ref")
+            object_id = reference.get("object_id") if isinstance(reference, dict) else None
+            if not isinstance(object_id, str) or object_id in seen_refs:
+                continue
+            seen_refs.add(object_id)
+            unique.append(adjacent_object)
+        adjacent = unique[:_REGION_ADJACENT_OBJECTS]
         return {
-            "current_object": selected.public(),
-            "parent_paragraph": parent.public() if parent and parent is not selected else None,
-            "adjacent_paragraphs": siblings,
-            "child_objects": children,
-            "context_truncated": len(children) == 12,
+            "target": _agent_context_object(inspection, selected),
+            "parent_object": (_agent_object(parent) if parent is not None else None),
+            "adjacent_objects": adjacent,
         }
 
-    def _page_view(
+    @staticmethod
+    def _navigation_candidates(inspection: Inspection) -> list[InspectedObject]:
+        return [
+            item
+            for item in inspection.objects
+            if item.locator.startswith("/body/")
+            and (
+                (item.kind == "paragraph" and bool(item.text.strip()))
+                or item.kind in {"picture", "shape"}
+            )
+        ]
+
+    def _source_regions(self) -> list[list[JsonObject]]:
+        if self._source_region_cache is not None:
+            return self._source_region_cache
+        source_hash = sha256_file(self.source)
+        if self.region_blueprint_path.exists():
+            try:
+                value: Any = json.loads(self.region_blueprint_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                value = None
+            raw_regions = value.get("regions") if isinstance(value, dict) else None
+            if (
+                isinstance(value, dict)
+                and value.get("source_sha256") == source_hash
+                and value.get("layout_strategy") == _REGION_LAYOUT_STRATEGY
+                and value.get("max_objects_per_region") == _REGION_SOURCE_OBJECTS
+                and value.get("max_height_points") == _REGION_MAX_HEIGHT_POINTS
+                and value.get("max_vertical_gap_points") == _REGION_MAX_VERTICAL_GAP_POINTS
+                and isinstance(raw_regions, list)
+                and all(
+                    isinstance(region, list) and all(isinstance(anchor, dict) for anchor in region)
+                    for region in raw_regions
+                )
+            ):
+                self._source_region_cache = raw_regions
+                return raw_regions
+        source = self.versions / f"{sha256_file(self.source)}.docx"
+        inspection = self._inspection(source)
+        candidates = self._navigation_candidates(inspection)
+        rendered, _ = self.visual.render({"input_docx": str(source), "overview": False})
+        locations = self.visual.physical_locations(
+            str(rendered["render_ref"]),
+            inspection,
+            [item.object_ref for item in candidates],
+        )
+        locations_by_id = {
+            str(location["object_ref"]["object_id"]): location for location in locations
+        }
+        occurrences: Counter[str] = Counter()
+        anchors: list[JsonObject] = []
+        for item in candidates:
+            fingerprint = str(item.object_ref["expected_fingerprint"])
+            occurrence = occurrences[fingerprint]
+            occurrences[fingerprint] += 1
+            location = locations_by_id.get(str(item.object_ref["object_id"]), {})
+            anchor: JsonObject = {
+                "fingerprint": fingerprint,
+                "occurrence": occurrence,
+                "type": item.kind,
+                "text": item.text,
+                "page": location.get("page"),
+                "mapping_quality": location.get("mapping_quality", "mapping_unavailable"),
+            }
+            bbox = location.get("bbox_pdf")
+            if isinstance(bbox, list) and len(bbox) == 4:
+                anchor["bbox_pdf"] = bbox
+            anchors.append(anchor)
+        regions = self._cluster_physical_regions(anchors)
+        self.root.mkdir(parents=True, exist_ok=True)
+        atomic_write_json(
+            self.region_blueprint_path,
+            {
+                "schema_version": 2,
+                "source_sha256": source_hash,
+                "layout_strategy": _REGION_LAYOUT_STRATEGY,
+                "max_objects_per_region": _REGION_SOURCE_OBJECTS,
+                "max_height_points": _REGION_MAX_HEIGHT_POINTS,
+                "max_vertical_gap_points": _REGION_MAX_VERTICAL_GAP_POINTS,
+                "regions": regions,
+            },
+        )
+        self._source_region_cache = regions
+        return regions
+
+    @staticmethod
+    def _cluster_physical_regions(anchors: list[JsonObject]) -> list[list[JsonObject]]:
+        regions: list[list[JsonObject]] = []
+        current: list[JsonObject] = []
+        current_page: int | None = None
+        current_top: float | None = None
+        current_bottom: float | None = None
+
+        def flush() -> None:
+            nonlocal current, current_page, current_top, current_bottom
+            if current:
+                regions.append(current)
+            current = []
+            current_page = None
+            current_top = None
+            current_bottom = None
+
+        for anchor in anchors:
+            page = anchor.get("page")
+            bbox = anchor.get("bbox_pdf")
+            box = (
+                [float(coordinate) for coordinate in bbox]
+                if isinstance(bbox, list) and len(bbox) == 4
+                else None
+            )
+            if not isinstance(page, int):
+                flush()
+                regions.append([anchor])
+                continue
+            if not current:
+                current = [anchor]
+                current_page = page
+                if box is not None:
+                    current_top = box[1]
+                    current_bottom = box[3]
+                continue
+            if current_page != page or len(current) >= _REGION_SOURCE_OBJECTS:
+                flush()
+                current = [anchor]
+                current_page = page
+                if box is not None:
+                    current_top = box[1]
+                    current_bottom = box[3]
+                continue
+            if box is None or current_top is None or current_bottom is None:
+                current.append(anchor)
+                continue
+            top = box[1]
+            bottom = box[3]
+            union_top = min(current_top, top)
+            union_bottom = max(current_bottom, bottom)
+            vertical_gap = max(0.0, top - current_bottom, current_top - bottom)
+            if (
+                union_bottom - union_top > _REGION_MAX_HEIGHT_POINTS
+                or vertical_gap > _REGION_MAX_VERTICAL_GAP_POINTS
+            ):
+                flush()
+                current = [anchor]
+                current_page = page
+                current_top = top
+                current_bottom = bottom
+                continue
+            current.append(anchor)
+            current_top = union_top
+            current_bottom = union_bottom
+        flush()
+        return regions
+
+    def _resolve_region_objects(
+        self,
+        inspection: Inspection,
+        anchors: list[JsonObject],
+    ) -> list[InspectedObject]:
+        candidates = self._navigation_candidates(inspection)
+        by_fingerprint: dict[str, list[InspectedObject]] = {}
+        for item in candidates:
+            fingerprint = str(item.object_ref["expected_fingerprint"])
+            by_fingerprint.setdefault(fingerprint, []).append(item)
+        resolved: list[InspectedObject] = []
+        for anchor in anchors:
+            matches = by_fingerprint.get(str(anchor["fingerprint"]), [])
+            occurrence = anchor.get("occurrence")
+            if isinstance(occurrence, int) and occurrence < len(matches):
+                resolved.append(matches[occurrence])
+                continue
+            text = anchor.get("text")
+            kind = anchor.get("type")
+            fallback = next(
+                (
+                    item
+                    for item in candidates
+                    if item.kind == kind and item.text == text and item not in resolved
+                ),
+                None,
+            )
+            if fallback is not None:
+                resolved.append(fallback)
+        return resolved
+
+    def _region_selection(
+        self,
+        inspection: Inspection,
+        progress: JsonObject,
+    ) -> tuple[int, int, InspectedObject | None, list[InspectedObject]]:
+        regions = self._source_regions()
+        cursor = int(progress["region_index"])
+        pending = progress.get("pending_object_ref")
+        if isinstance(pending, dict):
+            try:
+                target = resolve_object_ref(pending, inspection)
+                peers = (
+                    self._resolve_region_objects(inspection, regions[cursor])
+                    if cursor < len(regions)
+                    else []
+                )
+                return cursor, len(regions), target, peers
+            except ToolFailure:
+                pass
+        while cursor < len(regions):
+            resolved = self._resolve_region_objects(inspection, regions[cursor])
+            if resolved:
+                mapped_positions = [
+                    position
+                    for position, anchor in enumerate(regions[cursor])
+                    if isinstance(anchor.get("bbox_pdf"), list)
+                ]
+                mapped_index = (
+                    mapped_positions[min(1, len(mapped_positions) - 1)]
+                    if mapped_positions
+                    else min(1, len(resolved) - 1)
+                )
+                target = resolved[min(mapped_index, len(resolved) - 1)]
+                return cursor, len(regions), target, resolved
+            cursor += 1
+        return cursor, len(regions), None, []
+
+    @staticmethod
+    def _region_ref(document_hash: str, index: int, selected: InspectedObject) -> str:
+        return f"region:v1:{document_hash}:{index}:{selected.object_ref['object_id']}"
+
+    def _region_view(
         self,
         document_hash: str,
-        document: Path,
         inspection: Inspection,
-        page: int,
-    ) -> tuple[JsonObject, list[Path]]:
-        render, _ = self.visual.render({"input_docx": str(document), "overview": False})
-        page_count = int(render["page_count"])
-        if not 1 <= page <= page_count:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="page_out_of_range",
-                message="The requested page does not exist in this Word version.",
-            )
-        review, images = self.visual.review(
+        progress: JsonObject,
+        *,
+        selected: InspectedObject | None = None,
+    ) -> tuple[JsonObject | None, list[Path], JsonObject]:
+        index, count, target, region_objects = self._region_selection(inspection, progress)
+        if selected is not None:
+            target = selected
+        if index != progress["region_index"]:
+            progress = {**progress, "region_index": index}
+            self._write_progress(progress)
+        if target is None:
+            return None, [], progress
+        reviewed, images = self._review(
             {
-                "render_ref": render["render_ref"],
-                "mode": "pages",
+                "document_ref": _document_ref(document_hash),
+                "mode": "object",
+                "object_ref": target.object_ref,
+                "related_object_refs": [
+                    item.object_ref
+                    for item in region_objects
+                    if item.object_ref != target.object_ref
+                ],
                 "quality": "review",
-                "pages": [page],
+                "padding": 48,
             }
         )
-        self._record_review(
-            document_hash,
-            render_ref=str(render["render_ref"]),
-            page_count=page_count,
-            pages={page},
-        )
-        objects, truncated = self.visual.objects_on_page(
-            str(render["render_ref"]),
+        if not images:
+            paragraph_locator = _parent_paragraph_locator(target.locator)
+            candidates = [
+                item
+                for item in inspection.objects
+                if item.kind == "paragraph"
+                and (
+                    item.locator == paragraph_locator
+                    or item.locator.startswith(f"{target.locator}/")
+                )
+                and item.object_ref != target.object_ref
+            ]
+            for candidate in candidates:
+                candidate_review, candidate_images = self._review(
+                    {
+                        "document_ref": _document_ref(document_hash),
+                        "mode": "object",
+                        "object_ref": candidate.object_ref,
+                        "quality": "review",
+                        "padding": _REGION_PADDING,
+                    }
+                )
+                if candidate_images:
+                    target = candidate
+                    reviewed = candidate_review
+                    images = candidate_images
+                    break
+        if (
+            selected is not None or isinstance(progress.get("pending_object_ref"), dict)
+        ) and progress.get("pending_object_ref") != target.object_ref:
+            progress = {**progress, "pending_object_ref": target.object_ref}
+            self._write_progress(progress)
+        context = self._local_context(
             inspection,
-            page,
-            limit=_MAX_PAGE_OBJECTS,
+            target,
+            region_objects=region_objects,
         )
         return (
             {
-                "page": page,
-                "page_count": page_count,
-                "objects": objects,
-                "objects_truncated": truncated,
-                "evidence": review.get("evidence", []),
+                "region_ref": self._region_ref(document_hash, index, target),
+                "index": index + 1,
+                "count": count,
+                "target": context["target"],
+                "parent_object": context["parent_object"],
+                "adjacent_objects": context["adjacent_objects"],
+                "evidence": reviewed["visual_review"].get("evidence", []),
+            },
+            images,
+            progress,
+        )
+
+    def _pending_generated_content(
+        self,
+        document_hash: str,
+        inspection: Inspection,
+    ) -> tuple[JsonObject | None, list[Path]]:
+        summary = self._checkpoint_summary(inspection)
+        toc = summary.get("toc")
+        if not isinstance(toc, dict) or not toc.get("refresh_needed"):
+            return None, []
+        toc_root = next(
+            (
+                item
+                for item in inspection.objects
+                if item.kind == "paragraph"
+                and item.style
+                and item.style.casefold().startswith("toc")
+            ),
+            None,
+        )
+        if toc_root is None:
+            return None, []
+        fixed_titles = {
+            "摘要",
+            "中文摘要",
+            "英文摘要",
+            "abstract",
+            "一级章标题",
+            "二级标题",
+            "三级标题",
+            "参考文献",
+            "附录",
+            "附录标题",
+            "相关的学术成果目录",
+            "致谢",
+        }
+        required_body_headings = [
+            item
+            for item in inspection.objects
+            if item.kind == "sdt"
+            and isinstance(item.format.get("alias"), str)
+            and item.format["alias"] in toc.get("missing_body_heading_types", [])
+        ]
+        candidates: list[InspectedObject] = list(required_body_headings)
+        seen: set[str] = set()
+        seen_titles: set[str] = set()
+        for item in candidates:
+            object_id = str(item.object_ref.get("object_id", ""))
+            if object_id:
+                seen.add(object_id)
+            seen_titles.add(_normalize(item.text))
+        for item in inspection.objects:
+            if not item.text.strip() or (item.style and item.style.casefold().startswith("toc")):
+                continue
+            alias = item.format.get("alias") if item.kind == "sdt" else None
+            style = item.style.casefold() if item.style else ""
+            normalized = _normalize(item.text)
+            normalized_label = normalized.strip("【】")
+            is_candidate = (
+                (isinstance(alias, str) and alias.startswith("body.heading."))
+                or style.startswith("heading")
+                or style.startswith("标题")
+                or normalized_label in fixed_titles
+            )
+            object_id = str(item.object_ref.get("object_id", ""))
+            title_key = _normalize(item.text)
+            if not is_candidate or not object_id or object_id in seen or title_key in seen_titles:
+                continue
+            seen.add(object_id)
+            seen_titles.add(title_key)
+            candidates.append(item)
+            if len(candidates) >= 16:
+                break
+        reviewed, images = self._review(
+            {
+                "document_ref": _document_ref(document_hash),
+                "mode": "object",
+                "object_ref": toc_root.object_ref,
+                "quality": "review",
+                "padding": _REGION_PADDING,
+            }
+        )
+        return (
+            {
+                "field_id": "generated.toc",
+                "target": _agent_object(toc_root),
+                "required_body_heading_candidates": [
+                    _agent_object(item) for item in required_body_headings
+                ],
+                "title_candidates": [_agent_object(item) for item in candidates],
+                "evidence": reviewed["visual_review"].get("evidence", []),
+                "guidance": (
+                    "The live TOC needs refresh because its cache contains sample markers "
+                    "or omits already materialized body heading types. Required body heading "
+                    "candidates preserve the Agent's prior semantic classifications; all "
+                    "other candidates remain non-semantic suggestions. Choose the entries, "
+                    "assign levels 1-3, and call template_edit refresh_toc once."
+                ),
             },
             images,
         )
@@ -247,62 +847,140 @@ class TemplateWorkspaceService:
     def view(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
         action = args.get("action")
         if action == "open":
-            reference, document = self._register_source()
-            inspection = self._inspection(document)
-            current_page, images = self._page_view(
-                inspection.document_sha256,
-                document,
-                inspection,
-                1,
+            source_reference, _ = self._register_source()
+            source_hash = source_reference.rsplit(":", 1)[-1]
+            progress = self._read_progress(source_hash)
+            document_hash, document = self._resolve_document(
+                _document_ref(str(progress["document_sha256"]))
             )
-            return (
-                {
-                    "schema_version": 1,
-                    "status": "ok",
-                    "document_ref": reference,
-                    "document": {
-                        "sha256": inspection.document_sha256,
-                        "paragraphs": inspection.summary.get("paragraphs", 0),
-                        "tables": inspection.summary.get("tables", 0),
-                        "sections": inspection.summary.get("sections", 0),
-                        "page_count": current_page["page_count"],
-                    },
-                    "registry": self.registry.identity(),
-                    "current_page": current_page,
-                    "visual": {"scope": "current_page"},
-                    "guidance": (
-                        "Judge only this current page/object context. Batch clear decisions "
-                        "that are all visible here; search or request another page only when "
-                        "the task actually needs it."
-                    ),
-                },
-                images,
-            )
-
-        if action == "page":
-            document_hash, document = self._resolve_document(args.get("document_ref"))
-            page = args.get("page")
-            if not isinstance(page, int):
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="page_missing",
-                    message="Viewing a page requires one page number.",
-                )
             inspection = self._inspection(document)
-            current_page, images = self._page_view(
+            current_region, images, progress = self._region_view(
                 document_hash,
-                document,
                 inspection,
-                page,
+                progress,
             )
+            pending_generated_content: JsonObject | None = None
+            if current_region is None:
+                pending_generated_content, images = self._pending_generated_content(
+                    document_hash,
+                    inspection,
+                )
+            resumed = document_hash != source_hash or int(progress["region_index"]) > 0
             return (
                 {
                     "schema_version": 1,
                     "status": "ok",
                     "document_ref": _document_ref(document_hash),
-                    "current_page": current_page,
-                    "guidance": "Act only on objects you can identify in this page context.",
+                    "document": {
+                        "sha256": inspection.document_sha256,
+                        "paragraphs": inspection.summary.get("paragraphs", 0),
+                        "tables": inspection.summary.get("tables", 0),
+                        "sections": inspection.summary.get("sections", 0),
+                    },
+                    "registry": self.registry.identity(),
+                    "resume": {
+                        "resumed": resumed,
+                        "source": "application_checkpoint",
+                        "prior_transcript_loaded": False,
+                    },
+                    "checkpoint_summary": self._checkpoint_summary(inspection),
+                    "current_region": current_region,
+                    "pending_generated_content": pending_generated_content,
+                    "navigation": {
+                        "completed_regions": int(progress["region_index"]),
+                        "done": current_region is None,
+                    },
+                    "visual": {
+                        "scope": "target_region",
+                        "full_page_returned": False,
+                    },
+                    "guidance": (
+                        "Judge only this target, its parent, and necessary adjacent objects. "
+                        "Batch decisions visible in this crop, then call action=next with its "
+                        "region_ref. The Tool navigates physical regions but never assigns "
+                        "their semantic meaning."
+                    ),
+                },
+                images,
+            )
+
+        if action == "next":
+            supplied = args.get("region_ref")
+            region_match = _REGION_REF.fullmatch(supplied) if isinstance(supplied, str) else None
+            if region_match is None:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_ref_stale",
+                    message="Use the region_ref returned with the latest target crop.",
+                )
+            encoded_document_hash = region_match.group(1)
+            requested_document = args.get("document_ref")
+            document_hash, document = self._resolve_document(
+                requested_document
+                if requested_document is not None
+                else _document_ref(encoded_document_hash)
+            )
+            if document_hash != encoded_document_hash:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_ref_stale",
+                    message="The region_ref and document_ref refer to different Word versions.",
+                )
+            source_hash = sha256_file(self.source)
+            progress = self._read_progress(source_hash)
+            if progress["document_sha256"] != document_hash:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="navigation_document_stale",
+                    message="Navigation must continue from the latest checkpointed Word version.",
+                )
+            inspection = self._inspection(document)
+            current_index, _, selected, _ = self._region_selection(inspection, progress)
+            expected = (
+                self._region_ref(document_hash, current_index, selected)
+                if selected is not None
+                else None
+            )
+            if supplied != expected:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_ref_stale",
+                    message="Use the region_ref returned with the latest target crop.",
+                )
+            progress = {
+                **progress,
+                "region_index": current_index + 1,
+                "pending_object_ref": None,
+            }
+            self._write_progress(progress)
+            current_region, images, progress = self._region_view(
+                document_hash,
+                inspection,
+                progress,
+            )
+            pending_generated_content = None
+            if current_region is None:
+                pending_generated_content, images = self._pending_generated_content(
+                    document_hash,
+                    inspection,
+                )
+            return (
+                {
+                    "schema_version": 1,
+                    "status": "ok",
+                    "document_ref": _document_ref(document_hash),
+                    "checkpoint_summary": self._checkpoint_summary(inspection),
+                    "current_region": current_region,
+                    "pending_generated_content": pending_generated_content,
+                    "navigation": {
+                        "completed_regions": int(progress["region_index"]),
+                        "done": current_region is None,
+                    },
+                    "guidance": "Make semantic decisions only from this local visual region.",
                 },
                 images,
             )
@@ -348,7 +1026,10 @@ class TemplateWorkspaceService:
                     "status": "ok",
                     "document_ref": _document_ref(inspection.document_sha256),
                     "query": query,
-                    "matches": [item.public() for item in matches[:_MAX_SEARCH_RESULTS]],
+                    "matches": [
+                        _agent_context_object(inspection, item)
+                        for item in matches[:_MAX_SEARCH_RESULTS]
+                    ],
                     "match_count": len(matches),
                     "truncated": len(matches) > _MAX_SEARCH_RESULTS,
                     "guidance": (
@@ -363,7 +1044,7 @@ class TemplateWorkspaceService:
             status="needs_input",
             origin="request",
             code="template_view_action_invalid",
-            message="template_view action must be open, page, search, or focus.",
+            message="template_view action must be open, next, search, or focus.",
         )
 
     def registry_query(self, args: dict[str, Any]) -> JsonObject:
@@ -395,10 +1076,25 @@ class TemplateWorkspaceService:
             query = raw.get("query")
             field_id = raw.get("field_id")
             if isinstance(field_id, str) and field_id:
-                matches = [self.registry.lookup(field_id)]
-                operation = "lookup"
+                try:
+                    matches = [_with_semantic_type(self.registry.lookup(field_id))]
+                    operation = "lookup"
+                except ToolFailure as error:
+                    if error.code != "field_not_registered":
+                        raise
+                    matches = [
+                        _with_semantic_type(item)
+                        for item in self.registry.search(
+                            field_id,
+                            limit=_MAX_SEARCH_RESULTS,
+                        )
+                    ]
+                    operation = "suggest"
             elif isinstance(query, str) and query.strip():
-                matches = list(self.registry.search(query, limit=_MAX_SEARCH_RESULTS))
+                matches = [
+                    _with_semantic_type(item)
+                    for item in self.registry.search(query, limit=_MAX_SEARCH_RESULTS)
+                ]
                 operation = "search"
             else:
                 raise ToolFailure(
@@ -410,11 +1106,12 @@ class TemplateWorkspaceService:
             results.append(
                 {
                     "current_object": {
-                        "object_ref": selected.object_ref,
+                        "object_ref": _agent_object_ref(selected),
                         "type": selected.kind,
                         "text": selected.text,
                     },
                     "operation": operation,
+                    **({"requested_field_id": field_id} if operation == "suggest" else {}),
                     "matches": matches,
                     "truncated": len(matches) == _MAX_SEARCH_RESULTS,
                 }
@@ -428,9 +1125,57 @@ class TemplateWorkspaceService:
             "registry": self.registry.identity(),
         }
 
+    def _feedback_object(
+        self,
+        inspection: Inspection,
+        operations: list[JsonObject],
+        progress: JsonObject,
+    ) -> InspectedObject | None:
+        preferred_slots = [
+            member.get("slot_id")
+            for operation in operations
+            for member in operation.get("members", [])
+            if isinstance(member, dict)
+        ] + [operation.get("slot_id") for operation in operations]
+        for slot_id in preferred_slots:
+            if not isinstance(slot_id, str):
+                continue
+            matched = next(
+                (
+                    item
+                    for item in inspection.objects
+                    if item.kind == "sdt" and item.format.get("tag") == slot_id
+                ),
+                None,
+            )
+            if matched is not None:
+                return matched
+        if any(operation.get("action") == "refresh_toc" for operation in operations):
+            matched = next(
+                (
+                    item
+                    for item in inspection.objects
+                    if item.kind == "paragraph"
+                    and item.style
+                    and item.style.casefold().startswith("toc")
+                ),
+                None,
+            )
+            if matched is not None:
+                return matched
+        for operation in operations:
+            locator = operation.get("target_locator")
+            matched = next(
+                (item for item in inspection.objects if item.locator == locator),
+                None,
+            )
+            if matched is not None:
+                return matched
+        _, _, target, _ = self._region_selection(inspection, progress)
+        return target
+
     def edit(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
         raw_operations = args.get("operations")
-        review_page = args.get("review_page")
         if (
             not isinstance(raw_operations, list)
             or not 1 <= len(raw_operations) <= _MAX_BATCH_OPERATIONS
@@ -442,33 +1187,68 @@ class TemplateWorkspaceService:
                 code="template_edit_operations_invalid",
                 message="template_edit requires one through thirty-two object operations.",
             )
-        if not isinstance(review_page, int) or review_page < 1:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="review_page_missing",
-                message="A page-sized edit batch must identify the page to return after editing.",
-            )
 
         document: Path | None = None
         before: Inspection | None = None
         existing_tags: set[str] = set()
+        operation_targets: set[tuple[str, str]] = set()
         prepared: list[JsonObject] = []
         mutations: list[ObjectMutation] = []
+
+        def allocate_slot(field_id: str) -> str:
+            ordinal = 1
+            while f"{field_id}.{ordinal}" in existing_tags:
+                ordinal += 1
+            value = f"{field_id}.{ordinal}"
+            existing_tags.add(value)
+            return value
+
+        def require_same_document(inspection: Inspection) -> None:
+            assert before is not None
+            if inspection.document_sha256 != before.document_sha256:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="batch_document_mismatch",
+                    message="Every operation in a batch must use refs from one Word version.",
+                )
+
         for raw in raw_operations:
             action = raw.get("action")
-            if action not in {"materialize_slot", "clear_content", "remove_object"}:
+            if action not in {
+                "materialize_slot",
+                "materialize_structure",
+                "normalize_format",
+                "refresh_toc",
+                "clear_content",
+                "remove_object",
+            }:
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
                     code="template_edit_action_invalid",
                     message=(
-                        "Each operation must materialize_slot, clear_content, or remove_object."
+                        "Each operation must use one direct template_edit action from its schema."
                     ),
                 )
             candidate_document, candidate_before, selected = self._resolve_object(
                 raw.get("object_ref")
             )
+            target_identity = (
+                candidate_before.document_sha256,
+                str(selected.object_ref["object_id"]),
+            )
+            if target_identity in operation_targets:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="duplicate_operation_target",
+                    message=(
+                        "One atomic edit batch may act on each object only once. Combine "
+                        "format cleanup into materialize_slot or remove the conflicting action."
+                    ),
+                )
+            operation_targets.add(target_identity)
             if before is None:
                 document = candidate_document
                 before = candidate_before
@@ -478,12 +1258,7 @@ class TemplateWorkspaceService:
                     if item.kind == "sdt" and item.format.get("tag")
                 }
             elif candidate_before.document_sha256 != before.document_sha256:
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="batch_document_mismatch",
-                    message="Every operation in a batch must use refs from one Word version.",
-                )
+                require_same_document(candidate_before)
             if selected.kind not in _EDITABLE_KINDS:
                 raise ToolFailure(
                     status="needs_input",
@@ -494,7 +1269,33 @@ class TemplateWorkspaceService:
             field: JsonObject | None = None
             slot_id: str | None = None
             placeholder: str | None = None
+            clear_direct_format = _direct_format_properties(raw.get("clear_direct_format"))
+            structure_members: list[StructureMember] = []
+            replaced_structure: InspectedObject | None = None
+            prepared_members: list[JsonObject] = []
+            toc_entries: list[TocEntry] = []
+            prepared_entries: list[JsonObject] = []
             if action == "materialize_slot":
+                if selected.kind == "paragraph":
+                    child_runs = [
+                        item
+                        for item in candidate_before.objects
+                        if item.kind == "run" and item.locator.startswith(f"{selected.locator}/")
+                    ]
+                    if any(item.text.strip() for item in child_runs) and any(
+                        not item.text.strip() for item in child_runs
+                    ):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="slot_boundary_too_broad",
+                            message=(
+                                "This paragraph contains both fixed label text and a blank "
+                                "value run. Keep the label and materialize only the blank/value "
+                                "child run returned in current_region.adjacent_objects."
+                            ),
+                            suggested_actions=("use_child_run_object_ref",),
+                        )
                 raw_field_id = raw.get("field_id")
                 if not isinstance(raw_field_id, str):
                     raise ToolFailure(
@@ -504,12 +1305,155 @@ class TemplateWorkspaceService:
                         message="materialize_slot requires one Registry field_id.",
                     )
                 field = self.registry.lookup(raw_field_id)
-                ordinal = 1
-                while f"{raw_field_id}.{ordinal}" in existing_tags:
-                    ordinal += 1
-                slot_id = f"{raw_field_id}.{ordinal}"
-                existing_tags.add(slot_id)
+                slot_id = allocate_slot(raw_field_id)
                 placeholder = _placeholder_text(field)
+            elif action == "materialize_structure":
+                raw_field_id = raw.get("field_id")
+                if not isinstance(raw_field_id, str):
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="field_id_missing",
+                        message="materialize_structure requires one structure field_id.",
+                    )
+                require_body_structure_type(raw_field_id)
+                replaced_structure = next(
+                    (
+                        item
+                        for item in candidate_before.objects
+                        if item.kind == "sdt" and item.format.get("alias") == raw_field_id
+                    ),
+                    None,
+                )
+                if replaced_structure is None:
+                    slot_id = allocate_slot(raw_field_id)
+                else:
+                    prior_slot = replaced_structure.format.get("tag")
+                    slot_id = (
+                        str(prior_slot)
+                        if isinstance(prior_slot, str) and prior_slot
+                        else allocate_slot(raw_field_id)
+                    )
+                field = self.registry.lookup(raw_field_id)
+                raw_members = raw.get("members")
+                if (
+                    not isinstance(raw_members, list)
+                    or not 1 <= len(raw_members) <= _MAX_BATCH_OPERATIONS
+                    or not all(isinstance(item, dict) for item in raw_members)
+                ):
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_members_invalid",
+                        message="materialize_structure requires ordered representative members.",
+                    )
+                member_object_ids = {
+                    reference.get("object_id")
+                    for item in raw_members
+                    if isinstance((reference := item.get("object_ref")), dict)
+                }
+                if selected.object_ref.get("object_id") not in member_object_ids:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_anchor_missing",
+                        message="The structure object_ref must be one of its member objects.",
+                    )
+                for raw_member in raw_members:
+                    _, member_inspection, member_object = self._resolve_object(
+                        raw_member.get("object_ref")
+                    )
+                    require_same_document(member_inspection)
+                    member_field_id = raw_member.get("field_id")
+                    if not isinstance(member_field_id, str):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="body_member_field_missing",
+                            message="Each body member requires a semantic field_id.",
+                        )
+                    semantic = require_body_member_type(member_field_id, member_object.kind)
+                    member_field = self.registry.lookup(member_field_id)
+                    member_slot = allocate_slot(member_field_id)
+                    member_placeholder = _placeholder_text(member_field)
+                    member_clear = _direct_format_properties(raw_member.get("clear_direct_format"))
+                    structure_members.append(
+                        StructureMember(
+                            selected=member_object,
+                            field_id=member_field_id,
+                            slot_id=member_slot,
+                            content_type=str(member_field.get("content_type", "text")),
+                            placeholder_text=member_placeholder,
+                            clear_direct_format=member_clear,
+                        )
+                    )
+                    prepared_members.append(
+                        {
+                            "target": member_object.public(),
+                            "target_locator": member_object.locator,
+                            "field": _with_semantic_type(member_field),
+                            "semantic_type": semantic.public(),
+                            "slot_id": member_slot,
+                            "placeholder": member_placeholder,
+                            "clear_direct_format": list(member_clear),
+                        }
+                    )
+            elif action == "refresh_toc":
+                raw_field_id = raw.get("field_id", "generated.toc")
+                if raw_field_id != "generated.toc":
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="toc_field_id_invalid",
+                        message="refresh_toc operates on the generated.toc field.",
+                    )
+                field = self.registry.lookup("generated.toc")
+                raw_entries = raw.get("entries")
+                if (
+                    not isinstance(raw_entries, list)
+                    or not 1 <= len(raw_entries) <= 64
+                    or not all(isinstance(item, dict) for item in raw_entries)
+                ):
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="toc_entries_invalid",
+                        message="refresh_toc requires representative final-title entries.",
+                    )
+                for raw_entry in raw_entries:
+                    _, entry_inspection, entry_object = self._resolve_object(
+                        raw_entry.get("object_ref")
+                    )
+                    require_same_document(entry_inspection)
+                    level = raw_entry.get("level")
+                    if not isinstance(level, int) or not 1 <= level <= 3:
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entry_level_invalid",
+                            message="Each TOC entry needs a level from 1 through 3.",
+                        )
+                    if not entry_object.text.strip():
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entry_text_empty",
+                            message="A representative TOC entry must point to a visible title.",
+                        )
+                    toc_entries.append(TocEntry(selected=entry_object, level=level))
+                    prepared_entries.append(
+                        {
+                            "target": entry_object.public(),
+                            "level": level,
+                        }
+                    )
+            elif action == "normalize_format" and not clear_direct_format:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="direct_format_property_missing",
+                    message="normalize_format requires an explicit clear_direct_format property.",
+                )
             prepared.append(
                 {
                     "action": action,
@@ -518,6 +1462,17 @@ class TemplateWorkspaceService:
                     "field": field,
                     "slot_id": slot_id,
                     "placeholder": placeholder,
+                    "clear_direct_format": list(clear_direct_format),
+                    "members": prepared_members,
+                    "replaced_structure": (
+                        {
+                            "target": replaced_structure.public(),
+                            "target_locator": replaced_structure.locator,
+                        }
+                        if replaced_structure is not None
+                        else None
+                    ),
+                    "entries": prepared_entries,
                 }
             )
             mutations.append(
@@ -526,10 +1481,12 @@ class TemplateWorkspaceService:
                     action=str(action),
                     field_id=str(field["field_id"]) if field else None,
                     slot_id=slot_id,
-                    content_type=(
-                        str(field.get("content_type", "text")) if field else "text"
-                    ),
+                    content_type=(str(field.get("content_type", "text")) if field else "text"),
                     placeholder_text=placeholder,
+                    clear_direct_format=clear_direct_format,
+                    structure_members=tuple(structure_members),
+                    replaced_structure=replaced_structure,
+                    toc_entries=tuple(toc_entries),
                 )
             )
 
@@ -582,24 +1539,41 @@ class TemplateWorkspaceService:
             }
             self.receipts.mkdir(parents=True, exist_ok=True)
             atomic_write_json(self.receipts / f"{output_hash}.json", receipt)
-            current_page, images = self._page_view(
+            task_source_hash = sha256_file(self.source)
+            progress = self._read_progress(task_source_hash)
+            feedback_object = self._feedback_object(after, prepared, progress)
+            progress = {
+                **progress,
+                "document_sha256": output_hash,
+                "pending_object_ref": (
+                    feedback_object.object_ref if feedback_object is not None else None
+                ),
+            }
+            self._write_progress(progress)
+            current_region, images, progress = self._region_view(
                 output_hash,
-                output,
                 after,
-                review_page,
+                progress,
+                selected=feedback_object,
             )
             materialized_count = sum(
-                item["action"] == "materialize_slot" for item in prepared
+                item["action"] in {"materialize_slot", "materialize_structure"} for item in prepared
             )
-            removed_count = len(prepared) - materialized_count
+            removed_count = sum(
+                item["action"] in {"remove_object", "clear_content"} for item in prepared
+            )
+            action_counts = Counter(str(item["action"]) for item in prepared)
+            created_slots = sum(
+                item["field"] is not None and item["slot_id"] is not None for item in prepared
+            ) + sum(len(item["members"]) for item in prepared)
             guidance = (
-                "Judge the returned changed page now. If it is correct, continue from "
-                "its fresh object refs without a separate review call."
+                "Judge the returned changed region now. If it is correct, call "
+                "template_view action=next with its region_ref; no separate review is needed."
             )
             if removed_count >= 5 and materialized_count == 0:
                 guidance = (
                     f"This batch removed or cleared {removed_count} objects and created no "
-                    "fillable slot. Judge the returned page before continuing. If these were "
+                    "fillable slot. Judge the returned region before continuing. If these were "
                     "student-authored examples, do not accept a blank content page: branch "
                     "from previous_document_ref and reissue the batch with one representative "
                     "object materialized as its fill interface."
@@ -613,42 +1587,42 @@ class TemplateWorkspaceService:
                     "document_ref": _document_ref(output_hash),
                     "document_sha256": output_hash,
                     "prior_refs_do_not_address_new_version": True,
-                    "applied": [
+                    "effects": {
+                        "operations": len(prepared),
+                        "actions": dict(sorted(action_counts.items())),
+                        "slots_created": created_slots,
+                    },
+                    "structures": [
                         {
-                            "action": item["action"],
-                            "type": item["target"].get("type"),
-                            "text": _brief_text(item["target"].get("text")),
-                            **(
-                                {"field_id": item["field"]["field_id"]}
-                                if item["field"] is not None
-                                else {}
-                            ),
-                            **(
-                                {"slot_id": item["slot_id"]}
-                                if item["slot_id"] is not None
-                                else {}
-                            ),
-                        }
-                        for item in prepared
-                    ],
-                    "slots": [
-                        {
-                            "slot_id": item["slot_id"],
                             "field_id": item["field"]["field_id"],
-                            "placeholder": item["placeholder"],
+                            "slot_id": item["slot_id"],
+                            "member_count": len(item["members"]),
                         }
                         for item in prepared
-                        if item["field"] is not None
+                        if item["action"] == "materialize_structure"
                     ],
-                    "reviewed_page": review_page,
-                    "current_page": current_page,
+                    "generated_content": [
+                        {
+                            "field_id": item["field"]["field_id"],
+                            "entry_count": len(item["entries"]),
+                            "live_field": True,
+                            "update_on_open": True,
+                        }
+                        for item in prepared
+                        if item["action"] == "refresh_toc"
+                    ],
+                    "current_region": current_region,
+                    "navigation": {
+                        "completed_regions": int(progress["region_index"]),
+                        "done": current_region is None,
+                    },
                     "checks": [
                         {"name": "source_unchanged", "result": "ok"},
                         {"name": "package_reopens", "result": "ok"},
                         {"name": "officecli_validate", "result": "ok"},
                         {"name": "all_requested_effects_re_read", "result": "ok"},
                         {"name": "non_target_text_preserved", "result": "ok"},
-                        {"name": "changed_page_returned", "result": "ok"},
+                        {"name": "changed_region_returned", "result": "ok"},
                     ],
                     "guidance": guidance,
                 },
@@ -663,23 +1637,40 @@ class TemplateWorkspaceService:
         after: Inspection,
         operations: list[JsonObject],
     ) -> None:
-        selected = [item["target"] for item in operations]
+        toc_roots = {
+            item.locator
+            for item in before.objects
+            if item.kind == "paragraph" and item.style and item.style.casefold().startswith("toc")
+        }
 
         def in_target_closure(item: InspectedObject) -> bool:
-            for operation, target in zip(operations, selected, strict=True):
-                locator = operation.get("target_locator")
-                kind = target.get("type")
-                if not isinstance(locator, str):
-                    continue
-                paragraph_locator = _parent_paragraph_locator(locator)
-                if item.locator == locator:
-                    return True
-                if kind in {"paragraph", "table", "sdt", "shape"} and item.locator.startswith(
-                    f"{locator}/"
+            for operation in operations:
+                if operation.get("action") == "refresh_toc" and any(
+                    item.locator == root or item.locator.startswith(f"{root}/")
+                    for root in toc_roots
                 ):
                     return True
-                if kind != "paragraph" and paragraph_locator == item.locator:
-                    return True
+                targets = [operation] + [
+                    member for member in operation.get("members", []) if isinstance(member, dict)
+                ]
+                replaced = operation.get("replaced_structure")
+                if isinstance(replaced, dict):
+                    targets.append(replaced)
+                for candidate in targets:
+                    target = candidate.get("target", {})
+                    locator = candidate.get("target_locator")
+                    kind = target.get("type") if isinstance(target, dict) else None
+                    if not isinstance(locator, str):
+                        continue
+                    paragraph_locator = _parent_paragraph_locator(locator)
+                    if item.locator == locator:
+                        return True
+                    if kind in {"paragraph", "table", "sdt", "shape"} and item.locator.startswith(
+                        f"{locator}/"
+                    ):
+                        return True
+                    if kind != "paragraph" and paragraph_locator == item.locator:
+                        return True
             return False
 
         protected = Counter(
@@ -732,6 +1723,74 @@ class TemplateWorkspaceService:
                         code="content_control_not_materialized",
                         message="A requested content control is not uniquely present after edit.",
                     )
+            elif action == "materialize_structure":
+                assert isinstance(field, dict)
+                groups = [
+                    item
+                    for item in after.objects
+                    if item.kind == "sdt"
+                    and item.format.get("tag") == slot_id
+                    and item.format.get("alias") == field.get("field_id")
+                ]
+                if len(groups) != 1:
+                    raise ToolFailure(
+                        status="error",
+                        origin="postcondition",
+                        code="body_structure_not_materialized",
+                        message="The reusable body structure is not uniquely present after edit.",
+                    )
+                for member in operation.get("members", []):
+                    member_field = member.get("field", {})
+                    member_matches = [
+                        item
+                        for item in after.objects
+                        if item.kind == "sdt"
+                        and item.format.get("tag") == member.get("slot_id")
+                        and item.format.get("alias") == member_field.get("field_id")
+                    ]
+                    if len(member_matches) != 1:
+                        raise ToolFailure(
+                            status="error",
+                            origin="postcondition",
+                            code="body_structure_member_not_materialized",
+                            message=(
+                                "A body semantic member is missing after structure materialization."
+                            ),
+                        )
+            elif action == "normalize_format":
+                if "color" in operation.get("clear_direct_format", []):
+                    locator = operation.get("target_locator")
+                    normalized = next(
+                        (item for item in after.objects if item.locator == locator),
+                        None,
+                    )
+                    if normalized is not None and "color" in normalized.format:
+                        raise ToolFailure(
+                            status="error",
+                            origin="postcondition",
+                            code="direct_color_not_removed",
+                            message="The selected object's direct color was not removed.",
+                        )
+            elif action == "refresh_toc":
+                expected = [
+                    entry["target"].get("text")
+                    for entry in operation.get("entries", [])
+                    if isinstance(entry.get("target"), dict)
+                ]
+                toc_text = [
+                    item.text
+                    for item in after.objects
+                    if item.kind == "paragraph"
+                    and item.style
+                    and item.style.casefold().startswith("toc")
+                ]
+                if any(not any(text in value for value in toc_text) for text in expected):
+                    raise ToolFailure(
+                        status="error",
+                        origin="postcondition",
+                        code="toc_cache_not_refreshed",
+                        message="The live TOC cache is missing a requested representative entry.",
+                    )
             elif action == "clear_content":
                 text = target.get("text")
                 if isinstance(text, str) and text and after_text[text] >= before_text[text]:
@@ -766,16 +1825,37 @@ class TemplateWorkspaceService:
                     code="stale_object_ref",
                     message="The review object_ref does not belong to this document version.",
                 )
+            related = args.get("related_object_refs", [])
+            if not isinstance(related, list) or any(
+                not isinstance(item, dict) or item.get("document_sha256") != document_hash
+                for item in related
+            ):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="stale_object_ref",
+                    message="Every related review object must belong to this document version.",
+                )
+            object_refs = [object_ref, *related]
+            selector = (
+                {
+                    "selector": "object_refs",
+                    "object_refs": object_refs,
+                    "padding": args.get("padding", 32),
+                    "fallback": "metadata_only",
+                }
+                if len(object_refs) > 1
+                else {
+                    "selector": "object_ref",
+                    "object_ref": object_ref,
+                    "padding": args.get("padding", 32),
+                    "fallback": "metadata_only",
+                }
+            )
             visual_args.update(
                 {
                     "mode": "regions",
-                    "regions": [
-                        {
-                            "selector": "object_ref",
-                            "object_ref": object_ref,
-                            "padding": args.get("padding", 32),
-                        }
-                    ],
+                    "regions": [selector],
                 }
             )
         else:
@@ -886,11 +1966,25 @@ class TemplateWorkspaceService:
             for operation in receipt.get("operations", [])
             if isinstance(operation, dict)
         ]
-        slots = [item for item in operations if item.get("action") == "materialize_slot"]
+        structure_history = [
+            item for item in operations if item.get("action") == "materialize_structure"
+        ]
+        latest_structures: dict[str, JsonObject] = {}
+        for item in structure_history:
+            field = item.get("field")
+            field_id = field.get("field_id") if isinstance(field, dict) else None
+            if isinstance(field_id, str):
+                latest_structures[field_id] = item
+        structures = list(latest_structures.values())
+        slots = [item for item in operations if item.get("action") == "materialize_slot"] + [
+            member
+            for item in structures
+            for member in item.get("members", [])
+            if isinstance(member, dict)
+        ]
+        generated_content = [item for item in operations if item.get("action") == "refresh_toc"]
         removes = [
-            item
-            for item in operations
-            if item.get("action") in {"remove_object", "clear_content"}
+            item for item in operations if item.get("action") in {"remove_object", "clear_content"}
         ]
         inspection = self._inspection(document)
         controls = [item for item in inspection.objects if item.kind == "sdt"]
@@ -913,8 +2007,41 @@ class TemplateWorkspaceService:
                 }
                 for item in slots
             ],
+            "structures": [
+                {
+                    "slot_id": item.get("slot_id"),
+                    "field": item.get("field"),
+                    "member_slot_ids": [
+                        member.get("slot_id")
+                        for member in item.get("members", [])
+                        if isinstance(member, dict)
+                    ],
+                    "object_ref": next(
+                        (
+                            control.object_ref
+                            for control in controls
+                            if control.format.get("tag") == item.get("slot_id")
+                        ),
+                        None,
+                    ),
+                }
+                for item in structures
+            ],
+            "generated_content": [
+                {
+                    "field": item.get("field"),
+                    "entry_count": len(item.get("entries", [])),
+                    "live_field": True,
+                    "update_on_open": True,
+                }
+                for item in generated_content
+            ],
         }
-        if any(item.get("object_ref") is None for item in fill_contract["slots"]):
+        if any(
+            item.get("object_ref") is None
+            for key in ("slots", "structures")
+            for item in fill_contract[key]
+        ):
             raise ToolFailure(
                 status="error",
                 origin="postcondition",

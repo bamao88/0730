@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,38 @@ from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 
 def _normalize(value: str) -> str:
     return "".join(value.split()).casefold()
+
+
+_SEARCH_STOP_WORDS = {
+    "all",
+    "available",
+    "cover",
+    "current",
+    "field",
+    "fields",
+    "fillable",
+    "list",
+    "object",
+    "page",
+    "template",
+}
+_SEARCH_ALIASES = {
+    "college": "department",
+    "student": "author",
+    "supervisor": "advisor",
+    "teacher": "advisor",
+    "topic": "title",
+}
+
+
+def _search_terms(value: str) -> tuple[str, ...]:
+    raw = re.findall(r"[a-z0-9]+|[\u3400-\u9fff]+", value.casefold())
+    terms = [
+        _SEARCH_ALIASES.get(term, term)
+        for term in raw
+        if term not in _SEARCH_STOP_WORDS
+    ]
+    return tuple(dict.fromkeys(terms))
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +145,7 @@ class FieldRegistrySnapshot:
                 code="field_query_empty",
                 message="Registry search requires a non-empty object-specific query.",
             )
+        query_terms = _search_terms(text)
         ranked: list[tuple[int, int, JsonObject]] = []
         for index, item in enumerate(self.fields):
             field_id = _normalize(str(item.get("field_id", "")))
@@ -120,21 +154,32 @@ class FieldRegistrySnapshot:
             notes = _normalize(str(item.get("notes", "")))
             score = 0
             if query in (field_id, label):
-                score = 100
+                score = 1000
             elif query in field_id or query in label:
-                score = 80
+                score = 800
             elif query in meaning:
-                score = 50
+                score = 500
             elif query in notes:
-                score = 20
+                score = 200
             else:
-                tokens = [value for value in (label, meaning, notes) if value]
-                score = max(
-                    (sum(1 for char in set(query) if char in value) for value in tokens),
-                    default=0,
-                )
-                if score < max(2, len(set(query)) // 2):
+                matched_terms = 0
+                for term in query_terms:
+                    normalized_term = _normalize(term)
+                    if normalized_term in field_id:
+                        score += 100
+                        matched_terms += 1
+                    elif normalized_term in label:
+                        score += 80
+                        matched_terms += 1
+                    elif normalized_term in meaning:
+                        score += 30
+                        matched_terms += 1
+                    elif normalized_term in notes:
+                        score += 10
+                        matched_terms += 1
+                if matched_terms == 0:
                     continue
+                score += matched_terms * 10
             ranked.append((score, -index, item))
         ranked.sort(reverse=True, key=lambda value: (value[0], value[1]))
         return tuple(dict(item) for _, _, item in ranked[:limit])

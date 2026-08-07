@@ -3,15 +3,24 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import shutil
 import tempfile
+import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
-from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
+from claude_agent_sdk.types import (
+    AssistantMessage,
+    ResultMessage,
+    TextBlock,
+    ToolResultBlock,
+    ToolUseBlock,
+    UserMessage,
+)
 
 from docfit.app.agent import (
     AGENT_SDK_MAX_BUFFER_BYTES,
@@ -75,6 +84,11 @@ PREPARE_TEMPLATE_OUTPUT_SCHEMA: JsonObject = {
 }
 
 PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS = 1800
+# Claude Agent SDK sessions retain prior Tool images. Keep each native session
+# deliberately short, then continue from DocFit's application checkpoint in a
+# fresh session instead of resuming the transcript.
+PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT = 12
+PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT = 24
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
     "mcp__docfit__template_view",
@@ -172,12 +186,19 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
         suffixes=(".yaml", ".yml", ".json"),
     )
     task_root = request.output_directory.expanduser().resolve(strict=False)
-    if task_root.exists() or task_root.parent.is_symlink() or not task_root.parent.is_dir():
+    if task_root.exists():
+        return _resume_prepare_template_task(
+            task_root=task_root,
+            template=template,
+            requirements=requirements,
+            registry=registry,
+        )
+    if task_root.parent.is_symlink() or not task_root.parent.is_dir():
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="output_exists" if task_root.exists() else "invalid_prepare_output",
-            message="prepare-template requires a new output task directory.",
+            code="invalid_prepare_output",
+            message="prepare-template requires a writable task-directory parent.",
         )
     task_root.mkdir(mode=0o700)
     try:
@@ -213,6 +234,91 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
         raise
 
 
+def _resume_prepare_template_task(
+    *,
+    task_root: Path,
+    template: Path,
+    requirements: Path | None,
+    registry: Path,
+) -> PreparedTemplateTask:
+    if task_root.is_symlink() or not task_root.is_dir():
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="invalid_prepare_output",
+            message="The existing prepare-template task root is not a regular directory.",
+        )
+    input_directory = task_root / "input"
+    work_directory = task_root / "work"
+    output_directory = task_root / "output"
+    if any(
+        path.is_symlink() or not path.is_dir()
+        for path in (input_directory, work_directory, output_directory)
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="prepare_checkpoint_invalid",
+            message="The existing task does not contain a valid DocFit checkpoint layout.",
+        )
+    template_target = input_directory / "school-template.docx"
+    if (
+        template_target.is_symlink()
+        or not template_target.is_file()
+        or sha256_file(template_target) != sha256_file(template)
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="prepare_source_mismatch",
+            message="The existing task belongs to a different school template.",
+        )
+    output_files = [item for item in output_directory.iterdir()]
+    if output_files:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="prepare_already_published",
+            message="The existing prepare-template task has already published output.",
+        )
+    existing_requirements = sorted(input_directory.glob("school-requirements.*"))
+    requirements_target: Path | None = None
+    if requirements is None:
+        if existing_requirements:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="prepare_requirements_mismatch",
+                message="Resume with the same school-requirements input used by this task.",
+            )
+    else:
+        requirements_target = input_directory / f"school-requirements{requirements.suffix.lower()}"
+        if (
+            existing_requirements != [requirements_target]
+            or requirements_target.is_symlink()
+            or sha256_file(requirements_target) != sha256_file(requirements)
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="prepare_requirements_mismatch",
+                message="Resume with the same school-requirements input used by this task.",
+            )
+    skill_source = project_root() / "docs/plans/docfit-school-extract-v2-candidate-skill"
+    skill_target = task_root / ".claude/skills/docfit-school-extract"
+    skill_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(skill_source, skill_target, dirs_exist_ok=True)
+    return PreparedTemplateTask(
+        task_root=task_root,
+        template_path=template_target,
+        requirements_path=requirements_target,
+        registry_source=registry,
+        template_sha256=sha256_file(template_target),
+        requirements_sha256=(sha256_file(requirements_target) if requirements_target else None),
+        registry_sha256=sha256_file(registry),
+    )
+
+
 def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
     requirements = (
         f" Optional school requirements: "
@@ -221,15 +327,51 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         if prepared.requirements_path is not None
         else " No separate school-requirements file was supplied; use the template itself."
     )
+    finalization_guidance = (
+        " Visual-region navigation is already complete. This is a narrow finalization "
+        "session: call template_view open, resolve only the returned "
+        "pending_generated_content using its target and title_candidates, inspect the one "
+        "changed-region feedback, and publish. Do not search, focus, or redo prior semantic "
+        "regions."
+        if _visual_navigation_complete(prepared)
+        else ""
+    )
     return (
         "Load the docfit-school-extract Skill and turn the supplied school Word into one clean, "
-        "fillable final Word. Work from the current page/object context. Start with template_view "
-        "action=open; batch up to thirty-two clear decisions visible on the same page into one "
-        "template_edit. Use a known field_id directly; when several meanings are uncertain, "
-        "query them together in one template_registry call. Judge the changed-page image returned "
-        "by template_edit before continuing. Every student-authored content region must retain a "
+        "fillable final Word. Work from the current target region. Start with template_view "
+        "action=open; it resumes the latest application checkpoint without loading any prior "
+        "Agent transcript. Batch up to thirty-two decisions visible in the same local crop "
+        "into one template_edit. For a blank or ambiguous run, use its parent_context label "
+        "to determine which field it carries; never assign adjacent blank values by position "
+        "alone. "
+        "Treat color as evidence: remove direct color only when you judge it is "
+        "sample/instruction formatting. For a representative body chapter, map only its current "
+        "objects to body semantic types and use one materialize_structure operation. After the "
+        "final title tree exists, refresh a TOC as one compound object with non-empty 1-3 level "
+        "representative entries; never clear its result rows individually. Use a known field_id "
+        "directly; when several meanings are uncertain, "
+        "query them together in one template_registry call. Judge the changed-region image "
+        "returned by template_edit before continuing, then use template_view action=next with "
+        "its region_ref. "
+        "On every fresh open, use checkpoint_summary as durable feedback: if "
+        "toc.refresh_needed is true, the live TOC still contains school sample cache rows "
+        "such as XXX/XX or omits an already materialized body heading type. It must include "
+        "every object in pending_generated_content.required_body_heading_candidates at the "
+        "corresponding 1-3 level. When navigation is done, open returns "
+        "pending_generated_content with the TOC "
+        "target and a bounded set of title candidates so you can assign levels and refresh it "
+        "in one edit without repeated search/focus calls. If a later body block is more "
+        "complete than the currently materialized "
+        "structure, materialize_structure replaces the earlier representative structure "
+        "instead of creating a duplicate. Never delete a visually distinct body heading or "
+        "content-object sample whose semantic type is absent from "
+        "checkpoint_summary.materialized_fields; keep navigating until a continuous fuller "
+        "representative block can replace the structure. "
+        "Every student-authored content region must retain a "
         "fillable slot after its examples are removed; a structural heading by itself is not a "
-        "fillable region. When the current page/object matches one of the Skill's "
+        "fillable region. Visible placeholders use brackets only; do not add gray placeholder "
+        "formatting or a separate placeholder state. When the current region/object matches one "
+        "of the Skill's "
         "knowledge-routing signals, Read only that referenced topic before deciding the batch; "
         "never preload all references. "
         f"Task root: {prepared.task_root}. School template: "
@@ -239,14 +381,19 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "enumerate or reproduce every Registry field. Remove template instructions, examples, "
         "sample thesis content, and other content that should not survive in a reusable template; "
         "preserve school-mandated fixed text and layout. The absence of existing content controls "
-        "is normal. Prior object refs still identify their immutable prior version but do not "
-        "address the new version, so normally continue from the fresh refs returned by the Tool. "
-        "Request another page or object only when the task needs it; do not review every page for "
-        "coverage and do not repeat review for a page already returned by template_edit. Publish "
+        "is normal. Agent-visible object refs are short object IDs bound by the Tool to the latest "
+        "application checkpoint; after an edit, continue only from the fresh refs returned by the "
+        "Tool and never copy or invent document hashes or fingerprints. "
+        "The next action only navigates to an unprocessed physical visual region; you remain "
+        "responsible for every semantic decision. Focus or search only when the current crop needs "
+        "more context; do not review every page or request full pages for coverage, and do not "
+        "repeat visual "
+        "feedback already returned by template_edit. Publish "
         "the exact final document_ref once with template_publish. Only "
         "output/final-template.docx is user-visible. Return blocked only for a genuinely material "
         "semantic ambiguity that cannot be resolved from the current object, template, optional "
         "requirements, Tool feedback, or Skill knowledge."
+        f"{finalization_guidance}"
     )
 
 
@@ -298,17 +445,48 @@ def build_prepare_template_options(
         cwd=prepared.task_root,
         env=environment,
         model=backend.model,
+        max_turns=_prepare_template_turn_limit(prepared),
         max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
         output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
         system_prompt=(
             "You are the single DocFit template-preparation Agent. Trust your semantic and visual "
             "judgment. The SDK-native Agent loop and four focused template Tools are the entire "
-            "workflow: view one needed page/object, batch the decisions visible there, inspect "
-            "the changed-page feedback, and publish one Word without an all-page coverage gate. "
+            "workflow: view one target-object region, batch the decisions visible there, inspect "
+            "the changed-region feedback, and publish one Word without an all-page coverage gate. "
             "Inputs are read-only. "
             "There are no plan files, compilers, attempt paths, semantic checker, or compatibility "
             "protocol. Tool checks are mechanical feedback, not a substitute for your judgment."
         ),
+    )
+
+
+def _prepare_template_turn_limit(prepared: PreparedTemplateTask) -> int:
+    """Allow one longer, single-image session only for final generated content."""
+
+    return (
+        PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
+        if _visual_navigation_complete(prepared)
+        else PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT
+    )
+
+
+def _visual_navigation_complete(prepared: PreparedTemplateTask) -> bool:
+    """Read only the durable cursor needed to choose the bounded Agent phase."""
+
+    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
+    try:
+        progress: object = json.loads(
+            (workspace / "task-progress.json").read_text(encoding="utf-8")
+        )
+        blueprint: object = json.loads(
+            (workspace / "visual-regions.json").read_text(encoding="utf-8")
+        )
+    except (OSError, json.JSONDecodeError):
+        return False
+    region_index = progress.get("region_index") if isinstance(progress, dict) else None
+    regions = blueprint.get("regions") if isinstance(blueprint, dict) else None
+    return (
+        isinstance(region_index, int) and isinstance(regions, list) and region_index >= len(regions)
     )
 
 
@@ -368,35 +546,124 @@ async def _run_backend(
     backend: AgentBackend,
 ) -> TemplateAgentExecution:
     with tempfile.TemporaryDirectory(prefix="docfit-template-sdk-") as config_name:
-        options = build_prepare_template_options(prepared, backend, Path(config_name))
-        result: ResultMessage | None = None
         tool_uses: list[str] = []
         skills: list[str] = []
-        async with ClaudeSDKClient(options=options) as client:
-            await client.query(build_prepare_template_prompt(prepared))
-            async for message in client.receive_response():
-                if isinstance(message, AssistantMessage):
-                    for block in message.content:
-                        if isinstance(block, ToolUseBlock):
-                            tool_uses.append(block.name)
-                            if block.name == "Skill":
-                                value = block.input.get("skill") or block.input.get("name")
-                                if isinstance(value, str):
-                                    skills.append(value)
-                if isinstance(message, ResultMessage):
-                    result = message
-        structured_output = _validated_sdk_output(result, backend=backend)
-        assert result is not None
-        return TemplateAgentExecution(
-            structured_output=structured_output,
-            tool_uses=tuple(tool_uses),
-            skills_loaded=tuple(dict.fromkeys(skills)),
-            session_id=result.session_id,
-            backend=backend.name,
-            num_turns=result.num_turns,
-            duration_ms=result.duration_ms,
-            duration_api_ms=result.duration_api_ms,
-        )
+        total_turns = 0
+        total_duration_ms = 0
+        total_duration_api_ms = 0
+        while True:
+            options = build_prepare_template_options(prepared, backend, Path(config_name))
+            result: ResultMessage | None = None
+            async with ClaudeSDKClient(options=options) as client:
+                await client.query(build_prepare_template_prompt(prepared))
+                async for message in client.receive_response():
+                    if isinstance(message, AssistantMessage):
+                        for block in message.content:
+                            if isinstance(block, ToolUseBlock):
+                                tool_uses.append(block.name)
+                                _append_agent_live_event(
+                                    prepared,
+                                    {
+                                        "event": "tool_use",
+                                        "backend": backend.name,
+                                        "tool": block.name,
+                                        "input": block.input,
+                                    },
+                                )
+                                if block.name == "Skill":
+                                    value = block.input.get("skill") or block.input.get("name")
+                                    if isinstance(value, str):
+                                        skills.append(value)
+                            elif isinstance(block, TextBlock) and block.text.strip():
+                                _append_agent_live_event(
+                                    prepared,
+                                    {
+                                        "event": "assistant_text",
+                                        "backend": backend.name,
+                                        "text": block.text[:2000],
+                                    },
+                                )
+                    elif isinstance(message, UserMessage) and isinstance(message.content, list):
+                        for block in message.content:
+                            if isinstance(block, ToolResultBlock):
+                                _append_agent_live_event(
+                                    prepared,
+                                    {
+                                        "event": "tool_result",
+                                        "backend": backend.name,
+                                        "is_error": bool(block.is_error),
+                                        "content": _agent_result_summary(block.content),
+                                    },
+                                )
+                    if isinstance(message, ResultMessage):
+                        result = message
+                        _append_agent_live_event(
+                            prepared,
+                            {
+                                "event": "session_result",
+                                "backend": backend.name,
+                                "is_error": result.is_error,
+                                "subtype": result.subtype,
+                                "terminal_reason": result.terminal_reason,
+                                "num_turns": result.num_turns,
+                            },
+                        )
+            if result is not None:
+                total_turns += result.num_turns
+                total_duration_ms += result.duration_ms
+                total_duration_api_ms += result.duration_api_ms
+            if _context_segment_exhausted(result):
+                continue
+            structured_output = _validated_sdk_output(result, backend=backend)
+            assert result is not None
+            return TemplateAgentExecution(
+                structured_output=structured_output,
+                tool_uses=tuple(tool_uses),
+                skills_loaded=tuple(dict.fromkeys(skills)),
+                session_id=result.session_id,
+                backend=backend.name,
+                num_turns=total_turns,
+                duration_ms=total_duration_ms,
+                duration_api_ms=total_duration_api_ms,
+            )
+
+
+def _agent_result_summary(value: object) -> object:
+    if isinstance(value, str):
+        return value[:6000]
+    if not isinstance(value, list):
+        return None
+    summarized: list[object] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        if item.get("type") == "image":
+            summarized.append({"type": "image", "data": "omitted"})
+            continue
+        copied = dict(item)
+        if isinstance(copied.get("text"), str):
+            copied["text"] = copied["text"][:6000]
+        summarized.append(copied)
+    return summarized
+
+
+def _append_agent_live_event(
+    prepared: PreparedTemplateTask,
+    event: JsonObject,
+) -> None:
+    path = prepared.task_root / "work/.docfit/template-agent-live.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"timestamp_unix": time.time(), **event}
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def _context_segment_exhausted(result: ResultMessage | None) -> bool:
+    if result is None or not result.is_error:
+        return False
+    reason = (result.terminal_reason or "").casefold()
+    subtype = result.subtype.casefold()
+    return "max_turn" in reason or "max_turn" in subtype
 
 
 async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExecution:

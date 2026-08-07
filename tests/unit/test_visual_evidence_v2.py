@@ -241,6 +241,23 @@ def test_regions_use_text_object_and_image_coordinate_selectors(tmp_path: Path) 
     assert review["evidence"][0]["selector"]["object_ref"] == object_ref
     assert review["evidence"][1]["selector"]["text"] == "指导教师"
 
+    grouped, grouped_images = service.review(
+        {
+            "render_ref": rendered["render_ref"],
+            "mode": "regions",
+            "regions": [
+                {
+                    "selector": "object_refs",
+                    "object_refs": [item["object_ref"] for item in anchors["anchors"][:3]],
+                    "padding": 0,
+                }
+            ],
+        }
+    )
+    assert len(grouped_images) == 1
+    assert grouped["evidence"][0]["mapping_quality"] == "object_group"
+    assert grouped["evidence"][0]["bbox_pdf"] == [50.0, 50.0, 120.0, 150.0]
+
     page_review, _ = service.review(
         {"render_ref": rendered["render_ref"], "mode": "pages", "pages": [1]}
     )

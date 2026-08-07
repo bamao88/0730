@@ -5,17 +5,23 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+import pytest
+from claude_agent_sdk.types import ResultMessage
+
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
+    PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT,
+    PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT,
     PrepareTemplateRequest,
     TemplateAgentExecution,
+    _run_backend,
     build_prepare_template_options,
     build_prepare_template_prompt,
     prepare_template_task,
     run_prepare_template,
 )
 from docfit.app.settings import AgentBackend
-from docfit.tools.runtime import sha256_file
+from docfit.tools.runtime import ToolFailure, sha256_file
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TEMPLATE = PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
@@ -58,6 +64,36 @@ def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
     assert not any((prepared.task_root / "output").iterdir())
 
 
+def test_prepare_task_resumes_an_unpublished_matching_checkpoint(tmp_path: Path) -> None:
+    request = _request(tmp_path)
+    prepared = prepare_template_task(request)
+    progress = prepared.task_root / "work/.docfit/template-workspace-v1/task-progress.json"
+    progress.parent.mkdir(parents=True)
+    progress.write_text('{"region_index": 15}', encoding="utf-8")
+
+    resumed = prepare_template_task(request)
+
+    assert resumed == prepared
+    assert progress.read_text(encoding="utf-8") == '{"region_index": 15}'
+
+
+def test_prepare_task_rejects_resume_with_a_different_source(tmp_path: Path) -> None:
+    request = _request(tmp_path)
+    prepare_template_task(request)
+    different = tmp_path / "different.docx"
+    different.write_bytes(TEMPLATE.read_bytes() + b"different")
+
+    with pytest.raises(ToolFailure) as caught:
+        prepare_template_task(
+            PrepareTemplateRequest(
+                school_template=different,
+                output_directory=request.output_directory,
+            )
+        )
+
+    assert caught.value.code == "prepare_source_mismatch"
+
+
 def test_prepare_options_remove_bash_write_compilers_and_checker(tmp_path: Path) -> None:
     prepared = prepare_template_task(_request(tmp_path))
     config = tmp_path / "config"
@@ -71,7 +107,26 @@ def test_prepare_options_remove_bash_write_compilers_and_checker(tmp_path: Path)
     assert {"Bash", "Write", "Agent"} <= set(options.disallowed_tools or ())
     assert "Bash" not in (options.tools or ())
     assert "Write" not in (options.tools or ())
-    assert options.max_turns is None
+    assert options.max_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT
+
+
+def test_prepare_options_allow_one_longer_final_generated_content_session(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
+    workspace.mkdir(parents=True)
+    (workspace / "task-progress.json").write_text('{"region_index": 2}', encoding="utf-8")
+    (workspace / "visual-regions.json").write_text('{"regions": [[], []]}', encoding="utf-8")
+    config = tmp_path / "config"
+    config.mkdir()
+
+    options = build_prepare_template_options(prepared, _backend(), config)
+    prompt = build_prepare_template_prompt(prepared)
+
+    assert options.max_turns == PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
+    assert "narrow finalization session" in prompt
+    assert "Do not search, focus, or redo prior semantic regions" in prompt
 
 
 def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
@@ -79,7 +134,9 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
 
     prompt = build_prepare_template_prompt(prepared)
 
-    assert "current page/object context" in prompt
+    assert "current target region" in prompt
+    assert "template_view action=next" in prompt
+    assert "application checkpoint" in prompt
     assert "Registry is Tool-private" in prompt
     assert "not a task list" in prompt
     assert "batch" in prompt.casefold()
@@ -87,6 +144,69 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
     assert "output/final-template.docx" in prompt
     assert "compiler" not in prompt.casefold()
     assert "attempt" not in prompt.casefold()
+
+
+def test_context_boundary_starts_fresh_sdk_session_and_keeps_application_progress(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    results = [
+        ResultMessage(
+            subtype="error_max_turns",
+            duration_ms=100,
+            duration_api_ms=80,
+            is_error=True,
+            num_turns=PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT,
+            session_id="segment-one",
+            terminal_reason="max_turns",
+        ),
+        ResultMessage(
+            subtype="success",
+            duration_ms=50,
+            duration_api_ms=40,
+            is_error=False,
+            num_turns=2,
+            session_id="segment-two",
+            structured_output={
+                "status": "blocked",
+                "artifact_path": None,
+                "template_sha256": None,
+                "counts": {**COUNTS, "unresolved": 1},
+            },
+            terminal_reason="end_turn",
+        ),
+    ]
+    options_seen: list[Any] = []
+    prompts: list[str] = []
+
+    class FakeClient:
+        def __init__(self, *, options: Any) -> None:
+            options_seen.append(options)
+            self.result = results[len(options_seen) - 1]
+
+        async def __aenter__(self) -> FakeClient:
+            return self
+
+        async def __aexit__(self, *_args: Any) -> None:
+            return None
+
+        async def query(self, prompt: str) -> None:
+            prompts.append(prompt)
+
+        async def receive_response(self) -> Any:
+            yield self.result
+
+    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", FakeClient)
+
+    execution = asyncio.run(_run_backend(prepared, _backend()))
+
+    assert len(options_seen) == 2
+    assert all(option.resume is None for option in options_seen)
+    assert all(option.continue_conversation is False for option in options_seen)
+    assert all("application checkpoint" in prompt for prompt in prompts)
+    assert execution.session_id == "segment-two"
+    assert execution.num_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT + 2
 
 
 def test_cli_requirements_and_registry_are_optional() -> None:

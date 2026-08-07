@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import re
 import zipfile
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
@@ -56,6 +57,30 @@ class ObjectMutation:
     slot_id: str | None = None
     content_type: str = "text"
     placeholder_text: str | None = None
+    clear_direct_format: tuple[str, ...] = ()
+    structure_members: tuple[StructureMember, ...] = ()
+    replaced_structure: InspectedObject | None = None
+    toc_entries: tuple[TocEntry, ...] = ()
+
+
+@dataclass(frozen=True)
+class StructureMember:
+    """One Agent-classified object inside a reusable body structure."""
+
+    selected: InspectedObject
+    field_id: str
+    slot_id: str
+    content_type: str
+    placeholder_text: str
+    clear_direct_format: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class TocEntry:
+    """One representative live-TOC cache entry chosen from the final title tree."""
+
+    selected: InspectedObject
+    level: int
 
 
 def _serialize(root: ET.Element) -> bytes:
@@ -166,38 +191,13 @@ def _clear_visible_text(target: ET.Element) -> None:
 
 
 def _clear_content(
-    parent: ET.Element,
+    _parent: ET.Element,
     target: ET.Element,
-    selected: InspectedObject,
+    _selected: InspectedObject,
 ) -> None:
-    """Clear one object while preserving a generated field's control structure.
+    """Clear visible text in a non-generated object while preserving its container."""
 
-    TOC result rows are cached display content.  Clearing only ``w:t`` leaves
-    their leader tabs and one empty paragraph per historical row, so the page
-    still looks populated.  Rows without a field boundary can be removed in
-    full; boundary rows retain their field characters/instruction while tabs
-    and visible text are cleared.
-    """
-
-    is_toc_result = bool(
-        selected.kind == "paragraph"
-        and selected.style
-        and selected.style.casefold().startswith("toc")
-    )
-    if not is_toc_result:
-        _clear_visible_text(target)
-        return
-    field_nodes = list(target.iter(f"{_W}fldChar")) + list(
-        target.iter(f"{_W}instrText")
-    )
-    if not field_nodes:
-        parent.remove(target)
-        return
     _clear_visible_text(target)
-    for container in target.iter():
-        for child in list(container):
-            if child.tag in {f"{_W}tab", f"{_W}ptab"}:
-                container.remove(child)
 
 
 def _set_visible_text(target: ET.Element, value: str) -> None:
@@ -216,6 +216,44 @@ def _set_visible_text(target: ET.Element, value: str) -> None:
     text = ET.SubElement(run, f"{_W}t")
     text.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
     text.text = value
+
+
+def _remove_direct_format(target: ET.Element, properties: tuple[str, ...]) -> None:
+    """Remove only Agent-selected direct formatting, leaving school styles intact."""
+
+    unsupported = set(properties) - {"color"}
+    if unsupported:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="direct_format_property_invalid",
+            message="Only direct color normalization is currently supported.",
+        )
+    if "color" not in properties:
+        return
+    for parent in target.iter():
+        for child in list(parent):
+            if child.tag == f"{_W}color":
+                parent.remove(child)
+
+
+def _sdt(
+    *,
+    field_id: str,
+    slot_id: str,
+    content_type: str,
+) -> tuple[ET.Element, ET.Element]:
+    control = ET.Element(f"{_W}sdt")
+    properties = ET.SubElement(control, f"{_W}sdtPr")
+    ET.SubElement(properties, f"{_W}alias", {f"{_W}val": field_id})
+    ET.SubElement(properties, f"{_W}tag", {f"{_W}val": slot_id})
+    internal_id = int(sha256_json({"slot_id": slot_id})[:7], 16)
+    ET.SubElement(properties, f"{_W}id", {f"{_W}val": str(internal_id)})
+    # Brackets in visible content are the whole placeholder protocol.  In
+    # particular, do not add w:showingPlcHdr or placeholder-specific shading.
+    if content_type not in {"rich_text", "section"}:
+        ET.SubElement(properties, f"{_W}text")
+    return control, ET.SubElement(control, f"{_W}sdtContent")
 
 
 def _materialize(
@@ -243,17 +281,11 @@ def _materialize(
             code="target_already_fillable",
             message="The selected object is already inside a content control.",
         )
-    sdt = ET.Element(f"{_W}sdt")
-    properties = ET.SubElement(sdt, f"{_W}sdtPr")
-    ET.SubElement(properties, f"{_W}alias", {f"{_W}val": field_id})
-    ET.SubElement(properties, f"{_W}tag", {f"{_W}val": slot_id})
-    internal_id = int(sha256_json({"slot_id": slot_id})[:7], 16)
-    ET.SubElement(properties, f"{_W}id", {f"{_W}val": str(internal_id)})
-    # Rich-text controls are represented by the absence of w:text in OOXML;
-    # plain-text controls opt in explicitly.
-    if content_type not in {"rich_text", "section"}:
-        ET.SubElement(properties, f"{_W}text")
-    content = ET.SubElement(sdt, f"{_W}sdtContent")
+    sdt, content = _sdt(
+        field_id=field_id,
+        slot_id=slot_id,
+        content_type=content_type,
+    )
 
     if selected.kind == "paragraph":
         for child in list(target):
@@ -270,6 +302,346 @@ def _materialize(
     content.append(target)
     _set_visible_text(content, placeholder_text)
     target_parent.insert(position, sdt)
+
+
+def _materialize_structure(
+    document_root: ET.Element,
+    members: list[tuple[ET.Element, ET.Element, StructureMember]],
+    *,
+    field_id: str,
+    slot_id: str,
+    replaced_structure: tuple[ET.Element, ET.Element] | None = None,
+) -> None:
+    """Turn one representative contiguous school section into a reusable structure.
+
+    When the Agent later discovers a better representative block, replace the
+    earlier structure atomically.  The Tool only performs the requested
+    replacement; deciding that the newer block is semantically better remains
+    the Agent's responsibility.
+    """
+
+    if not members:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_members_missing",
+            message="A body structure requires at least one representative member.",
+        )
+    parents = {id(parent): parent for parent, _, _ in members}
+    if len(parents) != 1:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_not_one_block",
+            message="Body structure members must be sibling objects from one school section.",
+        )
+    parent = next(iter(parents.values()))
+    targets = [target for _, target, _ in members]
+    indices = [list(parent).index(target) for target in targets]
+    if indices != sorted(indices) or indices != list(range(indices[0], indices[0] + len(indices))):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_not_contiguous",
+            message=(
+                "Body structure members must be supplied in document order without gaps; "
+                "include every school object that belongs to this representative block."
+            ),
+        )
+    if any(member.selected.kind not in {"paragraph", "table"} for _, _, member in members):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_member_not_block",
+            message="Select paragraph or table containers for a reusable body structure.",
+        )
+    if any(_inside_content_control(document_root, target) for target in targets):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="target_already_fillable",
+            message="A selected body member is already inside a content control.",
+        )
+
+    if replaced_structure is not None:
+        replaced_parent, replaced_target = replaced_structure
+        replaced_parent.remove(replaced_target)
+
+    for _, target, member in members:
+        _remove_direct_format(target, member.clear_direct_format)
+        if member.selected.kind == "paragraph":
+            _materialize(
+                document_root,
+                parent,
+                target,
+                selected=member.selected,
+                field_id=member.field_id,
+                slot_id=member.slot_id,
+                content_type=member.content_type,
+                placeholder_text=member.placeholder_text,
+            )
+        else:
+            # Tables remain structurally intact; the outer and member controls
+            # make the sample addressable without inventing a replacement table.
+            control, content = _sdt(
+                field_id=member.field_id,
+                slot_id=member.slot_id,
+                content_type=member.content_type,
+            )
+            position = list(parent).index(target)
+            parent.remove(target)
+            content.append(target)
+            parent.insert(position, control)
+            targets[targets.index(target)] = control
+
+    # Paragraph materialization nests its member control inside the paragraph;
+    # table materialization replaces the table with a member control.
+    current_blocks: list[ET.Element] = []
+    for original, (_, _, member) in zip(targets, members, strict=True):
+        if member.selected.kind == "table" and _local_name(original.tag) == "sdt":
+            current_blocks.append(original)
+        else:
+            current_blocks.append(original)
+    outer, content = _sdt(field_id=field_id, slot_id=slot_id, content_type="section")
+    first_position = min(list(parent).index(block) for block in current_blocks)
+    for block in current_blocks:
+        parent.remove(block)
+        content.append(block)
+    parent.insert(first_position, outer)
+
+
+def _toc_style_ids(parts: dict[str, bytes]) -> dict[int, str]:
+    raw = parts.get("word/styles.xml")
+    if raw is None:
+        return {}
+    try:
+        styles = ET.fromstring(raw)
+    except ET.ParseError as error:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="styles_xml_invalid",
+            message="The Word styles part cannot be parsed.",
+        ) from error
+    result: dict[int, str] = {}
+    for style in styles.findall(f"{_W}style"):
+        style_id = style.get(f"{_W}styleId")
+        name = style.find(f"{_W}name")
+        style_name = name.get(f"{_W}val", "") if name is not None else ""
+        match = re.fullmatch(r"toc\s*([1-3])", style_name, re.IGNORECASE)
+        if match is not None and style_id:
+            result[int(match.group(1))] = style_id
+    return result
+
+
+def _toc_level(
+    paragraph: ET.Element,
+    style_levels: dict[str, int],
+) -> int | None:
+    style = paragraph.find(f"{_W}pPr/{_W}pStyle")
+    value = style.get(f"{_W}val", "") if style is not None else ""
+    if value in style_levels:
+        return style_levels[value]
+    match = re.search(r"([1-9])$", value)
+    return int(match.group(1)) if match else None
+
+
+def _toc_paragraph(
+    template: ET.Element,
+    text: str,
+    *,
+    level: int,
+    style_id: str,
+    instruction_text: str,
+    first: bool,
+    last: bool,
+) -> ET.Element:
+    paragraph = ET.Element(f"{_W}p")
+    properties = template.find(f"{_W}pPr")
+    if properties is not None:
+        properties = deepcopy(properties)
+        paragraph.append(properties)
+    else:
+        properties = ET.SubElement(paragraph, f"{_W}pPr")
+    paragraph_style = properties.find(f"{_W}pStyle")
+    if paragraph_style is None:
+        paragraph_style = ET.Element(f"{_W}pStyle")
+        properties.insert(0, paragraph_style)
+    paragraph_style.set(f"{_W}val", style_id)
+    if first:
+        begin_run = ET.SubElement(paragraph, f"{_W}r")
+        ET.SubElement(
+            begin_run,
+            f"{_W}fldChar",
+            {f"{_W}fldCharType": "begin", f"{_W}dirty": "true"},
+        )
+        instruction_run = ET.SubElement(paragraph, f"{_W}r")
+        instruction = ET.SubElement(instruction_run, f"{_W}instrText")
+        instruction.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        instruction.text = instruction_text
+        separate_run = ET.SubElement(paragraph, f"{_W}r")
+        ET.SubElement(
+            separate_run,
+            f"{_W}fldChar",
+            {f"{_W}fldCharType": "separate"},
+        )
+    text_run = ET.SubElement(paragraph, f"{_W}r")
+    template_run_properties = next(
+        (
+            properties
+            for run in template.iter(f"{_W}r")
+            if run.find(f"{_W}t") is not None and (properties := run.find(f"{_W}rPr")) is not None
+        ),
+        None,
+    )
+    if template_run_properties is not None:
+        text_run.append(deepcopy(template_run_properties))
+    ET.SubElement(text_run, f"{_W}t").text = text
+    ET.SubElement(text_run, f"{_W}tab")
+    ET.SubElement(text_run, f"{_W}t").text = "1"
+    if last:
+        end_run = ET.SubElement(paragraph, f"{_W}r")
+        ET.SubElement(end_run, f"{_W}fldChar", {f"{_W}fldCharType": "end"})
+    return paragraph
+
+
+def _refresh_toc(
+    parent: ET.Element,
+    target: ET.Element,
+    entries: tuple[TocEntry, ...],
+    style_ids: dict[int, str],
+) -> None:
+    """Rebuild a representative cache while keeping a live, dirty TOC field."""
+
+    if not entries:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="toc_entries_missing",
+            message="refresh_toc requires representative entries from the final title tree.",
+        )
+    siblings = list(parent)
+    start = siblings.index(target)
+    end = next(
+        (
+            index
+            for index in range(start, len(siblings))
+            if any(
+                node.get(f"{_W}fldCharType") == "end"
+                for node in siblings[index].iter(f"{_W}fldChar")
+            )
+        ),
+        None,
+    )
+    if end is None:
+        raise ToolFailure(
+            status="needs_input",
+            origin="document",
+            code="toc_field_boundary_missing",
+            message="The selected object does not begin a complete TOC field result.",
+        )
+    templates: dict[int, ET.Element] = {}
+    style_levels = {style_id: level for level, style_id in style_ids.items()}
+    for paragraph in siblings[start : end + 1]:
+        level = _toc_level(paragraph, style_levels)
+        if level is not None:
+            templates.setdefault(level, paragraph)
+    fallback = siblings[start]
+    instruction_text = "".join(
+        node.text or ""
+        for paragraph in siblings[start : end + 1]
+        for node in paragraph.iter(f"{_W}instrText")
+    )
+    if "TOC" not in instruction_text.upper():
+        instruction_text = ' TOC \\o "1-3" \\h \\z \\u '
+    replacements = [
+        _toc_paragraph(
+            templates.get(entry.level, fallback),
+            entry.selected.text,
+            level=entry.level,
+            style_id=style_ids.get(entry.level, f"TOC{entry.level}"),
+            instruction_text=instruction_text,
+            first=index == 0,
+            last=index == len(entries) - 1,
+        )
+        for index, entry in enumerate(entries)
+    ]
+    following_content = next(
+        (
+            paragraph
+            for paragraph in siblings[end + 1 :]
+            if _local_name(paragraph.tag) == "p"
+            and any((node.text or "").strip() for node in paragraph.iter(f"{_W}t"))
+        ),
+        None,
+    )
+    if following_content is not None:
+        properties = following_content.find(f"{_W}pPr")
+        if properties is None:
+            properties = ET.Element(f"{_W}pPr")
+            following_content.insert(0, properties)
+        page_break = properties.find(f"{_W}pageBreakBefore")
+        if page_break is None:
+            page_break = ET.Element(f"{_W}pageBreakBefore")
+            preceding = {"pStyle", "keepNext", "keepLines"}
+            insertion = next(
+                (
+                    index
+                    for index, child in enumerate(properties)
+                    if _local_name(child.tag) not in preceding
+                ),
+                len(properties),
+            )
+            properties.insert(insertion, page_break)
+    for paragraph in siblings[start : end + 1]:
+        parent.remove(paragraph)
+    for offset, paragraph in enumerate(replacements):
+        parent.insert(start + offset, paragraph)
+
+
+def _mark_word_fields_for_update(parts: dict[str, bytes]) -> None:
+    raw = parts.get("word/settings.xml")
+    if raw is None:
+        return
+    try:
+        settings = ET.fromstring(raw)
+    except ET.ParseError as error:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="settings_xml_invalid",
+            message="The Word settings part cannot be parsed.",
+        ) from error
+    update = settings.find(f"{_W}updateFields")
+    if update is None:
+        update = ET.Element(f"{_W}updateFields")
+        following_settings = {
+            "hdrShapeDefaults",
+            "footnotePr",
+            "endnotePr",
+            "compat",
+            "docVars",
+            "rsids",
+            "mathPr",
+            "themeFontLang",
+            "clrSchemeMapping",
+            "doNotIncludeSubdocsInStats",
+            "shapeDefaults",
+            "decimalSymbol",
+            "listSeparator",
+            "docId",
+        }
+        insertion = next(
+            (
+                index
+                for index, child in enumerate(settings)
+                if _local_name(child.tag) in following_settings
+            ),
+            len(settings),
+        )
+        settings.insert(insertion, update)
+    update.set(f"{_W}val", "true")
+    parts["word/settings.xml"] = _serialize(settings)
 
 
 def _overlap(first: ET.Element, second: ET.Element) -> bool:
@@ -300,11 +672,32 @@ def mutate_objects(
             message="The Word document main part cannot be parsed.",
         ) from error
     resolved = [
-        (*_resolve(document_root, mutation.selected.locator), mutation)
-        for mutation in mutations
+        (*_resolve(document_root, mutation.selected.locator), mutation) for mutation in mutations
     ]
-    for index, (_, target, _) in enumerate(resolved):
-        if any(_overlap(target, other) for _, other, _ in resolved[index + 1 :]):
+    structure_resolved: dict[int, list[tuple[ET.Element, ET.Element, StructureMember]]] = {
+        index: [
+            (*_resolve(document_root, member.selected.locator), member)
+            for member in mutation.structure_members
+        ]
+        for index, mutation in enumerate(mutations)
+        if mutation.action == "materialize_structure"
+    }
+    replaced_structures: dict[int, tuple[ET.Element, ET.Element]] = {
+        index: _resolve(document_root, mutation.replaced_structure.locator)
+        for index, mutation in enumerate(mutations)
+        if mutation.action == "materialize_structure" and mutation.replaced_structure is not None
+    }
+    mutable_targets: list[ET.Element] = []
+    for index, (_, target, mutation) in enumerate(resolved):
+        if mutation.action == "materialize_structure":
+            mutable_targets.extend(item for _, item, _ in structure_resolved[index])
+            replacement = replaced_structures.get(index)
+            if replacement is not None:
+                mutable_targets.append(replacement[1])
+        else:
+            mutable_targets.append(target)
+    for index, target in enumerate(mutable_targets):
+        if any(_overlap(target, other) for other in mutable_targets[index + 1 :]):
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
@@ -314,10 +707,13 @@ def mutate_objects(
                     "choose the smallest intended targets."
                 ),
             )
-    for parent, target, mutation in resolved:
+    refreshed_toc = False
+    toc_style_ids = _toc_style_ids(parts)
+    for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
             if mutation.field_id is None or mutation.slot_id is None:
                 raise AssertionError("materialize_slot requires field and slot identifiers")
+            _remove_direct_format(target, mutation.clear_direct_format)
             _materialize(
                 document_root,
                 parent,
@@ -326,10 +722,34 @@ def mutate_objects(
                 field_id=mutation.field_id,
                 slot_id=mutation.slot_id,
                 content_type=mutation.content_type,
-                placeholder_text=mutation.placeholder_text
-                or f"【{mutation.field_id}】",
+                placeholder_text=mutation.placeholder_text or f"【{mutation.field_id}】",
             )
+        elif mutation.action == "materialize_structure":
+            if mutation.field_id is None or mutation.slot_id is None:
+                raise AssertionError("materialize_structure requires field and slot identifiers")
+            _materialize_structure(
+                document_root,
+                structure_resolved[index],
+                field_id=mutation.field_id,
+                slot_id=mutation.slot_id,
+                replaced_structure=replaced_structures.get(index),
+            )
+        elif mutation.action == "normalize_format":
+            _remove_direct_format(target, mutation.clear_direct_format)
+        elif mutation.action == "refresh_toc":
+            _refresh_toc(parent, target, mutation.toc_entries, toc_style_ids)
+            refreshed_toc = True
         elif mutation.action == "clear_content":
+            if mutation.selected.style and mutation.selected.style.casefold().startswith("toc"):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="toc_requires_refresh",
+                    message=(
+                        "Do not clear TOC cache rows individually. Refresh the live TOC "
+                        "with representative final-title entries."
+                    ),
+                )
             if not mutation.selected.text:
                 raise ToolFailure(
                     status="needs_input",
@@ -343,6 +763,8 @@ def mutate_objects(
         else:
             raise AssertionError(f"unsupported direct object action: {mutation.action}")
     parts["word/document.xml"] = _serialize(document_root)
+    if refreshed_toc:
+        _mark_word_fields_for_update(parts)
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w") as result:
         for info in infos:

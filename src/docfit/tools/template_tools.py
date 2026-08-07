@@ -68,9 +68,10 @@ async def _unbound(_args: dict[str, Any]) -> dict[str, Any]:
 @tool(
     "template_view",
     (
-        "Open one template version on its current page, request one needed page, or find/focus "
-        "one concrete object with bounded local visual context. This Tool never forces an "
-        "all-page review. Returned object_ref values are accepted unchanged by template_edit."
+        "Open or resume the current target-object crop, advance to the next unprocessed visual "
+        "region, or find/focus one concrete object. Each visual result contains only the target, "
+        "its parent, and necessary adjacent objects. Navigation is physical and never assigns "
+        "semantic meaning. Returned object_ref values are accepted unchanged by template_edit."
     ),
     TEMPLATE_VIEW_SCHEMA,
     annotations=_OBSERVE,
@@ -96,9 +97,11 @@ async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
 @tool(
     "template_edit",
     (
-        "Atomically apply up to thirty-two materialize, clear, or remove decisions made from one "
-        "page context. No plan file or output path is needed. The Tool creates one immutable "
-        "version, checks every effect, and returns the changed page image plus fresh refs."
+        "Directly and atomically materialize slots or one reusable body structure, normalize an "
+        "explicit direct color, refresh one live TOC with representative entries, or batch clear "
+        "and remove current objects. No plan file or output path is needed. The Tool creates one "
+        "immutable version, checks every effect, checkpoints task progress, and returns one "
+        "changed target-region crop plus fresh refs."
     ),
     TEMPLATE_EDIT_SCHEMA,
     annotations=_WRITE,
@@ -189,7 +192,7 @@ def build_template_tool_server(
     runners = (view, registry, edit, publish)
     return create_sdk_mcp_server(
         name="docfit",
-        version="3.0.0",
+        version="4.0.0",
         tools=[
             _bind(registered, runner)
             for registered, runner in zip(TEMPLATE_TOOLS, runners, strict=True)
