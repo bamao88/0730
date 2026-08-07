@@ -7,13 +7,15 @@ from pathlib import Path
 import pytest
 import yaml
 
-from docfit.app.student_content_fill import _force_inline_inspection
+from docfit.app.student_content_fill import _document_visible_text, _force_inline_inspection
 from docfit.content.extraction import extraction_output_schema, validate_extraction
 from docfit.content.placement import build_placement
 from docfit.content.student import build_student_inventory
 from docfit.fields.registry import FieldRegistrySnapshot
 from docfit.tools.inspection import InspectedObject, Inspection
 from docfit.tools.runtime import ToolFailure, sha256_file
+
+W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
 
 def _inspection() -> Inspection:
@@ -173,6 +175,89 @@ def test_inventory_uses_ooxml_body_order_for_paragraph_table_interleaving(
     )
     body = next(item for item in actual["segments"] if item["field_id"] == "body.chapters")
     assert body["source_object_ids"] == ["obj-start", "obj-table", "obj-end"]
+
+
+def test_inventory_synthesizes_formula_only_top_level_paragraphs(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "student.docx"
+    math_namespace = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    document_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="{W_NS}"
+ xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+ xmlns:m="{math_namespace}">
+ <w:body>
+  <w:p w14:paraId="00000001"><w:r><w:t>Start</w:t></w:r></w:p>
+  <w:p w14:paraId="00000002"><m:oMath><m:r><m:t>x</m:t></m:r></m:oMath></w:p>
+  <w:p w14:paraId="00000003"><w:r><w:t>End</w:t></w:r></w:p>
+  <w:sectPr/>
+ </w:body>
+</w:document>""".encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", document_xml)
+    inspection = Inspection(
+        "a" * 64,
+        (
+            _object("obj-start", "/body/p[@paraId=00000001]", "Start"),
+            _object("obj-end", "/body/p[@paraId=00000003]", "End"),
+        ),
+        {"equations": 1},
+        (),
+        (),
+        {},
+    )
+
+    inventory = build_student_inventory(inspection, source_docx=source)
+
+    transferable = [item for item in inventory["objects"] if item["transferable"] is True]
+    assert [item["body_sequence"] for item in transferable] == [1, 3, 2]
+    formula = next(item for item in transferable if item["source_locator"].endswith("00000002]"))
+    assert formula["content_type"] == "equation"
+    assert formula["kind"] == "paragraph"
+    assert inventory["synthetic_transferable_object_count"] == 1
+
+    payload = {
+        "schema_version": 1,
+        "fields": [],
+        "segments": [
+            {
+                "field_id": "body.chapters",
+                "status": "extracted",
+                "start_object_id": "obj-start",
+                "end_object_id": "obj-end",
+                "confidence": 1.0,
+                "note": "The full body range includes a formula-only paragraph.",
+            }
+        ],
+        "unmapped_object_ids": [],
+        "summary": "Synthetic.",
+        "uncertainties": [],
+    }
+    actual = validate_extraction(
+        payload,
+        inventory=inventory,
+        registry=_registry(tmp_path),
+        expected_field_ids=(),
+    )
+    body = next(item for item in actual["segments"] if item["field_id"] == "body.chapters")
+    assert body["source_locators"] == [
+        "/body/p[@paraId=00000001]",
+        "/body/p[@paraId=00000002]",
+        "/body/p[@paraId=00000003]",
+    ]
+
+
+def test_visible_text_audit_includes_omml_formula_text(tmp_path: Path) -> None:
+    document = tmp_path / "formula.docx"
+    math_namespace = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    document_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="{W_NS}" xmlns:m="{math_namespace}">
+ <w:body><w:p><w:r><w:t>Before</w:t></w:r><m:oMath><m:r><m:t>x=1</m:t></m:r></m:oMath></w:p></w:body>
+</w:document>""".encode()
+    with zipfile.ZipFile(document, "w") as archive:
+        archive.writestr("word/document.xml", document_xml)
+
+    assert _document_visible_text(document) == "Before\nx=1"
 
 
 def test_extraction_schema_avoids_composition_keywords() -> None:

@@ -552,9 +552,7 @@ def finalize_saved_student_content_fill(
     ):
         partial_reasons.append("source_complex_objects_unmapped")
     if validation.get("new_officecli_regression") == "UNKNOWN":
-        partial_reasons.append(
-            "officecli_validation_unknown_from_invalid_template_baseline"
-        )
+        partial_reasons.append("officecli_validation_unknown_from_invalid_template_baseline")
     report: JsonObject = {
         "schema_version": "docfit-student-content-fill-report/v1",
         "status": placement["status"],
@@ -640,6 +638,7 @@ def _audit_candidate(
     inventory: JsonObject,
     student_content: JsonObject,
     office: OfficeCliAdapter,
+    approved_text_replacements: tuple[tuple[str, str], ...] = (),
 ) -> JsonObject:
     final_inspection = inspect_document(candidate, office)
     final_text = _normalize_text(_document_visible_text(candidate))
@@ -657,7 +656,12 @@ def _audit_candidate(
     missing_segment_ids = [
         object_id
         for object_id in sorted(selected_segment_ids)
-        if (text := str(by_id.get(object_id, {}).get("text", ""))).strip()
+        if (
+            text := _apply_approved_text_replacements(
+                str(by_id.get(object_id, {}).get("text", "")),
+                approved_text_replacements,
+            )
+        ).strip()
         and _normalize_text(text) not in final_text
     ]
     missing_scalar_field_ids = [
@@ -824,9 +828,17 @@ def _normalize_text(value: str) -> str:
 
 def _document_visible_text(document: Path) -> str:
     word_namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    math_namespace = "http://schemas.openxmlformats.org/officeDocument/2006/math"
     with zipfile.ZipFile(document) as archive:
         root = ET.fromstring(archive.read("word/document.xml"))
-    return "\n".join(node.text or "" for node in root.iter(f"{{{word_namespace}}}t"))
+    text_tags = {f"{{{word_namespace}}}t", f"{{{math_namespace}}}t"}
+    return "\n".join(node.text or "" for node in root.iter() if node.tag in text_tags)
+
+
+def _apply_approved_text_replacements(value: str, replacements: tuple[tuple[str, str], ...]) -> str:
+    for old, new in replacements:
+        value = value.replace(old, new)
+    return value
 
 
 def _failure(code: str, message: str, *, origin: str = "request") -> ToolFailure:

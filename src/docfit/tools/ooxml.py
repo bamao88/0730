@@ -325,6 +325,20 @@ def _copy_referenced_styles(
     return mapping, copied_count
 
 
+def _strip_style_references(copied: list[ET.Element]) -> int:
+    """Remove source style IDs while retaining concrete OOXML content and formatting."""
+
+    removed = 0
+    style_tags = {_q(W_NS, value) for value in ("pStyle", "rStyle", "tblStyle")}
+    for item in copied:
+        for parent in item.iter():
+            for child in list(parent):
+                if child.tag in style_tags:
+                    parent.remove(child)
+                    removed += 1
+    return removed
+
+
 def _copy_numbering(
     copied: list[ET.Element],
     source_parts: dict[str, bytes],
@@ -590,6 +604,7 @@ def import_content_objects(
     include_source_final_section_properties: bool,
     output_docx: Path,
     replace_content_control_tag: str | None = None,
+    copy_source_styles: bool = True,
 ) -> JsonObject:
     """Copy selected body objects and their concrete package dependencies."""
 
@@ -639,7 +654,12 @@ def import_content_objects(
             paragraph_properties.append(copy.deepcopy(final_section))
             copied.append(paragraph)
 
-    style_mapping, copied_styles = _copy_referenced_styles(copied, source_parts, target_parts)
+    stripped_style_references = 0
+    if copy_source_styles:
+        style_mapping, copied_styles = _copy_referenced_styles(copied, source_parts, target_parts)
+    else:
+        style_mapping, copied_styles = {}, 0
+        stripped_style_references = _strip_style_references(copied)
     numbering_mapping, copied_numbering = _copy_numbering(copied, source_parts, target_parts)
     remapped_local_ids = _remap_local_ids(copied, target_document)
 
@@ -707,6 +727,32 @@ def import_content_objects(
     for offset, item in enumerate(copied):
         target_body.insert(insert_index + offset, item)
 
+    inserted_body_refs: list[JsonObject] = []
+    table_positions = {
+        id(table): index
+        for index, table in enumerate(target_body.findall(_q(W_NS, "tbl")), start=1)
+    }
+    for source_locator, item in zip(source_locators, copied, strict=False):
+        target_locator: str | None = None
+        if item.tag == _q(W_NS, "p"):
+            para_id = next(
+                (value for key, value in item.attrib.items() if key.endswith("}paraId")),
+                None,
+            )
+            if para_id:
+                target_locator = f"/body/p[@paraId={para_id}]"
+        elif item.tag == _q(W_NS, "tbl"):
+            table_index = table_positions.get(id(item))
+            if table_index is not None:
+                target_locator = f"/body/tbl[{table_index}]"
+        inserted_body_refs.append(
+            {
+                "source_locator": source_locator,
+                "target_locator": target_locator,
+                "kind": "table" if item.tag == _q(W_NS, "tbl") else "paragraph",
+            }
+        )
+
     target_parts["word/document.xml"] = _serialize(target_document)
     target_parts["word/_rels/document.xml.rels"] = _serialize(target_document_rels)
     target_parts["[Content_Types].xml"] = _serialize(target_content_types)
@@ -716,12 +762,14 @@ def import_content_objects(
         "inserted_objects": len(copied),
         "styles_copied": copied_styles,
         "style_id_map": style_mapping,
+        "source_style_references_stripped": stripped_style_references,
         "numbering_copied": copied_numbering,
         "numbering_id_map": numbering_mapping,
         "package_parts_copied": len(closure.copied_parts),
         "relationships_copied": closure.copied_relationships,
         "replaced_content_control_tag": replace_content_control_tag,
         "local_ids_remapped": remapped_local_ids,
+        "inserted_body_refs": inserted_body_refs,
         "headers_or_footers_copied": sum(
             1
             for value in closure.copied_parts

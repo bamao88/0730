@@ -94,6 +94,7 @@ def fill_template(
                 include_source_final_section_properties=False,
                 output_docx=next_docx,
                 replace_content_control_tag=tag,
+                copy_source_styles=False,
             )
             block_evidence.append(
                 {

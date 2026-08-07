@@ -214,6 +214,11 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
     assert result["status"] == "PARTIAL"
     assert result["text_controls_replaced"] == 1
     assert result["block_operations"][0]["dependency_closure_complete"] is True
+    assert result["block_operations"][0]["styles_copied"] == 0
+    assert result["block_operations"][0]["source_style_references_stripped"] >= 0
+    assert result["block_operations"][0]["inserted_body_refs"][0]["target_locator"].startswith(
+        "/body/p[@paraId="
+    )
     assert sha256_file(source) == source_hash
     assert sha256_file(template) == template_hash
     inspected = inspect_document(output, office)
