@@ -55,13 +55,14 @@
   已存在的可选开发资产
 - Current visual proof: 固定镜像、真实 OfficeCLI+LibreOffice M1 链路、V2 MCP 原生图片块和
   三校“联系表→页面→对象局部图”服务链均已通过；当前证据和 live 限制见 V2 active capsule
-- Current blocker: 当前默认仍选择 `MiniMax-M2.7`。V2 Tool 已产生原生 image block，M2.7
-  按官方合同只支持文本与 Tool 相关内容块；bounded `MiniMax-M3` image live 已在相同
-  Anthropic-compatible 接口 PASS，证明无需 base64 文本或文件 Read 兼容层。后续是默认模型
-  升级和 M3 只读 Subagent qualification；Kimi 当前候选仍在 Tool 循环层 error。
+- Current blocker: 默认 backend 和本机运行配置已切换为 MiniMax 优先、Kimi 回退，MiniMax
+  默认模型为 `MiniMax-M3`。bounded M3 image live 已在相同 Anthropic-compatible 接口 PASS，
+  证明无需 base64 文本或文件 Read 兼容层。当前仅剩 M3 只读 Subagent qualification；Kimi
+  回退候选仍在 Tool 循环层 error。
 - Receipt truth: V2 image/subagent case version 已提升，旧回执不再有效；当前
-  `doctor --require agent-smoke` 为 NOT_READY。此前 denied-tools/path-tools v3 的权限证据
-  不因视觉迁移失效，但不能替代新的视觉 live receipt。
+  MiniMax-M3 image v4 回执已 PASS 并绑定 backend/model；`doctor --require agent-smoke` 仍因
+  其他缺失或旧 schema 回执为 NOT_READY。此前 denied-tools/path-tools v3 的权限证据不因视觉
+  迁移失效，但不能替代新的视觉 live receipt。
 - Live M2 proof: MiniMax 真实 SDK convert 返回 COMPLETED；两 Skills 与五 Tool 均有调用，
   源 hash 不变，根目录 final.docx、当时的 candidate PDF/ref、2 页全页 review、
   validation 均发布；candidate 绑定 final hash，errors=0、verification_gap=0、blocking=0

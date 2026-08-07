@@ -42,11 +42,11 @@ SMOKE_CASES: tuple[SmokeCase, ...] = (
     "subagent",
 )
 SMOKE_CASE_VERSIONS: dict[SmokeCase, int] = {
-    "image": 3,
+    "image": 4,
     "ask-user": 1,
     "denied-tools": 3,
     "path-tools": 3,
-    "subagent": 3,
+    "subagent": 4,
 }
 SMOKE_BACKEND_TIMEOUT_SECONDS = 180
 SMOKE_SYSTEM_PROMPT = (
@@ -62,6 +62,7 @@ class SmokeReport:
     case: SmokeCase
     status: Literal["PASS", "FAIL"]
     backend: str
+    model: str
     session_id: str | None
     tool_uses: tuple[str, ...]
     detail: str
@@ -185,6 +186,7 @@ async def run_image_smoke(backend: AgentBackend) -> SmokeReport:
         case="image",
         status="PASS" if passed else "FAIL",
         backend=backend.name,
+        model=backend.model,
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
@@ -235,6 +237,7 @@ async def run_ask_user_smoke(backend: AgentBackend) -> SmokeReport:
         case="ask-user",
         status="PASS" if passed else "FAIL",
         backend=backend.name,
+        model=backend.model,
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
@@ -266,6 +269,7 @@ async def run_denied_tools_smoke(backend: AgentBackend) -> SmokeReport:
         case="denied-tools",
         status="PASS" if passed else "FAIL",
         backend=backend.name,
+        model=backend.model,
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
@@ -370,6 +374,7 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
         case="path-tools",
         status="PASS" if passed else "FAIL",
         backend=backend.name,
+        model=backend.model,
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
@@ -455,6 +460,7 @@ async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
         case="subagent",
         status="PASS" if passed else "FAIL",
         backend=backend.name,
+        model=backend.model,
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
@@ -530,6 +536,7 @@ async def run_smoke_with_fallback(
         case=case_name,
         status="FAIL",
         backend=backends[-1].name,
+        model=backends[-1].model,
         session_id=None,
         tool_uses=(),
         detail=f"All configured candidates failed: {detail}",

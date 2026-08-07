@@ -46,6 +46,7 @@ def test_smoke_tries_all_kimi_candidates_before_minimax(
             case="image",
             status="PASS" if passed else "FAIL",
             backend=backend.name,
+            model=backend.model,
             session_id="session" if passed else None,
             tool_uses=(),
             detail=(
@@ -88,6 +89,7 @@ def test_smoke_timeout_moves_to_next_candidate(
             case=case_name,
             status="PASS",
             backend=backend.name,
+            model=backend.model,
             session_id="session",
             tool_uses=(),
             detail="candidate passed",
@@ -108,6 +110,7 @@ def test_new_live_attempt_invalidates_stale_pass_receipt(tmp_path: Path) -> None
         case="image",
         status="PASS",
         backend="kimi",
+        model="kimi-model",
         session_id="old-session",
         tool_uses=("mcp__docfit__docx_visual_review",),
         detail="old pass",

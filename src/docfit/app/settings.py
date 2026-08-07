@@ -18,11 +18,11 @@ from docfit.config import (
 
 BackendName = Literal["kimi", "minimax"]
 
-DEFAULT_BACKEND_ORDER = ("kimi", "minimax")
+DEFAULT_BACKEND_ORDER = ("minimax", "kimi")
 DEFAULT_KIMI_BASE_URL = "https://api.kimi.com/coding/"
 DEFAULT_KIMI_MODEL = "kimi-for-coding"
 DEFAULT_MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
-DEFAULT_MINIMAX_MODEL = "MiniMax-M2.7"
+DEFAULT_MINIMAX_MODEL = "MiniMax-M3"
 
 _BACKEND_KEY_NAMES: dict[BackendName, tuple[str, ...]] = {
     "kimi": (

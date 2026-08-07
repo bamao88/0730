@@ -9,7 +9,8 @@
 - Credential/API status: Token Plan credential 已安装到仓库外配置；对 MiniMax M2.7 官方接口的
   最小请求返回 HTTP 200，真实 Claude Agent SDK 调用、MCP Tool 与 filesystem Skill 均已进入
   有效执行。此前 HTTP 402 的根因是误用了与 Token Plan 资源池分离的普通按量 key，已排除。
-- Runtime repairs: selected credential 使用 `ANTHROPIC_AUTH_TOKEN`；模型为 `MiniMax-M2.7`；
+- Runtime repairs: 该次历史执行的 selected credential 使用 `ANTHROPIC_AUTH_TOKEN`，模型为
+  `MiniMax-M2.7`；当前全局默认已切换为 MiniMax 优先的 `MiniMax-M3`；
   Agent turn 上限提高到 160；MiniMax 把 JSON Schema 常量 `1` 发送成字符串 `"1"` 的传输差异
   由 `PreToolUse` hook 规范化，不把 provider 兼容问题下沉到领域 Tool。
 - Capability/safety repairs: template task 的 `Write` 只能新增 decisions YAML/JSON，`Bash` 只能

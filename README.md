@@ -70,13 +70,13 @@ uv run docfit tools visual render:v2:<hash> --mode pages --pages 1
 变量可以覆盖文件配置。不要把 key 写入仓库、测试证据或日志。
 
 ```dotenv
-DOCFIT_AGENT_BACKEND_ORDER=kimi,minimax
+DOCFIT_AGENT_BACKEND_ORDER=minimax,kimi
 DOCFIT_KIMI_API_KEY=...
 DOCFIT_KIMI_BASE_URL=https://api.kimi.com/coding/
 DOCFIT_KIMI_MODEL=kimi-for-coding
 DOCFIT_MINIMAX_API_KEY=...
 DOCFIT_MINIMAX_BASE_URL=https://api.minimaxi.com/anthropic
-DOCFIT_MINIMAX_MODEL=MiniMax-M2.7
+DOCFIT_MINIMAX_MODEL=MiniMax-M3
 ```
 
 ```bash
@@ -90,7 +90,8 @@ uv run docfit doctor --require agent-smoke
 ```
 
 五个 smoke case 验证真实 MCP 图片、同会话用户提问、隐藏工具拒绝、路径权限和只读
-Subagent。`.docfit/smoke/` 只保存不含凭据与论文正文的回执元数据。
+Subagent。MiniMax-M3 是默认模型和首选 backend，Kimi 仅作回退。`.docfit/smoke/` 只保存
+不含凭据与论文正文、但绑定实际 backend/model 的回执元数据。
 
 模板准备：
 

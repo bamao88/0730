@@ -52,6 +52,8 @@ def test_agent_smoke_gate_requires_backend_and_current_receipts(tmp_path: Path) 
                     "status": "PASS",
                     "case_version": SMOKE_CASE_VERSIONS[case_name],
                     "sdk_version": version("claude-agent-sdk"),
+                    "backend": "kimi",
+                    "model": "kimi-for-coding",
                 }
             ),
             encoding="utf-8",
@@ -90,6 +92,41 @@ def test_visual_renderer_gate_checks_the_fixed_pipeline(tmp_path: Path) -> None:
     }
     assert report.gate in {"PASS", "NOT_READY"}
     assert report.exit_code == (0 if report.gate == "PASS" else 1)
+
+
+def test_agent_smoke_receipt_is_stale_when_configured_model_changes(
+    tmp_path: Path,
+) -> None:
+    _make_project(tmp_path)
+    directory = receipt_directory(tmp_path)
+    directory.mkdir(parents=True)
+    for case_name in SMOKE_CASES:
+        (directory / f"{case_name}.json").write_text(
+            json.dumps(
+                {
+                    "case": case_name,
+                    "status": "PASS",
+                    "case_version": SMOKE_CASE_VERSIONS[case_name],
+                    "sdk_version": version("claude-agent-sdk"),
+                    "backend": "minimax",
+                    "model": "MiniMax-M2.7",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    report = run_doctor(
+        "agent-smoke",
+        root=tmp_path,
+        environment={"DOCFIT_MINIMAX_API_KEY": "test-only"},
+        python_version=(3, 12),
+    )
+
+    receipts = next(
+        check for check in report.checks if check.name == "agent_smoke_receipts"
+    )
+    assert receipts.status == "NOT_READY"
+    assert "invalid or stale" in receipts.detail
 
 
 def test_base_gate_fails_for_wrong_python_or_missing_files(tmp_path: Path) -> None:

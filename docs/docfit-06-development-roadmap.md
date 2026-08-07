@@ -282,7 +282,8 @@ uv run docfit doctor --require agent-smoke
 
 没有 API key 时可以完成 M0 代码工作，但不能宣称本地产品门通过。M0 的本地
 Agent 配置统一放在仓库外 `~/.config/docfit/agent.env`，文件权限必须为 `0600`；
-当前 runtime 按 Kimi、MiniMax 的顺序选择 Anthropic 兼容 backend，并通过
+当前 runtime 按 MiniMax、Kimi 的顺序选择 Anthropic 兼容 backend，默认使用支持原生
+image/video 内容块的 `MiniMax-M3`，Kimi 仅作回退，并通过
 `ClaudeAgentOptions.env` 只向 SDK 子进程注入当前候选配置。Kimi 配置显式保持官方
 high-effort Tool 上下文并关闭 Tool Search；HTTP 400 请求格式拒绝被视为同一
 name/base URL/model route 的不可重放失败，不再轮换 credential 重复请求，而是转到下一个

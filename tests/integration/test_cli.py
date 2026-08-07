@@ -36,6 +36,7 @@ def test_live_smoke_fails_closed_without_agent_backend(
             case="image",
             status="PASS",
             backend="test",
+            model="test-model",
             session_id="previous-live-session",
             tool_uses=("mcp__docfit__docx_visual_review",),
             detail="previous live proof",

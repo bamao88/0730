@@ -492,9 +492,9 @@ Claude 官方工具机制允许普通客户端工具通过 `tool_result` 返回�
 - 湖南大学、南京农业大学、北京大学三个模板已分别通过“联系表 → 完整页 → object_ref
   局部证据”真实 Docker 链路；它们只作为测试样本，运行时代码不存在学校判断。
 - SDK 进程内 MCP server 会把应用会话 task root 绑定到 Tool 服务，视觉 schema 不允许
-  Agent 选择授权根。当前运行配置使用 `MiniMax-M2.7`，其官方合同只支持文本与 Tool 相关
-  内容块，因此 live 能调用 render/visual-review 但只能看到图片元数据。MiniMax 最新
-  `MiniMax-M3` 已在相同 Anthropic-compatible 接口支持 image/video 内容块；bounded M3
-  image live 已通过联系表和 220 DPI 整页读取。正确后续是升级默认模型并完成只读 Subagent
-  qualification，而不是增加第二图片协议。
+  Agent 选择授权根。运行配置已永久切换为 MiniMax 优先、Kimi 回退，MiniMax 默认模型为
+  `MiniMax-M3`。M3 在相同 Anthropic-compatible 接口支持 image/video 内容块；bounded M3
+  image live 已通过联系表和 220 DPI 整页读取。后续只需完成 M3 只读 Subagent
+  qualification，而不是增加第二图片协议。此前 `MiniMax-M2.7` 只看到图片元数据的结果保留为
+  历史失败证据。
 - 本方案不提供旧 ref 迁移、Provider 平台、第二 renderer、学校补丁或 Word 像素一致性。

@@ -27,8 +27,9 @@ from docfit.app.agent import (
 )
 from docfit.app.settings import (
     AgentConfigurationError,
+    BackendName,
     agent_env_file_is_private,
-    configured_backend_names,
+    iter_agent_backends,
     merged_agent_environment,
 )
 from docfit.tools import MCP_SERVER_NAME
@@ -74,7 +75,11 @@ def _sdk_version() -> str | None:
         return None
 
 
-def _receipt_check(root: Path, sdk_version: str | None) -> DoctorCheck:
+def _receipt_check(
+    root: Path,
+    sdk_version: str | None,
+    backend_identities: set[tuple[BackendName, str]],
+) -> DoctorCheck:
     missing: list[str] = []
     invalid: list[str] = []
     for case_name in SMOKE_CASES:
@@ -91,13 +96,15 @@ def _receipt_check(root: Path, sdk_version: str | None) -> DoctorCheck:
             payload.get("status") != "PASS"
             or payload.get("sdk_version") != sdk_version
             or payload.get("case_version", 1) != SMOKE_CASE_VERSIONS[case_name]
+            or (payload.get("backend"), payload.get("model")) not in backend_identities
         ):
             invalid.append(case_name)
     if not missing and not invalid:
         return DoctorCheck(
             "agent_smoke_receipts",
             "PASS",
-            f"All {len(SMOKE_CASES)} live smoke receipts match the installed SDK version.",
+            f"All {len(SMOKE_CASES)} live smoke receipts match the installed SDK "
+            "and configured models.",
             ("agent-smoke",),
         )
     detail_parts = []
@@ -127,16 +134,24 @@ def run_doctor(
     checks: list[DoctorCheck] = []
 
     configuration_error: str | None = None
+    backend_identities: set[tuple[BackendName, str]]
     try:
         agent_environment, selected_env_file = merged_agent_environment(
             environment,
             env_file=env_file,
         )
-        backend_names = configured_backend_names(agent_environment)
+        configured_backends = tuple(
+            iter_agent_backends(agent_environment, env_file=selected_env_file)
+        )
+        backend_names = tuple(dict.fromkeys(backend.name for backend in configured_backends))
+        backend_identities = {
+            (backend.name, backend.model) for backend in configured_backends
+        }
     except AgentConfigurationError as error:
         agent_environment = {}
         selected_env_file = env_file
         backend_names = ()
+        backend_identities = set()
         configuration_error = str(error)
 
     checks.append(
@@ -327,7 +342,7 @@ def run_doctor(
             ("agent-smoke",),
         )
     )
-    checks.append(_receipt_check(project, sdk_version))
+    checks.append(_receipt_check(project, sdk_version, backend_identities))
 
     try:
         office = OfficeCliAdapter()
