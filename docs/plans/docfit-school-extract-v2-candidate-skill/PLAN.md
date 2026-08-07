@@ -1,6 +1,7 @@
 # `docfit-school-extract` v2 候选实施与验收计划
 
-> 状态：W0–W5 候选实现与验收已完成；已生成真实学校候选产物，尚未执行 W6 生产切换。
+> 状态：W0–W5 候选代码与自动化合同已完成；既有真实学校产物因未完成内容清理而被否决，
+> 新一轮真实 Agent 验证受外部模型凭据/额度阻断，尚未执行 W6 生产切换。
 >
 > 当前已有开发入口 `docfit prepare-template` 和候选 Skill/Tool 组合。生产 Skill、转换链与长期
 > 架构基线仍保持现状；只有 W6 获得单独批准后才执行原子生产切换。
@@ -380,6 +381,7 @@ final review 缺页/跨 hash → 无 artifact spec     → 补精确 hash 审查
 Registry/field/marker 错误 → 无 template artifact → 修正字段或槽标记
 build blocker         → 无 template artifact     → 回到对应环节
 缺用户授权/裁决        → structured blocked      → 不发布产物
+Agent backend 401–403 → 无 Agent 决定/产物       → 恢复凭据或额度后新 task 重跑
 ```
 
 任何“无输出”都必须断言目标路径不存在或原有目标未变化，不能只检查错误码。
@@ -393,18 +395,22 @@ build blocker         → 无 template artifact     → 回到对应环节
 - 在产品模块中实现或 import Eval；
 - 将当前任务学校材料写入通用 Knowledge。
 
-## 13. W0–W5 完成状态与证据
+## 13. W0–W5 代码状态与真实运行证据
 
 - 四个公开 Tool、两个 compiler、task-local evidence、Registry/marker、原子四文件 build 已实现；
 - 零 mutation、安全 mutation、Agent/CLI、blocked/recovery 和 changed-template lineage 均有合同测试；
 - 真实 SDK 最小任务已通过一个 query/session 生成四文件产物；
-- 真实南农输入已生成 `temp/docfit-school-extract-v2-njau-real-r2/output/template-artifact/`：
-  18 个 slot、4 个 manual、3 个 gap、0 个 unresolved，12 页最终候选证据均有 disposition；
-- 产物 hash、来源 hash、Registry/marker、locator、mutation lineage、最终视觉覆盖和四文件集合
-  均由 compiler/build 独立重验，真实 `fill-contract.json` 通过独立 Eval schema；Word 内容效果仍
-  按用户约定由人工判断；
-- 根项目全量回归 348 项通过，最终受影响的 Tool/Agent/CLI 合同 42 项通过；root 的
-  lock/build、ruff、strict mypy、doctor 以及独立 Eval 的 lock/build/ruff/mypy/129 项测试均通过；
+- `temp/docfit-school-extract-v2-njau-real-r2/` 没有清理槽内示例/说明、required 槽位覆盖不足且
+  原 CLI 未干净完成，只保留为诊断证据，不是有效候选或交付；
+- `template_mutate` 不再使用 protected content/style/section/marker 语义检查器否决 Agent 已
+  编译决定；它保留计划、路径、hash、目标定位、package 和原子发布边界，并把 after snapshot、
+  mutation diff 与渲染证据反馈给 Agent 自行核对；
+- 新南农运行在空 task root 完成结构 snapshot 与 14 页初始渲染，但在写 mutation decisions 前
+  失去可用后端：三个 Kimi credential 返回 HTTP 403，MiniMax 返回 HTTP 402；未生成新 DOCX
+  或 template artifact；
+- 当前受影响的 Tool/Agent/CLI 合同 30 项、根项目全量 353 项通过；scoped ruff、strict mypy、
+  doctor、lock 和 build 通过。全仓 ruff 只被两个既有未跟踪 `test/` 诊断脚本的 import 顺序
+  阻断，本工作包未修改这些用户文件；
 - W6 的转换端硬依赖尚未满足，保持不可执行。
 
 真实学校运行暴露并已修正两个合同缺口：只要最终模板 hash 与学校源模板不同，artifact spec 和
