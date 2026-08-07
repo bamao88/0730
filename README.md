@@ -87,13 +87,20 @@ DOCFIT_KIMI_MODEL=kimi-for-coding
 
 DOCFIT_MINIMAX_API_KEY=...
 DOCFIT_MINIMAX_BASE_URL=https://api.minimaxi.com/anthropic
-DOCFIT_MINIMAX_MODEL=MiniMax-M3
+DOCFIT_MINIMAX_MODEL=MiniMax-M2.7
 
 # Adobe PDF Services service-principal bundle (never print or commit values).
 DOCFIT_ADOBE_PDF_SERVICES_CLIENT_ID=...
 DOCFIT_ADOBE_PDF_SERVICES_CLIENT_SECRET=...
 DOCFIT_ADOBE_PDF_SERVICES_ORGANIZATION_ID=...
 ```
+
+MiniMax Token Plan keys (`sk-cp-...`) and pay-as-you-go API keys (`sk-...`) use
+separate resource pools and are not interchangeable. A Token Plan subscription
+does not provide balance to a pay-as-you-go key. The Claude Agent SDK route maps
+the selected MiniMax credential to `ANTHROPIC_AUTH_TOKEN`, following MiniMax's
+Claude Code integration contract; keep the credential itself only in the private
+external environment file.
 
 After creating or editing the file:
 

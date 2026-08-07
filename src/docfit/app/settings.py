@@ -22,7 +22,7 @@ DEFAULT_BACKEND_ORDER = ("kimi", "minimax")
 DEFAULT_KIMI_BASE_URL = "https://api.kimi.com/coding/"
 DEFAULT_KIMI_MODEL = "kimi-for-coding"
 DEFAULT_MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
-DEFAULT_MINIMAX_MODEL = "MiniMax-M3"
+DEFAULT_MINIMAX_MODEL = "MiniMax-M2.7"
 
 _BACKEND_KEY_NAMES: dict[BackendName, tuple[str, ...]] = {
     "kimi": (
@@ -67,7 +67,14 @@ class AgentBackend:
             "ENABLE_TOOL_SEARCH": "false",
             "CLAUDE_AGENT_SDK_CLIENT_APP": "docfit/0.1.0",
         }
-        if self.name == "kimi":
+        if self.name == "minimax":
+            # MiniMax's Claude Code integration uses the selected credential as
+            # ANTHROPIC_AUTH_TOKEN and disables Anthropic-only background traffic.
+            environment["ANTHROPIC_API_KEY"] = ""
+            environment["ANTHROPIC_AUTH_TOKEN"] = self.api_key
+            environment["API_TIMEOUT_MS"] = "3000000"
+            environment["CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"] = "1"
+        else:
             # Kimi's Claude Code contract requires thinking context to remain enabled
             # across assistant tool-call messages.  Make the documented default explicit
             # so a host setting cannot silently produce reasoning-free tool history.

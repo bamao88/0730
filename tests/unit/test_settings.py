@@ -41,7 +41,7 @@ def test_shared_env_parser_and_backend_priority(tmp_path: Path) -> None:
     ]
     assert backends[0].base_url == "https://api.kimi.com/coding/"
     assert backends[0].model == "kimi-for-coding"
-    assert backends[-1].model == "MiniMax-M3"
+    assert backends[-1].model == "MiniMax-M2.7"
     assert agent_env_file_is_private(env_file)
     assert "FUTURE_PROVIDER_API_KEY" in read_agent_env_file(env_file)
 
@@ -67,7 +67,7 @@ def test_process_values_override_the_shared_file(tmp_path: Path) -> None:
     assert backend.model == "process-model"
 
 
-def test_sdk_environment_uses_anthropic_compatible_variables_without_repr_leak() -> None:
+def test_minimax_sdk_environment_uses_official_claude_code_contract() -> None:
     backend = next(
         iter_agent_backends(
             {
@@ -79,9 +79,12 @@ def test_sdk_environment_uses_anthropic_compatible_variables_without_repr_leak()
 
     sdk_env = backend.sdk_environment()
 
-    assert sdk_env["ANTHROPIC_API_KEY"] == "secret-value"
+    assert sdk_env["ANTHROPIC_API_KEY"] == ""
+    assert sdk_env["ANTHROPIC_AUTH_TOKEN"] == "secret-value"
     assert sdk_env["ANTHROPIC_BASE_URL"] == "https://api.minimaxi.com/anthropic/"
-    assert sdk_env["ANTHROPIC_MODEL"] == "MiniMax-M3"
+    assert sdk_env["ANTHROPIC_MODEL"] == "MiniMax-M2.7"
+    assert sdk_env["API_TIMEOUT_MS"] == "3000000"
+    assert sdk_env["CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"] == "1"
     assert sdk_env["ENABLE_TOOL_SEARCH"] == "false"
     assert "secret-value" not in repr(backend)
 
