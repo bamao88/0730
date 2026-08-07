@@ -81,16 +81,13 @@ def _serialize(root: ET.Element) -> bytes:
     missing = [
         (prefix, _IGNORABLE_NAMESPACES[prefix])
         for prefix in ignorable
-        if prefix in _IGNORABLE_NAMESPACES
-        and f"xmlns:{prefix}=".encode() not in payload
+        if prefix in _IGNORABLE_NAMESPACES and f"xmlns:{prefix}=".encode() not in payload
     ]
     if missing:
         declaration_end = payload.find(b"?>")
         root_start = payload.find(b"<", declaration_end + 2)
         root_end = payload.find(b">", root_start)
-        declarations = b"".join(
-            f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing
-        )
+        declarations = b"".join(f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing)
         payload = payload[:root_end] + declarations + payload[root_end:]
     return payload
 
@@ -178,6 +175,25 @@ def _find_body_element(root: ET.Element, locator: str) -> ET.Element:
         message="Template import currently accepts only top-level paragraph or table refs.",
         suggested_actions=("inspect_template_again", "select_top_level_objects"),
     )
+
+
+def _find_direct_body_content_control(body: ET.Element, tag: str) -> ET.Element:
+    matches: list[ET.Element] = []
+    for child in body.findall(_q(W_NS, "sdt")):
+        tag_element = child.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
+        if tag_element is not None and tag_element.get(_q(W_NS, "val")) == tag:
+            matches.append(child)
+    if len(matches) != 1:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="content_control_tag_not_unique",
+            message=(
+                "A block replacement tag must identify exactly one body-level content control."
+            ),
+            suggested_actions=("inspect_template_again", "repair_fill_contract"),
+        )
+    return matches[0]
 
 
 @dataclass(slots=True)
@@ -323,7 +339,7 @@ def _copy_numbering(
     if not requested:
         return {}, 0
     source_numbering = _xml(source_parts, "word/numbering.xml")
-    target_numbering = _xml(target_parts, "word/numbering.xml")
+    target_numbering = _ensure_numbering_part(target_parts)
     source_nums = {
         item.get(_q(W_NS, "numId"), ""): item for item in source_numbering.findall(_q(W_NS, "num"))
     }
@@ -381,6 +397,42 @@ def _copy_numbering(
     return mapping, len(mapping)
 
 
+def _ensure_numbering_part(target_parts: dict[str, bytes]) -> ET.Element:
+    """Create the standard numbering infrastructure when a target has none."""
+
+    if "word/numbering.xml" in target_parts:
+        return _xml(target_parts, "word/numbering.xml")
+    numbering = ET.Element(_q(W_NS, "numbering"))
+    target_relationships = _xml(target_parts, "word/_rels/document.xml.rels")
+    numbering_type = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"
+    if not any(
+        relationship.get("Type") == numbering_type
+        for relationship in target_relationships.findall(_q(REL_NS, "Relationship"))
+    ):
+        relationship = ET.SubElement(
+            target_relationships,
+            _q(REL_NS, "Relationship"),
+        )
+        relationship.set("Id", _next_relationship_id(target_relationships))
+        relationship.set("Type", numbering_type)
+        relationship.set("Target", "numbering.xml")
+    target_parts["word/_rels/document.xml.rels"] = _serialize(target_relationships)
+
+    content_types = _xml(target_parts, "[Content_Types].xml")
+    part_name = "/word/numbering.xml"
+    if not any(
+        item.get("PartName") == part_name for item in content_types.findall(_q(CT_NS, "Override"))
+    ):
+        override = ET.SubElement(content_types, _q(CT_NS, "Override"))
+        override.set("PartName", part_name)
+        override.set(
+            "ContentType",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml",
+        )
+    target_parts["[Content_Types].xml"] = _serialize(content_types)
+    return numbering
+
+
 def _remap_local_ids(copied: list[ET.Element], target_document: ET.Element) -> int:
     changes = 0
     for local_name in ("paraId", "textId"):
@@ -390,10 +442,13 @@ def _remap_local_ids(copied: list[ET.Element], target_document: ET.Element) -> i
             for key, value in element.attrib.items()
             if key.endswith(f"}}{local_name}")
         }
-        next_value = max(
-            (int(value, 16) for value in used if re.fullmatch(r"[0-9A-F]+", value)),
-            default=0x100000,
-        ) + 1
+        next_value = (
+            max(
+                (int(value, 16) for value in used if re.fullmatch(r"[0-9A-F]+", value)),
+                default=0x100000,
+            )
+            + 1
+        )
         for item in copied:
             for element in item.iter():
                 for key in tuple(element.attrib):
@@ -446,6 +501,85 @@ def _write_package(path: Path, parts: dict[str, bytes]) -> None:
             archive.writestr(entry, parts[name])
 
 
+def mutate_content_controls(
+    *,
+    input_docx: Path,
+    text_replacements: dict[str, str],
+    remove_body_tags: tuple[str, ...],
+    output_docx: Path,
+) -> JsonObject:
+    """Replace tagged text and remove declared body-level controls in one snapshot."""
+
+    parts = _read_package(input_docx)
+    document = _xml(parts, "word/document.xml")
+    body = document.find(_q(W_NS, "body"))
+    if body is None:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="document_body_missing",
+            message="The DOCX document body is missing.",
+        )
+    controls_by_tag: dict[str, list[ET.Element]] = {}
+    for control in document.iter(_q(W_NS, "sdt")):
+        tag_element = control.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
+        tag = tag_element.get(_q(W_NS, "val")) if tag_element is not None else None
+        if tag:
+            controls_by_tag.setdefault(tag, []).append(control)
+    for tag, value in text_replacements.items():
+        matches = controls_by_tag.get(tag, [])
+        if len(matches) != 1:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_tag_not_unique",
+                message="A text replacement tag must identify exactly one content control.",
+            )
+        content = matches[0].find(_q(W_NS, "sdtContent"))
+        if content is None:
+            raise ToolFailure(
+                status="error",
+                origin="document",
+                code="content_control_content_missing",
+                message="A target content control has no editable content container.",
+            )
+        text_nodes = list(content.iter(_q(W_NS, "t")))
+        if text_nodes:
+            text_nodes[0].text = value
+            text_nodes[0].set(
+                "{http://www.w3.org/XML/1998/namespace}space",
+                "preserve",
+            )
+            for text_node in text_nodes[1:]:
+                text_node.text = None
+        else:
+            run = next(content.iter(_q(W_NS, "r")), None)
+            if run is None:
+                run = ET.SubElement(content, _q(W_NS, "r"))
+            text_node = ET.SubElement(run, _q(W_NS, "t"))
+            text_node.set(
+                "{http://www.w3.org/XML/1998/namespace}space",
+                "preserve",
+            )
+            text_node.text = value
+        properties = matches[0].find(_q(W_NS, "sdtPr"))
+        if properties is not None:
+            placeholder_flag = properties.find(_q(W_NS, "showingPlcHdr"))
+            if placeholder_flag is not None:
+                properties.remove(placeholder_flag)
+    removed = 0
+    for tag in remove_body_tags:
+        control = _find_direct_body_content_control(body, tag)
+        body.remove(control)
+        removed += 1
+    parts["word/document.xml"] = _serialize(document)
+    _write_package(output_docx, parts)
+    return {
+        "text_controls_replaced": len(text_replacements),
+        "body_controls_removed": removed,
+    }
+
+
 def import_content_objects(
     *,
     target_docx: Path,
@@ -455,6 +589,7 @@ def import_content_objects(
     position: str,
     include_source_final_section_properties: bool,
     output_docx: Path,
+    replace_content_control_tag: str | None = None,
 ) -> JsonObject:
     """Copy selected body objects and their concrete package dependencies."""
 
@@ -472,7 +607,7 @@ def import_content_objects(
             code="invalid_insert_position",
             message="Content insertion position must be before, after, or end.",
         )
-    if position != "end" and anchor_locator is None:
+    if replace_content_control_tag is None and position != "end" and anchor_locator is None:
         raise ToolFailure(
             status="needs_input",
             origin="request",
@@ -550,7 +685,14 @@ def import_content_objects(
                 closure.copied_relationships += 1
                 element.set(attribute, new_id)
 
-    if position == "end":
+    if replace_content_control_tag is not None:
+        replaced = _find_direct_body_content_control(
+            target_body,
+            replace_content_control_tag,
+        )
+        insert_index = list(target_body).index(replaced)
+        target_body.remove(replaced)
+    elif position == "end":
         final_sect_pr = target_body.find(_q(W_NS, "sectPr"))
         insert_index = (
             list(target_body).index(final_sect_pr)
@@ -578,6 +720,7 @@ def import_content_objects(
         "numbering_id_map": numbering_mapping,
         "package_parts_copied": len(closure.copied_parts),
         "relationships_copied": closure.copied_relationships,
+        "replaced_content_control_tag": replace_content_control_tag,
         "local_ids_remapped": remapped_local_ids,
         "headers_or_footers_copied": sum(
             1
