@@ -61,7 +61,7 @@ description: 当用户需要以学校目标模板为主干，把只读学生论�
 | --- | --- |
 | 获取结构、哈希和对象引用 | `mcp__docfit__docx_inspect` |
 | 执行原子修改 | `mcp__docfit__docx_edit` |
-| 建立基线、编辑反馈或候选验证渲染 | `mcp__docfit__docx_render` |
+| 为当前 DOCX 建立 V2 LibreOffice 视觉快照和联系表 | `mcp__docfit__docx_render` |
 | 查看已有渲染中的页面或局部图像 | `mcp__docfit__docx_visual_review` |
 | 验证候选文档 | `mcp__docfit__docx_validate` |
 
@@ -78,7 +78,7 @@ Tool 的参数选择和错误恢复见 `.claude/skills/convert-thesis/references
 - [ ] 最终候选文档的每一页都已经观察。
 - [ ] 候选文档通过 `mcp__docfit__docx_validate`。
 - [ ] 视觉证据、验证结果和最终 DOCX 对应同一哈希。
-- [ ] 当前候选具有 `candidate_verification` 和 `official_service_conversion` 证据。
+- [ ] 当前候选具有绑定最终哈希、固定 renderer/font identity 的 V2 LibreOffice render。
 - [ ] 没有未解决的阻断性问题。
 
 ## 最终回复要求

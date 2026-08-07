@@ -55,6 +55,176 @@ mcp__docfit__template_compare
 mcp__docfit__template_build
 ```
 
+这四个 Tool 不是四个彼此独立的叶子操作，而是模板生产流水线上的四个阶段：
+
+```text
+看清模板                    按已批准计划修改
+template_observe  ────────> template_mutate
+       │                           │
+       │                           v
+       │                    检查是否改对、是否误伤
+       └──────────────────> template_compare
+                                   │
+                                   v
+                           重验并发布候选产物
+                              template_build
+```
+
+只有 `template_mutate` 修改 DOCX；`template_observe` 和 `template_compare` 只生产任务内证据，
+`template_build` 只在全部重验通过后发布四文件目录。四个 Tool 共同负责学校模板生产，不负责
+提取学生论文内容、执行 Placement 或生成最终论文。
+
+#### 2.1.1 `template_observe`：建立事实快照、查询对象和读取图片
+
+它回答“当前这份学校模板里实际有什么、目标对象在哪里”，只报告事实，不产生“应该保留、
+删除或映射到哪个字段”的语义结论。
+
+公开 action 为：
+
+| action | 输入重点 | 能力与输出 |
+|---|---|---|
+| `create` | 只读 `input_docx`、`visual_level`、`focus` | 解析 DOCX，建立绑定源 hash 的不可变 `snapshot_ref`；按需产生 `render_ref` |
+| `query` | `snapshot_ref`、文字、匹配方式、对象 kind | 返回零个或全部稳定排序的匹配及 task-local execution locator，不在重复匹配中静默挑选一个 |
+| `images` | 已存在的 `render_ref`、页码或 cursor | 分批返回已有页面图片；不触发新的 Word 转换 |
+
+`create` 可观察结构、可见对象、有效样式和槽位候选，并按 `none`、`quick` 或
+`candidate_verification` 决定是否产生页面证据。`query` 支持 `exact`、`casefold`、`regex`，
+默认查询 paragraph；标签和填写文字共享一个段落时可以限定 `run`，避免后续把学校固定标签
+一起修改。匹配返回的：
+
+```yaml
+object_ref:
+  snapshot_ref: snapshot:v1:...
+  object_id: obj-...
+  expected_fingerprint: <sha256>
+```
+
+只用于当前任务中的 mutation/evidence，不能直接充当最终 `fill-contract.json` 的持久 locator。
+`template_observe` 不修改源 DOCX，不判断视觉是否正确，也不决定字段责任。
+
+#### 2.1.2 `template_mutate`：事务执行已编译的修改计划
+
+它回答“语义决定已经完成后，怎样安全、确定地修改 Word”。Tool 只接受
+`compile_mutation_plan.py` 产生并通过重验的 canonical `mutation-plan.json`：
+
+```yaml
+schema_version: 1
+task_root: ...
+mutation_plan_path: work/compiled/mutation-plan-attempt-1.json
+output_docx: work/attempts/template-attempt-1.docx
+```
+
+它不接受 inline operations、overwrite、best-effort 或 provider 参数。当前实现只开放两种
+operation：
+
+- `materialize_slot`：在唯一 execution target 上物化 Word content control；令
+  `w:alias = field_id`、`w:tag = slot_id`，保留外层 paragraph/cell/textbox 和有效样式。该操作
+  只建立槽位，不负责自动清理原有示例文字。
+- `remove_content`：删除已获得责任迁移或精确删除授权的内容。当前只开放
+  `clear_text_preserve_container`，即清空目标文字但保留段落、表格单元格或 content control
+  容器。`remove_paragraph`、`remove_table_row`、`remove_table`、`remove_bounded_block` 和
+  `remove_shape` 只是未来可按真实场景逐项开放的合同名称，不是当前已经实现的能力。
+
+执行时，Tool 在同文件系统的临时副本上按顺序重解 target、核对 fingerprint、执行 operation，
+再重新打开 DOCX 验证 package 有效性。它确认源文件未变化后原子发布：
+
+```yaml
+output_docx: work/attempts/template-attempt-1.docx
+after_snapshot_ref: snapshot:v1:...
+mutation_ref: mutation:v1:...
+committed: true
+```
+
+任何机械执行步骤失败都不发布 output、after snapshot 或 committed mutation ref。Tool 不判断
+“该不该修改”，也不检查 protected content、样式或页面语义是否正确；这些判断由 Agent 根据
+`template_compare` 的 before/after 差异和实际渲染页面完成。
+
+#### 2.1.3 `template_compare`：对账结构变化并确定必看视觉证据
+
+它回答“修改是否按计划发生、是否误伤其他结构，以及 Agent 必须查看哪些图片”。公开 action
+为 `create` 和 `images`；`create` 有两种 review mode：
+
+| review mode | 输入 | 目的 |
+|---|---|---|
+| `mutation_review` | before/after snapshot 和 `mutation_ref` | 把实际差异与 mutation plan 对账，区分预期变化、意外变化和 machine blocker |
+| `final_review` | 最终 snapshot 和 `candidate_verification` | 绑定最终 DOCX hash，生成或复用全页候选验证证据；零 mutation 模板也可执行 |
+
+成功结果至少包含：
+
+```yaml
+comparison_ref: comparison:v1:...
+expected_changes: []
+unexpected_changes: []
+required_images: []
+machine_blockers: []
+```
+
+`images` 只返回 comparison manifest 已声明的 required images，不能用任意页请求绕过 review
+coverage。Tool 负责确定性 diff、页面覆盖和 blocker，不接受 Agent 写入的 disposition，也不替
+Agent 判断图片是否美观、学校语义是否理解正确。Agent 必须实际读取 required images，再把
+自己的视觉结论写入 artifact decisions。
+
+#### 2.1.4 `template_build`：独立重验并原子发布四文件产物
+
+它回答“当前最终模板和全部合同、证据是否已经自洽，可以形成一个完整的开发期候选产物”。
+输入只接受最终 snapshot 和 `compile_artifact_spec.py` 产生的 canonical artifact spec：
+
+```yaml
+schema_version: 1
+task_root: ...
+final_snapshot_ref: snapshot:v1:...
+artifact_spec_path: work/compiled/artifact-spec.json
+output_dir: output/template-artifact
+```
+
+Tool 会独立重验最终 DOCX 与来源 hash、Registry、`field_id`、marker、artifact locator、保护内容、
+删除残留、mutation lineage、final comparison、全页 required images、Agent dispositions 和
+manual/gap/unresolved 阻塞项。它不信任 compiler success、Agent pass flag 或已有摘要，且不允许
+覆盖已有 output 目录。
+
+通过后一次原子发布：
+
+```text
+template-artifact/
+├── clean-template.docx       # 处理后的 Word 模板
+├── fill-contract.json        # 下游字段、marker、locator 和填写合同
+├── visual-review.json        # 最终视觉证据及 Agent disposition
+└── build-report.json         # 来源、hash、检查结果和产物摘要
+```
+
+`artifact_status: built` 只表示这四个文件机械完整、互相绑定并已发布；不表示 Human accepted、
+学校质量认证、模板定版或 M3 完成。`template_build` 也不填入学生内容或生成最终论文。
+
+#### 2.1.5 两条实际调用路径
+
+需要修改模板时：
+
+```text
+template_observe.create/query/images
+  -> Agent 编写 mutation-decisions.yaml
+  -> compile_mutation_plan.py
+  -> template_mutate
+  -> template_compare.mutation_review/images
+  -> 按需重复修改与比较
+  -> template_compare.final_review/images
+  -> Agent 编写 artifact-decisions.yaml
+  -> compile_artifact_spec.py
+  -> template_build
+```
+
+原始模板已经干净、不需要修改时：
+
+```text
+template_observe.create/query/images
+  -> template_compare.final_review/images
+  -> Agent 编写 artifact-decisions.yaml
+  -> compile_artifact_spec.py
+  -> template_build
+```
+
+因此四个 Tool 可以简记为：`observe` 看清楚，`mutate` 按计划修改，`compare` 确认没有改错，
+`build` 重验并发布。
+
 ### 2.2 两个 Skill 脚本
 
 | 脚本 | 输入 | 输出 | 下游 |
@@ -248,20 +418,16 @@ Agent 在执行副作用前写两份人类可审查决定：
 所有删除必须记录内容责任如何迁移或为什么得到明确删除授权。用户最新指令或当前任务中提供
 的书面要求可以构成授权；长期文档或目标描述不能替代精确授权记录。
 
-`template_mutate` 对计划执行顺序、snapshot/hash、目标唯一性、容器边界、受保护内容和 DOCX
-可打开性做前置/后置检查。任何失败都不发布新 DOCX；重试使用新输出路径。
+`template_mutate` 对计划执行顺序、snapshot/hash、目标可定位性、操作输入和 DOCX 可打开性做
+机械校验。它不以内置检查器裁决受保护内容、样式或页面语义；Agent 必须使用 mutation diff 和
+渲染结果自行核对，发现问题后使用新输出路径返工。
 
 ## 7. 视觉证据与最终审查
 
-视觉级别固定为：
-
-- `none`：只建立结构事实；
-- `quick`：OfficeCLI 快速返工定位；
-- `candidate_verification`：Adobe 路由的最终候选全页证据。
-
-`candidate_verification` 表示固定的高保真验证路由，不表示 Word/WPS 质量已经被权威认证。
-Agent 必须实际读取最终模板 hash 的每一页图片，为 required images 和 findings 写结构化
-disposition。结构检查、渲染事实和 Agent 视觉判断必须分开保存。
+模板领域 Tool 不再拥有 visual level 或图片 action。主 Agent 使用共享的 `docx_render`
+建立最终模板 hash 的 V2 LibreOffice 快照，再用 `docx_visual_review` 查看联系表、完整页
+和必要对象局部图。Agent 必须实际读取每一页图片，为 evidence refs 和 findings 写结构化
+disposition。所有结果标记为 `approximate`；结构检查、渲染事实和 Agent 视觉判断分开保存。
 
 `template_compare` 报告预期变化、意外变化和 required images，不替 Agent 返回视觉
 `pass/fail`。若最终图片暴露语义或视觉问题，即使 build 的机械检查可以通过，Agent 也必须返工，
@@ -336,8 +502,8 @@ Tool / Code Gate 必须证明 `fill-contract.json` 符合
 ## 10. 实现与切换边界
 
 候选实现位于 `src/docfit/template/**`，公开 SDK schema/handler 位于
-`src/docfit/tools/template_schemas/**` 与 `src/docfit/tools/template_tools.py`。领域层通过 ports
-接收 OfficeCLI/Adobe 能力，不反向导入 Tool 注册层。
+`src/docfit/tools/template_schemas/**` 与 `src/docfit/tools/template_tools.py`。模板领域层只
+管理结构 snapshot/mutation/comparison/build；视觉能力由共享 `src/docfit/visual/**` 提供。
 
 W0–W5 可以在不切换生产的情况下实现和验证。W6 是单独批准的原子生产切换，必须同时更新：
 

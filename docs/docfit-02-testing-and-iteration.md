@@ -13,9 +13,10 @@
 `docs/plans/docfit-template-extraction-eval/DESIGN.md` 中形成独立顶层设计。它把已经生成的
 模板和填写契约作为 Actual，把人工确认的模板和填写契约作为 Gold，通过一套共享文档
 事实分析分别评测模板保留与填写槽，并输出分项分数、总分和 `PASS/FAIL/UNKNOWN`。
-该设计不运行或约束上游 Agent，只定义离线结果断言。当前已完成 G1 schema/config/合成
-fixture 和三校 candidate case 的最终目录物化，但三校仍为 `INPUT_ERROR`，评分 runner、
-Human-accepted Gold 与学校回归尚未完成；这不改变本文件对完整 M3 和真实样本资格门的判定。
+该设计不运行或约束上游 Agent，只定义离线结果断言。当前独立工程已完成 schema/config、
+合成 fixture、共享事实分析、断言、评分 runner 和报告，并物化三校 candidate case 的
+最终目录；三校仍为 `INPUT_ERROR`，Human-accepted Gold 与学校回归尚未完成。这不改变
+本文件对完整 M3、Student/Placement Eval 和真实样本资格门的判定。
 
 完整质量闭环不能止于模板侧。未来 M3 还必须使用同一版 Content Field Registry 快照分别
 评测学生内容提取 Actual、显式 Placement Actual 和最终转换结果。模板槽与学生内容共享
@@ -31,7 +32,7 @@ doctor 和 live 产品门，并使用同一合成链路做前后测量；这些�
 
 测试与 Eval 只解决三个问题：
 
-1. 五个 DocFit Tool 及 OfficeCLI、Adobe PDF Services API 各自承担的能力是否可靠；
+1. 五个 DocFit Tool、OfficeCLI 与固定 LibreOffice V2 视觉链路各自承担的能力是否可靠；
 2. 两个领域 Skill、模块化 Knowledge、可选只读 Subagent 和 Tools 的组合能否完成
    代表性模板提取与论文转换；
 3. 一次修改是否修复目标问题，同时没有破坏已知正确行为。
@@ -84,105 +85,53 @@ Gate Report，至少包含：
 
 代码测试目录固定为：
 
-- `tests/unit/`：不依赖 SDK 或真实 Provider 的纯逻辑测试；
-- `tests/contract/`：五个公开 Tool 契约、固定路由、主 Agent 直接读取路径权限与受信任
+- `tests/unit/`：不依赖 SDK 或真实外部进程的纯逻辑测试；
+- `tests/contract/`：五个公开 Tool/V2 ref 契约、主 Agent 直接读取路径权限与受信任
   Bash/Write 配置、SDK
-  Subagent 权限/上下文边界，以及两个后端各自职责范围内的契约测试；
-- `tests/integration/`：真实 OfficeCLI、CLI 与薄转换壳集成测试；真实 SDK 和 Adobe API
-  使用仓库外凭据作为独立 live 产品门，不混入默认 pytest。
+  Subagent 权限/上下文边界，以及 OfficeCLI/LibreOffice 各自职责契约；
+- `tests/integration/`：真实 OfficeCLI、Docker LibreOffice、三校视觉链路、CLI 与薄转换壳；
+  真实 SDK 使用仓库外凭据作为独立 live 产品门，不混入默认 pytest。
 
 当前最小 Eval 实现位于 `src/docfit/evals/` 与 `evals/`：专用 Python builder 生成一个
-普通合成案例和四个单风险 DOCX，JSON case 描述第五个 Provider 伪成功风险、三个
+普通合成案例和四个单风险 DOCX，JSON case 描述第五个 renderer 伪成功风险、三个
 Skill 范围及一个合成端到端合同。`docfit eval --suite core` 只运行确定性 Tool、Skill
 静态边界和薄应用合同回归，并把调用数、页数、耗时和失败归因写入忽略版本控制的
-`.docfit/evals/core/latest.json`。它明确不运行真实 SDK、Adobe official-service conversion、
+`.docfit/evals/core/latest.json`。它明确不运行真实 SDK、Docker LibreOffice、
 授权/脱敏真实样本或人工复核；这些门必须单独留下实际证据。
 
 ## 2. 三类验证
 
 ### 2.1 Tool tests
 
-Tool tests 不调用 Agent，直接验证 `docx_inspect`、`docx_edit`、`docx_render`、`docx_visual_review`、`docx_validate` 的公开契约，以及 OfficeCLI、Adobe PDF Services API 的薄适配。
+Tool tests 不调用 Agent，直接验证五个公开契约、OfficeCLI adapter、固定 Docker
+LibreOffice renderer、Poppler 和 V2 Evidence Store。
 
-两个后端不需要通过一套假想的可互换 Provider 契约。OfficeCLI 只通过 inspect、
-edit、validate 和高频截图的职责契约；Adobe PDF Services API 只通过分页基线与候选验证
-PDF 导出的职责契约。共同稳定的是五个公开 Tool 及其证据、错误
-与安全语义。
+至少覆盖：
 
-重点覆盖：
+- `docx_inspect` 的段落、表格、图片、节、页眉页脚、域、内容控件和 opaque ref；
+- `docx_edit` 的前置条件、目标范围、复杂对象依赖闭包、原子发布和源文件只读；
+- `docx_render` 只接受 `input_docx` / `overview`，应用注入 task root；旧 intent、
+  provider、output directory、parent/focus 参数全部拒绝；
+- render identity 绑定 DOCX hash、LibreOffice、container/font digest、locale 和 PDF 参数；
+- 相同 identity cache hit，任何 identity 输入变化生成新 `render:v2:`；
+- Docker 禁网、只读 root、cap drop、no-new-privileges、只读输入、独立 HOME/profile、
+  timeout cleanup 和 PDF 完整性发布门；
+- 页数/尺寸来自 LibreOffice PDF，文本 bbox 来自 Poppler，不依赖 OfficeCLI HTML；
+- render 默认只派生联系表，不预生成全部高清页面；
+- `docx_visual_review` 的 contact_sheet、pages、regions、compare、DPI、分页 cursor 和
+  图片字节/数量预算；
+- object selector 的 exact/contextual 映射，重复/无文字/不可映射对象返回候选完整页；
+- text selector occurrence 与 image_bbox 反算 PDF 坐标；
+- compare 只接受一致 renderer/font identity，分页变化按文字锚点对齐；
+- 每个 `visual:v2:` 绑定 render、页码、selector/bbox、DPI、padding、变换和 image hash；
+- MCP text JSON 与 structured result 一致，原生 image block 实际可见；
+- `docx_validate` 核对当前最终 DOCX、V2 render、全部页面覆盖和 blocking findings；
+- 旧 ref、越权路径、source hash 变化、renderer 失败和损坏 evidence 有稳定失败语义；
+- 普通 Agent 与 `prepare-template` 共用同一视觉服务和 Evidence Store；
+- 三校真实模板均完成“联系表 → 页面 → object_ref 局部图”，通用源码无学校分支。
 
-- DOCX 能正确打开、无操作另存和重新打开；
-- 段落、表格、合并单元格、图片、公式、脚注尾注、文本框、域、内容控件、页眉页脚和编号能够被发现；
-- 样式继承、直接格式和最终生效值能够正确解析；
-- 原始 run 与逻辑文本之间的字符映射正确；
-- 不支持的可见对象被明确报告；
-- 对象引用绑定输入 hash，失效引用被安全拒绝；
-- 跨 run 文本和占位符能被准确定位；
-- 跨文档模板组合复制完整依赖闭包、重映射冲突 ID，并在任一操作失败时不发布部分结果；
-- 一组编辑要么全部发布，要么全部不发布；
-- 修改只影响目标对象，源文件保持不变；
-- 可能漂移的多目标修改按安全顺序执行；
-- Provider 报告成功但产物打不开或目标未变化时，Tool 返回失败；
-- 编辑后从新文件重新取证，不相信 Provider 自报结果；
-- 渲染缓存按输入 hash、Provider/SDK 版本、转换 profile、环境证据和参数正确命中与失效；
-- `docx_render` 对 `baseline` / `edit_feedback` / `candidate_verification`、fidelity 和
-  转换证据的声明符合 Provider 能力；
-- Adobe baseline/candidate 固定为 `fidelity: official_service_conversion`，OfficeCLI
-  feedback 固定为 `fidelity: approximate`；
-- 固定路由矩阵生效：`edit_feedback` 只走 OfficeCLI，`baseline` 与
-  `candidate_verification` 只走 Adobe PDF Services API；未知 intent 和任何后端选择参数被拒绝；
-- Agent、Skill 或应用壳无法注入后端选择；任一固定后端失败时不会跨职责静默回退；
-- Adobe 服务基线、CLI 编辑反馈和候选验证能够用稳定的 `render_intent` 区分；
-- `baseline_render_ref` 被记录为新证据的 `parent_render_ref`，但旧页码和旧对象引用不会
-  被当作当前文档事实；相同缓存键命中已有 render，不伪造新的 ref；
-- `docx_render` 可以返回有大小限制的 contact sheet，让简单场景无需固定追加第二次
-  Tool 调用即可开始观察；
-- 页码只在对应 render ref 内有效，不同后端的同页码不会被自动关联；同一文档 hash 的页面元素可通过当前快照的 `object_ref`、节引用或文字锚点关联，文档 hash 变化后旧 ref 被拒绝；
-- 页面元素映射的坐标系、页码、bbox、mapping quality 和 opaque `object_ref` 与当前 render 一致；
-- `docx_visual_review` 只接受当前任务的有效 render ref，并返回与文档、页码和图片 hash 绑定的图片 content block；
-- 五个公开 schema 不包含兼容 backend 会误解释的 `oneOf` / `anyOf` / `allOf`；动作
-  专属必填关系由 Tool runtime 校验；
-- SDK in-process MCP bridge 即使丢弃 `structuredContent`，Agent 可见的首个 text block
-  仍是与完整结构化结果相同的 JSON；
-- live smoke 的 CLI 集成测试只操作临时项目根；凭据或配置检查在任何 backend 可运行前
-  返回 `NOT_READY` 时，不得删除此前真实 PASS 回执。只有确认存在可运行候选并开始新
-  live 尝试后才先使旧回执失效；
-- Tool 结果大小声明、SDK transport buffer 和视觉图片预算能够承载受控真实页面批次，
-  不会在图片进入 Agent 前触发默认 1 MiB 消息截断；
-- 主 Agent 可见 `Skill/Read/Glob/Grep/Bash/Write/AskUserQuestion/Agent`，五个 DocFit Tool
-  仍可直接调用；`Read/Glob/Grep` 不自动批准且只接受 realpath 后位于批准根的路径；
-  `Bash/Write` 自动批准且没有 DocFit 路径 hook；
-- `~/.config/docfit/**`、`.env`、`.git/**`、凭据、其他任务、项目外路径、`..` 与 symlink
-  逃逸均被拒绝；搜索根中的 symlink/敏感文件使整个搜索调用失败；
-- 主 Agent 可调用 Bash/Write；Subagent 仍只看到 inspect + visual-review，不继承主
-  Agent 的 Read/Glob/Grep/Bash/Write；
-- 整页、裁剪、contact sheet 和 compare 模式的图片变换、页码、候选对象和元数据一致；
-- `docx_visual_review` 不调用 Adobe PDF Services API 或 CLI，不产生新的 `render_ref`；派生视图只产生
-  visual evidence/image hash，多次读取同一 ref 不构成新一轮；
-- 修改后的文档不能继续使用旧 render ref 证明视觉结果；
-- 单次图片页数和字节上限生效，Tool 不返回视觉 `pass` / `fail` 判断；
-- 验证从源文件与最终文件重新读取事实；
-- 占位符、有效格式、内容对象、package 关系、视觉审查覆盖和渲染警告返回清晰结果；
-- 超时、凭据缺失、额度耗尽、服务失败和不支持对象都有可行动的错误。
-- Adobe 大文件上传使用固定且可测试的 connect/read timeout；真实上传超时仍返回
-  安全 provider failure，不泄露 SDK 原始错误或凭据；
-- 只读源文件权限不会被传播到临时编辑副本；同一 backend route 超时后不会仅因轮换
-  credential 重复等待同一模型路由；Kimi Claude Code 环境显式保持官方 high-effort
-  Tool 上下文并关闭 Tool Search，HTTP 400 请求格式拒绝映射为不含原始错误体的安全码，
-  且不会轮换同一 name/base URL/model 的 credential 重放相同无效请求。
-
-Tool test 的基本标准是确定性、可重复、源文件只读、失败不产生伪成功产物。
-
-当 06 中“样式观测与确定性补全”候选切片获得独立实施批准时，还必须新增以下
-普通 Tool/契约测试；本段不表示这些门当前已经通过：
-
-- 模板观测能区分命名样式、直接格式、继承链、最终有效值、覆盖、缺失与冲突；
-- 解析器不把 Word 继承或缺省值误标为国家标准补全，也不把观测值误标为目标要求；
-- 规则解析器只接受已批准的标准标识、版本和适用性证据，且只补当前任务证据
-  未规定的单个属性；
-- 当前任务来源冲突、标准不适用、条款无规定或多条规则冲突时，结果为未决而非默认值；
-- 每个解析后属性保留来源类型、来源 hash/ref，以及适用时的标准版本、条款和适用性；
-- 不向 Agent 或 Subagent 载入国家标准样式值表、缺省补全表或历史学校样式。
+外部 renderer 的退出码或“success”不能单独证明 Tool 成功；测试必须检查 PDF、页数、
+hash inventory、当前文档绑定和原生图片。
 
 ### 2.2 Skill eval
 
@@ -210,29 +159,25 @@ Skill eval 使用固定任务、产品内置 Knowledge、当前任务学校材�
 - 样式属性仍缺失时，请求程序的确定性解析结果或显式保留未决，不在 prompt 中
   读取国家标准数值表后自行决定；
 - 使用 Tool 提供的事实，不直接猜测文档结果或修改 OOXML；
-- 修改前观察输入与模板页面图片，影响布局的修改后复核变化页和相邻页；
-- 分页敏感且 Adobe 服务可用时，修改前建立输入与模板的服务转换分页基线；不可用时保留明确的能力缺口；
-- 把 Adobe 页面当作视觉观察窗口而不是编辑身份，不用 Adobe 第 N 页直接定位近似 Provider 第 N 页或驱动 `docx_edit`；
-- 修改过程中使用低延迟 CLI `edit_feedback` 观察受影响对象及邻近页面；当当前候选
-  值得进行 Adobe 交付检查时请求 `candidate_verification`；
+- 修改前为输入与模板建立当前 V2 LibreOffice render；影响布局的修改后生成新 render，
+  复核变化页、相邻页和必要局部区域；
+- 把页面当作单个 render 内的视觉观察窗口，不用页码或 OfficeCLI HTML 坐标驱动
+  `docx_edit`；
 - 最终分批观察当前文档的全部页面，并把 visual finding 绑定到 evidence ref；
 - 整页缩放不足以辨认小字、域结果或页边界细节时，继续读取绑定同一 render ref 的
   crop；可见应用错误标记、断裂域/交叉引用、未完成占位和截断内容必须作为 blocking
   finding 保留；
-- 不把旧截图、近似渲染或结构检查当作当前页面已经视觉合格；
-- 使用元素映射缩小编辑目标时仍验证 `object_ref` 前置条件，不把 bbox 当成 OOXML 定位器；
-- 区分近似 `edit_feedback` 和 Adobe 官方服务转换；没有绑定当前文档且已被
-  Agent 查看过的 candidate 证据时保留 `verification_gap`；
-- 只提交 render intent，不选择具体后端；Adobe PDF Services API 失败时不把 OfficeCLI 预览
-  当作最终真实性证据；
+- 不把旧截图、旧 render 或结构检查当作当前页面已经视觉合格；
+- 使用语义映射缩小编辑目标时仍验证 `object_ref` 前置条件，不把 bbox 当成 OOXML 定位器；
+- 没有绑定当前最终文档、固定 renderer identity 且已被 Agent 覆盖全部页面的 V2 证据时
+  保留 `verification_gap`；
+- 不选择具体后端；LibreOffice 失败时不把 OfficeCLI 结构结果当成视觉证据；
 - 保护学生内容，选择破坏最小的修改方式；
-- 根据错误语义重新 inspect、缩小范围、修复固定后端调用、询问或停止，不把后端切换当作首版恢复策略；
+- 根据错误语义重新 inspect/render、缩小范围、修复固定 adapter 调用、询问或停止；
 - 不消费 `committed: false` 或未通过后置检查的文件；
 - 不在没有新证据时循环重试；
-- 相同文档 hash 与相同渲染策略不重复调用 Adobe 转换；首次建立一次 baseline，上一
-  candidate 可以作为下一 candidate 的 baseline ref，不额外调用 Adobe PDF Services API 制造轮次；
-- 不把“第几轮”写入 Tool 状态或 Gold，也不把 baseline/candidate 的确切调用次数作为
-  通用行为断言；只验证缓存、parent ref、后端路由和当前证据绑定；
+- 相同 render identity 不重复调用 LibreOffice，相同 view identity 不重复栅格化；
+- 不把“第几轮”写入 Tool 状态或 Gold；只验证缓存、当前证据绑定和失败不回退；
 - 在最终答复中如实说明产物、验证结果和未解决问题。
 
 Skill eval 以可观察结果为主。除安全底线和必要先后关系外，不要求 Agent 复现固定工具调用序列。
@@ -263,9 +208,10 @@ limit      成本或重复调用上限
   有效值、适用国家级标准或未决，且未决属性没有被静默写入文档；
 - 必填模板内容或槽位已处理；
 - 不应出现的占位符和说明文字已清理；
-- PDF 或页面预览可生成；
-- render ref 明确记录 intent、fidelity、Provider/SDK、转换 profile、环境可见性、parent ref 和可选元素映射；
-- 同一文档 hash 的 Adobe 与 OfficeCLI 页面证据通过当前对象引用或锚点关联；跨编辑快照先重新 inspect，再通过新旧节、文字锚点或显式内容指纹对照，不假设相同页码表示相同内容范围；
+- V2 LibreOffice PDF、联系表和按需页面/局部证据可生成；
+- render ref 明确记录 fidelity、renderer/container/font identity、locale、PDF 参数与索引；
+- OfficeCLI 对象通过当前语义锚点映射到 LibreOffice PDF；跨编辑快照先重新 inspect 和
+  render，不假设相同页码表示相同内容范围；
 - `docx_visual_review` 返回的图片实际进入当前 Agent 上下文；
 - 如果使用 Subagent，`Agent` Tool 只启动 `docfit-unit-analyst`，其任务包只包含
   选中 Knowledge 与显式证据，返回结果可追溯到当前文档；
@@ -373,11 +319,11 @@ Truth 文件默认是 `oracle_only`。只有专门评测“给定结构化合同
 - Tool 的脱敏输入/输出摘要、`tool_use_id`、committed、错误码和相关证据 ref；
 - Subagent 的父子关系、安全任务元数据、Tool、耗时、Token、返回状态和证据请求计数；
 - OfficeCLI 解析次数与单次运行缓存命中；
-- Adobe baseline/candidate 的真实 API 调用与缓存命中；
+- 真实 LibreOffice render execution 与缓存命中；
 - 实际渲染页数、Agent 读取页数、重复读取页数和图片输入字节数；
 - Token、成本来源、权限拒绝、用户追问和重试次数；
 - 失败首先来自哪里，并能按 App/SDK、main Agent、Subagent、Skill、Tool、OfficeCLI、
-  Adobe 聚合错误，定位相关文档 hash、`object_ref`、`render_ref`、evidence ref 与页码；
+  LibreOffice/Poppler 聚合错误，定位相关文档 hash、`object_ref`、`render_ref`、evidence ref 与页码；
 - 指标中不包含论文正文、学校材料正文、完整页面图片、完整模型请求/响应、隐藏思维链、
   凭据值或未经授权的绝对路径。
 
@@ -426,9 +372,9 @@ O0 在页面开发前先建立以下非 Eval 产品合同测试：
 - collector 恢复后只允许从用户显式挂载且验证通过的最终报告进行 summary-only 对账；
   缺少最终报告时终态保持 unknown，不生成虚构时间线；
 - 用确定性 synthetic runner 验证同步 projector、事件/queue/run、数据库/保留、低水位、
-  wall time、CPU 与 RSS 都满足目标设计预算，不能用网络或 Adobe 延迟掩盖开销；
-- 观测开关、失败注入和页面刷新都不能增加 OfficeCLI/Adobe Tool 调用；已有 Adobe cache
-  命中路径不得因 O0 多消耗 Document Transaction。
+  wall time、CPU 与 RSS 都满足目标设计预算，不能用外部进程延迟掩盖开销；
+- 观测开关、失败注入和页面刷新都不能增加 OfficeCLI 调用或 LibreOffice render execution；
+  cache-hit 路径不得因 O0 启动新容器。
 
 上述测试锁定数据可信度与非干扰性，不要求 Agent 复现固定调用轨迹，也不属于延期的
 M3 Eval。
@@ -437,12 +383,11 @@ M3 Eval。
 比较前后结果。首轮顺序固定为：先减少没有新增证据的重复 Tool 调用，再复用单次运行
 内的解析与渲染结果，然后优化页面批次、crop/contact sheet 和图片载荷，最后处理
 同一失败条件下的无效重试。任何优化都必须保持五个公开 Tool 路线与源 hash 完成门、固定
-OfficeCLI/Adobe 职责、独立最终验证、当前 candidate 证据和错误语义。
+OfficeCLI/LibreOffice 职责、独立最终验证、当前 V2 证据和错误语义。
 
-这条轨道的回归门包括全量 pytest、ruff、mypy、build/lock、基础/provider/agent-smoke
-doctor，以及受影响的真实合成产品 smoke。只有改动确实可能产生新的 Adobe cache miss
-时才消费 live Document Transaction；已有缓存证据足以验证的路径不得为了测量重复调用
-服务。测试失败表示优化不能合入，但不把普通测试重新命名为 M3 Eval。
+这条轨道的回归门包括全量 pytest、ruff、mypy、build/lock、基础/visual-renderer/
+agent-smoke doctor，以及受影响的真实合成产品 smoke。已有缓存证据足以验证的路径不得
+为了测量重复启动 renderer。测试失败表示优化不能合入，但不把普通测试重新命名为 M3 Eval。
 
 ## 3. 首批场景
 
@@ -464,13 +409,13 @@ doctor，以及受影响的真实合成产品 smoke。只有改动确实可能�
 | 域、内容控件、脚注、文本框和图片不静默丢失 | 是 |  | 是 |
 | 页眉页脚、编号和节属性正确保留或修改 | 是 |  | 是 |
 | 对象引用因前次修改失效 | 是 | 是 |  |
-| Provider 伪成功被后置检查拦截 | 是 | 是 |  |
+| renderer 伪成功被后置检查拦截 | 是 | 是 |  |
 | 渲染器或字体差异影响分页 | 是 | 是 | 是 |
-| Adobe 与 OfficeCLI 页数或分页边界不同，相同页码不能直接对应 | 是 | 是 | 是 |
-| 近似渲染被错误标成 Adobe 交付转换证据，或 candidate 路由被静默降级 | 是 | 是 | 是 |
-| render intent 被路由到错误后端，或固定后端失败后发生静默跨职责回退 | 是 | 是 | 是 |
-| 页面元素 bbox 能定位到当前快照对象，失效或低可信映射不会驱动错误修改 | 是 | 是 | 是 |
-| 大范围版式修改后 Agent 生成新 candidate，并只把旧 baseline/candidate 用作显式 parent 对照 | 是 | 是 | 是 |
+| OfficeCLI 页码/HTML 坐标被错误当成 LibreOffice 视觉坐标 | 是 | 是 | 是 |
+| renderer/font identity 变化后错误复用旧 render | 是 | 是 | 是 |
+| 固定 LibreOffice 失败后发生静默视觉回退 | 是 | 是 | 是 |
+| semantic anchor 能定位当前对象，歧义/失效映射只返回候选页 | 是 | 是 | 是 |
+| 大范围版式修改后 Agent 生成新 render，旧 evidence 只作历史对照 | 是 | 是 | 是 |
 | 封面溢出、意外空白页、孤行和图表错位能被视觉审查发现 | 是 | 是 | 是 |
 | 修改后错误复用旧截图或漏审相邻页 | 是 | 是 | 是 |
 | 学校文字要求与模板表现冲突 |  | 是 | 是 |
@@ -626,9 +571,9 @@ trace 服务和正式性能平台仍等真实规模与成本增长后再选择�
 - 每个 Tool 的调用者、调用数、结果状态、单次/累计耗时、错误码和 committed；
 - 主 Agent/Subagent 的层级、耗时、Token、成本来源、权限拒绝和证据请求；
 - 解析次数、单次运行缓存命中、渲染页数、Agent 实际审查页数和图片输入字节数；
-- Adobe 转换调用数、缓存命中数、baseline/candidate intent 分布和 parent ref 复用；
+- LibreOffice render execution、cache hit、派生 view 数与复用；
 - 重试次数、首个失败来源，以及按 App/SDK、main Agent、Subagent、Skill、Tool、
-  OfficeCLI、Adobe 聚合的错误；
+  OfficeCLI、LibreOffice/Poppler 聚合的错误；
 - 相关 task/session/tool ID、文档 hash、opaque object/render/evidence ref、页码和本地
   证据可用性；
 - O0 自身的 coverage、drop/queue high-water、projector P95/P99、事件/数据库字节、CPU、

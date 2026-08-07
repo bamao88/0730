@@ -1,11 +1,25 @@
 # 模板提取静态 E2E Eval 实施计划
 
-> 状态：用户已批准开始实施；W0/G1 已完成，三校 candidate case 目录已物化，W1–W5 待继续
+> 状态：W0–W5/G1–G3 已实现；独立模块 99 个测试通过。三校 candidate case 已物化并被
+> 评分入口显式拒绝；W6 的 Human Gold 验收和每校三条正式评分回归仍待完成
 > 上层合同：[DESIGN.md](DESIGN.md)
 > 本计划负责：实施顺序、文件责任、逐代码测试、停止门和完成证据
 > 本计划不负责：重新设计模板提取流程、执行正式填写、自动批准 Gold 或宣称 M3 完成
 
 ## 0. 计划结论
+
+### 当前执行进度（2026-08-06）
+
+| 工作包 | 状态 | 当前证据/剩余门 |
+|---|---|---|
+| W0 schema、配置、S00–S13 | `PASS` | 独立 lock/build、确定性 fixture 和 contract tests 已通过 |
+| W1 模型与输入契约 | `PASS` | schema/hash/Registry/Gold 状态错误均结构化拒绝 |
+| W2 共享 DOCX 事实 | `PASS` | content/structure/style/object/unsupported 均有单元证据 |
+| W3 对齐与三类断言 | `PASS` | S01–S10 归因和 UNKNOWN 路径通过 |
+| W4 评分与报告 | `PASS` | 双 50 分视角、八分项、F1、coverage、JSON/Markdown 同源通过 |
+| W5 独立 runner/CLI | `PASS` | PASS/FAIL/UNKNOWN/INPUT_ERROR 四路径和确定性通过 |
+| W6 三校 case | `BLOCKED_BY_HUMAN_GATE` | 目录已物化；candidate gate 3/3 通过，accepted Gold 0/3 |
+| W7 收尾 | `PARTIAL_PASS` | build/mypy/323 tests/doctor/core/scoped ruff 与 00–06 漂移检查已通过；全根 ruff 仅被两个无关用户文件阻断，且 W6 仍受 Human gate 约束 |
 
 本模块按一条离线、确定性的纵向链路实施：
 
@@ -455,33 +469,37 @@ schema 和配置不是 Python，但它们是机器合同，同样每项至少 3 
 ```text
 evals/template-extraction/tests/
 ├── unit/
-│   ├── test_public_api.py
+│   ├── test_package_api.py
 │   ├── test_models.py
 │   ├── test_contracts.py
 │   ├── test_alignment.py
 │   ├── test_scoring.py
 │   ├── test_reporting.py
-│   ├── test_runner.py
 │   ├── test_sample_builder.py
+│   ├── test_case_materializer.py
 │   ├── facts/
+│   │   ├── test_facts_api.py
 │   │   ├── test_reader.py
 │   │   ├── test_content.py
 │   │   ├── test_structure.py
 │   │   ├── test_effective_style.py
 │   │   └── test_objects.py
 │   └── evaluators/
+│       ├── test_evaluators_api.py
 │       ├── test_protected.py
 │       ├── test_slots.py
 │       └── test_forbidden_residue.py
 ├── contract/
-│   └── test_eval_contract.py
+│   ├── test_eval_contract.py
+│   ├── test_cli.py
+│   └── test_candidate_gate.py
 └── integration/
-    └── test_run_eval.py
+    └── test_runner.py
 ```
 
-`test_public_api.py` 负责三个 `__init__.py` 的导出 case；CLI 参数、退出码和 schema 放在
-contract；完整最小链路放在 integration。不要为了“每文件一个测试文件”复制相同的
-DOCX 构建逻辑。
+包、facts 和 evaluator 的公共导出分别由三个 API 测试文件负责；CLI 参数、退出码、
+candidate gate 和 schema 放在 contract；完整最小链路放在 integration。不要为了
+“每文件一个测试文件”复制相同的 DOCX 构建逻辑。
 
 ## 8. 完成门
 

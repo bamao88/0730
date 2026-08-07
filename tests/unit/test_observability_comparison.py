@@ -28,13 +28,14 @@ CONDITIONS = (
     ObservationAttribute("knowledge_digest", "sha256:" + "d" * 64),
     ObservationAttribute("tool_version", "0.1.0"),
     ObservationAttribute("officecli_version", "1.0.143"),
-    ObservationAttribute("adobe_sdk_version", "4.2.0"),
+    ObservationAttribute("renderer", "libreoffice"),
+    ObservationAttribute("renderer_version", "libreoffice-25.2.3.2"),
     ObservationAttribute("route_fingerprint", "f" * 64),
     ObservationAttribute("routing_policy", "configured_backend_fallback_v1"),
     ObservationAttribute("task_authorization", "task_root_capability_v1"),
     ObservationAttribute("validation_requirement", "m2_delivery_gate_v1"),
     ObservationAttribute(
-        "final_evidence_category", "adobe_candidate_full_page_validation_v1"
+        "final_evidence_category", "libreoffice_full_page_validation_v2"
     ),
 )
 

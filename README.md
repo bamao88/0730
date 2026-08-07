@@ -1,51 +1,38 @@
 # DocFit Agent SDK
 
-DocFit is a permission-bounded Claude Agent SDK application for thesis-formatting
-tasks. It now includes the product-shipped universal Knowledge Package v1, two domain
-Skills, one SDK-native read-only `docfit-unit-analyst`, five real DOCX Tools, fixed
-OfficeCLI / Adobe PDF Services adapters, a thin `convert` product command, and a bounded core
-Eval runner. The current product-development scope is complete through M2; M3 Eval expansion,
-real-sample qualification, Gold, and external manual review are deferred future work.
+DocFit 是基于 Claude Agent SDK 的论文格式处理应用。当前系统由两个领域 Skill、一个
+只读分析 Subagent、五个 DOCX Tool、通用 Knowledge、Eval、薄应用壳和本地可观测性组成。
+Agent 负责语义判断与执行策略；确定性代码保护输入只读、快照绑定、原子发布和证据完整性。
 
-The implemented P1 architecture is documented in
-[`docs/plans/docfit-progressive-subagents.md`](docs/plans/docfit-progressive-subagents.md):
-two domain Skills (`docfit-school-extract` and `convert-thesis`), one modular universal
-Knowledge Package, five DocFit MCP Tools, and one SDK-wiring-level read-only
-`docfit-unit-analyst`. Delegation remains a Skill-guided Agent decision; the application
-shell only enforces context isolation and permissions. The five Tool names remain the only
-Agent-visible evidence-bound DOCX operation surface. The main Agent additionally has path-bounded
-Read/Glob/Grep for project Skill references, product Knowledge, and current-task evidence, plus
-trusted, auto-approved Bash and Write without a DocFit path gate. Bash and Write can access any
-resource available to the Agent process, so direct Read restrictions are not a sandbox boundary.
-The read-only `docfit-unit-analyst` still receives neither tool. No second workflow or
-Provider-selection layer is added.
+视觉证据采用 clean-break V2 架构：固定 Docker LibreOffice 是唯一页面视觉来源，
+OfficeCLI 只负责 DOCX 结构、编辑、验证和语义对象定位。DocFit 把对象锚点映射到
+LibreOffice PDF，并按需生成联系表、完整页面、局部图和前后比较图。不存在 Provider
+选择、自动回退、第二视觉路径或旧 `render_ref` 兼容层。视觉结果始终标记为
+`approximate`，不声称与 Microsoft Word 像素一致。
 
-The approved M2-follow-on design for a local, read-only runtime observability UI is documented
-in [`docs/docfit-local-observability-design.md`](docs/docfit-local-observability-design.md).
-It projects actual SDK Agent/Tool/Subagent events, redacted metrics, and stable local
-evidence references without storing thesis text or controlling the conversion. O0.0–O0.7 now
-provide the platform-neutral skeleton, SDK transcript/report v2 privacy boundary, synchronous
-field-allowlist projectors, direct-ID correlation, coverage dimensions, safe metrics, and a
-bounded background SQLite history writer, plus the direct-open loopback security shell, automatic
-ephemeral sessions, and session-only evidence remount. The offline run overview,
-Transcript/timeline, verified Agent tree,
-Tool/Subagent/event details, SSE refresh, debug-context copy, evidence states, and evidence-aware
-cross-run comparison are implemented. The O0 privacy, security, fault, resource, benchmark, live
-SDK, and documentation gates are complete; O1 optimization has not started.
-
-“Without storing thesis text” applies to the observability index. The SDK's own local session
-transcript is a separate data plane; O0 requires a private per-run `CLAUDE_CONFIG_DIR`, explicit
-cleanup status, and no transcript mirror. Historical evidence stays unmounted until the user
-reselects a task directory and its report IDs/hashes verify. A local debugging shell may load an
-optional platform directory-picker adapter, but core conversion and cloud execution never import
-AppleScript/GUI implementations; adapter availability is not a core completion gate.
+架构基线从 [docs/docfit-00-index.md](docs/docfit-00-index.md) 开始；视觉 V2 的决策和
+验收见
+[docs/plans/docfit-libreoffice-visual-evidence-v2.md](docs/plans/docfit-libreoffice-visual-evidence-v2.md)。
 
 ## Requirements
 
-- Python 3.12 (pinned by `.python-version`)
+- Python 3.12（由 `.python-version` 固定）
 - [uv](https://docs.astral.sh/uv/)
-- OfficeCLI 1.0.143, Adobe PDF Services credentials, and Poppler for Provider gates
-- A Kimi Code or MiniMax API key for live Agent SDK smoke checks and `docfit convert`
+- OfficeCLI 1.0.143
+- Docker，以及仓库内固定的 `docfit-libreoffice-visual:25.2.3.2` 镜像
+- Poppler：`pdfinfo`、`pdftotext`、`pdftoppm`
+- 运行真实 Agent 时使用 Kimi Code 或 MiniMax API key
+
+构建视觉镜像：
+
+```bash
+docker build \
+  -t docfit-libreoffice-visual:25.2.3.2 \
+  docker/visual-renderer
+```
+
+如默认 Debian mirror 在本地不可达，可显式传入镜像源；镜像内容版本仍由
+`docker/visual-renderer/packages.lock` 固定。
 
 ## Install and verify
 
@@ -53,56 +40,44 @@ AppleScript/GUI implementations; adapter availability is not a core completion g
 uv sync --frozen
 uv lock --check
 uv build
-uv run ruff check .
+uv run ruff check src tests
 uv run mypy src
 uv run pytest -q
 uv run docfit doctor
+uv run docfit doctor --require visual-renderer
 ```
 
-`docfit doctor` is the deterministic CI gate. Missing Agent/Adobe credentials or fixed
-DOCX backend configuration is reported as `NOT_READY` but does not make that base command
-fail. `docfit doctor --require provider` requires OfficeCLI, Adobe PDF Services SDK and
-credentials, plus `pdftoppm`/`pdfinfo`.
+`docfit doctor` 是基础确定性门。`--require visual-renderer` 额外验证锁定的 OfficeCLI、
+LibreOffice 镜像身份、字体环境 digest 和 Poppler 工具；缺失时返回非零，不会换用其他
+渲染器。
 
-## Live Agent smoke checks
+开发者 Tool CLI 示例：
 
-Keep all local API credentials in one repository-external file:
-`~/.config/docfit/agent.env`. The file must have mode `0600`; never add it to
-this repository. DocFit normally tries configured Kimi credentials before
-falling back to MiniMax. Kimi runs with the documented high-effort Claude Code
-tool context and Tool Search disabled. An HTTP 400 request-format rejection is
-treated as a route-level incompatibility, so DocFit skips the remaining credentials
-for the same Kimi name/base URL/model instead of replaying the same invalid request.
-Process environment variables override values from the file when a one-off local
-override is needed.
+```bash
+uv run docfit tools inspect evals/fixtures/smoke/student.docx
+uv run docfit tools render evals/fixtures/smoke/student.docx
+uv run docfit tools visual render:v2:<hash> --mode pages --pages 1
+```
+
+`docx_render` 输入只包含 `input_docx` 和可选 `overview`；应用会话注入 `task_root`。
+`docx_visual_review` 支持 `contact_sheet`、`pages`、`regions` 和 `compare`。PDF 只生成一次，
+页面与局部图片按需栅格化并缓存在任务目录的 `.docfit/evidence/`。Tool 结果返回紧凑 JSON
+文本块及原生 `image` 内容块；长文档通过 cursor 分批查看。
+
+## Agent and product commands
+
+将 Agent 凭据保存在仓库外的 `~/.config/docfit/agent.env`，权限必须为 `0600`。进程环境
+变量可以覆盖文件配置。不要把 key 写入仓库、测试证据或日志。
 
 ```dotenv
 DOCFIT_AGENT_BACKEND_ORDER=kimi,minimax
-
 DOCFIT_KIMI_API_KEY=...
-DOCFIT_KIMI_API_KEY_2=...
-DOCFIT_KIMI_API_KEY_BACKUP=...
 DOCFIT_KIMI_BASE_URL=https://api.kimi.com/coding/
 DOCFIT_KIMI_MODEL=kimi-for-coding
-
 DOCFIT_MINIMAX_API_KEY=...
 DOCFIT_MINIMAX_BASE_URL=https://api.minimaxi.com/anthropic
 DOCFIT_MINIMAX_MODEL=MiniMax-M2.7
-
-# Adobe PDF Services service-principal bundle (never print or commit values).
-DOCFIT_ADOBE_PDF_SERVICES_CLIENT_ID=...
-DOCFIT_ADOBE_PDF_SERVICES_CLIENT_SECRET=...
-DOCFIT_ADOBE_PDF_SERVICES_ORGANIZATION_ID=...
 ```
-
-MiniMax Token Plan keys (`sk-cp-...`) and pay-as-you-go API keys (`sk-...`) use
-separate resource pools and are not interchangeable. A Token Plan subscription
-does not provide balance to a pay-as-you-go key. The Claude Agent SDK route maps
-the selected MiniMax credential to `ANTHROPIC_AUTH_TOKEN`, following MiniMax's
-Claude Code integration contract; keep the credential itself only in the private
-external environment file.
-
-After creating or editing the file:
 
 ```bash
 chmod 600 ~/.config/docfit/agent.env
@@ -114,60 +89,10 @@ uv run docfit agent-smoke --case subagent
 uv run docfit doctor --require agent-smoke
 ```
 
-The five cases verify that the Agent can inspect an actual MCP Tool image, can route
-`AskUserQuestion` through the CLI within the same session, and cannot execute hidden or
-unregistered tools. The path case proves that direct Read/Glob/Grep calls remain canonical-root
-checked while trusted Bash and Write execute without a DocFit path gate inside a temporary test
-scope. This does not claim that files outside the direct Read allowlist are inaccessible through
-Bash.
-The Subagent case additionally proves that only the named read-only
-Agent definition receives explicit task context, uses inspect + visual-review, and returns
-`unit_analysis_v1`. Receipts under `.docfit/smoke/` contain metadata only and record
-which backend passed; they never contain API keys. Starting a new runnable live attempt
-invalidates that case's older PASS receipt, and only a PASS from the current attempt publishes
-a new one. A command that is `NOT_READY` before any backend can run does not erase prior live
-evidence; the doctor still checks current credentials and SDK version independently.
+五个 smoke case 验证真实 MCP 图片、同会话用户提问、隐藏工具拒绝、路径权限和只读
+Subagent。`.docfit/smoke/` 只保存不含凭据与论文正文的回执元数据。
 
-Provider installation and deterministic Tool checks:
-
-```bash
-uv run docfit doctor --require provider
-uv run docfit tools inspect evals/fixtures/smoke/student.docx
-```
-
-The fixed render routes are OfficeCLI for `edit_feedback` and Adobe PDF Services for
-`baseline` / `candidate_verification`. Adobe uses `pdfservices-sdk==4.2.0`; each conversion
-on a cache miss consumes one Document Transaction (the development free tier is planned
-against 500 transactions per month). DocFit does not require local Microsoft Word,
-AppleScript, an unlocked GUI session, or a local font inventory for delivery conversion.
-Adobe's server-side font environment is recorded as managed and opaque. A baseline or
-candidate call uploads the complete authorized DOCX to Adobe's cloud service; do not run
-that route on a document whose owner has not authorized external processing.
-
-The locked Adobe adapter uses a 30-second connect timeout and a 120-second read/upload
-timeout so real DOCX uploads are not constrained by the SDK's short defaults. These values
-are evidence, not public backend-selection parameters. Public Tool schemas intentionally
-avoid `oneOf` / `anyOf` / `allOf` because the configured compatible model routes do not
-consume schema composition reliably. Action-specific requirements are still enforced by
-the Tool runtime.
-
-With `claude-agent-sdk==0.2.128`, the in-process MCP bridge does not preserve
-`structuredContent` in the Agent-visible result. DocFit therefore mirrors the same complete
-structured object as compact JSON in the first text block, followed by native image blocks.
-The SDK subprocess buffer is 16 MiB, while the Tool retains its own image count and byte
-budgets. Review long documents in bounded page batches; use crops from the same render ref
-when small field results, captions, or page-boundary details are not legible at full-page
-scale.
-
-`uv run docfit eval --suite core` remains available as an optional bounded developer aid.
-Expanding that runner into M3 Skill/E2E evaluation, Gold maintenance, real-sample
-qualification, or manual delivery review is outside the current development scope and is not
-a completion gate for the implemented M2 product chain.
-
-The exploratory authorized real-sample run is retained only as historical engineering
-evidence. It is not a current completion blocker and does not make M3 complete.
-
-The development-stage school-template preparation command is:
+模板准备：
 
 ```bash
 uv run docfit prepare-template \
@@ -177,13 +102,7 @@ uv run docfit prepare-template \
   --output .tmp/template-preparation-task
 ```
 
-The output argument must identify a new task directory. A successful run publishes exactly
-`clean-template.docx`, `fill-contract.json`, `visual-review.json`, and `build-report.json` below
-`<output>/output/template-artifact/`. The `built` status proves the development artifact is
-complete and mechanically revalidated; it does not claim Human acceptance, a fixed template,
-formal quality scoring, or M3 completion.
-
-The public conversion command is:
+转换：
 
 ```bash
 uv run docfit convert \
@@ -193,32 +112,16 @@ uv run docfit convert \
   --output .tmp/smoke-output
 ```
 
-A successful `conversion-report.json` is generated from the current Adobe candidate and the
-independent final validation rerun. Intermediate Agent warnings or summaries are not replayed
-as current completion facts.
+完成报告只引用当前最终 DOCX 的 V2 LibreOffice render、全页 Agent 视觉覆盖和独立验证；
+中间渲染或旧快照不能证明最终结果。
 
-Start the local observer with `uv run docfit observe`. It binds only `127.0.0.1` and opens directly
-without a login page or one-time code, including in non-interactive local development. The first
-valid request creates an in-memory ephemeral session; same-origin checks and session-bound CSRF
-remain mandatory for delete, mount, and open actions. The server-rendered monitoring pages use only
-packaged local CSS/JavaScript, show privacy-safe stored events and unknown values without inventing
-facts, and expose local evidence actions only after the current session reauthorizes and verifies a
-task directory. `docfit convert` now uses `--observation auto` by default; pass
-`--observation off` for the explicit no-observer baseline. The comparison page distinguishes
-strict, conditional, and not-comparable runs and never turns missing metrics into zero or declares
-a winner. For startup commands and a human reading order from run result to Tool, Subagent, and
-local evidence, see the
-[`DocFit local observer user guide`](docs/human/docfit-local-observer-user-guide.md).
+本地观察器通过 `uv run docfit observe` 启动，只绑定 `127.0.0.1`。观察索引不保存论文
+正文；SDK transcript 使用每次运行隔离目录并显式清理。历史本地证据只有在当前会话重新
+授权任务目录并验证 ID/hash 后才可访问。
 
 ## Test layout
 
-- `tests/unit`: pure local logic, including bundled universal Knowledge validation
-- `tests/contract`: public Tool names, schemas, and SDK permission boundaries
-- `tests/integration`: CLI, real OfficeCLI, thin conversion-shell, and loopback observer
-  integration; live SDK and Adobe API product gates are run separately with repository-external
-  credentials
-
-The coordinated long-term development baseline starts at
-[`docs/docfit-00-index.md`](docs/docfit-00-index.md); the accepted milestone
-contract is in
-[`docs/docfit-06-development-roadmap.md`](docs/docfit-06-development-roadmap.md).
+- `tests/unit`：纯本地逻辑与视觉证据核心
+- `tests/contract`：公开 Tool/schema、权限与 MCP 原生图片合同
+- `tests/integration`：真实 OfficeCLI、Docker LibreOffice、三校视觉链路、转换壳和本地观察器
+- `evals`：离线开发与回归资产，不进入一次用户任务的在线决策环

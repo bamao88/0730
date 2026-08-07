@@ -200,39 +200,3 @@ class OfficeCliAdapter:
             "passed": True,
             "detail": result.message or "OfficeCLI OpenXML validation passed.",
         }
-
-    def html(self, document: Path, output: Path) -> None:
-        self._run_json(["view", str(document), "html", "--out", str(output)])
-        if not output.is_file() or output.stat().st_size == 0:
-            raise ToolFailure(
-                status="error",
-                origin="postcondition",
-                code="officecli_html_missing",
-                message="OfficeCLI reported success but produced no HTML preview.",
-            )
-
-    def screenshot(self, document: Path, *, page: int, output: Path) -> None:
-        self._run_json(
-            [
-                "view",
-                str(document),
-                "screenshot",
-                "--page",
-                str(page),
-                "--render",
-                "html",
-                "--out",
-                str(output),
-                "--screenshot-width",
-                "1600",
-                "--screenshot-height",
-                "1200",
-            ]
-        )
-        if not output.is_file() or output.stat().st_size == 0:
-            raise ToolFailure(
-                status="error",
-                origin="postcondition",
-                code="officecli_screenshot_missing",
-                message="OfficeCLI reported success but produced no page screenshot.",
-            )

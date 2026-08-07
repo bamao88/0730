@@ -66,8 +66,7 @@ _EDIT_ACTIONS = {
     "import_content_objects",
     "import_template_sections",
 }
-_RENDER_INTENTS = {"baseline", "edit_feedback", "candidate_verification"}
-_VISUAL_MODES = {"pages", "crops", "contact_sheet", "compare", "m0_image_smoke"}
+_VISUAL_MODES = {"pages", "regions", "contact_sheet", "compare"}
 _USAGE_KEYS = {
     "input_tokens",
     "output_tokens",
@@ -80,7 +79,7 @@ _RUNTIME_IDENTITY_KEYS = {
     "sdk_version",
     "tool_version",
     "officecli_version",
-    "adobe_sdk_version",
+    "renderer_version",
     "route_fingerprint",
     "routing_policy",
     "task_authorization",
@@ -324,16 +323,8 @@ def _tool_input_summary(
             references[:256]
         )
     if logical == "docx_render":
-        intent = tool_input.get("render_intent")
-        focus_refs = tool_input.get("focus_object_refs")
-        references = []
-        if isinstance(focus_refs, list):
-            for reference in focus_refs[:256]:
-                references.extend(_object_refs(reference))
-        return _attrs(
-            render_intent=intent if intent in _RENDER_INTENTS else None,
-            focus_ref_count=len(focus_refs) if isinstance(focus_refs, list) else 0,
-        ), tuple(references[:256])
+        overview = tool_input.get("overview")
+        return _attrs(overview=overview if isinstance(overview, bool) else None), ()
     if logical == "docx_visual_review":
         mode = tool_input.get("mode")
         pages = tool_input.get("pages")
@@ -346,27 +337,18 @@ def _tool_input_summary(
             if isinstance(pages, list)
             else ()
         )
-        crops = tool_input.get("crops")
-        crop_pages = (
-            tuple(
-                page
-                for crop in crops[:256]
-                if isinstance(crop, Mapping)
-                and isinstance((page := crop.get("page")), int)
-                and not isinstance(page, bool)
-                and page >= 1
-            )
-            if isinstance(crops, list)
-            else ()
-        )
         evidence = tuple(
             ObservationEvidenceRef("page", page)
-            for page in dict.fromkeys((*safe_pages, *crop_pages))
+            for page in dict.fromkeys(safe_pages)
         )
         return _attrs(
             mode=mode if mode in _VISUAL_MODES else None,
             page_count=len(safe_pages),
-            crop_count=len(crop_pages),
+            region_count=(
+                len(tool_input["regions"])
+                if isinstance(tool_input.get("regions"), list)
+                else 0
+            ),
         ), evidence
     if logical == "docx_validate":
         source_hash = _hash(tool_input.get("source_sha256"))
@@ -629,18 +611,18 @@ def _tool_result_summary(
         )
     elif logical == "docx_render":
         reference = payload.get("render_ref")
-        if isinstance(reference, Mapping):
-            document_hash = _hash(reference.get("document_sha256"))
-            render_hash = _hash(reference.get("render_sha256"))
-            provider = reference.get("provider")
-            provider_name = (
-                _safe_identifier(provider.get("name"))
-                if isinstance(provider, Mapping)
+        if isinstance(reference, str) and reference.startswith("render:v2:"):
+            document_hash = _hash(payload.get("document_sha256"))
+            render_hash = _hash(reference.removeprefix("render:v2:"))
+            renderer = payload.get("renderer")
+            renderer_name = (
+                _safe_identifier(renderer.get("name"))
+                if isinstance(renderer, Mapping)
                 else None
             )
-            provider_version = (
-                _safe_identifier(provider.get("version"))
-                if isinstance(provider, Mapping)
+            renderer_version = (
+                _safe_identifier(renderer.get("version"))
+                if isinstance(renderer, Mapping)
                 else None
             )
             if document_hash is not None:
@@ -653,38 +635,26 @@ def _tool_result_summary(
                         document_sha256=document_hash,
                     )
                 )
-            artifacts = reference.get("artifacts")
             attributes = _attrs(
-                render_intent=(
-                    reference.get("render_intent")
-                    if reference.get("render_intent") in _RENDER_INTENTS
-                    else None
-                ),
-                provider=provider_name,
-                provider_version=provider_version,
+                renderer=renderer_name,
+                renderer_version=renderer_version,
                 cache_hit=(
                     payload.get("cache_hit")
                     if isinstance(payload.get("cache_hit"), bool)
                     else None
                 ),
-                page_count=_nonnegative_int(reference.get("page_count")),
-                dpi=_nonnegative_int(reference.get("dpi")),
-                pdf_available=(
-                    isinstance(artifacts.get("pdf"), str)
-                    if isinstance(artifacts, Mapping)
-                    else False
-                ),
-                pages_available=(
-                    len(artifacts.get("pages", ()))
-                    if isinstance(artifacts, Mapping)
-                    and isinstance(artifacts.get("pages"), list)
-                    else 0
-                ),
+                page_count=_nonnegative_int(payload.get("page_count")),
+                pdf_available=status == "ok",
             )
             artifact_published = status == "ok" and render_hash is not None
     elif logical == "docx_visual_review":
         document_hash = _hash(payload.get("document_sha256"))
-        render_hash = _hash(payload.get("render_sha256"))
+        render_ref = payload.get("render_ref")
+        render_hash = (
+            _hash(render_ref.removeprefix("render:v2:"))
+            if isinstance(render_ref, str) and render_ref.startswith("render:v2:")
+            else None
+        )
         if document_hash is not None:
             evidence.append(ObservationEvidenceRef("document", document_hash))
         if render_hash is not None:
@@ -700,7 +670,6 @@ def _tool_result_summary(
                 if not isinstance(item, Mapping):
                     continue
                 evidence_ref = _safe_code(item.get("evidence_ref"))
-                page = _nonnegative_int(item.get("page"))
                 if evidence_ref is not None:
                     evidence.append(
                         ObservationEvidenceRef(
@@ -710,16 +679,32 @@ def _tool_result_summary(
                             render_sha256=render_hash,
                         )
                     )
-                if page is not None and page >= 1:
-                    pages.append(page)
-                    evidence.append(
-                        ObservationEvidenceRef(
-                            "page",
-                            page,
-                            document_sha256=document_hash,
-                            render_sha256=render_hash,
+                raw_pages = item.get("pages")
+                if isinstance(raw_pages, list):
+                    for raw_page in raw_pages[:256]:
+                        page = _nonnegative_int(raw_page)
+                        if page is not None and page >= 1:
+                            pages.append(page)
+                            evidence.append(
+                                ObservationEvidenceRef(
+                                    "page",
+                                    page,
+                                    document_sha256=document_hash,
+                                    render_sha256=render_hash,
+                                )
+                            )
+                else:
+                    page = _nonnegative_int(item.get("page"))
+                    if page is not None and page >= 1:
+                        pages.append(page)
+                        evidence.append(
+                            ObservationEvidenceRef(
+                                "page",
+                                page,
+                                document_sha256=document_hash,
+                                render_sha256=render_hash,
+                            )
                         )
-                    )
         image_count, image_bytes = _image_stats(response)
         attributes = _attrs(
             mode=payload.get("mode") if payload.get("mode") in _VISUAL_MODES else None,

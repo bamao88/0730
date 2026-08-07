@@ -8,7 +8,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from docfit.tools.image_smoke import make_smoke_png
+from docfit.evals.synthetic_image import make_fixture_png
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import JsonObject, ToolFailure, atomic_write_json, sha256_file
 from docfit.tools.service import DocFitToolService
@@ -232,7 +232,7 @@ def build_core_fixtures(repository: Path) -> JsonObject:
     smoke.mkdir(parents=True, exist_ok=True)
     risks.mkdir(parents=True, exist_ok=True)
     marker = smoke / "synthetic-marker.png"
-    marker.write_bytes(make_smoke_png())
+    marker.write_bytes(make_fixture_png())
     student = smoke / "student.docx"
     template = smoke / "school-template.docx"
     requirements = smoke / "school-requirements.pdf"

@@ -124,8 +124,7 @@ focus:
    control、bookmark、field、header/footer、分页边界；
 3. 解析命名样式、继承、直接格式和最终有效属性；
 4. 识别 unsupported features，但不猜测其语义；
-5. 按 visual level 调用固定 port：`quick` 使用 OfficeCLI，`candidate_verification` 使用 Adobe；
-6. 重查 source hash，原子发布 snapshot/render manifests。
+5. 重查 source hash，原子发布结构 snapshot；视觉证据由共享 `docx_render` 单独建立。
 
 成功至少返回：
 
@@ -479,8 +478,7 @@ findings: []
 ## 8. 缓存、性能和隐私
 
 - snapshot cache key 包含 document hash 和 extractor/schema version；
-- render cache 额外包含 visual level、provider profile/version 和环境证据；
-- 相同 `candidate_verification` key 最多一次外部 Document Transaction；
+- V2 render cache 由共享 Evidence Store 管理，绑定文档、renderer/container/font、locale 与 PDF 参数；
 - comparison JSON 只保存 image refs/hashes，不内嵌 base64；
 - query/diff 有资源上限和 regex timeout；图片通过 cursor 分批；
 - structured logs 不记录正文、decision body、OOXML、绝对敏感路径或凭据；
@@ -492,7 +490,6 @@ findings: []
 src/docfit/template/
 ├── contracts/          # Registry、semantics、evidence、mutation、review、artifact
 ├── runtime/            # paths、canonical、atomic、task-local store
-├── ports.py            # OfficeCLI/Adobe/filesystem failure boundaries
 ├── observation.py
 ├── mutation.py
 ├── mutation_modes.py

@@ -27,6 +27,10 @@ from docfit.app.agent import (
     terminal_ask_user,
 )
 from docfit.app.settings import AgentBackend, iter_agent_backends
+from docfit.app.template_permissions import (
+    make_docfit_schema_version_hook,
+    make_template_task_permission_callback,
+)
 from docfit.observability.transcript import isolated_sdk_environment
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 from docfit.tools.template_tools import (
@@ -68,6 +72,8 @@ PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS = 1800
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
     "mcp__docfit__template_observe",
+    "mcp__docfit__docx_render",
+    "mcp__docfit__docx_visual_review",
     "mcp__docfit__template_compare",
     "mcp__docfit__template_build",
 }
@@ -214,7 +220,8 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "because a required slot or content control does not yet exist. Ask only when the "
         "available task evidence leaves a material field mapping, deletion boundary, source "
         "priority, or visual decision genuinely unresolved. "
-        "Use the four DocFit template Tools for all DOCX evidence and mutations. Write decisions "
+        "Use the four template Tools for structural evidence and mutations, and use docx_render "
+        "plus docx_visual_review for all visual evidence. Write decisions "
         "only below work/decisions and compiled files only below work/compiled. Invoke the Skill "
         f"compiler scripts with the exact Python interpreter {sys.executable!s}. Inspect every "
         "required final image before accepting it. Publish only through template_build to "
@@ -243,20 +250,28 @@ def build_prepare_template_options(
         *TRUSTED_BASIC_TOOLS,
         "AskUserQuestion",
     )
-    return ClaudeAgentOptions(
-        tools=list(builtin_tools),
-        allowed_tools=[],
-        disallowed_tools=[*FORBIDDEN_TOOLS, "Agent"],
-        mcp_servers={"docfit": build_template_tool_server()},
-        strict_mcp_config=True,
-        permission_mode="default",
-        can_use_tool=make_permission_callback(
+    permission_callback = make_template_task_permission_callback(
+        make_permission_callback(
             terminal_ask_user,
             read_path_policy=policy,
             registered_tool_names=TEMPLATE_FULL_TOOL_NAMES,
         ),
+        task_root=prepared.task_root,
+    )
+    return ClaudeAgentOptions(
+        tools=list(builtin_tools),
+        allowed_tools=[],
+        disallowed_tools=[*FORBIDDEN_TOOLS, "Agent"],
+        mcp_servers={"docfit": build_template_tool_server(prepared.task_root)},
+        strict_mcp_config=True,
+        permission_mode="default",
+        can_use_tool=permission_callback,
         hooks={
             "PreToolUse": [
+                HookMatcher(
+                    matcher="mcp__docfit__.*",
+                    hooks=[make_docfit_schema_version_hook()],
+                ),
                 HookMatcher(
                     matcher="Read|Glob|Grep",
                     hooks=[make_read_path_gate_hook(policy)],
@@ -273,8 +288,9 @@ def build_prepare_template_options(
         output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
         system_prompt=(
             "You are the single DocFit template-preparation Agent. The filesystem Skill is your "
-            "workflow contract; the four MCP Tools are the only trusted DOCX evidence, mutation, "
-            "comparison, and publication boundaries. Inputs are read-only. Use SDK-native Tool "
+            "workflow contract; the four template MCP Tools plus the shared docx_render and "
+            "docx_visual_review Tools are the trusted DOCX evidence, mutation, comparison, and "
+            "publication boundaries. Inputs are read-only. Use SDK-native Tool "
             "calls, permissions, AskUserQuestion, and structured output. Bash and Write are "
             "available only for decision files and the two compiler scripts; never edit a DOCX "
             "with them. A built artifact remains pending the user's Word content review."

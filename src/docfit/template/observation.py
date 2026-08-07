@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import re
 import zipfile
+from collections import Counter
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree as ET
 
-from docfit.template.ports import TemplateRenderer
-from docfit.template.rendering import TemplateRenderService
 from docfit.template.runtime.paths import task_file
 from docfit.template.runtime.store import EvidenceStore
 from docfit.tools.package import validate_docx_package
@@ -21,6 +20,8 @@ _STORY_PATTERN = re.compile(
     r"word/(?:document|header\d+|footer\d+|footnotes|endnotes|comments)\.xml"
 )
 _FOCUS_VALUES = {"structure", "visible_objects", "styles", "slot_candidates"}
+_MAX_INLINE_OBJECTS = 200
+_MAX_INLINE_PARAGRAPHS = 250
 
 
 def _attribute(element: ET.Element | None, name: str) -> str | None:
@@ -159,18 +160,7 @@ def snapshot_document(document: Path, document_sha256: str, source_path: str) ->
 class TemplateObservationService:
     """Trusted observation boundary for template extraction."""
 
-    def __init__(self, renderer: TemplateRenderer | None = None) -> None:
-        self.rendering = TemplateRenderService(renderer)
-
     def create(self, args: dict[str, Any], *, task_root: Path) -> JsonObject:
-        visual_level = args.get("visual_level", "none")
-        if visual_level not in {"none", "quick", "candidate_verification"}:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_visual_level",
-                message="The requested visual evidence level is unsupported.",
-            )
         focus = args.get("focus", [])
         if not isinstance(focus, list) or any(item not in _FOCUS_VALUES for item in focus):
             raise ToolFailure(
@@ -204,14 +194,45 @@ class TemplateObservationService:
                 code="source_changed",
                 message="The source document changed before evidence publication completed.",
             )
-        render = (
-            self.rendering.create(
-                task_root=task_root,
-                snapshot_ref=snapshot_ref,
-                visual_level=visual_level,
-            )
-            if visual_level != "none"
-            else None
+        raw_objects = payload["objects"]
+        assert isinstance(raw_objects, list)
+        object_count = len(raw_objects)
+        paragraph_objects = [
+            item
+            for item in raw_objects
+            if isinstance(item, dict) and item.get("kind") == "paragraph"
+        ]
+        inline_object_scope = "all"
+        objects = raw_objects
+        warnings: list[JsonObject] = []
+        if object_count > _MAX_INLINE_OBJECTS:
+            if len(paragraph_objects) <= _MAX_INLINE_PARAGRAPHS:
+                inline_object_scope = "paragraphs"
+                objects = paragraph_objects
+                warnings.append(
+                    {
+                        "code": "run_inventory_omitted_use_query",
+                        "message": (
+                            "All paragraph objects are included and the complete run inventory "
+                            "is stored in the snapshot. Use template_observe.query with "
+                            "kinds:[run] when a paragraph target is not precise enough."
+                        ),
+                    }
+                )
+            else:
+                inline_object_scope = "none"
+                objects = []
+                warnings.append(
+                    {
+                        "code": "object_inventory_omitted_use_query",
+                        "message": (
+                            "The complete object inventory is stored in the snapshot. Use "
+                            "template_observe.query to retrieve bounded matching objects."
+                        ),
+                    }
+                )
+        object_kind_counts = Counter(
+            str(item.get("kind")) for item in raw_objects if isinstance(item, dict)
         )
         return {
             "schema_version": 1,
@@ -219,9 +240,10 @@ class TemplateObservationService:
             "result_state": "observed",
             "document_sha256": before_hash,
             "snapshot_ref": snapshot_ref,
-            "render_ref": render["render_ref"] if render else None,
-            "page_count": render["page_count"] if render else None,
-            "objects": payload["objects"],
+            "object_count": object_count,
+            "object_kind_counts": dict(sorted(object_kind_counts.items())),
+            "inline_object_scope": inline_object_scope,
+            "objects": objects,
             "content_controls": payload["content_controls"],
             "styles": payload["styles"],
             "sections": payload["sections"],
@@ -230,7 +252,7 @@ class TemplateObservationService:
                 {"name": "docx_package", "result": "ok"},
                 {"name": "source_hash_unchanged", "result": "ok"},
             ],
-            "warnings": [],
+            "warnings": warnings,
             "failure": None,
         }
 
@@ -358,11 +380,3 @@ class TemplateObservationService:
             "warnings": [],
             "failure": None,
         }
-
-    def images(
-        self,
-        args: dict[str, Any],
-        *,
-        task_root: Path,
-    ) -> tuple[JsonObject, list[Path]]:
-        return self.rendering.images(args, task_root=task_root)

@@ -6,11 +6,14 @@
 | --- | --- | --- |
 | `mcp__docfit__docx_inspect` | 获取当前结构、对象引用和文档哈希 | 文档引用、哈希、对象定位 |
 | `mcp__docfit__docx_edit` | 在授权工作目录执行受控操作 | 输入引用、操作、输出引用、编辑反馈 |
-| `mcp__docfit__docx_render` | 建立 `baseline`、`edit_feedback` 或 `candidate_verification` 渲染 | intent、哈希、`render_ref`、Provider 证据 |
-| `mcp__docfit__docx_visual_review` | 从已有渲染读取页面、联系表或局部裁剪图 | `render_ref`、页码、图像哈希 |
+| `mcp__docfit__docx_render` | 为当前 DOCX 建立固定 LibreOffice V2 快照和默认联系表 | 文档哈希、`render_ref`、renderer/font identity |
+| `mcp__docfit__docx_visual_review` | 从已有渲染按需读取联系表、页面、对象/文字局部图或 compare | `render_ref`、evidence ref、页码、bbox、图像哈希 |
 | `mcp__docfit__docx_validate` | 验证最终候选并发布验证产物 | 候选哈希、检查结果、输出路径 |
 
-一次 Tool 返回的引用只对它绑定的文档状态有效。编辑产生新候选后，重新取得后续操作需要的引用和视觉证据。渲染时只选择 intent，绝不选择后端，也不接受静默跨后端回退；页面和 bbox 只用于观察，不能作为编辑定位。
+一次 Tool 返回的引用只对它绑定的文档状态有效。编辑产生新候选后，重新取得后续操作
+需要的引用和 V2 视觉证据。`docx_render` 只传 `input_docx` 与可选 `overview`；绝不传
+intent、provider、backend、output directory 或 parent ref。页面和 bbox 只用于观察，
+不能作为编辑定位；LibreOffice 失败时不回退到第二视觉路径。
 
 Knowledge 不是学校规则来源。只读取当前判断所需的最小通用模块，并保留文档 ID、包版本和内容摘要。
 
@@ -20,7 +23,7 @@ Knowledge 不是学校规则来源。只读取当前判断所需的最小通用�
 | --- | --- |
 | 输入路径未授权或源文件不受支持 | 报告具体输入问题；不使用其他工具绕过授权 |
 | 文档、对象或操作引用陈旧 | 重新检查最新文档，重新规划受影响操作 |
-| 渲染失败、页码无效或证据绑定旧哈希 | 修正最小页面范围并重新渲染；关键页不可见时不交付 |
+| 渲染失败、页码无效或证据绑定旧哈希 | 修复固定 renderer 环境或重新渲染；关键页不可见时不交付 |
 | Knowledge 不可用 | 使用已有任务证据继续；若缺少必要方法，报告能力缺口 |
 | 编辑被拒绝或原子操作失败 | 不假定任何写入成功；检查 Tool 结果和当前工作文档 |
 | 编辑反馈显示意外版式变化 | 停止后续依赖操作，检查受影响范围并制定修复 |

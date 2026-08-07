@@ -218,7 +218,7 @@ class RunMetrics:
     tool_calls: MetricValue
     subagents: MetricValue
     cache_hits: MetricValue
-    adobe_api_calls: MetricValue
+    render_executions: MetricValue
     pages_viewed: MetricValue
     image_count: MetricValue
     image_bytes: MetricValue
@@ -1154,18 +1154,11 @@ def _metrics(
         for event in render_events
         if (cache_value := _bool_attribute(event, "cache_hit")) is not None
     ]
-    adobe_known = all(
-        _string_attribute(event, "provider") is not None
-        and _bool_attribute(event, "cache_hit") is not None
-        for event in render_events
+    render_execution_known = all(
+        _bool_attribute(event, "cache_hit") is not None for event in render_events
     )
-    adobe_calls = sum(
-        bool(
-            (provider := _string_attribute(event, "provider"))
-            and provider.startswith("adobe")
-            and _bool_attribute(event, "cache_hit") is False
-        )
-        for event in render_events
+    render_executions = sum(
+        _bool_attribute(event, "cache_hit") is False for event in render_events
     )
     page_refs = {
         (reference.render_sha256, reference.value)
@@ -1204,7 +1197,7 @@ def _metrics(
         derived_tool_calls = derived_subagents = derived_cache_hits = _unknown()
         derived_permissions = derived_questions = derived_errors = _unknown()
         derived_retries = _unknown()
-        derived_adobe = derived_pages = derived_image_count = derived_image_bytes = _unknown()
+        derived_renders = derived_pages = derived_image_count = derived_image_bytes = _unknown()
     else:
         derived_tool_calls = _estimated(len(tools))
         derived_subagents = _estimated(len(subagents))
@@ -1217,8 +1210,8 @@ def _metrics(
         derived_questions = _estimated(user_questions)
         derived_errors = _estimated(errors)
         derived_retries = _estimated(max(0, backend_attempts - 1))
-        derived_adobe = (
-            _estimated(adobe_calls) if adobe_known else _unknown()
+        derived_renders = (
+            _estimated(render_executions) if render_execution_known else _unknown()
         )
         if page_refs:
             derived_pages = _estimated(len(page_refs))
@@ -1257,7 +1250,7 @@ def _metrics(
         tool_calls=derived_tool_calls,
         subagents=derived_subagents,
         cache_hits=derived_cache_hits,
-        adobe_api_calls=derived_adobe,
+        render_executions=derived_renders,
         pages_viewed=derived_pages,
         image_count=derived_image_count,
         image_bytes=derived_image_bytes,

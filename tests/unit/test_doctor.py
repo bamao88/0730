@@ -71,20 +71,22 @@ def test_agent_smoke_gate_requires_backend_and_current_receipts(tmp_path: Path) 
     assert ready.exit_code == 0
 
 
-def test_provider_gate_checks_the_two_fixed_backends(tmp_path: Path) -> None:
+def test_visual_renderer_gate_checks_the_fixed_pipeline(tmp_path: Path) -> None:
     _make_project(tmp_path)
 
     report = run_doctor(
-        "provider",
+        "visual-renderer",
         root=tmp_path,
         environment={},
         python_version=(3, 12),
     )
 
-    assert {check.name for check in report.checks if "provider" in check.required_for} >= {
+    assert {
+        check.name for check in report.checks if "visual-renderer" in check.required_for
+    } >= {
         "officecli_backend",
-        "adobe_pdf_services_backend",
-        "pdf_page_derivation",
+        "libreoffice_visual_renderer",
+        "pdf_visual_derivation",
     }
     assert report.gate in {"PASS", "NOT_READY"}
     assert report.exit_code == (0 if report.gate == "PASS" else 1)

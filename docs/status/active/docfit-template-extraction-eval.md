@@ -1,71 +1,81 @@
 # DocFit 模板提取静态 E2E Eval 执行胶囊
 
-- Capsule status: IN_PROGRESS
+- Capsule status: `IMPLEMENTATION_PASS / HUMAN_GOLD_GATE_PENDING`
 - Source design: `docs/plans/docfit-template-extraction-eval/DESIGN.md`
-  (`cbed177e4bc63477eae4a9007d3fdc3bae6e8564989b21261c5b8e7508e58a7e`)
+  (`ff57efcf78144a7528a5149ecae9901fdeda5656bb5dc12a37f78df14a7021b0`，文档收尾 hash)
 - Source plan: `docs/plans/docfit-template-extraction-eval/PLAN.md`
-  (`8d3c44edb4e620f0681d7bc845a702b54a4a51f219f9b5c07e46da9ed28c89fa`)
-- Latest user intent: 实施三校 `case.yaml + gold/template.docx + gold/fill-contract.yaml`
-  结构，并让 Word 槽语义名称与 canonical YAML `field_id` 一致
-- Approval source: 用户先批准实施思路，随后给出目标目录并明确要求“实施”
-- Baseline commit: `dc159eb01ebb1bc0d4c5446e7c59f34567969b26`
-- Current development gate: G2 component proof；G1 schema/config/fixture 能力合同已通过；
-  本次只对 candidate case 物化组件形成 G2 PASS，不构成 G5 或 M3 PASS
-- Current slice: W0/G1 已完成；W6 candidate 目录预物化已完成；W1–W5 的模型、事实分析、
-  evaluator、评分、报告和独立 CLI 尚未实现
-- Approved scope: `evals/template-extraction/**` 的独立数据、schema、配置、fixture、测试与
-  准备脚本；只读消费 Temp candidate 和 Registry 的版本/hash
-- No-touch scope: `src/docfit/**`、产品 CLI/根依赖、Agent/Provider/Adobe/OfficeCLI 运行链、
-  Student/Placement Eval、用户其他未提交改动
-- Isolation contract: Eval 不 import `docfit`、不启动产品 CLI、不把 Temp 放入运行依赖；
-  正式 case 只通过路径、schema、状态和 SHA-256 引用外部准备来源
+  (`8212c1305916eae5c533f615e71c11dfeebb95b6f90f3a7341179db013191f99`，文档收尾 hash)
+- Approval source: 用户批准顶层设计、逐代码至少 3 个简单测试、Eval 与产品代码解耦，随后
+  明确要求“开始实施”
+- Current development gate: G3 minimal vertical slice `PASS`；W0/G1 和 W1–W4/G2 证据已通过；
+  三校 Human Gold 与正式质量资格仍属于后续 G5，不作 M3 PASS 声明
+- Completed slice: W0–W5；三校 candidate 目录与拒绝评分门已完成
+- Pending slice: W6 Human acceptance、每校自比较/文字反例/字段反例共 9 条正式回归
+- Isolation contract: 所有新增运行代码、依赖、测试和输出位于
+  `evals/template-extraction/**`；没有修改或 import `src/docfit/**`
 
-## Gate Report：candidate case materialization
+## 已交付能力
 
-- Gate conclusion: **PASS（仅 G2 物化组件）**
-- G5/Human readiness conclusion: **FAIL / NOT_READY**；三校均保持 candidate，
-  `expected_verdict: INPUT_ERROR`，不得进入 Gold 通过率
-- Changed scope:
-  - 新增正式 `cases/01-*`、`02-*`、`03-*` 目录和各自三件数据资产；
-  - 新增正式 Eval config、candidate 物化器和 3 个物化器测试；
-  - 扩展 case/fill-contract schema，使复合槽、连续 region、样式引用与 candidate 状态可执行；
-  - 更新专项 DESIGN/PLAN 和 Eval README，区分目录位置与 Human acceptance。
-- Explicitly unchanged: 产品源码/依赖/CLI、Temp 候选源、原 Gold 资产、两校 OfficeCLI
-  schema finding、M3 状态和任何 accepted Gold 状态
-- Acceptance mapping:
-  - 目标目录完整 → `CASES-01`；三个 case 均存在 manifest/template/contract；
-  - 槽名与 YAML 一致 → `CASES-02`；91 个内容控件满足 `w:alias == field_id`，`w:tag`
-    与 slot/region locator 闭包；
-  - hash/Registry 绑定 → materializer 预检 + case/contract schema；三校 template/contract、
-    Registry `9779d0…522d`、Eval config `d734e5…88b6` 均绑定；
-  - 不自动晋升 → case schema 强制 candidate → `INPUT_ERROR`，`CASES-03` 拒绝覆盖 accepted。
-- Artifact summary:
-  - HUNAU: 24 slots + 1 generated region；template
-    `c118e574db83aeaa057e35db5eff98121ce7dee6592f4046cacd0b7fcf30d3b0`；OfficeCLI FAIL
-    （16 个既有 schema-order findings）；
-  - NJAU: 32 slots + 1 generated region；template
-    `284038cdcb25a9f4ac0734790776d905c6b592c1eeb2251ebd1107ec03ec9eef`；OfficeCLI FAIL
-    （1 个既有 styles schema-order finding）；
-  - PKU: 28 slots + 3 generated regions；template
-    `3bbe394c3b6f63cc3126fd92134c8042cf5da8f48128f7ee97c34741206b88a3`；OfficeCLI PASS，
-    但该 snapshot 不继承既有 r02 Gold 的 Human signoff。
-- Verification commands/results:
-  - 独立 Eval：`uv lock --project evals/template-extraction --check`、frozen sync、build、
-    task-scope Ruff 和 strict mypy 均 PASS；W0 + materializer/schema 定向测试 `29 passed`；
-  - 数据包：三份正式 DOCX 均通过 ZIP integrity，且与规范化 candidate source byte-identical；
-    schema/hash/path/`alias == field_id`/tag-locator 闭包检查均 PASS；
-  - 产品仓回归：root lock/build/mypy、`323 passed` 和 `docfit doctor` 均 PASS；
-  - root `ruff check .` 的剩余 finding 只位于未纳入本工作包的并行 W3/临时测试文件；
-    `docfit eval --suite core` 两次稳定失败于既有 OfficeCLI synthetic fixture 的
-    `fixture_officecli_rejected`，本次 case 数据与产品 fixture 生成链无调用关系。
-- Remaining unknowns/blockers:
-  - 三校逐槽字段语义、必填性、样式与 protected/remove Truth 尚未 Human signoff；
-  - HUNAU/NJAU validation findings 尚未修复或 Human 裁决；
-  - fill/update/save/reopen 的空值/长值往返和 Word 全页视觉复核尚未完成；
-  - CI 使用授权尚未确认；静态 Eval 不需要 Adobe 外部处理；
-  - W1–W5 未实现，因此还不能运行 Actual—Gold 评分。
-- Documentation drift: 专项 DESIGN/PLAN、Eval README、本 capsule 与 00/02/03/06 的状态
-  声明已同步；`doc-keeper` focused audit 已清除“schema/case 尚未实现”的过期表述；candidate
-  物化不作为 production cutover，也不改变 M3 未开始的全局结论
-- Advance requires: 继续 W1–W5 G2/G3；三校只有在 Human readiness、validation、hash 和
-  protected/remove Truth 全部满足后，才可把三层状态原地改为 accepted 并进入 G5
+1. 独立 `pyproject.toml`、`uv.lock`、wheel/sdist、`run_eval.py` 和 `.runs/**`。
+2. case、fill contract、Registry、Eval config、report 五类 schema 与 scoring-v1。
+3. S00–S13 确定性合成 DOCX/YAML fixture。
+4. Actual/Gold 共用的只读 DOCX facts：内容、story/结构、有效样式、关系和结构化对象。
+5. ID/locator/tag/anchor 对齐，重复候选显式 `AMBIGUOUS`。
+6. protected 四分项、slot 四分项和 Gold 声明的 remove 残留断言。
+7. 双 50 分视角、八个分项、slot inventory F1、coverage、provisional 与硬失败结论。
+8. 同一 report model 原子发布 `template-extraction-eval-report.json/.md`。
+9. candidate Gold 状态硬门：三校均返回 `GOLD_NOT_ACCEPTED`，不得形成质量分数。
+
+## G3 Gate Report
+
+- Gate conclusion: **PASS（独立合成纵向链路）**
+- Formal school Gold conclusion: **NOT_READY / HUMAN_GATE_PENDING**
+- Contract baseline:
+  - Actual 模板、Actual 填写契约、Gold 模板、Gold 填写契约；
+  - Registry ID/version/hash、marker protocol、Eval config 和 scoring version/hash；
+  - 输入错误无分数；质量 `PASS/FAIL/UNKNOWN` 与数值分数分离。
+- Acceptance-to-test mapping:
+  - S00 → `PASS`、100、protected 50/50、slot 50/50、coverage 1；
+  - S01–S06、S08、S09 → 单变量 `FAIL`，issue 归因到预期维度；
+  - S07、S10 → `UNKNOWN`、provisional，未静默判为 PASS；
+  - S11 → `INPUT_ERROR`、退出码 3、不创建报告目录；
+  - S12/S13 → 表格合并和公式/域/书签 facts 正例；
+  - 三校 candidate → 3/3 `GOLD_NOT_ACCEPTED`。
+- Module verification:
+  - `uv lock --check` → PASS；
+  - `uv build` → PASS，独立 wheel/sdist；
+  - `uv run ruff check .` → PASS；
+  - strict mypy（20 个生产 Python 文件）→ PASS；
+  - `uv run pytest -q` → **99 passed**；
+  - dependency tree → 仅标准运行依赖 `PyYAML`、`jsonschema`，无产品、Claude 或 renderer；
+  - static import scan → 无 `import docfit` / `from docfit`；
+  - `git diff -- src/docfit pyproject.toml uv.lock` → 空，产品源码和根依赖未改。
+- Project regression:
+  - root `uv lock --check` / `uv build` → PASS；
+  - root mypy → **46 source files PASS**；
+  - root pytest → **323 passed, 1 existing deprecation warning**；
+  - `docfit doctor` → overall PASS；
+  - `docfit eval --suite core` → **7/7 cases, 58 assertions, 2 rendered pages PASS**；
+  - scoped `ruff check src tests evals/template-extraction` → PASS；
+  - full-root `ruff check .` → BLOCKED only by pre-existing import ordering in
+    `test/build_clean_plan.py` and `test/run_officecli_diagnostic_candidate.py`; this work package
+    did not modify those user files.
+- Input safety: runner rechecks all eight bound input hashes before report publication；输入只读；
+  报告默认不复制整篇正文。
+- Product boundary: 产品 `docfit --help` 仍使用既有命令集合；新 Eval 没有产品子命令。
+
+## 剩余 Human Gold 门
+
+- 三校逐槽 field semantics、required/cardinality、value style、protected/remove Truth 未签字；
+- HUNAU/NJAU validation findings 未修复或人工裁决；
+- PKU 当前 snapshot 不自动继承历史 r02 Human signoff；
+- Git/CI/data permission 需形成明确 accepted 记录；
+- 通过后才可把 case/contract/review 三层状态原地改为 accepted，并运行每校 3 条正式回归；
+- 在此之前不得计算三校通过率，也不得宣称 G5 或 M3 完成。
+
+## Documentation drift
+
+- 专项 DESIGN、PLAN、Eval README 和本 capsule 已与 W0–W5 实现同步；
+- `doc-keeper` focused audit 已检查 00/01/02/03/06：01 无漂移；00/02/03/06 已只更新
+  “独立静态 runner 已有合成证据”的事实，没有把 candidate 写成 accepted Gold，也没有把
+  静态 Eval 写成完整 M3 已完成。

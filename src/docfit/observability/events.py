@@ -34,7 +34,6 @@ _OBJECT_ID = re.compile(r"^obj-[0-9a-f]{24}$")
 _EVIDENCE_ID = re.compile(r"^[a-z0-9][a-z0-9_.:-]{0,255}$")
 ALLOWED_OBSERVATION_ATTRIBUTE_KEYS = frozenset(
     {
-        "adobe_sdk_version",
         "answered",
         "api_error_status",
         "app_version",
@@ -49,7 +48,6 @@ ALLOWED_OBSERVATION_ATTRIBUTE_KEYS = frozenset(
         "check_count",
         "committed",
         "coverage_state",
-        "crop_count",
         "dpi",
         "duration_api_ms",
         "errors",
@@ -75,6 +73,7 @@ ALLOWED_OBSERVATION_ATTRIBUTE_KEYS = frozenset(
         "officecli_version",
         "operation_count",
         "operation_types",
+        "overview",
         "option_count",
         "output_tokens",
         "page_count",
@@ -83,9 +82,11 @@ ALLOWED_OBSERVATION_ATTRIBUTE_KEYS = frozenset(
         "pdf_available",
         "provider",
         "provider_version",
+        "region_count",
+        "renderer",
+        "renderer_version",
         "question_count",
         "reason_code",
-        "render_intent",
         "report_run_id",
         "report_schema",
         "required_visual_coverage",

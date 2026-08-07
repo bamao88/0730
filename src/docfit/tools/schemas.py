@@ -117,58 +117,69 @@ EDIT_SCHEMA: JsonSchema = {
 RENDER_SCHEMA: JsonSchema = {
     "type": "object",
     "properties": {
-        "task_root": _TASK_ROOT,
         "input_docx": {"type": "string"},
-        "render_intent": {
-            "type": "string",
-            "enum": ["baseline", "edit_feedback", "candidate_verification"],
-        },
-        "output_dir": {"type": "string"},
-        "baseline_render_ref": {"type": "string"},
-        "focus_object_refs": {"type": "array", "items": OBJECT_REF_SCHEMA},
+        "overview": {"type": "boolean"},
     },
-    "required": ["input_docx", "render_intent", "output_dir"],
+    "required": ["input_docx"],
     "additionalProperties": False,
 }
 
 VISUAL_REVIEW_SCHEMA: JsonSchema = {
     "type": "object",
     "properties": {
-        "task_root": _TASK_ROOT,
-        "render_ref": {"type": "string"},
+        "render_ref": {"type": "string", "pattern": "^render:v2:[0-9a-f]{64}$"},
         "mode": {
             "type": "string",
-            "enum": ["pages", "crops", "contact_sheet", "compare", "m0_image_smoke"],
+            "enum": ["contact_sheet", "pages", "regions", "compare"],
+        },
+        "quality": {
+            "type": "string",
+            "enum": ["thumbnail", "review", "detail"],
         },
         "pages": {
             "type": "array",
             "items": {"type": "integer", "minimum": 1},
             "uniqueItems": True,
         },
-        "crops": {
+        "regions": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                    "page": {"type": "integer", "minimum": 1},
-                    "bbox": {
+                    "selector": {
+                        "type": "string",
+                        "enum": ["object_ref", "text", "image_bbox"],
+                    },
+                    "object_ref": OBJECT_REF_SCHEMA,
+                    "text": {"type": "string", "minLength": 1},
+                    "occurrence": {"type": "integer", "minimum": 1},
+                    "evidence_ref": {
+                        "type": "string",
+                        "pattern": "^visual:v2:[0-9a-f]{64}$",
+                    },
+                    "bbox_px": {
                         "type": "array",
                         "items": {"type": "integer", "minimum": 0},
                         "minItems": 4,
                         "maxItems": 4,
                     },
+                    "padding": {"type": "integer", "minimum": 0, "maximum": 256},
                 },
-                "required": ["page", "bbox"],
+                "required": ["selector"],
                 "additionalProperties": False,
             },
         },
-        "baseline_render_ref": {"type": "string"},
-        "focus": {"type": "array", "items": {"type": "string"}},
+        "compare_render_ref": {
+            "type": "string",
+            "pattern": "^render:v2:[0-9a-f]{64}$",
+        },
+        "cursor": {"type": "string"},
     },
     # A single flat object is intentional: the supported Anthropic-compatible
     # backends interpret top-level oneOf as a literal argument. Real review
-    # modes still require render_ref at the service boundary.
-    "required": ["mode"],
+    # Mode-specific fields remain runtime-validated because compatible
+    # backends interpret top-level oneOf as a literal Tool argument.
+    "required": ["render_ref", "mode"],
     "additionalProperties": False,
 }
 

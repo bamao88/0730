@@ -14,29 +14,68 @@ from PIL import Image
 from docfit.template.comparison import TemplateComparisonService
 from docfit.template.compile_artifact import compile_artifact_decisions
 from docfit.template.observation import TemplateObservationService
-from docfit.template.ports import RenderedDocument
-from docfit.tools.runtime import ToolFailure, sha256_file, sha256_json
+from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
 from docfit.tools.template_tools import template_build
+from docfit.visual.evidence import render_reference, visual_reference
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE = PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
 REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
 
 
-class _CandidateRenderer:
-    def render(
-        self,
-        document: Path,
-        *,
-        visual_level: str,
-        output: Path,
-    ) -> RenderedDocument:
-        assert visual_level == "candidate_verification"
-        pages_directory = output / "pages"
-        pages_directory.mkdir()
-        page = pages_directory / "page-0001.png"
-        Image.new("RGB", (80, 120), "white").save(page)
-        return RenderedDocument((page,), {"name": "fake-boundary"})
+def _seed_visual_evidence(task_root: Path, document_sha256: str) -> tuple[str, str]:
+    renderer = {
+        "name": "libreoffice",
+        "version": "LibreOffice 25.2.3.2 520(Build:2)",
+        "container_image_digest": "sha256:test",
+        "font_environment_digest": "f" * 64,
+        "locale": "zh_CN.UTF-8",
+        "pdf_export_options": "test",
+    }
+    render_ref = render_reference(
+        {"document_sha256": document_sha256, "renderer": renderer}
+    )
+    render_path = (
+        task_root
+        / ".docfit/evidence/renders"
+        / render_ref.removeprefix("render:v2:")
+    )
+    views = render_path / "views"
+    views.mkdir(parents=True)
+    pdf = render_path / "document.pdf"
+    pdf.write_bytes(b"%PDF-1.4\n% test\n")
+    atomic_write_json(
+        render_path / "manifest.json",
+        {
+            "schema_version": 2,
+            "render_ref": render_ref,
+            "document_sha256": document_sha256,
+            "page_count": 1,
+            "fidelity": "approximate",
+            "renderer": renderer,
+            "files": [
+                {"path": "document.pdf", "sha256": sha256_file(pdf), "bytes": pdf.stat().st_size}
+            ],
+        },
+    )
+    identity = {"render_ref": render_ref, "view": "page", "page": 1, "dpi": 144}
+    evidence_ref = visual_reference(identity)
+    opaque = evidence_ref.removeprefix("visual:v2:")
+    image = views / f"page-0001-{opaque}.png"
+    Image.new("RGB", (80, 120), "white").save(image)
+    atomic_write_json(
+        image.with_suffix(".json"),
+        {
+            "schema_version": 2,
+            "evidence_ref": evidence_ref,
+            "render_ref": render_ref,
+            "identity": identity,
+            "image_sha256": sha256_file(image),
+            "page": 1,
+            "pages": [1],
+        },
+    )
+    return render_ref, evidence_ref
 
 
 def _prepare_spec(
@@ -50,16 +89,21 @@ def _prepare_spec(
     observed = TemplateObservationService().create(
         {
             "input_docx": final_relative,
-            "visual_level": "none",
             "focus": ["structure", "slot_candidates"],
         },
         task_root=task_root,
     )
-    compared = TemplateComparisonService(_CandidateRenderer()).final_review(
+    render_ref, evidence_ref = _seed_visual_evidence(
+        task_root, str(observed["document_sha256"])
+    )
+    compared = TemplateComparisonService().final_review(
         {
             "review_mode": "final_review",
             "final_snapshot_ref": observed["snapshot_ref"],
-            "visual_level": "candidate_verification",
+            "render_ref": render_ref,
+            "reviewed_pages": [1],
+            "evidence_refs": [evidence_ref],
+            "findings": [],
         },
         task_root=task_root,
     )
@@ -159,7 +203,7 @@ def _prepare_spec(
         "final_review": {
             "final_snapshot_ref": observed["snapshot_ref"],
             "comparison_ref": compared["comparison_ref"],
-            "visual_level": "candidate_verification",
+            "render_ref": render_ref,
             "page_count": 1,
             "image_dispositions": [
                 {

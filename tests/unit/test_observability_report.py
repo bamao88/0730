@@ -100,7 +100,7 @@ def test_completed_v2_projects_only_the_final_evidence_category() -> None:
 
     assert (
         projected["final_evidence_category"]
-        == "adobe_candidate_full_page_validation_v1"
+        == "libreoffice_full_page_validation_v2"
     )
     assert "/private" not in json.dumps(projected)
 

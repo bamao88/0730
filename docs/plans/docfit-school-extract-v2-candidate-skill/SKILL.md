@@ -42,6 +42,10 @@ Tool/compiler 成功都不能替代你的结果检查。
 2. 读取 Registry ID/version/hash，理解可用 `field_id`、类型、字段基数和 value source。
 3. 调用 `template_observe.create` 建立结构 snapshot；根据任务需要选择 structure、visible
    objects、styles 和 slot candidates。
+   如果返回 `run_inventory_omitted_use_query`，段落对象已经完整内联，run 对象仍保存在
+   snapshot；先用段落对象建立全局映射，只在同段标签/填写区等需要精确目标时 query 到 run。
+   如果返回 `object_inventory_omitted_use_query`，则按 requirements 中的字段、标签和占位文字
+   分段 query。不得把省略的 inline inventory 解释为零对象、零 slot 或零 mutation。
 4. 需要定位文字或对象时使用 `template_observe.query`。默认查询 paragraph；当标签与填写区共享
    段落、必须只物化局部内容时，显式使用 `kinds: [run]` 查询 run，并保留标签和其他同段内容。
    保留全部匹配；不要凭页码、段落序号或相似文字静默选一个。

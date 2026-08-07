@@ -514,7 +514,7 @@ spec_digest: <sha256>
 ## 9. 安全、隐私与性能
 
 - 决定文件和 canonical 输出继承任务材料敏感级别，不写日志或最终摘要；
-- compiler 不访问网络、Adobe、OfficeCLI 或凭据；
+- compiler 不访问网络、LibreOffice、OfficeCLI 或凭据；
 - source path 在输出中使用 task-relative path，禁止绝对路径；
 - 限制 input bytes、数组项、文本长度、ref 数量和 resolver IO；
 - 同一输入相同版本产生稳定输出，便于 cache 和审计；

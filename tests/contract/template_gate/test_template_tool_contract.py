@@ -16,15 +16,17 @@ def _nested(value: object) -> list[object]:
     return []
 
 
-def test_candidate_template_server_has_exact_four_tool_contract() -> None:
+def test_candidate_template_server_has_four_domain_and_two_visual_tools() -> None:
     assert TEMPLATE_LOGICAL_TOOL_NAMES == (
         "template_observe",
         "template_mutate",
         "template_compare",
         "template_build",
     )
-    assert tuple(
-        f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES
+    assert (
+        *(f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES),
+        "mcp__docfit__docx_render",
+        "mcp__docfit__docx_visual_review",
     ) == TEMPLATE_FULL_TOOL_NAMES
     assert tuple(tool.name for tool in TEMPLATE_TOOLS) == TEMPLATE_LOGICAL_TOOL_NAMES
     assert build_template_tool_server()["name"] == "docfit"

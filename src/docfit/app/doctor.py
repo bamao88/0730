@@ -1,4 +1,4 @@
-"""Deterministic and provider readiness checks for DocFit."""
+"""Deterministic and visual-renderer readiness checks for DocFit."""
 
 from __future__ import annotations
 
@@ -32,8 +32,6 @@ from docfit.app.settings import (
     merged_agent_environment,
 )
 from docfit.tools import MCP_SERVER_NAME
-from docfit.tools.adobe import AdobePdfServicesAdapter
-from docfit.tools.image_smoke import make_smoke_png
 from docfit.tools.images import poppler_versions
 from docfit.tools.officecli import (
     OFFICECLI_EXPECTED_SHA256,
@@ -41,11 +39,12 @@ from docfit.tools.officecli import (
     OfficeCliAdapter,
 )
 from docfit.tools.runtime import ToolFailure, sha256_file
+from docfit.visual.renderer import LibreOfficeRenderer
 
 from .smoke import SMOKE_CASE_VERSIONS, SMOKE_CASES, receipt_directory
 
 CheckStatus = Literal["PASS", "NOT_READY", "FAIL"]
-Requirement = Literal["base", "agent-smoke", "provider"]
+Requirement = Literal["base", "agent-smoke", "visual-renderer"]
 
 
 @dataclass(frozen=True)
@@ -145,7 +144,7 @@ def run_doctor(
             "python",
             "PASS" if current_python == (3, 12) else "FAIL",
             f"Python {current_python[0]}.{current_python[1]}; M0 requires 3.12.",
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     checks.append(
@@ -153,7 +152,7 @@ def run_doctor(
             "claude_agent_sdk",
             "PASS" if sdk_version else "FAIL",
             f"claude-agent-sdk {sdk_version}" if sdk_version else "Package is not installed.",
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
 
@@ -175,7 +174,7 @@ def run_doctor(
                 if missing_files
                 else "Project metadata, lock, Python pin, and both domain Skills are present."
             ),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     permission_ok = os.access(project, os.R_OK | os.W_OK)
@@ -187,7 +186,7 @@ def run_doctor(
                 f"Project root is "
                 f"{'readable and writable' if permission_ok else 'not writable'}: {project}"
             ),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
 
@@ -227,7 +226,7 @@ def run_doctor(
                 if config_ok
                 else "SDK permission or discovery configuration does not match the P1 contract."
             ),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     policy_ok = DIRECTORY_POLICY == (
@@ -241,7 +240,7 @@ def run_doctor(
             "directory_policy",
             "PASS" if policy_ok else "FAIL",
             ("The Tool boundary fixes input as read-only and work/output as writable."),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     trusted_basic_tools_ok = TRUSTED_BASIC_TOOLS == ("Bash", "Write")
@@ -253,7 +252,7 @@ def run_doctor(
                 "Bash and Write are visible and auto-approved for the main Agent without a "
                 "DocFit path gate; the read-only unit analyst still receives neither tool."
             ),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     read_policy_ok = MAIN_AGENT_READ_POLICY == (
@@ -273,7 +272,7 @@ def run_doctor(
                 "Read, Glob, and Grep require canonical paths under project Skill references, "
                 "product Knowledge, or the current task; sensitive and escaping paths are denied."
             ),
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
     checks.append(
@@ -281,28 +280,10 @@ def run_doctor(
             "logging_policy",
             "PASS" if LOGGING_POLICY == "metadata_only_no_document_body" else "FAIL",
             "CLI and smoke receipts record metadata only, never document body content.",
-            ("base", "agent-smoke", "provider"),
+            ("base", "agent-smoke", "visual-renderer"),
         )
     )
 
-    image = make_smoke_png()
-    image_ok = image.startswith(b"\x89PNG\r\n\x1a\n") and len(image) > 500
-    checks.append(
-        DoctorCheck(
-            "image_tool_payload",
-            "PASS" if image_ok else "FAIL",
-            f"Generated deterministic PNG payload ({len(image)} bytes).",
-            ("base", "agent-smoke"),
-        )
-    )
-    checks.append(
-        DoctorCheck(
-            "iteration_rendering",
-            "PASS" if image_ok else "FAIL",
-            "The synthetic page image path is available for Agent iteration evidence.",
-            ("base", "agent-smoke"),
-        )
-    )
     if selected_env_file is None:
         env_file_status: CheckStatus = "PASS" if backend_names else "NOT_READY"
         env_file_detail = (
@@ -368,25 +349,29 @@ def run_doctor(
             "officecli_backend",
             "PASS" if office_ok else "NOT_READY",
             office_detail,
-            ("provider",),
+            ("visual-renderer",),
         )
     )
 
     try:
-        adobe = AdobePdfServicesAdapter.from_environment(environment, env_file=env_file)
-        adobe_ok = True
-        adobe_detail = (
-            f"Adobe PDF Services SDK {adobe.version}; service-principal configuration is ready."
+        visual_image = (environment or {}).get("DOCFIT_VISUAL_IMAGE")
+        renderer = LibreOfficeRenderer(image=visual_image)
+        renderer_environment = renderer.environment()
+        renderer_ok = True
+        renderer_detail = (
+            f"{renderer_environment.version}; image "
+            f"{renderer_environment.container_image_digest}; fonts "
+            f"{renderer_environment.font_environment_digest}."
         )
     except ToolFailure as error:
-        adobe_ok = False
-        adobe_detail = error.message
+        renderer_ok = False
+        renderer_detail = error.message
     checks.append(
         DoctorCheck(
-            "adobe_pdf_services_backend",
-            "PASS" if adobe_ok else "NOT_READY",
-            adobe_detail,
-            ("provider",),
+            "libreoffice_visual_renderer",
+            "PASS" if renderer_ok else "NOT_READY",
+            renderer_detail,
+            ("visual-renderer",),
         )
     )
 
@@ -394,14 +379,18 @@ def run_doctor(
     poppler_ok = all(poppler.values())
     checks.append(
         DoctorCheck(
-            "pdf_page_derivation",
+            "pdf_visual_derivation",
             "PASS" if poppler_ok else "NOT_READY",
             (
-                f"pdftoppm: {poppler['pdftoppm']}; pdfinfo: {poppler['pdfinfo']}."
+                f"pdftoppm: {poppler['pdftoppm']}; pdfinfo: {poppler['pdfinfo']}; "
+                f"pdftotext: {poppler['pdftotext']}."
                 if poppler_ok
-                else "pdftoppm and pdfinfo are both required for converted PDF page derivation."
+                else (
+                    "pdftoppm, pdfinfo, and pdftotext are required for LibreOffice visual "
+                    "evidence."
+                )
             ),
-            ("provider",),
+            ("visual-renderer",),
         )
     )
 

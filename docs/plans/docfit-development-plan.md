@@ -5,6 +5,8 @@
 > 长期基线：`docs/docfit-00-index.md`–`docs/docfit-06-development-roadmap.md`
 > 后续权限修订：本计划的“源只读 / 主 Agent 单一写入”记录 M1–M2 当时的行为与责任
 > 边界；当前 Bash/Write 权限以 06 第 6.7 节为准，不构成文件系统 sandbox。
+> 视觉架构修订：本文中的旧视觉后端、intent、成本和完成证据仅是 2026-08-03 历史记录，
+> 已被 `docfit-libreoffice-visual-evidence-v2.md` clean break 取代，不再是当前合同或可复用证据。
 
 ## Plan Ledger
 

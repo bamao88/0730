@@ -1,16 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-import base64
 import shutil
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from PIL import Image
-
 from docfit.template.observation import TemplateObservationService
-from docfit.template.ports import RenderedDocument
 from docfit.tools.runtime import sha256_file
 from docfit.tools.template_tools import template_observe
 
@@ -58,6 +54,29 @@ def _mixed_run_task(tmp_path: Path) -> tuple[Path, Path]:
     return task_root, source
 
 
+def _large_task(tmp_path: Path) -> tuple[Path, Path]:
+    task_root, source = _task(tmp_path)
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    body = root.find(f"{W}body")
+    assert body is not None
+    for index in range(120):
+        paragraph = ET.SubElement(body, f"{W}p")
+        run = ET.SubElement(paragraph, f"{W}r")
+        ET.SubElement(run, f"{W}t").text = f"FIELD-{index}"
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+    return task_root, source
+
+
 def test_observe_create_publishes_hash_bound_snapshot_without_mutating_source(
     tmp_path: Path,
 ) -> None:
@@ -71,7 +90,6 @@ def test_observe_create_publishes_hash_bound_snapshot_without_mutating_source(
                 "task_root": str(task_root),
                 "action": "create",
                 "input_docx": "input/school-template.docx",
-                "visual_level": "none",
                 "focus": ["structure", "slot_candidates"],
             }
         )
@@ -82,8 +100,6 @@ def test_observe_create_publishes_hash_bound_snapshot_without_mutating_source(
     assert structured["result_state"] == "observed"
     assert structured["document_sha256"] == source_hash
     assert structured["snapshot_ref"].startswith("snapshot:v1:")
-    assert structured["render_ref"] is None
-    assert structured["page_count"] is None
     assert structured["content_controls"] == [
         {
             "alias": "author.name.zh",
@@ -108,7 +124,6 @@ def test_observe_query_returns_zero_or_all_matches_without_silent_selection(
                 "task_root": str(task_root),
                 "action": "create",
                 "input_docx": "input/school-template.docx",
-                "visual_level": "none",
                 "focus": ["visible_objects"],
             }
         )
@@ -164,7 +179,6 @@ def test_observe_query_can_select_a_run_without_selecting_its_label_paragraph(
     created = TemplateObservationService().create(
         {
             "input_docx": "input/school-template.docx",
-            "visual_level": "none",
             "focus": ["slot_candidates"],
         },
         task_root=task_root,
@@ -201,80 +215,43 @@ def test_observe_query_can_select_a_run_without_selecting_its_label_paragraph(
     assert run["matches"][0]["context"]["run_index"] == 1
 
 
-class _ThreePageRenderer:
-    def render(
-        self,
-        document: Path,
-        *,
-        visual_level: str,
-        output: Path,
-    ) -> RenderedDocument:
-        assert document.is_file()
-        assert visual_level == "candidate_verification"
-        pages_directory = output / "pages"
-        pages_directory.mkdir()
-        pages: list[Path] = []
-        for page_number in range(1, 4):
-            page = pages_directory / f"page-{page_number:04d}.png"
-            Image.new("RGB", (40, 60), (page_number * 30, 10, 10)).save(page)
-            pages.append(page)
-        return RenderedDocument(tuple(pages), {"name": "fake-boundary"})
-
-
-def test_observe_candidate_images_are_hash_bound_and_cursor_bounded(
+def test_large_snapshot_stays_complete_but_returns_query_guidance(
     tmp_path: Path,
-    monkeypatch,
 ) -> None:
-    task_root, source = _task(tmp_path)
-    source_hash = sha256_file(source)
-    service = TemplateObservationService(_ThreePageRenderer())
-    monkeypatch.setattr(
-        "docfit.tools.template_tools.TemplateObservationService",
-        lambda: service,
+    task_root, _ = _large_task(tmp_path)
+
+    created = TemplateObservationService().create(
+        {
+            "input_docx": "input/school-template.docx",
+            "focus": ["visible_objects", "slot_candidates"],
+        },
+        task_root=task_root,
     )
 
-    created = asyncio.run(
-        template_observe.handler(
-            {
-                "schema_version": 1,
-                "task_root": str(task_root),
-                "action": "create",
-                "input_docx": "input/school-template.docx",
-                "visual_level": "candidate_verification",
-                "focus": ["structure"],
-            }
-        )
-    )["structuredContent"]
-    first = asyncio.run(
-        template_observe.handler(
-            {
-                "schema_version": 1,
-                "task_root": str(task_root),
-                "action": "images",
-                "render_ref": created["render_ref"],
-                "max_images": 2,
-            }
-        )
+    assert created["object_count"] > 100
+    assert created["inline_object_scope"] == "paragraphs"
+    assert created["objects"]
+    assert {item["kind"] for item in created["objects"]} == {"paragraph"}
+    assert any(item["text"] == "FIELD-119" for item in created["objects"])
+    assert created["warnings"] == [
+        {
+            "code": "run_inventory_omitted_use_query",
+            "message": (
+                "All paragraph objects are included and the complete run inventory is stored "
+                "in the snapshot. Use template_observe.query with kinds:[run] when a "
+                "paragraph target is not precise enough."
+            ),
+        }
+    ]
+    queried = TemplateObservationService().query(
+        {
+            "snapshot_ref": created["snapshot_ref"],
+            "query": {
+                "text": "FIELD-119",
+                "match": "exact",
+                "include": ["context"],
+            },
+        },
+        task_root=task_root,
     )
-    second = asyncio.run(
-        template_observe.handler(
-            {
-                "schema_version": 1,
-                "task_root": str(task_root),
-                "action": "images",
-                "render_ref": created["render_ref"],
-                "cursor": first["structuredContent"]["next_cursor"],
-                "max_images": 2,
-            }
-        )
-    )
-
-    assert created["page_count"] == 3
-    assert created["render_ref"].startswith("render:v1:")
-    assert len(first["structuredContent"]["images"]) == 2
-    assert first["structuredContent"]["next_cursor"] is not None
-    assert len([item for item in first["content"] if item["type"] == "image"]) == 2
-    assert len(second["structuredContent"]["images"]) == 1
-    assert second["structuredContent"]["next_cursor"] is None
-    assert base64.b64decode(second["content"][1]["data"]).startswith(b"\x89PNG")
-    assert sha256_file(source) == source_hash
+    assert queried["match_count"] == 1

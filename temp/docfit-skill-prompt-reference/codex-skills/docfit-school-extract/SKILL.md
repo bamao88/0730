@@ -1,70 +1,55 @@
 ---
 name: docfit-school-extract
-description: Convert supplied school thesis templates, legacy Word files, PDFs, requirement docs, and sample theses into a validated docfit school package. Use when onboarding or updating a school directory, extracting fonts/margins/headings/captions/references/front matter/post-body logical pages into school.yaml, requirements.yaml with top-level checks, style_mapping.yaml, cover fragments, reference fixtures, or template-manifest-ready evidence.
+description: 将用户提供的学校论文模板、旧版 Word 文件、PDF、要求文档和论文样例转换为经验证的 Docfit 学校包。适用于接入或更新学校目录，以及将字体、页边距、标题、题注、参考文献、前置部分和正文后逻辑页面提取到 school.yaml、带顶层 checks 的 requirements.yaml、style_mapping.yaml、封面片段、参考固件或可供 template-manifest 使用的证据中。
 ---
 
-# Docfit School Extract
+# Docfit 学校要求提取
 
-## Core Rule
+## 核心规则
 
-Do not pretend this is one-click automatic extraction. Use programs wherever
-they can produce evidence, then make explicit evidence-backed judgments for the
-parts that require human reasoning.
+不要假装这是一键式自动提取。凡是程序能够生成证据的地方，都应使用程序；对于需要人工推理的部分，则应基于明确证据作出显式判断。
 
-Every final school rule should answer:
+每条最终学校规则都应回答：
 
-- What source said this?
-- Was it programmatically extracted, visibly stated, or inferred?
-- What conflict or uncertainty remains?
-- How did validation prove the package is usable?
+- 哪个来源提出了这条规则？
+- 它是由程序提取、在来源中明确写明，还是通过推断得出？
+- 还存在哪些冲突或不确定性？
+- 验证如何证明该学校包可用？
 
-Use `references/evidence-template.md` when the extraction has more than a few
-rules or when sources disagree.
+当提取的规则不止少数几条，或不同来源之间存在分歧时，请使用 `references/evidence-template.md`。
 
-## Workflow
+## 工作流
 
-### 0. Choose Mode
+### 0. 选择模式
 
-For a new school, run the full extraction workflow below.
+对于新学校，运行下面完整的提取工作流。
 
-For an existing school package, first run an audit/update pass: compare
-`school.yaml`, `requirements.yaml` including top-level `checks:`,
-`style_mapping.yaml`, `README.md`, `reference.docx`, and `fixtures/` against the
-committed upstream sources. Do not refresh tracked golden fixtures or binary
-assets just because a script can generate them; refresh them only when a
-rule/source mismatch was found or the user explicitly asked for fixture updates.
+对于已有的学校包，先执行审计/更新流程：将 `school.yaml`、`requirements.yaml`（包括顶层 `checks:`）、`style_mapping.yaml`、`README.md`、`reference.docx` 和 `fixtures/` 与已提交的上游来源进行比较。不要仅仅因为脚本能够生成受版本控制的黄金固件或二进制资产就刷新它们；只有在发现规则/来源不匹配，或用户明确要求更新固件时，才进行刷新。
 
-### 1. Inventory Sources
+### 1. 盘点来源
 
-List all provided files and classify each one:
+列出用户提供的所有文件，并将每个文件归入以下类别之一：
 
-- official Word template
-- legacy `.doc` template
-- PDF/spec text
-- requirement/instruction document
-- accepted thesis sample
-- school fixed form bundle
+- 官方 Word 模板
+- 旧版 `.doc` 模板
+- PDF/规范文本
+- 要求/说明文档
+- 已通过验收的论文样例
+- 学校固定表单包
 
-Preserve originals under `schools/<school-id>/upstream/`, usually
-`upstream/word/`. If a legacy `.doc` must be inspected, convert it with
-LibreOffice and keep both original and converted files:
+将原始文件保存在 `schools/<school-id>/upstream/` 下，通常放在 `upstream/word/` 中。如果必须检查旧版 `.doc`，请使用 LibreOffice 转换它，并同时保留原文件和转换后的文件：
 
 ```bash
 soffice --headless --convert-to docx --outdir /tmp/docfit-school schools/<school-id>/upstream/word/source.doc
 ```
 
-If the visible school name in the source conflicts with the directory slug,
-flag it clearly in the school README and final response. Ask before renaming a
-tracked school id unless the user already requested the rename.
+如果来源中可见的学校名称与目录 slug 冲突，应在学校 README 和最终回复中清楚标明。除非用户已经要求重命名，否则在重命名受版本控制的学校 ID 之前先征求确认。
 
-If an official specification is not checked in, link the exact school page or
-attachment in the README and ledger. Third-party templates, accepted theses, or
-community LaTeX/Word projects must be labeled as visual/reference evidence, not
-as normative sources, unless the school itself publishes them as official.
+如果官方规范未纳入版本控制，应在 README 和证据台账中链接学校页面或附件的确切地址。第三方模板、已通过验收的论文或社区 LaTeX/Word 项目必须标记为视觉/参考证据，不能作为规范性来源，除非学校本身将其作为官方材料发布。
 
-### 2. Extract Programmatic Evidence
+### 2. 提取程序化证据
 
-Prefer deterministic tools before reasoning:
+推理之前优先使用确定性工具：
 
 ```bash
 file <source>
@@ -107,190 +92,111 @@ for style in doc.styles:
 PY
 ```
 
-Use direct OOXML inspection when `python-docx` hides details:
+当 `python-docx` 隐藏细节时，直接检查 OOXML：
 
 ```bash
 unzip -p <source.docx> word/styles.xml | rg "styleId|rFonts|spacing|outlineLvl|jc"
 unzip -p <source.docx> word/document.xml | rg "pgMar|pgSz|tbl|sdt|bookmark"
 ```
 
-Do not treat `uv run docfit features extract` or `word/styles.xml` as the final
-style oracle. Feature extraction and raw style definitions are evidence, but
-official templates often contain visible examples whose paragraph or run direct
-formatting intentionally overrides the named style. For visible examples,
-compute the effective formatting from `docDefaults` → based-on style chain →
-style `pPr/rPr` → paragraph `pPr/rPr` → run `rPr`; then record any conflict
-between the raw style and the visible result. This is especially important for
-TOC field result paragraphs, hyperlinks, and generated examples: inspect the
-actual `word/document.xml` result paragraphs/runs, not only the `toc 1`/`toc 2`
-style definitions.
+不要将 `uv run docfit features extract` 或 `word/styles.xml` 视为最终的样式权威。特征提取和原始样式定义只是证据，而官方模板经常包含可见示例，其中的段落或文本运行直接格式会有意覆盖命名样式。对于可见示例，应按 `docDefaults` → 基于样式的继承链 → 样式 `pPr/rPr` → 段落 `pPr/rPr` → 文本运行 `rPr` 的顺序计算有效格式；然后记录原始样式与可见结果之间的任何冲突。目录域结果段落、超链接和生成的示例尤其需要这样处理：检查 `word/document.xml` 中实际的结果段落/文本运行，而不能只检查 `toc 1`/`toc 2` 样式定义。
 
-When optional files may or may not exist, use `find`, arrays, or shell
-`nullglob`/existence checks instead of naked globs. A failed glob should not
-abort the extraction or silently skip a source class.
+当可选文件可能存在也可能不存在时，应使用 `find`、数组或 shell 的 `nullglob`/存在性检查，而不要直接使用未受保护的 glob。glob 匹配失败不应导致提取中止，也不应让某类来源被静默跳过。
 
-### 3. Resolve Conflicts Deliberately
+### 3. 有意识地解决冲突
 
-Use this precedence for final values:
+最终取值按以下优先级确定：
 
-1. Visible normative school spec text.
-2. Official template visible instruction text.
-3. Official template effective visible examples, including paragraph/run direct
-   formatting and inherited style values.
-4. Official template raw OOXML styles and section properties.
-5. Accepted thesis samples.
-6. Conservative thesis-format heuristics.
+1. 学校规范中可见的规范性文本。
+2. 官方模板中可见的说明文本。
+3. 官方模板中有效的可见示例，包括段落/文本运行直接格式和继承的样式值。
+4. 官方模板中的原始 OOXML 样式和节属性。
+5. 已通过验收的论文样例。
+6. 保守的论文格式启发式规则。
 
-Document any conflict. Example: if converted OOXML says `20mm` top margin but
-visible text says `2.54cm`, use `25.4mm` and note why.
-When a raw style and the effective visible example disagree, do not silently
-choose the style definition. Add a conflict row explaining which layer supplied
-the winning value and whether the renderer/test fixture must encode a direct
-override.
+记录所有冲突。例如：如果转换后的 OOXML 显示上边距为 `20mm`，但可见文本写的是 `2.54cm`，则采用 `25.4mm`，并注明原因。
+当原始样式与有效的可见示例不一致时，不要静默选择样式定义。增加一条冲突记录，解释最终取值来自哪一层，以及渲染器/测试固件是否必须编码直接覆盖。
 
-### 4. Infer The Actual Thesis Contract
+### 4. 推断实际的论文契约
 
-Infer and record at least these areas:
+至少推断并记录以下方面：
 
-- Page: paper size, margins, gutter, header/footer distances.
-- Body: CJK/Latin fonts, size, line spacing, alignment, first-line indent.
-- Headings: H1/H2/H3 fonts, sizes, spacing, alignment, outline levels, numbering
-  scheme, and required separator spaces.
-- Abstract/keywords/TOC: title and body styles, effective TOC entry formatting
-  from visible field results/examples, TOC depth, whether typed TOC lines must
-  be replaced by a Word TOC field.
-- Captions/tables/figures: label text, numbering pattern, reset policy, whether
-  figure captions are below and table captions are above, font/alignment rules.
-- References: heading style, item style, bracketed or period numbering, GB/T
-  rule evidence, continuation handling.
-- Formula and units: whether numbering is chapter-scoped, right-aligned,
-  upright terms/operators, or manual-only.
-- Front/post-body matter: cover, declarations, instructions before the TOC,
-  academic achievements, task books, data-set tables, appendices, author resume,
-  defense/grade forms. Keep these school-owned and outside generic body
-  normalization.
+- 页面：纸张尺寸、页边距、装订线、页眉/页脚距离。
+- 正文：中日韩文字/拉丁文字字体、字号、行距、对齐方式、首行缩进。
+- 标题：H1/H2/H3 的字体、字号、间距、对齐方式、大纲级别、编号方案和所需的分隔空格。
+- 摘要/关键词/目录：标题和正文样式、从可见域结果/示例获得的有效目录条目格式、目录深度，以及是否必须用 Word 目录域替换手工输入的目录行。
+- 题注/表格/图形：标签文本、编号模式、重置策略、图题是否位于图下方及表题是否位于表上方，以及字体/对齐规则。
+- 参考文献：标题样式、条目样式、方括号编号或句点编号、GB/T 规则证据、续行处理。
+- 公式和单位：编号是否按章、是否右对齐、项/运算符是否使用正体，或是否只能手工处理。
+- 前置/正文后内容：封面、声明、目录前说明、学术成果、任务书、数据集表、附录、作者简历、答辩/成绩表。让这些内容保持由学校所有，并置于通用正文规范化范围之外。
 
-### 4a. Build The Logical Page Contract
+### 4a. 构建逻辑页面契约
 
-Do not let the extractor decide logical pages only from whatever content the
-student source happens to contain. The target school's official template and
-requirement documents own the page sequence.
+不要让提取器仅根据学生源文档中碰巧存在的内容来决定逻辑页面。页面顺序由目标学校的官方模板和要求文档决定。
 
-Create an ordered logical-page ledger for every page-like section before and
-after the main body. Include:
+为正文前后每个类似页面的部分创建有序的逻辑页面台账。包括：
 
-- `id`: stable snake-case id, for example `cover`,
-  `originality_statement`, `toc`, `academic_achievements`, `author_resume`,
-  `dataset`, `design_task`, `proposal`, `defense_record`, `grade_form`,
-  `appendix`, or `acknowledgement`.
-- `titles`: visible Chinese/English headings and aliases. Include long forms
-  such as `相关的学术成果目录`, `攻读硕士学位期间取得的学术成果`,
-  `作者简历及攻读硕士学位期间取得的研究成果`, and `学位论文数据集`.
-- `owner`: usually `target_school_template`. Use `source_student_content` only
-  for body content that should be moved into a target-owned slot.
-- `position`: before cover, before TOC, between TOC and body, after references,
-  after appendix, or other explicit ordering evidence.
-- `status`: one of `required`, `optional`, `conditional`, or `manual_only`.
-- `source_policy`: whether content is copied from the student source,
-  generated from metadata, preserved as a school form, or left for manual fill.
-- `empty_policy`: what happens when no student/source content exists.
-- `implementation_notes`: required template slot, manifest slot, parser block
-  kind, heading aliases, stop-title behavior, and validation/review checks.
+- `id`：稳定的 snake_case ID，例如 `cover`、`originality_statement`、`toc`、`academic_achievements`、`author_resume`、`dataset`、`design_task`、`proposal`、`defense_record`、`grade_form`、`appendix` 或 `acknowledgement`。
+- `titles`：可见的中英文标题和别名。包括 `相关的学术成果目录`、`攻读硕士学位期间取得的学术成果`、`作者简历及攻读硕士学位期间取得的研究成果` 和 `学位论文数据集` 等长标题。
+- `owner`：通常为 `target_school_template`。只有应移入目标学校所有槽位的正文内容才使用 `source_student_content`。
+- `position`：封面前、目录前、目录与正文之间、参考文献后、附录后，或证据明确规定的其他顺序位置。
+- `status`：`required`、`optional`、`conditional` 或 `manual_only` 之一。
+- `source_policy`：内容是从学生源文档复制、根据元数据生成、作为学校表单保留，还是留待手工填写。
+- `empty_policy`：学生/源文档中不存在内容时的处理方式。
+- `implementation_notes`：所需模板槽位、manifest 槽位、解析器块类型、标题别名、终止标题行为和验证/审查检查。
 
-Default empty-content policy:
+默认的空内容策略：
 
-- Required target-owned page missing content: keep the page or form shell, add a
-  visible needs-human placeholder, and make strict/final validation fail or
-  report the missing value.
-- Optional target-owned page missing content: keep the logical page in
-  draft/review output with a visible placeholder unless the official school
-  source explicitly says the page should be omitted. Use a sentence like:
-  `【源文档中未识别到本页内容；如学校不要求，可删除本页。】`
-- Conditional page: record the condition and use the optional policy until the
-  condition is known. Do not silently remove it just because the source thesis
-  omitted it.
-- Manual-only signed form or administrative page: keep the school-owned form
-  shell or placeholder and mark it manual-only; do not normalize it as body
-  prose.
-- Source-school-only front matter from the input thesis: strip or ignore it
-  during conversion unless it supplies metadata for the target page. This rule
-  does not authorize deleting target-school logical pages.
+- 目标学校所有的必需页面缺少内容：保留页面或表单外壳，添加醒目的“需要人工处理”占位符，并让严格/最终验证失败或报告缺失值。
+- 目标学校所有的可选页面缺少内容：在草稿/审查输出中保留该逻辑页面和醒目的占位符，除非学校官方来源明确说明应省略该页面。使用类似下面的句子：`【源文档中未识别到本页内容；如学校不要求，可删除本页。】`
+- 条件页面：记录条件；在条件尚不明确时采用可选页面策略。不要仅仅因为源论文省略了该页面就静默删除它。
+- 只能手工处理的签字表单或行政页面：保留学校所有的表单外壳或占位符并将其标记为只能手工处理；不要将它作为正文文本进行规范化。
+- 输入论文中仅属于来源学校的前置内容：转换时移除或忽略，除非它为目标页面提供元数据。此规则并不授权删除目标学校的逻辑页面。
 
-For template-first packages, every target-owned logical page with a visible
-anchor, content control, or bookmark should be represented in
-`template_manifest.yaml` or an equivalent school-specific renderer contract.
-Prefer an explicit empty policy such as `placeholder_review` for optional
-logical pages. Use `remove_block` only when the school source says the final
-document should omit that page and the README explains the decision.
+对于模板优先的学校包，每个具有可见锚点、内容控件或书签且由目标学校所有的逻辑页面，都应在 `template_manifest.yaml` 或等效的学校专用渲染契约中表示。对于可选逻辑页面，优先使用 `placeholder_review` 等显式空内容策略。只有学校来源明确说明最终文档应省略该页面，并且 README 解释了此决定时，才使用 `remove_block`。
 
-Parser and renderer guidance:
+解析器和渲染器指导：
 
-- Treat logical-page headings and aliases as block starts / stop titles, not as
-  ordinary body headings.
-- Post-body pages such as academic achievements, author resume, thesis data
-  set, appendix, and acknowledgement must stop the references block from
-  swallowing them.
-- Front-matter pages such as declarations, usage authorization, abstract, TOC,
-  and pre-TOC instructions must not become chapter headings.
-- If the runtime model lacks a block kind for a school-owned page, record the
-  required new kind or school-specific mapping in `implementation_notes`; do not
-  hide the page by mapping it to `UNKNOWN` without a review finding.
+- 将逻辑页面标题和别名视为块起点/终止标题，而不是普通正文标题。
+- 学术成果、作者简历、论文数据集、附录和致谢等正文后页面必须终止参考文献块，防止它们被参考文献块吞入。
+- 声明、使用授权、摘要、目录和目录前说明等前置页面不得成为章标题。
+- 如果运行时模型缺少学校所有页面所需的块类型，应在 `implementation_notes` 中记录需要新增的类型或学校专用映射；不要通过将页面映射到 `UNKNOWN` 来隐藏它而不产生审查发现。
 
-### 4b. Build A Page-Start Layout Contract
+### 4b. 构建起页布局契约
 
-Do not infer a logical page's visible leading whitespace by counting empty OOXML
-paragraphs alone. Natural pagination, `pageBreakBefore`, explicit page breaks,
-and `nextPage` section boundaries can assign the same empty paragraph to
-different visible pages in Microsoft Word and LibreOffice.
+不要仅通过统计空 OOXML 段落来推断逻辑页面可见的顶部空白。自然分页、`pageBreakBefore`、显式分页符和 `nextPage` 分节边界可能让 Microsoft Word 与 LibreOffice 将同一个空段落分配到不同的可见页面。
 
-For every logical unit that starts a page, record and validate:
+对于每个从新页开始的逻辑单元，记录并验证：
 
-- `boundary_mode`: document start, `pageBreakBefore`, explicit page break, or
-  `nextPage` section.
-- `boundary_owner`: the exact paragraph that owns the boundary. A unit must have
-  one owner; duplicated page and section breaks are forbidden.
-- `first_anchor`: the first visible title, form label, or stable text anchor.
-- `leading_blank_paragraphs`: only blank paragraphs visibly present after the
-  boundary in the canonical renderer. Undeclared blocks between the boundary
-  and first anchor are a build failure.
-- `first_anchor_spacing_before`: explicit paragraph spacing that replaces
-  instruction-derived or otherwise ambiguous empty paragraphs.
-- Section page margins, numbering, and header/footer inheritance.
-- Canonical-renderer page number and anchor offset (or an equivalent screenshot
-  reference) with a small tolerance.
+- `boundary_mode`：文档起点、`pageBreakBefore`、显式分页符或 `nextPage` 分节。
+- `boundary_owner`：拥有该边界的确切段落。一个单元必须只有一个边界所有者；禁止重复的分页符和分节符。
+- `first_anchor`：第一个可见标题、表单标签或稳定的文本锚点。
+- `leading_blank_paragraphs`：仅计算在规范渲染器中，边界之后可见的空段落。边界与第一个锚点之间出现未声明的块时，构建必须失败。
+- `first_anchor_spacing_before`：用于替代说明衍生或其他含义不明确的空段落的显式段前间距。
+- 分节页面的页边距、页码以及页眉/页脚继承关系。
+- 规范渲染器中的页码和锚点偏移量（或等效截图引用），并设置较小的容差。
 
-Prefer paragraph spacing or section geometry over editable blank paragraphs.
-Keep a leading blank paragraph only when the official visible example requires
-one and the canonical renderer proves that it belongs to the new page.
+优先使用段落间距或分节几何属性，而不是可编辑的空段落。只有当官方可见示例要求保留前导空段落，并且规范渲染器证明它属于新页面时，才保留该段落。
 
-Renderer precedence for layout QA:
+用于布局 QA 的渲染器优先级：
 
-1. The renderer used by the school/user for final Word delivery (normally
-   Microsoft Word; use WPS if the user explicitly treats WPS as authoritative).
-2. Official PDF or screenshot evidence from that renderer.
-3. LibreOffice for broad whole-document scanning.
-4. Raw OOXML as structural evidence, not a visible-layout oracle.
+1. 学校/用户用于最终交付 Word 文档的渲染器（通常为 Microsoft Word；如果用户明确将 WPS 视为权威，则使用 WPS）。
+2. 来自该渲染器的官方 PDF 或截图证据。
+3. 用于广泛扫描整个文档的 LibreOffice。
+4. 作为结构证据而非可见布局权威的原始 OOXML。
 
-When Word and LibreOffice disagree, do not average the coordinates and do not
-mark the build accepted because one renderer passes. Record the conflict and
-make the canonical renderer decisive. A final template is not accepted until
-every logical-page start has been reviewed in the canonical renderer.
+当 Word 与 LibreOffice 的结果不一致时，不要对坐标取平均值，也不要因为其中一个渲染器通过就将构建标记为已验收。记录冲突，并以规范渲染器的结果为准。只有在规范渲染器中审查完每个逻辑页面的起始位置后，才能验收最终模板。
 
-Cross-school examples that should be captured by this ledger:
+本台账应涵盖的跨学校示例：
 
-- Nanjing Agricultural undergraduate templates may include
-  `相关的学术成果目录（此项非必需项）`; this is optional, target-owned, and should
-  become a review placeholder when absent.
-- Beijing Jiaotong graduate templates include post-body sections such as
-  appendix, author resume / research achievements, and thesis data set.
-- Hunan Agricultural packages may include task book, proposal, defense record,
-  and grade form pages that are school-owned administrative forms.
-- Generic `致谢` and `附录` are optional in several schools, but optional does
-  not automatically mean "delete during draft conversion."
+- 南京农业大学本科模板可能包含 `相关的学术成果目录（此项非必需项）`；该页面为可选、由目标学校所有，缺失时应成为审查占位页面。
+- 北京交通大学研究生模板包含附录、作者简历/研究成果和学位论文数据集等正文后部分。
+- 湖南农业大学学校包可能包含任务书、开题报告、答辩记录和成绩表页面，这些是学校所有的行政表单。
+- 在多所学校中，通用的 `致谢` 和 `附录` 都是可选页面，但“可选”并不自动意味着“在草稿转换期间删除”。
 
-Useful Chinese size conversions:
+常用的中文字号换算：
 
-| Name | pt |
+| 名称 | pt |
 | --- | ---: |
 | 一号 | 26 |
 | 小二 | 18 |
@@ -302,60 +208,43 @@ Useful Chinese size conversions:
 | 五号 | 10.5 |
 | 小五 | 9 |
 
-Treat `□` in Chinese format docs as an explicit space marker, often one Chinese
-character width or two ASCII spaces. Preserve it as a requirement when it
-affects heading/caption/reference parsing.
+将中文格式文档中的 `□` 视为显式空格标记，通常表示一个汉字宽度或两个 ASCII 空格。当它影响标题/题注/参考文献解析时，将其保留为一项要求。
 
-### 5. Produce Docfit Assets
+### 5. 生成 Docfit 资产
 
-Create or update:
+创建或更新：
 
 - `schools/<school-id>/school.yaml`
 - `style_mapping.yaml`
-- `requirements.yaml` with top-level `checks:`
-- `cover_fragment.xml` or `cover.inject: false` if the template owns cover/front
-  matter
+- 带顶层 `checks:` 的 `requirements.yaml`
+- `cover_fragment.xml`；如果封面/前置内容由模板所有，则设置 `cover.inject: false`
 - `README.md`
-- `upstream/` provenance assets
+- `upstream/` 来源追踪资产
 - `reference.docx`
 - `fixtures/reference.docx`
 - `fixtures/features.json`
 
-For shallow packages, generate reference assets from `school.yaml`:
+对于浅层学校包，根据 `school.yaml` 生成参考资产：
 
 ```bash
 uv run python scripts/gen_school_reference.py <school-id>
 uv run python scripts/build_golden.py <school-id>
 ```
 
-For deep template-first packages, prefer a school-owned `template.docx` with
-content-control or bookmark slots and a `template_manifest.yaml`. Text anchors
-are only a migration bridge for existing templates.
+对于深层的模板优先学校包，优先使用包含内容控件或书签槽位的学校自有 `template.docx`，并配合 `template_manifest.yaml`。文本锚点仅作为现有模板的迁移过渡方案。
 
-Template-first packages may keep `template.docx` and `template_manifest.yaml`
-at the school root while still generating a style `reference.docx` and
-`fixtures/reference.docx` for validation. If a package intentionally omits one
-of these assets, document the exception in `README.md` and make validation
-commands use the actual canonical asset.
+模板优先学校包可以将 `template.docx` 和 `template_manifest.yaml` 保留在学校根目录，同时仍生成用于验证的样式 `reference.docx` 和 `fixtures/reference.docx`。如果学校包有意省略其中某项资产，应在 `README.md` 中记录例外，并让验证命令使用实际的规范资产。
 
-The produced assets should preserve the logical-page contract:
+生成的资产应保留逻辑页面契约：
 
-- `school.yaml` `sections:` should list the target school page order even for
-  optional or manual-only pages.
-- `requirements.yaml` should include evidence rows and checks for each
-  target-owned logical page whose presence, absence, or manual-only status
-  matters.
-- `template_manifest.yaml` should expose target-owned logical pages as slots,
-  fixed blocks, or explicit school-specific renderer responsibilities. Missing
-  optional content should prefer a review-placeholder policy over silent
-  deletion unless school evidence justifies deletion.
-- `README.md` should state which logical pages are required, optional,
-  conditional, or manual-only, and which pages are emitted as placeholders for
-  student review.
+- `school.yaml` 的 `sections:` 应列出目标学校的页面顺序，包括可选或只能手工处理的页面。
+- `requirements.yaml` 应为每个由目标学校所有、且其存在、缺失或只能手工处理状态具有实际意义的逻辑页面包含证据记录和检查。
+- `template_manifest.yaml` 应将由目标学校所有的逻辑页面公开为槽位、固定块或显式的学校专用渲染器职责。可选内容缺失时，应优先采用审查占位符策略，而非静默删除；只有学校证据支持删除时才能例外。
+- `README.md` 应说明哪些逻辑页面是必需、可选、条件性或只能手工处理的，以及哪些页面以占位符形式生成供学生审查。
 
-### 6. Validate
+### 6. 验证
 
-Run the narrowest useful checks, then broaden if runtime assets changed:
+先运行范围最窄且有用的检查；如果运行时资产发生变化，再扩大检查范围：
 
 ```bash
 uv run docfit schools validate <school-id>
@@ -366,30 +255,23 @@ uv run mypy src/
 uv run pytest tests/unit/test_school_coverage.py tests/integration/test_student_fixture_matrix.py
 ```
 
-Use `uv run pytest` when changes touch shared runtime, school discovery, or the
-student-to-target-school conversion matrix.
+如果变更涉及共享运行时、学校发现机制或学生源学校到目标学校的转换矩阵，请使用 `uv run pytest`。
 
-For deep template-first packages, validation must also include:
+对于深层的模板优先学校包，验证还必须包括：
 
-- A machine-readable page-start contract covering every page-owning logical
-  unit, not only the page currently under review.
-- A negative regression fixture proving the validator rejects one extra or one
-  missing page-start line.
-- Full-document rendering in LibreOffice for overflow, page count, and form
-  integrity.
-- A final canonical-renderer review of all logical-unit starts. Preserve
-  screenshots or exported-PDF anchor measurements in the evidence ledger.
+- 覆盖每个拥有页面的逻辑单元、而非仅覆盖当前审查页面的机器可读起页契约。
+- 一个负向回归固件，用于证明多一行或少一行起页内容时验证器会拒绝。
+- 在 LibreOffice 中渲染完整文档，检查溢出、页数和表单完整性。
+- 对所有逻辑单元起始位置进行最终的规范渲染器审查。在证据台账中保留截图或导出的 PDF 锚点测量结果。
 
-### 7. Report Back
+### 7. 回报结果
 
-Summarize:
+总结：
 
-- which sources were used
-- which values were program-extracted
-- which values were inferred and why
-- the logical-page ledger, including required/optional/conditional/manual-only
-  status and empty-content policy
-- unresolved conflicts or manual-only requirements
-- exact validation commands and outcomes
-- whether the package is shallow validation-only or has a slot-based engineering
-  template ready for generic rendering
+- 使用了哪些来源
+- 哪些值由程序提取
+- 哪些值通过推断得到，以及推断原因
+- 逻辑页面台账，包括必需/可选/条件性/只能手工处理状态和空内容策略
+- 尚未解决的冲突或只能手工处理的要求
+- 执行的确切验证命令及结果
+- 该学校包是仅支持浅层验证，还是已经具有可供通用渲染使用的基于槽位的工程模板

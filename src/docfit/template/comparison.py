@@ -5,16 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from docfit.template.ports import TemplateRenderer
-from docfit.template.rendering import TemplateRenderService
 from docfit.template.runtime.store import EvidenceStore
-from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_json
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
+from docfit.visual.evidence import EvidenceStore as VisualEvidenceStore
 
 
 class TemplateComparisonService:
-    def __init__(self, renderer: TemplateRenderer | None = None) -> None:
-        self.rendering = TemplateRenderService(renderer)
-
     def review(self, args: dict[str, Any], *, task_root: Path) -> JsonObject:
         if args.get("review_mode") == "mutation_review":
             return self.mutation_review(args, task_root=task_root)
@@ -174,14 +170,7 @@ class TemplateComparisonService:
                 status="needs_input",
                 origin="request",
                 code="unsupported_review_mode",
-                message="This implementation slice currently supports final_review.",
-            )
-        if args.get("visual_level") != "candidate_verification":
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="candidate_verification_unavailable",
-                message="Final review requires candidate_verification visual evidence.",
+                message="review_mode must be mutation_review or final_review.",
             )
         snapshot_ref = args.get("final_snapshot_ref")
         if not isinstance(snapshot_ref, str):
@@ -193,163 +182,116 @@ class TemplateComparisonService:
             )
         store = EvidenceStore(task_root)
         snapshot = store.resolve(snapshot_ref, expected_kind="snapshot")
-        render_result = self.rendering.create(
-            task_root=task_root,
-            snapshot_ref=snapshot_ref,
-            visual_level="candidate_verification",
-        )
-        render_ref = render_result["render_ref"]
-        if not isinstance(render_ref, str):
-            raise AssertionError("render service returned an invalid reference")
-        render = store.resolve(render_ref, expected_kind="render")
-        pages = render.get("pages")
-        if not isinstance(pages, list) or not pages:
+        visual_store = VisualEvidenceStore(task_root)
+        render_ref = args.get("render_ref")
+        _, render = visual_store.resolve_render(render_ref)
+        if render.get("document_sha256") != snapshot.get("document_sha256"):
             raise ToolFailure(
-                status="error",
-                origin="evidence",
-                code="candidate_verification_unavailable",
-                message="Final candidate page evidence is incomplete.",
+                status="needs_input",
+                origin="request",
+                code="final_render_snapshot_mismatch",
+                message="The LibreOffice render does not bind the final template snapshot.",
             )
-        required_images: list[JsonObject] = []
-        for item in pages:
-            if not isinstance(item, dict) or not isinstance(item.get("page"), int):
+        page_count = render.get("page_count")
+        reviewed_pages = args.get("reviewed_pages")
+        evidence_refs = args.get("evidence_refs")
+        if (
+            not isinstance(page_count, int)
+            or reviewed_pages != list(range(1, page_count + 1))
+            or not isinstance(evidence_refs, list)
+            or not all(isinstance(item, str) for item in evidence_refs)
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="incomplete_review_coverage",
+                message="Final review must cite full-page evidence for every rendered page.",
+            )
+        by_page: dict[int, JsonObject] = {}
+        for evidence_ref in evidence_refs:
+            view = visual_store.resolve_view(evidence_ref)
+            identity = view.metadata.get("identity")
+            page = view.metadata.get("page")
+            if (
+                view.metadata.get("render_ref") != render_ref
+                or not isinstance(identity, dict)
+                or identity.get("view") != "page"
+                or not isinstance(page, int)
+            ):
                 raise ToolFailure(
-                    status="error",
-                    origin="evidence",
-                    code="candidate_verification_unavailable",
-                    message="Final candidate page evidence is invalid.",
+                    status="needs_input",
+                    origin="request",
+                    code="invalid_final_page_evidence",
+                    message="Final review evidence must be full pages from the final render.",
                 )
-            page = item["page"]
-            required_images.append(
-                {
-                    "required_image_id": f"image-final-page-{page:04d}",
-                    "kind": "final_full_page",
-                    "pages": [page],
-                    "image_sha256": item.get("sha256"),
-                    "render_page_path": item.get("path"),
-                }
+            by_page[page] = {
+                "required_image_id": f"image-final-page-{page:04d}",
+                "kind": "final_full_page",
+                "pages": [page],
+                "evidence_ref": evidence_ref,
+                "image_sha256": view.metadata.get("image_sha256"),
+            }
+        if sorted(by_page) != reviewed_pages:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="incomplete_review_coverage",
+                message="Every final page requires one current full-page evidence reference.",
             )
+        findings = args.get("findings", [])
+        if not isinstance(findings, list) or any(not isinstance(item, dict) for item in findings):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="invalid_visual_findings",
+                message="findings must be an array of visual finding objects.",
+            )
+        blockers = [
+            item
+            for item in findings
+            if item.get("blocking") is True or item.get("severity") == "blocking"
+        ]
+        required_images = [by_page[page] for page in reviewed_pages]
         payload: JsonObject = {
-            "schema_version": 1,
+            "schema_version": 2,
             "kind": "comparison",
-            "implementation_version": "0.1.0",
+            "implementation_version": "0.2.0",
             "review_mode": "final_review",
             "final_snapshot_ref": snapshot_ref,
             "document_sha256": snapshot.get("document_sha256"),
-            "visual_level": "candidate_verification",
             "render_ref": render_ref,
-            "page_count": len(required_images),
+            "fidelity": render.get("fidelity"),
+            "renderer": render.get("renderer"),
+            "page_count": page_count,
             "expected_changes": [],
             "unexpected_changes": [],
             "required_images": required_images,
-            "machine_blockers": [],
+            "findings": findings,
+            "machine_blockers": blockers,
         }
         comparison_ref = store.publish("comparison", payload)
         return {
-            "schema_version": 1,
+            "schema_version": 2,
             "call_status": "ok",
             "result_state": "compared",
             "comparison_ref": comparison_ref,
             "document_sha256": snapshot.get("document_sha256"),
             "render_ref": render_ref,
+            "fidelity": render.get("fidelity"),
+            "renderer": render.get("renderer"),
             "expected_changes": [],
             "unexpected_changes": [],
-            "required_images": [
-                {key: value for key, value in item.items() if key != "render_page_path"}
-                for item in required_images
-            ],
-            "machine_blockers": [],
+            "required_images": required_images,
+            "machine_blockers": blockers,
             "next_cursor": None,
             "checks": [
                 {"name": "final_snapshot_integrity", "result": "ok"},
-                {"name": "all_final_pages_required", "result": "ok"},
+                {"name": "libreoffice_render_binding", "result": "ok"},
+                {
+                    "name": "all_final_pages_reviewed",
+                    "result": "ok" if not blockers else "blocked",
+                },
             ],
             "warnings": [],
             "failure": None,
         }
-
-    def images(
-        self,
-        args: dict[str, Any],
-        *,
-        task_root: Path,
-    ) -> tuple[JsonObject, list[Path]]:
-        store = EvidenceStore(task_root)
-        comparison_ref = args.get("comparison_ref")
-        comparison = store.resolve(comparison_ref, expected_kind="comparison")
-        requested = args.get("required_image_ids")
-        max_images = args.get("max_images", 4)
-        if (
-            not isinstance(requested, list)
-            or not requested
-            or not all(isinstance(item, str) for item in requested)
-            or not isinstance(max_images, int)
-            or not 1 <= max_images <= 4
-            or len(requested) > max_images
-        ):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="image_budget_exceeded",
-                message="Required comparison images exceed the per-call budget.",
-            )
-        required = comparison.get("required_images")
-        render_ref = comparison.get("render_ref")
-        if not isinstance(required, list) or not isinstance(render_ref, str):
-            raise ToolFailure(
-                status="error",
-                origin="evidence",
-                code="evidence_invalid",
-                message="The comparison image inventory is invalid.",
-            )
-        by_id = {
-            item.get("required_image_id"): item
-            for item in required
-            if isinstance(item, dict) and isinstance(item.get("required_image_id"), str)
-        }
-        if any(image_id not in by_id for image_id in requested):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="requested_image_not_required",
-                message="A requested image is not required by this comparison.",
-            )
-        render_bundle = store.bundle_path(render_ref, expected_kind="render")
-        selected: list[JsonObject] = []
-        paths: list[Path] = []
-        for image_id in requested:
-            item = by_id[image_id]
-            path_value = item.get("render_page_path")
-            if not isinstance(path_value, str):
-                raise ToolFailure(
-                    status="error",
-                    origin="evidence",
-                    code="evidence_invalid",
-                    message="A required image path is invalid.",
-                )
-            path = (render_bundle / path_value).resolve(strict=True)
-            if render_bundle not in path.parents or sha256_file(path) != item.get("image_sha256"):
-                raise ToolFailure(
-                    status="error",
-                    origin="evidence",
-                    code="evidence_hash_mismatch",
-                    message="A required image failed its integrity check.",
-                )
-            selected.append(
-                {key: value for key, value in item.items() if key != "render_page_path"}
-            )
-            paths.append(path)
-        return (
-            {
-                "schema_version": 1,
-                "call_status": "ok",
-                "result_state": "compared",
-                "comparison_ref": comparison_ref,
-                "images": selected,
-                "next_cursor": None,
-                "checks": [{"name": "required_images_verified", "result": "ok"}],
-                "warnings": [],
-                "failure": None,
-            },
-            paths,
-        )

@@ -1,14 +1,14 @@
 # DocFit Skill 设计（04）
 
 > 状态：最终方案
-> 日期：2026-08-04
+> 日期：2026-08-06
 > 原则：Skill 是 Agent 的论文领域操作手册，不是工作流定义。
 
 本文定义已经批准并在 Provider-independent P1 落地的两个领域 Skill。当前实现已从
 M0 discovery marker 重写 `convert-thesis`，并从零增加只产生当前任务证据的
 `docfit-school-extract`。五个真实 DOCX Tool 与 `docfit convert` 薄应用壳现已接入；
-Skill 的完成声明仍要求当前 Adobe candidate、全页视觉证据和独立验证；凭据、额度、
-网络或 backend 失败时必须保留缺口。本地锁屏不属于产品依赖。
+Skill 的完成声明要求当前 V2 LibreOffice render、全页视觉证据和独立验证；renderer、
+Poppler 或环境失败时必须保留缺口。本地锁屏不属于产品依赖。
 
 两个 Skill 已采用显式渐进式披露：`SKILL.md` 保留目标与判断入口，并用项目相对路径
 指向同目录 `references/`。主 Agent 通过路径受限的 Read 按需加载；关联文件不会由
@@ -70,6 +70,19 @@ Knowledge 和五个 Tool，但不要求按“先提取、再转换”的固定�
 对样式，输出必须区分“Tool 已观测的有效值”“当前材料明确声明的目标值”、
 覆盖范围、冲突和未决属性。Skill 不要求 Agent 从样式经验、历史任务或常识补值。
 
+当任务要求产出可填写模板合同或为未来 M3 Eval 准备 Template Actual 时，模板侧输出
+还必须能够表达：Registry ID/version/hash；模板 hash；`slot_id` / `region_id → field_id`；
+内容类型、slot required 状态、字段语义基数、条件与填充策略；绑定模板快照的
+locator/区域边界；槽值
+样式；`protected/slot/remove` 责任；来源证据、覆盖和未决项。复合槽保存组件 locator，
+连续内容保存 start/end locator。跨模板 field-alignment 只能从各模板合同派生，不取代
+单个模板合同的 target locator。
+
+`field_id` 只表示语义，不携带学校位置或样式。Registry 中还必须区分学生源可提取值、
+任务输入、系统生成和外部/人工资产；否则目录、评审配置或二维码页会被错误要求从学生
+DOCX 中提取。当前三校 candidate 文件尚待 Human 签署和 schema 冻结，不是本 Skill
+已经稳定输出该合同的实现声明。
+
 ### 3.3 可选委派
 
 Skill 可以让主 Agent 直接分析，也可以把证据密集或需要专门通用知识的局部范围交给
@@ -104,127 +117,118 @@ Skill 固定成串行阶段。
 如果来源冲突、适用范围不明或证据不足，Agent 提出最小问题；不能根据文件名、
 历史任务或通用 Knowledge 猜测学校规则。
 
+字段槽连接使用同一份固定的 Content Field Registry ID/version/hash。模板提取结果与
+学生内容提取结果可以共享同一
+`field_id`，但它们分别保留模板 target locator 与学生 source locator；任一 locator 只在
+绑定的文档 hash 下有效。字段相同只能提出候选，不能替代具体 placement、条件裁决或
+写入前置检查。
+
 样式处理使用“观测—语义绑定—确定性解析”边界：Tool 先返回模板中命名样式、
 直接格式、继承后有效值、覆盖、缺失和冲突；Agent 仅判断这些事实对应哪个语义对象。
 当属性仍缺失时，Agent 不读取样式值经验表或国家标准数值表，也不自行选值；它只能
 请求现有 Tool/程序使用已明确选定的版本化国家级标准做逐属性确定性解析，
 或者保留未决并说明缺口。标准无明文、不适用或与当前任务证据冲突时不得静默继续。
 
+### 4.2.1 学生内容投影与 Placement
+
+`convert-thesis` 不增加第三个“学生提取 Skill”。主 Agent 使用现有 `docx_inspect`、通用
+Knowledge、当前任务证据和必要的 Human 确认识别学生内容；当任务或 Eval 需要物化结果
+时，形成绑定学生源 hash 的 Student Content Actual。每项至少保留任务内 `content_id`、
+`field_id` 或未注册状态、内容类型、规范值/原始观测值或复杂对象引用、source
+locator、父项、顺序、
+来源证据和未决状态。
+
+论文级题名、作者等共享事实与它们在封面、摘要等位置的 occurrence 必须分离。一份事实
+可以有多个 source locator；多处值冲突时保留各 occurrence 并询问或标记 unresolved，
+不得任选一处。章节、段落、图、表、公式等有序局部内容继续使用各自 `content_id`、父子
+关系和顺序，不能因 `field_id` 相同而合并。Registry 中没有的可见内容使用
+`field_id: null` 和产物内 `local_field_key` 标记为 `unregistered`；没有目标槽的内容
+另标记为 `unmapped`。两者都要保留来源证据和最终处置，不能为了生成漂亮映射而删除。
+
+主 Agent 根据 Student Content 与 Template Truth 形成当前任务 placement：显式引用一个
+或多个 source `content_id`、共享 `field_id`、具体 target `slot_id/region_id`、action、
+projection/formatter、order、condition、status 和证据。日期拆分、复合值组合或
+枚举显示只能使用可追溯的输入与规则，不得猜测缺失值。以下情况不得仅凭字段
+同名自动确认：一对多、多对一、
+复合槽、连续正文、条件内容、重复/冲突事实、retain/exclude、`generated.*`、任务配置和
+外部整页资产。`unresolved` 必须留给用户或最终报告。
+
+placement 是任务证据，不是 Tool locator。真正调用 `docx_edit` 前，主 Agent 仍使用
+当前学生源/模板工作副本的有效 opaque ref 和 hash 前置条件；文档变化后重新 inspect。
+这是一条可按需物化的数据连接，不是固定的三阶段工作流、全局 Content Ledger 或新的
+运行时组件。
+
 ### 4.3 论文分析
 
-修改前，Agent 使用 `docx_inspect` 获取高信号摘要和对象引用，并使用
-`docx_render(render_intent=baseline)` 首次建立 Adobe 服务转换分页基线。`docx_render` 可以
-随结果附带一张有大小限制的 contact sheet；需要指定页面、裁剪或前后比较时，Agent
-再使用 `docx_visual_review` 读取同一个 `render_ref`。完整解析结果和渲染证据由 Tool
-保存在任务临时目录，原始论文及其 hash 始终是学生内容真值，目标模板及其 hash 始终是
-候选主干真值。渲染结果附带元素 bbox
-映射时，Agent 用它把视觉问题缩小到候选 `object_ref`，但仍通过
-`docx_inspect` / `docx_edit` 的前置条件确认真正目标。
+修改前，Agent 使用 `docx_inspect` 获取结构摘要和当前对象引用，并调用
+`docx_render(input_docx=..., overview=true)` 建立 V2 LibreOffice 视觉快照。默认联系表用于
+全局扫描；Agent 再按风险通过 `docx_visual_review` 请求完整页面、object/text region 或
+修改前后 compare。原始论文及 hash 是学生内容真值，目标模板及 hash 是候选主干真值。
 
-对于分页敏感的论文转换，Adobe PDF Services 可用时，Agent 在修改前
-为输入论文和模板建立一次 `baseline` 证据，不把初始文件冒充最终交付。
-基线页面应尽量绑定当前快照的 `object_ref`、节引用、首尾对象或文字锚点；没有
-可靠映射时只能作为人工视觉参考，不能根据页码驱动修改。Adobe 服务尚不可用
-时，Agent 使用近似渲染开始工作，并保留对应 `verification_gap`。
+分析必须覆盖可能承载可见内容或版式关系的段落、表格、合并单元格、图片、公式、脚注
+尾注、文本框、域、内容控件、书签、编号、节、页眉页脚、跨 run 文本和 Tool 无法可靠
+识别的对象。Agent 根据结构、样式、上下文和当前页面判断语义；Tool 只提供事实、稳定
+引用与证据。
 
-分析必须覆盖可能承载可见内容或版式关系的对象，包括：
-
-- 段落、表格和合并单元格；
-- 图片、公式、脚注尾注和文本框；
-- 域、内容控件、书签、编号；
-- 节、页眉页脚和页面相关属性；
-- 跨多个 run 的逻辑文本；
-- Tool 无法可靠识别的可见对象。
-
-Agent 根据上下文、页面、样式和相邻内容判断语义。Tool 只提供事实和稳定引用，不替 Agent 判断标题、正文或模板说明。
-
-结构事实不能替代页面图片。涉及溢出、空白页、分页、遮挡、图表位置、页眉页脚、
-长标题和整体版式的判断，Agent 必须基于 `docx_render` 随结果返回的有限预览，或
-`docx_visual_review` 从有效 `render_ref` 读取的当前图片证据完成。
-
-整页批次必须同时服从 Tool 图片预算和 SDK transport 消息预算。整页缩放后无法辨认
-的小字、域结果、标题/图题编号或页边界细节，应通过同一 render ref 的受控 crop
-复核。页面中可见的应用错误标记、断裂域/交叉引用、未完成占位或截断必需内容属于
-blocking finding；DOCX 能打开、Adobe 转换成功或结构验证通过都不能覆盖这些视觉事实。
-记录类别和 evidence ref 即可，不在日志或报告中复制周围学生正文。
+结构事实不能替代页面图片。涉及溢出、空白页、分页、遮挡、图表位置、页眉页脚、长
+标题和整体版式的判断必须引用当前 V2 evidence。整页不足以辨认小字、域结果、图题编号
+或边界时请求 detail region。可见应用错误、断裂域/交叉引用、未完成占位或截断必需内容
+属于 blocking finding；DOCX 能打开或 renderer 成功不能覆盖这些视觉事实。
 
 ### 4.4 核心判断原则
 
-- 先观察再修改，不凭段落序号或文件名定位；
-- 始终从干净、可填写的目标模板产生候选工作副本，不以学生论文副本作为候选主干；
-- 把学生内容按当前任务绑定放入模板槽位或区域；固定内容留在模板主干中，说明文字在交付前清理；
-- 跨文档复制学生表格、图片、公式或连续正文时使用来源学生对象引用和目标模板锚点，
-  不把旧的模板节导入兼容操作当作默认转换路线；
-- 模板中的旧目录不是学生正文，学生正文中的标题也不能因外观相似而被当作目录；
-- 空的附录标题、双语图题、跨 run 占位符等边界情况必须根据证据处理；
-- 学生文字与学校固定文字冲突时，优先保护学生内容并询问；
+- 先观察再修改，不凭段落序号、文件名或旧页码定位；
+- 始终从目标模板工作副本产生候选，不以学生论文副本作为候选主干；
+- 学生内容放入当前证据支持的模板槽位/区域，固定内容保留，说明文字在交付前清理；
+- 跨文档复制复杂对象时使用当前来源对象 ref 与目标模板锚点；
 - 无法可靠定位时重新 inspect，不扩大修改范围；
-- 页码只在生成它的 render ref 内有意义；不能把 Adobe 第 N 页直接当作近似 Provider 第 N 页，也不能把页码作为 `docx_edit` 的目标；
-- 修改前保留输入和模板的 `baseline`；修改过程中可以多次使用 OfficeCLI
-  `edit_feedback`，并根据当前 render 的对象映射观察受影响对象、所在页和相邻页；
-- 当 Agent 认为当前文档可能结束本轮时，使用Adobe PDF Services API
-  `candidate_verification` 生成候选证据；在 Agent 实际查看图片前不得称为 final；
-- Agent 只选择 `baseline`、`edit_feedback` 或 `candidate_verification`，不选择或
-  传入具体后端；固定路由由 `docx_render` 内部完成，后端失败不得跨职责静默回退；
-- 如果候选图片暴露问题，Agent 修改文档并继续判断；上一候选 render 可以作为新候选
-  的 `baseline_render_ref`，不需要为了标记“新一轮”再次调用 Adobe PDF Services API；
-- 相同文档 hash、intent、Provider/SDK、转换 profile、环境证据和渲染参数下不得重复
-  请求 Adobe 转换；缓存命中返回已有证据，不产生新的文档渲染；
-- 多次调用 `docx_visual_review` 只是在同一 `render_ref` 上读取不同视图，不产生新
-  render，也不构成新一轮；
-- 目录、页码和跨页对象依赖交付转换时，若没有经过 Agent 查看且绑定当前文档的
-  `candidate_verification` 证据，明确人工复核要求和 `verification_gap`；
-- 结构检查和页面渲染冲突时保留两类证据，不静默选择其中一个。
+- 页码只在生成它的 V2 render 内有意义，不能作为 `docx_edit` 目标；
+- OfficeCLI 语义对象必须在 LibreOffice PDF 中重新定位；mapping 歧义时查看候选完整页；
+- 修改后重新 render；旧 object/evidence ref 不能证明新快照；
+- 相同 render/view identity 使用缓存，不重复启动 renderer 或栅格化；
+- 结构检查与页面观察冲突时保留两类证据，不静默选择其中一个。
 
-这些是判断原则，不是必须按顺序执行的阶段。
+这些是判断原则，不是固定阶段。
 
 ### 4.5 Tool 使用
 
-- `docx_inspect`：通过 OfficeCLI 读取模板与论文事实，复用相同输入的分析缓存；
-- `docx_edit`：通过 OfficeCLI 一次提交一组带前置条件的修改，只使用当前文档的有效对象引用；
-- `docx_render`：用 `render_intent` 区分首次 Adobe 基线、OfficeCLI 编辑反馈和 Adobe 候选
-  验证；产生新的 `render_ref`，或在缓存命中时返回已有 ref，并记录 fidelity、实际
-  后端/SDK、转换 profile、环境可见性、parent ref、分页差异和可选元素映射；
-- `docx_visual_review`：只读取已有 `render_ref`，把指定页面、裁剪图、contact sheet
-  或前后对比图送入当前 Agent 上下文；它不调用 Adobe PDF Services API 或 CLI 渲染，不产生新的
-  文档 render，也不返回 `pass` / `fail`；Agent 以受控批次覆盖整页，并在小字或域错误
-  无法辨认时请求 crop；
-- `docx_validate`：通过 OfficeCLI 与 DocFit 后置检查从源文件和最终文件重新取证，独立检查内容保留、适用格式、占位符、结构和渲染，不把 OfficeCLI 的成功声明当作唯一 oracle。
+- `docx_inspect`：读取模板与论文结构事实，返回绑定当前 hash 的 opaque refs；
+- `docx_edit`：一次提交一组带前置条件的修改，只使用当前文档 ref；
+- `docx_render`：输入只有 DOCX 与 overview，固定生成 `render:v2:` LibreOffice PDF、
+  索引和可选联系表，始终声明 `fidelity: approximate`；
+- `docx_visual_review`：从已有 render 按需返回 contact sheet、pages、regions 或 compare
+  原生图片；它不修改文档、不选择 renderer、不返回语义 pass/fail；
+- `docx_validate`：从源文件和最终文件重新取证，独立检查内容、结构、规则、当前
+  render 和视觉覆盖。
 
-`docx_visual_review` 不替 Agent 做视觉判断。Agent 根据图片形成带页码和 evidence ref 的结构化 finding；应用壳保存这些 findings，`docx_validate` 只核对它们是否对应当前文档、是否覆盖必查页面，以及是否存在 blocking finding。
-
-Agent 不直接修改 OOXML，也不能仅凭底层 MCP 返回成功、输出文件存在或确定性结构检查通过就宣布完成。
+Agent 根据图片形成带 evidence ref 的 findings；应用壳保存 findings，validate 只核对
+当前文档绑定、完整页面覆盖和 blocking finding，不重新解释图片。Agent 不直接修改
+OOXML，也不能仅凭底层成功声明或文件存在就宣布完成。
 
 ### 4.6 Tool 失败时
 
-- `needs_input` 或引用失效：根据现有证据修正调用或重新 inspect；
-- 文档定位歧义或对象不支持：缩小范围，可能损坏内容时停止并询问；
-- 后端或环境错误：仅在输入、调用方式、范围或环境有实际变化时重试固定后端；
-- Adapter 或后置检查失败：不消费该产物，停止并说明；首版不切换到另一职责的后端补位；
-- Adobe PDF Services API 不可用时：可以继续 OfficeCLI 编辑迭代，但保留 `verification_gap`，不得把近似预览作为 Adobe 交付证据或宣布完成；
-- 相同错误在没有新证据时不循环重试；
-- 五个 DocFit Tool 发布的写入产物必须是 `committed: true`，并通过必要后置检查；
-  Bash/Write 支持性产物不产生该 Tool 状态，也不能替代它。
+- `needs_input` 或引用失效：修正调用或重新 inspect/render；
+- 对象映射歧义：查看候选完整页面，必要时缩小 selector 或询问用户；
+- LibreOffice/Poppler/环境错误：只有输入或环境实际变化时重试；不切换视觉路径；
+- adapter 或后置检查失败：不消费、不发布该产物；
+- 相同错误没有新证据时不循环重试；
+- 五个 DocFit Tool 的写入产物必须经过发布后置检查；Bash/Write 支持性产物不能替代。
 
 ### 4.7 完成条件
 
 只有以下事实成立时，Agent 才能报告转换完成：
 
 - 源文件未被覆盖；
-- 最终 DOCX 由目标模板工作副本构建，而不是由学生论文副本构建；
-- 最终 DOCX 存在、能重新打开且 package 关系可解析；
-- 支持范围内的学生文本、表格、图片、公式和其他关键对象没有丢失、重复或错序；
-- 当前任务证据支持的关键格式和模板要求已应用；
-- 必填槽位已填写，模板占位符和说明文字已处理；
-- 输入、模板和最终文件的图片证据与各自文档 hash、Provider、字体和页面绑定；
-- 同一文档 hash 的 OfficeCLI / Adobe 页面比较使用当前快照的对象引用、节引用或文字锚点，不根据相同页码假设内容范围相同；文档 hash 变化后重新 inspect，不复用旧 `object_ref`；
-- 可能影响分页或布局的修改已经通过变化页与相邻页图片复核；
-- 最终文件的全部页面已经由 Agent 分批视觉审查，未解决的 blocking finding 为零；
-- 若声称已经通过 Adobe 交付转换复核，必须存在绑定当前文档、已被 Agent 查看且没有
-  后续修改的 `candidate_verification` + `official_service_conversion` 证据；否则只能
-  说明近似渲染已观察并明确后续交付复核要求；
-- 严重 Tool 错误已解决；
-- 无法自动确认的事项已在最终回复中明确说明。
+- 最终 DOCX 由目标模板工作副本构建，存在、可重新打开且 package 关系可解析；
+- 支持范围内的学生文本与复杂对象没有丢失、重复或错序；
+- 当前任务证据支持的关键格式、模板要求、槽位、占位符和说明文字已处理；
+- 使用 field/placement 合同时，每个 in-scope source 与 required target 都有明确处置；
+- 当前最终 DOCX 有 V2 LibreOffice render，manifest hash 与最终文件一致；
+- renderer/container/font identity 完整且 fidelity 为 `approximate`；
+- 全部最终页面已由 Agent 分批审查，必要细节有 region evidence；
+- findings 引用有效 evidence ref，未解决 blocking finding 为零；
+- 文档在最终 render 后没有再次修改，独立 validate 通过；
+- 无法自动确认的事项已在最终回复中说明。
 
 ### 4.8 Agent 最终回复
 
@@ -234,7 +238,7 @@ Agent 不直接修改 OOXML，也不能仅凭底层 MCP 返回成功、输出文
 - 使用的通用 Knowledge 版本，以及当前任务模板和要求文件的来源 hash；
 - 内容保留、格式、占位符、结构和渲染的验证摘要；
 - Agent 已审查的页面范围、视觉 finding 摘要和对应 evidence refs；
-- 实际使用的 render intent、fidelity、Provider、parent ref 和重要 warning；
+- 当前 render/evidence refs、fidelity、renderer identity 和重要 warning；
 - 仍需人工复核或用户补充的事项。
 
 ## 5. 两个 Skill 共享的可选委派契约
@@ -348,6 +352,12 @@ Agent 可以形成结构化分析、来源 hash、冲突记录和本次转换所
 Bash/Write 保存结果；无论路径位于何处，这些当前任务内容仍是任务证据或中间产物，
 不是 Knowledge Package，也不得自动晋升到产品 Knowledge。
 
+未来 M3 数据准备中，Content Field Registry、Template Truth、Student Content Truth 和
+Placement Truth 也遵守同一边界：Registry 是开放、版本化的跨阶段研发语义合同，
+不由 Eval 或任一 Skill 所有；后三者分别绑定模板 hash、学生源 hash 和双方明确版本。
+它们可以服务多个 Eval 断言，但不会因为被保存就成为学校数据库、产品 Knowledge 或
+跨任务自动复用规则。
+
 处理原则：
 
 - Tool 确定性提取模板结构、有效样式、可见对象、槽位和来源 hash；
@@ -401,9 +411,9 @@ Knowledge 模块不伪装成额外的用户 Skill，也不建立 cover/toc/body 
 - 跨 run 的说明文字与占位符；
 - 合并单元格、脚注尾注、文本框、域和内容控件；
 - 页眉页脚、编号和节属性；
-- 不同渲染器造成的分页差异；
-- Adobe 服务分页基线、CLI 高频反馈、候选证据继承和页面锚点；
-- 对象引用失效、定位漂移和 Provider 伪成功。
+- renderer/font 环境变化造成的分页差异；
+- 联系表、按需页面、局部证据、compare 和语义页面锚点；
+- 对象引用失效、定位漂移和 renderer 伪成功。
 
 这些经验帮助 Agent 判断，不扩展 Tool 数量，也不定义固定路线。
 
@@ -428,10 +438,10 @@ reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
 - 是否出现固定阶段、状态或 checkpoint？
 - 是否绕过五个 Tool 新增了一个模板处理层？
 - 是否在修改前、布局变化后和最终交付前使用了当前图片证据，而不是只看结构数据或旧截图？
-- 是否错误地把页码当成稳定编辑身份，或把 Adobe 与 CLI 的同页码当成同一内容范围？
-- Adobe 转换是否遵守缓存和调用额度，只用于首次 baseline 与必要的 candidate verification？
-- Agent 是否只表达 `render_intent`，而没有选择具体后端或要求跨职责回退？
-- OfficeCLI 与 Adobe PDF Services API 是否仍只承担各自固定职责，没有在 Skill 中出现通用 Provider 平台逻辑？
+- 是否错误地把页码、OfficeCLI 页码或 HTML 坐标当成稳定编辑/视觉身份？
+- 相同 render/view identity 是否命中缓存，文档或环境变化后是否生成新 ref？
+- Agent 是否只请求视图与 selector，而没有选择 renderer 或要求回退？
+- OfficeCLI 与 LibreOffice 是否仍只承担各自固定职责，没有在 Skill 中出现 Provider 平台逻辑？
 - 学生内容是否仍以原始 DOCX 和 hash 为真值？
 - Tool 失败是否根据实际错误语义处理？
 - 新增 Knowledge 是否已经去除学校值，并有多个任务或跨学校 Eval 支持其通用性？
@@ -446,5 +456,9 @@ reference，契约测试验证引用完整性和两棵 Skill 的领域隔离。
   主 Agent 负责？
 - `SKILL.md` 是否以明确项目相对路径按需读取 references，而不是依赖自动加载或临时
   shell 约定？
+- 模板侧是否输出 `slot_id/region_id + target locator + field_id`，学生侧是否输出
+  `content_id + source locator + field_id/未注册状态`，且两侧 locator 分别绑定自己的 hash？
+- placement 是否显式覆盖一对多、多对一、复合、条件、生成、外部和未映射内容，而
+  没有把字段同名当作写入授权？
 
 如果 Skill 需要复杂状态图才能解释，说明设计已经偏离 Agent-first 架构。

@@ -210,7 +210,7 @@ def test_tool_lifecycle_uses_direct_id_and_derives_safe_metrics() -> None:
             tool_use_id="render-1",
             tool_name="mcp__docfit__docx_render",
             result_attributes=(
-                ObservationAttribute("provider", "adobe_pdf_services"),
+                ObservationAttribute("renderer", "libreoffice"),
                 ObservationAttribute("cache_hit", False),
             ),
             evidence=render_evidence,
@@ -262,7 +262,7 @@ def test_tool_lifecycle_uses_direct_id_and_derives_safe_metrics() -> None:
         if relationship.kind == "tool_result"
     )
     assert correlation.metrics.tool_calls.value == 2
-    assert correlation.metrics.adobe_api_calls.value == 1
+    assert correlation.metrics.render_executions.value == 1
     assert correlation.metrics.cache_hits.value == 0
     assert correlation.metrics.pages_viewed.value == 1
     assert correlation.metrics.image_count.value == 2
@@ -571,7 +571,7 @@ def test_incomplete_metric_fields_stay_unknown_while_scoped_pages_remain_countab
         tool_use_id="render-incomplete",
         tool_name="mcp__docfit__docx_render",
         result_attributes=(
-            ObservationAttribute("provider", "adobe_pdf_services"),
+            ObservationAttribute("renderer", "libreoffice"),
         ),
     )
     review_call = _tool_call(
@@ -604,7 +604,7 @@ def test_incomplete_metric_fields_stay_unknown_while_scoped_pages_remain_countab
     assert correlation.dimensions.observation.state == "complete"
     assert correlation.metrics.cache_hits.value is None
     assert correlation.metrics.cache_hits.source == "unknown"
-    assert correlation.metrics.adobe_api_calls.value is None
+    assert correlation.metrics.render_executions.value is None
     assert correlation.metrics.pages_viewed.value == 1
 
 

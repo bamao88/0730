@@ -3,7 +3,7 @@
   "id": "synthetic-core-conversion",
   "fixture": "synthetic",
   "command": "docfit convert",
-  "requires_adobe_candidate": true,
+  "requires_libreoffice_candidate": true,
   "requires_all_page_review": true,
   "assertions": [
     "all_six_required_sdk_tool_uses_observed",

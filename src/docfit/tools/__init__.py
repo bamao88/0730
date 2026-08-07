@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import base64
+from collections.abc import Awaitable, Callable
+from pathlib import Path
 from typing import Any
 
 from claude_agent_sdk import SdkMcpTool, create_sdk_mcp_server, tool
 from claude_agent_sdk.types import McpSdkServerConfig
 from mcp.types import ToolAnnotations
 
-from docfit.tools.image_smoke import make_smoke_png
 from docfit.tools.runtime import ToolFailure
 from docfit.tools.schemas import (
     EDIT_SCHEMA,
@@ -54,6 +54,67 @@ LOGICAL_TOOL_NAMES = (
 )
 FULL_TOOL_NAMES = tuple(f"mcp__{MCP_SERVER_NAME}__{name}" for name in LOGICAL_TOOL_NAMES)
 
+ToolRunner = Callable[
+    [DocFitToolService, dict[str, Any]], Awaitable[dict[str, Any]]
+]
+
+
+async def _run_inspect(
+    service: DocFitToolService, args: dict[str, Any]
+) -> dict[str, Any]:
+    try:
+        return tool_result(service.inspect(args))
+    except ToolFailure as error:
+        return failure_result(error)
+    except Exception:
+        return unexpected_failure_result()
+
+
+async def _run_edit(
+    service: DocFitToolService, args: dict[str, Any]
+) -> dict[str, Any]:
+    try:
+        return tool_result(service.edit(args))
+    except ToolFailure as error:
+        return failure_result(error, committed=False)
+    except Exception:
+        return unexpected_failure_result(committed=False)
+
+
+async def _run_render(
+    service: DocFitToolService, args: dict[str, Any]
+) -> dict[str, Any]:
+    try:
+        structured, images = service.render(args)
+        return tool_result(structured, image_paths=images)
+    except ToolFailure as error:
+        return failure_result(error)
+    except Exception:
+        return unexpected_failure_result()
+
+
+async def _run_visual_review(
+    service: DocFitToolService, args: dict[str, Any]
+) -> dict[str, Any]:
+    try:
+        structured, images = service.visual_review(args)
+        return tool_result(structured, image_paths=images)
+    except ToolFailure as error:
+        return failure_result(error)
+    except Exception:
+        return unexpected_failure_result()
+
+
+async def _run_validate(
+    service: DocFitToolService, args: dict[str, Any]
+) -> dict[str, Any]:
+    try:
+        return tool_result(service.validate(args))
+    except ToolFailure as error:
+        return failure_result(error)
+    except Exception:
+        return unexpected_failure_result()
+
 
 @tool(
     "docx_inspect",
@@ -62,12 +123,7 @@ FULL_TOOL_NAMES = tuple(f"mcp__{MCP_SERVER_NAME}__{name}" for name in LOGICAL_TO
     annotations=_READ_ONLY_ANNOTATIONS,
 )
 async def docx_inspect(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        return tool_result(DocFitToolService().inspect(args))
-    except ToolFailure as error:
-        return failure_result(error)
-    except Exception:
-        return unexpected_failure_result()
+    return await _run_inspect(DocFitToolService(), args)
 
 
 @tool(
@@ -77,57 +133,27 @@ async def docx_inspect(args: dict[str, Any]) -> dict[str, Any]:
     annotations=_WRITE_ANNOTATIONS,
 )
 async def docx_edit(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        return tool_result(DocFitToolService().edit(args))
-    except ToolFailure as error:
-        return failure_result(error, committed=False)
-    except Exception:
-        return unexpected_failure_result(committed=False)
+    return await _run_edit(DocFitToolService(), args)
 
 
 @tool(
     "docx_render",
-    "Render with the fixed intent route: OfficeCLI feedback or Adobe PDF Services evidence.",
+    "Create one content-addressed visual snapshot with the fixed Docker LibreOffice renderer.",
     RENDER_SCHEMA,
     annotations=_WRITE_ANNOTATIONS,
 )
 async def docx_render(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        return tool_result(DocFitToolService().render(args))
-    except ToolFailure as error:
-        return failure_result(error)
-    except Exception:
-        return unexpected_failure_result()
+    return await _run_render(DocFitToolService(), args)
 
 
 @tool(
     "docx_visual_review",
-    "Return images derived only from an existing render ref; includes the transport smoke mode.",
+    "Return on-demand page, region, contact-sheet, or comparison images from a render ref.",
     VISUAL_REVIEW_SCHEMA,
     annotations=_READ_ONLY_ANNOTATIONS,
 )
 async def docx_visual_review(args: dict[str, Any]) -> dict[str, Any]:
-    if args.get("mode") == "m0_image_smoke":
-        return {
-            "content": [
-                {
-                    "type": "text",
-                    "text": "Read the marker and border color from the attached image.",
-                },
-                {
-                    "type": "image",
-                    "data": base64.b64encode(make_smoke_png()).decode("ascii"),
-                    "mimeType": "image/png",
-                },
-            ]
-        }
-    try:
-        structured, images = DocFitToolService().visual_review(args)
-        return tool_result(structured, image_paths=images)
-    except ToolFailure as error:
-        return failure_result(error)
-    except Exception:
-        return unexpected_failure_result()
+    return await _run_visual_review(DocFitToolService(), args)
 
 
 @tool(
@@ -137,12 +163,7 @@ async def docx_visual_review(args: dict[str, Any]) -> dict[str, Any]:
     annotations=_READ_ONLY_ANNOTATIONS,
 )
 async def docx_validate(args: dict[str, Any]) -> dict[str, Any]:
-    try:
-        return tool_result(DocFitToolService().validate(args))
-    except ToolFailure as error:
-        return failure_result(error)
-    except Exception:
-        return unexpected_failure_result()
+    return await _run_validate(DocFitToolService(), args)
 
 
 DOCFIT_TOOLS: tuple[SdkMcpTool[Any], ...] = (
@@ -154,9 +175,42 @@ DOCFIT_TOOLS: tuple[SdkMcpTool[Any], ...] = (
 )
 
 
-def build_docfit_server() -> McpSdkServerConfig:
+def build_docfit_tools(task_root: Path | None = None) -> tuple[SdkMcpTool[Any], ...]:
+    """Return the stable Tools, optionally bound to one application-session root."""
+    if task_root is None:
+        return DOCFIT_TOOLS
+    service = DocFitToolService(task_root=task_root)
+    runners: tuple[ToolRunner, ...] = (
+        _run_inspect,
+        _run_edit,
+        _run_render,
+        _run_visual_review,
+        _run_validate,
+    )
+
+    def bind(
+        registered: SdkMcpTool[Any], runner: ToolRunner
+    ) -> SdkMcpTool[Any]:
+        async def handler(args: dict[str, Any]) -> dict[str, Any]:
+            return await runner(service, args)
+
+        return SdkMcpTool(
+            name=registered.name,
+            description=registered.description,
+            input_schema=registered.input_schema,
+            handler=handler,
+            annotations=registered.annotations,
+        )
+
+    return tuple(
+        bind(registered, runner)
+        for registered, runner in zip(DOCFIT_TOOLS, runners, strict=True)
+    )
+
+
+def build_docfit_server(task_root: Path | None = None) -> McpSdkServerConfig:
     return create_sdk_mcp_server(
         name=MCP_SERVER_NAME,
-        version="1.0.0",
-        tools=list(DOCFIT_TOOLS),
+        version="2.0.0",
+        tools=list(build_docfit_tools(task_root)),
     )

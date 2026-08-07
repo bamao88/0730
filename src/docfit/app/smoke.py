@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import shutil
 import tempfile
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
@@ -29,7 +30,8 @@ from docfit.observability.transcript import (
     isolated_sdk_environment,
 )
 from docfit.tools import FULL_TOOL_NAMES
-from docfit.tools.image_smoke import SMOKE_BORDER_COLOR, SMOKE_MARKER
+
+VISUAL_SMOKE_TEXT = "SYNTHETIC UNIVERSITY"
 
 SmokeCase = Literal["image", "ask-user", "denied-tools", "path-tools", "subagent"]
 SMOKE_CASES: tuple[SmokeCase, ...] = (
@@ -40,11 +42,11 @@ SMOKE_CASES: tuple[SmokeCase, ...] = (
     "subagent",
 )
 SMOKE_CASE_VERSIONS: dict[SmokeCase, int] = {
-    "image": 1,
+    "image": 3,
     "ask-user": 1,
     "denied-tools": 3,
     "path-tools": 3,
-    "subagent": 1,
+    "subagent": 3,
 }
 SMOKE_BACKEND_TIMEOUT_SECONDS = 180
 SMOKE_SYSTEM_PROMPT = (
@@ -110,6 +112,8 @@ async def _collect(
             backend.sdk_environment(),
             config_directory,
         )
+        if task_root is not None:
+            environment["DOCFIT_TASK_ROOT"] = str(task_root.resolve(strict=True))
         options = build_agent_options(
             ask_user,
             task_root=task_root,
@@ -140,21 +144,40 @@ async def _collect(
 
 
 async def run_image_smoke(backend: AgentBackend) -> SmokeReport:
-    prompt = (
-        "This is the DocFit image gate. First invoke the Skill tool to load the "
-        "convert-thesis Skill. Then call mcp__docfit__docx_visual_review with "
-        '{"mode":"m0_image_smoke"}. Read the marker and border color from the returned '
-        "image. In your final response state only what you actually saw; do not infer "
-        "image contents from this prompt."
-    )
-    result, tool_uses, session_ids = await _collect(prompt, backend)
+    with tempfile.TemporaryDirectory(prefix="docfit-image-smoke-") as temporary_value:
+        task_root = Path(temporary_value)
+        input_root = task_root / "input"
+        input_root.mkdir()
+        document = input_root / "school-template.docx"
+        shutil.copy2(project_root() / "evals/fixtures/smoke/school-template.docx", document)
+        render_args = json.dumps(
+            {"input_docx": str(document), "overview": True}, separators=(",", ":")
+        )
+        prompt = (
+            "This is the DocFit native image gate. First invoke the Skill tool to load the "
+            "convert-thesis Skill. Then call mcp__docfit__docx_render exactly once with this "
+            f"JSON object and no other fields: {render_args}. Inspect the returned "
+            "contact-sheet image. If and only if the result status is ok, call "
+            "mcp__docfit__docx_visual_review exactly once with only the returned render_ref, "
+            "mode pages, pages [1], and quality detail. Inspect that full-page image. Do not "
+            "call Bash, Read, or any other Tool, and do not retry. In your final response "
+            "state the exact large university heading you actually saw; do not infer image "
+            "contents from this prompt or inspect document text."
+        )
+        result, tool_uses, session_ids = await _collect(
+            prompt, backend, task_root=task_root
+        )
     text = result.result if result and result.result else ""
-    required_tools = {"Skill", "mcp__docfit__docx_visual_review"}
+    result_excerpt = " ".join(text.split())[:500]
+    required_tools = {
+        "Skill",
+        "mcp__docfit__docx_render",
+        "mcp__docfit__docx_visual_review",
+    }
     passed = (
         result is not None
         and not result.is_error
-        and SMOKE_MARKER in text
-        and SMOKE_BORDER_COLOR.casefold() in text.casefold()
+        and VISUAL_SMOKE_TEXT in text
         and required_tools.issubset(tool_uses)
         and len(session_ids) == 1
     )
@@ -165,16 +188,17 @@ async def run_image_smoke(backend: AgentBackend) -> SmokeReport:
         session_id=result.session_id if result else None,
         tool_uses=tool_uses,
         detail=(
-            "Agent loaded the project Skill, called the image Tool, and read the hidden marker."
+            "Agent loaded the project Skill, rendered a real DOCX, and read its contact-sheet "
+            "and detailed full-page images."
             if passed
             else (
                 "Expected image evidence was incomplete; "
                 f"result_present={result is not None}, "
                 f"result_error={result.is_error if result else None}, "
-                f"marker_observed={SMOKE_MARKER in text}, "
-                f"color_observed={SMOKE_BORDER_COLOR.casefold() in text.casefold()}, "
+                f"heading_observed={VISUAL_SMOKE_TEXT in text}, "
                 f"required_tools_observed={required_tools.issubset(tool_uses)}, "
-                f"session_count={len(session_ids)}."
+                f"session_count={len(session_ids)}, "
+                f"result_excerpt={result_excerpt!r}."
             )
         ),
     )
@@ -366,34 +390,49 @@ async def run_path_tools_smoke(backend: AgentBackend) -> SmokeReport:
 
 async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
     permission_events: list[PermissionAuditEvent] = []
-    prompt = (
-        "This is the DocFit P1 Subagent gate. Load the docfit-school-extract Skill, then "
-        "call Agent with subagent_type docfit-unit-analyst. Its prompt must explicitly "
-        "contain document_sha256=synthetic-p1, analysis_scope=visual-smoke, one selected "
-        "Knowledge module with id=recognition-methods/version=v1/content_digest="
-        "sha256:synthetic/content=synthetic-universal-method, empty task evidence, and "
-        "requested_output=unit_analysis_v1. Tell the Subagent to call docx_inspect once, "
-        "then call docx_visual_review with mode m0_image_smoke and actually inspect the "
-        "image. It must return all unit_analysis_v1 fields, using needs_more_evidence for "
-        "the unavailable DOCX facts and putting the observed image marker and border color "
-        "in findings. After Agent returns, include the complete structured field names and "
-        "the observed marker/color in your own final response."
-    )
-    result, tool_uses, session_ids = await _collect(
-        prompt,
-        backend,
-        permission_events=permission_events,
-    )
+    with tempfile.TemporaryDirectory(prefix="docfit-subagent-smoke-") as temporary_value:
+        task_root = Path(temporary_value)
+        input_root = task_root / "input"
+        input_root.mkdir()
+        document = input_root / "school-template.docx"
+        shutil.copy2(project_root() / "evals/fixtures/smoke/school-template.docx", document)
+        render_args = json.dumps(
+            {"input_docx": str(document), "overview": False}, separators=(",", ":")
+        )
+        prompt = (
+            "This is the DocFit P1 Subagent gate. Load the docfit-school-extract Skill, "
+            "then call mcp__docfit__docx_render exactly once with this JSON object and no "
+            f"other fields: {render_args}. If and only if the render status is ok, call "
+            "Agent with subagent_type "
+            "docfit-unit-analyst. Its prompt must explicitly contain document_sha256="
+            "synthetic-p1, analysis_scope=visual-smoke, one selected Knowledge module with "
+            "id=recognition-methods/version=v1/content_digest=sha256:synthetic/content="
+            "synthetic-universal-method, empty task evidence, requested_output="
+            "unit_analysis_v1, the DOCX path, and the returned render_ref. Tell the Subagent "
+            "to call docx_inspect once, then call docx_visual_review with mode pages, pages "
+            "[1], quality detail, and actually inspect the image. It must return all "
+            "unit_analysis_v1 fields, "
+            "using needs_more_evidence for unavailable facts and putting the exact large "
+            "university heading observed in the image in findings. After Agent returns, "
+            "include the complete structured field names and observed heading in your own "
+            "final response."
+        )
+        result, tool_uses, session_ids = await _collect(
+            prompt,
+            backend,
+            task_root=task_root,
+            permission_events=permission_events,
+        )
     text = result.result if result and result.result else ""
     required_tools = {
         "Skill",
         "Agent",
         "mcp__docfit__docx_inspect",
+        "mcp__docfit__docx_render",
         "mcp__docfit__docx_visual_review",
     }
     forbidden_tools = {
         "mcp__docfit__docx_edit",
-        "mcp__docfit__docx_render",
         "mcp__docfit__docx_validate",
     }
     allowed_named_subagent = any(
@@ -409,8 +448,7 @@ async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
         and not forbidden_tools.intersection(tool_uses)
         and allowed_named_subagent
         and all(field in text for field in UNIT_ANALYSIS_REQUIRED_FIELDS)
-        and SMOKE_MARKER in text
-        and SMOKE_BORDER_COLOR.casefold() in text.casefold()
+        and VISUAL_SMOKE_TEXT in text
         and len(session_ids) == 1
     )
     return SmokeReport(
@@ -421,7 +459,7 @@ async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
         tool_uses=tool_uses,
         detail=(
             "The named read-only Subagent received explicit context, used only inspect and "
-            "visual-review, returned unit_analysis_v1, and observed the image."
+            "visual-review, returned unit_analysis_v1, and observed the real DOCX image."
             if passed
             else (
                 "Subagent evidence was incomplete: "

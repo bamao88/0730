@@ -34,9 +34,9 @@
 - UI proof: 375/768/1280 px、键盘与 focus、长 ID、unknown、条件差异、禁止性能结论、
   comparison 横向滚动、空状态、无第三方资源和无 console error 已检查
 - O1 candidate baseline: 重复 inspect/render、各 Tool 调用数/耗时、retries、cache hit/
-  Adobe calls、实际查看页数、图片字节、Agent turns、Token/cost source 和主/子上下文代理
+  render executions、实际查看页数、图片字节、Agent turns、Token/cost source 和主/子上下文代理
   指标；具体产品运行值留给下一次授权且可比的 cached/live conversion，O0 未为测量制造
-  Adobe Document Transaction
+  新 renderer execution
 - Next decision: 如继续，先批准 O1 的单一主要指标和可比样本；O1 尚未开始
 - Stop condition: 任何 O1–O4、M3、第二 Agent loop、第六 Tool、远程 collector、正文
   留存、跨任务持久缓存，或让核心/云端导入 Word、AppleScript、GUI adapter，都需要新的

@@ -6,7 +6,12 @@ import shutil
 from pathlib import Path
 
 import pytest
-from claude_agent_sdk.types import ResultMessage
+from claude_agent_sdk.types import (
+    PermissionResultAllow,
+    PermissionResultDeny,
+    ResultMessage,
+    ToolPermissionContext,
+)
 
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
@@ -21,6 +26,7 @@ from docfit.app.prepare_template import (
     run_template_agent,
 )
 from docfit.app.settings import AgentBackend
+from docfit.app.template_permissions import make_docfit_schema_version_hook
 from docfit.tools.runtime import ToolFailure, sha256_file
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -94,6 +100,123 @@ def test_prepare_prompt_carries_development_stage_mutation_authority(
     assert "development-stage working copy is intentionally mutable" in prompt
     assert "The absence of pre-existing content controls is not a blocker" in prompt
     assert "Do not ask for authorization merely because a required slot" in prompt
+
+
+def test_prepare_permissions_allow_only_decision_writes_and_compiler_bash(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    backend = AgentBackend(
+        name="minimax",
+        base_url="https://example.invalid/",
+        model="test-model",
+        credential_variable="TEST_KEY",
+        api_key="secret",
+    )
+    config_directory = tmp_path / "sdk-config"
+    config_directory.mkdir()
+    callback = build_prepare_template_options(
+        prepared, backend, config_directory
+    ).can_use_tool
+    assert callback is not None
+    context = ToolPermissionContext()
+
+    decision = prepared.task_root / "work/decisions/mutation-v1.yaml"
+    allowed_write = asyncio.run(
+        callback(
+            "Write",
+            {"file_path": str(decision), "content": "schema_version: 1\n"},
+            context,
+        )
+    )
+    denied_output_write = asyncio.run(
+        callback(
+            "Write",
+            {
+                "file_path": str(
+                    prepared.task_root / "output/template-artifact/build-report.json"
+                ),
+                "content": "{}\n",
+            },
+            context,
+        )
+    )
+    assert isinstance(allowed_write, PermissionResultAllow)
+    assert allowed_write.updated_input is not None
+    assert allowed_write.updated_input["file_path"] == str(decision)
+    assert isinstance(denied_output_write, PermissionResultDeny)
+
+    decision.write_text("schema_version: 1\n", encoding="utf-8")
+    compiler = (
+        prepared.task_root
+        / ".claude/skills/docfit-school-extract/scripts/compile_mutation_plan.py"
+    )
+    compiled = prepared.task_root / "work/compiled/mutation-v1.json"
+    allowed_compiler = asyncio.run(
+        callback(
+            "Bash",
+            {
+                "command": (
+                    f'"$DOCFIT_PYTHON" "{compiler}" '
+                    f'--task-root "{prepared.task_root}" '
+                    f'--input "{decision}" --output "{compiled}"'
+                )
+            },
+            context,
+        )
+    )
+    allowed_compiler_variant = asyncio.run(
+        callback(
+            "Bash",
+            {
+                "command": (
+                    f'cd "{prepared.task_root}" && python3 "{compiler}" '
+                    "--task-root . --input work/decisions/mutation-v1.yaml "
+                    "--output work/compiled/mutation-v2.json 2>&1"
+                )
+            },
+            context,
+        )
+    )
+    denied_copy = asyncio.run(
+        callback(
+            "Bash",
+            {
+                "command": (
+                    "cp input/school-template.docx "
+                    "output/template-artifact/clean-template.docx"
+                )
+            },
+            context,
+        )
+    )
+    assert isinstance(allowed_compiler, PermissionResultAllow)
+    assert allowed_compiler.updated_input is not None
+    assert str(compiler) in allowed_compiler.updated_input["command"]
+    assert isinstance(allowed_compiler_variant, PermissionResultAllow)
+    assert isinstance(denied_copy, PermissionResultDeny)
+
+
+def test_docfit_pre_tool_hook_canonicalizes_minimax_string_schema_version() -> None:
+    hook = make_docfit_schema_version_hook()
+    result = asyncio.run(
+        hook(
+            {
+                "hook_event_name": "PreToolUse",
+                "session_id": "session",
+                "transcript_path": "/tmp/transcript",
+                "cwd": "/tmp",
+                "tool_name": "mcp__docfit__template_observe",
+                "tool_input": {"schema_version": "1", "action": "create"},
+                "tool_use_id": "tool-use",
+            },
+            "tool-use",
+            {"signal": None},
+        )
+    )
+
+    output = result["hookSpecificOutput"]
+    assert output["updatedInput"] == {"schema_version": 1, "action": "create"}
 
 
 def test_prepare_output_schema_requires_the_canonical_relative_artifact_path() -> None:
@@ -177,6 +300,8 @@ def test_run_prepare_template_accepts_only_disk_consistent_built_result(tmp_path
             tool_uses=(
                 "Skill",
                 "mcp__docfit__template_observe",
+                "mcp__docfit__docx_render",
+                "mcp__docfit__docx_visual_review",
                 "mcp__docfit__template_compare",
                 "mcp__docfit__template_build",
             ),
@@ -299,6 +424,8 @@ def test_changed_built_template_requires_mutation_tool_evidence(tmp_path: Path) 
             tool_uses=(
                 "Skill",
                 "mcp__docfit__template_observe",
+                "mcp__docfit__docx_render",
+                "mcp__docfit__docx_visual_review",
                 "mcp__docfit__template_compare",
                 "mcp__docfit__template_build",
             ),

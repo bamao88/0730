@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 from pathlib import Path
 from typing import Any
@@ -15,6 +14,7 @@ from docfit.template.artifact_build import TemplateArtifactBuilder
 from docfit.template.comparison import TemplateComparisonService
 from docfit.template.mutation import TemplateMutationService
 from docfit.template.observation import TemplateObservationService
+from docfit.tools import build_docfit_tools
 from docfit.tools.runtime import JsonObject, ToolFailure, task_root_from_args
 from docfit.tools.template_schemas import (
     TEMPLATE_BUILD_SCHEMA,
@@ -41,7 +41,7 @@ _WRITE_ANNOTATIONS = ToolAnnotations.model_validate(
 )
 
 
-def _result(structured: JsonObject, image_paths: list[Path] | None = None) -> JsonObject:
+def _result(structured: JsonObject) -> JsonObject:
     content: list[JsonObject] = [
             {
                 "type": "text",
@@ -53,14 +53,6 @@ def _result(structured: JsonObject, image_paths: list[Path] | None = None) -> Js
                 ),
             }
         ]
-    for path in image_paths or []:
-        content.append(
-            {
-                "type": "image",
-                "data": base64.b64encode(path.read_bytes()).decode("ascii"),
-                "mimeType": "image/png",
-            }
-        )
     return {
         "content": content,
         "structuredContent": structured,
@@ -88,7 +80,7 @@ def _failure(error: ToolFailure) -> JsonObject:
 
 @tool(
     "template_observe",
-    "Create/query immutable DOCX evidence or read images without mutating the source document.",
+    "Create or query immutable structural DOCX evidence without rendering or mutation.",
     TEMPLATE_OBSERVE_SCHEMA,
     annotations=_OBSERVE_ANNOTATIONS,
 )
@@ -100,9 +92,6 @@ async def template_observe(args: dict[str, Any]) -> dict[str, Any]:
             structured = TemplateObservationService().create(args, task_root=task_root)
         elif action == "query":
             structured = TemplateObservationService().query(args, task_root=task_root)
-        elif action == "images":
-            structured, images = TemplateObservationService().images(args, task_root=task_root)
-            return _result(structured, images)
         else:
             raise ToolFailure(
                 status="needs_input",
@@ -133,7 +122,7 @@ async def template_observe(args: dict[str, Any]) -> dict[str, Any]:
 
 @tool(
     "template_compare",
-    "Create deterministic template comparisons or read only their required images.",
+    "Bind structural comparison to images already reviewed through docx_visual_review.",
     TEMPLATE_COMPARE_SCHEMA,
     annotations=_OBSERVE_ANNOTATIONS,
 )
@@ -149,7 +138,10 @@ async def template_compare(args: dict[str, Any]) -> dict[str, Any]:
                 "after_snapshot_ref",
                 "mutation_ref",
                 "final_snapshot_ref",
-                "visual_level",
+                "render_ref",
+                "reviewed_pages",
+                "evidence_refs",
+                "findings",
             }
             if set(args) - allowed:
                 raise ToolFailure(
@@ -159,27 +151,11 @@ async def template_compare(args: dict[str, Any]) -> dict[str, Any]:
                     message="The comparison request contains unsupported fields.",
                 )
             return _result(TemplateComparisonService().review(args, task_root=task_root))
-        if action == "images":
-            allowed = common | {
-                "comparison_ref",
-                "required_image_ids",
-                "cursor",
-                "max_images",
-            }
-            if set(args) - allowed:
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="invalid_compare_request",
-                    message="The comparison request contains unsupported fields.",
-                )
-            structured, images = TemplateComparisonService().images(args, task_root=task_root)
-            return _result(structured, images)
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="unsupported_compare_action",
-            message="template_compare requires action=create or action=images.",
+            message="template_compare requires action=create.",
         )
     except ToolFailure as error:
         return _failure(error)
@@ -291,7 +267,7 @@ TEMPLATE_LOGICAL_TOOL_NAMES = (
 )
 TEMPLATE_FULL_TOOL_NAMES = tuple(
     f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES
-)
+) + ("mcp__docfit__docx_render", "mcp__docfit__docx_visual_review")
 TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
     template_observe,
     template_mutate,
@@ -300,10 +276,15 @@ TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
 )
 
 
-def build_template_tool_server() -> McpSdkServerConfig:
+def build_template_tool_server(task_root: Path | None = None) -> McpSdkServerConfig:
     """Build the one DocFit server composition used by prepare-template sessions."""
+    shared = {tool.name: tool for tool in build_docfit_tools(task_root)}
     return create_sdk_mcp_server(
         name="docfit",
-        version="2.0.0-candidate",
-        tools=list(TEMPLATE_TOOLS),
+        version="2.0.0",
+        tools=[
+            *TEMPLATE_TOOLS,
+            shared["docx_render"],
+            shared["docx_visual_review"],
+        ],
     )

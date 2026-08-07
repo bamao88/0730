@@ -2,34 +2,36 @@
 
 ## Eval 项目文件目录
 
-> 注：下面是模板提取静态 Eval 实施完成后的目标项目目录，只展开本模块直接相关的
-> 文件。`[现有]` 表示仓库中已经存在且继续保留，`[扩展]` 表示修改现有文件，`[新增]`
-> 表示本模块需要创建，`[生成]` 表示运行产物且不进入源代码，`[临时]` 表示当前设计
-> 阶段使用、正式接入 case 时需要迁移或固定的输入。
+> 注：下面是当前已经落地的项目目录，只展开本模块直接相关的文件。`[已实现]` 表示
+> W0–W5 已有代码和测试，`[新增]` 表示本工作包已经新增的实现文件，`[候选]` 表示文件
+> 已在最终目录但仍未通过 Human Gold 验收，
+> `[生成]` 表示运行产物且被 gitignore，`[不修改]` 表示产品边界，`[临时来源]` 表示只供
+> candidate 准备使用、不会进入评分运行路径。
 
 ```text
 docfit_agent_SDK/
-├── src/docfit/                                          # [现有][不修改] 产品代码；不得导入或承载本 Eval
+├── src/docfit/                                          # [不修改] 产品代码；不得导入、调用或承载本 Eval
 │   └── ...                                              # 产品只产生模板与填写契约，不调用质量评测器
 │
 ├── evals/
-│   ├── README.md                                        # [扩展] 登记 template-extraction suite 的运行方式和边界
+│   ├── README.md                                        # [已实现] 登记 template-extraction suite 的边界和状态
 │   ├── fixtures/                                        # [现有] core suite 的通用/风险 fixture，保持独立
 │   ├── e2e/                                             # [现有] 当前 synthetic-core case，保持独立
 │   │
-│   └── template-extraction/                             # [新增] 模板提取 Eval 的版本化数据资产
-│       ├── README.md                                    # [新增] case 制作、运行、Gold 审核和更新规则
-│       ├── pyproject.toml                               # [新增] Eval 独立依赖、测试和静态检查配置
-│       ├── uv.lock                                      # [新增] Eval 独立锁文件，不改变产品依赖
-│       ├── run_eval.py                                  # [新增] 独立命令入口；不导入 docfit 产品包
+│   └── template-extraction/                             # [已实现] 模板提取 Eval 的独立工程根目录
+│       ├── README.md                                    # [已实现] 运行、输入输出、Gold 审核和更新规则
+│       ├── pyproject.toml                               # [已实现] Eval 独立依赖、测试和静态检查配置
+│       ├── uv.lock                                      # [已实现] Eval 独立锁文件，不改变产品依赖
+│       ├── run_eval.py                                  # [已实现] 独立 CLI；PASS=0，质量非 PASS=2，输入错误=3
+│       ├── materialize_candidate_cases.py               # [已实现] 三校 candidate 准备器；拒绝覆盖 accepted
 │       │
-│       ├── template_extraction_eval/                    # [新增] Eval 自有运行代码，与 src/docfit 物理解耦
+│       ├── template_extraction_eval/                    # [已实现] Eval 自有运行代码，与 src/docfit 物理解耦
 │       │   ├── __init__.py                              # [新增] Eval 包公共入口
 │       │   ├── models.py                                # [新增] 事实、定位器、断言、issue、分数和结论模型
 │       │   ├── contracts.py                             # [新增] case、契约、Registry 和配置加载校验
 │       │   ├── alignment.py                             # [新增] Actual—Gold 稳定对齐
-│       │   ├── scoring.py                               # [新增] 权重、F1、覆盖率和硬失败结论
-│       │   ├── reporting.py                             # [新增] JSON/Markdown 同源报告
+│       │   ├── scoring.py                               # [新增] 双 50 分视角、八分项、F1、覆盖率和硬失败
+│       │   ├── reporting.py                             # [新增] schema-valid JSON/Markdown 同源报告
 │       │   ├── runner.py                                # [新增] 只读串联预检、分析、断言与输出
 │       │   ├── facts/
 │       │   │   ├── __init__.py                          # [新增] Eval 自有统一文档事实入口
@@ -44,7 +46,7 @@ docfit_agent_SDK/
 │       │       ├── slots.py                             # [新增] slot 四个分项
 │       │       └── forbidden_residue.py                 # [新增] remove 禁止残留断言
 │       │
-│       ├── schemas/
+│       ├── schemas/                                     # [已实现] 五类版本化输入/输出机器合同
 │       │   ├── case.schema.json                         # [新增] case manifest 的结构约束
 │       │   ├── fill-contract.schema.json                # [新增] protected/slot/remove、字段、定位和样式契约
 │       │   ├── field-catalog.schema.json                # [新增] Registry 快照的消费侧结构校验
@@ -52,39 +54,40 @@ docfit_agent_SDK/
 │       │   └── report.schema.json                       # [新增] JSON 评分报告的机器契约
 │       │
 │       ├── config/
-│       │   └── scoring-v1.yaml                          # [新增] 固定 100 分权重、容差和硬失败规则
+│       │   ├── scoring-v1.yaml                          # [已实现] 固定 100 分权重、F1 和硬失败规则
+│       │   └── eval-config-v1.yaml                      # [候选] 三校配置；受 Human Gold gate 约束
 │       │
-│       ├── fixtures/
+│       ├── fixtures/                                    # [已实现] 不含真实学校内容的合成验证集
 │       │   ├── build_samples.py                         # [新增] 只生成 S00–S13 小型合成样本
 │       │   ├── manifest.yaml                            # [新增] 样本用途、预期和 hash
 │       │   └── S00-*/ ... S13-*/                       # [新增] 单变量正反例，不含真实学校内容
 │       │
 │       ├── cases/
 │       │   ├── 01-hunau-undergraduate/
-│       │   │   ├── case.yaml                            # [新增] Gold、字段、配置、标记协议和 case 元数据
+│       │   │   ├── case.yaml                            # [候选] 湖南农大；expected_verdict=INPUT_ERROR
 │       │   │   └── gold/
-│       │   │       ├── template.docx                    # [新增] 人工确认的湖南农业大学 Gold 模板
-│       │   │       └── fill-contract.yaml               # [新增] 对应 Gold 填写契约
+│       │   │       ├── template.docx                    # [候选] 最终路径不代表已验收 Gold
+│       │   │       └── fill-contract.yaml               # [候选] 等待字段/样式/protected/remove 人审
 │       │   ├── 02-njau-undergraduate/
-│       │   │   ├── case.yaml                            # [新增] 南京农业大学本科 case manifest
+│       │   │   ├── case.yaml                            # [候选] 南京农大；expected_verdict=INPUT_ERROR
 │       │   │   └── gold/
-│       │   │       ├── template.docx                    # [新增] 人工确认的 Gold 模板
-│       │   │       └── fill-contract.yaml               # [新增] 对应 Gold 填写契约
+│       │   │       ├── template.docx                    # [候选] 有待裁决 validation finding
+│       │   │       └── fill-contract.yaml               # [候选] 等待 Human signoff
 │       │   └── 03-pku-graduate/
-│       │       ├── case.yaml                            # [新增] 北京大学研究生 case manifest
+│       │       ├── case.yaml                            # [候选] 北京大学；expected_verdict=INPUT_ERROR
 │       │       └── gold/
-│       │           ├── template.docx                    # [新增] 人工确认的 Gold 模板
-│       │           └── fill-contract.yaml               # [新增] 对应 Gold 填写契约
+│       │           ├── template.docx                    # [候选] 机器检查不继承历史 Human signoff
+│       │           └── fill-contract.yaml               # [候选] 等待 Human signoff
 │
-│       ├── tests/                                       # [新增] Eval 自有测试，不进入产品 tests 目录
+│       ├── tests/                                       # [已实现] Eval 自有 99-case suite，不进产品 tests
 │       │   ├── unit/
-│       │   │   ├── test_public_api.py                   # [新增] Eval 包导出与无产品 import
+│       │   │   ├── test_package_api.py                  # [新增] Eval 包导出与无产品 import
 │       │   │   ├── test_models.py                       # [新增] status、fact、issue、score 和 report
 │       │   │   ├── test_contracts.py                    # [新增] schema、Registry 和模板—契约一致性
 │       │   │   ├── test_alignment.py                    # [新增] ID、定位器、锚点和 AMBIGUOUS
 │       │   │   ├── test_scoring.py                      # [新增] 权重、F1、覆盖率和硬失败
 │       │   │   ├── test_reporting.py                    # [新增] JSON/Markdown 同源和稳定排序
-│       │   │   ├── test_runner.py                       # [新增] PASS、FAIL、UNKNOWN 和输入失败
+│       │   │   ├── test_case_materializer.py            # [新增] 三校候选物化与防覆盖
 │       │   │   ├── test_sample_builder.py               # [新增] 样本完整、确定性和 schema 有效
 │       │   │   ├── facts/
 │       │   │   │   ├── test_reader.py                   # [新增] parts、story、关系和坏包
@@ -93,23 +96,26 @@ docfit_agent_SDK/
 │       │   │   │   ├── test_effective_style.py          # [新增] 默认值、继承、直接格式和单位
 │       │   │   │   └── test_objects.py                  # [新增] 图片、公式、域、书签和合并关系
 │       │   │   └── evaluators/
+│       │   │       ├── test_evaluators_api.py           # [新增] 三类断言公共导出
 │       │   │       ├── test_protected.py                # [新增] protected 四个分项
 │       │   │       ├── test_slots.py                    # [新增] slot 集合、位置、字段和样式
 │       │   │       └── test_forbidden_residue.py        # [新增] remove 明确命中与不推断
 │       │   ├── contract/
-│       │   │   └── test_eval_contract.py                # [新增] 独立 CLI、输入、输出和 report schema
+│       │   │   ├── test_eval_contract.py                # [新增] 独立环境、schema 和评分合同
+│       │   │   ├── test_cli.py                          # [新增] 四种 CLI 退出语义
+│       │   │   └── test_candidate_gate.py               # [新增] 三校 candidate 均拒绝评分
 │       │   └── integration/
-│       │       └── test_run_eval.py                     # [新增] 最小 Actual—Gold 全链路
+│       │       └── test_runner.py                        # [新增] 最小 Actual—Gold 全链路和确定性
 │       │
 │       └── .runs/<run-id>/<case-id>/                    # [生成] Eval 私有运行输出，保持 gitignore
 │           ├── template-extraction-eval-report.json     # [生成] 评分与门禁机器真源
 │           └── template-extraction-eval-report.md       # [生成] 人工审查摘要
 │
 ├── temp/manual-gold-preparation/eval-template-truth-candidates/
-│   ├── build_candidates.py                              # [临时] 候选资产生成器，不进入评测运行路径
-│   ├── 01-hunau-undergraduate/                          # [临时] 湖南农业大学候选模板和契约
-│   ├── 02-njau-undergraduate/                           # [临时] 南京农业大学本科候选模板和契约
-│   └── 03-pku-graduate/                                 # [临时] 北京大学研究生候选模板和契约
+│   ├── build_candidates.py                              # [临时来源] 候选生成器，不进入评分运行路径
+│   ├── 01-hunau-undergraduate/                          # [临时来源] 湖南农业大学候选证据
+│   ├── 02-njau-undergraduate/                           # [临时来源] 南京农业大学本科候选证据
+│   └── 03-pku-graduate/                                 # [临时来源] 北京大学研究生候选证据
 │
 ├── docs/plans/docfit-content-field-registry/
 │   ├── DESIGN.md                                        # [现有] 跨阶段字段语义、版本和未知字段权威
@@ -153,7 +159,8 @@ readiness、hash 和验证门。Temp 只作为显式、hash 绑定的准备来�
 因此 Eval 可以在只拿到四份核心输入文件和版本化配置的环境中运行；删除产品源码、关闭
 Agent 或不安装产品 wheel，都不应改变同一组输入的评分结果。
 
-> 状态：当前任务的顶层设计基线；W0/G1 与三校 candidate case 目录已物化，评分实现尚未完成
+> 状态：W0–W5/G1–G3 已实现并通过合成链路；三校目录已物化但保持 candidate，W6 的
+> Human Gold 验收和每校正式评分回归尚未通过
 > 本文负责：定义评测目标、输入输出、比较维度、评分口径、能力依赖和现有代码覆盖情况
 > 本文不负责：定义模板如何生成、Gold 如何生产，或安排具体代码实施步骤
 

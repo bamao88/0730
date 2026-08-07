@@ -130,13 +130,12 @@ Skill、Knowledge、Tool 契约、测试、证据记录和人机协作文档同�
 
 | 截图对象 | DOCX 来源 | 当次文件 SHA-256 | 渲染方式 |
 |---|---|---|---|
-| 学生源 Word | `evals/fixtures/smoke/student.docx` | `08e6ebcb95aade162e4bb6065472b3e2b2f49d9af2f5ae38d141971782602eb9` | OfficeCLI 1.0.143 HTML 页面截图 |
-| 目标模板 Word | `evals/fixtures/smoke/school-template.docx` | `cb3e7b5ad2afd82d58400e61ba4881d4f6c08da8c83dcc7dffe1785cfb70fc57` | OfficeCLI 1.0.143 HTML 页面截图 |
-| 填写后候选 Word | 合成 smoke edit 产物 `.tmp/smoke/edited.docx` | `2914b21e7f6cc9ea1ba9fb000d43802712000588c1b531046235e11bbfac6778` | OfficeCLI 1.0.143 HTML 页面截图 |
+| 学生源 Word | `evals/fixtures/smoke/student.docx` | `08e6ebcb95aade162e4bb6065472b3e2b2f49d9af2f5ae38d141971782602eb9` | 历史截图，已被 V2 合同废止 |
+| 目标模板 Word | `evals/fixtures/smoke/school-template.docx` | `cb3e7b5ad2afd82d58400e61ba4881d4f6c08da8c83dcc7dffe1785cfb70fc57` | 历史截图，已被 V2 合同废止 |
+| 填写后候选 Word | 合成 smoke edit 产物 `.tmp/smoke/edited.docx` | `2914b21e7f6cc9ea1ba9fb000d43802712000588c1b531046235e11bbfac6778` | 历史截图，已被 V2 合同废止 |
 
-这些截图用于问题说明和人机共同定位，不是 Microsoft Word 桌面渲染证据，也不是 Adobe
-PDF Services 的 `candidate_verification` 交付证据。以后增加截图时，必须同时记录来源
-DOCX、hash、页码和渲染方式，避免图片与文档版本脱节。
+这些截图只保留为历史问题说明，不是当前证据。新增视觉证据必须通过 V2 LibreOffice
+Evidence Store，并同时绑定 DOCX hash、renderer/font identity、页码和变换参数。
 
 ## 3. 快速定位方法
 

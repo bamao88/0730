@@ -155,7 +155,7 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
     started = time.monotonic()
     fixtures = build_core_fixtures(repository)
     office = OfficeCliAdapter()
-    service = DocFitToolService(office=office)
+    service = DocFitToolService(task_root=repository, office=office)
     run_root = Path(tempfile.mkdtemp(prefix="core-", dir=repository / ".tmp"))
     student = Path(str(fixtures["student"]))
     template = Path(str(fixtures["template"]))
@@ -210,50 +210,57 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
             "INSTRUCTION_TEXT_REMOVE_BEFORE_DELIVERY" not in edited_text,
             "template instruction remains",
         )
-        render = service.render(
-            {
-                "task_root": str(repository),
-                "input_docx": str(output),
-                "render_intent": "edit_feedback",
-                "output_dir": str(run_root / "edit-feedback"),
-                "focus_object_refs": [_ref(edited, kind="table")],
-            }
+        render, overview_images = service.render(
+            {"input_docx": str(output), "overview": True}
         )
         reference = render["render_ref"]
-        page_count = reference["page_count"]
+        page_count = render["page_count"]
         _assert(isinstance(page_count, int) and page_count >= 1, "render has no pages")
+        _assert(len(overview_images) == 1, "render overview image is absent")
         review, images = service.visual_review(
             {
-                "task_root": str(repository),
-                "render_ref": render["render_ref_path"],
+                "render_ref": reference,
                 "mode": "pages",
                 "pages": list(range(1, page_count + 1)),
             }
         )
         _assert(review["status"] == "ok", "visual review failed")
         _assert(len(images) == page_count, "visual review did not return every page")
-        layout = read_json(Path(str(reference["artifacts"]["layout_map"])))
-        mapped = [
-            item
-            for page in layout["pages"]
-            for item in page["elements"]
-            if isinstance(item, dict)
-        ]
-        _assert(len(mapped) == 1, "table bbox was not mapped")
-        _assert(mapped[0]["mapping_quality"] == "approximate", "bbox quality is incorrect")
-        _assert(len(mapped[0]["bbox"]) == 4, "bbox is incomplete")
+        region, region_images = service.visual_review(
+            {
+                "render_ref": reference,
+                "mode": "regions",
+                "quality": "detail",
+                "regions": [
+                    {"selector": "object_ref", "object_ref": _ref(edited, kind="table")}
+                ],
+            }
+        )
+        _assert(region["status"] == "ok", "semantic region review failed")
+        _assert(len(region_images) >= 1, "semantic region returned no visual evidence")
+        review_receipt = run_root / "visual-review.json"
+        atomic_write_json(
+            review_receipt,
+            {
+                "document_sha256": render["document_sha256"],
+                "reviewed_pages": list(range(1, page_count + 1)),
+                "findings": [],
+            },
+        )
         validation = service.validate(
             {
                 "task_root": str(repository),
                 "source_docx": str(student),
                 "source_sha256": source_hash,
                 "final_docx": str(output),
+                "visual_review": str(review_receipt),
+                "candidate_render_ref": reference,
             }
         )
         _assert(validation["status"] == "ok", "validation call failed")
         _assert(
-            any(item.get("code") == "verification_gap" for item in validation["warnings"]),
-            "missing Adobe delivery evidence was not preserved as a verification gap",
+            not any(item.get("code") == "verification_gap" for item in validation["warnings"]),
+            "complete LibreOffice evidence was not accepted",
         )
         state.update({"inspection": inspection, "edited": output})
         return {
@@ -261,7 +268,7 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
             "tool_calls": 7,
             "rendered_pages": page_count,
             "reviewed_pages": len(images),
-            "layout_mappings": len(mapped),
+            "region_views": len(region_images),
             "render_cache_hit": bool(render["cache_hit"]),
         }
 
@@ -469,8 +476,8 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
         case = read_json(repository / "evals/e2e/synthetic-core/case.json")
         _assert(case.get("fixture") == "synthetic", "core e2e fixture must stay synthetic")
         _assert(
-            case.get("requires_adobe_candidate") is True,
-            "Adobe delivery gate was weakened",
+            case.get("requires_libreoffice_candidate") is True,
+            "LibreOffice delivery gate was weakened",
         )
         _assert(case.get("requires_all_page_review") is True, "visual gate was weakened")
         return {"assertions": 4, "e2e_cases": 1}
@@ -513,7 +520,7 @@ def run_core_eval(repository: Path) -> CoreEvalReport:
         metrics=metrics,
         local_product_gates={
             "claude_agent_sdk_e2e": "NOT_RUN_BY_DETERMINISTIC_SUITE",
-            "adobe_pdf_services_baseline_candidate": "NOT_RUN_BY_DETERMINISTIC_SUITE",
+            "libreoffice_visual_renderer": "RUN_BY_DETERMINISTIC_SUITE",
             "authorized_or_deidentified_real_sample": "NOT_RUN_BY_DETERMINISTIC_SUITE",
         },
         manual_gates={

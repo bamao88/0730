@@ -227,7 +227,7 @@ def project_conversion_report(source: Path | Mapping[str, Any]) -> dict[str, Any
             "validation",
         )
     ):
-        final_evidence_category = "adobe_candidate_full_page_validation_v1"
+        final_evidence_category = "libreoffice_full_page_validation_v2"
     return {
         "schema_version": version,
         "run_id": run_id,

@@ -24,6 +24,24 @@ jobs:
       - name: Restore locked Python environment
         run: uv sync --frozen
 
+      - name: Build locked LibreOffice visual renderer
+        run: docker build -t docfit-libreoffice-visual:25.2.3.2 docker/visual-renderer
+
+      - name: Smoke-test real DOCX conversion
+        run: |
+          mkdir -p .tmp/visual-renderer-smoke
+          docker run --rm --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges --tmpfs /tmp:rw,size=512m \
+            -e HOME=/tmp/home \
+            -v "$PWD/evals/fixtures/smoke/school-template.docx:/input/document.docx:ro" \
+            -v "$PWD/.tmp/visual-renderer-smoke:/output:rw" \
+            docfit-libreoffice-visual:25.2.3.2 sh -lc \
+            "mkdir -p /tmp/home /tmp/lo-profile && soffice --headless --nologo \
+             --nodefault --nofirststartwizard --nolockcheck --norestore \
+             -env:UserInstallation=file:///tmp/lo-profile \
+             --convert-to pdf --outdir /output /input/document.docx"
+          test -s .tmp/visual-renderer-smoke/document.pdf
+
       - name: Lint
         run: uv run ruff check .
 

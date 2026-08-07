@@ -29,7 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     doctor_parser = subparsers.add_parser("doctor", help="check the local DocFit environment")
     doctor_parser.add_argument(
         "--require",
-        choices=("agent-smoke", "provider"),
+        choices=("agent-smoke", "visual-renderer"),
         dest="requirement",
     )
     doctor_parser.add_argument("--json", action="store_true", dest="as_json")
@@ -65,22 +65,22 @@ def build_parser() -> argparse.ArgumentParser:
 
     render_parser = tool_subparsers.add_parser("render")
     render_parser.add_argument("input_docx")
-    render_parser.add_argument(
-        "--intent", required=True, choices=("baseline", "edit_feedback", "candidate_verification")
-    )
-    render_parser.add_argument("--output", required=True)
-    render_parser.add_argument("--baseline-ref")
+    render_parser.add_argument("--no-overview", action="store_true")
 
     visual_parser = tool_subparsers.add_parser("visual-review")
     visual_parser.add_argument("render_ref")
     visual_parser.add_argument(
         "--mode",
-        choices=("pages", "crops", "contact_sheet", "compare"),
+        choices=("contact_sheet", "pages", "regions", "compare"),
         default="pages",
     )
+    visual_parser.add_argument(
+        "--quality", choices=("thumbnail", "review", "detail"), default="review"
+    )
     visual_parser.add_argument("--pages")
-    visual_parser.add_argument("--crops")
-    visual_parser.add_argument("--baseline-ref")
+    visual_parser.add_argument("--regions")
+    visual_parser.add_argument("--compare-ref")
+    visual_parser.add_argument("--cursor")
 
     validate_parser = tool_subparsers.add_parser("validate")
     validate_parser.add_argument("source_docx")
@@ -157,7 +157,7 @@ def _tools_main(args: argparse.Namespace) -> int:
     from docfit.tools.service import DocFitToolService
 
     task_root = Path(args.task_root).expanduser().resolve()
-    service = DocFitToolService()
+    service = DocFitToolService(task_root=task_root)
     payload: dict[str, Any] = {"task_root": str(task_root)}
     try:
         if args.tool_command == "inspect":
@@ -184,31 +184,26 @@ def _tools_main(args: argparse.Namespace) -> int:
             )
             result = service.edit(payload)
         elif args.tool_command == "render":
-            payload.update(
-                {
-                    "input_docx": args.input_docx,
-                    "render_intent": args.intent,
-                    "output_dir": args.output,
-                }
+            result, images = service.render(
+                {"input_docx": args.input_docx, "overview": not args.no_overview}
             )
-            if args.baseline_ref:
-                payload["baseline_render_ref"] = args.baseline_ref
-            result = service.render(payload)
+            result["image_paths"] = [str(path) for path in images]
         elif args.tool_command == "visual-review":
-            payload.update(
-                {
-                    "render_ref": args.render_ref,
-                    "mode": args.mode,
-                }
-            )
+            visual_payload: dict[str, Any] = {
+                "render_ref": args.render_ref,
+                "mode": args.mode,
+                "quality": args.quality,
+            }
             if args.pages:
-                payload["pages"] = _comma_ints(args.pages)
-            if args.crops:
-                crop_payload = _load_json_object(args.crops, task_root=task_root)
-                payload["crops"] = crop_payload.get("crops")
-            if args.baseline_ref:
-                payload["baseline_render_ref"] = args.baseline_ref
-            result, images = service.visual_review(payload)
+                visual_payload["pages"] = _comma_ints(args.pages)
+            if args.regions:
+                region_payload = _load_json_object(args.regions, task_root=task_root)
+                visual_payload["regions"] = region_payload.get("regions")
+            if args.compare_ref:
+                visual_payload["compare_render_ref"] = args.compare_ref
+            if args.cursor:
+                visual_payload["cursor"] = args.cursor
+            result, images = service.visual_review(visual_payload)
             result["image_paths"] = [str(path) for path in images]
         elif args.tool_command == "validate":
             payload.update(
@@ -343,6 +338,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"{metrics['rendered_pages']} rendered pages"
             )
             print(f"Report: {eval_report.report_path}")
-            print("Live SDK/Adobe/real-sample and manual delivery-review gates remain separate.")
+            print("Live SDK/LibreOffice/real-sample and manual review gates remain separate.")
         return 0 if eval_report.passed else 2
     raise AssertionError(f"unhandled command: {args.command}")

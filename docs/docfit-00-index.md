@@ -1,14 +1,14 @@
 # DocFit 设计文档索引（00）
 
 > 状态：最终架构索引
-> 日期：2026-08-06
+> 日期：2026-08-07
 
 本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
 M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
-固定 OfficeCLI/Adobe PDF Services 薄适配、`docfit convert` 薄应用壳，以及最小
-`docfit eval --suite core`。第二个后端已纠正为 Adobe PDF Services API；核心转换和
-云端运行链路不依赖本地 Microsoft Word、AppleScript、macOS 图形会话、用户电脑或
-本地字体库存。本地调试壳可以提供可选的平台适配器，但核心代码不得导入该实现，
+OfficeCLI 结构/编辑适配、固定 Docker LibreOffice V2 视觉证据、`docfit convert` 薄应用
+壳，以及最小 `docfit eval --suite core`。核心链路不依赖本地 Microsoft Word、
+AppleScript、macOS 图形会话或用户电脑，也不上传 DOCX 到远程视觉转换服务。本地调试
+壳可以提供可选的平台适配器，但核心代码不得导入该实现，
 平台适配能力也不构成核心完成门。确定性与 live 完成情况仍分别按 06 判定。当前用户
 批准的产品开发范围已在 M2 结束并完成；M3 的
 Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
@@ -17,9 +17,10 @@ Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后�
 模板提取静态产物 Eval 已有一份独立的顶层设计：
 `docs/plans/docfit-template-extraction-eval/DESIGN.md`。该切片只读取已经生成的模板与
 填写契约，并与 Gold 模板、Gold 填写契约比较；它不依赖上游提取运行状态，也不规定
-Agent 轨迹。当前已完成 G1 schema/config/合成 fixture 和三校 candidate case 的最终目录
-物化；三校仍固定为 `INPUT_ERROR`，Actual—Gold 评分 runner、Human-accepted Gold 与
-学校评分回归尚未完成，因此不构成 M3 通过或可试用 MVP 声明。
+Agent 轨迹。当前已在 `evals/template-extraction/` 独立工程内完成 schema/config、合成
+fixture、共享事实分析、两套断言、评分 runner、同源报告和四类 CLI 结论，并物化三校
+candidate case 的最终目录。三校仍固定为 `INPUT_ERROR`；Human-accepted Gold 与学校
+评分回归尚未完成，因此这项合成静态证据不构成完整 M3 通过或可试用 MVP 声明。
 
 该静态设计只覆盖连接链的一侧。长期 M3 数据合同还必须把三类 Human-confirmed
 任务事实连到同一语义基线：开放且版本化的 Content Field Registry 快照定义
@@ -80,6 +81,12 @@ Skill + Knowledge + Tools + Eval + 薄应用壳
 DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问、
 原生 Subagent 与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
 
+核心信任模型是 **Agent owns the outcome**：主 Agent 承担语义理解、任务规划、执行策略、
+反馈解释、自主重试、自我复核和完成判断。DocFit 的重点是给它提供充分上下文、领域知识、
+可组合工具、可逆操作和与当前文档绑定的证据；确定性代码只固化客观产品不变量与显式
+任务合同，不在 Agent 外再实现一套语义决策系统，也不通过代理指标重复否决 Agent 的
+判断。完整边界见 `docfit-01-architecture-core.md` 第 2.7 节。
+
 批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）负责
 任务判断与可选委派，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
 DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个通用只读
@@ -96,18 +103,14 @@ DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个�
 不可写。`Edit` 和网络工具仍不开放。`docfit-unit-analyst` 不继承这组主 Agent 能力，仍只
 拥有 inspect + visual-review；五个 DocFit Tool 仍是证据绑定、可验证的权威文档操作面。
 
-第一版在五个 Tool 内只适配两个职责不重叠的具体后端：OfficeCLI 负责
-inspect、edit、validate 和高频截图，Adobe PDF Services API 负责 `baseline` 与
-`candidate_verification` 的 DOCX→PDF 服务转换。Agent 只表达 `baseline`、
-`edit_feedback` 或
-`candidate_verification`，不选择后端；当前不建设通用
-Provider 接口、注册表、动态选择或故障转移。
+第一版在五个 Tool 内只适配两个职责不重叠的具体能力：OfficeCLI 负责 inspect、edit、
+validate 和语义对象定位；固定 Docker LibreOffice 负责唯一 DOCX→PDF。Agent 不表达
+intent 或后端选择。Poppler 从 PDF 建立页数/文字 bbox，并按需派生联系表、页面、局部图
+和 compare；当前不建设通用 Provider 接口、注册表、动态选择或故障转移。
 
-Adobe 路由通过锁定的 `pdfservices-sdk==4.2.0` 和仓库外 `0600` 凭据运行。每个未命中
-缓存的 DOCX→PDF 调用消耗一个 Document Transaction；免费开发额度当前按每月 500 次
-做容量规划。配额是运行资源约束，不进入公开 Tool schema，也不允许失败后回退到
-OfficeCLI 冒充交付证据。Adobe 未公开的字体库存和替代详情必须标记为
-`service-managed` / `opaque`，不得用本地字体指纹代替。
+视觉证据绑定 DOCX hash、LibreOffice、容器 digest、字体 digest、locale、PDF 参数、
+页码和图片变换。所有结果固定标记为 `approximate`；renderer 失败时不回退到 OfficeCLI
+截图或第二渲染器。
 
 Claude Agent SDK 兼容边界也属于薄应用壳与 Tool adapter：公开 Tool schema 使用兼容
 backend 能稳定消费的扁平 JSON Schema 子集；Tool 的完整结构化结果同时以紧凑 JSON
@@ -165,7 +168,7 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 |---|---|---|
 | Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回；通过明确项目相对路径指引按需读取 references | 固定调度图、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
-| Tools | DOCX 分析、修改、按 intent 生产渲染证据、读取已有视觉证据、可选元素映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染冒充 Adobe 交付转换证据，或替当前 Agent 做语义判断 |
+| Tools | DOCX 分析、修改、固定 LibreOffice V2 渲染、按需视觉视图、语义对象映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染声称为 Word 像素真值，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较；在未来 M3 中保存相互 hash/版本绑定的字段、模板、学生内容与 placement 真值 | 在线运行编排、交付状态管理，或把 oracle 默认暴露给被测对象 |
 | 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实主 Agent 直接读取路径策略、受信任 Bash/Write 与 Subagent 上下文隔离/最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、第二套 shell/runtime、用监控事件控制或精确回放 Agent |
 
@@ -210,9 +213,8 @@ Knowledge、学校 profile 或第六类产品资产；当前实现状态与后�
 只读历史比较不等于 comparative replay：它比较已经落盘的脱敏指标和证据可用性，
 不会重放模型请求、Tool 副作用或文档内容。
 
-OfficeCLI 与 Adobe PDF Services API 分担不同职责，不构成“两个实现共同消费一套通用
-Provider 抽象”的证据。只有未来真实接入第三个引擎，并且确实需要动态选择或
-故障转移时，才重新评估该抽象。
+OfficeCLI 与 LibreOffice 分担不同职责，不构成“两个实现共同消费一套通用 Provider
+抽象”的证据。当前视觉合同明确只有一个 renderer，不提供动态选择或故障转移。
 
 如果未来真实需求证明必须增加其中某项，应以独立 ADR 说明：当前痛点、最小方案、为什么 SDK 或普通工具不能解决，以及删除成本。
 

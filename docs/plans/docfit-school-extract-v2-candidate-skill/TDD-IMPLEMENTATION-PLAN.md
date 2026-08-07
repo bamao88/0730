@@ -20,7 +20,7 @@
 ```
 
 不得先批量写完整阶段测试再批量实现。测试不 mock 自有领域模块，不断言私有函数或无关精确
-调用次数。只在 OfficeCLI、Adobe、Agent SDK、文件系统故障、时间/随机数等系统边界使用可注入
+调用次数。只在 OfficeCLI、LibreOffice、Agent SDK、文件系统故障、时间/随机数等系统边界使用可注入
 fake；fake 不能绕过 schema、hash、Registry、DOCX package、marker、locator 和原子发布。
 
 SDK 的 loop、MCP transport、Skill discovery、permissions、session 和 structured-output validation

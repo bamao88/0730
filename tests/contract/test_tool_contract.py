@@ -3,6 +3,9 @@ from __future__ import annotations
 import asyncio
 import base64
 import json
+from pathlib import Path
+
+from PIL import Image
 
 from docfit.tools import (
     AGENT_TOOL_RESULT_MAX_CHARS,
@@ -10,13 +13,13 @@ from docfit.tools import (
     FULL_TOOL_NAMES,
     LOGICAL_TOOL_NAMES,
     build_docfit_server,
+    build_docfit_tools,
     docx_edit,
     docx_inspect,
     docx_render,
     docx_validate,
     docx_visual_review,
 )
-from docfit.tools.image_smoke import SMOKE_MARKER
 
 
 def test_exact_public_tool_names() -> None:
@@ -60,7 +63,37 @@ def test_public_tool_schemas_avoid_unsupported_composition_keywords() -> None:
         assert all(not {"oneOf", "anyOf", "allOf"}.intersection(item) for item in dictionaries)
 
 
-def test_real_docx_tools_expose_versioned_m1_schemas_without_backend_selector() -> None:
+def test_task_bound_visual_tools_use_the_application_session_root(tmp_path: Path) -> None:
+    document = tmp_path / "unsupported.txt"
+    document.write_text("not a docx", encoding="utf-8")
+    tools = {registered.name: registered for registered in build_docfit_tools(tmp_path)}
+
+    render_result = asyncio.run(
+        tools["docx_render"].handler({"input_docx": str(document), "overview": False})
+    )
+
+    assert render_result["structuredContent"]["failure"]["code"] == (
+        "unsupported_document_type"
+    )
+
+
+def test_task_bound_tools_reject_agent_selected_root(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    task_root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    tools = {registered.name: registered for registered in build_docfit_tools(task_root)}
+
+    result = asyncio.run(
+        tools["docx_inspect"].handler(
+            {"task_root": str(outside), "input_docx": "outside.docx"}
+        )
+    )
+
+    assert result["structuredContent"]["failure"]["code"] == "task_root_mismatch"
+
+
+def test_real_docx_tools_expose_versioned_v2_schemas_without_backend_selector() -> None:
     result = asyncio.run(docx_inspect.handler({}))
 
     assert result["structuredContent"]["status"] == "needs_input"
@@ -69,12 +102,7 @@ def test_real_docx_tools_expose_versioned_m1_schemas_without_backend_selector() 
     for registered in (docx_inspect, docx_edit, docx_render, docx_validate):
         assert registered.input_schema.get("additionalProperties") is False
     render_properties = docx_render.input_schema["properties"]
-    assert set(render_properties) >= {
-        "input_docx",
-        "render_intent",
-        "output_dir",
-        "baseline_render_ref",
-    }
+    assert set(render_properties) == {"input_docx", "overview"}
     assert not {"provider", "backend", "engine"}.intersection(render_properties)
     edit_actions = docx_edit.input_schema["properties"]["operations"]["items"]["properties"][
         "action"
@@ -93,15 +121,44 @@ def test_real_docx_tools_expose_versioned_m1_schemas_without_backend_selector() 
     }
 
 
-def test_visual_review_returns_a_real_image_without_leaking_marker_in_text() -> None:
+def test_visual_review_returns_a_native_image_block(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
     assert "oneOf" not in docx_visual_review.input_schema
-    assert docx_visual_review.input_schema["required"] == ["mode"]
-    assert "m0_image_smoke" in docx_visual_review.input_schema["properties"]["mode"]["enum"]
+    assert docx_visual_review.input_schema["required"] == ["render_ref", "mode"]
+    assert docx_visual_review.input_schema["properties"]["mode"]["enum"] == [
+        "contact_sheet",
+        "pages",
+        "regions",
+        "compare",
+    ]
 
-    result = asyncio.run(docx_visual_review.handler({"mode": "m0_image_smoke"}))
-    text_content = [item["text"] for item in result["content"] if item["type"] == "text"]
+    image = tmp_path / "page.png"
+    Image.new("RGB", (16, 16), "blue").save(image)
+
+    class _FakeService:
+        def visual_review(self, args):
+            assert args["mode"] == "pages"
+            return (
+                {
+                    "schema_version": 2,
+                    "status": "ok",
+                    "render_ref": args["render_ref"],
+                    "evidence": [],
+                },
+                [image],
+            )
+
+    monkeypatch.setattr("docfit.tools.DocFitToolService", _FakeService)
+
+    render_ref = "render:v2:" + "0" * 64
+    result = asyncio.run(
+        docx_visual_review.handler(
+            {"render_ref": render_ref, "mode": "pages", "pages": [1]}
+        )
+    )
     image_content = next(item for item in result["content"] if item["type"] == "image")
 
-    assert all(SMOKE_MARKER not in text for text in text_content)
     assert image_content["mimeType"] == "image/png"
     assert base64.b64decode(image_content["data"]).startswith(b"\x89PNG\r\n\x1a\n")

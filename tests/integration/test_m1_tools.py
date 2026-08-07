@@ -11,8 +11,8 @@ from typing import Any
 import pytest
 from PIL import Image
 
+from docfit.evals.synthetic_image import make_fixture_png
 from docfit.tools import docx_inspect, docx_visual_review
-from docfit.tools.image_smoke import make_smoke_png
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import ToolFailure, sha256_file
 from docfit.tools.service import DocFitToolService
@@ -110,7 +110,7 @@ def _make_template(path: Path) -> None:
         "style=Title",
     )
     marker = path.with_name("template-marker.png")
-    marker.write_bytes(make_smoke_png())
+    marker.write_bytes(make_fixture_png())
     _officecli(
         "add",
         str(path),
@@ -137,7 +137,10 @@ def _ref(result: dict[str, Any], text: str) -> dict[str, Any]:
     return next(item["object_ref"] for item in result["objects"] if item["text"] == text)
 
 
-def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Path) -> None:
+def test_real_officecli_inspect_edit_import_render_review_validate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     student = tmp_path / "student.docx"
     template = tmp_path / "template.docx"
     edited = tmp_path / "edited.docx"
@@ -147,7 +150,7 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
     template_hash = sha256_file(template)
     student.chmod(0o444)
     template.chmod(0o444)
-    service = DocFitToolService(office=OfficeCliAdapter())
+    service = DocFitToolService(task_root=tmp_path, office=OfficeCliAdapter())
 
     student_result = service.inspect({"task_root": str(tmp_path), "input_docx": student.name})
     template_result = service.inspect({"task_root": str(tmp_path), "input_docx": template.name})
@@ -247,49 +250,54 @@ def test_real_officecli_inspect_edit_import_render_review_validate(tmp_path: Pat
         "tracked_deletions",
     }
 
-    render_result = service.render(
-        {
-            "task_root": str(tmp_path),
-            "input_docx": edited.name,
-            "render_intent": "edit_feedback",
-            "output_dir": "render-cli",
-            "focus_object_refs": [
-                next(
-                    item["object_ref"]
-                    for item in edited_result["objects"]
-                    if item["type"] == "table"
-                )
-            ],
-        }
+    render_result, overview_images = service.render(
+        {"input_docx": edited.name, "overview": True}
     )
     assert render_result["status"] == "ok"
     reference = render_result["render_ref"]
-    assert reference["fidelity"] == "approximate"
-    assert reference["provider"]["name"] == "officecli"
-    assert reference["artifacts"]["pdf"] is None
-    assert reference["page_count"] >= 1
-    layout_map = json.loads(Path(reference["artifacts"]["layout_map"]).read_text(encoding="utf-8"))
-    mapped = [element for page_record in layout_map["pages"] for element in page_record["elements"]]
-    assert len(mapped) == 1
-    assert mapped[0]["type"] == "table"
-    assert mapped[0]["mapping_quality"] == "approximate"
-    assert len(mapped[0]["bbox"]) == 4
+    assert reference.startswith("render:v2:")
+    assert render_result["fidelity"] == "approximate"
+    assert render_result["renderer"]["name"] == "libreoffice"
+    assert render_result["page_count"] >= 1
+    assert len(overview_images) == 1
 
-    review, images = DocFitToolService(office=_BombOffice()).visual_review(
+    review, images = DocFitToolService(
+        task_root=tmp_path,
+        office=_BombOffice(),
+        visual=service.visual(),
+    ).visual_review(
         {
-            "task_root": str(tmp_path),
-            "render_ref": "render-cli",
+            "render_ref": reference,
             "mode": "pages",
-            "pages": list(range(1, reference["page_count"] + 1)),
+            "pages": list(range(1, render_result["page_count"] + 1)),
         }
     )
     assert review["status"] == "ok"
-    assert len(images) == reference["page_count"]
+    assert len(images) == render_result["page_count"]
+    region, region_images = service.visual_review(
+        {
+            "render_ref": reference,
+            "mode": "regions",
+            "quality": "detail",
+            "regions": [
+                {
+                    "selector": "object_ref",
+                    "object_ref": next(
+                        item["object_ref"]
+                        for item in edited_result["objects"]
+                        if item["type"] == "table"
+                    ),
+                }
+            ],
+        }
+    )
+    assert region["status"] == "ok"
+    assert region_images
+    monkeypatch.setenv("DOCFIT_TASK_ROOT", str(tmp_path))
     mcp_result = asyncio.run(
         docx_visual_review.handler(
             {
-                "task_root": str(tmp_path),
-                "render_ref": "render-cli",
+                "render_ref": reference,
                 "mode": "pages",
                 "pages": [1],
             }

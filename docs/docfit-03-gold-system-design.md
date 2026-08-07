@@ -12,9 +12,10 @@
 Gold 模板和 Gold 填写契约作为 Expected，并与已经生成的 Actual 模板和 Actual 填写
 契约比较。Gold 填写契约承载 `protected`、`slot`、`remove` 区域责任、稳定定位、字段
 映射和槽值样式契约；完整 Gold 模板只作为这些结果事实的确定性参照，不规定上游
-Agent 路径。该顶层设计已形成；G1 schema 和三校最终 case 目录已物化，但三校数据仍为
-candidate、预期 `INPUT_ERROR`，尚未成为 Human-accepted Gold；Actual—Gold 评分 runner
-和学校回归也尚未实施。
+Agent 路径。该顶层设计和独立 Actual—Gold 静态评分 runner 已实现，并由合成 fixture
+验证两套断言、双视角/八分项评分、报告和输入错误语义；三校最终 case 目录也已物化。
+但三校数据仍为 candidate、预期 `INPUT_ERROR`，尚未成为 Human-accepted Gold，学校
+自比较和单错误回归也尚未启用。
 
 完整转换 case 还需要 Human-confirmed Student Content Truth 与 Placement Truth。它们与
 Template Truth 共同引用同一版 Content Field Registry 快照，却各自保留来源 locator、
@@ -38,7 +39,7 @@ Gold 是人工确认过的参考结果或关键事实，不是独立系统。
 - 规定是否必须委派、Subagent 数量、并行/串行选择或固定论文单元目录；
 - 复制运行时状态；
 - 重放自定义工作流阶段；
-- 替代真实 Adobe 交付页面查看和人工判断。
+- 替代当前 V2 页面查看和必要的人工判断。
 
 Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只有在事实断言不足时才保存 Gold 产物。
 
@@ -184,11 +185,11 @@ Knowledge，但不保存固定调用轨迹、Subagent transcript、委派图或�
 - 它是已经确认的真实交付基线。
 
 完整文件和页面图片是辅助参照，不能自动覆盖事实断言。像素差异也不能单独证明版式
-语义正确。页码只在对应 render ref 内有意义；OfficeCLI 与 Adobe PDF Services API 的同页码不能
-自动认定为同一内容范围。字体、DPI、页面尺寸或 fidelity 不同的页面不得直接做像素
-Gold 比较。比较同一文档 hash 的 `edit_feedback` 与 Adobe candidate 时，可以使用当前
-快照的 `object_ref`、节引用或文字锚点关联；文档 hash 变化后必须重新 inspect，并通过
-新旧快照的节、文字锚点或显式内容指纹建立对照。Gold 同时保存实际后端、页数、bbox、
+语义正确。页码只在对应 render ref 内有意义；OfficeCLI 对象页码或 HTML 坐标不能直接
+认定为 LibreOffice 页面范围。renderer/font identity、DPI 或页面尺寸不同的页面不得直接
+做像素 Gold 比较。比较两个 V2 render 时使用当前快照的 `object_ref`、节引用或文字锚点
+对齐；文档 hash 变化后必须重新 inspect 和 render，并通过新旧快照的节、文字锚点或
+显式内容指纹建立对照。Gold 同时保存 renderer identity、页数、bbox、
 问题类别和人工结论等稳定事实。
 
 ## 4. 比较方式

@@ -35,8 +35,9 @@ from docfit.observability.storage import (
 )
 from docfit.observability.transcript import SDKTranscriptManager
 from docfit.observability.web import create_observer_app
-from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file, sha256_json
+from docfit.tools.runtime import ToolFailure, atomic_write_json, sha256_file
 from docfit.tools.service import DocFitToolService
+from docfit.visual.evidence import EvidenceStore, render_reference
 
 
 def _officecli(*arguments: str) -> None:
@@ -128,82 +129,41 @@ async def _fake_completed_agent(
         }
     )
     final_hash = sha256_file(prepared.final_docx)
-    candidate_directory = prepared.work_directory / "candidate-adobe"
-    pages_directory = candidate_directory / "pages"
-    pages_directory.mkdir(parents=True)
-    page = pages_directory / "page-0001.png"
+    renderer = {
+        "name": "libreoffice",
+        "version": "LibreOffice 25.2.3.2 520(Build:2)",
+        "container_image": "docfit-libreoffice-visual:25.2.3.2",
+        "container_image_digest": "sha256:" + "1" * 64,
+        "font_environment_digest": "2" * 64,
+        "locale": "zh_CN.UTF-8",
+        "pdf_export_options": "synthetic-test-options",
+    }
+    identity = {"document_sha256": final_hash, "renderer": renderer}
+    candidate_render_ref = render_reference(identity)
+    store = EvidenceStore(prepared.task_root)
+    candidate_directory = store.temporary_render(candidate_render_ref)
     image = Image.new("RGB", (240, 340), "white")
-    image.save(page, format="PNG")
     pdf = candidate_directory / "document.pdf"
     image.save(pdf, format="PDF", resolution=144)
-    page_entry = {
-        "page": 1,
-        "path": str(page),
-        "sha256": sha256_file(page),
-        "width": 240,
-        "height": 340,
-        "bytes": page.stat().st_size,
-    }
-    provider = {
-        "name": "adobe_pdf_services",
-        "version": "4.2.0",
-        "operation": "create_pdf_from_docx",
-    }
-    font_environment = {
-        "fingerprint": None,
-        "font_file_count": None,
-        "substitutions": None,
-        "source": "adobe_managed_service",
-        "visibility": "opaque",
-    }
-    render_sha256 = sha256_json(
-        {"document": final_hash, "page": page_entry["sha256"], "provider": provider}
-    )
-    reference = {
-        "schema_version": 1,
-        "document_path": str(prepared.final_docx),
+    manifest = {
+        "schema_version": 2,
+        "render_ref": candidate_render_ref,
+        "render_identity": identity,
         "document_sha256": final_hash,
-        "render_sha256": render_sha256,
-        "render_intent": "candidate_verification",
-        "fidelity": "official_service_conversion",
-        "target_application": None,
-        "target_application_version": None,
-        "provider": provider,
-        "font_environment": font_environment,
-        "font_substitutions": None,
-        "conversion_profile": "adobe_pdf_services_default",
-        "revision_display": "document_default",
-        "parent_render_ref": {
-            "render_sha256": "synthetic-baseline",
-            "document_sha256": prepared.source_sha256,
-        },
         "page_count": 1,
-        "dpi": 144,
-        "cache_key": "synthetic-cache",
-        "artifacts": {
-            "pdf": str(pdf),
-            "pages": [page_entry],
-            "pages_directory": str(pages_directory),
-            "contact_sheet": None,
-            "layout_map": None,
-        },
-        "warnings": [
-            {
-                "code": "service_managed_render_environment",
-                "message": "Synthetic provider detail.",
-            }
-        ],
+        "fidelity": "approximate",
+        "renderer": renderer,
+        "files": store.file_inventory(candidate_directory, [pdf]),
     }
-    render_ref = candidate_directory / "render-ref.json"
-    atomic_write_json(render_ref, reference)
+    atomic_write_json(candidate_directory / "manifest.json", manifest)
+    store.publish_render(candidate_directory, candidate_render_ref)
     visual_review = {
-        "schema_version": 1,
+        "schema_version": 2,
         "document_sha256": final_hash,
-        "render_sha256": render_sha256,
-        "provider": provider,
-        "font_environment": font_environment,
+        "render_ref": candidate_render_ref,
+        "renderer": renderer,
         "reviewed_pages": [1],
-        "evidence_refs": ["visual-page-1"],
+        "evidence_refs": ["visual:v2:" + "3" * 64],
         "findings": [],
     }
     structured = {
@@ -211,7 +171,7 @@ async def _fake_completed_agent(
         "status": "completed",
         "candidate_backbone": "school_template_work_copy",
         "final_docx": str(prepared.final_docx),
-        "candidate_render_ref": str(render_ref),
+        "candidate_render_ref": candidate_render_ref,
         "visual_review": visual_review,
         "task_rule_evidence": [
             {
@@ -274,6 +234,7 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
             request,
             runner=_fake_completed_agent,
             observation=recorder,
+            transcripts=SDKTranscriptManager(parent=tmp_path / "sdk-transcripts"),
         )
     )
 
@@ -313,7 +274,7 @@ def test_thin_convert_shell_mounts_evidence_and_publishes_verified_outputs(
     assert not validation["warnings"]
     assert report.knowledge_version == "v1"
     assert REQUIRED_CONVERSION_TOOLS.issubset(report.tool_uses)
-    assert report.warnings == ("candidate:service_managed_render_environment",)
+    assert report.warnings == ()
     assert "stale" not in report.detail.casefold()
     assert "complete Agent visual coverage" in report.detail
     assert not observation_state.exists()

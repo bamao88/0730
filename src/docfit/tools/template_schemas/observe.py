@@ -9,12 +9,8 @@ TEMPLATE_OBSERVE_SCHEMA: JsonObject = {
     "properties": {
         "schema_version": {"const": 1},
         "task_root": {"type": "string", "minLength": 1},
-        "action": {"type": "string", "enum": ["create", "query", "images"]},
+        "action": {"type": "string", "enum": ["create", "query"]},
         "input_docx": {"type": "string", "minLength": 1},
-        "visual_level": {
-            "type": "string",
-            "enum": ["none", "quick", "candidate_verification"],
-        },
         "focus": {
             "type": "array",
             "maxItems": 4,
@@ -50,15 +46,6 @@ TEMPLATE_OBSERVE_SCHEMA: JsonObject = {
             "required": ["text", "match", "include"],
             "additionalProperties": False,
         },
-        "render_ref": {"type": "string", "minLength": 1},
-        "pages": {
-            "type": "array",
-            "maxItems": 16,
-            "uniqueItems": True,
-            "items": {"type": "integer", "minimum": 1},
-        },
-        "cursor": {"type": ["string", "null"]},
-        "max_images": {"type": "integer", "minimum": 1, "maximum": 4},
     },
     "required": ["schema_version", "task_root", "action"],
     "additionalProperties": False,

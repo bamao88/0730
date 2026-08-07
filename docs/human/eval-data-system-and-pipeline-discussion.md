@@ -5,6 +5,12 @@
 > 讨论范围：未来 M3 的 Eval 数据准备与管理
 > 当前权威来源：`docs/docfit-00-index.md` 至 `docs/docfit-06-development-roadmap.md`
 
+> 2026-08-06 职责边界更新：本文原称 Content Field Contract 的对象已收窄为
+> 独立 Content Field Registry，详细研发权威为
+> `docs/plans/docfit-content-field-registry/DESIGN.md` 及其 v0.1 快照。Registry 不再打包进
+> Human Truth Package；case 只固定 Registry ID/version/hash。本讨论稿其余未批准内容
+> 仍不定义当前架构。
+
 ## 0. 这次讨论按什么顺序进行
 
 这份文档先不讨论代码怎么实现。我们需要依次确认五件事：
@@ -67,7 +73,7 @@ Human 不需要直接维护大量互相独立的测试文件。理想方式是�
 - 每个评测文件都能说明它来自哪里、服务哪个层级；
 - 下层用例可以从顶层 Case 加工得到，但不会偷偷改变原始材料；
 - 实际运行结果不会自动变成正确答案；
-- 私有论文、学校材料和 Adobe 外部处理授权边界清楚；
+- 私有论文、学校材料和本地测试授权边界清楚；
 - 新增一个案例时，不需要人工重复填写大量相同信息；
 - 数据体系属于离线 Eval，不进入正常论文转换的运行路径。
 
@@ -101,7 +107,7 @@ Placement Truth
 
 | 人工准备目标 | 上游材料 | 固定产出 | 后续主要用途 |
 |---|---|---|---|
-| 内容字段定义 | 当前案例的论文语义范围 | `content-fields.yaml` | 连接模板槽位与学生内容 |
+| 内容字段语义 | 固定的跨阶段 Registry 快照 | Registry ID/version/hash 引用 | 连接模板槽位与学生内容 |
 | 模板准备 | 原模板、要求、示例与 Human 判断 | `fillable-template.docx` + `template-spec.yaml` | 模板准备 Oracle、转换输入与格式 Oracle |
 | 学生内容准备 | `student-source.docx` | `student-content.json` + 按需 `content-assets/*` | 内容提取 Oracle、转换内容保留 Oracle |
 | 内容放置确认 | 模板真值 + 学生内容真值 | `placement-map.yaml` | 槽位填写与内容放置 Oracle |
@@ -112,7 +118,7 @@ Placement Truth
 
 ```mermaid
 flowchart LR
-    FIELDS["Content Field Contract<br/>field_id + 含义 + 内容类型"]
+    FIELDS["Content Field Registry snapshot<br/>field_id + 含义 + 内容类型"]
     TEMPLATE["Template Truth Pack<br/>slot_id → field_id + locator + style_id"]
     STUDENT["Student Content Truth Pack<br/>content_id → field_id + content"]
     PLACEMENT["Placement Truth<br/>content_id → slot_id / region_id"]
@@ -138,9 +144,9 @@ flowchart LR
 字段一致时，系统可以生成映射候选；一对多、多对一、条件槽位或复合结构由 Human
 确认。不能仅根据文字相似度静默决定映射。
 
-### 2.3 Content Field Contract：共享内容字段契约
+### 2.3 Content Field Registry：共享内容字段语义
 
-建议形式：`content-fields.yaml`。
+当前形式：固定引用 `docfit.thesis.content_fields@0.1.0` 的内容 hash；case 不拷贝快照。
 
 它定义当前 Case Family 使用的语义字段，不保存具体学生内容，也不保存具体样式。
 
@@ -155,9 +161,14 @@ flowchart LR
 | `language` | 可选 | zh、en 或其他适用语言 |
 | `notes` | 可选 | 当前 Case 的边界说明 |
 
-这份字段契约是开放的当前任务/Eval 数据，不是封闭的全局论文类型枚举，也不会自动
-进入产品 Knowledge。只有多个任务反复证明某些概念通用后，才另行评审是否沉淀通用
-概念；学校值和具体学生内容始终不能进入 Knowledge。
+这份 Registry 是开放、版本化的跨阶段研发语义合同，不是封闭的全局论文类型枚举，
+也不会自动进入产品 Knowledge。学校值和具体学生内容始终不能进入 Registry 或
+Knowledge。
+
+如果需要从软件工程角度理解这种“多个环节并行开发，但要共享同一套数据语义”的
+问题，参见 [《非研发背景的 DocFit 开发概念说明》](./non-technical-development-guide.md)
+第 8–17 节。其中解释了 shared semantic contract、bounded context、projection、
+schema evolution、contract test、open-world assumption 与并行开发集成门。
 
 ### 2.4 Template Truth Pack：可填写模板真值包
 
@@ -197,7 +208,7 @@ flowchart LR
 | `template_id` | 是 | 模板身份 |
 | `revision` | 是 | Human 每次确认后的版本 |
 | `template_sha256` | 是 | 规范绑定的 `fillable-template.docx` |
-| `field_contract_ref` | 是 | 使用哪一版 `content-fields.yaml` |
+| `field_registry_ref` | 是 | 固定的 Registry ID/version/hash |
 | `slots` | 是 | 可填写槽位列表，可以为空但必须显式存在 |
 | `styles` | 是 | 被槽位或区域引用的样式定义 |
 | `regions` | 推荐 | 固定、条件、说明或连续正文区域 |
@@ -210,7 +221,7 @@ flowchart LR
 | `slot_id` | 是 | 模板内部稳定槽位 ID |
 | `field_id` | 是 | 允许填入的语义内容字段 |
 | `label` | 是 | Human 可读名称 |
-| `content_type` | 是 | 与字段契约一致的内容类型 |
+| `content_type` | 是 | 与 Registry 快照一致的内容类型 |
 | `locator` | 是 | content control、bookmark 或占位符锚点 |
 | `required` | 是 | 最终是否必须有内容 |
 | `cardinality` | 是 | 一个或多个内容项 |
@@ -312,7 +323,7 @@ styles:
 | 字段 | 必需 | 含义 |
 |---|---:|---|
 | `student_document_sha256` | 是 | 绑定的学生论文版本 |
-| `field_contract_ref` | 是 | 使用哪一版内容字段契约 |
+| `field_registry_ref` | 是 | 固定的 Registry ID/version/hash |
 | `items` | 是 | Human 确认的内容项 |
 | `review` | 是 | Human 验收人、时间和结论 |
 
@@ -405,11 +416,11 @@ styles:
 - 每个槽位都引用存在的 `field_id` 和 `style_id`；
 - 关键样式已经保存可检查的有效值；
 - `student-content.json` 中每项内容都有 `field_id`、内容值/引用和来源位置；
-- 模板与学生内容引用同一版 `content-fields.yaml`；
+- 模板与学生内容引用同一 Registry ID/version/hash；
 - 所有必要 placement 已确认，歧义项明确标记为 `unresolved`；
 - 使用三文档拆解时，`reference-final.docx` 已明确标记为 Human approved，并与当前
   模板 revision、学生源 hash 和短确认表绑定；
-- 文件 hash、隐私、存储权限和 Adobe 外部处理权限已经确认。
+- 文件 hash、隐私、存储权限和本地 renderer 使用权限已经确认。
 
 这道门只说明人工数据已经准备完整，不表示任何 DocFit Eval 已经通过。
 
@@ -485,7 +496,7 @@ flowchart TB
 4. **学生论文对成品**：比较 `student-source` 与 `reference-final`，用规范化文本、对象
    指纹、顺序和父子关系找出学生内容在成品中的对应位置；
 5. **三方归因**：区分内容来自模板、学生论文、Human 补充输入，还是无法解释的差异；
-6. **生成候选**：产出候选字段契约、模板规范、学生内容清单、placement 和 Expected
+6. **生成候选**：引用固定 Registry 并产出模板规范、学生内容清单、placement 和 Expected
    facts，再把歧义项交给 Human 确认。
 
 #### 2.9.2 两组差异分别产生什么
@@ -550,7 +561,7 @@ Human 不需要预先创建 content control、bookmark、`field_id` 或 YAML。�
 | `supplemental_fields` | 有则填写 | 姓名、学号、日期等不在原论文中的补充内容 |
 | `conditional_sections` | 有则填写 | 哪些页面或章节只有特定条件下出现 |
 | `known_ambiguities` | 有则填写 | Human 已知但暂时无法确定的地方 |
-| 数据授权 | 是 | 存储、CI、脱敏和 Adobe 外部处理权限 |
+| 数据授权 | 是 | 存储、CI、脱敏和本地 Docker renderer 使用权限 |
 
 如果 Human 愿意多做一步，给模板槽位增加 content control tag、bookmark 或唯一占位符，
 会显著提高自动定位可靠性；但这应该是推荐增强，不是第一批数据的强制前提。系统可以
@@ -692,7 +703,7 @@ flowchart LR
 
 | 文件 | 作用 |
 |---|---|
-| `content-fields.yaml` | 模板槽位和学生内容共享的语义字段契约 |
+| Registry ID/version/hash 引用 | 模板槽位和学生内容共享的语义快照 |
 | `fillable-template.docx` | Human 验收的可填写模板 |
 | `template-spec.yaml` | 槽位定位、目标字段和样式规范 |
 | `student-source.docx` | 只读学生内容源文件 |
@@ -718,7 +729,7 @@ flowchart LR
 | `materials/*` | 可选 | `subject_input` | 只暴露本 Case 明确允许的学校要求或示例 |
 | `student-content.json` 引用 | 必需 | 默认 `oracle_only` | 内容保留与字段归属真值 |
 | `template-spec.yaml` 引用 | 必需 | 默认 `oracle_only` | 槽位、定位和样式真值 |
-| `content-fields.yaml` 引用 | 必需 | 默认 `oracle_only` | 双方共享的字段语义 |
+| `field_registry_ref` | 必需 | 通常 `subject_input` | 双方共享的固定字段语义，不是 case 答案 |
 | `placement-map.yaml` 引用 | 转换类必需 | 默认 `oracle_only` | 未解决映射必须显式保留 |
 | `reference-final.docx` 引用 | 可选 | `oracle_only` | 已有人工正确成品时用于事实提取和人工页面参照 |
 | `asset-metadata` | 必需 | Eval 系统使用 | 保存身份、hash、来源和使用权限，不提供给被评测对象 |
@@ -807,7 +818,7 @@ Suite 只是一次要运行哪些 Case 的清单。它不拥有论文、期望�
 初期可以只讨论：
 
 - 公开、合成、确定性的核心回归；
-- 需要真实 OfficeCLI / Adobe 的本地 live 回归；
+- 需要真实 OfficeCLI / Docker LibreOffice 的本地 live 回归；
 - 需要受保护真实样本和 Human 复核的私有回归。
 
 ## 5. 文件之间首先依赖什么
@@ -818,7 +829,7 @@ Suite 只是一次要运行哪些 Case 的清单。它不拥有论文、期望�
 flowchart TB
     RAW_TEMPLATE["原始模板与学校材料"] --> TEMPLATE["Template Truth Pack"]
     RAW_STUDENT["原始学生论文"] --> STUDENT["Student Content Truth Pack"]
-    FIELDS["Content Field Contract"] --> TEMPLATE
+    FIELDS["Content Field Registry snapshot"] --> TEMPLATE
     FIELDS --> STUDENT
     TEMPLATE --> PLACEMENT["Placement Truth"]
     STUDENT --> PLACEMENT
@@ -843,7 +854,7 @@ flowchart TB
 
 ### 5.2 必须固定的依赖规则
 
-1. 模板槽位和学生内容必须引用同一版 Content Field Contract；
+1. 模板槽位和学生内容必须引用同一 Registry ID/version/hash；
 2. `template-spec` 必须绑定固定模板 hash，`student-content` 必须绑定固定论文 hash；
 3. 没有来源、权限和 hash 的文件，不能进入 Accepted Eval Input Pack；
 4. Case 只能引用 Accepted Eval Input，不能直接指向一份身份不明的本地文件；
@@ -852,7 +863,8 @@ flowchart TB
 7. Run 必须绑定 Case revision、输入 hash 和被评测产品版本；
 8. Review 必须绑定固定 Run 和固定 Evidence，不能审核一个会继续变化的目录；
 9. Actual、Evidence 和 Review 都不会自动进入产品 Knowledge；
-10. 允许本地读取文件，不等于允许将完整 DOCX 上传到 Adobe；外部处理权限必须单独确认。
+10. 当前视觉链路只在本地禁网容器处理 DOCX；若未来新增任何外部处理，必须重新批准
+    数据授权与产品边界。
 
 ## 6. 原始文件如何转换成评测文件
 
@@ -869,7 +881,7 @@ flowchart TB
 
     subgraph P2["② Human Prepared Truth"]
         ALIGN["三文档结构化对齐"]
-        FIELDS["content-fields.yaml"]
+        FIELDS["fixed field_registry_ref"]
         TEMPLATE["fillable-template.docx<br/>+ template-spec.yaml"]
         STUDENT["student-source.docx<br/>+ student-content.json"]
         PLACEMENT["placement-map.yaml"]
@@ -941,7 +953,7 @@ Human 提供学校材料、学生论文和使用授权。这里不要求 Human �
 - 生成页面预览供 Human 查看；
 - 提示隐私、仓库提交和外部处理权限；
 - 对干净模板、学生源论文和正确成品做三文档结构化对齐；
-- 帮助 Human 定义当前 Case 使用的 `content-fields.yaml`；
+- 帮助 Human 为当前 case 选定固定 Registry，并把新概念保留为未注册审查项；
 - 帮助 Human 把原始模板整理为 `fillable-template.docx`，并生成待审核的
   `template-spec.yaml` 槽位和样式候选；
 - 从学生论文生成 `student-content.json` 候选，让 Human 只需确认内容和字段归属；
@@ -1056,7 +1068,7 @@ Asset 的字段重点是文件身份和权限：
 | 可见性 | 公开、内部或私有 |
 | 隐私 | 是否含真实学生内容，是否已经脱敏 |
 | 存储权限 | 是否允许进入仓库和 CI |
-| 外部处理 | 是否允许上传到 Adobe 等外部服务，以及允许的处理方 |
+| renderer 使用 | 是否允许在本地禁网 Docker LibreOffice 中处理，以及对应测试环境 |
 | 验收 | 谁确认它可以作为 Eval 输入、何时确认 |
 
 这里没有任何论文格式正确性字段。
@@ -1083,11 +1095,11 @@ Case 的字段重点是组织关系：
 |---|---|
 | Run | Case revision、产品版本、Knowledge digest、输入 hash、开始/结束时间 |
 | Actual | 文件路径、hash、产生它的 Run |
-| Evidence | 文档 hash、证据类型、Provider/版本、render ref、页面和图片 hash |
+| Evidence | 文档 hash、证据类型、renderer/container/font identity、render ref、页面和图片 hash |
 | Comparison | 使用的 Expected revision、比较器版本、无法判断项 |
 
-当前固定后端是 OfficeCLI 1.0.143 与 Adobe PDF Services SDK 4.2.0。这里记录它们是为了
-复现证据，不是让 Case 动态选择 Provider。
+当前固定 adapter 是 OfficeCLI 1.0.143 与 Docker LibreOffice 25.2.3.2。这里记录它们是
+为了复现证据，不是让 Case 动态选择 Provider。
 
 ### 8.6 Human Review 管理字段
 
@@ -1105,11 +1117,12 @@ Review 不应把整段学生正文复制进元数据。
 
 ## 9. 逻辑上的文件包装方式
 
-在职责确定后，可以把它们理解成四个相互独立的包。这里仍不是最终仓库目录。
+在职责确定后，可以把它们理解成一个外部 Registry 依赖和三类 Truth。这里仍不是最终仓库目录。
 
 ```text
+Content Field Registry snapshot (external, pinned by ID/version/hash)
+
 Human Truth Package
-├── content-fields.yaml
 ├── template/
 │   ├── fillable-template.docx
 │   ├── template-spec.yaml
@@ -1189,10 +1202,10 @@ flowchart TB
 是否同意学生内容准备必须保留 `student-source.docx`，并产出 `student-content.json`；
 每项内容至少包含 `content_id`、`field_id`、内容值/引用、来源定位和顺序？
 
-### 决策 4：共享 Content Field Contract
+### 决策 4：共享 Content Field Registry
 
-是否同意模板槽位和学生内容共同引用 `content-fields.yaml`，以 `field_id` 作为语义连接
-键，同时保持字段集合开放，不建立封闭的全局论文类型枚举？
+已确定：模板槽位和学生内容共同引用固定的 Registry ID/version/hash，以
+`field_id` 作为语义连接键，同时保持字段集合开放，不建立封闭的全局论文类型枚举。
 
 ### 决策 5：Placement Truth
 

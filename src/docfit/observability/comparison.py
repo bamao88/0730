@@ -24,7 +24,8 @@ _CONDITIONS: tuple[tuple[str, str, str], ...] = (
     ("knowledge_digest", "Knowledge digest", "runtime"),
     ("tool_version", "DocFit Tool version", "runtime"),
     ("officecli_version", "OfficeCLI version", "runtime"),
-    ("adobe_sdk_version", "Adobe SDK version", "runtime"),
+    ("renderer", "Visual renderer", "runtime"),
+    ("renderer_version", "Visual renderer version", "runtime"),
     ("route_fingerprint", "Selected route fingerprint", "runtime"),
     ("routing_policy", "Routing policy", "runtime"),
     ("task_authorization", "Task authorization", "runtime"),
@@ -45,12 +46,7 @@ def _attribute_values(events: Sequence[ObservationEvent], key: str) -> tuple[obj
         provider_version = attributes.get("provider_version")
         if key == "officecli_version" and provider == "officecli" and provider_version:
             values.add(provider_version)
-        if (
-            key == "adobe_sdk_version"
-            and isinstance(provider, str)
-            and provider.startswith("adobe")
-            and provider_version
-        ):
+        if key == "renderer_version" and provider == "libreoffice" and provider_version:
             values.add(provider_version)
     return tuple(sorted(values, key=str))
 

@@ -66,16 +66,15 @@ from docfit.observability.transcript import (
     isolated_sdk_environment,
     transcript_summary_safely,
 )
-from docfit.tools.adobe import ADOBE_FIDELITY
 from docfit.tools.images import pdf_page_count
 from docfit.tools.runtime import (
     JsonObject,
     ToolFailure,
     atomic_write_json,
-    read_json,
     sha256_file,
 )
 from docfit.tools.service import DocFitToolService
+from docfit.visual.evidence import EvidenceStore as VisualEvidenceStore
 
 ConversionStatus = Literal["COMPLETED", "NEEDS_INPUT", "ERROR"]
 CONVERSION_BACKEND_TIMEOUT_SECONDS = 900
@@ -128,11 +127,13 @@ CONVERSION_OUTPUT_SCHEMA: JsonObject = {
         "visual_review": {
             "type": ["object", "null"],
             "properties": {
-                "schema_version": {"const": 1},
+                "schema_version": {"const": 2},
                 "document_sha256": {"type": "string"},
-                "render_sha256": {"type": "string"},
-                "provider": {"type": "object"},
-                "font_environment": {"type": "object"},
+                "render_ref": {
+                    "type": "string",
+                    "pattern": "^render:v2:[0-9a-f]{64}$",
+                },
+                "renderer": {"type": "object"},
                 "reviewed_pages": {
                     "type": "array",
                     "items": {"type": "integer", "minimum": 1},
@@ -175,9 +176,8 @@ CONVERSION_OUTPUT_SCHEMA: JsonObject = {
             "required": [
                 "schema_version",
                 "document_sha256",
-                "render_sha256",
-                "provider",
-                "font_environment",
+                "render_ref",
+                "renderer",
                 "reviewed_pages",
                 "evidence_refs",
                 "findings",
@@ -521,14 +521,14 @@ def build_conversion_prompt(prepared: PreparedConversion) -> str:
         "document bodies in logs, and prefer the five DocFit Tools for evidence-bound document "
         "operations. "
         "Use only the five DocFit Tools for document operations. Inspect the student and "
-        "template; establish Adobe PDF Services baseline evidence before layout-sensitive "
+        "template; establish a LibreOffice visual snapshot before layout-sensitive "
         "edits. The school template work copy is the only candidate backbone: begin editing "
         "with the template as docx_edit input_docx, place student content into its confirmed "
         "slots or regions, and use import_content_objects for cross-document objects. Never "
         "start the candidate from a student-document copy or import template sections into "
         "one. Apply supported school rules on the template-backed work copy; use OfficeCLI "
         "feedback when useful; "
-        "produce the exact required final.docx; generate an Adobe delivery candidate bound to "
+        "produce the exact required final.docx; generate a LibreOffice render bound to "
         "it; observe "
         "every final page through docx_visual_review in bounded batches; and call docx_validate. "
         "Use current object_refs after every document hash change. Do not select a backend, use "
@@ -554,10 +554,10 @@ def _conversion_system_prompt() -> str:
         "available to this process. Use them deliberately and never expose credentials or "
         "document bodies in logs. The five DocFit Tools remain the authoritative route for "
         "document mutations and document evidence. A clean school-template work copy is the "
-        "candidate backbone; the student DOCX is only the read-only content source. Adobe "
-        "baseline and "
-        "candidate routes never fall back to OfficeCLI. Complete only with current "
-        "official-service conversion evidence, full final-page observation, independent "
+        "candidate backbone; the student DOCX is only the read-only content source. "
+        "LibreOffice is the only visual renderer and OfficeCLI is only structural. Complete "
+        "only with current approximate LibreOffice evidence, full final-page observation, "
+        "independent "
         "validation, and zero "
         "blocking findings."
     )
@@ -785,7 +785,10 @@ async def run_conversion_agent(
     )
 
 
-def _render_reference_path(value: Any, prepared: PreparedConversion) -> Path:
+def _resolve_render_reference(
+    value: Any,
+    prepared: PreparedConversion,
+) -> tuple[str, Path, JsonObject]:
     if not isinstance(value, str) or not value:
         raise ToolFailure(
             status="error",
@@ -793,26 +796,8 @@ def _render_reference_path(value: Any, prepared: PreparedConversion) -> Path:
             code="candidate_render_ref_missing",
             message="The Agent returned no candidate render ref.",
         )
-    path = Path(value).expanduser()
-    path = path if path.is_absolute() else prepared.task_root / path
-    path = path.resolve()
-    if prepared.task_root not in path.parents and path != prepared.task_root:
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="candidate_render_ref_outside_task",
-            message="The Agent returned candidate evidence outside the task root.",
-        )
-    if path.is_dir():
-        path = path / "render-ref.json"
-    if not path.is_file():
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="candidate_render_ref_unreadable",
-            message="The Agent candidate render ref cannot be read.",
-        )
-    return path
+    path, manifest = VisualEvidenceStore(prepared.task_root).resolve_render(value)
+    return value, path, manifest
 
 
 def _validated_report_warnings(
@@ -922,21 +907,21 @@ def _finalize_conversion(
             code="conversion_source_changed",
             message="The read-only source snapshot changed during conversion.",
         )
-    candidate_path = _render_reference_path(output.get("candidate_render_ref"), prepared)
-    candidate = read_json(candidate_path)
+    candidate_ref, candidate_path, candidate = _resolve_render_reference(
+        output.get("candidate_render_ref"), prepared
+    )
     final_hash = sha256_file(prepared.final_docx)
     if not (
         candidate.get("document_sha256") == final_hash
-        and candidate.get("render_intent") == "candidate_verification"
-        and candidate.get("fidelity") == ADOBE_FIDELITY
-        and isinstance(candidate.get("provider"), dict)
-        and candidate["provider"].get("name") == "adobe_pdf_services"
+        and candidate.get("fidelity") == "approximate"
+        and isinstance(candidate.get("renderer"), dict)
+        and candidate["renderer"].get("name") == "libreoffice"
     ):
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="candidate_evidence_invalid",
-            message="The final candidate is not current Adobe PDF Services evidence.",
+            message="The final candidate is not current LibreOffice visual evidence.",
         )
     visual = output.get("visual_review")
     if not isinstance(visual, dict):
@@ -948,9 +933,8 @@ def _finalize_conversion(
         )
     if not (
         visual.get("document_sha256") == final_hash
-        and visual.get("render_sha256") == candidate.get("render_sha256")
-        and visual.get("provider") == candidate.get("provider")
-        and visual.get("font_environment") == candidate.get("font_environment")
+        and visual.get("render_ref") == candidate_ref
+        and visual.get("renderer") == candidate.get("renderer")
     ):
         raise ToolFailure(
             status="error",
@@ -993,7 +977,7 @@ def _finalize_conversion(
             )
     visual_path = prepared.task_root / "visual-review.json"
     atomic_write_json(visual_path, visual)
-    validation = DocFitToolService().validate(
+    validation = DocFitToolService(task_root=prepared.task_root).validate(
         {
             "task_root": str(prepared.task_root),
             "source_docx": str(prepared.source_docx),
@@ -1002,7 +986,7 @@ def _finalize_conversion(
             "knowledge_version": prepared.knowledge_version,
             "task_rule_evidence": output.get("task_rule_evidence", []),
             "visual_review": str(visual_path),
-            "candidate_render_ref": str(candidate_path),
+            "candidate_render_ref": candidate_ref,
             "required_visual_coverage": "all_final_pages",
         }
     )
@@ -1017,16 +1001,7 @@ def _finalize_conversion(
         )
     validation_path = prepared.task_root / "validation.json"
     atomic_write_json(validation_path, validation)
-    artifacts = candidate.get("artifacts")
-    candidate_pdf = artifacts.get("pdf") if isinstance(artifacts, dict) else None
-    if not isinstance(candidate_pdf, str):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="candidate_pdf_missing",
-            message="The Adobe delivery candidate has no complete PDF artifact.",
-        )
-    candidate_pdf_path = Path(candidate_pdf).resolve()
+    candidate_pdf_path = (candidate_path / "document.pdf").resolve()
     if (
         not candidate_pdf_path.is_file()
         or prepared.task_root not in candidate_pdf_path.parents
@@ -1036,7 +1011,7 @@ def _finalize_conversion(
             status="error",
             origin="postcondition",
             code="candidate_pdf_invalid",
-            message="The Adobe delivery candidate PDF is missing, outside the task, or incomplete.",
+            message="The LibreOffice candidate PDF is missing, outside the task, or incomplete.",
         )
     # A model may retain warnings from intermediate Tool calls after the final
     # evidence has changed.  Successful reports are authoritative summaries of
@@ -1054,7 +1029,7 @@ def _finalize_conversion(
         "COMPLETED",
         str(prepared.task_root),
         str(prepared.final_docx),
-        str(candidate_path),
+        candidate_ref,
         str(candidate_pdf_path),
         str(visual_path),
         str(validation_path),
@@ -1068,7 +1043,7 @@ def _finalize_conversion(
         execution.tool_uses,
         warnings,
         (
-            "Conversion completed with current Adobe PDF Services candidate, complete "
+            "Conversion completed with current LibreOffice visual evidence, complete "
             "Agent visual coverage, and independent validation; "
             f"pages={page_count}, validation_issues={issue_count}, "
             f"evidence_warnings={len(warnings)}."

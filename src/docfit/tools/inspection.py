@@ -260,32 +260,3 @@ def resolve_object_ref(reference: Any, inspection: Inspection) -> InspectedObjec
             suggested_actions=("inspect_document_again",),
         )
     return item
-
-
-def html_path_for_locator(document: Path, locator: str) -> str | None:
-    """Map an OfficeCLI opaque internal locator to its HTML preview data-path."""
-
-    with zipfile.ZipFile(document) as archive:
-        root = ET.fromstring(archive.read("word/document.xml"))
-    body = root.find(f"{{{W_NS}}}body")
-    if body is None:
-        return None
-    paragraph_match = re.fullmatch(r"/body/p\[@paraId=([0-9A-Fa-f]+)\]", locator)
-    if paragraph_match:
-        expected = paragraph_match.group(1).upper()
-        paragraph_index = 0
-        for child in body:
-            if child.tag != f"{{{W_NS}}}p":
-                continue
-            paragraph_index += 1
-            para_id = next(
-                (value for key, value in child.attrib.items() if key.endswith("}paraId")),
-                None,
-            )
-            if para_id and para_id.upper() == expected:
-                return f"/body/p[{paragraph_index}]"
-        return None
-    table_match = re.fullmatch(r"/body/tbl\[(\d+)\]", locator)
-    if table_match:
-        return f"/body/table[{table_match.group(1)}]"
-    return None

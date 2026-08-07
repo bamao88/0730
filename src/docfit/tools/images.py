@@ -289,7 +289,7 @@ def ensure_review_budget(paths: list[Path]) -> None:
 
 def poppler_versions() -> dict[str, str | None]:
     result: dict[str, str | None] = {}
-    for name in ("pdftoppm", "pdfinfo"):
+    for name in ("pdftoppm", "pdfinfo", "pdftotext"):
         executable = shutil.which(name)
         if executable is None:
             result[name] = None

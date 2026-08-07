@@ -5,36 +5,18 @@ from __future__ import annotations
 import base64
 import json
 import os
-import re
 import shutil
 import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from docfit.tools.adobe import (
-    ADOBE_CONVERSION_PROFILE,
-    ADOBE_FIDELITY,
-    ADOBE_REVISION_DISPLAY,
-    AdobePdfServicesAdapter,
-)
-from docfit.tools.images import (
-    compare_pages,
-    create_contact_sheet,
-    crop_page,
-    ensure_review_budget,
-    font_environment_fingerprint,
-    image_metadata,
-    pdf_to_png_pages,
-    verify_png,
-)
+from docfit.tools.images import verify_png
 from docfit.tools.inspection import (
     Inspection,
-    html_path_for_locator,
     inspect_document,
     resolve_object_ref,
 )
-from docfit.tools.layout import measure_html_layout
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.ooxml import import_content_objects
 from docfit.tools.package import validate_docx_package
@@ -46,13 +28,9 @@ from docfit.tools.runtime import (
     read_json,
     require_docx,
     sha256_file,
-    sha256_json,
     task_root_from_args,
 )
-
-RENDER_INTENTS = ("baseline", "edit_feedback", "candidate_verification")
-VISUAL_MODES = ("pages", "crops", "contact_sheet", "compare")
-MAX_RENDER_PAGES = 500
+from docfit.visual.service import VisualEvidenceService
 
 _SET_PROPERTY_ALLOWLIST = {
     "alignment",
@@ -204,125 +182,36 @@ def _scalar_properties(value: Any) -> dict[str, str]:
     return result
 
 
-def _render_ref_path(value: Any, *, task_root: Path, field: str) -> Path:
-    if not isinstance(value, str) or not value.strip():
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="missing_render_ref_path",
-            message=f"{field} must identify render evidence.",
-        )
-    raw = Path(value).expanduser()
-    candidate = raw if raw.is_absolute() else task_root / raw
-    path = authorized_path(
-        str(candidate),
-        task_root=task_root,
-        field=field,
-        expect_directory=candidate.is_dir(),
-    )
-    if path.is_dir():
-        path = path / "render-ref.json"
-    if path.name != "render-ref.json" or not path.is_file():
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="invalid_render_ref_path",
-            message=f"{field} must identify a render-ref.json file or its containing directory.",
-        )
-    return path
-
-
-def _load_render_ref(value: Any, *, task_root: Path, field: str) -> tuple[Path, JsonObject]:
-    path = _render_ref_path(value, task_root=task_root, field=field)
-    reference = read_json(path)
-    required = {
-        "schema_version",
-        "document_sha256",
-        "render_sha256",
-        "render_intent",
-        "fidelity",
-        "provider",
-        "font_environment",
-        "page_count",
-        "dpi",
-        "artifacts",
-    }
-    if reference.get("schema_version") != 1 or not required.issubset(reference):
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="invalid_render_ref",
-            message="The referenced render evidence has an invalid or unsupported schema.",
-        )
-    artifacts = reference.get("artifacts")
-    pages = artifacts.get("pages") if isinstance(artifacts, dict) else None
-    if not isinstance(pages, list) or len(pages) != reference.get("page_count"):
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="incomplete_render_ref",
-            message="The render ref does not enumerate every page artifact.",
-        )
-    for page in pages:
-        if not isinstance(page, dict) or not isinstance(page.get("path"), str):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_render_page",
-                message="A render page entry is invalid.",
-            )
-        page_path = authorized_path(
-            page["path"],
-            task_root=task_root,
-            field="render_page",
-        )
-        if page.get("sha256") != sha256_file(page_path):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="stale_render_ref",
-                message="A page image no longer matches its render ref.",
-            )
-    document_path = reference.get("document_path")
-    if isinstance(document_path, str):
-        current = authorized_path(
-            document_path,
-            task_root=task_root,
-            field="render_document",
-        )
-        if sha256_file(current) != reference.get("document_sha256"):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="render_document_changed",
-                message="The render ref belongs to an older document snapshot.",
-            )
-    return path, reference
-
-
-def _page_paths(reference: JsonObject, *, task_root: Path) -> list[Path]:
-    artifacts = reference["artifacts"]
-    assert isinstance(artifacts, dict)
-    values = artifacts["pages"]
-    assert isinstance(values, list)
-    return [
-        authorized_path(value["path"], task_root=task_root, field="render_page")
-        for value in values
-        if isinstance(value, dict)
-    ]
-
-
 class DocFitToolService:
     """One concrete service; it owns no Agent loop or workflow state."""
 
     def __init__(
         self,
         *,
+        task_root: Path | None = None,
         office: OfficeCliAdapter | None = None,
-        adobe: AdobePdfServicesAdapter | None = None,
+        visual: VisualEvidenceService | None = None,
     ) -> None:
+        self._task_root = (
+            task_root.expanduser().resolve(strict=True) if task_root is not None else None
+        )
         self._office = office
-        self._adobe = adobe
+        self._visual = visual
+
+    def _session_root(self, args: dict[str, Any]) -> Path:
+        if self._task_root is None:
+            return task_root_from_args(args)
+        requested = args.get("task_root")
+        if requested is not None:
+            candidate = task_root_from_args({"task_root": requested})
+            if candidate != self._task_root:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="task_root_mismatch",
+                    message="task_root does not match the root bound to this application session.",
+                )
+        return self._task_root
 
     @property
     def office(self) -> OfficeCliAdapter:
@@ -330,14 +219,14 @@ class DocFitToolService:
             self._office = OfficeCliAdapter()
         return self._office
 
-    @property
-    def adobe(self) -> AdobePdfServicesAdapter:
-        if self._adobe is None:
-            self._adobe = AdobePdfServicesAdapter()
-        return self._adobe
+    def visual(self) -> VisualEvidenceService:
+        if self._visual is None:
+            root = self._task_root or task_root_from_args({})
+            self._visual = VisualEvidenceService(root, office=self._office)
+        return self._visual
 
     def inspect(self, args: dict[str, Any]) -> JsonObject:
-        root = task_root_from_args(args)
+        root = self._session_root(args)
         document = _document_path(args, "input_docx", root)
         inspection = inspect_document(document, self.office)
         result = _public_inspection(inspection)
@@ -365,7 +254,7 @@ class DocFitToolService:
         return result
 
     def edit(self, args: dict[str, Any]) -> JsonObject:
-        root = task_root_from_args(args)
+        root = self._session_root(args)
         input_docx = _document_path(args, "input_docx", root)
         output_docx = authorized_path(
             args.get("output_docx"),
@@ -706,554 +595,14 @@ class DocFitToolService:
             for leftover in output_docx.parent.glob(f"{temporary.stem}-import-*.docx"):
                 leftover.unlink(missing_ok=True)
 
-    def render(self, args: dict[str, Any]) -> JsonObject:
-        root = task_root_from_args(args)
-        input_docx = _document_path(args, "input_docx", root)
-        intent = args.get("render_intent")
-        if intent not in RENDER_INTENTS:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_render_intent",
-                message="render_intent must be baseline, edit_feedback, or candidate_verification.",
-            )
-        forbidden = {"provider", "backend", "engine"}.intersection(args)
-        if forbidden:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="backend_selection_denied",
-                message="The public render contract does not accept a backend selector.",
-            )
-        output = _output_directory(args.get("output_dir"), task_root=root, field="output_dir")
-        document_hash = sha256_file(input_docx)
-        focus_value = args.get("focus_object_refs", [])
-        if not isinstance(focus_value, list):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_focus_object_refs",
-                message="focus_object_refs must be an array of current object refs.",
-            )
-        focused_objects: list[tuple[Any, str | None]] = []
-        if focus_value:
-            current_inspection = inspect_document(input_docx, self.office)
-            focused_objects = [
-                (
-                    item,
-                    html_path_for_locator(input_docx, item.locator),
-                )
-                for item in (
-                    resolve_object_ref(reference, current_inspection) for reference in focus_value
-                )
-            ]
-        parent_reference: JsonObject | None = None
-        parent_identity: JsonObject | None = None
-        baseline_value = args.get("baseline_render_ref")
-        if baseline_value is not None:
-            parent_path, parent_reference = _load_render_ref(
-                baseline_value,
-                task_root=root,
-                field="baseline_render_ref",
-            )
-            parent_identity = {
-                "render_sha256": parent_reference["render_sha256"],
-                "document_sha256": parent_reference["document_sha256"],
-                "ref_path": str(parent_path),
-            }
-        if intent == "candidate_verification" and parent_reference is None:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="candidate_baseline_required",
-                message="candidate_verification requires a valid baseline_render_ref.",
-            )
-        if intent == "edit_feedback":
-            provider = self.office.evidence()
-            fidelity = "approximate"
-            conversion_profile = "officecli_html_screenshot"
-            revision_display = "not_applicable"
-            font_environment = font_environment_fingerprint()
-            target_application: str | None = None
-            target_application_version: str | None = None
-        else:
-            provider = self.adobe.evidence()
-            fidelity = ADOBE_FIDELITY
-            conversion_profile = ADOBE_CONVERSION_PROFILE
-            revision_display = ADOBE_REVISION_DISPLAY
-            font_environment = self.adobe.font_environment()
-            target_application = None
-            target_application_version = None
-        cache_key = sha256_json(
-            {
-                "document_sha256": document_hash,
-                "render_intent": intent,
-                "provider": provider,
-                "font_environment": font_environment,
-                "conversion_profile": conversion_profile,
-                "revision_display": revision_display,
-                "parent_render_sha256": (
-                    parent_reference.get("render_sha256") if parent_reference else None
-                ),
-                "dpi": 144,
-            }
-        )
-        existing_ref = output / "render-ref.json"
-        if output.is_dir() and existing_ref.is_file():
-            existing = read_json(existing_ref)
-            if existing.get("cache_key") == cache_key:
-                _, verified = _load_render_ref(
-                    str(existing_ref), task_root=root, field="output_render_ref"
-                )
-                return {
-                    "schema_version": 1,
-                    "status": "ok",
-                    "checks": [{"name": "render_cache", "result": "ok"}],
-                    "warnings": list(verified.get("warnings", [])),
-                    "failure": None,
-                    "cache_hit": True,
-                    "render_ref": verified,
-                    "render_ref_path": str(existing_ref),
-                    "artifacts": verified["artifacts"],
-                }
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="render_output_conflict",
-                message="output_dir contains different render evidence; choose a new directory.",
-            )
-        if output.exists():
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="render_output_not_empty",
-                message="output_dir already exists without a reusable render ref.",
-            )
-
-        temporary = Path(tempfile.mkdtemp(prefix=".docfit-render-", dir=output.parent))
-        try:
-            pages_directory = temporary / "pages"
-            pages_directory.mkdir()
-            warnings: list[JsonObject] = []
-            pdf_final: Path | None = None
-            if intent == "edit_feedback":
-                html = temporary / "document.html"
-                self.office.html(input_docx, html)
-                html_text = html.read_text(encoding="utf-8", errors="replace")
-                page_count = len(re.findall(r"\bdata-page(?:=|\b)", html_text)) or 1
-                if page_count > MAX_RENDER_PAGES:
-                    raise ToolFailure(
-                        status="error",
-                        origin="postcondition",
-                        code="render_page_limit_exceeded",
-                        message="The approximate render exceeds the configured page limit.",
-                    )
-                pages = []
-                for page_number in range(1, page_count + 1):
-                    page = pages_directory / f"page-{page_number:04d}.png"
-                    self.office.screenshot(input_docx, page=page_number, output=page)
-                    pages.append(page)
-                warnings.append(
-                    {
-                        "code": "approximate_render",
-                        "kind": "fidelity",
-                        "message": (
-                            "OfficeCLI HTML screenshots are iteration feedback, not delivery "
-                            "conversion evidence."
-                        ),
-                    }
-                )
-            else:
-                pdf = temporary / "document.pdf"
-                self.adobe.export_pdf(input_docx, pdf)
-                pages = pdf_to_png_pages(pdf, pages_directory, dpi=144)
-                pdf_final = output / "document.pdf"
-                warnings.append(
-                    {
-                        "code": "service_managed_render_environment",
-                        "kind": "fidelity",
-                        "message": (
-                            "Adobe PDF Services completed the official conversion, but its "
-                            "font inventory and substitution details are not exposed."
-                        ),
-                    }
-                )
-            if sha256_file(input_docx) != document_hash:
-                raise ToolFailure(
-                    status="error",
-                    origin="postcondition",
-                    code="source_document_changed",
-                    message="The source document changed during rendering; evidence was discarded.",
-                )
-            page_entries: list[JsonObject] = []
-            for page_number, page in enumerate(pages, start=1):
-                metadata = image_metadata(page)
-                metadata["page"] = page_number
-                metadata["path"] = str(output / "pages" / page.name)
-                page_entries.append(metadata)
-            contact = temporary / "contact-sheet.png"
-            contact_metadata = create_contact_sheet(pages, contact)
-            contact_metadata["path"] = str(output / contact.name)
-            layout_map: JsonObject = {
-                "schema_version": 1,
-                "pages": [
-                    {
-                        "page": entry["page"],
-                        "coordinate_space": {
-                            "unit": "px",
-                            "origin": "top_left",
-                            "width": entry["width"],
-                            "height": entry["height"],
-                            "dpi": 144,
-                        },
-                        "elements": [],
-                    }
-                    for entry in page_entries
-                ],
-                "mapping_quality": "unavailable",
-            }
-            mapped_count = 0
-            if intent == "edit_feedback" and focused_objects:
-                measured = {str(item["path"]): item for item in measure_html_layout(html)}
-                layout_pages = layout_map["pages"]
-                assert isinstance(layout_pages, list)
-                for focused, html_path in focused_objects:
-                    measurement = measured.get(html_path or "")
-                    if measurement is None:
-                        continue
-                    measured_page = measurement.get("page")
-                    if not isinstance(measured_page, int) or not 1 <= measured_page <= len(
-                        layout_pages
-                    ):
-                        continue
-                    page_record = layout_pages[measured_page - 1]
-                    assert isinstance(page_record, dict)
-                    page_elements = page_record["elements"]
-                    assert isinstance(page_elements, list)
-                    page_elements.append(
-                        {
-                            "object_ref": focused.object_ref,
-                            "type": focused.kind,
-                            "bbox": measurement["bbox"],
-                            "mapping_quality": "approximate",
-                            "source": "officecli_html_dom",
-                        }
-                    )
-                    mapped_count += 1
-                if mapped_count:
-                    layout_map["mapping_quality"] = "approximate"
-            if intent == "edit_feedback" and mapped_count < len(focused_objects):
-                warnings.append(
-                    {
-                        "code": "layout_mapping_unavailable",
-                        "kind": "capability",
-                        "message": (
-                            "OfficeCLI supplied page pixels but one or more requested object "
-                            "bbox mappings were unavailable."
-                        ),
-                    }
-                )
-            if intent != "edit_feedback" and focused_objects:
-                warnings.append(
-                    {
-                        "code": "layout_mapping_unavailable",
-                        "kind": "capability",
-                        "message": (
-                            "The Adobe PDF Services route does not expose reliable object bbox "
-                            "mapping; use text anchors or current object refs."
-                        ),
-                    }
-                )
-            layout_path = temporary / "layout-map.json"
-            artifacts: JsonObject = {
-                "pdf": str(pdf_final) if pdf_final else None,
-                "pages": page_entries,
-                "pages_directory": str(output / "pages"),
-                "contact_sheet": contact_metadata,
-                "layout_map": str(output / "layout-map.json"),
-            }
-            render_basis = {
-                "document_sha256": document_hash,
-                "render_intent": intent,
-                "fidelity": fidelity,
-                "target_application": target_application,
-                "target_application_version": target_application_version,
-                "provider": provider,
-                "font_environment": font_environment,
-                "conversion_profile": conversion_profile,
-                "revision_display": revision_display,
-                "parent_render_ref": parent_identity,
-                "page_count": len(page_entries),
-                "dpi": 144,
-                "page_hashes": [entry["sha256"] for entry in page_entries],
-            }
-            render_sha256 = sha256_json(render_basis)
-            layout_map["render_sha256"] = render_sha256
-            atomic_write_json(layout_path, layout_map)
-            reference: JsonObject = {
-                "schema_version": 1,
-                "document_path": str(input_docx),
-                "document_sha256": document_hash,
-                "render_sha256": render_sha256,
-                "render_intent": intent,
-                "fidelity": fidelity,
-                "target_application": target_application,
-                "target_application_version": target_application_version,
-                "provider": provider,
-                "font_environment": font_environment,
-                "font_substitutions": font_environment["substitutions"],
-                "conversion_profile": conversion_profile,
-                "revision_display": revision_display,
-                "parent_render_ref": parent_identity,
-                "page_count": len(page_entries),
-                "dpi": 144,
-                "cache_key": cache_key,
-                "artifacts": artifacts,
-                "warnings": warnings,
-            }
-            atomic_write_json(temporary / "render-ref.json", reference)
-            os.replace(temporary, output)
-            return {
-                "schema_version": 1,
-                "status": "ok",
-                "checks": [
-                    {"name": "source_unchanged", "result": "ok"},
-                    {"name": "all_pages_present", "result": "ok"},
-                    {"name": "render_evidence_bound", "result": "ok"},
-                ],
-                "warnings": warnings,
-                "failure": None,
-                "cache_hit": False,
-                "render_ref": reference,
-                "render_ref_path": str(output / "render-ref.json"),
-                "artifacts": artifacts,
-            }
-        finally:
-            if temporary.exists():
-                shutil.rmtree(temporary)
+    def render(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
+        return self.visual().render(args)
 
     def visual_review(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
-        root = task_root_from_args(args)
-        _, reference = _load_render_ref(args.get("render_ref"), task_root=root, field="render_ref")
-        mode = args.get("mode", "pages")
-        if mode not in VISUAL_MODES:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="invalid_visual_mode",
-                message="Visual review mode must be pages, crops, contact_sheet, or compare.",
-            )
-        page_paths = _page_paths(reference, task_root=root)
-        images: list[Path] = []
-        evidence: list[JsonObject] = []
-        if mode == "contact_sheet":
-            artifacts = reference["artifacts"]
-            assert isinstance(artifacts, dict)
-            contact = artifacts.get("contact_sheet")
-            contact_path_value = contact.get("path") if isinstance(contact, dict) else None
-            contact_path = authorized_path(
-                contact_path_value,
-                task_root=root,
-                field="contact_sheet",
-            )
-            images.append(contact_path)
-            evidence.append(
-                {
-                    "evidence_ref": f"visual-{sha256_file(contact_path)[:24]}",
-                    "view": "contact_sheet",
-                    "image_sha256": sha256_file(contact_path),
-                    "pages": list(range(1, len(page_paths) + 1)),
-                    "candidate_object_refs": [],
-                }
-            )
-        elif mode == "pages":
-            requested = args.get("pages")
-            if (
-                not isinstance(requested, list)
-                or not requested
-                or not all(isinstance(value, int) for value in requested)
-            ):
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="invalid_review_pages",
-                    message="pages mode requires a non-empty array of page numbers.",
-                )
-            for page_number in requested:
-                if not 1 <= page_number <= len(page_paths):
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="review_page_out_of_range",
-                        message="A requested page is outside the render ref.",
-                    )
-                page = page_paths[page_number - 1]
-                images.append(page)
-                evidence_identity = {
-                    "render": reference["render_sha256"],
-                    "page": page_number,
-                }
-                evidence.append(
-                    {
-                        "evidence_ref": f"visual-{sha256_json(evidence_identity)[:24]}",
-                        "page": page_number,
-                        "view": "full_page",
-                        "image_sha256": sha256_file(page),
-                        "candidate_object_refs": [],
-                    }
-                )
-        elif mode == "crops":
-            crops = args.get("crops")
-            if (
-                not isinstance(crops, list)
-                or not crops
-                or not all(isinstance(item, dict) for item in crops)
-            ):
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="invalid_review_crops",
-                    message="crops mode requires crop objects with page and bbox.",
-                )
-            derived = (
-                Path(
-                    _render_ref_path(args["render_ref"], task_root=root, field="render_ref")
-                ).parent
-                / "visual-evidence"
-            )
-            derived.mkdir(exist_ok=True)
-            for crop in crops:
-                page_number = crop.get("page")
-                bbox = crop.get("bbox")
-                if not isinstance(page_number, int) or not 1 <= page_number <= len(page_paths):
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="crop_page_out_of_range",
-                        message="A crop page is outside the render ref.",
-                    )
-                if not isinstance(bbox, list):
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="invalid_crop_bbox",
-                        message="Each crop requires a bbox array.",
-                    )
-                identity = sha256_json(
-                    {"render": reference["render_sha256"], "page": page_number, "bbox": bbox}
-                )
-                output = derived / f"crop-{identity[:24]}.png"
-                metadata = crop_page(page_paths[page_number - 1], bbox, output)
-                images.append(output)
-                evidence.append(
-                    {
-                        "evidence_ref": f"visual-{identity[:24]}",
-                        "page": page_number,
-                        "view": "crop",
-                        "bbox": bbox,
-                        "image_sha256": metadata["sha256"],
-                        "candidate_object_refs": [],
-                    }
-                )
-        else:
-            _, baseline = _load_render_ref(
-                args.get("baseline_render_ref"),
-                task_root=root,
-                field="baseline_render_ref",
-            )
-            comparable_fields = ("dpi", "fidelity", "render_intent", "font_environment")
-            provider_fields = ("name", "version")
-            providers_match = all(
-                isinstance(reference.get("provider"), dict)
-                and isinstance(baseline.get("provider"), dict)
-                and reference["provider"].get(field) == baseline["provider"].get(field)
-                for field in provider_fields
-            )
-            if not providers_match or any(
-                reference.get(field) != baseline.get(field) for field in comparable_fields
-            ):
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="incomparable_render_refs",
-                    message=(
-                        "Compare requires the same provider, version, font environment, "
-                        "intent, fidelity, and DPI."
-                    ),
-                )
-            requested = args.get("pages")
-            if (
-                not isinstance(requested, list)
-                or not requested
-                or not all(isinstance(value, int) for value in requested)
-            ):
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="invalid_compare_pages",
-                    message="compare mode requires a non-empty pages array.",
-                )
-            baseline_pages = _page_paths(baseline, task_root=root)
-            derived = (
-                _render_ref_path(args["render_ref"], task_root=root, field="render_ref").parent
-                / "visual-evidence"
-            )
-            derived.mkdir(exist_ok=True)
-            for page_number in requested:
-                if not 1 <= page_number <= min(len(page_paths), len(baseline_pages)):
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="compare_page_out_of_range",
-                        message="A compare page is absent from one render ref.",
-                    )
-                identity = sha256_json(
-                    {
-                        "baseline": baseline["render_sha256"],
-                        "current": reference["render_sha256"],
-                        "page": page_number,
-                    }
-                )
-                output = derived / f"compare-{identity[:24]}.png"
-                metadata = compare_pages(
-                    baseline_pages[page_number - 1],
-                    page_paths[page_number - 1],
-                    output,
-                )
-                images.append(output)
-                evidence.append(
-                    {
-                        "evidence_ref": f"visual-{identity[:24]}",
-                        "page": page_number,
-                        "view": metadata["view"],
-                        "image_sha256": metadata["sha256"],
-                        "baseline_render_sha256": baseline["render_sha256"],
-                        "baseline_image_sha256": sha256_file(baseline_pages[page_number - 1]),
-                        "candidate_object_refs": [],
-                    }
-                )
-        ensure_review_budget(images)
-        return (
-            {
-                "schema_version": 1,
-                "status": "ok",
-                "checks": [{"name": "existing_render_only", "result": "ok"}],
-                "warnings": [],
-                "failure": None,
-                "document_sha256": reference["document_sha256"],
-                "render_sha256": reference["render_sha256"],
-                "render_intent": reference["render_intent"],
-                "fidelity": reference["fidelity"],
-                "provider": reference["provider"],
-                "font_environment": reference["font_environment"],
-                "mode": mode,
-                "evidence": evidence,
-            },
-            images,
-        )
+        return self.visual().review(args)
 
     def validate(self, args: dict[str, Any]) -> JsonObject:
-        root = task_root_from_args(args)
+        root = self._session_root(args)
         source = _document_path(args, "source_docx", root)
         final = _document_path(args, "final_docx", root)
         source_hash = sha256_file(source)
@@ -1371,11 +720,7 @@ class DocFitToolService:
                 )
         candidate: JsonObject | None = None
         if candidate_value is not None:
-            _, candidate = _load_render_ref(
-                candidate_value,
-                task_root=root,
-                field="candidate_render_ref",
-            )
+            _, candidate = self.visual().store.resolve_render(candidate_value)
             if candidate.get("document_sha256") != final_hash:
                 raise ToolFailure(
                     status="needs_input",
@@ -1386,14 +731,13 @@ class DocFitToolService:
         all_pages_covered = candidate is not None and reviewed_pages == set(
             range(1, int(candidate["page_count"]) + 1)
         )
-        delivery_candidate = (
+        current_visual_snapshot = (
             candidate is not None
-            and candidate.get("render_intent") == "candidate_verification"
-            and candidate.get("fidelity") == ADOBE_FIDELITY
-            and isinstance(candidate.get("provider"), dict)
-            and candidate["provider"].get("name") == "adobe_pdf_services"
+            and candidate.get("fidelity") == "approximate"
+            and isinstance(candidate.get("renderer"), dict)
+            and candidate["renderer"].get("name") == "libreoffice"
         )
-        visual_ok = delivery_candidate and all_pages_covered and blocking_findings == 0
+        visual_ok = current_visual_snapshot and all_pages_covered and blocking_findings == 0
         checks.append(
             {
                 "name": "visual_review_coverage",
@@ -1401,17 +745,14 @@ class DocFitToolService:
                 "severity": "warning" if not visual_ok else "info",
                 "blocking": False,
                 "evidence": {
-                    "delivery_candidate": delivery_candidate,
+                    "current_visual_snapshot": current_visual_snapshot,
                     "all_final_pages_reviewed": all_pages_covered,
                     "blocking_findings": blocking_findings,
                 },
                 "suggested_action": (
                     None
                     if visual_ok
-                    else (
-                        "Generate current Adobe delivery candidate evidence and review every "
-                        "final page."
-                    )
+                    else "Render the current final DOCX and review every final page."
                 ),
             }
         )
@@ -1421,8 +762,8 @@ class DocFitToolService:
                     "code": "verification_gap",
                     "kind": "visual_review",
                     "message": (
-                        "Current Adobe delivery candidate evidence and complete Agent page "
-                        "coverage are absent or incomplete."
+                        "Current LibreOffice render evidence and complete Agent page coverage "
+                        "are absent or incomplete."
                     ),
                 }
             )

@@ -9,7 +9,7 @@ TEMPLATE_COMPARE_SCHEMA: JsonObject = {
     "properties": {
         "schema_version": {"const": 1},
         "task_root": {"type": "string", "minLength": 1},
-        "action": {"type": "string", "enum": ["create", "images"]},
+        "action": {"const": "create"},
         "review_mode": {
             "type": "string",
             "enum": ["mutation_review", "final_review"],
@@ -18,16 +18,18 @@ TEMPLATE_COMPARE_SCHEMA: JsonObject = {
         "after_snapshot_ref": {"type": "string"},
         "mutation_ref": {"type": "string"},
         "final_snapshot_ref": {"type": "string"},
-        "visual_level": {"type": "string", "enum": ["candidate_verification"]},
-        "comparison_ref": {"type": "string"},
-        "required_image_ids": {
+        "render_ref": {"type": "string", "pattern": "^render:v2:[0-9a-f]{64}$"},
+        "reviewed_pages": {
             "type": "array",
-            "maxItems": 4,
             "uniqueItems": True,
-            "items": {"type": "string", "minLength": 1},
+            "items": {"type": "integer", "minimum": 1},
         },
-        "cursor": {"type": ["string", "null"]},
-        "max_images": {"type": "integer", "minimum": 1, "maximum": 4},
+        "evidence_refs": {
+            "type": "array",
+            "uniqueItems": True,
+            "items": {"type": "string", "pattern": "^visual:v2:[0-9a-f]{64}$"},
+        },
+        "findings": {"type": "array", "items": {"type": "object"}},
     },
     "required": ["schema_version", "task_root", "action"],
     "additionalProperties": False,

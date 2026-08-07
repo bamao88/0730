@@ -1,7 +1,8 @@
 # `docfit-school-extract` v2 候选实施与验收计划
 
-> 状态：W0–W5 候选代码与自动化合同已完成；既有真实学校产物因未完成内容清理而被否决，
-> 新一轮真实 Agent 验证受外部模型凭据/额度阻断，尚未执行 W6 生产切换。
+> 状态：W0–W5 候选代码与自动化合同已完成；MiniMax Token Plan、SDK transport、权限与观察
+> 上下文问题已经修复，真实 Agent CLI 已能观察、渲染、mutate 并自检，但仍未稳定完成空白区域
+> 的语义定位和内容清理，因此 W5 Agent Gate 未通过，W6 尚未执行。
 >
 > 当前已有开发入口 `docfit prepare-template` 和候选 Skill/Tool 组合。生产 Skill、转换链与长期
 > 架构基线仍保持现状；只有 W6 获得单独批准后才执行原子生产切换。
@@ -173,13 +174,13 @@ Tool transport success/error 与领域状态分开。即使 MCP 调用成功，�
 
 | Tool | 公开 action/mode | 关键输入 | 成功结果 |
 |---|---|---|---|
-| `template_observe` | `create`、`query`、`images` | task root、DOCX/snapshot/render、focus、visual level | 不可变 snapshot/render 或匹配/图片批次 |
+| `template_observe` | `create`、`query` | task root、DOCX/snapshot、focus | 不可变 snapshot 或匹配结果 |
 | `template_mutate` | plan 内 `materialize_slot`、`remove_content` | mutation plan、新 DOCX 路径 | 新 DOCX、after snapshot、mutation ref |
-| `template_compare` | `create` 的 `mutation_review`/`final_review`，及 `images` | before/after/final snapshot、mutation ref | comparison ref、diff、required images |
+| `template_compare` | `create` 的 `mutation_review`/`final_review` | before/after/final snapshot、mutation ref；final review 绑定 V2 render/evidence | comparison ref、diff、final review evidence |
 | `template_build` | 单一 build | final snapshot、artifact spec、新 output dir | 四文件 template artifact |
 
-visual level 固定为 `none | quick | candidate_verification`。`candidate_verification` 使用 Adobe
-固定路由并覆盖最终 hash 全页，但不表示 Word/WPS 质量认证。
+模板 Tool server 额外暴露共享 `docx_render` 与 `docx_visual_review`；最终模板使用固定
+LibreOffice V2 render 覆盖全部页面，不表示 Word/WPS 像素质量认证。
 
 四个 Tool 的字段、错误码、原子性和 algorithm 见 `TOOL-DESIGN.md`。未列出的 action/mode
 默认不支持。
@@ -405,16 +406,28 @@ Agent backend 401–403 → 无 Agent 决定/产物       → 恢复凭据或额
 - `template_mutate` 不再使用 protected content/style/section/marker 语义检查器否决 Agent 已
   编译决定；它保留计划、路径、hash、目标定位、package 和原子发布边界，并把 after snapshot、
   mutation diff 与渲染证据反馈给 Agent 自行核对；
-- 新南农运行在空 task root 完成结构 snapshot 与 14 页初始渲染，但在写 mutation decisions 前
-  失去可用后端。三个 Kimi credential 返回 HTTP 403；MiniMax 外部配置使用普通按量 key，针对
-  官方 M2.7 endpoint 的最小请求返回 HTTP 402 / `insufficient_balance_error`。Token Plan 与按量
-  key 资源池独立，正确 Token Plan key 尚未安装；未生成新 DOCX 或 template artifact；
+- Token Plan credential 已安装到仓库外配置；官方 M2.7 endpoint 最小请求返回 HTTP 200，真实
+  Claude Agent SDK、filesystem Skill 与 MCP Tool 调用均通过。此前 HTTP 402 的根因是普通按量
+  key 与 Token Plan 资源池分离，不再是当前 blocker；
 - MiniMax SDK 环境已按官方 Claude Code 合同改用 `ANTHROPIC_AUTH_TOKEN`、关闭非必要后台流量，
-  默认和本机覆盖模型均改为 `MiniMax-M2.7`；
-- 当前受影响的 Tool/Agent/CLI 合同 30 项、根项目全量 353 项通过；scoped ruff、strict mypy、
-  doctor、lock 和 build 通过。全仓 ruff 只被两个既有未跟踪 `test/` 诊断脚本的 import 顺序
-  阻断，本工作包未修改这些用户文件；
+  默认和本机覆盖模型均为 `MiniMax-M2.7`；provider 把 schema 常量 `1` 发送为字符串 `"1"` 的
+  transport 差异由 `PreToolUse` hook 规范化；
+- task-local permissions 只允许 Agent 新增 decisions YAML/JSON 并调用两个 compiler；禁止绕过
+  template Tool 直接复制/修改 DOCX 或人工拼出 artifact。snapshot 保留完整 inventory，过大响应
+  内联 paragraph objects 并允许 Agent 继续 query run/table，保证上下文省略不会被解释为空模板；
+- 完整 CLI 第六轮 `temp/docfit-school-extract-v2-njau-minimax-token-plan-r6/` 已完成观察、全页 render/
+  visual review 与两轮 mutate。Agent 根据反馈主动否决了首轮 13 个错误定位并从原模板重试；第二轮
+  仅稳定 materialize 7 个槽位，保留 7 个 gap，`remove_content` 为 0，最终返回 blocked。两个
+  mutated DOCX 都只是诊断尝试，没有 final compare/build，也没有被接受为候选 artifact；
+- 当前 template/permission 合同回归 46 项、unit + Agent 回归 252 项通过；scoped ruff、strict
+  mypy 和 diff check 通过。本轮没有把工作区中同时进行的视觉能力、全局文档与独立 Eval 改动
+  纳入学校模板提取切片；
 - W6 的转换端硬依赖尚未满足，保持不可执行。
+
+当前剩余问题不是额度或隐藏语义 checker，而是观察界面对“标签旁边的空白填写区”和“标题后的
+空正文区域”表达不足。建议下一步给观察能力增加确定性的相邻对象/空白区域候选查询：Tool 只返回
+布局事实与 object ref，Agent 继续负责语义选择、mutation、渲染和自我纠错。因为这会扩展公开
+Tool 合同，必须先获得产品决策，再进入实现与下一轮真实运行。
 
 真实学校运行暴露并已修正两个合同缺口：只要最终模板 hash 与学校源模板不同，artifact spec 和
 builder 都强制要求非空、连续且比较无 blocker 的 mutation lineage；观测侧扁平样式事实必须由

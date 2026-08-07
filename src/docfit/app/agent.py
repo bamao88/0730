@@ -659,7 +659,7 @@ def build_agent_options(
         tools=list(BUILTIN_TOOLS),
         allowed_tools=list(AUTO_APPROVED_TOOL_NAMES),
         disallowed_tools=list(FORBIDDEN_TOOLS),
-        mcp_servers={MCP_SERVER_NAME: build_docfit_server()},
+        mcp_servers={MCP_SERVER_NAME: build_docfit_server(task_root or root)},
         strict_mcp_config=True,
         permission_mode="default",
         can_use_tool=make_permission_callback(
@@ -689,8 +689,8 @@ def build_agent_options(
             "process, so use them deliberately and never expose credentials or document "
             "content in logs. "
             "Interpret Tool results yourself; the application shell does not choose Knowledge, "
-            "delegate scopes, or interpret needs_input. Never treat approximate OfficeCLI "
-            "rendering as Adobe delivery conversion evidence, and never consume an error or "
+            "delegate scopes, or interpret needs_input. LibreOffice is the only visual "
+            "renderer; OfficeCLI evidence is structural only. Never consume an error or "
             "committed=false "
             "output."
         ),

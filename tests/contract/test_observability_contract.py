@@ -150,7 +150,7 @@ def test_observer_web_core_does_not_import_optional_platform_adapter() -> None:
                 "from docfit.observability.web import create_observer_app; "
                 "create_observer_app(Path('/observer.sqlite3'), port=43123); "
                 "forbidden=('docfit.observability.local_debug','docfit.tools',"
-                "'adobe','win32com','appscript','pyautogui'); "
+                "'win32com','appscript','pyautogui'); "
                 "assert not any(name == item or name.startswith(item + '.') "
                 "for name in sys.modules for item in forbidden)"
             ),

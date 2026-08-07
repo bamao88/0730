@@ -24,13 +24,15 @@ def validate_review(
         review.get("final_snapshot_ref") != decisions.get("final_snapshot_ref")
         or comparison.get("final_snapshot_ref") != decisions.get("final_snapshot_ref")
         or comparison.get("document_sha256") != snapshot.get("document_sha256")
-        or comparison.get("visual_level") != "candidate_verification"
-        or review.get("visual_level") != "candidate_verification"
+        or comparison.get("render_ref") != review.get("render_ref")
+        or comparison.get("fidelity") != "approximate"
+        or not isinstance(comparison.get("renderer"), dict)
+        or comparison["renderer"].get("name") != "libreoffice"
     ):
         raise ToolFailure(
             status="needs_input", origin="request",
-            code="final_comparison_not_candidate_verification",
-            message="The final comparison does not bind the exact candidate snapshot.",
+            code="final_comparison_not_visual_snapshot",
+            message="The final comparison does not bind the exact LibreOffice snapshot.",
         )
     required = decision_objects(comparison.get("required_images"), "required_images")
     dispositions = decision_objects(review.get("image_dispositions"), "image_dispositions")
@@ -66,7 +68,8 @@ def validate_review(
         "comparison_ref": review.get("comparison_ref"),
         "render_ref": comparison.get("render_ref"),
         "document_sha256": snapshot.get("document_sha256"),
-        "visual_level": "candidate_verification",
+        "fidelity": "approximate",
+        "renderer": comparison.get("renderer"),
         "page_count": len(required),
         "required_images": [
             {key: value for key, value in item.items() if key != "render_page_path"}

@@ -107,9 +107,12 @@ def test_convert_thesis_uses_only_the_five_public_docfit_tools() -> None:
     body, _ = _skill_tree("convert-thesis")
 
     assert _tool_names(body) == set(FULL_TOOL_NAMES)
-    assert "只选择 intent，绝不选择后端" in body
-    assert "传输预算" in body
-    assert "局部裁剪图" in body
+    assert "固定 LibreOffice V2" in body
+    assert "`render:v2:`" in body
+    assert "intent、provider、backend" in body
+    assert "有 cursor" in body
+    assert "mapping 不唯一" in body
+    assert "裁剪图不能替代完整页面判断" in body
     assert "可见的应用错误" in body
     assert "损坏的域或交叉引用结果" in body
     assert "阻断性发现" in body
