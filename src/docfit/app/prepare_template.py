@@ -274,6 +274,57 @@ def build_prepare_template_options(
     )
 
 
+def _validated_sdk_output(
+    result: ResultMessage | None,
+    *,
+    backend: AgentBackend,
+) -> JsonObject:
+    if result is None:
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="template_agent_result_missing",
+            message=f"The {backend.name} Agent backend returned no SDK result.",
+            retryable=True,
+        )
+    terminal_reason = result.terminal_reason or "unknown"
+    if result.is_error:
+        if result.api_error_status is not None:
+            status = result.api_error_status
+            raise ToolFailure(
+                status="error",
+                origin="agent",
+                code="template_agent_backend_api_error",
+                message=(
+                    f"The {backend.name} Agent backend returned HTTP {status} "
+                    f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
+                ),
+                retryable=status not in {400, 401, 402, 403},
+            )
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="template_agent_backend_error",
+            message=(
+                f"The {backend.name} Agent backend ended with an SDK error "
+                f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
+            ),
+            retryable=True,
+        )
+    if not isinstance(result.structured_output, dict):
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="template_agent_structured_output_missing",
+            message=(
+                f"The {backend.name} Agent backend returned no structured output "
+                f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
+            ),
+            retryable=True,
+        )
+    return result.structured_output
+
+
 async def _run_backend(
     prepared: PreparedTemplateTask,
     backend: AgentBackend,
@@ -296,16 +347,10 @@ async def _run_backend(
                                     skills.append(value)
                 if isinstance(message, ResultMessage):
                     result = message
-        if result is None or result.is_error or not isinstance(result.structured_output, dict):
-            raise ToolFailure(
-                status="error",
-                origin="agent",
-                code="template_agent_result_invalid",
-                message="The template Agent returned no valid structured result.",
-                retryable=True,
-            )
+        structured_output = _validated_sdk_output(result, backend=backend)
+        assert result is not None
         return TemplateAgentExecution(
-            structured_output=result.structured_output,
+            structured_output=structured_output,
             tool_uses=tuple(tool_uses),
             skills_loaded=tuple(dict.fromkeys(skills)),
             session_id=result.session_id,
@@ -322,25 +367,29 @@ async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExe
             code="agent_backend_not_configured",
             message="No configured Agent backend is available for template preparation.",
         )
-    last_error: ToolFailure | None = None
+    failures: list[str] = []
     for backend in backends:
         try:
             async with asyncio.timeout(PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS):
                 return await _run_backend(prepared, backend)
         except TimeoutError:
-            last_error = ToolFailure(
-                status="error",
-                origin="agent",
-                code="template_agent_timeout",
-                message=(
-                    "The template Agent exceeded the bounded backend execution timeout."
-                ),
-                retryable=True,
+            failures.append(
+                f"{backend.name}: The template Agent exceeded the "
+                f"{PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS}s backend timeout."
             )
         except ToolFailure as error:
-            last_error = error
-    assert last_error is not None
-    raise last_error
+            failures.append(f"{backend.name}: {error.message}")
+    raise ToolFailure(
+        status="error",
+        origin="agent",
+        code="template_agent_backends_failed",
+        message="All configured Agent backend candidates failed: " + "; ".join(failures),
+        retryable=True,
+        suggested_actions=(
+            "Restore at least one backend credential or quota, then rerun with a "
+            "new output directory.",
+        ),
+    )
 
 
 def _validated_report(

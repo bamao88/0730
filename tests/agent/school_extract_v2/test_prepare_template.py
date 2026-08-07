@@ -6,12 +6,14 @@ import shutil
 from pathlib import Path
 
 import pytest
+from claude_agent_sdk.types import ResultMessage
 
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
     PREPARE_TEMPLATE_OUTPUT_SCHEMA,
     PrepareTemplateRequest,
     TemplateAgentExecution,
+    _validated_sdk_output,
     build_prepare_template_options,
     prepare_template_task,
     run_prepare_template,
@@ -88,6 +90,38 @@ def test_prepare_output_schema_requires_the_canonical_relative_artifact_path() -
         "type": ["string", "null"],
         "enum": ["output/template-artifact", None],
     }
+
+
+def test_sdk_api_error_preserves_safe_backend_diagnostics() -> None:
+    backend = AgentBackend(
+        name="minimax",
+        base_url="https://example.invalid/",
+        model="test-model",
+        credential_variable="TEST_KEY",
+        api_key="secret",
+    )
+    result = ResultMessage(
+        subtype="success",
+        duration_ms=100,
+        duration_api_ms=90,
+        is_error=True,
+        num_turns=1,
+        session_id="session-error",
+        stop_reason="stop_sequence",
+        structured_output=None,
+        api_error_status=402,
+        terminal_reason="api_error",
+    )
+
+    with pytest.raises(ToolFailure) as caught:
+        _validated_sdk_output(result, backend=backend)
+
+    assert caught.value.code == "template_agent_backend_api_error"
+    assert caught.value.retryable is False
+    assert caught.value.message == (
+        "The minimax Agent backend returned HTTP 402 "
+        "(terminal_reason=api_error, turns=1)."
+    )
 
 
 def test_prepare_cli_has_the_approved_public_arguments() -> None:
@@ -304,6 +338,44 @@ def test_template_agent_timeout_moves_to_the_next_backend(
     execution = asyncio.run(run_template_agent(prepared))
 
     assert execution.backend == "minimax"
+
+
+def test_template_agent_reports_all_backend_failures(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    backends = (
+        AgentBackend("kimi", "https://kimi.invalid/", "kimi", "KIMI_KEY", "secret-1"),
+        AgentBackend(
+            "minimax",
+            "https://minimax.invalid/",
+            "minimax",
+            "MINIMAX_KEY",
+            "secret-2",
+        ),
+    )
+
+    async def fake_run_backend(_prepared, backend: AgentBackend) -> TemplateAgentExecution:
+        status = 403 if backend.name == "kimi" else 402
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="template_agent_backend_api_error",
+            message=f"The {backend.name} Agent backend returned HTTP {status}.",
+        )
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.iter_agent_backends", lambda: iter(backends)
+    )
+    monkeypatch.setattr("docfit.app.prepare_template._run_backend", fake_run_backend)
+
+    with pytest.raises(ToolFailure) as caught:
+        asyncio.run(run_template_agent(prepared))
+
+    assert caught.value.code == "template_agent_backends_failed"
+    assert "kimi: The kimi Agent backend returned HTTP 403." in caught.value.message
+    assert "minimax: The minimax Agent backend returned HTTP 402." in caught.value.message
 
 
 def test_prepare_rejects_agent_that_changes_a_read_only_input(tmp_path: Path) -> None:
