@@ -19,9 +19,10 @@
   图片检查，Tool 成功不等于结果正确。
 - Regression proof: 旧实现会把 Agent 明确授权的 paragraph 清理误判为
   `protected_content_changed`；新公开 Tool 回归用例证明同一计划可提交且源模板保持不变。
-- Automated proof: 受影响的 Tool/Agent/CLI 合同 `30 passed`，根项目全量 `353 passed`；scoped
-  ruff、strict mypy、lock 和 build 通过。全仓 ruff 只被两个既有未跟踪 `test/` 诊断脚本的
-  import 顺序阻断，本切片未修改这些用户文件。
+- Automated proof: MiniMax 修复后的 unit + school Agent `259 passed`，受影响的模板
+  Tool/Agent/CLI 合同 `30 passed`；scoped ruff、strict mypy、lock 和 build 通过。本修复前最近
+  一次根项目全量为 `353 passed`。全仓 ruff 只被两个既有未跟踪 `test/` 诊断脚本的 import
+  顺序阻断，本切片未修改这些用户文件。
 - Rejected prior artifact: `temp/docfit-school-extract-v2-njau-real-r2/` 仅保留诊断证据。它没有完成
   内容清理，required 槽位覆盖不足，且原运行没有干净结束，不再作为有效交付。
 - Live run: `temp/docfit-school-extract-v2-njau-agent-trust-r1/` 使用同一份南农模板、requirements
