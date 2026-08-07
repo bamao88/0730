@@ -9,7 +9,7 @@ from template_extraction_eval.sentinel import run_raw_source_sentinel
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PROJECT_ROOT.parents[1]
-DEFAULT_OUTPUT = PROJECT_ROOT / ".runs" / "raw-source-sentinel-v3"
+DEFAULT_OUTPUT = PROJECT_ROOT / ".runs" / "source-clean-audit-v2"
 CASES = (
     (
         "01-hunau-undergraduate",
@@ -32,33 +32,48 @@ def _source_root() -> Path:
 
 def _markdown(results: list[dict[str, Any]]) -> str:
     lines = [
-        "# Raw source as Actual — sentinel result",
-        "",
-        "> Diagnostic only; candidate Gold is never promoted or accepted by this command.",
+        "# Original source → clean Gold audit",
         "",
         (
-            "| Case | Protected | Protected score | Protected atoms | Slot | "
-            "Slot score | Total | Responsibility | Analysis | Verdict |"
+            "> Diagnostic only. The original DOCX is Actual; the clean template and "
+            "fill contract are Gold."
         ),
-        "|---|---|---:|---:|---|---:|---:|---:|---:|---|",
+        "",
+        (
+            "| Case | Verdict | Gold coverage | Aligned paragraphs | Missing Gold paragraphs | "
+            "Protected FAIL | Protected UNKNOWN | Slot FAIL | Score |"
+        ),
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for item in results:
         result = item["result"]
         protected = result["protected"]
         slot = result["slot"]
-        protected_atoms = protected["responsibility_inventory"]["protected_atoms"]
+        audit = protected["audit"]
         lines.append(
-            f"| {item['case_id']} | {protected['status']} | "
-            f"{protected['score']}/{protected['weight']} | {protected_atoms} | "
-            f"{slot['status']} | "
-            f"{slot['score']}/{slot['weight']} | {result['score']} | "
-            f"{result['responsibility_coverage']:.0%} | "
-            f"{result['analysis_coverage']:.0%} | {result['verdict']} |"
+            f"| {item['case_id']} | {result['verdict']} | "
+            f"{result['responsibility_coverage']:.2%} | "
+            f"{audit['matched_paragraphs']} | {audit['missing_gold_paragraphs']} | "
+            f"{protected['counts']['FAIL']} | {protected['counts']['UNKNOWN']} | "
+            f"{slot['counts']['FAIL']} | {result['score']} |"
         )
     lines.extend(["", "## Warnings", ""])
     for item in results:
         for warning in item["warnings"]:
             lines.append(f"- `{item['case_id']}` — {warning}")
+    lines.extend(["", "## Failed/unknown protected cases", ""])
+    for item in results:
+        lines.append(f"### {item['case_id']}")
+        lines.append("")
+        issues = item["result"]["protected"]["issues"]
+        if not issues:
+            lines.append("- None")
+        for issue in issues:
+            lines.append(
+                f"- `{issue['assertion_id']}` `{issue['status']}` "
+                f"`{issue['dimension']}` — {issue['message']}"
+            )
+        lines.append("")
     return "\n".join(lines) + "\n"
 
 

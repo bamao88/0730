@@ -29,6 +29,11 @@ issue。分数不覆盖硬失败；输入/schema/hash/Gold 状态错误不生成
 统一遮罩后再比较两侧固定内容。分析器识别但不能解释的对象仍完成责任归类，但断言必须输出
 `UNKNOWN`，不能用“已归类”冒充“已正确分析”。
 
+本阶段只承接 Actual 与 clean Gold，不把 Gold 的上游生成或验收状态混入质量评分。protected
+责任面以 clean Gold 中 slot/remove 的补集为真值；每一个 Gold protected 事实都必须产生一条
+PASS/FAIL/UNKNOWN 断言。段落先通过单调内容与容器证据对齐，再比较文字、逻辑结构、有效样式
+与对象，因此 Actual 前面多出待删除说明时，不会把后续全文按绝对段落序号误判为错位。
+
 默认输出目录为 `.runs/<run-id>/<case-id>/`：
 
 ```text
@@ -56,6 +61,7 @@ evals/template-extraction/
 │   ├── contracts.py                    # 输入和 Gold 资格门禁
 │   ├── markers.py                      # 主槽、组件、连续区域的标记闭包
 │   ├── responsibility.py               # 全文事实责任归类与 protected 补集比较
+│   ├── aligned_protected.py             # Gold 全量 protected 事实对齐与逐原子断言
 │   ├── scoring.py                      # 双视角评分和覆盖率
 │   └── sentinel.py                     # diagnostic-only 哨兵编排
 ├── tests/                              # contract、unit、integration 测试
@@ -72,6 +78,7 @@ evals/template-extraction/
 | `template_extraction_eval/facts/` | Actual/Gold 共用的 DOCX 内容、结构、有效样式和对象事实分析 |
 | `template_extraction_eval/markers.py` | 校验主槽、组件槽、连续区域和 DOCX 标记的双向闭包 |
 | `template_extraction_eval/responsibility.py` | 枚举全文事实、完成 protected/slot/remove 归类并比较全部 protected 原子 |
+| `template_extraction_eval/aligned_protected.py` | 以 clean Gold 为参考，完成段落单调对齐，并为每一个 protected 原子生成断言 |
 | `template_extraction_eval/evaluators/` | protected、slot 与 Gold 声明的 remove 业务断言 |
 | `template_extraction_eval/scoring.py` | 双视角、八分项、slot F1、覆盖率和硬失败结论 |
 | `template_extraction_eval/reporting.py` | 原子发布同源 JSON/Markdown 报告 |
@@ -97,20 +104,27 @@ uv run python run_eval.py \
 
 ```bash
 uv run python run_raw_source_sentinel.py \
-  --output-dir .runs/raw-source-sentinel-v3
+  --output-dir .runs/source-clean-audit-v2
 ```
 
-该命令明确标记 `diagnostic_only=true`，并使用两套互不污染的事实基线：protected 层以原始
-模板自身作为保留真值，slot 层以 Gold 提取模板与填写契约作为提取真值。最新全量结果为：
+该命令明确标记 `diagnostic_only=true`，把原始学校 DOCX 当作 Actual，直接对比 clean Gold
+模板和填写契约。它不是自比较，也不抽取少量 anchor；Gold 的全部 protected 原子和全部 slot
+都会进入断言集合：
 
-| 学校 | protected 全量事实 | protected | slot 失败断言 | slot |
-|---|---:|---|---:|---|
-| 湖南农业大学 | 2301 | `50/50 + PASS` | 96 | `0/50 + FAIL` |
-| 南京农业大学 | 1227 | `50/50 + PASS` | 128 | `0/50 + FAIL` |
-| 北京大学 | 4367 | `50/50 + PASS` | 112 | `0/50 + FAIL` |
+| 学校 | Gold protected 原子 | 责任覆盖 | protected P/F/U | protected 得分 | slot FAIL | 总分 |
+|---|---:|---:|---:|---:|---:|---:|
+| 湖南农业大学 | 1692 | 100% | 1036 / 647 / 9 | 33.0208 / 50 | 96 | 33.0208 |
+| 南京农业大学 | 659 | 100% | 417 / 230 / 12 | 34.4072 / 50 | 128 | 34.4072 |
+| 北京大学 | 486 | 100% | 468 / 9 / 9 | 48.2307 / 50 | 112 | 48.2307 |
 
-三校的责任覆盖率和分析覆盖率均为 100%。此前湖南农大基于三个 anchor 得出的 `35/50` 已
-撤销：那只能证明三个样本中的页边距差异，不能代表全文保留质量，也不再进入正式口径。
+三校结论均为 `FAIL`，槽层符合哨兵预期：Gold 的每个槽均产生 inventory、位置边界、字段映射
+和槽值样式四条失败断言。保留层并非理论上的全对：湖南农大集中存在页面上下边距
+56.7pt→72pt、模板说明文字残留/清理造成的文本差异及少量对象差异；南农存在字号、行距、
+颜色、结构和书签语义无法完全证明等问题；北大主体接近，但仍有页眉内容、段落间距/颜色和
+书签语义问题。UNKNOWN 不会冒充 PASS，当前三校分析覆盖率均高于 99%。
+
+此前“原始模板与自身比较”得到的三校 protected `50/50` 已撤销；自比较只能验证程序可运行，
+不能验证 clean Gold 的真实性或完整性。
 
 验证独立工程：
 

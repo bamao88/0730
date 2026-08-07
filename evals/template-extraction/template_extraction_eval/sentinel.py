@@ -7,6 +7,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .aligned_protected import (
+    aligned_audit_summary,
+    evaluate_aligned_exhaustive_protected,
+)
 from .contracts import (
     InputContractError,
     InputErrorCode,
@@ -21,11 +25,7 @@ from .evaluators import evaluate_forbidden_residue, evaluate_slots
 from .facts import analyze_docx
 from .markers import validate_markers
 from .models import AssertionResult, AssertionStatus, FillContract, View
-from .responsibility import (
-    build_responsibility_inventory,
-    evaluate_exhaustive_protected,
-    inventory_summary,
-)
+from .responsibility import inventory_summary
 from .scoring import score_assertions
 
 
@@ -48,7 +48,7 @@ def _view_result(
     view: View,
     assertions: tuple[AssertionResult, ...],
     *,
-    score: float,
+    score: float | None,
     weight: float,
     expected: str,
 ) -> dict[str, Any]:
@@ -80,7 +80,10 @@ def _assert_equal(actual: str, expected: str, message: str, *, path: Path) -> No
         raise InputContractError(InputErrorCode.HASH_MISMATCH, message, path=path)
 
 
-def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str, Any]:
+def run_raw_source_sentinel(
+    case_path: Path,
+    source_template: Path,
+) -> dict[str, Any]:
     """Run scoring internals without weakening the formal accepted-Gold gate.
 
     The result is always diagnostic-only. Candidate Gold can be inspected, but this
@@ -122,15 +125,15 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         path=case.gold_contract_path,
     )
     validate_markers(actual, actual_facts, label="Actual", path=source)
-    source_inventory = build_responsibility_inventory(actual_facts, actual)
-    gold_inventory = build_responsibility_inventory(gold_facts, gold)
-    assertions = (
-        evaluate_exhaustive_protected(
-            source_inventory,
-            source_inventory,
-            eval_config,
-        )
-        + evaluate_slots(
+    audit = evaluate_aligned_exhaustive_protected(
+        gold_facts,
+        actual_facts,
+        gold,
+        actual,
+        eval_config,
+    )
+    slot_assertions = (
+        evaluate_slots(
             gold,
             actual,
             gold_facts,
@@ -140,12 +143,13 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         )
         + evaluate_forbidden_residue(gold, actual_facts)
     )
+    assertions = audit.assertions + slot_assertions
     scoring = score_assertions(assertions, scoring_config)
     view_scores = {item.view: item for item in scoring.views}
     warnings: list[str] = []
     protected_result = _view_result(
         View.PROTECTED,
-        assertions,
+        audit.assertions,
         score=view_scores[View.PROTECTED].score,
         weight=view_scores[View.PROTECTED].weight,
         expected="PASS",
@@ -156,13 +160,14 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
             "dimension": item.dimension,
             "status": item.status.value,
             "message": item.message,
+            "expected": item.expected,
+            "actual": item.actual,
         }
-        for item in assertions
-        if item.view is View.PROTECTED
-        and item.status in {AssertionStatus.FAIL, AssertionStatus.UNKNOWN}
+        for item in audit.assertions
+        if item.status in {AssertionStatus.FAIL, AssertionStatus.UNKNOWN}
     ]
-    protected_result["scope"] = "exhaustive"
-    protected_result["responsibility_inventory"] = inventory_summary(source_inventory)
+    protected_result["scope"] = "all_clean_gold_protected_facts"
+    protected_result["audit"] = aligned_audit_summary(audit)
     slot_result = _view_result(
         View.SLOT,
         assertions,
@@ -170,14 +175,14 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
         weight=view_scores[View.SLOT].weight,
         expected="FAIL",
     )
-    if protected_result["status"] != protected_result["expected"]:
+    if any(item.status is AssertionStatus.FAIL for item in audit.assertions):
         warnings.append(
-            "protected sentinel outcome differs from expectation; see protected.issues"
+            "known protected source-to-clean differences exist; see protected.issues"
         )
     if slot_result["status"] != slot_result["expected"]:
         warnings.append("slot sentinel outcome differs from expectation")
     payload = {
-        "schema_version": "docfit-template-extraction-raw-source-sentinel/v1",
+        "schema_version": "docfit-template-extraction-raw-source-sentinel/v2",
         "diagnostic_only": True,
         "case_id": case.case_id,
         "gold_status": {
@@ -195,14 +200,29 @@ def run_raw_source_sentinel(case_path: Path, source_template: Path) -> dict[str,
             "verdict": scoring.verdict.value,
             "score": scoring.total_score,
             "analysis_coverage": scoring.analysis_coverage,
-            "responsibility_coverage": source_inventory.coverage,
+            "responsibility_coverage": audit.responsibility_coverage,
             "protected": protected_result,
             "slot": slot_result,
         },
         "inventories": {
-            "source_protected_baseline": inventory_summary(source_inventory),
-            "gold_extracted_template": inventory_summary(gold_inventory),
+            "original_source": inventory_summary(audit.actual_inventory),
+            "clean_gold": inventory_summary(audit.gold_inventory),
         },
+        "paragraph_alignment": [
+            {
+                "gold_path": item.gold.paragraph.path,
+                "actual_path": (
+                    None if item.actual is None else item.actual.paragraph.path
+                ),
+                "gold_text": item.gold.masked_text[:160],
+                "actual_text": (
+                    None if item.actual is None else item.actual.masked_text[:160]
+                ),
+                "similarity": round(item.similarity, 6),
+                "method": item.method,
+            }
+            for item in audit.alignments
+        ],
         "warnings": warnings,
     }
     payload["run_id"] = hashlib.sha256(

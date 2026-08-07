@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from .aligned_protected import evaluate_aligned_exhaustive_protected
 from .contracts import (
     InputContractError,
     InputErrorCode,
@@ -21,10 +22,6 @@ from .facts import PackageValidationError, analyze_docx
 from .markers import validate_markers
 from .models import EvalInputs
 from .reporting import build_report, write_report
-from .responsibility import (
-    build_responsibility_inventory,
-    evaluate_exhaustive_protected,
-)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -114,26 +111,21 @@ def run_evaluation(
             label="Actual",
             path=inputs.actual_contract_path,
         )
-        gold_inventory = build_responsibility_inventory(
+        protected_audit = evaluate_aligned_exhaustive_protected(
             gold_facts,
-            inputs.gold_contract,
-        )
-        actual_inventory = build_responsibility_inventory(
             actual_facts,
+            inputs.gold_contract,
             inputs.actual_contract,
+            inputs.eval_config,
         )
-        if gold_inventory.coverage != 1.0:
+        if protected_audit.gold_inventory.coverage != 1.0:
             raise InputContractError(
                 InputErrorCode.GOLD_NOT_ACCEPTED,
                 "Gold responsibility coverage must be 100% before formal scoring",
                 path=inputs.case.gold_contract_path,
             )
         assertions = (
-            evaluate_exhaustive_protected(
-                gold_inventory,
-                actual_inventory,
-                inputs.eval_config,
-            )
+            protected_audit.assertions
             + evaluate_slots(
                 inputs.gold_contract,
                 inputs.actual_contract,
@@ -170,7 +162,7 @@ def run_evaluation(
                 },
             },
             scoring_config=inputs.scoring_config,
-            responsibility_coverage=gold_inventory.coverage,
+            responsibility_coverage=protected_audit.responsibility_coverage,
         )
         destination = (
             output_dir.resolve()

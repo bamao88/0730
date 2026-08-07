@@ -123,13 +123,22 @@ def build_responsibility_inventory(
             paragraph.paragraph_index,
         )
         block_slot = key in block_keys
-        owner = Owner.SLOT if block_slot else Owner.PROTECTED
-        content_dimension = "slot.location_boundary" if block_slot else "protected.content"
-        structure_dimension = "slot.location_boundary" if block_slot else "protected.structure"
         text = (
             paragraph.text
             if block_slot
             else _masked_text(paragraph.text, inline_intervals.get(key, []))
+        )
+        inline_slot_only = (
+            bool(inline_intervals.get(key))
+            and text.replace("<SLOT>", "") == ""
+        )
+        paragraph_slot_owned = block_slot or inline_slot_only
+        owner = Owner.SLOT if paragraph_slot_owned else Owner.PROTECTED
+        content_dimension = (
+            "slot.location_boundary" if paragraph_slot_owned else "protected.content"
+        )
+        structure_dimension = (
+            "slot.location_boundary" if paragraph_slot_owned else "protected.structure"
         )
         add(
             f"paragraph:{paragraph.path}:content",
