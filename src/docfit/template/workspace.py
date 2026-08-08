@@ -26,6 +26,7 @@ from docfit.template.object_mutation import (
 from docfit.template.semantic_types import (
     require_body_member_type,
     require_body_structure_type,
+    require_complete_body_structure,
     semantic_object_type,
 )
 from docfit.tools.inspection import (
@@ -50,13 +51,20 @@ _TEMPLATE_SELECTOR = "paragraph, table, picture, run, sdt, shape"
 _EDITABLE_KINDS = {"paragraph", "run", "table", "picture", "sdt", "shape"}
 _MAX_SEARCH_RESULTS = 5
 _MAX_BATCH_OPERATIONS = 32
+_MAX_TOC_TITLE_CANDIDATES = 24
 _REGION_SOURCE_OBJECTS = 6
 _REGION_LAYOUT_STRATEGY = "page-proximity-v1"
 _REGION_MAX_HEIGHT_POINTS = 300.0
 _REGION_MAX_VERTICAL_GAP_POINTS = 120.0
 _REGION_ADJACENT_OBJECTS = 32
 _REGION_PADDING = 160
-_TOC_SAMPLE_MARKER = re.compile(r"(?:X{2,}|×{2,}|第\s*X\s*章)", re.IGNORECASE)
+_TOC_SAMPLE_MARKER = re.compile(r"(?:X{2,}|×{2,})", re.IGNORECASE)
+_DURABLE_EDIT_INTENT_ACTIONS = {
+    "materialize_slot",
+    "materialize_structure",
+    "refresh_toc",
+}
+_MAX_PENDING_EDIT_INTENTS = 8
 
 
 def _normalize(value: str) -> str:
@@ -81,9 +89,12 @@ def _agent_object_ref(item: InspectedObject) -> JsonObject:
     return {"object_id": str(item.object_ref["object_id"])}
 
 
-def _agent_object(item: InspectedObject) -> JsonObject:
+def _agent_object(inspection: Inspection, item: InspectedObject) -> JsonObject:
     value = VisualEvidenceService._compact_page_object(item)
     value["object_ref"] = _agent_object_ref(item)
+    value["document_order"] = next(
+        index for index, candidate in enumerate(inspection.objects) if candidate is item
+    )
     return value
 
 
@@ -109,10 +120,10 @@ def _agent_context_object(
 ) -> JsonObject:
     """Expose one object plus only the immediate context needed to interpret it."""
 
-    value = _agent_object(item)
+    value = _agent_object(inspection, item)
     parent = _context_parent(inspection, item)
     if parent is not None:
-        value["parent_context"] = _agent_object(parent)
+        value["parent_context"] = _agent_object(inspection, parent)
     return value
 
 
@@ -135,6 +146,37 @@ def _direct_format_properties(value: Any) -> tuple[str, ...]:
             message="clear_direct_format currently accepts only the explicit color property.",
         )
     return tuple(dict.fromkeys(str(item) for item in value))
+
+
+def _semantic_intent_key(operation: JsonObject) -> tuple[str, str] | None:
+    action = operation.get("action")
+    if action not in _DURABLE_EDIT_INTENT_ACTIONS:
+        return None
+    field_id = operation.get("field_id")
+    if not isinstance(field_id, str) and isinstance(operation.get("field"), dict):
+        field_id = operation["field"].get("field_id")
+    if action == "refresh_toc" and not isinstance(field_id, str):
+        field_id = "generated.toc"
+    if not isinstance(field_id, str) or not field_id:
+        return None
+    return str(action), field_id
+
+
+def _semantic_intent_richness(intent: JsonObject) -> tuple[int, int]:
+    """Prefer the most informative failed attempt for fresh-session recovery."""
+
+    member_types = [
+        str(value) for value in intent.get("member_field_ids", []) if isinstance(value, str)
+    ]
+    retry = intent.get("retry_operation")
+    entries = retry.get("entries", []) if isinstance(retry, dict) else []
+    return len(set(member_types)), max(len(member_types), len(entries))
+
+
+def _can_regenerate_pending_content(intents: list[JsonObject]) -> bool:
+    """Return whether fresh generated-content refs can resolve every pending intent."""
+
+    return not intents or all(intent.get("action") == "refresh_toc" for intent in intents)
 
 
 class TemplateWorkspaceService:
@@ -223,6 +265,8 @@ class TemplateWorkspaceService:
                 "document_sha256": source_hash,
                 "region_index": 0,
                 "pending_object_ref": None,
+                "pending_edit_intents": [],
+                "current_region_edited": False,
             }
             self._write_progress(progress)
             return progress
@@ -245,6 +289,9 @@ class TemplateWorkspaceService:
                 value.get("pending_object_ref") is not None
                 and not isinstance(value.get("pending_object_ref"), dict)
             )
+            or not isinstance(value.get("pending_edit_intents", []), list)
+            or any(not isinstance(item, dict) for item in value.get("pending_edit_intents", []))
+            or not isinstance(value.get("current_region_edited", False), bool)
         ):
             raise ToolFailure(
                 status="error",
@@ -253,11 +300,173 @@ class TemplateWorkspaceService:
                 message="The saved template task progress failed its integrity checks.",
             )
         self._resolve_document(_document_ref(str(value["document_sha256"])))
+        value.setdefault("pending_edit_intents", [])
+        value.setdefault("current_region_edited", False)
         return value
 
     def _write_progress(self, progress: JsonObject) -> None:
         self.root.mkdir(parents=True, exist_ok=True)
         atomic_write_json(self.progress_path, progress)
+
+    @staticmethod
+    def _intent_already_satisfied(intent: JsonObject, summary: JsonObject) -> bool:
+        action = intent.get("action")
+        field_id = intent.get("field_id")
+        if not isinstance(field_id, str):
+            return False
+        materialized_fields = summary.get("materialized_fields", {})
+        field_ids = set(materialized_fields) if isinstance(materialized_fields, dict) else set()
+        if action == "materialize_slot":
+            return field_id in field_ids
+        if action == "materialize_structure":
+            structures = summary.get("materialized_structures", [])
+            requested_members = {
+                str(value) for value in intent.get("member_field_ids", []) if isinstance(value, str)
+            }
+            return (
+                isinstance(structures, list)
+                and field_id in structures
+                and requested_members <= field_ids
+            )
+        if action == "refresh_toc":
+            toc = summary.get("toc")
+            return isinstance(toc, dict) and not toc.get("refresh_needed", True)
+        return False
+
+    def _reconcile_satisfied_intents(
+        self,
+        progress: JsonObject,
+        inspection: Inspection,
+    ) -> JsonObject:
+        pending = [
+            dict(item)
+            for item in progress.get("pending_edit_intents", [])
+            if isinstance(item, dict)
+        ]
+        summary = self._checkpoint_summary(inspection)
+        unresolved = [
+            intent for intent in pending if not self._intent_already_satisfied(intent, summary)
+        ]
+        if len(unresolved) == len(pending):
+            return progress
+        reconciled = {**progress, "pending_edit_intents": unresolved}
+        self._write_progress(reconciled)
+        return reconciled
+
+    @staticmethod
+    def _pending_intents_for_current_document(
+        progress: JsonObject,
+        _inspection: Inspection,
+    ) -> list[JsonObject]:
+        """Expose semantic recovery context without replaying a known-failed tool call."""
+
+        result: list[JsonObject] = []
+        for raw in progress.get("pending_edit_intents", []):
+            if not isinstance(raw, dict):
+                continue
+            intent = {
+                key: value
+                for key, value in raw.items()
+                if key not in {"document_sha256", "retry_operation"}
+            }
+            intent["recovery"] = "re_locate_and_improve"
+            result.append(intent)
+        return result
+
+    def record_edit_failure(self, args: JsonObject, error: ToolFailure) -> None:
+        """Persist unresolved Agent-authored semantic edit intent across fresh sessions."""
+
+        raw_operations = args.get("operations")
+        if not isinstance(raw_operations, list):
+            return
+        source_hash = sha256_file(self.source)
+        progress = self._read_progress(source_hash)
+        _, current_document = self._resolve_document(
+            _document_ref(str(progress["document_sha256"]))
+        )
+        current_summary = self._checkpoint_summary(self._inspection(current_document))
+        pending = [
+            dict(item)
+            for item in progress.get("pending_edit_intents", [])
+            if isinstance(item, dict)
+        ]
+        changed = False
+        for raw in raw_operations:
+            if not isinstance(raw, dict) or (key := _semantic_intent_key(raw)) is None:
+                continue
+            target: JsonObject | None = None
+            retry_operation: JsonObject | None = None
+            try:
+                _, _, selected = self._resolve_object(raw.get("object_ref"))
+                target = {
+                    "type": selected.kind,
+                    "text": selected.text[:240],
+                }
+                references = (
+                    [raw.get("object_ref")]
+                    + [
+                        member.get("object_ref")
+                        for member in raw.get("members", [])
+                        if isinstance(member, dict)
+                    ]
+                    + [
+                        entry.get("object_ref")
+                        for entry in raw.get("entries", [])
+                        if isinstance(entry, dict)
+                    ]
+                )
+                for reference in references:
+                    self._resolve_object(reference)
+                retry_operation = json.loads(json.dumps(raw))
+            except ToolFailure:
+                pass
+            intent: JsonObject = {
+                "action": key[0],
+                "field_id": key[1],
+                "member_field_ids": [
+                    str(member["field_id"])
+                    for member in raw.get("members", [])
+                    if isinstance(member, dict) and isinstance(member.get("field_id"), str)
+                ],
+                "target": target,
+                "document_sha256": progress["document_sha256"],
+                "retry_operation": retry_operation,
+                "last_failure": {
+                    "code": error.code,
+                    "message": error.message,
+                },
+                "guidance": (
+                    "This is an Agent-requested edit that never committed. Re-locate the "
+                    "current objects, retry or improve the same semantic edit, and confirm its "
+                    "changed-region feedback before generated-content finalization."
+                ),
+            }
+            if self._intent_already_satisfied(intent, current_summary):
+                continue
+            existing = next(
+                (item for item in pending if (item.get("action"), item.get("field_id")) == key),
+                None,
+            )
+            if existing is not None and _semantic_intent_richness(existing) > (
+                _semantic_intent_richness(intent)
+            ):
+                intent = {
+                    **existing,
+                    "last_failure": intent["last_failure"],
+                    "guidance": intent["guidance"],
+                }
+            pending = [
+                item for item in pending if (item.get("action"), item.get("field_id")) != key
+            ]
+            pending.append(intent)
+            changed = True
+        if changed:
+            self._write_progress(
+                {
+                    **progress,
+                    "pending_edit_intents": pending[-_MAX_PENDING_EDIT_INTENTS:],
+                }
+            )
 
     @staticmethod
     def _checkpoint_summary(inspection: Inspection) -> JsonObject:
@@ -354,6 +563,7 @@ class TemplateWorkspaceService:
         selected: InspectedObject,
         *,
         region_objects: list[InspectedObject] | None = None,
+        adjacent_radius: int = 2,
     ) -> JsonObject:
         paragraph_locator = _parent_paragraph_locator(selected.locator)
         descendant_paragraph = next(
@@ -414,8 +624,8 @@ class TemplateWorkspaceService:
                     and child.locator.startswith(f"{item.locator}/")
                 )
         elif selected_index is not None:
-            start = max(0, selected_index - 2)
-            stop = min(len(candidates), selected_index + 3)
+            start = max(0, selected_index - adjacent_radius)
+            stop = min(len(candidates), selected_index + adjacent_radius + 1)
             adjacent.extend(
                 _agent_context_object(inspection, item)
                 for index, item in enumerate(candidates[start:stop], start=start)
@@ -433,7 +643,9 @@ class TemplateWorkspaceService:
         adjacent = unique[:_REGION_ADJACENT_OBJECTS]
         return {
             "target": _agent_context_object(inspection, selected),
-            "parent_object": (_agent_object(parent) if parent is not None else None),
+            "parent_object": (
+                _agent_object(inspection, parent) if parent is not None else None
+            ),
             "adjacent_objects": adjacent,
         }
 
@@ -674,7 +886,11 @@ class TemplateWorkspaceService:
         if selected is not None:
             target = selected
         if index != progress["region_index"]:
-            progress = {**progress, "region_index": index}
+            progress = {
+                **progress,
+                "region_index": index,
+                "current_region_edited": False,
+            }
             self._write_progress(progress)
         if target is None:
             return None, [], progress
@@ -793,6 +1009,7 @@ class TemplateWorkspaceService:
             if object_id:
                 seen.add(object_id)
             seen_titles.add(_normalize(item.text))
+        eligible: list[tuple[InspectedObject, bool]] = []
         for item in inspection.objects:
             if not item.text.strip() or (item.style and item.style.casefold().startswith("toc")):
                 continue
@@ -800,20 +1017,35 @@ class TemplateWorkspaceService:
             style = item.style.casefold() if item.style else ""
             normalized = _normalize(item.text)
             normalized_label = normalized.strip("【】")
+            named_chapter_landmark = normalized_label.startswith("第") and (
+                "文献综述" in normalized_label or "结论与展望" in normalized_label
+            )
             is_candidate = (
                 (isinstance(alias, str) and alias.startswith("body.heading."))
                 or style.startswith("heading")
                 or style.startswith("标题")
                 or normalized_label in fixed_titles
+                or named_chapter_landmark
             )
+            if is_candidate:
+                eligible.append(
+                    (
+                        item,
+                        normalized_label in fixed_titles or named_chapter_landmark,
+                    )
+                )
+        prioritized = [pair for pair in eligible if pair[1]] + [
+            pair for pair in eligible if not pair[1]
+        ]
+        for item, _ in prioritized:
             object_id = str(item.object_ref.get("object_id", ""))
             title_key = _normalize(item.text)
-            if not is_candidate or not object_id or object_id in seen or title_key in seen_titles:
+            if not object_id or object_id in seen or title_key in seen_titles:
                 continue
             seen.add(object_id)
             seen_titles.add(title_key)
             candidates.append(item)
-            if len(candidates) >= 16:
+            if len(candidates) >= _MAX_TOC_TITLE_CANDIDATES:
                 break
         reviewed, images = self._review(
             {
@@ -827,18 +1059,19 @@ class TemplateWorkspaceService:
         return (
             {
                 "field_id": "generated.toc",
-                "target": _agent_object(toc_root),
+                "target": _agent_object(inspection, toc_root),
                 "required_body_heading_candidates": [
-                    _agent_object(item) for item in required_body_headings
+                    _agent_object(inspection, item) for item in required_body_headings
                 ],
-                "title_candidates": [_agent_object(item) for item in candidates],
+                "title_candidates": [_agent_object(inspection, item) for item in candidates],
                 "evidence": reviewed["visual_review"].get("evidence", []),
                 "guidance": (
                     "The live TOC needs refresh because its cache contains sample markers "
                     "or omits already materialized body heading types. Required body heading "
                     "candidates preserve the Agent's prior semantic classifications; all "
                     "other candidates remain non-semantic suggestions. Choose the entries, "
-                    "assign levels 1-3, and call template_edit refresh_toc once."
+                    "assign levels 1-3, decide whether sample-only direct color should be "
+                    "cleared, and call template_edit refresh_toc once."
                 ),
             },
             images,
@@ -854,13 +1087,18 @@ class TemplateWorkspaceService:
                 _document_ref(str(progress["document_sha256"]))
             )
             inspection = self._inspection(document)
+            progress = self._reconcile_satisfied_intents(progress, inspection)
             current_region, images, progress = self._region_view(
                 document_hash,
                 inspection,
                 progress,
             )
+            pending_edit_intents = self._pending_intents_for_current_document(
+                progress,
+                inspection,
+            )
             pending_generated_content: JsonObject | None = None
-            if current_region is None:
+            if current_region is None and _can_regenerate_pending_content(pending_edit_intents):
                 pending_generated_content, images = self._pending_generated_content(
                     document_hash,
                     inspection,
@@ -885,6 +1123,7 @@ class TemplateWorkspaceService:
                     },
                     "checkpoint_summary": self._checkpoint_summary(inspection),
                     "current_region": current_region,
+                    "pending_edit_intents": pending_edit_intents,
                     "pending_generated_content": pending_generated_content,
                     "navigation": {
                         "completed_regions": int(progress["region_index"]),
@@ -895,16 +1134,46 @@ class TemplateWorkspaceService:
                         "full_page_returned": False,
                     },
                     "guidance": (
-                        "Judge only this target, its parent, and necessary adjacent objects. "
-                        "Batch decisions visible in this crop, then call action=next with its "
-                        "region_ref. The Tool navigates physical regions but never assigns "
-                        "their semantic meaning."
+                        (
+                            "Resolve pending_edit_intents first. They are semantic edits you "
+                            "previously requested but that never committed; re-locate current "
+                            "objects and improve the request before TOC finalization or publish. "
+                            "The Tool deliberately does not replay the known-failed operation. "
+                            "For refresh_toc, use pending_generated_content's regenerated fresh "
+                            "target and title candidates directly instead of searching again."
+                        )
+                        if pending_edit_intents
+                        else (
+                            "Judge only this target, its parent, and necessary adjacent objects. "
+                            "Batch decisions visible in this crop, then call action=next with "
+                            "its region_ref. The Tool navigates physical regions but never "
+                            "assigns their semantic meaning."
+                        )
                     ),
                 },
                 images,
             )
 
         if action == "next":
+            region_outcome = args.get("region_outcome")
+            if region_outcome not in {"handled", "preserve"}:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_outcome_missing",
+                    message=(
+                        "State whether this region was handled by a committed edit or should be "
+                        "preserved as fixed school content."
+                    ),
+                )
+            reason = args.get("reason")
+            if region_outcome == "preserve" and (not isinstance(reason, str) or not reason.strip()):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_preserve_reason_missing",
+                    message="Preserving an unchanged region requires the Agent's short reason.",
+                )
             supplied = args.get("region_ref")
             region_match = _REGION_REF.fullmatch(supplied) if isinstance(supplied, str) else None
             if region_match is None:
@@ -938,6 +1207,7 @@ class TemplateWorkspaceService:
                     message="Navigation must continue from the latest checkpointed Word version.",
                 )
             inspection = self._inspection(document)
+            progress = self._reconcile_satisfied_intents(progress, inspection)
             current_index, _, selected, _ = self._region_selection(inspection, progress)
             expected = (
                 self._region_ref(document_hash, current_index, selected)
@@ -951,10 +1221,21 @@ class TemplateWorkspaceService:
                     code="region_ref_stale",
                     message="Use the region_ref returned with the latest target crop.",
                 )
+            if region_outcome == "handled" and not progress["current_region_edited"]:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="region_edit_not_committed",
+                    message=(
+                        "This region has only been viewed. Commit the Agent's cleanup/fillable "
+                        "edit first, or explicitly preserve fixed school content with a reason."
+                    ),
+                )
             progress = {
                 **progress,
                 "region_index": current_index + 1,
                 "pending_object_ref": None,
+                "current_region_edited": False,
             }
             self._write_progress(progress)
             current_region, images, progress = self._region_view(
@@ -962,8 +1243,12 @@ class TemplateWorkspaceService:
                 inspection,
                 progress,
             )
+            pending_edit_intents = self._pending_intents_for_current_document(
+                progress,
+                inspection,
+            )
             pending_generated_content = None
-            if current_region is None:
+            if current_region is None and _can_regenerate_pending_content(pending_edit_intents):
                 pending_generated_content, images = self._pending_generated_content(
                     document_hash,
                     inspection,
@@ -975,18 +1260,25 @@ class TemplateWorkspaceService:
                     "document_ref": _document_ref(document_hash),
                     "checkpoint_summary": self._checkpoint_summary(inspection),
                     "current_region": current_region,
+                    "pending_edit_intents": pending_edit_intents,
                     "pending_generated_content": pending_generated_content,
                     "navigation": {
                         "completed_regions": int(progress["region_index"]),
                         "done": current_region is None,
                     },
-                    "guidance": "Make semantic decisions only from this local visual region.",
+                    "guidance": (
+                        "Resolve pending_edit_intents before generated-content finalization."
+                        if pending_edit_intents
+                        else "Make semantic decisions only from this local visual region."
+                    ),
                 },
                 images,
             )
 
         if action == "focus":
             _, inspection, selected = self._resolve_object(args.get("object_ref"))
+            padding = args.get("padding", 32)
+            radius = max(2, min(12, int(padding) // 32 if isinstance(padding, int) else 2))
             reviewed, images = self._review(
                 {
                     "document_ref": _document_ref(inspection.document_sha256),
@@ -1001,7 +1293,11 @@ class TemplateWorkspaceService:
                     "schema_version": 1,
                     "status": "ok",
                     "document_ref": _document_ref(inspection.document_sha256),
-                    "local_context": self._local_context(inspection, selected),
+                    "local_context": self._local_context(
+                        inspection,
+                        selected,
+                        adjacent_radius=radius,
+                    ),
                     "visual_review": reviewed["visual_review"],
                 },
                 images,
@@ -1308,14 +1604,9 @@ class TemplateWorkspaceService:
                 slot_id = allocate_slot(raw_field_id)
                 placeholder = _placeholder_text(field)
             elif action == "materialize_structure":
-                raw_field_id = raw.get("field_id")
+                raw_field_id = raw.get("field_id", "body.chapters")
                 if not isinstance(raw_field_id, str):
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="field_id_missing",
-                        message="materialize_structure requires one structure field_id.",
-                    )
+                    raw_field_id = "body.chapters"
                 require_body_structure_type(raw_field_id)
                 replaced_structure = next(
                     (
@@ -1398,6 +1689,7 @@ class TemplateWorkspaceService:
                             "clear_direct_format": list(member_clear),
                         }
                     )
+                require_complete_body_structure([member.field_id for member in structure_members])
             elif action == "refresh_toc":
                 raw_field_id = raw.get("field_id", "generated.toc")
                 if raw_field_id != "generated.toc":
@@ -1491,6 +1783,36 @@ class TemplateWorkspaceService:
             )
 
         assert document is not None and before is not None
+        materialized_locators = {
+            str(item["target_locator"])
+            for item in prepared
+            if item.get("action") == "materialize_slot"
+        }
+        materialized_locators.update(
+            str(member["target_locator"])
+            for item in prepared
+            if item.get("action") == "materialize_structure"
+            for member in item.get("members", [])
+            if isinstance(member, dict) and isinstance(member.get("target_locator"), str)
+        )
+        absorbed_operations: list[JsonObject] = []
+        retained: list[tuple[JsonObject, ObjectMutation]] = []
+        for item, mutation in zip(prepared, mutations, strict=True):
+            locator = str(item.get("target_locator", ""))
+            if item.get("action") in {"remove_object", "clear_content"} and any(
+                locator.startswith(f"{materialized}/") for materialized in materialized_locators
+            ):
+                absorbed_operations.append(
+                    {
+                        "action": item["action"],
+                        "target": item["target"],
+                        "absorbed_by": "materialize_parent",
+                    }
+                )
+                continue
+            retained.append((item, mutation))
+        prepared = [item for item, _ in retained]
+        mutations = [mutation for _, mutation in retained]
         source_hash = before.document_sha256
         self.versions.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
@@ -1548,6 +1870,20 @@ class TemplateWorkspaceService:
                 "pending_object_ref": (
                     feedback_object.object_ref if feedback_object is not None else None
                 ),
+                "pending_edit_intents": [
+                    {
+                        key: value
+                        for key, value in intent.items()
+                        if key not in {"retry_operation", "document_sha256"}
+                    }
+                    for intent in progress.get("pending_edit_intents", [])
+                    if isinstance(intent, dict)
+                    and (intent.get("action"), intent.get("field_id"))
+                    not in {
+                        key for item in prepared if (key := _semantic_intent_key(item)) is not None
+                    }
+                ],
+                "current_region_edited": True,
             }
             self._write_progress(progress)
             current_region, images, progress = self._region_view(
@@ -1591,6 +1927,7 @@ class TemplateWorkspaceService:
                         "operations": len(prepared),
                         "actions": dict(sorted(action_counts.items())),
                         "slots_created": created_slots,
+                        "absorbed_operations": absorbed_operations,
                     },
                     "structures": [
                         {
@@ -1689,6 +2026,7 @@ class TemplateWorkspaceService:
             item["target"].get("type")
             for item in operations
             if item.get("action") == "remove_object"
+            and (item["target"].get("type") != "paragraph" or not item["target"].get("text"))
         )
         for kind, count in removed_by_kind.items():
             kind_before = sum(1 for item in before.objects if item.kind == kind)
@@ -1799,6 +2137,15 @@ class TemplateWorkspaceService:
                         origin="postcondition",
                         code="content_not_cleared",
                         message="At least one selected object's content was not cleared.",
+                    )
+            elif action == "remove_object":
+                text = target.get("text")
+                if isinstance(text, str) and text and after_text[text] >= before_text[text]:
+                    raise ToolFailure(
+                        status="error",
+                        origin="postcondition",
+                        code="object_not_removed",
+                        message="The selected object's visible content is still present.",
                     )
 
     def _review(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
@@ -1946,6 +2293,21 @@ class TemplateWorkspaceService:
                 origin="postcondition",
                 code="source_document_changed",
                 message="The source template changed during preparation.",
+            )
+        progress = self._read_progress(source_hash)
+        progress = self._reconcile_satisfied_intents(progress, self._inspection(document))
+        pending_edit_intents = progress.get("pending_edit_intents", [])
+        if pending_edit_intents:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="agent_edit_intent_unresolved",
+                message=(
+                    "At least one semantic edit requested by the Agent never committed. Open "
+                    "the current checkpoint, resolve pending_edit_intents with fresh object "
+                    "references, inspect the changed region, then publish."
+                ),
+                suggested_actions=("resolve_pending_edit_intents",),
             )
         validate_docx_package(document)
         office_validation = self.office.validate(document)

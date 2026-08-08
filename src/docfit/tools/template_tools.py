@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -70,8 +71,14 @@ async def _unbound(_args: dict[str, Any]) -> dict[str, Any]:
     (
         "Open or resume the current target-object crop, advance to the next unprocessed visual "
         "region, or find/focus one concrete object. Each visual result contains only the target, "
-        "its parent, and necessary adjacent objects. Navigation is physical and never assigns "
-        "semantic meaning. Returned object_ref values are accepted unchanged by template_edit."
+        "its parent, and a bounded set of necessary adjacent objects; a wider focus padding "
+        "returns a larger local object neighborhood without returning a full page. Open also "
+        "returns compact unresolved Agent-authored edit intents without replaying the known-failed "
+        "operation. Navigation is physical and never assigns semantic meaning. "
+        "Returned object_ref values are accepted unchanged by template_edit. Advance with "
+        "region_outcome=handled only after a committed edit for this region, or use "
+        "region_outcome=preserve plus a short reason when the Agent judges the visible content is "
+        "fixed school material that should remain unchanged."
     ),
     TEMPLATE_VIEW_SCHEMA,
     annotations=_OBSERVE,
@@ -101,7 +108,9 @@ async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
         "explicit direct color, refresh one live TOC with representative entries, or batch clear "
         "and remove current objects. No plan file or output path is needed. The Tool creates one "
         "immutable version, checks every effect, checkpoints task progress, and returns one "
-        "changed target-region crop plus fresh refs."
+        "changed target-region crop plus fresh refs. A body.chapters structure is one complete "
+        "representative chapter and therefore includes at least H1, H2, H3, and body.paragraph "
+        "members selected and classified by the Agent."
     ),
     TEMPLATE_EDIT_SCHEMA,
     annotations=_WRITE,
@@ -177,6 +186,8 @@ def build_template_tool_server(
             structured, images = service.edit(args)
             return tool_result(structured, image_paths=images)
         except ToolFailure as error:
+            with suppress(ToolFailure):
+                service.record_edit_failure(args, error)
             return failure_result(error, committed=False)
         except Exception:
             return unexpected_failure_result(committed=False)

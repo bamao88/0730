@@ -327,15 +327,33 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         if prepared.requirements_path is not None
         else " No separate school-requirements file was supplied; use the template itself."
     )
-    finalization_guidance = (
-        " Visual-region navigation is already complete. This is a narrow finalization "
-        "session: call template_view open, resolve only the returned "
-        "pending_generated_content using its target and title_candidates, inspect the one "
-        "changed-region feedback, and publish. Do not search, focus, or redo prior semantic "
-        "regions."
-        if _visual_navigation_complete(prepared)
-        else ""
-    )
+    pending_edit_intents = _has_pending_edit_intents(prepared)
+    finalization_guidance = ""
+    if pending_edit_intents:
+        finalization_guidance = (
+            " Visual-region navigation may already be complete, but an Agent-requested semantic "
+            "edit did not commit. Call template_view open and resolve every returned "
+            "pending_edit_intent before generated-content work. Search/focus is allowed only to "
+            "re-locate the current objects needed for that intent. A successful matching edit "
+            "clears it; never publish while one remains. If the pending action is refresh_toc, "
+            "use the fresh pending_generated_content target and title_candidates returned by "
+            "open; do not rebuild that candidate set with search."
+        )
+    elif _visual_navigation_complete(prepared):
+        finalization_guidance = (
+            " Visual-region navigation is already complete. Call template_view open and treat "
+            "checkpoint_summary as a capability inventory, not proof that cleaning alone "
+            "finished extraction. Before generated-content work, confirm that "
+            "materialized_structures contains body.chapters; standalone body.paragraph slots do "
+            "not replace the reusable H1/H2/H3/paragraph chapter structure. If that structure "
+            "is absent, use bounded search/focus to re-locate one surviving representative body "
+            "block and materialize it. Also reconcile obvious student-authored core sections "
+            "shown by the surviving title tree: a visible Chinese 摘要 body needs abstract.zh and "
+            "a visible ABSTRACT body needs abstract.en. Search/focus only for a missing "
+            "capability; do not redo checkpointed work. Then resolve pending_generated_content "
+            "using its target and title_candidates, inspect the changed-region feedback, and "
+            "publish."
+        )
     return (
         "Load the docfit-school-extract Skill and turn the supplied school Word into one clean, "
         "fillable final Word. Work from the current target region. Start with template_view "
@@ -346,14 +364,42 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "alone. "
         "Treat color as evidence: remove direct color only when you judge it is "
         "sample/instruction formatting. For a representative body chapter, map only its current "
-        "objects to body semantic types and use one materialize_structure operation. After the "
+        "objects to body semantic types and use one materialize_structure operation. A standalone "
+        "body.paragraph slot is not a replacement for body.chapters; the final checkpoint must "
+        "contain the reusable structure with H1/H2/H3/paragraph members. Ordering is critical: "
+        "when a crop first exposes numbered body samples such as 1□ or 1.1□ while body.chapters "
+        "is absent, stop cleanup and navigation. Use bounded search/focus immediately to collect "
+        "the H1 and missing levels, then commit materialize_structure before clearing, removing, "
+        "or normalizing any of those body sample objects. Immutable Word checkpoints recover "
+        "Agent progress, not semantic styles that the Agent already deleted. The Registry counts "
+        "the chapter itself as level 1: a chapter title is body.heading.level1, a school's "
+        "numbered `1 ...` section is body.heading.level2, and `1.1 ...` is "
+        "body.heading.level3. Do not search for nonexistent `1.1.1` when `1.1` is the deepest "
+        "heading demonstrated by this school template. Preserve named landmarks: never use "
+        "`第一章 文献综述` or `第X章 结论与展望` as the generic body.chapters H1. For this school, "
+        "use the separate `第X章（正文标题）` middle-chapter sample for the reusable structure; "
+        "when a crop visually mixes objects from both sides of that H1, compare the returned "
+        "document_order values and select only H2/H3/body objects whose order follows the H1. "
+        "keep the named opening and terminal headings at their original page positions and give "
+        "each a local body.paragraph fill slot after removing its writing instructions. After the "
         "final title tree exists, refresh a TOC as one compound object with non-empty 1-3 level "
-        "representative entries; never clear its result rows individually. Use a known field_id "
+        "representative entries; never clear its result rows individually. When you judge the "
+        "TOC sample colors are instructions rather than formal style, include "
+        "clear_direct_format=[color] on that refresh operation so the Tool can stabilize the "
+        "effective TOC styles without the sample color. Use a known field_id "
         "directly; when several meanings are uncertain, "
         "query them together in one template_registry call. Judge the changed-region image "
         "returned by template_edit before continuing, then use template_view action=next with "
-        "its region_ref. "
+        "its region_ref and region_outcome=handled. If a crop contains only fixed school "
+        "content that truly needs no edit, advance with region_outcome=preserve and a short "
+        "reason. Never preserve writing instructions, sample/student content, or a "
+        "student-authored region that still lacks its fillable interface. "
         "On every fresh open, use checkpoint_summary as durable feedback: if "
+        "pending_edit_intents is non-empty, resolve those Agent-authored edits first; they are "
+        "prior semantic operations that never committed, not Tool-generated semantic guesses. "
+        "The Tool does not return the exact known-failed operation for replay. Use its target, "
+        "member_field_ids, and last_failure as compact recovery context, then re-locate only "
+        "the necessary current objects and submit an improved edit. "
         "toc.refresh_needed is true, the live TOC still contains school sample cache rows "
         "such as XXX/XX or omits an already materialized body heading type. It must include "
         "every object in pending_generated_content.required_body_heading_candidates at the "
@@ -365,12 +411,33 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "structure, materialize_structure replaces the earlier representative structure "
         "instead of creating a duplicate. Never delete a visually distinct body heading or "
         "content-object sample whose semantic type is absent from "
-        "checkpoint_summary.materialized_fields; keep navigating until a continuous fuller "
-        "representative block can replace the structure. "
+        "checkpoint_summary.materialized_fields; keep navigating until a fuller representative "
+        "chapter can replace the structure. materialize_structure members must be in physical "
+        "document order but need not be adjacent: the Tool extracts only the selected school "
+        "objects, so leave intervening writing instructions and redundant samples unselected, "
+        "then clean them after the structure commits. When the source TOC and body both "
+        "show a named opening or terminal chapter, such as a literature-review first chapter "
+        "or a conclusion-and-outlook final chapter, preserve those distinct body landmarks and "
+        "include them in the representative TOC; they are not duplicate instances of the one "
+        "repeatable generic chapter structure. Preserve only their fixed title/page position, "
+        "not the red/blue writing instructions or sample prose below them; remove those and "
+        "leave a real body.paragraph fill slot when the named chapter needs student content. "
         "Every student-authored content region must retain a "
         "fillable slot after its examples are removed; a structural heading by itself is not a "
-        "fillable region. Visible placeholders use brackets only; do not add gray placeholder "
-        "formatting or a separate placeholder state. When the current region/object matches one "
+        "fillable region. The Chinese abstract page's colored `论文题目` sample is a second visual "
+        "location for thesis.title.zh: materialize it and clear sample-only color even when the "
+        "cover already has the same semantic field. A field's presence elsewhere never satisfies "
+        "the current visible student-authored location. In references, remove every visible sample "
+        "entry or category such as `科技报告` after creating references.entries; do not leave it "
+        "beside the slot. references.entries is a collection interface: one representative "
+        "fillable entry slot is sufficient. Once checkpoint_summary shows one, remove all later "
+        "reference examples instead of materializing a second slot. Visible placeholders use "
+        "brackets only; do not add gray placeholder formatting or a separate placeholder state. "
+        "In the appendix heading, preserve the fixed `附录` label and materialize "
+        "the student-authored `名称`/title part as appendix.title; materialize a real appendix "
+        "sample paragraph as appendix.body before removing its instructions. Never delete "
+        "`附录名称` as though the entire phrase were writing guidance. "
+        "When the current region/object matches one "
         "of the Skill's "
         "knowledge-routing signals, Read only that referenced topic before deciding the batch; "
         "never preload all references. "
@@ -487,6 +554,19 @@ def _visual_navigation_complete(prepared: PreparedTemplateTask) -> bool:
     regions = blueprint.get("regions") if isinstance(blueprint, dict) else None
     return (
         isinstance(region_index, int) and isinstance(regions, list) and region_index >= len(regions)
+    )
+
+
+def _has_pending_edit_intents(prepared: PreparedTemplateTask) -> bool:
+    progress_path = prepared.task_root / "work/.docfit/template-workspace-v1/task-progress.json"
+    try:
+        progress: object = json.loads(progress_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return bool(
+        isinstance(progress, dict)
+        and isinstance(progress.get("pending_edit_intents"), list)
+        and progress["pending_edit_intents"]
     )
 
 

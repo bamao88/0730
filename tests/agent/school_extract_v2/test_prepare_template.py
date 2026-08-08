@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import shutil
 from pathlib import Path
 from typing import Any
@@ -125,8 +126,40 @@ def test_prepare_options_allow_one_longer_final_generated_content_session(
     prompt = build_prepare_template_prompt(prepared)
 
     assert options.max_turns == PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
-    assert "narrow finalization session" in prompt
-    assert "Do not search, focus, or redo prior semantic regions" in prompt
+    assert "checkpoint_summary as a capability inventory" in prompt
+    assert "materialized_structures contains body.chapters" in prompt
+    assert "standalone body.paragraph slots do not replace" in prompt
+    assert "visible Chinese 摘要 body needs abstract.zh" in prompt
+    assert "Search/focus only for a missing capability" in prompt
+
+
+def test_pending_edit_intent_takes_priority_over_narrow_toc_finalization(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
+    workspace.mkdir(parents=True)
+    (workspace / "task-progress.json").write_text(
+        json.dumps(
+            {
+                "region_index": 2,
+                "pending_edit_intents": [
+                    {
+                        "action": "materialize_structure",
+                        "field_id": "body.chapters",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (workspace / "visual-regions.json").write_text('{"regions": [[], []]}', encoding="utf-8")
+
+    prompt = build_prepare_template_prompt(prepared)
+
+    assert "resolve every returned pending_edit_intent" in prompt
+    assert "Search/focus is allowed only to re-locate" in prompt
+    assert "resolve only the returned pending_generated_content" not in prompt
 
 
 def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
@@ -136,6 +169,22 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
 
     assert "current target region" in prompt
     assert "template_view action=next" in prompt
+    assert "region_outcome=handled" in prompt
+    assert "region_outcome=preserve" in prompt
+    assert "Never preserve writing instructions" in prompt
+    assert "stop cleanup and navigation" in prompt
+    assert "commit materialize_structure before clearing" in prompt
+    assert "chapter itself as level 1" in prompt
+    assert "Do not search for nonexistent `1.1.1`" in prompt
+    assert "never use `第一章 文献综述`" in prompt
+    assert "separate `第X章（正文标题）`" in prompt
+    assert "compare the returned document_order values" in prompt
+    assert "members must be in physical document order but need not be adjacent" in prompt
+    assert "does not return the exact known-failed operation" in prompt
+    assert "second visual location for thesis.title.zh" in prompt
+    assert "such as `科技报告`" in prompt
+    assert "one representative fillable entry slot is sufficient" in prompt
+    assert "preserve the fixed `附录` label" in prompt
     assert "application checkpoint" in prompt
     assert "Registry is Tool-private" in prompt
     assert "not a task list" in prompt

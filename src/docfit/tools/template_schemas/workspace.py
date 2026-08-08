@@ -36,6 +36,11 @@ TEMPLATE_VIEW_SCHEMA: JsonObject = {
         "query": {"type": "string", "minLength": 1, "maxLength": 256},
         "quality": {"type": "string", "enum": ["thumbnail", "review", "detail"]},
         "padding": {"type": "integer", "minimum": 0, "maximum": 256},
+        "region_outcome": {
+            "type": "string",
+            "enum": ["handled", "preserve"],
+        },
+        "reason": {"type": "string", "minLength": 1, "maxLength": 256},
     },
     "required": ["action"],
     "additionalProperties": False,

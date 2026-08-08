@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import re
+import unicodedata
 import zipfile
 from copy import deepcopy
 from dataclasses import dataclass
@@ -126,6 +127,13 @@ def _selected_child(parent: ET.Element, segment: str) -> ET.Element:
         raise _target_not_found()
     name = match.group("name")
     candidates = [child for child in parent if _local_name(child.tag) == name]
+    if not candidates and _local_name(parent.tag) == "sdt":
+        # OfficeCLI object locators deliberately flatten the OOXML-only
+        # sdtContent container. Keep mutation resolution on that same public
+        # abstraction so an Agent never has to manufacture hidden XML paths.
+        content = parent.find(f"{_W}sdtContent")
+        if content is not None:
+            candidates = [child for child in content if _local_name(child.tag) == name]
     selector = match.group("selector")
     if selector.isdigit():
         index = int(selector) - 1
@@ -158,8 +166,12 @@ def _resolve(root: ET.Element, locator: str) -> tuple[ET.Element, ET.Element]:
     current = root
     parent = root
     for segment in (value for value in locator.split("/") if value):
-        parent = current
-        current = _selected_child(current, segment)
+        selected = _selected_child(current, segment)
+        parent = next(
+            (container for container in current.iter() if selected in list(container)),
+            current,
+        )
+        current = selected
     return parent, current
 
 
@@ -216,6 +228,37 @@ def _set_visible_text(target: ET.Element, value: str) -> None:
     text = ET.SubElement(run, f"{_W}t")
     text.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
     text.text = value
+
+
+def _display_width_units(value: str) -> int:
+    """Estimate the source run's East-Asian inline width without using len()."""
+
+    return sum(
+        2 if unicodedata.east_asian_width(character) in {"W", "F"} else 1 for character in value
+    )
+
+
+def _placeholder_preserving_underlined_fill(
+    target: ET.Element,
+    *,
+    source_text: str,
+    placeholder_text: str,
+) -> str:
+    """Keep an underlined blank run's source width budget after slot materialization.
+
+    Many school covers draw fill lines by underlining preserved spaces. Replacing
+    the complete run with a short placeholder keeps ``w:u`` but destroys that
+    visible template geometry. Keep the unused source width as trailing spaces;
+    the changed-region render remains the final authority for proportional fonts.
+    """
+
+    if source_text.strip() or target.find(f"{_W}rPr/{_W}u") is None:
+        return placeholder_text
+    remaining = max(
+        0,
+        _display_width_units(source_text) - _display_width_units(placeholder_text),
+    )
+    return f"{placeholder_text}{' ' * remaining}"
 
 
 def _remove_direct_format(target: ET.Element, properties: tuple[str, ...]) -> None:
@@ -300,8 +343,33 @@ def _materialize(
     position = list(target_parent).index(target)
     target_parent.remove(target)
     content.append(target)
-    _set_visible_text(content, placeholder_text)
+    visible_placeholder = _placeholder_preserving_underlined_fill(
+        target,
+        source_text=selected.text,
+        placeholder_text=placeholder_text,
+    )
+    _set_visible_text(content, visible_placeholder)
     target_parent.insert(position, sdt)
+
+
+def _remove_object_preserving_boundary(
+    parent: ET.Element,
+    target: ET.Element,
+) -> None:
+    """Remove content without deleting a paragraph-owned section boundary."""
+
+    section = target.find(f"{_W}pPr/{_W}sectPr")
+    if _local_name(target.tag) == "p" and section is not None:
+        for child in list(target):
+            if child.tag != f"{_W}pPr":
+                target.remove(child)
+        return
+    parent.remove(target)
+
+
+def _paragraph_style_id(target: ET.Element) -> str | None:
+    style = target.find(f"{_W}pPr/{_W}pStyle")
+    return style.get(f"{_W}val") if style is not None else None
 
 
 def _materialize_structure(
@@ -312,12 +380,14 @@ def _materialize_structure(
     slot_id: str,
     replaced_structure: tuple[ET.Element, ET.Element] | None = None,
 ) -> None:
-    """Turn one representative contiguous school section into a reusable structure.
+    """Extract ordered representative school objects into a reusable structure.
 
     When the Agent later discovers a better representative block, replace the
     earlier structure atomically.  The Tool only performs the requested
     replacement; deciding that the newer block is semantically better remains
-    the Agent's responsibility.
+    the Agent's responsibility.  Representative objects may have instruction or
+    redundant sample objects between them: those unselected objects stay in the
+    document for the Agent's later cleanup instead of becoming structure members.
     """
 
     if not members:
@@ -337,16 +407,12 @@ def _materialize_structure(
         )
     parent = next(iter(parents.values()))
     targets = [target for _, target, _ in members]
-    indices = [list(parent).index(target) for target in targets]
-    if indices != sorted(indices) or indices != list(range(indices[0], indices[0] + len(indices))):
+    if len({id(target) for target in targets}) != len(targets):
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="body_structure_not_contiguous",
-            message=(
-                "Body structure members must be supplied in document order without gaps; "
-                "include every school object that belongs to this representative block."
-            ),
+            code="body_structure_member_duplicate",
+            message="Each representative body structure member must select a distinct object.",
         )
     if any(member.selected.kind not in {"paragraph", "table"} for _, _, member in members):
         raise ToolFailure(
@@ -367,12 +433,63 @@ def _materialize_structure(
         replaced_parent, replaced_target = replaced_structure
         replaced_parent.remove(replaced_target)
 
+    siblings = list(parent)
+    indices = [siblings.index(target) for target in targets]
+    if indices != sorted(indices):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_not_in_document_order",
+            message=(
+                "Body structure members must be supplied in document order. They do not need "
+                "to be adjacent; select the H1, H2, H3, and body objects from the same "
+                "representative chapter in their physical order."
+            ),
+        )
+    level1_target = next(
+        (
+            target
+            for _, target, member in members
+            if member.field_id == "body.heading.level1"
+        ),
+        None,
+    )
+    level1_style = _paragraph_style_id(level1_target) if level1_target is not None else None
+    if level1_style is not None and any(
+        block is not level1_target and _paragraph_style_id(block) == level1_style
+        for block in siblings[indices[0] + 1 : indices[-1] + 1]
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_crosses_chapter_boundary",
+            message=(
+                "The selected representative members cross another paragraph with the same "
+                "school style as the H1. Choose the H2, H3, and nearest real body sample "
+                "before that next chapter boundary."
+            ),
+        )
+    first_position = indices[0]
+    selected_ids = {id(target) for target in targets}
+    layout_blocks = [
+        block
+        for block in siblings[indices[0] : indices[-1] + 1]
+        if id(block) in selected_ids
+        or (
+            not "".join(node.text or "" for node in block.iter(f"{_W}t")).strip()
+            and block.find(f"{_W}pPr/{_W}sectPr") is None
+        )
+    ]
+    outer, content = _sdt(field_id=field_id, slot_id=slot_id, content_type="section")
+    for block in layout_blocks:
+        parent.remove(block)
+        content.append(block)
     for _, target, member in members:
         _remove_direct_format(target, member.clear_direct_format)
         if member.selected.kind == "paragraph":
             _materialize(
                 document_root,
-                parent,
+                content,
                 target,
                 selected=member.selected,
                 field_id=member.field_id,
@@ -383,30 +500,17 @@ def _materialize_structure(
         else:
             # Tables remain structurally intact; the outer and member controls
             # make the sample addressable without inventing a replacement table.
-            control, content = _sdt(
+            control, member_content = _sdt(
                 field_id=member.field_id,
                 slot_id=member.slot_id,
                 content_type=member.content_type,
             )
-            position = list(parent).index(target)
-            parent.remove(target)
-            content.append(target)
-            parent.insert(position, control)
-            targets[targets.index(target)] = control
-
-    # Paragraph materialization nests its member control inside the paragraph;
-    # table materialization replaces the table with a member control.
-    current_blocks: list[ET.Element] = []
-    for original, (_, _, member) in zip(targets, members, strict=True):
-        if member.selected.kind == "table" and _local_name(original.tag) == "sdt":
-            current_blocks.append(original)
-        else:
-            current_blocks.append(original)
-    outer, content = _sdt(field_id=field_id, slot_id=slot_id, content_type="section")
-    first_position = min(list(parent).index(block) for block in current_blocks)
-    for block in current_blocks:
-        parent.remove(block)
-        content.append(block)
+            outer_content = outer.find(f"{_W}sdtContent")
+            assert outer_content is not None
+            position = list(outer_content).index(target)
+            outer_content.remove(target)
+            member_content.append(target)
+            outer_content.insert(position, control)
     parent.insert(first_position, outer)
 
 
@@ -446,6 +550,198 @@ def _toc_level(
     return int(match.group(1)) if match else None
 
 
+_PPR_ORDER = {
+    name: index
+    for index, name in enumerate(
+        (
+            "pStyle",
+            "keepNext",
+            "keepLines",
+            "pageBreakBefore",
+            "widowControl",
+            "numPr",
+            "pBdr",
+            "shd",
+            "tabs",
+            "spacing",
+            "ind",
+            "jc",
+            "outlineLvl",
+            "rPr",
+            "sectPr",
+        )
+    )
+}
+_RPR_ORDER = {
+    name: index
+    for index, name in enumerate(
+        (
+            "rStyle",
+            "rFonts",
+            "b",
+            "bCs",
+            "i",
+            "iCs",
+            "caps",
+            "smallCaps",
+            "strike",
+            "dstrike",
+            "outline",
+            "shadow",
+            "emboss",
+            "imprint",
+            "noProof",
+            "snapToGrid",
+            "vanish",
+            "webHidden",
+            "color",
+            "spacing",
+            "w",
+            "kern",
+            "position",
+            "sz",
+            "szCs",
+            "highlight",
+            "u",
+            "bdr",
+            "shd",
+            "fitText",
+            "vertAlign",
+            "rtl",
+            "cs",
+            "lang",
+            "eastAsianLayout",
+            "specVanish",
+            "oMath",
+        )
+    )
+}
+
+
+def _ordered_children(
+    values: list[ET.Element],
+    order: dict[str, int],
+) -> list[ET.Element]:
+    return sorted(values, key=lambda item: order.get(_local_name(item.tag), len(order)))
+
+
+def _style_chain(styles: ET.Element, style_id: str) -> list[ET.Element]:
+    by_id = {style.get(f"{_W}styleId", ""): style for style in styles.findall(f"{_W}style")}
+    result: list[ET.Element] = []
+    seen: set[str] = set()
+
+    def visit(current_id: str) -> None:
+        if not current_id or current_id in seen:
+            return
+        seen.add(current_id)
+        current = by_id.get(current_id)
+        if current is None:
+            return
+        based_on = current.find(f"{_W}basedOn")
+        if based_on is not None:
+            visit(based_on.get(f"{_W}val", ""))
+        result.append(current)
+
+    visit(style_id)
+    return result
+
+
+def _first_visible_run_properties(paragraph: ET.Element) -> ET.Element | None:
+    return next(
+        (
+            properties
+            for run in paragraph.iter(f"{_W}r")
+            if any((node.text or "").strip() for node in run.iter(f"{_W}t"))
+            and (properties := run.find(f"{_W}rPr")) is not None
+        ),
+        None,
+    )
+
+
+def _stabilize_toc_styles(
+    parts: dict[str, bytes],
+    templates: dict[int, ET.Element],
+    style_ids: dict[int, str],
+    clear_direct_format: tuple[str, ...],
+) -> None:
+    """Flatten observed TOC result formatting into styles used on field update."""
+
+    raw = parts.get("word/styles.xml")
+    if raw is None:
+        return
+    try:
+        styles = ET.fromstring(raw)
+    except ET.ParseError as error:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="styles_xml_invalid",
+            message="The Word styles part cannot be parsed.",
+        ) from error
+    default_run = styles.find(f"{_W}docDefaults/{_W}rPrDefault/{_W}rPr")
+    by_id = {style.get(f"{_W}styleId", ""): style for style in styles.findall(f"{_W}style")}
+    for level, style_id in style_ids.items():
+        style = by_id.get(style_id)
+        template = templates.get(level)
+        if style is None or template is None:
+            continue
+
+        paragraph_properties = style.find(f"{_W}pPr")
+        if paragraph_properties is None:
+            paragraph_properties = ET.Element(f"{_W}pPr")
+            run_properties_position = next(
+                (index for index, child in enumerate(style) if child.tag == f"{_W}rPr"),
+                len(style),
+            )
+            style.insert(run_properties_position, paragraph_properties)
+        template_paragraph_properties = template.find(f"{_W}pPr")
+        if template_paragraph_properties is not None:
+            for name in ("tabs", "spacing", "ind"):
+                if paragraph_properties.find(f"{_W}{name}") is not None:
+                    continue
+                source = template_paragraph_properties.find(f"{_W}{name}")
+                if source is not None:
+                    paragraph_properties.append(deepcopy(source))
+        spacing = paragraph_properties.find(f"{_W}spacing")
+        if spacing is not None:
+            spacing.attrib.setdefault(f"{_W}before", "0")
+            spacing.attrib.setdefault(f"{_W}after", "0")
+        alignment = paragraph_properties.find(f"{_W}jc")
+        if alignment is None:
+            alignment = ET.SubElement(paragraph_properties, f"{_W}jc")
+        alignment.set(f"{_W}val", "left")
+        children = _ordered_children(list(paragraph_properties), _PPR_ORDER)
+        paragraph_properties[:] = children
+
+        merged: dict[str, ET.Element] = {}
+        sources: list[ET.Element] = []
+        if default_run is not None:
+            sources.append(default_run)
+        sources.extend(
+            properties
+            for item in _style_chain(styles, style_id)
+            if (properties := item.find(f"{_W}rPr")) is not None
+        )
+        template_run = _first_visible_run_properties(template)
+        if template_run is not None:
+            sources.append(template_run)
+        for source in sources:
+            for child in source:
+                name = _local_name(child.tag)
+                if name not in {"rStyle", "rPrChange"}:
+                    merged[name] = deepcopy(child)
+        if "color" in clear_direct_format:
+            merged.pop("color", None)
+        for name in ("b", "bCs"):
+            if name not in merged:
+                merged[name] = ET.Element(f"{_W}{name}", {f"{_W}val": "0"})
+        run_properties = style.find(f"{_W}rPr")
+        if run_properties is None:
+            run_properties = ET.SubElement(style, f"{_W}rPr")
+        run_properties[:] = _ordered_children(list(merged.values()), _RPR_ORDER)
+    parts["word/styles.xml"] = _serialize(styles)
+
+
 def _toc_paragraph(
     template: ET.Element,
     text: str,
@@ -453,6 +749,7 @@ def _toc_paragraph(
     level: int,
     style_id: str,
     instruction_text: str,
+    clear_direct_format: tuple[str, ...],
     first: bool,
     last: bool,
 ) -> ET.Element:
@@ -496,6 +793,7 @@ def _toc_paragraph(
     )
     if template_run_properties is not None:
         text_run.append(deepcopy(template_run_properties))
+        _remove_direct_format(text_run, clear_direct_format)
     ET.SubElement(text_run, f"{_W}t").text = text
     ET.SubElement(text_run, f"{_W}tab")
     ET.SubElement(text_run, f"{_W}t").text = "1"
@@ -506,10 +804,12 @@ def _toc_paragraph(
 
 
 def _refresh_toc(
+    parts: dict[str, bytes],
     parent: ET.Element,
     target: ET.Element,
     entries: tuple[TocEntry, ...],
     style_ids: dict[int, str],
+    clear_direct_format: tuple[str, ...],
 ) -> None:
     """Rebuild a representative cache while keeping a live, dirty TOC field."""
 
@@ -554,6 +854,7 @@ def _refresh_toc(
     )
     if "TOC" not in instruction_text.upper():
         instruction_text = ' TOC \\o "1-3" \\h \\z \\u '
+    _stabilize_toc_styles(parts, templates, style_ids, clear_direct_format)
     replacements = [
         _toc_paragraph(
             templates.get(entry.level, fallback),
@@ -561,6 +862,7 @@ def _refresh_toc(
             level=entry.level,
             style_id=style_ids.get(entry.level, f"TOC{entry.level}"),
             instruction_text=instruction_text,
+            clear_direct_format=clear_direct_format,
             first=index == 0,
             last=index == len(entries) - 1,
         )
@@ -575,7 +877,25 @@ def _refresh_toc(
         ),
         None,
     )
+    boundary_already_present = False
     if following_content is not None:
+        following_index = siblings.index(following_content)
+        for paragraph in siblings[end + 1 : following_index + 1]:
+            if paragraph.find(f"{_W}pPr/{_W}pageBreakBefore") is not None:
+                boundary_already_present = True
+                break
+            if any(node.get(f"{_W}type", "page") == "page" for node in paragraph.iter(f"{_W}br")):
+                boundary_already_present = True
+                break
+            section = paragraph.find(f"{_W}pPr/{_W}sectPr")
+            section_type = section.find(f"{_W}type") if section is not None else None
+            if section is not None and (
+                section_type is None
+                or section_type.get(f"{_W}val", "nextPage") in {"nextPage", "oddPage", "evenPage"}
+            ):
+                boundary_already_present = True
+                break
+    if following_content is not None and not boundary_already_present:
         properties = following_content.find(f"{_W}pPr")
         if properties is None:
             properties = ET.Element(f"{_W}pPr")
@@ -737,7 +1057,23 @@ def mutate_objects(
         elif mutation.action == "normalize_format":
             _remove_direct_format(target, mutation.clear_direct_format)
         elif mutation.action == "refresh_toc":
-            _refresh_toc(parent, target, mutation.toc_entries, toc_style_ids)
+            element_order = {id(element): rank for rank, element in enumerate(document_root.iter())}
+            toc_entries = tuple(
+                sorted(
+                    mutation.toc_entries,
+                    key=lambda entry: element_order[
+                        id(_resolve(document_root, entry.selected.locator)[1])
+                    ],
+                )
+            )
+            _refresh_toc(
+                parts,
+                parent,
+                target,
+                toc_entries,
+                toc_style_ids,
+                mutation.clear_direct_format,
+            )
             refreshed_toc = True
         elif mutation.action == "clear_content":
             if mutation.selected.style and mutation.selected.style.casefold().startswith("toc"):
@@ -759,7 +1095,7 @@ def mutate_objects(
                 )
             _clear_content(parent, target, mutation.selected)
         elif mutation.action == "remove_object":
-            parent.remove(target)
+            _remove_object_preserving_boundary(parent, target)
         else:
             raise AssertionError(f"unsupported direct object action: {mutation.action}")
     parts["word/document.xml"] = _serialize(document_root)

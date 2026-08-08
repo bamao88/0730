@@ -238,7 +238,9 @@ def _append_label_and_blank_paragraph(document: Path) -> None:
     label = ET.SubElement(paragraph, f"{W}r")
     ET.SubElement(label, f"{W}t").text = "指导教师："
     blank = ET.SubElement(paragraph, f"{W}r")
-    ET.SubElement(blank, f"{W}t", {f"{XML}space": "preserve"}).text = "            "
+    blank_properties = ET.SubElement(blank, f"{W}rPr")
+    ET.SubElement(blank_properties, f"{W}u", {f"{W}val": "single"})
+    ET.SubElement(blank, f"{W}t", {f"{XML}space": "preserve"}).text = "                        "
     section = body.find(f"{W}sectPr")
     body.insert(list(body).index(section) if section is not None else len(body), paragraph)
     parts["word/document.xml"] = ET.tostring(
@@ -297,6 +299,30 @@ def _append_toc_and_titles(document: Path) -> None:
         )
         ET.SubElement(style, f"{W}name", {f"{W}val": f"toc {level}"})
         ET.SubElement(style, f"{W}basedOn", {f"{W}val": "Normal"})
+        paragraph_properties = ET.SubElement(style, f"{W}pPr")
+        if level == 1:
+            tabs = ET.SubElement(paragraph_properties, f"{W}tabs")
+            ET.SubElement(
+                tabs,
+                f"{W}tab",
+                {f"{W}val": "right", f"{W}leader": "dot", f"{W}pos": "9060"},
+            )
+            ET.SubElement(
+                paragraph_properties,
+                f"{W}spacing",
+                {f"{W}line": "400", f"{W}lineRule": "exact"},
+            )
+        else:
+            ET.SubElement(
+                paragraph_properties,
+                f"{W}ind",
+                {f"{W}left": str(420 * (level - 1))},
+            )
+        run_properties = ET.SubElement(style, f"{W}rPr")
+        if level == 1:
+            ET.SubElement(run_properties, f"{W}b")
+        ET.SubElement(run_properties, f"{W}sz", {f"{W}val": "28"})
+        ET.SubElement(run_properties, f"{W}szCs", {f"{W}val": "28"})
     parts["word/styles.xml"] = ET.tostring(
         styles,
         encoding="utf-8",
@@ -311,6 +337,17 @@ def _append_toc_and_titles(document: Path) -> None:
         paragraph = ET.Element(f"{W}p")
         properties = ET.SubElement(paragraph, f"{W}pPr")
         ET.SubElement(properties, f"{W}pStyle", {f"{W}val": f"TOC{level}"})
+        tabs = ET.SubElement(properties, f"{W}tabs")
+        ET.SubElement(
+            tabs,
+            f"{W}tab",
+            {f"{W}val": "right", f"{W}leader": "dot", f"{W}pos": "9060"},
+        )
+        ET.SubElement(
+            properties,
+            f"{W}spacing",
+            {f"{W}line": "400", f"{W}lineRule": "exact"},
+        )
         if level == 1:
             begin = ET.SubElement(paragraph, f"{W}r")
             ET.SubElement(begin, f"{W}fldChar", {f"{W}fldCharType": "begin"})
@@ -319,6 +356,11 @@ def _append_toc_and_titles(document: Path) -> None:
             separate = ET.SubElement(paragraph, f"{W}r")
             ET.SubElement(separate, f"{W}fldChar", {f"{W}fldCharType": "separate"})
         run = ET.SubElement(paragraph, f"{W}r")
+        run_properties = ET.SubElement(run, f"{W}rPr")
+        ET.SubElement(run_properties, f"{W}b", {f"{W}val": "0"})
+        ET.SubElement(run_properties, f"{W}color", {f"{W}val": "3333FF"})
+        ET.SubElement(run_properties, f"{W}sz", {f"{W}val": "28"})
+        ET.SubElement(run_properties, f"{W}szCs", {f"{W}val": "28"})
         ET.SubElement(run, f"{W}t").text = text
         ET.SubElement(run, f"{W}tab")
         ET.SubElement(run, f"{W}t").text = str(level)
@@ -340,6 +382,36 @@ def _append_toc_and_titles(document: Path) -> None:
         ET.SubElement(run, f"{W}t").text = text
         body.insert(position, paragraph)
         position += 1
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(document, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+
+def _append_section_boundary_instruction(document: Path) -> None:
+    with zipfile.ZipFile(document) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    body = root.find(f"{W}body")
+    assert body is not None
+    final_section = body.find(f"{W}sectPr")
+    position = list(body).index(final_section) if final_section is not None else len(body)
+    boundary = ET.Element(f"{W}p")
+    properties = ET.SubElement(boundary, f"{W}pPr")
+    section = ET.SubElement(properties, f"{W}sectPr")
+    ET.SubElement(section, f"{W}type", {f"{W}val": "nextPage"})
+    run = ET.SubElement(boundary, f"{W}r")
+    ET.SubElement(run, f"{W}t").text = "应删除的目录页说明"
+    body.insert(position, boundary)
+    title = ET.Element(f"{W}p")
+    title_run = ET.SubElement(title, f"{W}r")
+    ET.SubElement(title_run, f"{W}t").text = "摘  要"
+    body.insert(position + 1, title)
     parts["word/document.xml"] = ET.tostring(
         root,
         encoding="utf-8",
@@ -400,6 +472,8 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
         {
             "action": "next",
             "region_ref": opened["current_region"]["region_ref"],
+            "region_outcome": "preserve",
+            "reason": "This fixture region is fixed school content.",
         }
     )
     searched, _ = service.view(
@@ -419,9 +493,14 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
         "full_page_returned": False,
     }
     assert opened["current_region"]["target"]["object_ref"]
+    assert isinstance(opened["current_region"]["target"]["document_order"], int)
     assert set(opened["current_region"]["target"]["object_ref"]) == {"object_id"}
     assert all(
         set(item["object_ref"]) == {"object_id"}
+        for item in opened["current_region"]["adjacent_objects"]
+    )
+    assert all(
+        isinstance(item["document_order"], int)
         for item in opened["current_region"]["adjacent_objects"]
     )
     assert len(opened["current_region"]["adjacent_objects"]) <= 32
@@ -438,6 +517,7 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
     assert next_region["navigation"]["completed_regions"] == 1
     assert searched["match_count"] > 1
     assert len(searched["matches"]) <= 5
+    assert all(isinstance(item["document_order"], int) for item in searched["matches"])
 
 
 def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
@@ -471,6 +551,14 @@ def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
                 },
                 object_ref={"object_id": "obj-summary-3"},
             ),
+            InspectedObject(
+                locator="/body/p[3]",
+                kind="paragraph",
+                text="第 X 章 结论与展望\t6",
+                style="TOC 1",
+                format={},
+                object_ref={"object_id": "obj-summary-4"},
+            ),
         ),
         summary={},
         risks=(),
@@ -481,12 +569,73 @@ def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
     summary = TemplateWorkspaceService._checkpoint_summary(inspection)
 
     assert summary["toc"] == {
-        "entry_count": 2,
+        "entry_count": 3,
         "sample_marker_count": 1,
         "sample_marker_examples": ["第X章 XXX\tXX"],
         "missing_body_heading_types": ["body.heading.level1"],
         "refresh_needed": True,
     }
+
+
+def test_next_requires_an_explicit_agent_outcome_and_committed_handling(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    opened, _ = service.view({"action": "open"})
+    region_ref = opened["current_region"]["region_ref"]
+
+    with pytest.raises(ToolFailure) as missing:
+        service.view({"action": "next", "region_ref": region_ref})
+    assert missing.value.code == "region_outcome_missing"
+
+    with pytest.raises(ToolFailure) as uncommitted:
+        service.view(
+            {
+                "action": "next",
+                "region_ref": region_ref,
+                "region_outcome": "handled",
+            }
+        )
+    assert uncommitted.value.code == "region_edit_not_committed"
+
+    with pytest.raises(ToolFailure) as no_reason:
+        service.view(
+            {
+                "action": "next",
+                "region_ref": region_ref,
+                "region_outcome": "preserve",
+            }
+        )
+    assert no_reason.value.code == "region_preserve_reason_missing"
+
+    advanced, _ = service.view(
+        {
+            "action": "next",
+            "region_ref": region_ref,
+            "region_outcome": "preserve",
+            "reason": "The visible school identity must remain unchanged.",
+        }
+    )
+    assert advanced["navigation"]["completed_regions"] == 1
+
+
+def test_next_accepts_handled_after_the_region_has_a_committed_edit(tmp_path: Path) -> None:
+    service, _, _ = _service(tmp_path)
+    opened, _ = service.view({"action": "open"})
+    selected = opened["current_region"]["target"]
+
+    changed, _ = service.edit(
+        {"operations": [{"action": "clear_content", "object_ref": selected["object_ref"]}]}
+    )
+    advanced, _ = service.view(
+        {
+            "action": "next",
+            "region_ref": changed["current_region"]["region_ref"],
+            "region_outcome": "handled",
+        }
+    )
+
+    assert advanced["navigation"]["completed_regions"] == 1
 
 
 def test_finished_navigation_returns_one_bounded_toc_refresh_task(
@@ -507,9 +656,37 @@ def test_finished_navigation_returns_one_bounded_toc_refresh_task(
     assert pending["field_id"] == "generated.toc"
     assert pending["required_body_heading_candidates"] == []
     assert set(pending["target"]["object_ref"]) == {"object_id"}
-    assert 1 <= len(pending["title_candidates"]) <= 16
+    assert 1 <= len(pending["title_candidates"]) <= 24
     assert all(set(item["object_ref"]) == {"object_id"} for item in pending["title_candidates"])
     assert "non-semantic suggestions" in pending["guidance"]
+
+
+def test_failed_toc_intent_returns_regenerated_fresh_candidates(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_toc_and_titles(source)
+    service._register_source()
+    source_hash = sha256_file(source)
+    progress = service._read_progress(source_hash)
+    progress.update(
+        {
+            "region_index": len(service._source_regions()),
+            "pending_edit_intents": [
+                {
+                    "action": "refresh_toc",
+                    "field_id": "generated.toc",
+                    "last_failure": {"code": "target_not_found", "message": "stale ref"},
+                }
+            ],
+        }
+    )
+    service._write_progress(progress)
+
+    reopened, _ = service.view({"action": "open"})
+
+    assert reopened["pending_edit_intents"][0]["action"] == "refresh_toc"
+    assert reopened["pending_generated_content"]["field_id"] == "generated.toc"
+    assert reopened["pending_generated_content"]["target"]["object_ref"]
+    assert reopened["pending_generated_content"]["title_candidates"]
 
 
 def test_checkpoint_toc_feedback_detects_wrong_body_heading_level() -> None:
@@ -600,6 +777,8 @@ def test_unmappable_paragraph_never_falls_back_to_an_unrelated_region(
         {
             "action": "next",
             "region_ref": opened["current_region"]["region_ref"],
+            "region_outcome": "preserve",
+            "reason": "This fixture region is fixed school content.",
         }
     )
 
@@ -693,10 +872,9 @@ def test_local_region_gives_blank_run_its_immediate_parent_label(tmp_path: Path)
         "text": "题目：",
         "style": "封面字段",
         "object_ref": {"object_id": "obj-parent"},
+        "document_order": 0,
     }
-    adjacent_label = next(
-        item for item in context["adjacent_objects"] if item["text"] == "题目："
-    )
+    adjacent_label = next(item for item in context["adjacent_objects"] if item["text"] == "题目：")
     assert adjacent_label["parent_context"]["text"] == "题目："
 
 
@@ -892,6 +1070,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "operations": 2,
         "actions": {"clear_content": 1, "materialize_slot": 1},
         "slots_created": 1,
+        "absorbed_operations": [],
     }
     assert "applied" not in result
     assert "slots" not in result
@@ -941,6 +1120,51 @@ def test_materialize_slot_rejects_a_paragraph_that_contains_label_and_blank_runs
     assert caught.value.code == "slot_boundary_too_broad"
 
 
+def test_materialize_slot_preserves_underlined_blank_run_width_budget(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_label_and_blank_paragraph(source)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    paragraph = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text.startswith("指导教师：")
+    )
+    blank = next(
+        item
+        for item in inspection.objects
+        if item.kind == "run"
+        and item.locator.startswith(f"{paragraph.locator}/")
+        and not item.text.strip()
+    )
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": blank.object_ref,
+                    "field_id": "advisor.name.zh",
+                }
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    control = next(
+        sdt
+        for sdt in document_root.iter(f"{W}sdt")
+        if (alias := sdt.find(f"{W}sdtPr/{W}alias")) is not None
+        and alias.get(f"{W}val") == "advisor.name.zh"
+    )
+    assert "".join(node.text or "" for node in control.iter(f"{W}t")) == (
+        "【导师中文姓名】        "
+    )
+    assert control.find(f".//{W}u").get(f"{W}val") == "single"
+
+
 def test_atomic_edit_rejects_conflicting_actions_on_the_same_object(
     tmp_path: Path,
 ) -> None:
@@ -970,6 +1194,576 @@ def test_atomic_edit_rejects_conflicting_actions_on_the_same_object(
         )
 
     assert caught.value.code == "duplicate_operation_target"
+
+
+def test_structure_materialization_absorbs_redundant_descendant_cleanup(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第 X 章 样例标题", "FF0000"),
+            ("1 节标题", "FF0000"),
+            ("1.1 小节标题", "FF0000"),
+            ("正文样例", "0000FF"),
+        ],
+    )
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    heading = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "第 X 章 样例标题"
+    )
+    heading_run = next(
+        item
+        for item in inspection.objects
+        if item.kind == "run" and item.locator.startswith(f"{heading.locator}/")
+    )
+    paragraph = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "正文样例"
+    )
+    level2 = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "1 节标题"
+    )
+    level3 = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "1.1 小节标题"
+    )
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {"action": "remove_object", "object_ref": heading_run.object_ref},
+                {
+                    "action": "materialize_structure",
+                    "object_ref": heading.object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": heading.object_ref,
+                            "field_id": "body.heading.level1",
+                            "clear_direct_format": ["color"],
+                        },
+                        {
+                            "object_ref": level2.object_ref,
+                            "field_id": "body.heading.level2",
+                            "clear_direct_format": ["color"],
+                        },
+                        {
+                            "object_ref": level3.object_ref,
+                            "field_id": "body.heading.level3",
+                            "clear_direct_format": ["color"],
+                        },
+                        {
+                            "object_ref": paragraph.object_ref,
+                            "field_id": "body.paragraph",
+                            "clear_direct_format": ["color"],
+                        },
+                    ],
+                },
+            ]
+        }
+    )
+
+    assert result["effects"]["actions"] == {"materialize_structure": 1}
+    assert result["effects"]["operations"] == 1
+    assert result["effects"]["absorbed_operations"] == [
+        {
+            "action": "remove_object",
+            "target": heading_run.public(),
+            "absorbed_by": "materialize_parent",
+        }
+    ]
+    assert result["structures"][0]["field_id"] == "body.chapters"
+
+
+def test_structure_preserves_empty_layout_paragraphs_between_semantic_members(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第 X 章", "FF0000"),
+            ("", "0000FF"),
+            ("1 节标题", "FF0000"),
+            ("1.1 小节标题", "FF0000"),
+            ("正文样例", "0000FF"),
+        ],
+    )
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    heading = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "第 X 章"
+    )
+    paragraph = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "正文样例"
+    )
+    level2 = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "1 节标题"
+    )
+    level3 = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "1.1 小节标题"
+    )
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": heading.object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": heading.object_ref,
+                            "field_id": "body.heading.level1",
+                        },
+                        {
+                            "object_ref": level2.object_ref,
+                            "field_id": "body.heading.level2",
+                        },
+                        {
+                            "object_ref": level3.object_ref,
+                            "field_id": "body.heading.level3",
+                        },
+                        {
+                            "object_ref": paragraph.object_ref,
+                            "field_id": "body.paragraph",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    structure = next(
+        sdt
+        for sdt in document_root.iter(f"{W}sdt")
+        if (alias := sdt.find(f"{W}sdtPr/{W}alias")) is not None
+        and alias.get(f"{W}val") == "body.chapters"
+    )
+    assert len(structure.findall(f"{W}sdtContent/{W}p")) == 5
+
+
+def test_structure_leaves_empty_section_boundary_outside_repeatable_unit(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第 X 章", "FF0000"),
+            ("1 节标题", "0000FF"),
+            ("1.1 小节标题", "0000FF"),
+            ("", "000000"),
+            ("正文样例", "0000FF"),
+        ],
+    )
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    document_root = ET.fromstring(parts["word/document.xml"])
+    appended = list(document_root.iter(f"{W}p"))[-5:]
+    properties = appended[-2].find(f"{W}pPr")
+    assert properties is not None
+    ET.SubElement(properties, f"{W}sectPr")
+    parts["word/document.xml"] = ET.tostring(
+        document_root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+    _, document = service._register_source()
+    selected = {
+        item.text: item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph"
+        and item.text in {"第 X 章", "1 节标题", "1.1 小节标题", "正文样例"}
+    }
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected["第 X 章"].object_ref,
+                    "members": [
+                        {
+                            "object_ref": selected["第 X 章"].object_ref,
+                            "field_id": "body.heading.level1",
+                        },
+                        {
+                            "object_ref": selected["1 节标题"].object_ref,
+                            "field_id": "body.heading.level2",
+                        },
+                        {
+                            "object_ref": selected["1.1 小节标题"].object_ref,
+                            "field_id": "body.heading.level3",
+                        },
+                        {
+                            "object_ref": selected["正文样例"].object_ref,
+                            "field_id": "body.paragraph",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    structure = next(
+        sdt
+        for sdt in document_root.iter(f"{W}sdt")
+        if (alias := sdt.find(f"{W}sdtPr/{W}alias")) is not None
+        and alias.get(f"{W}val") == "body.chapters"
+    )
+    assert structure.find(f".//{W}sectPr") is None
+    assert document_root.find(f".//{W}sectPr") is not None
+
+
+def test_structure_extracts_nonadjacent_members_without_absorbing_instructions(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第 X 章", "FF0000"),
+            ("各章标题三号黑体，正文首行缩进两个字符。", "FF0000"),
+            ("1 节标题", "0000FF"),
+            ("1.1 小节标题", "0000FF"),
+            ("正文样例", "0000FF"),
+        ],
+    )
+    _, document = service._register_source()
+    selected = {
+        item.text: item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph"
+        and item.text in {"第 X 章", "1 节标题", "1.1 小节标题", "正文样例"}
+    }
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected["第 X 章"].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": selected["第 X 章"].object_ref,
+                            "field_id": "body.heading.level1",
+                        },
+                        {
+                            "object_ref": selected["1 节标题"].object_ref,
+                            "field_id": "body.heading.level2",
+                        },
+                        {
+                            "object_ref": selected["1.1 小节标题"].object_ref,
+                            "field_id": "body.heading.level3",
+                        },
+                        {
+                            "object_ref": selected["正文样例"].object_ref,
+                            "field_id": "body.paragraph",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    structure = next(
+        sdt
+        for sdt in document_root.iter(f"{W}sdt")
+        if (alias := sdt.find(f"{W}sdtPr/{W}alias")) is not None
+        and alias.get(f"{W}val") == "body.chapters"
+    )
+    structure_text = "".join(node.text or "" for node in structure.iter(f"{W}t"))
+    document_text = "".join(node.text or "" for node in document_root.iter(f"{W}t"))
+    assert "各章标题三号黑体" not in structure_text
+    assert "各章标题三号黑体" in document_text
+
+
+def test_structure_rejects_members_that_cross_the_next_chapter_boundary(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第 X 章 代表标题", "FF0000"),
+            ("1 节标题", "0000FF"),
+            ("1.1 小节标题", "0000FF"),
+            ("第 X 章 结论与展望", "000000"),
+            ("结论章正文样例", "0000FF"),
+        ],
+    )
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    document_root = ET.fromstring(parts["word/document.xml"])
+    for paragraph in document_root.iter(f"{W}p"):
+        text = "".join(node.text or "" for node in paragraph.iter(f"{W}t"))
+        if text.startswith("第 X 章"):
+            properties = paragraph.find(f"{W}pPr")
+            assert properties is not None
+            properties.insert(0, ET.Element(f"{W}pStyle", {f"{W}val": "chapter"}))
+    parts["word/document.xml"] = ET.tostring(
+        document_root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+    _, document = service._register_source()
+    selected = {
+        item.text: item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph"
+        and item.text
+        in {"第 X 章 代表标题", "1 节标题", "1.1 小节标题", "结论章正文样例"}
+    }
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_structure",
+                        "object_ref": selected["第 X 章 代表标题"].object_ref,
+                        "field_id": "body.chapters",
+                        "members": [
+                            {
+                                "object_ref": selected["第 X 章 代表标题"].object_ref,
+                                "field_id": "body.heading.level1",
+                            },
+                            {
+                                "object_ref": selected["1 节标题"].object_ref,
+                                "field_id": "body.heading.level2",
+                            },
+                            {
+                                "object_ref": selected["1.1 小节标题"].object_ref,
+                                "field_id": "body.heading.level3",
+                            },
+                            {
+                                "object_ref": selected["结论章正文样例"].object_ref,
+                                "field_id": "body.paragraph",
+                            },
+                        ],
+                    }
+                ]
+            }
+        )
+
+    assert caught.value.code == "body_structure_crosses_chapter_boundary"
+
+
+def test_body_structure_rejects_an_incomplete_core_member_set(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [("第 X 章", "FF0000"), ("1 节标题", "FF0000")],
+    )
+    _, document = service._register_source()
+    selected = {
+        item.text: item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph" and item.text in {"第 X 章", "1 节标题"}
+    }
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_structure",
+                        "object_ref": selected["第 X 章"].object_ref,
+                        "field_id": "body.chapters",
+                        "members": [
+                            {
+                                "object_ref": selected["第 X 章"].object_ref,
+                                "field_id": "body.heading.level1",
+                            },
+                            {
+                                "object_ref": selected["1 节标题"].object_ref,
+                                "field_id": "body.heading.level2",
+                            },
+                        ],
+                    }
+                ]
+            }
+        )
+
+    assert caught.value.code == "body_structure_core_members_missing"
+    assert "body.heading.level3" in caught.value.message
+    assert "body.paragraph" in caught.value.message
+
+
+def test_pending_structure_intent_keeps_the_richer_failed_attempt(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _, document = service._register_source()
+    selected = next(
+        item for item in service._inspection(document).objects if item.kind == "paragraph"
+    )
+    reference = {"object_id": selected.object_ref["object_id"]}
+
+    def operation(member_types: list[str]) -> JsonObject:
+        return {
+            "action": "materialize_structure",
+            "object_ref": reference,
+            "field_id": "body.chapters",
+            "members": [
+                {"object_ref": reference, "field_id": field_id} for field_id in member_types
+            ],
+        }
+
+    richer = [
+        "body.heading.level1",
+        "body.heading.level2",
+        "body.heading.level3",
+        "body.paragraph",
+    ]
+    failure = ToolFailure(
+        status="needs_input",
+        origin="request",
+        code="body_structure_not_contiguous",
+        message="retry",
+    )
+    service.record_edit_failure({"operations": [operation(richer)]}, failure)
+    service.record_edit_failure(
+        {"operations": [operation(["body.heading.level2", "body.heading.level3"])]},
+        failure,
+    )
+
+    progress = service._read_progress(sha256_file(source))
+    assert progress["pending_edit_intents"][0]["member_field_ids"] == richer
+    assert [
+        item["field_id"]
+        for item in progress["pending_edit_intents"][0]["retry_operation"]["members"]
+    ] == richer
+
+
+def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:
+    summary: JsonObject = {
+        "materialized_fields": {
+            "body.heading.level1": 1,
+            "body.heading.level2": 1,
+            "body.heading.level3": 1,
+            "body.paragraph": 3,
+        },
+        "materialized_structures": ["body.chapters"],
+        "toc": {"refresh_needed": False},
+    }
+
+    assert TemplateWorkspaceService._intent_already_satisfied(
+        {
+            "action": "materialize_structure",
+            "field_id": "body.chapters",
+            "member_field_ids": [
+                "body.heading.level2",
+                "body.heading.level3",
+                "body.paragraph",
+            ],
+        },
+        summary,
+    )
+    assert TemplateWorkspaceService._intent_already_satisfied(
+        {"action": "materialize_slot", "field_id": "body.paragraph"},
+        summary,
+    )
+    assert TemplateWorkspaceService._intent_already_satisfied(
+        {"action": "refresh_toc", "field_id": "generated.toc"},
+        summary,
+    )
+
+
+def test_failed_semantic_edit_intent_survives_fresh_open_until_success(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    document_ref, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+    operation = {
+        "action": "materialize_slot",
+        "object_ref": selected.object_ref,
+        "field_id": "abstract.zh",
+    }
+    service.record_edit_failure(
+        {"operations": [operation]},
+        ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="synthetic_edit_failure",
+            message="The requested semantic edit did not commit.",
+        ),
+    )
+
+    reopened, _ = service.view({"action": "open"})
+    intent = reopened["pending_edit_intents"][0]
+    assert intent["action"] == "materialize_slot"
+    assert intent["field_id"] == "abstract.zh"
+    assert intent["member_field_ids"] == []
+    assert intent["target"] == {"type": "run", "text": "请在此填写"}
+    assert intent["last_failure"]["code"] == "synthetic_edit_failure"
+    assert intent["recovery"] == "re_locate_and_improve"
+    assert "retry_operation" not in intent
+    assert reopened["pending_generated_content"] is None
+    with pytest.raises(ToolFailure) as pending:
+        service.publish({"document_ref": document_ref})
+    assert pending.value.code == "agent_edit_intent_unresolved"
+
+    changed, _ = service.edit({"operations": [operation]})
+    assert (
+        json.loads(service.progress_path.read_text(encoding="utf-8"))["pending_edit_intents"] == []
+    )
+    assert changed["effects"]["slots_created"] == 1
+
+
+def test_large_focus_crop_returns_a_bounded_larger_object_neighborhood(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_plain_paragraphs(source, [f"正文对象{index}" for index in range(12)])
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph" and item.text == "正文对象5"
+    )
+
+    narrow, _ = service.view({"action": "focus", "object_ref": selected.object_ref, "padding": 32})
+    wide, _ = service.view({"action": "focus", "object_ref": selected.object_ref, "padding": 256})
+    narrow_paragraphs = [
+        item for item in narrow["local_context"]["adjacent_objects"] if item["type"] == "paragraph"
+    ]
+    wide_paragraphs = [
+        item for item in wide["local_context"]["adjacent_objects"] if item["type"] == "paragraph"
+    ]
+
+    assert len(wide_paragraphs) > len(narrow_paragraphs)
+    assert len(wide["local_context"]["adjacent_objects"]) <= 32
 
 
 def test_run_level_slot_feedback_falls_back_to_its_own_paragraph_crop(
@@ -1072,6 +1866,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     replacement_samples = [
         ("第二章 更完整样例", "FF0000", "body.heading.level1"),
         ("2.1 更完整样例", "FF0000", "body.heading.level2"),
+        ("2.1.1 更完整样例", "FF0000", "body.heading.level3"),
         ("替换后的正文样例", "0000FF", "body.paragraph"),
     ]
     _append_styled_paragraphs(
@@ -1171,7 +1966,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         {
             "field_id": "body.chapters",
             "slot_id": "body.chapters.1",
-            "member_count": 3,
+            "member_count": 4,
         }
     ]
     _, replacement_path = service._resolve_document(replacement_result["document_ref"])
@@ -1182,9 +1977,9 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
     ]
     assert len(structures) == 1
-    assert structures[0].text == "【一级章标题】【二级标题】【正文段落】"
+    assert structures[0].text == "【一级章标题】【二级标题】【三级标题】【正文段落】"
     published = service.publish({"document_ref": replacement_result["document_ref"]})
-    assert published["counts"]["slot"] == 3
+    assert published["counts"]["slot"] == 4
     fill_contract = json.loads(
         (service.root / "publication/fill-contract.json").read_text(encoding="utf-8")
     )
@@ -1212,6 +2007,41 @@ def test_clear_content_preserves_selected_container_and_its_metadata(tmp_path: P
     assert preserved.text == ""
     assert preserved.format["alias"] == "author.name.zh"
     assert preserved.format["tag"] == "docfit.cover.student_name"
+
+
+def test_remove_instruction_preserves_its_next_page_section_boundary(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_section_boundary_instruction(source)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    selected = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "应删除的目录页说明"
+    )
+    sections_before = int(inspection.summary["sections"])
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {"action": "remove_object", "object_ref": selected.object_ref},
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    changed = service._inspection(changed_path)
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    boundary = next(
+        paragraph
+        for paragraph in document_root.iter(f"{W}p")
+        if paragraph.find(f"{W}pPr/{W}sectPr/{W}type") is not None
+    )
+    assert "".join(node.text or "" for node in boundary.iter(f"{W}t")) == ""
+    assert boundary.find(f"{W}pPr/{W}sectPr/{W}type").get(f"{W}val") == "nextPage"
+    assert int(changed.summary["sections"]) == sections_before
+    assert any(item.text == "摘  要" for item in changed.objects)
 
 
 def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
@@ -1321,6 +2151,74 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
     assert begin.get(f"{W}dirty") == "true"
 
 
+def test_toc_refresh_does_not_duplicate_a_preserved_next_page_section(tmp_path: Path) -> None:
+    source = tmp_path / "toc-with-boundary.docx"
+    output = tmp_path / "toc-with-boundary-refreshed.docx"
+    xml = (
+        f'<w:document xmlns:w="{W[1:-1]}"><w:body>'
+        '<w:p><w:pPr><w:pStyle w:val="TOC1"/></w:pPr>'
+        '<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
+        '<w:r><w:instrText> TOC \\o "1-3" </w:instrText></w:r>'
+        '<w:r><w:fldChar w:fldCharType="separate"/></w:r>'
+        '<w:r><w:t>旧目录</w:t><w:tab/><w:fldChar w:fldCharType="end"/></w:r></w:p>'
+        '<w:p><w:pPr><w:sectPr><w:type w:val="nextPage"/></w:sectPr></w:pPr>'
+        "<w:r><w:t>应删除说明</w:t></w:r></w:p>"
+        "<w:p><w:r><w:t>摘  要</w:t></w:r></w:p>"
+        "<w:sectPr/></w:body></w:document>"
+    ).encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+        archive.writestr(
+            "word/settings.xml",
+            (f'<w:settings xmlns:w="{W[1:-1]}"><w:compat/></w:settings>').encode(),
+        )
+    toc = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="旧目录",
+        style="TOC1",
+        format={},
+        object_ref={},
+    )
+    instruction = InspectedObject(
+        locator="/body/p[2]",
+        kind="paragraph",
+        text="应删除说明",
+        style=None,
+        format={},
+        object_ref={},
+    )
+    entry = TocEntry(
+        selected=InspectedObject(
+            locator="/body/p[3]",
+            kind="paragraph",
+            text="摘  要",
+            style=None,
+            format={},
+            object_ref={},
+        ),
+        level=1,
+    )
+
+    mutate_objects(
+        source,
+        output,
+        mutations=[
+            ObjectMutation(selected=toc, action="refresh_toc", toc_entries=(entry,)),
+            ObjectMutation(selected=instruction, action="remove_object"),
+        ],
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    paragraphs = root.findall(f"{W}body/{W}p")
+    boundary = paragraphs[1]
+    title = paragraphs[2]
+    assert "".join(node.text or "" for node in boundary.iter(f"{W}t")) == ""
+    assert boundary.find(f"{W}pPr/{W}sectPr/{W}type").get(f"{W}val") == "nextPage"
+    assert title.find(f"{W}pPr/{W}pageBreakBefore") is None
+
+
 def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
     _append_toc_and_titles(source)
@@ -1354,13 +2252,18 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
                     "action": "refresh_toc",
                     "object_ref": toc.object_ref,
                     "field_id": "generated.toc",
-                    "entries": [
-                        {
-                            "object_ref": titles[text].object_ref,
-                            "level": level,
-                        }
-                        for text, level in title_levels.items()
-                    ],
+                    "clear_direct_format": ["color"],
+                    "entries": list(
+                        reversed(
+                            [
+                                {
+                                    "object_ref": titles[text].object_ref,
+                                    "level": level,
+                                }
+                                for text, level in title_levels.items()
+                            ]
+                        )
+                    ),
                 }
             ],
         }
@@ -1387,6 +2290,32 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         for item in changed.objects
         if item.kind == "paragraph" and item.style and item.style.casefold().startswith("toc")
     ] == ["toc 1", "toc 1", "toc 1", "toc 2", "toc 3", "toc 1"]
+    with zipfile.ZipFile(changed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+        styles_root = ET.fromstring(archive.read("word/styles.xml"))
+    toc_styles = {
+        name.get(f"{W}val"): style
+        for style in styles_root.findall(f"{W}style")
+        if (name := style.find(f"{W}name")) is not None
+        and name.get(f"{W}val") in {"toc 1", "toc 2", "toc 3"}
+    }
+    for level in range(1, 4):
+        style = toc_styles[f"toc {level}"]
+        assert style.find(f"{W}rPr/{W}rFonts") is not None
+        assert style.find(f"{W}rPr/{W}b").get(f"{W}val") == "0"
+        assert style.find(f"{W}rPr/{W}sz").get(f"{W}val") == "28"
+        assert style.find(f"{W}rPr/{W}color") is None
+        assert style.find(f"{W}pPr/{W}jc").get(f"{W}val") == "left"
+        assert style.find(f"{W}pPr/{W}tabs/{W}tab").get(f"{W}leader") == "dot"
+    assert toc_styles["toc 2"].find(f"{W}pPr/{W}ind").get(f"{W}left") == "420"
+    assert toc_styles["toc 3"].find(f"{W}pPr/{W}ind").get(f"{W}left") == "840"
+    refreshed_paragraphs = [
+        paragraph
+        for paragraph in document_root.iter(f"{W}p")
+        if (paragraph_style := paragraph.find(f"{W}pPr/{W}pStyle")) is not None
+        and paragraph_style.get(f"{W}val") in {"TOC1", "TOC2", "TOC3"}
+    ]
+    assert all(paragraph.find(f".//{W}color") is None for paragraph in refreshed_paragraphs)
 
 
 def test_batch_remove_checks_every_effect_and_returns_one_fresh_version(tmp_path: Path) -> None:
