@@ -671,7 +671,10 @@ class TemplateWorkspaceService:
         ]
         summary = self._checkpoint_summary(inspection)
         unresolved = [
-            intent for intent in pending if not self._intent_already_satisfied(intent, summary)
+            intent
+            for intent in pending
+            if self._intent_field_registered(intent)
+            and not self._intent_already_satisfied(intent, summary)
         ]
         if len(unresolved) == len(pending):
             return progress
@@ -679,9 +682,8 @@ class TemplateWorkspaceService:
         self._write_progress(reconciled)
         return reconciled
 
-    @classmethod
     def _remaining_pending_intents(
-        cls,
+        self,
         progress: JsonObject,
         inspection: Inspection,
         completed_operations: list[JsonObject],
@@ -689,7 +691,7 @@ class TemplateWorkspaceService:
         completed_keys = {
             key for item in completed_operations if (key := _semantic_intent_key(item)) is not None
         }
-        summary = cls._checkpoint_summary(inspection)
+        summary = self._checkpoint_summary(inspection)
         return [
             {
                 key: value
@@ -698,9 +700,20 @@ class TemplateWorkspaceService:
             }
             for intent in progress.get("pending_edit_intents", [])
             if isinstance(intent, dict)
+            and self._intent_field_registered(intent)
             and (intent.get("action"), intent.get("field_id")) not in completed_keys
-            and not cls._intent_already_satisfied(intent, summary)
+            and not self._intent_already_satisfied(intent, summary)
         ]
+
+    def _intent_field_registered(self, intent: JsonObject) -> bool:
+        field_id = intent.get("field_id")
+        if not isinstance(field_id, str):
+            return False
+        try:
+            self.registry.lookup(field_id)
+        except ToolFailure:
+            return False
+        return True
 
     @staticmethod
     def _pending_intents_for_current_document(
@@ -744,6 +757,10 @@ class TemplateWorkspaceService:
         for raw in raw_operations:
             if not isinstance(raw, dict) or (key := _semantic_intent_key(raw)) is None:
                 continue
+            try:
+                self.registry.lookup(key[1])
+            except ToolFailure:
+                continue
             target: JsonObject | None = None
             retry_operation: JsonObject | None = None
             try:
@@ -770,6 +787,18 @@ class TemplateWorkspaceService:
                 retry_operation = json.loads(json.dumps(raw))
             except ToolFailure:
                 pass
+            last_failure = {
+                "code": error.code,
+                "message": error.message,
+            }
+            if error.code == "field_not_registered":
+                last_failure = {
+                    "code": "batch_rejected_by_invalid_sibling",
+                    "message": (
+                        "This registered semantic operation did not commit because another "
+                        "operation in the same atomic batch used an unregistered field."
+                    ),
+                }
             intent: JsonObject = {
                 "action": key[0],
                 "field_id": key[1],
@@ -781,10 +810,7 @@ class TemplateWorkspaceService:
                 "target": target,
                 "document_sha256": progress["document_sha256"],
                 "retry_operation": retry_operation,
-                "last_failure": {
-                    "code": error.code,
-                    "message": error.message,
-                },
+                "last_failure": last_failure,
                 "guidance": (
                     "This is an Agent-requested edit that never committed. Re-locate the "
                     "current objects, retry or improve the same semantic edit, and confirm its "

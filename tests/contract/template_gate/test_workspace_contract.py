@@ -601,11 +601,11 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
         "index",
         "count",
         "target",
-            "parent_object",
-            "adjacent_objects",
-            "knowledge_signals",
-            "evidence",
-        }
+        "parent_object",
+        "adjacent_objects",
+        "knowledge_signals",
+        "evidence",
+    }
     assert len(opened["current_region"]["knowledge_signals"]) <= 1
     assert next_region["current_region"]["region_ref"] != opened["current_region"]["region_ref"]
     assert next_region["navigation"]["completed_regions"] == 1
@@ -1074,6 +1074,8 @@ def test_registry_search_ranks_domain_terms_in_an_agent_phrase(tmp_path: Path) -
 
     assert title[0]["field_id"] == "thesis.title.zh"
     assert author[0]["field_id"] == "author.name.zh"
+    assert service.registry.search("学生 学院")[0]["field_id"] == "author.department"
+    assert service.registry.search("指导教师 职称")[0]["field_id"] == "advisor.title"
 
 
 def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> None:
@@ -1758,6 +1760,47 @@ def test_pending_structure_intent_keeps_the_richer_failed_attempt(tmp_path: Path
         item["field_id"]
         for item in progress["pending_edit_intents"][0]["retry_operation"]["members"]
     ] == richer
+
+
+def test_failed_batch_persists_only_registered_semantic_intents(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+    service.record_edit_failure(
+        {
+            "materialize_slots": [
+                {"object_ref": selected.object_ref, "field_id": "abstract.zh"},
+                {"object_ref": selected.object_ref, "field_id": "invented.field"},
+            ]
+        },
+        ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="field_not_registered",
+            message="One field was not registered.",
+        ),
+    )
+
+    progress = service._read_progress(sha256_file(source))
+    assert [item["field_id"] for item in progress["pending_edit_intents"]] == ["abstract.zh"]
+    assert progress["pending_edit_intents"][0]["last_failure"]["code"] == (
+        "batch_rejected_by_invalid_sibling"
+    )
+
+    progress["pending_edit_intents"].append(
+        {
+            "action": "materialize_slot",
+            "field_id": "invented.field",
+            "member_field_ids": [],
+        }
+    )
+    service._write_progress(progress)
+    reopened, _ = service.view({"action": "open"})
+    assert [item["field_id"] for item in reopened["pending_edit_intents"]] == ["abstract.zh"]
 
 
 def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:

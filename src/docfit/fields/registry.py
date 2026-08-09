@@ -36,16 +36,20 @@ _SEARCH_ALIASES = {
     "supervisor": "advisor",
     "teacher": "advisor",
     "topic": "title",
+    "作者": "author",
+    "学生": "author",
+    "学院": "department",
+    "院系": "department",
+    "指导教师": "advisor",
+    "导师": "advisor",
+    "论文题目": "title",
+    "题目": "title",
 }
 
 
 def _search_terms(value: str) -> tuple[str, ...]:
     raw = re.findall(r"[a-z0-9]+|[\u3400-\u9fff]+", value.casefold())
-    terms = [
-        _SEARCH_ALIASES.get(term, term)
-        for term in raw
-        if term not in _SEARCH_STOP_WORDS
-    ]
+    terms = [_SEARCH_ALIASES.get(term, term) for term in raw if term not in _SEARCH_STOP_WORDS]
     return tuple(dict.fromkeys(terms))
 
 
