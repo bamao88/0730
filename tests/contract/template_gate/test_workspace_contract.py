@@ -1164,6 +1164,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "actions": {"clear_content": 1, "materialize_slot": 1},
         "slots_created": 1,
         "absorbed_operations": [],
+        "target_adjustments": [],
         "preserved_boundaries": [],
         "migrated_boundaries": [],
         "page_start_results": [],
@@ -1190,7 +1191,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
     assert slot.text == "【中文摘要】"
 
 
-def test_materialize_slot_rejects_a_paragraph_that_contains_label_and_blank_runs(
+def test_materialize_slot_narrows_a_label_paragraph_to_its_unique_blank_value_run(
     tmp_path: Path,
 ) -> None:
     service, _, source = _service(tmp_path)
@@ -1202,13 +1203,79 @@ def test_materialize_slot_rejects_a_paragraph_that_contains_label_and_blank_runs
         if item.kind == "paragraph" and item.text.startswith("指导教师：")
     )
 
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": paragraph.object_ref,
+                    "field_id": "advisor.name.zh",
+                }
+            ]
+        }
+    )
+
+    assert result["committed"] is True
+    assert len(result["effects"]["target_adjustments"]) == 1
+    adjustment = result["effects"]["target_adjustments"][0]
+    assert adjustment["action"] == "materialize_slot"
+    assert adjustment["reason"] == "unique_widest_blank_value_run"
+    assert adjustment["requested_object_id"] == paragraph.object_ref["object_id"]
+    assert adjustment["effective_object_id"] != paragraph.object_ref["object_id"]
+    _, changed_path = service._resolve_document(result["document_ref"])
+    paragraphs = [
+        item
+        for item in service._inspection(changed_path).objects
+        if item.kind == "paragraph" and item.text.startswith("指导教师：")
+    ]
+    assert paragraphs
+    assert paragraphs[0].text == "指导教师："
+    slot = next(
+        item
+        for item in service._inspection(changed_path).objects
+        if item.kind == "sdt" and item.format.get("alias") == "advisor.name.zh"
+    )
+    assert slot.text.strip() == "【导师中文姓名】"
+
+
+def test_materialize_slot_rejects_indistinguishable_blank_value_runs(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_label_and_blank_paragraph(source)
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    paragraph = next(
+        item
+        for item in root.iter(f"{W}p")
+        if "".join(node.text or "" for node in item.iter(f"{W}t")).startswith("指导教师：")
+    )
+    blank = max(
+        (
+            run
+            for run in paragraph.findall(f"{W}r")
+            if not "".join(node.text or "" for node in run.iter(f"{W}t")).strip()
+        ),
+        key=lambda run: len("".join(node.text or "" for node in run.iter(f"{W}t"))),
+    )
+    paragraph.append(ET.fromstring(ET.tostring(blank)))
+    parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    with zipfile.ZipFile(source, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph" and item.text.startswith("指导教师：")
+    )
+
     with pytest.raises(ToolFailure) as caught:
         service.edit(
             {
-                "operations": [
+                "materialize_slots": [
                     {
-                        "action": "materialize_slot",
-                        "object_ref": paragraph.object_ref,
+                        "object_ref": selected.object_ref,
                         "field_id": "advisor.name.zh",
                     }
                 ]

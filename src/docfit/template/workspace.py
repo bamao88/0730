@@ -1956,6 +1956,7 @@ class TemplateWorkspaceService:
             prepared_members: list[JsonObject] = []
             toc_entries: list[TocEntry] = []
             prepared_entries: list[JsonObject] = []
+            target_adjustment: JsonObject | None = None
             if action == "materialize_slot":
                 if selected.kind == "paragraph":
                     child_runs = [
@@ -1963,20 +1964,36 @@ class TemplateWorkspaceService:
                         for item in candidate_before.objects
                         if item.kind == "run" and item.locator.startswith(f"{selected.locator}/")
                     ]
-                    if any(item.text.strip() for item in child_runs) and any(
-                        not item.text.strip() for item in child_runs
-                    ):
-                        raise ToolFailure(
-                            status="needs_input",
-                            origin="request",
-                            code="slot_boundary_too_broad",
-                            message=(
-                                "This paragraph contains both fixed label text and a blank "
-                                "value run. Keep the label and materialize only the blank/value "
-                                "child run returned in current_region.adjacent_objects."
+                    visible_runs = [item for item in child_runs if item.text.strip()]
+                    blank_runs = [item for item in child_runs if not item.text.strip()]
+                    if visible_runs and blank_runs:
+                        widest = max(len(item.text) for item in blank_runs)
+                        writable_runs = [
+                            item for item in blank_runs if len(item.text) == widest and widest > 1
+                        ]
+                        if len(writable_runs) != 1:
+                            raise ToolFailure(
+                                status="needs_input",
+                                origin="request",
+                                code="slot_boundary_too_broad",
+                                message=(
+                                    "This paragraph mixes fixed label text with multiple "
+                                    "indistinguishable blank runs. Focus the intended value run."
+                                ),
+                                suggested_actions=("use_child_run_object_ref",),
+                            )
+                        requested = selected
+                        selected = writable_runs[0]
+                        target_adjustment = {
+                            "action": "materialize_slot",
+                            "reason": "unique_widest_blank_value_run",
+                            "requested_object_id": str(
+                                requested.object_ref.get("object_id", requested.locator)
                             ),
-                            suggested_actions=("use_child_run_object_ref",),
-                        )
+                            "effective_object_id": str(
+                                selected.object_ref.get("object_id", selected.locator)
+                            ),
+                        }
                 raw_field_id = raw.get("field_id")
                 if not isinstance(raw_field_id, str):
                     raise ToolFailure(
@@ -2180,6 +2197,7 @@ class TemplateWorkspaceService:
                         else None
                     ),
                     "entries": prepared_entries,
+                    "target_adjustment": target_adjustment,
                 }
             )
             mutations.append(
@@ -2214,6 +2232,11 @@ class TemplateWorkspaceService:
             }
         )
         knowledge_signals = _knowledge_signals(prepared)
+        target_adjustments = [
+            adjustment
+            for item in prepared
+            if isinstance((adjustment := item.get("target_adjustment")), dict)
+        ]
         source_hash = before.document_sha256
         self.versions.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
@@ -2275,6 +2298,7 @@ class TemplateWorkspaceService:
                         "effects": {
                             "operations": len(prepared),
                             "absorbed_operations": absorbed_operations,
+                            "target_adjustments": target_adjustments,
                             "effective_format_changes": format_changes,
                             **mutation_effects,
                         },
@@ -2396,6 +2420,7 @@ class TemplateWorkspaceService:
                         "actions": dict(sorted(action_counts.items())),
                         "slots_created": created_slots,
                         "absorbed_operations": absorbed_operations,
+                        "target_adjustments": target_adjustments,
                         "preserved_boundaries": mutation_effects["preserved_boundaries"],
                         "migrated_boundaries": mutation_effects["migrated_boundaries"],
                         "page_start_results": mutation_effects["page_start_results"],
