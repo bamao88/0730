@@ -4,10 +4,15 @@ from __future__ import annotations
 
 from docfit.tools.runtime import JsonObject
 
+TEMPLATE_OBJECT_ID_SCHEMA: JsonObject = {
+    "type": "string",
+    "pattern": "^obj-[0-9a-f]{24}$",
+}
+
 TEMPLATE_OBJECT_REF_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "object_id": {"type": "string", "pattern": "^obj-[0-9a-f]{24}$"},
+        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
     },
     "required": ["object_id"],
     "additionalProperties": False,
@@ -68,10 +73,10 @@ TEMPLATE_REGISTRY_SCHEMA: JsonObject = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+                    "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
                     "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
                 },
-                "required": ["object_ref", "field_id"],
+                "required": ["object_id", "field_id"],
                 "additionalProperties": False,
             },
         },
@@ -81,10 +86,10 @@ TEMPLATE_REGISTRY_SCHEMA: JsonObject = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+                    "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
                     "query": {"type": "string", "minLength": 1, "maxLength": 256},
                 },
-                "required": ["object_ref", "query"],
+                "required": ["object_id", "query"],
                 "additionalProperties": False,
             },
         },

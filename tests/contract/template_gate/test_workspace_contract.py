@@ -1010,13 +1010,13 @@ def test_registry_batches_only_current_objects_from_one_version(tmp_path: Path) 
     result = service.registry_query(
         {
             "lookups": [
-                {"object_ref": second.object_ref, "field_id": "abstract.zh"},
+                {"object_id": second.object_ref["object_id"], "field_id": "abstract.zh"},
                 {
-                    "object_ref": second.object_ref,
+                    "object_id": second.object_ref["object_id"],
                     "field_id": "body.heading.level1",
                 },
             ],
-            "searches": [{"object_ref": selected.object_ref, "query": "中文姓名"}],
+            "searches": [{"object_id": selected.object_ref["object_id"], "query": "中文姓名"}],
         }
     )
 
@@ -1047,11 +1047,11 @@ def test_registry_keeps_batch_useful_when_agent_guesses_a_partial_field_id(
         {
             "lookups": [
                 {
-                    "object_ref": selected.object_ref,
+                    "object_id": selected.object_ref["object_id"],
                     "field_id": "thesis.title",
                 },
                 {
-                    "object_ref": selected.object_ref,
+                    "object_id": selected.object_ref["object_id"],
                     "field_id": "author.name",
                 },
             ]
@@ -1089,7 +1089,7 @@ def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> N
         {
             "searches": [
                 {
-                    "object_ref": selected.object_ref,
+                    "object_id": selected.object_ref["object_id"],
                     "query": "thesis title on cover",
                 }
             ]
@@ -1100,30 +1100,38 @@ def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> N
     assert result["results"][0]["matches"][0]["field_id"] == "thesis.title.zh"
 
 
-def test_template_object_identity_does_not_depend_on_model_echoed_fingerprint(
+def test_registry_schema_uses_flat_short_object_ids(
     tmp_path: Path,
 ) -> None:
     service, _, _ = _service(tmp_path)
     _, document = service._register_source()
     selected = service._inspection(document).objects[0]
-    advisory_ref = dict(selected.object_ref)
-    advisory_ref["expected_fingerprint"] = "a" * 63
-
     result = service.registry_query(
         {
             "lookups": [
                 {
-                    "object_ref": advisory_ref,
+                    "object_id": selected.object_ref["object_id"],
                     "field_id": "thesis.title.zh",
                 }
             ]
         }
     )
 
-    ref_schema = TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"][
-        "object_ref"
+    object_id_schema = TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"][
+        "object_id"
     ]
-    assert ref_schema["required"] == ["object_id"]
+    assert object_id_schema == {
+        "type": "string",
+        "pattern": "^obj-[0-9a-f]{24}$",
+    }
+    assert set(TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"]) == {
+        "object_id",
+        "field_id",
+    }
+    assert set(TEMPLATE_REGISTRY_SCHEMA["properties"]["searches"]["items"]["properties"]) == {
+        "object_id",
+        "query",
+    }
     assert result["results"][0]["operation"] == "lookup"
 
 

@@ -1762,7 +1762,7 @@ class TemplateWorkspaceService:
         document_hash: str | None = None
         results: list[JsonObject] = []
         for request_type, raw in raw_queries:
-            _, inspection, selected = self._resolve_object(raw.get("object_ref"))
+            _, inspection, selected = self._resolve_object({"object_id": raw.get("object_id")})
             if document_hash is None:
                 document_hash = inspection.document_sha256
             elif inspection.document_sha256 != document_hash:

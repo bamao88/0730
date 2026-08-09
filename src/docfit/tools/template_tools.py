@@ -130,7 +130,7 @@ async def template_focus(args: dict[str, Any]) -> dict[str, Any]:
     (
         "For up to sixteen concrete objects from the latest checkpoint, look up exact Registry "
         "fields in the lookups lane or search at most five object-relevant candidates each in "
-        "the searches lane. Keep field_id/query beside object_ref, never inside it. Never returns "
+        "the searches lane. Each lane item is flat: object_id plus field_id/query. Never returns "
         "the full Registry."
     ),
     TEMPLATE_REGISTRY_SCHEMA,
