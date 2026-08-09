@@ -442,8 +442,7 @@ def _ensure_page_start(parent: ET.Element, target: ET.Element) -> tuple[bool, st
         return False, "page_break_before"
     siblings = list(parent)
     position = siblings.index(target)
-    previous = siblings[position - 1] if position > 0 else None
-    if previous is not None:
+    for previous in reversed(siblings[:position]):
         if any(node.get(f"{_W}type", "page") == "page" for node in previous.iter(f"{_W}br")):
             return False, "preceding_explicit_page_break"
         section = previous.find(f"{_W}pPr/{_W}sectPr")
@@ -453,6 +452,8 @@ def _ensure_page_start(parent: ET.Element, target: ET.Element) -> tuple[bool, st
             or section_type.get(f"{_W}val", "nextPage") in {"nextPage", "oddPage", "evenPage"}
         ):
             return False, "preceding_section_boundary"
+        if any((node.text or "").strip() for node in previous.iter(f"{_W}t")):
+            break
     properties = target.find(f"{_W}pPr")
     if properties is None:
         properties = ET.Element(f"{_W}pPr")
@@ -736,12 +737,12 @@ def _stabilize_toc_styles(
     templates: dict[int, ET.Element],
     style_ids: dict[int, str],
     effective_format: tuple[tuple[str, str], ...],
-) -> None:
+) -> list[JsonObject]:
     """Flatten observed TOC result formatting into styles used on field update."""
 
     raw = parts.get("word/styles.xml")
     if raw is None:
-        return
+        return []
     try:
         styles = ET.fromstring(raw)
     except ET.ParseError as error:
@@ -826,6 +827,7 @@ def _stabilize_toc_styles(
         if (run_style := run_properties.find(f"{_W}rStyle")) is not None
         and (value := run_style.get(f"{_W}val"))
     }
+    style_scope_changes: list[JsonObject] = []
     for character_style_id in character_style_ids:
         character_style = by_id.get(character_style_id)
         if character_style is None:
@@ -834,7 +836,119 @@ def _stabilize_toc_styles(
         if run_properties is None:
             run_properties = ET.SubElement(character_style, f"{_W}rPr")
         _apply_run_outcomes(run_properties, dict(effective_format))
+        style_scope_changes.append(
+            {
+                "style_id": character_style_id,
+                "scope": "document_character_style",
+                "reason": "preserve_toc_effective_format_after_field_update",
+            }
+        )
     parts["word/styles.xml"] = _serialize(styles)
+    return style_scope_changes
+
+
+def _field_interval(
+    siblings: list[ET.Element],
+    selected_index: int,
+) -> tuple[int, int]:
+    """Resolve the complete live TOC field even when a cache row is selected."""
+
+    candidates = [
+        index
+        for index, paragraph in enumerate(siblings[: selected_index + 1])
+        if "TOC" in "".join(node.text or "" for node in paragraph.iter(f"{_W}instrText")).upper()
+        and any(node.get(f"{_W}fldCharType") == "begin" for node in paragraph.iter(f"{_W}fldChar"))
+    ]
+    for start in reversed(candidates):
+        depth = 0
+        for index in range(start, len(siblings)):
+            for node in siblings[index].iter(f"{_W}fldChar"):
+                kind = node.get(f"{_W}fldCharType")
+                if kind == "begin":
+                    depth += 1
+                elif kind == "end" and depth:
+                    depth -= 1
+                    if depth == 0 and start <= selected_index <= index:
+                        return start, index
+    raise ToolFailure(
+        status="needs_input",
+        origin="document",
+        code="toc_field_boundary_missing",
+        message="The selected TOC cache row is not inside a complete live TOC field.",
+    )
+
+
+def _contains_toc_preserved_payload(node: ET.Element) -> bool:
+    protected = {
+        "bookmarkStart",
+        "bookmarkEnd",
+        "commentRangeStart",
+        "commentRangeEnd",
+        "commentReference",
+        "footnoteReference",
+        "endnoteReference",
+        "drawing",
+        "object",
+        "pict",
+    }
+    return any(_local_name(item.tag) in protected for item in node.iter()) or any(
+        _local_name(item.tag) == "br" and item.get(f"{_W}type", "page") == "page"
+        for item in node.iter()
+    )
+
+
+def _toc_residual_paragraph(
+    paragraph: ET.Element,
+    *,
+    start_paragraph: ET.Element,
+    end_paragraph: ET.Element,
+) -> ET.Element | None:
+    """Keep non-field anchors and ranges sharing a TOC boundary paragraph."""
+
+    children = list(paragraph)
+    begin_index = next(
+        (
+            index
+            for index, child in enumerate(children)
+            if any(node.get(f"{_W}fldCharType") == "begin" for node in child.iter(f"{_W}fldChar"))
+        ),
+        None,
+    )
+    end_index = next(
+        (
+            index
+            for index, child in enumerate(children)
+            if any(node.get(f"{_W}fldCharType") == "end" for node in child.iter(f"{_W}fldChar"))
+        ),
+        None,
+    )
+    keep: list[ET.Element] = []
+    for index, child in enumerate(children):
+        if child.tag == f"{_W}pPr":
+            continue
+        outside_field = (
+            paragraph is start_paragraph and begin_index is not None and index < begin_index
+        ) or (paragraph is end_paragraph and end_index is not None and index > end_index)
+        if outside_field or _contains_toc_preserved_payload(child):
+            keep.append(deepcopy(child))
+    properties = paragraph.find(f"{_W}pPr")
+    preserve_properties = (
+        paragraph is not start_paragraph
+        and properties is not None
+        and (
+            properties.find(f"{_W}sectPr") is not None
+            or properties.find(f"{_W}pageBreakBefore") is not None
+            or bool(keep)
+        )
+    )
+    if not keep and not preserve_properties:
+        return None
+    residual = ET.Element(f"{_W}p")
+    if preserve_properties:
+        assert properties is not None
+        residual.append(deepcopy(properties))
+    residual.extend(keep)
+    return residual
 
 
 def _toc_paragraph(
@@ -905,7 +1019,7 @@ def _refresh_toc(
     entries: tuple[TocEntry, ...],
     style_ids: dict[int, str],
     effective_format: tuple[tuple[str, str], ...],
-) -> None:
+) -> list[JsonObject]:
     """Rebuild a representative cache while keeping a live, dirty TOC field."""
 
     if not entries:
@@ -916,25 +1030,7 @@ def _refresh_toc(
             message="refresh_toc requires representative entries from the final title tree.",
         )
     siblings = list(parent)
-    start = siblings.index(target)
-    end = next(
-        (
-            index
-            for index in range(start, len(siblings))
-            if any(
-                node.get(f"{_W}fldCharType") == "end"
-                for node in siblings[index].iter(f"{_W}fldChar")
-            )
-        ),
-        None,
-    )
-    if end is None:
-        raise ToolFailure(
-            status="needs_input",
-            origin="document",
-            code="toc_field_boundary_missing",
-            message="The selected object does not begin a complete TOC field result.",
-        )
+    start, end = _field_interval(siblings, siblings.index(target))
     templates: dict[int, ET.Element] = {}
     style_levels = {style_id: level for level, style_id in style_ids.items()}
     for paragraph in siblings[start : end + 1]:
@@ -949,7 +1045,12 @@ def _refresh_toc(
     )
     if "TOC" not in instruction_text.upper():
         instruction_text = ' TOC \\o "1-3" \\h \\z \\u '
-    _stabilize_toc_styles(parts, templates, style_ids, effective_format)
+    style_scope_changes = _stabilize_toc_styles(
+        parts,
+        templates,
+        style_ids,
+        effective_format,
+    )
     replacements = [
         _toc_paragraph(
             templates.get(entry.level, fallback),
@@ -963,55 +1064,23 @@ def _refresh_toc(
         )
         for index, entry in enumerate(entries)
     ]
-    following_content = next(
-        (
-            paragraph
-            for paragraph in siblings[end + 1 :]
-            if _local_name(paragraph.tag) == "p"
-            and any((node.text or "").strip() for node in paragraph.iter(f"{_W}t"))
-        ),
-        None,
-    )
-    boundary_already_present = False
-    if following_content is not None:
-        following_index = siblings.index(following_content)
-        for paragraph in siblings[end + 1 : following_index + 1]:
-            if paragraph.find(f"{_W}pPr/{_W}pageBreakBefore") is not None:
-                boundary_already_present = True
-                break
-            if any(node.get(f"{_W}type", "page") == "page" for node in paragraph.iter(f"{_W}br")):
-                boundary_already_present = True
-                break
-            section = paragraph.find(f"{_W}pPr/{_W}sectPr")
-            section_type = section.find(f"{_W}type") if section is not None else None
-            if section is not None and (
-                section_type is None
-                or section_type.get(f"{_W}val", "nextPage") in {"nextPage", "oddPage", "evenPage"}
-            ):
-                boundary_already_present = True
-                break
-    if following_content is not None and not boundary_already_present:
-        properties = following_content.find(f"{_W}pPr")
-        if properties is None:
-            properties = ET.Element(f"{_W}pPr")
-            following_content.insert(0, properties)
-        page_break = properties.find(f"{_W}pageBreakBefore")
-        if page_break is None:
-            page_break = ET.Element(f"{_W}pageBreakBefore")
-            preceding = {"pStyle", "keepNext", "keepLines"}
-            insertion = next(
-                (
-                    index
-                    for index, child in enumerate(properties)
-                    if _local_name(child.tag) not in preceding
-                ),
-                len(properties),
+    residuals = [
+        residual
+        for paragraph in siblings[start : end + 1]
+        if (
+            residual := _toc_residual_paragraph(
+                paragraph,
+                start_paragraph=siblings[start],
+                end_paragraph=siblings[end],
             )
-            properties.insert(insertion, page_break)
+        )
+        is not None
+    ]
     for paragraph in siblings[start : end + 1]:
         parent.remove(paragraph)
-    for offset, paragraph in enumerate(replacements):
+    for offset, paragraph in enumerate([*replacements, *residuals]):
         parent.insert(start + offset, paragraph)
+    return style_scope_changes
 
 
 def _mark_word_fields_for_update(parts: dict[str, bytes]) -> None:
@@ -1134,6 +1203,7 @@ def mutate_objects(
     preserved_boundaries: list[JsonObject] = []
     migrated_boundaries: list[JsonObject] = []
     page_start_results: list[JsonObject] = []
+    style_scope_changes: list[JsonObject] = []
     toc_style_ids = _toc_style_ids(parts)
     for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
@@ -1172,13 +1242,15 @@ def mutate_objects(
                     ],
                 )
             )
-            _refresh_toc(
-                parts,
-                parent,
-                target,
-                toc_entries,
-                toc_style_ids,
-                mutation.effective_format,
+            style_scope_changes.extend(
+                _refresh_toc(
+                    parts,
+                    parent,
+                    target,
+                    toc_entries,
+                    toc_style_ids,
+                    mutation.effective_format,
+                )
             )
             refreshed_toc = True
         elif mutation.action == "clear_content":
@@ -1237,4 +1309,5 @@ def mutate_objects(
         "preserved_boundaries": preserved_boundaries,
         "migrated_boundaries": migrated_boundaries,
         "page_start_results": page_start_results,
+        "style_scope_changes": style_scope_changes,
     }

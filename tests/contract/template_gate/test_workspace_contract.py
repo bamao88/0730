@@ -601,10 +601,12 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
         "index",
         "count",
         "target",
-        "parent_object",
-        "adjacent_objects",
-        "evidence",
-    }
+            "parent_object",
+            "adjacent_objects",
+            "knowledge_signals",
+            "evidence",
+        }
+    assert len(opened["current_region"]["knowledge_signals"]) <= 1
     assert next_region["current_region"]["region_ref"] != opened["current_region"]["region_ref"]
     assert next_region["navigation"]["completed_regions"] == 1
     assert searched["match_count"] > 1
@@ -1163,6 +1165,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "preserved_boundaries": [],
         "migrated_boundaries": [],
         "page_start_results": [],
+        "style_scope_changes": [],
         "effective_format_changes": [],
     }
     assert "applied" not in result
@@ -1764,6 +1767,7 @@ def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:
             "body.heading.level2": 1,
             "body.heading.level3": 1,
             "body.paragraph": 3,
+            "submission.date": 1,
         },
         "materialized_structures": ["body.chapters"],
         "toc": {"refresh_needed": False},
@@ -1783,6 +1787,14 @@ def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:
     )
     assert TemplateWorkspaceService._intent_already_satisfied(
         {"action": "materialize_slot", "field_id": "body.paragraph"},
+        summary,
+    )
+    assert TemplateWorkspaceService._intent_already_satisfied(
+        {
+            "action": "materialize_structure",
+            "field_id": "submission.date",
+            "member_field_ids": ["submission.date"],
+        },
         summary,
     )
     assert TemplateWorkspaceService._intent_already_satisfied(
@@ -2165,8 +2177,9 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
         '<w:p><w:pPr><w:pStyle w:val="TOC2"/></w:pPr>'
         "<w:r><w:t>第二节</w:t><w:tab/></w:r></w:p>"
         '<w:p><w:pPr><w:pStyle w:val="TOC3"/></w:pPr>'
-        "<w:r><w:t>第三小节</w:t><w:tab/>"
-        '<w:fldChar w:fldCharType="end"/></w:r></w:p>'
+        "<w:r><w:t>第三小节</w:t><w:tab/></w:r>"
+        "<w:r><w:drawing/></w:r>"
+        '<w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>'
         "<w:p><w:r><w:t>【中文摘要】</w:t></w:r></w:p>"
         "<w:p><w:r><w:t>【英文摘要】</w:t></w:r></w:p>"
         "<w:p><w:r><w:t>【一级章标题】</w:t></w:r></w:p>"
@@ -2207,10 +2220,10 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
     ]
     mutation = ObjectMutation(
         selected=InspectedObject(
-            locator="/body/p[1]",
+            locator="/body/p[2]",
             kind="paragraph",
-            text="第一章",
-            style="TOC1",
+            text="第二节",
+            style="TOC2",
             format={},
             object_ref={},
         ),
@@ -2247,8 +2260,13 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
         "TOC1",
     ]
     assert all(paragraph.find(f".//{W}tab") is not None for paragraph in paragraphs)
-    following_title = root.findall(f"{W}body/{W}p")[6]
-    assert following_title.find(f"{W}pPr/{W}pageBreakBefore") is not None
+    assert root.find(f".//{W}drawing") is not None
+    following_title = next(
+        paragraph
+        for paragraph in root.findall(f"{W}body/{W}p")
+        if "".join(node.text or "" for node in paragraph.iter(f"{W}t")) == "【中文摘要】"
+    )
+    assert following_title.find(f"{W}pPr/{W}pageBreakBefore") is None
     assert settings.find(f"{W}updateFields").get(f"{W}val") == "true"
     assert [child.tag for child in settings][:2] == [f"{W}updateFields", f"{W}compat"]
     begin = next(
@@ -2385,6 +2403,22 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         "color": "black",
         "underline": "none",
     }
+    assert result["effects"]["style_scope_changes"] == [
+        {
+            "style_id": "Hyperlink",
+            "scope": "document_character_style",
+            "reason": "preserve_toc_effective_format_after_field_update",
+        }
+    ]
+    assert result["structural_risks"] == [
+        {
+            "code": "shared_character_style_override",
+            "severity": "warning",
+            "style_id": "Hyperlink",
+            "scope": "document_character_style",
+            "reason": "preserve_toc_effective_format_after_field_update",
+        }
+    ]
     _, changed_path = service._resolve_document(result["document_ref"])
     changed = service._inspection(changed_path)
     toc_rows = [
@@ -2462,6 +2496,42 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         in {"#000000", "000000", "black", "auto"}
         for item in effective_toc_objects
     )
+
+
+def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_toc_and_titles(source)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    toc = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.style
+        and item.style.casefold().replace(" ", "") == "toc1"
+    )
+    title = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "【一级章标题】"
+    )
+
+    with pytest.raises(ToolFailure) as duplicate:
+        service.edit(
+            {
+                "refresh_tocs": [
+                    {
+                        "object_ref": toc.object_ref,
+                        "entries": [
+                            {"object_ref": title.object_ref, "level": 1},
+                            {"object_ref": title.object_ref, "level": 2},
+                        ],
+                    }
+                ]
+            }
+        )
+
+    assert duplicate.value.code == "toc_entry_duplicate"
 
 
 def test_batch_remove_checks_every_effect_and_returns_one_fresh_version(tmp_path: Path) -> None:

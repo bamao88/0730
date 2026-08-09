@@ -102,7 +102,8 @@ async def template_next(args: dict[str, Any]) -> dict[str, Any]:
     "template_search",
     (
         "Search visible text in the latest checkpoint and return at most five bounded object "
-        "candidates. Search is physical and assigns no semantic meaning."
+        "candidates needed to decide the current region. Search is physical, assigns no semantic "
+        "meaning, and must not be used to inventory document landmarks."
     ),
     TEMPLATE_SEARCH_SCHEMA,
     annotations=_READ_ONLY,
@@ -143,6 +144,8 @@ async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
     "template_edit",
     (
         "Atomically execute one action-partitioned batch against current object refs. The Agent "
+        "passes only lane arrays at the top level; field_id and object_ref belong inside each "
+        "lane item. The Agent "
         "chooses semantic fields, members, generated-content entries, and page-start intent; the "
         "Tool normalizes redundant operations, preserves Word boundaries, verifies effective "
         "results, checkpoints the immutable version, and returns changed-region feedback plus "

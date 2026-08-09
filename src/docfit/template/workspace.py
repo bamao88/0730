@@ -356,6 +356,37 @@ def _knowledge_signals(operations: list[JsonObject]) -> list[str]:
     return sorted(signals)
 
 
+def _context_knowledge_signals(objects: list[InspectedObject]) -> list[str]:
+    """Route at most one objective mechanism card for the current local decision."""
+
+    if any(
+        item.style and item.style.casefold().replace(" ", "").startswith("toc") for item in objects
+    ):
+        return ["generated-content"]
+    if any(
+        (
+            str(item.format.get("effective.color", "")).casefold()
+            not in {"", "#000000", "000000", "black", "auto"}
+        )
+        or (
+            str(item.format.get("effective.underline", "")).casefold()
+            not in {"", "none", "false", "0"}
+        )
+        for item in objects
+    ):
+        return ["effective-style"]
+    if any(
+        item.format.get("pageBreakBefore")
+        or item.format.get("page_break_before")
+        or item.format.get("section")
+        for item in objects
+    ):
+        return ["logical-page-starts"]
+    if any(item.kind in {"picture", "shape"} for item in objects):
+        return ["object-safety"]
+    return []
+
+
 def _style_signatures(operations: list[JsonObject]) -> list[JsonObject]:
     signatures: list[JsonObject] = []
     for operation in operations:
@@ -612,6 +643,8 @@ class TemplateWorkspaceService:
         if action == "materialize_slot":
             return field_id in field_ids
         if action == "materialize_structure":
+            if field_id in field_ids:
+                return True
             structures = summary.get("materialized_structures", [])
             requested_members = {
                 str(value) for value in intent.get("member_field_ids", []) if isinstance(value, str)
@@ -645,6 +678,29 @@ class TemplateWorkspaceService:
         reconciled = {**progress, "pending_edit_intents": unresolved}
         self._write_progress(reconciled)
         return reconciled
+
+    @classmethod
+    def _remaining_pending_intents(
+        cls,
+        progress: JsonObject,
+        inspection: Inspection,
+        completed_operations: list[JsonObject],
+    ) -> list[JsonObject]:
+        completed_keys = {
+            key for item in completed_operations if (key := _semantic_intent_key(item)) is not None
+        }
+        summary = cls._checkpoint_summary(inspection)
+        return [
+            {
+                key: value
+                for key, value in intent.items()
+                if key not in {"retry_operation", "document_sha256"}
+            }
+            for intent in progress.get("pending_edit_intents", [])
+            if isinstance(intent, dict)
+            and (intent.get("action"), intent.get("field_id")) not in completed_keys
+            and not cls._intent_already_satisfied(intent, summary)
+        ]
 
     @staticmethod
     def _pending_intents_for_current_document(
@@ -935,10 +991,22 @@ class TemplateWorkspaceService:
             seen_refs.add(object_id)
             unique.append(adjacent_object)
         adjacent = unique[:_REGION_ADJACENT_OBJECTS]
+        visible_ids = {
+            str(reference["object_id"])
+            for item in adjacent
+            if isinstance((reference := item.get("object_ref")), dict)
+            and isinstance(reference.get("object_id"), str)
+        }
+        signal_objects = [selected] + [
+            item
+            for item in inspection.objects
+            if str(item.object_ref.get("object_id", "")) in visible_ids
+        ]
         return {
             "target": _agent_context_object(inspection, selected),
             "parent_object": (_agent_object(inspection, parent) if parent is not None else None),
             "adjacent_objects": adjacent,
+            "knowledge_signals": _context_knowledge_signals(signal_objects),
         }
 
     @staticmethod
@@ -1245,6 +1313,7 @@ class TemplateWorkspaceService:
                 "target": context["target"],
                 "parent_object": context["parent_object"],
                 "adjacent_objects": context["adjacent_objects"],
+                "knowledge_signals": context["knowledge_signals"],
                 "evidence": reviewed["visual_review"].get("evidence", []),
             },
             images,
@@ -1437,7 +1506,7 @@ class TemplateWorkspaceService:
                         if pending_edit_intents
                         else (
                             "Judge only this target, its parent, and necessary adjacent objects. "
-                            "Batch decisions visible in this crop, then call action=next with "
+                            "Batch decisions visible in this crop, then call template_next with "
                             "its region_ref. The Tool navigates physical regions but never "
                             "assigns their semantic meaning."
                         )
@@ -2010,11 +2079,23 @@ class TemplateWorkspaceService:
                         code="toc_entries_invalid",
                         message="refresh_toc requires representative final-title entries.",
                     )
+                entry_object_ids: set[str] = set()
                 for raw_entry in raw_entries:
                     _, entry_inspection, entry_object = self._resolve_object(
                         raw_entry.get("object_ref")
                     )
                     require_same_document(entry_inspection)
+                    entry_object_id = str(entry_object.object_ref.get("object_id", ""))
+                    if entry_object_id in entry_object_ids:
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entry_duplicate",
+                            message=(
+                                "Each representative TOC entry must select a distinct title object."
+                            ),
+                        )
+                    entry_object_ids.add(entry_object_id)
                     level = raw_entry.get("level")
                     if not isinstance(level, int) or not 1 <= level <= 3:
                         raise ToolFailure(
@@ -2116,14 +2197,40 @@ class TemplateWorkspaceService:
         temporary = Path(temporary_name)
         try:
             mutation_effects = mutate_objects(document, temporary, mutations=mutations)
+            for change in mutation_effects.get("style_scope_changes", []):
+                if not isinstance(change, dict):
+                    continue
+                structural_risks.append(
+                    {
+                        "code": "shared_character_style_override",
+                        "severity": "warning",
+                        "style_id": change.get("style_id"),
+                        "scope": change.get("scope"),
+                        "reason": change.get("reason"),
+                    }
+                )
             validate_docx_package(temporary)
             office_validation = self.office.validate(temporary)
             output_hash = sha256_file(temporary)
             if output_hash == source_hash:
+                format_changes = self._verify_edit_effects(
+                    before,
+                    before,
+                    prepared,
+                    mutation_effects=mutation_effects,
+                )
                 task_source_hash = sha256_file(self.source)
                 progress = self._read_progress(task_source_hash)
                 feedback_object = self._feedback_object(before, prepared, progress)
-                progress = {**progress, "current_region_edited": True}
+                progress = {
+                    **progress,
+                    "pending_edit_intents": self._remaining_pending_intents(
+                        progress,
+                        before,
+                        prepared,
+                    ),
+                    "current_region_edited": True,
+                }
                 self._write_progress(progress)
                 current_region, images, progress = self._region_view(
                     source_hash,
@@ -2142,6 +2249,7 @@ class TemplateWorkspaceService:
                         "effects": {
                             "operations": len(prepared),
                             "absorbed_operations": absorbed_operations,
+                            "effective_format_changes": format_changes,
                             **mutation_effects,
                         },
                         "materialized_members": materialized_members,
@@ -2212,19 +2320,11 @@ class TemplateWorkspaceService:
                 "pending_object_ref": (
                     feedback_object.object_ref if feedback_object is not None else None
                 ),
-                "pending_edit_intents": [
-                    {
-                        key: value
-                        for key, value in intent.items()
-                        if key not in {"retry_operation", "document_sha256"}
-                    }
-                    for intent in progress.get("pending_edit_intents", [])
-                    if isinstance(intent, dict)
-                    and (intent.get("action"), intent.get("field_id"))
-                    not in {
-                        key for item in prepared if (key := _semantic_intent_key(item)) is not None
-                    }
-                ],
+                "pending_edit_intents": self._remaining_pending_intents(
+                    progress,
+                    after,
+                    prepared,
+                ),
                 "current_region_edited": True,
             }
             self._write_progress(progress)
@@ -2273,6 +2373,7 @@ class TemplateWorkspaceService:
                         "preserved_boundaries": mutation_effects["preserved_boundaries"],
                         "migrated_boundaries": mutation_effects["migrated_boundaries"],
                         "page_start_results": mutation_effects["page_start_results"],
+                        "style_scope_changes": mutation_effects["style_scope_changes"],
                         "effective_format_changes": format_changes,
                     },
                     "structures": [
