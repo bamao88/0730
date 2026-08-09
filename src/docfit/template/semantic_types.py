@@ -36,12 +36,6 @@ class SemanticObjectType:
 
 
 _TEXT_BLOCK = frozenset({"paragraph"})
-BODY_CHAPTER_CORE_MEMBER_TYPES = (
-    "body.heading.level1",
-    "body.heading.level2",
-    "body.heading.level3",
-    "body.paragraph",
-)
 _BODY_TYPES = {
     item.type_id: item
     for item in (
@@ -126,29 +120,3 @@ def require_body_member_type(type_id: str, word_kind: str) -> SemanticObjectType
             ),
         )
     return value
-
-
-def require_complete_body_structure(member_type_ids: list[str]) -> None:
-    """Enforce the minimum reusable chapter grammar after Agent classification.
-
-    The Agent still decides which school objects carry these meanings.  Once it
-    requests ``body.chapters``, the Tool must not accept a fragment such as two
-    adjacent headings as though it were a complete repeatable chapter.
-    """
-
-    missing = [
-        type_id for type_id in BODY_CHAPTER_CORE_MEMBER_TYPES if type_id not in member_type_ids
-    ]
-    if missing:
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="body_structure_core_members_missing",
-            message=(
-                "A reusable body.chapters block must include at least one H1, H2, H3, "
-                "and ordinary body paragraph. Missing semantic member types: "
-                f"{', '.join(missing)}. Keep the members in document order and classify "
-                "instruction/sample prose by its demonstrated role rather than by an "
-                "unreliable Word style name. Members do not need to be adjacent."
-            ),
-        )

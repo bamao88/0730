@@ -20,7 +20,7 @@ from typing import cast
 from xml.etree import ElementTree as ET
 
 from docfit.tools.inspection import InspectedObject
-from docfit.tools.runtime import ToolFailure, sha256_json
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -58,7 +58,7 @@ class ObjectMutation:
     slot_id: str | None = None
     content_type: str = "text"
     placeholder_text: str | None = None
-    clear_direct_format: tuple[str, ...] = ()
+    effective_format: tuple[tuple[str, str], ...] = ()
     structure_members: tuple[StructureMember, ...] = ()
     replaced_structure: InspectedObject | None = None
     toc_entries: tuple[TocEntry, ...] = ()
@@ -73,7 +73,7 @@ class StructureMember:
     slot_id: str
     content_type: str
     placeholder_text: str
-    clear_direct_format: tuple[str, ...] = ()
+    effective_format: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -261,23 +261,55 @@ def _placeholder_preserving_underlined_fill(
     return f"{placeholder_text}{' ' * remaining}"
 
 
-def _remove_direct_format(target: ET.Element, properties: tuple[str, ...]) -> None:
-    """Remove only Agent-selected direct formatting, leaving school styles intact."""
+def _apply_run_outcomes(properties: ET.Element, outcomes: dict[str, str]) -> None:
+    if outcomes.get("color") == "black":
+        color = properties.find(f"{_W}color")
+        if color is None:
+            color = ET.SubElement(properties, f"{_W}color")
+        color.attrib.clear()
+        color.set(f"{_W}val", "000000")
+    if outcomes.get("underline") == "none":
+        underline = properties.find(f"{_W}u")
+        if underline is None:
+            underline = ET.SubElement(properties, f"{_W}u")
+        underline.attrib.clear()
+        underline.set(f"{_W}val", "none")
+    properties[:] = _ordered_children(list(properties), _RPR_ORDER)
 
-    unsupported = set(properties) - {"color"}
-    if unsupported:
+
+def _apply_effective_format(
+    target: ET.Element,
+    effective_format: tuple[tuple[str, str], ...],
+) -> None:
+    """Write the smallest direct override that guarantees the requested visible result."""
+
+    outcomes = dict(effective_format)
+    if not outcomes:
+        return
+    if set(outcomes) - {"color", "underline"}:
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="direct_format_property_invalid",
-            message="Only direct color normalization is currently supported.",
+            code="effective_format_invalid",
+            message="Only effective color and underline outcomes are currently supported.",
         )
-    if "color" not in properties:
-        return
-    for parent in target.iter():
-        for child in list(parent):
-            if child.tag == f"{_W}color":
-                parent.remove(child)
+    runs = [target] if _local_name(target.tag) == "r" else list(target.iter(f"{_W}r"))
+    for run in runs:
+        properties = run.find(f"{_W}rPr")
+        if properties is None:
+            properties = ET.Element(f"{_W}rPr")
+            run.insert(0, properties)
+        _apply_run_outcomes(properties, outcomes)
+    if _local_name(target.tag) == "p":
+        paragraph_properties = target.find(f"{_W}pPr")
+        if paragraph_properties is None:
+            paragraph_properties = ET.Element(f"{_W}pPr")
+            target.insert(0, paragraph_properties)
+        run_properties = paragraph_properties.find(f"{_W}rPr")
+        if run_properties is None:
+            run_properties = ET.SubElement(paragraph_properties, f"{_W}rPr")
+        _apply_run_outcomes(run_properties, outcomes)
+        paragraph_properties[:] = _ordered_children(list(paragraph_properties), _PPR_ORDER)
 
 
 def _sdt(
@@ -355,16 +387,80 @@ def _materialize(
 def _remove_object_preserving_boundary(
     parent: ET.Element,
     target: ET.Element,
-) -> None:
-    """Remove content without deleting a paragraph-owned section boundary."""
+) -> list[str]:
+    """Remove visible content while retaining any Word-owned structural boundary."""
 
-    section = target.find(f"{_W}pPr/{_W}sectPr")
-    if _local_name(target.tag) == "p" and section is not None:
-        for child in list(target):
-            if child.tag != f"{_W}pPr":
-                target.remove(child)
-        return
+    kinds: list[str] = []
+    if target.find(f"{_W}pPr/{_W}sectPr") is not None:
+        kinds.append("section_boundary")
+    if target.find(f"{_W}pPr/{_W}pageBreakBefore") is not None:
+        kinds.append("page_break_before")
+    if any(node.get(f"{_W}type", "page") == "page" for node in target.iter(f"{_W}br")):
+        kinds.append("explicit_page_break")
+    for tag, kind in (
+        ("bookmarkStart", "bookmark_range"),
+        ("bookmarkEnd", "bookmark_range"),
+        ("commentRangeStart", "comment_range"),
+        ("commentRangeEnd", "comment_range"),
+        ("commentReference", "comment_reference"),
+        ("footnoteReference", "footnote_reference"),
+        ("endnoteReference", "endnote_reference"),
+        ("fldChar", "field_boundary"),
+        ("instrText", "field_boundary"),
+        ("drawing", "drawing_anchor"),
+        ("object", "drawing_anchor"),
+        ("pict", "drawing_anchor"),
+    ):
+        if next(target.iter(f"{_W}{tag}"), None) is not None:
+            kinds.append(kind)
+    if _local_name(target.tag) == "p":
+        siblings = list(parent)
+        position = siblings.index(target)
+        if (position > 0 and _local_name(siblings[position - 1].tag) == "tbl") or (
+            _local_name(parent.tag) == "tc" and position == len(siblings) - 1
+        ):
+            kinds.append("table_wrapper_paragraph")
+    kinds = list(dict.fromkeys(kinds))
+    if kinds:
+        for node in target.iter():
+            if _local_name(node.tag) in {"t", "delText"}:
+                node.text = ""
+        return kinds
     parent.remove(target)
+    return []
+
+
+def _ensure_page_start(parent: ET.Element, target: ET.Element) -> tuple[bool, str]:
+    if _local_name(target.tag) != "p":
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="page_start_target_invalid",
+            message="ensure_page_start requires a paragraph object.",
+        )
+    if target.find(f"{_W}pPr/{_W}pageBreakBefore") is not None:
+        return False, "page_break_before"
+    siblings = list(parent)
+    position = siblings.index(target)
+    previous = siblings[position - 1] if position > 0 else None
+    if previous is not None:
+        if any(node.get(f"{_W}type", "page") == "page" for node in previous.iter(f"{_W}br")):
+            return False, "preceding_explicit_page_break"
+        section = previous.find(f"{_W}pPr/{_W}sectPr")
+        section_type = section.find(f"{_W}type") if section is not None else None
+        if section is not None and (
+            section_type is None
+            or section_type.get(f"{_W}val", "nextPage") in {"nextPage", "oddPage", "evenPage"}
+        ):
+            return False, "preceding_section_boundary"
+    properties = target.find(f"{_W}pPr")
+    if properties is None:
+        properties = ET.Element(f"{_W}pPr")
+        target.insert(0, properties)
+    page_break = ET.Element(f"{_W}pageBreakBefore")
+    properties.append(page_break)
+    properties[:] = _ordered_children(list(properties), _PPR_ORDER)
+    return True, "page_break_before"
 
 
 def _paragraph_style_id(target: ET.Element) -> str | None:
@@ -442,31 +538,8 @@ def _materialize_structure(
             code="body_structure_not_in_document_order",
             message=(
                 "Body structure members must be supplied in document order. They do not need "
-                "to be adjacent; select the H1, H2, H3, and body objects from the same "
-                "representative chapter in their physical order."
-            ),
-        )
-    level1_target = next(
-        (
-            target
-            for _, target, member in members
-            if member.field_id == "body.heading.level1"
-        ),
-        None,
-    )
-    level1_style = _paragraph_style_id(level1_target) if level1_target is not None else None
-    if level1_style is not None and any(
-        block is not level1_target and _paragraph_style_id(block) == level1_style
-        for block in siblings[indices[0] + 1 : indices[-1] + 1]
-    ):
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="body_structure_crosses_chapter_boundary",
-            message=(
-                "The selected representative members cross another paragraph with the same "
-                "school style as the H1. Choose the H2, H3, and nearest real body sample "
-                "before that next chapter boundary."
+                "to be adjacent; select the representative objects from one school block in "
+                "their physical order."
             ),
         )
     first_position = indices[0]
@@ -485,7 +558,7 @@ def _materialize_structure(
         parent.remove(block)
         content.append(block)
     for _, target, member in members:
-        _remove_direct_format(target, member.clear_direct_format)
+        _apply_effective_format(target, member.effective_format)
         if member.selected.kind == "paragraph":
             _materialize(
                 document_root,
@@ -662,7 +735,7 @@ def _stabilize_toc_styles(
     parts: dict[str, bytes],
     templates: dict[int, ET.Element],
     style_ids: dict[int, str],
-    clear_direct_format: tuple[str, ...],
+    effective_format: tuple[tuple[str, str], ...],
 ) -> None:
     """Flatten observed TOC result formatting into styles used on field update."""
 
@@ -730,8 +803,11 @@ def _stabilize_toc_styles(
                 name = _local_name(child.tag)
                 if name not in {"rStyle", "rPrChange"}:
                     merged[name] = deepcopy(child)
-        if "color" in clear_direct_format:
-            merged.pop("color", None)
+        outcomes = dict(effective_format)
+        if outcomes.get("color") == "black":
+            merged["color"] = ET.Element(f"{_W}color", {f"{_W}val": "000000"})
+        if outcomes.get("underline") == "none":
+            merged["u"] = ET.Element(f"{_W}u", {f"{_W}val": "none"})
         for name in ("b", "bCs"):
             if name not in merged:
                 merged[name] = ET.Element(f"{_W}{name}", {f"{_W}val": "0"})
@@ -739,6 +815,25 @@ def _stabilize_toc_styles(
         if run_properties is None:
             run_properties = ET.SubElement(style, f"{_W}rPr")
         run_properties[:] = _ordered_children(list(merged.values()), _RPR_ORDER)
+
+    # Word can recreate the Hyperlink character style when a TOC with the \h
+    # switch is updated. If the current TOC cache already uses a character
+    # style, normalize that exact style as the durable field-update fallback.
+    character_style_ids = {
+        value
+        for template in templates.values()
+        for run_properties in template.iter(f"{_W}rPr")
+        if (run_style := run_properties.find(f"{_W}rStyle")) is not None
+        and (value := run_style.get(f"{_W}val"))
+    }
+    for character_style_id in character_style_ids:
+        character_style = by_id.get(character_style_id)
+        if character_style is None:
+            continue
+        run_properties = character_style.find(f"{_W}rPr")
+        if run_properties is None:
+            run_properties = ET.SubElement(character_style, f"{_W}rPr")
+        _apply_run_outcomes(run_properties, dict(effective_format))
     parts["word/styles.xml"] = _serialize(styles)
 
 
@@ -749,7 +844,7 @@ def _toc_paragraph(
     level: int,
     style_id: str,
     instruction_text: str,
-    clear_direct_format: tuple[str, ...],
+    effective_format: tuple[tuple[str, str], ...],
     first: bool,
     last: bool,
 ) -> ET.Element:
@@ -793,7 +888,7 @@ def _toc_paragraph(
     )
     if template_run_properties is not None:
         text_run.append(deepcopy(template_run_properties))
-        _remove_direct_format(text_run, clear_direct_format)
+    _apply_effective_format(text_run, effective_format)
     ET.SubElement(text_run, f"{_W}t").text = text
     ET.SubElement(text_run, f"{_W}tab")
     ET.SubElement(text_run, f"{_W}t").text = "1"
@@ -809,7 +904,7 @@ def _refresh_toc(
     target: ET.Element,
     entries: tuple[TocEntry, ...],
     style_ids: dict[int, str],
-    clear_direct_format: tuple[str, ...],
+    effective_format: tuple[tuple[str, str], ...],
 ) -> None:
     """Rebuild a representative cache while keeping a live, dirty TOC field."""
 
@@ -854,7 +949,7 @@ def _refresh_toc(
     )
     if "TOC" not in instruction_text.upper():
         instruction_text = ' TOC \\o "1-3" \\h \\z \\u '
-    _stabilize_toc_styles(parts, templates, style_ids, clear_direct_format)
+    _stabilize_toc_styles(parts, templates, style_ids, effective_format)
     replacements = [
         _toc_paragraph(
             templates.get(entry.level, fallback),
@@ -862,7 +957,7 @@ def _refresh_toc(
             level=entry.level,
             style_id=style_ids.get(entry.level, f"TOC{entry.level}"),
             instruction_text=instruction_text,
-            clear_direct_format=clear_direct_format,
+            effective_format=effective_format,
             first=index == 0,
             last=index == len(entries) - 1,
         )
@@ -973,7 +1068,7 @@ def mutate_objects(
     output: Path,
     *,
     mutations: list[ObjectMutation],
-) -> None:
+) -> JsonObject:
     """Apply one atomic batch against object refs from the same immutable version."""
 
     if not mutations:
@@ -1007,17 +1102,25 @@ def mutate_objects(
         for index, mutation in enumerate(mutations)
         if mutation.action == "materialize_structure" and mutation.replaced_structure is not None
     }
-    mutable_targets: list[ET.Element] = []
+    mutable_operations: list[tuple[ET.Element, str]] = []
     for index, (_, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_structure":
-            mutable_targets.extend(item for _, item, _ in structure_resolved[index])
+            mutable_operations.extend(
+                (item, mutation.action) for _, item, _ in structure_resolved[index]
+            )
             replacement = replaced_structures.get(index)
             if replacement is not None:
-                mutable_targets.append(replacement[1])
+                mutable_operations.append((replacement[1], mutation.action))
         else:
-            mutable_targets.append(target)
-    for index, target in enumerate(mutable_targets):
-        if any(_overlap(target, other) for other in mutable_targets[index + 1 :]):
+            mutable_operations.append((target, mutation.action))
+    for index, (target, action) in enumerate(mutable_operations):
+        conflicts = [
+            other_action
+            for other, other_action in mutable_operations[index + 1 :]
+            if _overlap(target, other)
+            and {action, other_action} != {"normalize_effective_format", "ensure_page_start"}
+        ]
+        if conflicts:
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
@@ -1028,12 +1131,15 @@ def mutate_objects(
                 ),
             )
     refreshed_toc = False
+    preserved_boundaries: list[JsonObject] = []
+    migrated_boundaries: list[JsonObject] = []
+    page_start_results: list[JsonObject] = []
     toc_style_ids = _toc_style_ids(parts)
     for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
             if mutation.field_id is None or mutation.slot_id is None:
                 raise AssertionError("materialize_slot requires field and slot identifiers")
-            _remove_direct_format(target, mutation.clear_direct_format)
+            _apply_effective_format(target, mutation.effective_format)
             _materialize(
                 document_root,
                 parent,
@@ -1054,8 +1160,8 @@ def mutate_objects(
                 slot_id=mutation.slot_id,
                 replaced_structure=replaced_structures.get(index),
             )
-        elif mutation.action == "normalize_format":
-            _remove_direct_format(target, mutation.clear_direct_format)
+        elif mutation.action == "normalize_effective_format":
+            _apply_effective_format(target, mutation.effective_format)
         elif mutation.action == "refresh_toc":
             element_order = {id(element): rank for rank, element in enumerate(document_root.iter())}
             toc_entries = tuple(
@@ -1072,7 +1178,7 @@ def mutate_objects(
                 target,
                 toc_entries,
                 toc_style_ids,
-                mutation.clear_direct_format,
+                mutation.effective_format,
             )
             refreshed_toc = True
         elif mutation.action == "clear_content":
@@ -1095,7 +1201,27 @@ def mutate_objects(
                 )
             _clear_content(parent, target, mutation.selected)
         elif mutation.action == "remove_object":
-            _remove_object_preserving_boundary(parent, target)
+            for kind in _remove_object_preserving_boundary(parent, target):
+                preserved_boundaries.append(
+                    {
+                        "kind": kind,
+                        "object_id": str(
+                            mutation.selected.object_ref.get("object_id", mutation.selected.locator)
+                        ),
+                    }
+                )
+        elif mutation.action == "ensure_page_start":
+            changed, representation = _ensure_page_start(parent, target)
+            page_start_results.append(
+                {
+                    "object_id": str(
+                        mutation.selected.object_ref.get("object_id", mutation.selected.locator)
+                    ),
+                    "mode": "new_page",
+                    "representation": representation,
+                    "changed": changed,
+                }
+            )
         else:
             raise AssertionError(f"unsupported direct object action: {mutation.action}")
     parts["word/document.xml"] = _serialize(document_root)
@@ -1107,3 +1233,8 @@ def mutate_objects(
             result.writestr(info, parts[info.filename])
     with output.open("rb") as handle:
         os.fsync(handle.fileno())
+    return {
+        "preserved_boundaries": preserved_boundaries,
+        "migrated_boundaries": migrated_boundaries,
+        "page_start_results": page_start_results,
+    }

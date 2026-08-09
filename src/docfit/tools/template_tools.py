@@ -16,9 +16,12 @@ from docfit.tools.runtime import ToolFailure
 from docfit.tools.service import failure_result, tool_result, unexpected_failure_result
 from docfit.tools.template_schemas import (
     TEMPLATE_EDIT_SCHEMA,
+    TEMPLATE_FOCUS_SCHEMA,
+    TEMPLATE_NEXT_SCHEMA,
+    TEMPLATE_OPEN_SCHEMA,
     TEMPLATE_PUBLISH_SCHEMA,
     TEMPLATE_REGISTRY_SCHEMA,
-    TEMPLATE_VIEW_SCHEMA,
+    TEMPLATE_SEARCH_SCHEMA,
 )
 
 _READ_ONLY = ToolAnnotations.model_validate(
@@ -47,7 +50,10 @@ _WRITE = ToolAnnotations.model_validate(
 )
 
 TEMPLATE_LOGICAL_TOOL_NAMES = (
-    "template_view",
+    "template_open",
+    "template_next",
+    "template_search",
+    "template_focus",
     "template_registry",
     "template_edit",
     "template_publish",
@@ -67,31 +73,62 @@ async def _unbound(_args: dict[str, Any]) -> dict[str, Any]:
 
 
 @tool(
-    "template_view",
+    "template_open",
     (
-        "Open or resume the current target-object crop, advance to the next unprocessed visual "
-        "region, or find/focus one concrete object. Each visual result contains only the target, "
-        "its parent, and a bounded set of necessary adjacent objects; a wider focus padding "
-        "returns a larger local object neighborhood without returning a full page. Open also "
-        "returns compact unresolved Agent-authored edit intents without replaying the known-failed "
-        "operation. Navigation is physical and never assigns semantic meaning. "
-        "Returned object_ref values are accepted unchanged by template_edit. Advance with "
-        "region_outcome=handled only after a committed edit for this region, or use "
-        "region_outcome=preserve plus a short reason when the Agent judges the visible content is "
-        "fixed school material that should remain unchanged."
+        "Open or resume the latest application checkpoint and return its current bounded visual "
+        "region, compact materialization facts, and unresolved Agent-authored edit intents."
     ),
-    TEMPLATE_VIEW_SCHEMA,
+    TEMPLATE_OPEN_SCHEMA,
     annotations=_OBSERVE,
 )
-async def template_view(args: dict[str, Any]) -> dict[str, Any]:
+async def template_open(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
+
+
+@tool(
+    "template_next",
+    (
+        "Advance from the exact region_ref returned by the latest checkpoint. Use handled only "
+        "after a committed edit, or preserve with a short Agent reason for fixed school content."
+    ),
+    TEMPLATE_NEXT_SCHEMA,
+    annotations=_OBSERVE,
+)
+async def template_next(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
+
+
+@tool(
+    "template_search",
+    (
+        "Search visible text in the latest checkpoint and return at most five bounded object "
+        "candidates. Search is physical and assigns no semantic meaning."
+    ),
+    TEMPLATE_SEARCH_SCHEMA,
+    annotations=_READ_ONLY,
+)
+async def template_search(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
+
+
+@tool(
+    "template_focus",
+    (
+        "Return a target-only or bounded-context crop for one current object_ref. The Tool "
+        "never expands this into a full-page semantic review."
+    ),
+    TEMPLATE_FOCUS_SCHEMA,
+    annotations=_READ_ONLY,
+)
+async def template_focus(args: dict[str, Any]) -> dict[str, Any]:
     return await _unbound(args)
 
 
 @tool(
     "template_registry",
     (
-        "For up to sixteen concrete objects from one version, look up exact Registry fields or "
-        "search at most five object-relevant candidates each. This Tool never returns the full "
+        "For up to sixteen concrete objects from the latest checkpoint, look up exact Registry "
+        "fields or search at most five object-relevant candidates each. Never returns the full "
         "Registry."
     ),
     TEMPLATE_REGISTRY_SCHEMA,
@@ -104,13 +141,11 @@ async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
 @tool(
     "template_edit",
     (
-        "Directly and atomically materialize slots or one reusable body structure, normalize an "
-        "explicit direct color, refresh one live TOC with representative entries, or batch clear "
-        "and remove current objects. No plan file or output path is needed. The Tool creates one "
-        "immutable version, checks every effect, checkpoints task progress, and returns one "
-        "changed target-region crop plus fresh refs. A body.chapters structure is one complete "
-        "representative chapter and therefore includes at least H1, H2, H3, and body.paragraph "
-        "members selected and classified by the Agent."
+        "Atomically execute one action-partitioned batch against current object refs. The Agent "
+        "chooses semantic fields, members, generated-content entries, and page-start intent; the "
+        "Tool normalizes redundant operations, preserves Word boundaries, verifies effective "
+        "results, checkpoints the immutable version, and returns changed-region feedback plus "
+        "objective materialization/style/risk facts."
     ),
     TEMPLATE_EDIT_SCHEMA,
     annotations=_WRITE,
@@ -122,9 +157,8 @@ async def template_edit(args: dict[str, Any]) -> dict[str, Any]:
 @tool(
     "template_publish",
     (
-        "Publish exactly one validated final Word from an immutable document_ref after the "
-        "Agent has seen local visual feedback for that exact version. No all-page coverage gate "
-        "is imposed. Never publishes or overwrites an intermediate Word."
+        "Publish exactly one validated final Word from the supplied immutable document_ref after "
+        "the Agent has reviewed feedback for that exact version."
     ),
     TEMPLATE_PUBLISH_SCHEMA,
     annotations=_WRITE,
@@ -134,7 +168,10 @@ async def template_publish(args: dict[str, Any]) -> dict[str, Any]:
 
 
 TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
-    template_view,
+    template_open,
+    template_next,
+    template_search,
+    template_focus,
     template_registry,
     template_edit,
     template_publish,
@@ -159,19 +196,39 @@ def build_template_tool_server(
 ) -> McpSdkServerConfig:
     """Build the one task-bound Tool server used by prepare-template."""
 
-    service = TemplateWorkspaceService(
-        task_root=task_root,
-        field_registry=field_registry,
-    )
+    service = TemplateWorkspaceService(task_root=task_root, field_registry=field_registry)
 
-    async def view(args: dict[str, Any]) -> dict[str, Any]:
+    async def navigate(action: str, args: dict[str, Any]) -> dict[str, Any]:
+        translated = {**args, "action": action}
+        if action == "next":
+            translated["region_outcome"] = translated.pop("outcome", None)
+        if action == "focus":
+            scope = translated.pop("scope", "target")
+            translated.update(
+                {
+                    "quality": "detail" if scope == "target" else "review",
+                    "padding": 32 if scope == "target" else 160,
+                }
+            )
         try:
-            structured, images = service.view(args)
+            structured, images = service.view(translated)
             return tool_result(structured, image_paths=images)
         except ToolFailure as error:
             return failure_result(error)
         except Exception:
             return unexpected_failure_result()
+
+    async def open_(args: dict[str, Any]) -> dict[str, Any]:
+        return await navigate("open", args)
+
+    async def next_(args: dict[str, Any]) -> dict[str, Any]:
+        return await navigate("next", args)
+
+    async def search(args: dict[str, Any]) -> dict[str, Any]:
+        return await navigate("search", args)
+
+    async def focus(args: dict[str, Any]) -> dict[str, Any]:
+        return await navigate("focus", args)
 
     async def registry(args: dict[str, Any]) -> dict[str, Any]:
         try:
@@ -200,10 +257,10 @@ def build_template_tool_server(
         except Exception:
             return unexpected_failure_result(committed=False)
 
-    runners = (view, registry, edit, publish)
+    runners = (open_, next_, search, focus, registry, edit, publish)
     return create_sdk_mcp_server(
         name="docfit",
-        version="4.0.0",
+        version="5.0.0",
         tools=[
             _bind(registered, runner)
             for registered, runner in zip(TEMPLATE_TOOLS, runners, strict=True)

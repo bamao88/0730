@@ -59,6 +59,19 @@ def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
     skill = prepared.task_root / ".claude/skills/docfit-school-extract"
     assert (skill / "SKILL.md").is_file()
     assert not (skill / "scripts").exists()
+    references = sorted(item.name for item in (skill / "references").iterdir())
+    assert references == [
+        "body-structure.md",
+        "collection-and-optional-sections.md",
+        "effective-style.md",
+        "generated-content.md",
+        "logical-page-starts.md",
+        "object-safety.md",
+    ]
+    skill_text = (skill / "SKILL.md").read_text(encoding="utf-8")
+    for reference in references:
+        assert f"](references/{reference})" in skill_text
+        assert f"`references/{reference}`" not in skill_text
     assert not (prepared.task_root / "work/decisions").exists()
     assert not (prepared.task_root / "work/compiled").exists()
     assert not (prepared.task_root / "work/attempts").exists()
@@ -126,11 +139,11 @@ def test_prepare_options_allow_one_longer_final_generated_content_session(
     prompt = build_prepare_template_prompt(prepared)
 
     assert options.max_turns == PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
-    assert "checkpoint_summary as a capability inventory" in prompt
-    assert "materialized_structures contains body.chapters" in prompt
-    assert "standalone body.paragraph slots do not replace" in prompt
-    assert "visible Chinese 摘要 body needs abstract.zh" in prompt
-    assert "Search/focus only for a missing capability" in prompt
+    assert "materialized_members, style_signatures, and structural_risks" in prompt
+    assert "facts rather than a semantic completion verdict" in prompt
+    assert "template_search/template_focus only for a concrete missing capability" in prompt
+    assert "materialized_structures contains body.chapters" not in prompt
+    assert "visible Chinese 摘要 body needs abstract.zh" not in prompt
 
 
 def test_pending_edit_intent_takes_priority_over_narrow_toc_finalization(
@@ -158,7 +171,7 @@ def test_pending_edit_intent_takes_priority_over_narrow_toc_finalization(
     prompt = build_prepare_template_prompt(prepared)
 
     assert "resolve every returned pending_edit_intent" in prompt
-    assert "Search/focus is allowed only to re-locate" in prompt
+    assert "template_search or template_focus only to re-locate" in prompt
     assert "resolve only the returned pending_generated_content" not in prompt
 
 
@@ -167,24 +180,16 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
 
     prompt = build_prepare_template_prompt(prepared)
 
-    assert "current target region" in prompt
-    assert "template_view action=next" in prompt
-    assert "region_outcome=handled" in prompt
-    assert "region_outcome=preserve" in prompt
+    assert "Start with template_open" in prompt
+    assert "template_next using outcome=handled" in prompt
+    assert "outcome=preserve" in prompt
     assert "Never preserve writing instructions" in prompt
-    assert "stop cleanup and navigation" in prompt
-    assert "commit materialize_structure before clearing" in prompt
-    assert "chapter itself as level 1" in prompt
-    assert "Do not search for nonexistent `1.1.1`" in prompt
-    assert "never use `第一章 文献综述`" in prompt
-    assert "separate `第X章（正文标题）`" in prompt
-    assert "compare the returned document_order values" in prompt
-    assert "members must be in physical document order but need not be adjacent" in prompt
-    assert "does not return the exact known-failed operation" in prompt
-    assert "second visual location for thesis.title.zh" in prompt
-    assert "such as `科技报告`" in prompt
-    assert "one representative fillable entry slot is sufficient" in prompt
-    assert "preserve the fixed `附录` label" in prompt
+    assert "action-partitioned template_edit lanes" in prompt
+    assert "does not require a global H1/H2/H3 grammar" in prompt
+    assert "effective_format={color:black, underline:none}" in prompt
+    assert "ensure_page_starts" in prompt
+    assert "knowledge_signals" in prompt
+    assert "Read only the matching relative reference" in prompt
     assert "application checkpoint" in prompt
     assert "Registry is Tool-private" in prompt
     assert "not a task list" in prompt
@@ -286,7 +291,7 @@ def test_run_prepare_template_accepts_exactly_one_published_word(tmp_path: Path)
             },
             tool_uses=(
                 "Skill",
-                "mcp__docfit__template_view",
+                "mcp__docfit__template_open",
                 "mcp__docfit__template_publish",
             ),
             skills_loaded=("docfit-school-extract",),
@@ -319,7 +324,7 @@ def test_run_prepare_template_preserves_true_blocked_result(tmp_path: Path) -> N
                 "template_sha256": None,
                 "counts": {**COUNTS, "unresolved": 1},
             },
-            tool_uses=("Skill", "mcp__docfit__template_view"),
+            tool_uses=("Skill", "mcp__docfit__template_open"),
             skills_loaded=("docfit-school-extract",),
             session_id="session-blocked",
             backend="minimax",

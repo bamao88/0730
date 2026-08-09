@@ -26,7 +26,6 @@ from docfit.template.object_mutation import (
 from docfit.template.semantic_types import (
     require_body_member_type,
     require_body_structure_type,
-    require_complete_body_structure,
     semantic_object_type,
 )
 from docfit.tools.inspection import (
@@ -65,6 +64,15 @@ _DURABLE_EDIT_INTENT_ACTIONS = {
     "refresh_toc",
 }
 _MAX_PENDING_EDIT_INTENTS = 8
+_EDIT_LANES = {
+    "materialize_slots": "materialize_slot",
+    "materialize_structures": "materialize_structure",
+    "normalize_effective_formats": "normalize_effective_format",
+    "refresh_tocs": "refresh_toc",
+    "clear_contents": "clear_content",
+    "remove_objects": "remove_object",
+    "ensure_page_starts": "ensure_page_start",
+}
 
 
 def _normalize(value: str) -> str:
@@ -135,17 +143,302 @@ def _with_semantic_type(field: JsonObject) -> JsonObject:
     return value
 
 
-def _direct_format_properties(value: Any) -> tuple[str, ...]:
-    if value is None:
-        return ()
-    if not isinstance(value, list) or any(item != "color" for item in value):
+def _effective_format(value: Any, *, required: bool = False) -> JsonObject:
+    if value is None and not required:
+        return {}
+    if not isinstance(value, dict) or (required and not value):
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="direct_format_property_invalid",
-            message="clear_direct_format currently accepts only the explicit color property.",
+            code="effective_format_invalid",
+            message="An effective-format operation requires at least one supported outcome.",
         )
-    return tuple(dict.fromkeys(str(item) for item in value))
+    unknown = set(value) - {"color", "underline"}
+    if (
+        unknown
+        or value.get("color", "black") != "black"
+        or value.get("underline", "none") != "none"
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="effective_format_invalid",
+            message=(
+                "Template Tool v5 currently supports effective color=black and "
+                "underline=none outcomes."
+            ),
+        )
+    return {key: str(value[key]) for key in ("color", "underline") if key in value}
+
+
+def _edit_operations(args: dict[str, Any]) -> list[JsonObject]:
+    """Expand narrow public action lanes into one internal atomic operation list."""
+
+    if set(args) - set(_EDIT_LANES):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="template_edit_batch_invalid",
+            message="template_edit accepts only the documented action-partitioned batch lanes.",
+        )
+    operations: list[JsonObject] = []
+    for lane, action in _EDIT_LANES.items():
+        values = args.get(lane, [])
+        if not isinstance(values, list) or any(not isinstance(item, dict) for item in values):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="template_edit_batch_invalid",
+                message=f"{lane} must be an array of operation objects.",
+            )
+        operations.extend({**item, "action": action} for item in values)
+    if not 1 <= len(operations) <= _MAX_BATCH_OPERATIONS:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="template_edit_operations_invalid",
+            message="template_edit requires one through thirty-two total operations.",
+        )
+    return operations
+
+
+def _normalize_prepared_operations(
+    prepared: list[JsonObject],
+    mutations: list[ObjectMutation],
+) -> tuple[list[JsonObject], list[ObjectMutation], list[JsonObject]]:
+    """Absorb redundant nested edits and reject only contradictory intent."""
+
+    absorbed: dict[int, JsonObject] = {}
+
+    def absorb(index: int, owner: int, reason: str) -> None:
+        if index in absorbed:
+            return
+        absorbed[index] = {
+            "action": prepared[index]["action"],
+            "target": prepared[index]["target"],
+            "absorbed_by": {
+                "action": prepared[owner]["action"],
+                "target": prepared[owner]["target"],
+            },
+            "reason": reason,
+        }
+
+    def conflict(parent_index: int, child_index: int) -> None:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="batch_operations_conflict",
+            message=(
+                "The batch removes or replaces an ancestor while also requiring a descendant "
+                "to survive as materialized/generated content. Split or revise those semantic "
+                "decisions; redundant descendant cleanup is absorbed automatically. "
+                f"Conflict: {prepared[parent_index]['action']} ancestor and "
+                f"{prepared[child_index]['action']} descendant."
+            ),
+        )
+
+    harmless_under_removal = {
+        "remove_object",
+        "clear_content",
+        "normalize_effective_format",
+        "ensure_page_start",
+    }
+    materializing = {"materialize_slot", "materialize_structure", "refresh_toc"}
+
+    for first_index, first in enumerate(prepared):
+        if first_index in absorbed:
+            continue
+        first_locator = str(first.get("target_locator", ""))
+        for second_index in range(first_index + 1, len(prepared)):
+            if second_index in absorbed:
+                continue
+            second = prepared[second_index]
+            second_locator = str(second.get("target_locator", ""))
+            if first_locator == second_locator:
+                first_action = str(first["action"])
+                second_action = str(second["action"])
+                if first_action == second_action:
+                    absorb(second_index, first_index, "duplicate_operation")
+                elif first_action == "remove_object" and second_action in harmless_under_removal:
+                    absorb(second_index, first_index, "ancestor_removal")
+                elif second_action == "remove_object" and first_action in harmless_under_removal:
+                    absorb(first_index, second_index, "ancestor_removal")
+                    break
+                elif (
+                    first_action in materializing
+                    and second_action in {"remove_object", "clear_content"}
+                ) or (
+                    second_action in materializing
+                    and first_action in {"remove_object", "clear_content"}
+                ):
+                    conflict(first_index, second_index)
+                elif {first_action, second_action} == {
+                    "normalize_effective_format",
+                    "ensure_page_start",
+                }:
+                    continue
+                else:
+                    conflict(first_index, second_index)
+                continue
+            if second_locator.startswith(f"{first_locator}/"):
+                parent_index, child_index = first_index, second_index
+            elif first_locator.startswith(f"{second_locator}/"):
+                parent_index, child_index = second_index, first_index
+            else:
+                continue
+            parent_action = str(prepared[parent_index]["action"])
+            child_action = str(prepared[child_index]["action"])
+            if parent_action == "remove_object":
+                if child_action in harmless_under_removal:
+                    absorb(child_index, parent_index, "ancestor_removal")
+                else:
+                    conflict(parent_index, child_index)
+            elif parent_action in materializing and child_action in {
+                "remove_object",
+                "clear_content",
+            }:
+                absorb(child_index, parent_index, "materialized_parent_replaces_content")
+
+    for index, item in enumerate(prepared):
+        if index in absorbed or item.get("action") not in {"remove_object", "clear_content"}:
+            continue
+        locator = str(item.get("target_locator", ""))
+        owner = next(
+            (
+                owner_index
+                for owner_index, owner in enumerate(prepared)
+                if owner.get("action") in {"materialize_slot", "materialize_structure"}
+                and any(
+                    locator == materialized or locator.startswith(f"{materialized}/")
+                    for materialized in (
+                        [str(owner.get("target_locator", ""))]
+                        if owner.get("action") == "materialize_slot"
+                        else [
+                            str(member.get("target_locator", ""))
+                            for member in owner.get("members", [])
+                            if isinstance(member, dict)
+                        ]
+                    )
+                )
+            ),
+            None,
+        )
+        if owner is not None and owner != index:
+            absorb(index, owner, "materialized_parent_replaces_content")
+
+    retained = [
+        (item, mutation)
+        for index, (item, mutation) in enumerate(zip(prepared, mutations, strict=True))
+        if index not in absorbed
+    ]
+    return (
+        [item for item, _ in retained],
+        [mutation for _, mutation in retained],
+        [absorbed[index] for index in sorted(absorbed)],
+    )
+
+
+def _knowledge_signals(operations: list[JsonObject]) -> list[str]:
+    signals: set[str] = set()
+    actions = {str(item.get("action")) for item in operations}
+    if actions & {"normalize_effective_format"} or any(
+        item.get("effective_format") for item in operations
+    ):
+        signals.add("effective-style")
+    if "ensure_page_start" in actions:
+        signals.add("logical-page-starts")
+    if "materialize_structure" in actions:
+        signals.add("body-structure")
+    if "refresh_toc" in actions:
+        signals.add("generated-content")
+    if actions & {"remove_object", "clear_content"}:
+        signals.add("object-safety")
+    return sorted(signals)
+
+
+def _style_signatures(operations: list[JsonObject]) -> list[JsonObject]:
+    signatures: list[JsonObject] = []
+    for operation in operations:
+        candidates = [operation] + [
+            member for member in operation.get("members", []) if isinstance(member, dict)
+        ]
+        for candidate in candidates:
+            field = candidate.get("field")
+            if not isinstance(field, dict):
+                continue
+            target = candidate.get("target", {})
+            if not isinstance(target, dict):
+                continue
+            format_value = target.get("format", {})
+            signatures.append(
+                {
+                    "field_id": field.get("field_id"),
+                    "object_type": target.get("type"),
+                    "style": target.get("style"),
+                    "effective_format": {
+                        key: value
+                        for key, value in format_value.items()
+                        if isinstance(key, str) and key.startswith("effective.")
+                    }
+                    if isinstance(format_value, dict)
+                    else {},
+                }
+            )
+    return signatures
+
+
+def _structural_risks(
+    inspection: Inspection,
+    operations: list[JsonObject],
+) -> list[JsonObject]:
+    """Return style/order observations without converting them into semantic gates."""
+
+    risks: list[JsonObject] = []
+    order = {item.locator: index for index, item in enumerate(inspection.objects)}
+    for operation in operations:
+        if operation.get("action") != "materialize_structure":
+            continue
+        members = [item for item in operation.get("members", []) if isinstance(item, dict)]
+        positions = [
+            order[locator]
+            for member in members
+            if isinstance((locator := member.get("target_locator")), str) and locator in order
+        ]
+        selected_locators = {
+            str(member.get("target_locator")) for member in members if member.get("target_locator")
+        }
+        heading_styles = {
+            target.get("style")
+            for member in members
+            if str(member.get("field", {}).get("field_id", "")).startswith("body.heading.")
+            and isinstance((target := member.get("target")), dict)
+            and target.get("style")
+        }
+        if positions and heading_styles:
+            between = inspection.objects[min(positions) : max(positions) + 1]
+            repeated = [
+                item
+                for item in between
+                if item.locator not in selected_locators
+                and item.kind == "paragraph"
+                and item.style in heading_styles
+                and item.text.strip()
+            ]
+            if repeated:
+                risks.append(
+                    {
+                        "code": "similar_heading_style_inside_member_span",
+                        "severity": "warning",
+                        "count": len(repeated),
+                        "examples": [item.text[:120] for item in repeated[:3]],
+                        "guidance": (
+                            "The selected member span contains other visible paragraphs with a "
+                            "similar heading style. This is a structural observation; the Agent "
+                            "decides whether the representative block is semantically complete."
+                        ),
+                    }
+                )
+    return risks
 
 
 def _semantic_intent_key(operation: JsonObject) -> tuple[str, str] | None:
@@ -376,8 +669,9 @@ class TemplateWorkspaceService:
     def record_edit_failure(self, args: JsonObject, error: ToolFailure) -> None:
         """Persist unresolved Agent-authored semantic edit intent across fresh sessions."""
 
-        raw_operations = args.get("operations")
-        if not isinstance(raw_operations, list):
+        try:
+            raw_operations = _edit_operations(args)
+        except ToolFailure:
             return
         source_hash = sha256_file(self.source)
         progress = self._read_progress(source_hash)
@@ -540,7 +834,7 @@ class TemplateWorkspaceService:
                 status="needs_input",
                 origin="request",
                 code="invalid_object_ref",
-                message="An object_ref from template_view is required.",
+                message="A current object_ref from template_open/search/focus is required.",
             )
         source_hash = sha256_file(self.source)
         progress = self._read_progress(source_hash)
@@ -643,9 +937,7 @@ class TemplateWorkspaceService:
         adjacent = unique[:_REGION_ADJACENT_OBJECTS]
         return {
             "target": _agent_context_object(inspection, selected),
-            "parent_object": (
-                _agent_object(inspection, parent) if parent is not None else None
-            ),
+            "parent_object": (_agent_object(inspection, parent) if parent is not None else None),
             "adjacent_objects": adjacent,
         }
 
@@ -1304,7 +1596,10 @@ class TemplateWorkspaceService:
             )
 
         if action == "search":
-            _, document = self._resolve_document(args.get("document_ref"))
+            source_reference, _ = self._register_source()
+            source_hash = source_reference.rsplit(":", 1)[-1]
+            progress = self._read_progress(source_hash)
+            _, document = self._resolve_document(_document_ref(str(progress["document_sha256"])))
             query = args.get("query")
             if not isinstance(query, str) or not query.strip():
                 raise ToolFailure(
@@ -1339,8 +1634,8 @@ class TemplateWorkspaceService:
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="template_view_action_invalid",
-            message="template_view action must be open, next, search, or focus.",
+            code="template_navigation_action_invalid",
+            message="The internal template navigation action is invalid.",
         )
 
     def registry_query(self, args: dict[str, Any]) -> JsonObject:
@@ -1471,23 +1766,11 @@ class TemplateWorkspaceService:
         return target
 
     def edit(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
-        raw_operations = args.get("operations")
-        if (
-            not isinstance(raw_operations, list)
-            or not 1 <= len(raw_operations) <= _MAX_BATCH_OPERATIONS
-            or not all(isinstance(item, dict) for item in raw_operations)
-        ):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="template_edit_operations_invalid",
-                message="template_edit requires one through thirty-two object operations.",
-            )
+        raw_operations = _edit_operations(args)
 
         document: Path | None = None
         before: Inspection | None = None
         existing_tags: set[str] = set()
-        operation_targets: set[tuple[str, str]] = set()
         prepared: list[JsonObject] = []
         mutations: list[ObjectMutation] = []
 
@@ -1514,10 +1797,11 @@ class TemplateWorkspaceService:
             if action not in {
                 "materialize_slot",
                 "materialize_structure",
-                "normalize_format",
+                "normalize_effective_format",
                 "refresh_toc",
                 "clear_content",
                 "remove_object",
+                "ensure_page_start",
             }:
                 raise ToolFailure(
                     status="needs_input",
@@ -1530,21 +1814,6 @@ class TemplateWorkspaceService:
             candidate_document, candidate_before, selected = self._resolve_object(
                 raw.get("object_ref")
             )
-            target_identity = (
-                candidate_before.document_sha256,
-                str(selected.object_ref["object_id"]),
-            )
-            if target_identity in operation_targets:
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="duplicate_operation_target",
-                    message=(
-                        "One atomic edit batch may act on each object only once. Combine "
-                        "format cleanup into materialize_slot or remove the conflicting action."
-                    ),
-                )
-            operation_targets.add(target_identity)
             if before is None:
                 document = candidate_document
                 before = candidate_before
@@ -1565,7 +1834,12 @@ class TemplateWorkspaceService:
             field: JsonObject | None = None
             slot_id: str | None = None
             placeholder: str | None = None
-            clear_direct_format = _direct_format_properties(raw.get("clear_direct_format"))
+            effective_format = _effective_format(
+                raw.get("format")
+                if action == "normalize_effective_format"
+                else raw.get("effective_format"),
+                required=action == "normalize_effective_format",
+            )
             structure_members: list[StructureMember] = []
             replaced_structure: InspectedObject | None = None
             prepared_members: list[JsonObject] = []
@@ -1667,7 +1941,7 @@ class TemplateWorkspaceService:
                     member_field = self.registry.lookup(member_field_id)
                     member_slot = allocate_slot(member_field_id)
                     member_placeholder = _placeholder_text(member_field)
-                    member_clear = _direct_format_properties(raw_member.get("clear_direct_format"))
+                    member_format = _effective_format(raw_member.get("effective_format"))
                     structure_members.append(
                         StructureMember(
                             selected=member_object,
@@ -1675,7 +1949,7 @@ class TemplateWorkspaceService:
                             slot_id=member_slot,
                             content_type=str(member_field.get("content_type", "text")),
                             placeholder_text=member_placeholder,
-                            clear_direct_format=member_clear,
+                            effective_format=tuple(member_format.items()),
                         )
                     )
                     prepared_members.append(
@@ -1686,10 +1960,18 @@ class TemplateWorkspaceService:
                             "semantic_type": semantic.public(),
                             "slot_id": member_slot,
                             "placeholder": member_placeholder,
-                            "clear_direct_format": list(member_clear),
+                            "effective_format": member_format,
+                            "effective_before": {
+                                key: value
+                                for key, value in member_object.format.items()
+                                if isinstance(key, str)
+                                and any(
+                                    key == outcome or key.startswith(f"effective.{outcome}")
+                                    for outcome in member_format
+                                )
+                            },
                         }
                     )
-                require_complete_body_structure([member.field_id for member in structure_members])
             elif action == "refresh_toc":
                 raw_field_id = raw.get("field_id", "generated.toc")
                 if raw_field_id != "generated.toc":
@@ -1739,12 +2021,12 @@ class TemplateWorkspaceService:
                             "level": level,
                         }
                     )
-            elif action == "normalize_format" and not clear_direct_format:
+            elif action == "ensure_page_start" and raw.get("mode") != "new_page":
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
-                    code="direct_format_property_missing",
-                    message="normalize_format requires an explicit clear_direct_format property.",
+                    code="page_start_mode_invalid",
+                    message="ensure_page_start currently supports mode=new_page.",
                 )
             prepared.append(
                 {
@@ -1754,7 +2036,17 @@ class TemplateWorkspaceService:
                     "field": field,
                     "slot_id": slot_id,
                     "placeholder": placeholder,
-                    "clear_direct_format": list(clear_direct_format),
+                    "effective_format": effective_format,
+                    "effective_before": {
+                        key: value
+                        for key, value in selected.format.items()
+                        if isinstance(key, str)
+                        and any(
+                            key == outcome or key.startswith(f"effective.{outcome}")
+                            for outcome in effective_format
+                        )
+                    },
+                    "page_start_mode": raw.get("mode"),
                     "members": prepared_members,
                     "replaced_structure": (
                         {
@@ -1775,7 +2067,7 @@ class TemplateWorkspaceService:
                     slot_id=slot_id,
                     content_type=(str(field.get("content_type", "text")) if field else "text"),
                     placeholder_text=placeholder,
-                    clear_direct_format=clear_direct_format,
+                    effective_format=tuple(effective_format.items()),
                     structure_members=tuple(structure_members),
                     replaced_structure=replaced_structure,
                     toc_entries=tuple(toc_entries),
@@ -1783,36 +2075,22 @@ class TemplateWorkspaceService:
             )
 
         assert document is not None and before is not None
-        materialized_locators = {
-            str(item["target_locator"])
-            for item in prepared
-            if item.get("action") == "materialize_slot"
-        }
-        materialized_locators.update(
-            str(member["target_locator"])
-            for item in prepared
-            if item.get("action") == "materialize_structure"
-            for member in item.get("members", [])
-            if isinstance(member, dict) and isinstance(member.get("target_locator"), str)
+        prepared, mutations, absorbed_operations = _normalize_prepared_operations(
+            prepared,
+            mutations,
         )
-        absorbed_operations: list[JsonObject] = []
-        retained: list[tuple[JsonObject, ObjectMutation]] = []
-        for item, mutation in zip(prepared, mutations, strict=True):
-            locator = str(item.get("target_locator", ""))
-            if item.get("action") in {"remove_object", "clear_content"} and any(
-                locator.startswith(f"{materialized}/") for materialized in materialized_locators
-            ):
-                absorbed_operations.append(
-                    {
-                        "action": item["action"],
-                        "target": item["target"],
-                        "absorbed_by": "materialize_parent",
-                    }
-                )
-                continue
-            retained.append((item, mutation))
-        prepared = [item for item, _ in retained]
-        mutations = [mutation for _, mutation in retained]
+        structural_risks = _structural_risks(before, prepared)
+        style_signatures = _style_signatures(prepared)
+        materialized_members = sorted(
+            {
+                str(member["field"]["field_id"])
+                for item in prepared
+                if item.get("action") == "materialize_structure"
+                for member in item.get("members", [])
+                if isinstance(member, dict) and isinstance(member.get("field"), dict)
+            }
+        )
+        knowledge_signals = _knowledge_signals(prepared)
         source_hash = before.document_sha256
         self.versions.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
@@ -1821,16 +2099,57 @@ class TemplateWorkspaceService:
         os.close(descriptor)
         temporary = Path(temporary_name)
         try:
-            mutate_objects(document, temporary, mutations=mutations)
+            mutation_effects = mutate_objects(document, temporary, mutations=mutations)
             validate_docx_package(temporary)
             office_validation = self.office.validate(temporary)
             output_hash = sha256_file(temporary)
             if output_hash == source_hash:
-                raise ToolFailure(
-                    status="error",
-                    origin="postcondition",
-                    code="edit_had_no_effect",
-                    message="The selected edit did not change the Word document.",
+                task_source_hash = sha256_file(self.source)
+                progress = self._read_progress(task_source_hash)
+                feedback_object = self._feedback_object(before, prepared, progress)
+                progress = {**progress, "current_region_edited": True}
+                self._write_progress(progress)
+                current_region, images, progress = self._region_view(
+                    source_hash,
+                    before,
+                    progress,
+                    selected=feedback_object,
+                )
+                return (
+                    {
+                        "schema_version": 1,
+                        "status": "ok",
+                        "committed": False,
+                        "already_satisfied": True,
+                        "document_ref": _document_ref(source_hash),
+                        "document_sha256": source_hash,
+                        "effects": {
+                            "operations": len(prepared),
+                            "absorbed_operations": absorbed_operations,
+                            **mutation_effects,
+                        },
+                        "materialized_members": materialized_members,
+                        "style_signatures": style_signatures,
+                        "structural_risks": structural_risks,
+                        "knowledge_signals": knowledge_signals,
+                        "current_region": current_region,
+                        "navigation": {
+                            "completed_regions": int(progress["region_index"]),
+                            "done": current_region is None,
+                        },
+                        "checks": [
+                            {"name": "requested_outcome_already_satisfied", "result": "ok"},
+                            {"name": "source_unchanged", "result": "ok"},
+                            {"name": "package_reopens", "result": "ok"},
+                            {"name": "officecli_validate", "result": "ok"},
+                        ],
+                        "guidance": (
+                            "The requested outcome was already true; no duplicate Word boundary "
+                            "or formatting override was added. Judge the returned region and "
+                            "continue with template_next."
+                        ),
+                    },
+                    images,
                 )
             if sha256_file(document) != source_hash:
                 raise ToolFailure(
@@ -1851,12 +2170,19 @@ class TemplateWorkspaceService:
             else:
                 os.link(temporary, output)
             after = self._inspection(output)
-            self._verify_edit_effects(before, after, prepared)
+            format_changes = self._verify_edit_effects(
+                before,
+                after,
+                prepared,
+                mutation_effects=mutation_effects,
+            )
             receipt: JsonObject = {
                 "schema_version": 1,
                 "input_sha256": source_hash,
                 "output_sha256": output_hash,
                 "operations": prepared,
+                "mutation_effects": mutation_effects,
+                "effective_format_changes": format_changes,
                 "officecli_validation": office_validation,
             }
             self.receipts.mkdir(parents=True, exist_ok=True)
@@ -1904,7 +2230,7 @@ class TemplateWorkspaceService:
             ) + sum(len(item["members"]) for item in prepared)
             guidance = (
                 "Judge the returned changed region now. If it is correct, call "
-                "template_view action=next with its region_ref; no separate review is needed."
+                "template_next with its region_ref; no separate review is needed."
             )
             if removed_count >= 5 and materialized_count == 0:
                 guidance = (
@@ -1928,6 +2254,10 @@ class TemplateWorkspaceService:
                         "actions": dict(sorted(action_counts.items())),
                         "slots_created": created_slots,
                         "absorbed_operations": absorbed_operations,
+                        "preserved_boundaries": mutation_effects["preserved_boundaries"],
+                        "migrated_boundaries": mutation_effects["migrated_boundaries"],
+                        "page_start_results": mutation_effects["page_start_results"],
+                        "effective_format_changes": format_changes,
                     },
                     "structures": [
                         {
@@ -1938,6 +2268,10 @@ class TemplateWorkspaceService:
                         for item in prepared
                         if item["action"] == "materialize_structure"
                     ],
+                    "materialized_members": materialized_members,
+                    "style_signatures": style_signatures,
+                    "structural_risks": structural_risks,
+                    "knowledge_signals": knowledge_signals,
                     "generated_content": [
                         {
                             "field_id": item["field"]["field_id"],
@@ -1973,7 +2307,9 @@ class TemplateWorkspaceService:
         before: Inspection,
         after: Inspection,
         operations: list[JsonObject],
-    ) -> None:
+        *,
+        mutation_effects: JsonObject,
+    ) -> list[JsonObject]:
         toc_roots = {
             item.locator
             for item in before.objects
@@ -2022,10 +2358,16 @@ class TemplateWorkspaceService:
                 code="non_target_content_changed",
                 message="Text outside the selected object changed during the edit.",
             )
+        preserved_removals = {
+            item.get("object_id")
+            for item in mutation_effects.get("preserved_boundaries", [])
+            if isinstance(item, dict)
+        }
         removed_by_kind = Counter(
             item["target"].get("type")
             for item in operations
             if item.get("action") == "remove_object"
+            and item["target"].get("object_ref", {}).get("object_id") not in preserved_removals
             and (item["target"].get("type") != "paragraph" or not item["target"].get("text"))
         )
         for kind, count in removed_by_kind.items():
@@ -2040,6 +2382,113 @@ class TemplateWorkspaceService:
                 )
         before_text = Counter(item.text for item in before.objects if item.text)
         after_text = Counter(item.text for item in after.objects if item.text)
+        format_changes: list[JsonObject] = []
+
+        def effective_objects(operation: JsonObject) -> list[InspectedObject]:
+            locator = operation.get("target_locator")
+            slot_id = operation.get("slot_id")
+            if isinstance(slot_id, str):
+                controls = [
+                    item
+                    for item in after.objects
+                    if item.kind == "sdt" and item.format.get("tag") == slot_id
+                ]
+                return [
+                    item
+                    for control in controls
+                    for item in after.objects
+                    if item.locator == control.locator
+                    or item.locator.startswith(f"{control.locator}/")
+                ]
+            if operation.get("action") == "refresh_toc":
+                toc_locators = [
+                    item.locator
+                    for item in after.objects
+                    if item.kind == "paragraph"
+                    and item.style
+                    and item.style.casefold().startswith("toc")
+                ]
+                return [
+                    item
+                    for item in after.objects
+                    if item.kind in {"paragraph", "run"}
+                    and any(
+                        item.locator == locator or item.locator.startswith(f"{locator}/")
+                        for locator in toc_locators
+                    )
+                ]
+            if not isinstance(locator, str):
+                return []
+            return [
+                item
+                for item in after.objects
+                if item.locator == locator or item.locator.startswith(f"{locator}/")
+            ]
+
+        def is_black(value: Any) -> bool:
+            if value is None:
+                return True
+            normalized = str(value).strip().lstrip("#").casefold()
+            return normalized in {"000", "000000", "black", "auto"}
+
+        def is_no_underline(value: Any) -> bool:
+            if value is None:
+                return True
+            return str(value).strip().casefold() in {"0", "false", "none", "nil", "off"}
+
+        def verify_effective_format(candidate: JsonObject, action: Any) -> None:
+            requested = candidate.get("effective_format", {})
+            if not isinstance(requested, dict) or not requested:
+                return
+            observed = effective_objects(candidate)
+            if not observed:
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="effective_format_target_missing",
+                    message="The edited object's effective formatting could not be re-read.",
+                )
+            if requested.get("color") == "black" and any(
+                not is_black(item.format.get("effective.color")) for item in observed
+            ):
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="effective_color_not_normalized",
+                    message=(
+                        "The requested effective black color is still overridden by a run, "
+                        "paragraph, character style, or theme source."
+                    ),
+                )
+            if requested.get("underline") == "none" and any(
+                not is_no_underline(item.format.get("effective.underline")) for item in observed
+            ):
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="effective_underline_not_normalized",
+                    message="The requested effective no-underline outcome did not materialize.",
+                )
+            after_sources = {
+                key: value
+                for item in observed
+                for key, value in item.format.items()
+                if isinstance(key, str)
+                and any(
+                    key == f"effective.{outcome}" or key.startswith(f"effective.{outcome}.")
+                    for outcome in requested
+                )
+            }
+            format_changes.append(
+                {
+                    "action": action,
+                    "target": candidate["target"],
+                    "requested": requested,
+                    "before": candidate.get("effective_before", {}),
+                    "after": after_sources,
+                }
+            )
+
         for operation in operations:
             action = operation.get("action")
             field = operation.get("field")
@@ -2095,21 +2544,11 @@ class TemplateWorkspaceService:
                                 "A body semantic member is missing after structure materialization."
                             ),
                         )
-            elif action == "normalize_format":
-                if "color" in operation.get("clear_direct_format", []):
-                    locator = operation.get("target_locator")
-                    normalized = next(
-                        (item for item in after.objects if item.locator == locator),
-                        None,
-                    )
-                    if normalized is not None and "color" in normalized.format:
-                        raise ToolFailure(
-                            status="error",
-                            origin="postcondition",
-                            code="direct_color_not_removed",
-                            message="The selected object's direct color was not removed.",
-                        )
-            elif action == "refresh_toc":
+            verify_effective_format(operation, action)
+            for member in operation.get("members", []):
+                if isinstance(member, dict):
+                    verify_effective_format(member, action)
+            if action == "refresh_toc":
                 expected = [
                     entry["target"].get("text")
                     for entry in operation.get("entries", [])
@@ -2139,6 +2578,9 @@ class TemplateWorkspaceService:
                         message="At least one selected object's content was not cleared.",
                     )
             elif action == "remove_object":
+                object_id = target.get("object_ref", {}).get("object_id")
+                if object_id in preserved_removals:
+                    continue
                 text = target.get("text")
                 if isinstance(text, str) and text and after_text[text] >= before_text[text]:
                     raise ToolFailure(
@@ -2147,6 +2589,24 @@ class TemplateWorkspaceService:
                         code="object_not_removed",
                         message="The selected object's visible content is still present.",
                     )
+            elif action == "ensure_page_start":
+                result = next(
+                    (
+                        item
+                        for item in mutation_effects.get("page_start_results", [])
+                        if isinstance(item, dict)
+                        and item.get("object_id") == target.get("object_ref", {}).get("object_id")
+                    ),
+                    None,
+                )
+                if result is None:
+                    raise ToolFailure(
+                        status="error",
+                        origin="postcondition",
+                        code="page_start_not_ensured",
+                        message="The requested logical new-page boundary was not verified.",
+                    )
+        return format_changes
 
     def _review(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
         document_hash, document = self._resolve_document(args.get("document_ref"))

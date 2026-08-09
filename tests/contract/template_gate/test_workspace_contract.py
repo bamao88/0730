@@ -97,6 +97,64 @@ class FakeVisual:
         return located
 
 
+def _v5_batch(operations: list[JsonObject]) -> JsonObject:
+    """Keep behavior-heavy fixtures concise while exercising the v5 public lanes."""
+
+    lanes: JsonObject = {}
+    lane_names = {
+        "materialize_slot": "materialize_slots",
+        "materialize_structure": "materialize_structures",
+        "normalize_format": "normalize_effective_formats",
+        "normalize_effective_format": "normalize_effective_formats",
+        "refresh_toc": "refresh_tocs",
+        "clear_content": "clear_contents",
+        "remove_object": "remove_objects",
+        "ensure_page_start": "ensure_page_starts",
+    }
+    for original in operations:
+        operation = dict(original)
+        action = str(operation.pop("action"))
+        lane = lane_names.get(action, "unsupported")
+        direct = operation.pop("clear_direct_format", None)
+        if direct is not None:
+            outcome = {"color": "black"} if "color" in direct else {}
+            if action == "normalize_format":
+                operation["format"] = outcome
+            else:
+                operation["effective_format"] = outcome
+        if action == "normalize_effective_format" and "effective_format" in operation:
+            operation["format"] = operation.pop("effective_format")
+        members = operation.get("members")
+        if isinstance(members, list):
+            converted_members: list[JsonObject] = []
+            for original_member in members:
+                member = dict(original_member)
+                member_direct = member.pop("clear_direct_format", None)
+                if member_direct is not None:
+                    member["effective_format"] = (
+                        {"color": "black"} if "color" in member_direct else {}
+                    )
+                converted_members.append(member)
+            operation["members"] = converted_members
+        lanes.setdefault(lane, []).append(operation)
+    return lanes
+
+
+class _ContractTemplateWorkspaceService(TemplateWorkspaceService):
+    def edit(self, args: dict[str, object]) -> tuple[JsonObject, list[Path]]:
+        operations = args.get("operations")
+        if isinstance(operations, list):
+            return super().edit(_v5_batch(operations))  # type: ignore[arg-type]
+        return super().edit(args)
+
+    def record_edit_failure(self, args: JsonObject, error: ToolFailure) -> None:
+        operations = args.get("operations")
+        if isinstance(operations, list):
+            super().record_edit_failure(_v5_batch(operations), error)
+            return
+        super().record_edit_failure(args, error)
+
+
 class PageSplitVisual(FakeVisual):
     def physical_locations(
         self,
@@ -291,6 +349,15 @@ def _append_toc_and_titles(document: Path) -> None:
         infos = archive.infolist()
         parts = {info.filename: archive.read(info.filename) for info in infos}
     styles = ET.fromstring(parts["word/styles.xml"])
+    hyperlink = ET.SubElement(
+        styles,
+        f"{W}style",
+        {f"{W}type": "character", f"{W}styleId": "Hyperlink"},
+    )
+    ET.SubElement(hyperlink, f"{W}name", {f"{W}val": "Hyperlink"})
+    hyperlink_run = ET.SubElement(hyperlink, f"{W}rPr")
+    ET.SubElement(hyperlink_run, f"{W}color", {f"{W}val": "0000FF"})
+    ET.SubElement(hyperlink_run, f"{W}u", {f"{W}val": "single"})
     for level in range(1, 4):
         style = ET.SubElement(
             styles,
@@ -357,6 +424,7 @@ def _append_toc_and_titles(document: Path) -> None:
             ET.SubElement(separate, f"{W}fldChar", {f"{W}fldCharType": "separate"})
         run = ET.SubElement(paragraph, f"{W}r")
         run_properties = ET.SubElement(run, f"{W}rPr")
+        ET.SubElement(run_properties, f"{W}rStyle", {f"{W}val": "Hyperlink"})
         ET.SubElement(run_properties, f"{W}b", {f"{W}val": "0"})
         ET.SubElement(run_properties, f"{W}color", {f"{W}val": "3333FF"})
         ET.SubElement(run_properties, f"{W}sz", {f"{W}val": "28"})
@@ -428,7 +496,7 @@ def _service(
     root, source = _task(tmp_path, fixture)
     visual = FakeVisual()
     return (
-        TemplateWorkspaceService(
+        _ContractTemplateWorkspaceService(
             task_root=root,
             field_registry=REGISTRY,
             visual=visual,  # type: ignore[arg-type]
@@ -438,9 +506,12 @@ def _service(
     )
 
 
-def test_agent_surface_is_four_direct_tools_without_plan_protocol() -> None:
+def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
     assert TEMPLATE_LOGICAL_TOOL_NAMES == (
-        "template_view",
+        "template_open",
+        "template_next",
+        "template_search",
+        "template_focus",
         "template_registry",
         "template_edit",
         "template_publish",
@@ -461,6 +532,26 @@ def test_agent_surface_is_four_direct_tools_without_plan_protocol() -> None:
     ):
         assert forbidden not in schemas
     assert "'page'" not in str(TEMPLATE_TOOLS[0].input_schema)
+    assert TEMPLATE_TOOLS[0].input_schema["properties"] == {}
+    assert set(TEMPLATE_TOOLS[1].input_schema["properties"]) == {
+        "region_ref",
+        "outcome",
+        "reason",
+    }
+    assert set(TEMPLATE_TOOLS[2].input_schema["properties"]) == {"query"}
+    assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {"object_ref", "scope"}
+    edit_lanes = set(TEMPLATE_TOOLS[5].input_schema["properties"])
+    assert edit_lanes == {
+        "materialize_slots",
+        "materialize_structures",
+        "normalize_effective_formats",
+        "refresh_tocs",
+        "clear_contents",
+        "remove_objects",
+        "ensure_page_starts",
+    }
+    assert "clear_direct_format" not in schemas
+    assert "template_view" not in TEMPLATE_LOGICAL_TOOL_NAMES
 
 
 def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path) -> None:
@@ -732,7 +823,7 @@ def test_navigation_regions_never_mix_objects_from_different_visual_pages(
     root, source = _task(tmp_path, "S07-ambiguous-anchor")
     _append_plain_paragraphs(source, [f"视觉对象{index}" for index in range(8)])
     visual = PageSplitVisual()
-    service = TemplateWorkspaceService(
+    service = _ContractTemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -766,7 +857,7 @@ def test_unmappable_paragraph_never_falls_back_to_an_unrelated_region(
 ) -> None:
     root, _ = _task(tmp_path, "S07-ambiguous-anchor")
     visual = MissingFirstRegionVisual()
-    service = TemplateWorkspaceService(
+    service = _ContractTemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -798,7 +889,7 @@ def test_open_resumes_latest_document_and_pending_region_without_transcript(
         {"operations": [{"action": "clear_content", "object_ref": selected["object_ref"]}]}
     )
 
-    resumed = TemplateWorkspaceService(
+    resumed = _ContractTemplateWorkspaceService(
         task_root=service.task_root,
         field_registry=REGISTRY,
         visual=FakeVisual(),  # type: ignore[arg-type]
@@ -1071,6 +1162,10 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "actions": {"clear_content": 1, "materialize_slot": 1},
         "slots_created": 1,
         "absorbed_operations": [],
+        "preserved_boundaries": [],
+        "migrated_boundaries": [],
+        "page_start_results": [],
+        "effective_format_changes": [],
     }
     assert "applied" not in result
     assert "slots" not in result
@@ -1193,7 +1288,7 @@ def test_atomic_edit_rejects_conflicting_actions_on_the_same_object(
             }
         )
 
-    assert caught.value.code == "duplicate_operation_target"
+    assert caught.value.code == "batch_operations_conflict"
 
 
 def test_structure_materialization_absorbs_redundant_descendant_cleanup(
@@ -1270,13 +1365,12 @@ def test_structure_materialization_absorbs_redundant_descendant_cleanup(
 
     assert result["effects"]["actions"] == {"materialize_structure": 1}
     assert result["effects"]["operations"] == 1
-    assert result["effects"]["absorbed_operations"] == [
-        {
-            "action": "remove_object",
-            "target": heading_run.public(),
-            "absorbed_by": "materialize_parent",
-        }
-    ]
+    absorbed = result["effects"]["absorbed_operations"]
+    assert len(absorbed) == 1
+    assert absorbed[0]["action"] == "remove_object"
+    assert absorbed[0]["target"] == heading_run.public()
+    assert absorbed[0]["absorbed_by"]["action"] == "materialize_structure"
+    assert absorbed[0]["reason"] == "materialized_parent_replaces_content"
     assert result["structures"][0]["field_id"] == "body.chapters"
 
 
@@ -1500,7 +1594,7 @@ def test_structure_extracts_nonadjacent_members_without_absorbing_instructions(
     assert "各章标题三号黑体" in document_text
 
 
-def test_structure_rejects_members_that_cross_the_next_chapter_boundary(
+def test_structure_reports_style_boundary_risk_without_semantic_rejection(
     tmp_path: Path,
 ) -> None:
     service, _, source = _service(tmp_path)
@@ -1538,45 +1632,47 @@ def test_structure_rejects_members_that_cross_the_next_chapter_boundary(
         item.text: item
         for item in service._inspection(document).objects
         if item.kind == "paragraph"
-        and item.text
-        in {"第 X 章 代表标题", "1 节标题", "1.1 小节标题", "结论章正文样例"}
+        and item.text in {"第 X 章 代表标题", "1 节标题", "1.1 小节标题", "结论章正文样例"}
     }
 
-    with pytest.raises(ToolFailure) as caught:
-        service.edit(
-            {
-                "operations": [
-                    {
-                        "action": "materialize_structure",
-                        "object_ref": selected["第 X 章 代表标题"].object_ref,
-                        "field_id": "body.chapters",
-                        "members": [
-                            {
-                                "object_ref": selected["第 X 章 代表标题"].object_ref,
-                                "field_id": "body.heading.level1",
-                            },
-                            {
-                                "object_ref": selected["1 节标题"].object_ref,
-                                "field_id": "body.heading.level2",
-                            },
-                            {
-                                "object_ref": selected["1.1 小节标题"].object_ref,
-                                "field_id": "body.heading.level3",
-                            },
-                            {
-                                "object_ref": selected["结论章正文样例"].object_ref,
-                                "field_id": "body.paragraph",
-                            },
-                        ],
-                    }
-                ]
-            }
-        )
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected["第 X 章 代表标题"].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": selected["第 X 章 代表标题"].object_ref,
+                            "field_id": "body.heading.level1",
+                        },
+                        {
+                            "object_ref": selected["1 节标题"].object_ref,
+                            "field_id": "body.heading.level2",
+                        },
+                        {
+                            "object_ref": selected["1.1 小节标题"].object_ref,
+                            "field_id": "body.heading.level3",
+                        },
+                        {
+                            "object_ref": selected["结论章正文样例"].object_ref,
+                            "field_id": "body.paragraph",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
 
-    assert caught.value.code == "body_structure_crosses_chapter_boundary"
+    assert result["committed"] is True
+    assert result["structural_risks"][0]["code"] == ("similar_heading_style_inside_member_span")
+    assert result["structural_risks"][0]["severity"] == "warning"
 
 
-def test_body_structure_rejects_an_incomplete_core_member_set(tmp_path: Path) -> None:
+def test_body_structure_materializes_agent_selected_member_set_without_fixed_grammar(
+    tmp_path: Path,
+) -> None:
     service, _, source = _service(tmp_path)
     _append_styled_paragraphs(
         source,
@@ -1589,32 +1685,34 @@ def test_body_structure_rejects_an_incomplete_core_member_set(tmp_path: Path) ->
         if item.kind == "paragraph" and item.text in {"第 X 章", "1 节标题"}
     }
 
-    with pytest.raises(ToolFailure) as caught:
-        service.edit(
-            {
-                "operations": [
-                    {
-                        "action": "materialize_structure",
-                        "object_ref": selected["第 X 章"].object_ref,
-                        "field_id": "body.chapters",
-                        "members": [
-                            {
-                                "object_ref": selected["第 X 章"].object_ref,
-                                "field_id": "body.heading.level1",
-                            },
-                            {
-                                "object_ref": selected["1 节标题"].object_ref,
-                                "field_id": "body.heading.level2",
-                            },
-                        ],
-                    }
-                ]
-            }
-        )
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected["第 X 章"].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": selected["第 X 章"].object_ref,
+                            "field_id": "body.heading.level1",
+                        },
+                        {
+                            "object_ref": selected["1 节标题"].object_ref,
+                            "field_id": "body.heading.level2",
+                        },
+                    ],
+                }
+            ]
+        }
+    )
 
-    assert caught.value.code == "body_structure_core_members_missing"
-    assert "body.heading.level3" in caught.value.message
-    assert "body.paragraph" in caught.value.message
+    assert result["committed"] is True
+    assert result["materialized_members"] == [
+        "body.heading.level1",
+        "body.heading.level2",
+    ]
+    assert result["structural_risks"] == []
 
 
 def test_pending_structure_intent_keeps_the_richer_failed_attempt(tmp_path: Path) -> None:
@@ -1771,7 +1869,7 @@ def test_run_level_slot_feedback_falls_back_to_its_own_paragraph_crop(
 ) -> None:
     root, _ = _task(tmp_path)
     visual = MissingFirstRegionVisual()
-    service = TemplateWorkspaceService(
+    service = _ContractTemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -1809,7 +1907,7 @@ def test_run_level_slot_feedback_falls_back_to_its_own_paragraph_crop(
     assert slot.locator.startswith(f"{fallback.locator}/")
 
 
-def test_slot_uses_brackets_only_and_agent_can_drop_direct_color_without_losing_style(
+def test_slot_uses_brackets_only_and_normalizes_effective_color_without_losing_style(
     tmp_path: Path,
 ) -> None:
     service, _, source = _service(tmp_path)
@@ -1824,16 +1922,21 @@ def test_slot_uses_brackets_only_and_agent_can_drop_direct_color_without_losing_
 
     result, _ = service.edit(
         {
-            "operations": [
+            "materialize_slots": [
                 {
-                    "action": "materialize_slot",
                     "object_ref": selected.object_ref,
                     "field_id": "abstract.zh",
-                    "clear_direct_format": ["color"],
+                    "effective_format": {"color": "black", "underline": "none"},
                 }
             ],
         }
     )
+
+    assert result["knowledge_signals"] == ["effective-style"]
+    assert result["effects"]["effective_format_changes"][0]["requested"] == {
+        "color": "black",
+        "underline": "none",
+    }
 
     _, changed_path = service._resolve_document(result["document_ref"])
     with zipfile.ZipFile(changed_path) as archive:
@@ -1846,7 +1949,12 @@ def test_slot_uses_brackets_only_and_agent_can_drop_direct_color_without_losing_
     )
     assert "".join(node.text or "" for node in control.iter(f"{W}t")) == "【中文摘要】"
     assert control.find(f".//{W}showingPlcHdr") is None
-    assert control.find(f".//{W}color") is None
+    color = control.find(f".//{W}color")
+    assert color is not None
+    assert color.get(f"{W}val") == "000000"
+    underline = control.find(f".//{W}u")
+    assert underline is not None
+    assert underline.get(f"{W}val") == "none"
     assert control.find(f".//{W}rFonts").get(f"{W}eastAsia") == "宋体"
     assert control.find(f".//{W}sz").get(f"{W}val") == "22"
 
@@ -1921,7 +2029,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     aliases = [alias.get(f"{W}val") for alias in group.findall(f".//{W}sdtPr/{W}alias")]
     assert aliases == ["body.chapters", *[field_id for _, _, field_id in samples]]
     assert group.find(f".//{W}showingPlcHdr") is None
-    assert group.find(f".//{W}color") is None
+    assert {color.get(f"{W}val") for color in group.findall(f".//{W}color")} == {"000000"}
     assert len(group.findall(f".//{W}rFonts")) == 6
     assert [node.get(f"{W}before") for node in group.findall(f".//{W}pPr/{W}spacing")] == [
         "20",
@@ -2247,12 +2355,10 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
 
     result, _ = service.edit(
         {
-            "operations": [
+            "refresh_tocs": [
                 {
-                    "action": "refresh_toc",
                     "object_ref": toc.object_ref,
-                    "field_id": "generated.toc",
-                    "clear_direct_format": ["color"],
+                    "effective_format": {"color": "black", "underline": "none"},
                     "entries": list(
                         reversed(
                             [
@@ -2277,6 +2383,10 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
             "update_on_open": True,
         }
     ]
+    assert result["effects"]["effective_format_changes"][0]["requested"] == {
+        "color": "black",
+        "underline": "none",
+    }
     _, changed_path = service._resolve_document(result["document_ref"])
     changed = service._inspection(changed_path)
     toc_rows = [
@@ -2299,12 +2409,22 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         if (name := style.find(f"{W}name")) is not None
         and name.get(f"{W}val") in {"toc 1", "toc 2", "toc 3"}
     }
+    hyperlink_style = next(
+        style
+        for style in styles_root.findall(f"{W}style")
+        if style.get(f"{W}styleId") == "Hyperlink"
+    )
+    assert hyperlink_style.find(f"{W}rPr/{W}color").get(f"{W}val") == "000000"
+    assert hyperlink_style.find(f"{W}rPr/{W}u").get(f"{W}val") == "none"
     for level in range(1, 4):
         style = toc_styles[f"toc {level}"]
         assert style.find(f"{W}rPr/{W}rFonts") is not None
         assert style.find(f"{W}rPr/{W}b").get(f"{W}val") == "0"
         assert style.find(f"{W}rPr/{W}sz").get(f"{W}val") == "28"
-        assert style.find(f"{W}rPr/{W}color") is None
+        color = style.find(f"{W}rPr/{W}color")
+        assert color is not None
+        assert color.get(f"{W}val") == "000000"
+        assert style.find(f"{W}rPr/{W}u").get(f"{W}val") == "none"
         assert style.find(f"{W}pPr/{W}jc").get(f"{W}val") == "left"
         assert style.find(f"{W}pPr/{W}tabs/{W}tab").get(f"{W}leader") == "dot"
     assert toc_styles["toc 2"].find(f"{W}pPr/{W}ind").get(f"{W}left") == "420"
@@ -2315,7 +2435,35 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         if (paragraph_style := paragraph.find(f"{W}pPr/{W}pStyle")) is not None
         and paragraph_style.get(f"{W}val") in {"TOC1", "TOC2", "TOC3"}
     ]
-    assert all(paragraph.find(f".//{W}color") is None for paragraph in refreshed_paragraphs)
+    assert all(
+        color.get(f"{W}val") == "000000"
+        for paragraph in refreshed_paragraphs
+        for color in paragraph.findall(f".//{W}color")
+    )
+    assert all(
+        underline.get(f"{W}val") == "none"
+        for paragraph in refreshed_paragraphs
+        for underline in paragraph.findall(f".//{W}u")
+    )
+    toc_locators = [
+        item.locator
+        for item in changed.objects
+        if item.kind == "paragraph" and item.style and item.style.casefold().startswith("toc")
+    ]
+    effective_toc_objects = [
+        item
+        for item in changed.objects
+        if item.kind in {"paragraph", "run"}
+        and any(
+            item.locator == locator or item.locator.startswith(f"{locator}/")
+            for locator in toc_locators
+        )
+    ]
+    assert all(
+        str(item.format.get("effective.color", "#000000")).casefold()
+        in {"#000000", "000000", "black", "auto"}
+        for item in effective_toc_objects
+    )
 
 
 def test_batch_remove_checks_every_effect_and_returns_one_fresh_version(tmp_path: Path) -> None:
@@ -2338,6 +2486,207 @@ def test_batch_remove_checks_every_effect_and_returns_one_fresh_version(tmp_path
     after = service._inspection(after_path)
     assert all(item.text != "姓名：" for item in after.objects)
     assert sha256_file(source) == source_hash
+
+
+def test_parent_removal_absorbs_descendant_cleanup_and_commits_once(tmp_path: Path) -> None:
+    service, _, _ = _service(tmp_path)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    parent = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.text.strip()
+        and any(
+            child.kind == "run"
+            and child.locator.startswith(f"{item.locator}/")
+            and child.text.strip()
+            for child in inspection.objects
+        )
+    )
+    child = next(
+        item
+        for item in inspection.objects
+        if item.kind == "run"
+        and item.locator.startswith(f"{parent.locator}/")
+        and item.text.strip()
+    )
+
+    result, _ = service.edit(
+        {
+            "remove_objects": [
+                {"object_ref": parent.object_ref},
+                {"object_ref": child.object_ref},
+            ]
+        }
+    )
+
+    assert result["committed"] is True
+    assert result["effects"]["operations"] == 1
+    assert result["effects"]["actions"] == {"remove_object": 1}
+    absorbed = result["effects"]["absorbed_operations"]
+    assert len(absorbed) == 1
+    assert absorbed[0]["target"] == child.public()
+    assert absorbed[0]["absorbed_by"]["action"] == "remove_object"
+    assert absorbed[0]["reason"] == "ancestor_removal"
+
+
+def test_parent_removal_rejects_descendant_materialization_as_true_conflict(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    parent = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and any(
+            child.kind == "run"
+            and child.locator.startswith(f"{item.locator}/")
+            and child.text.strip()
+            for child in inspection.objects
+        )
+    )
+    child = next(
+        item
+        for item in inspection.objects
+        if item.kind == "run"
+        and item.locator.startswith(f"{parent.locator}/")
+        and item.text.strip()
+    )
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "remove_objects": [{"object_ref": parent.object_ref}],
+                "materialize_slots": [{"object_ref": child.object_ref, "field_id": "abstract.zh"}],
+            }
+        )
+
+    assert caught.value.code == "batch_operations_conflict"
+
+
+def test_removal_preserves_word_boundaries_ranges_anchors_and_table_wrapper(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "boundary-source.docx"
+    output = tmp_path / "boundary-output.docx"
+    xml = (
+        f'<w:document xmlns:w="{W[1:-1]}"><w:body>'
+        '<w:p><w:pPr><w:pageBreakBefore/><w:sectPr><w:type w:val="nextPage"/>'
+        '</w:sectPr></w:pPr><w:bookmarkStart w:id="1" w:name="mark"/>'
+        '<w:commentRangeStart w:id="2"/><w:r><w:fldChar w:fldCharType="begin"/>'
+        '<w:instrText> PAGE </w:instrText><w:br w:type="page"/><w:drawing/>'
+        '<w:footnoteReference w:id="3"/><w:endnoteReference w:id="4"/>'
+        '<w:t>应删除说明</w:t></w:r><w:commentRangeEnd w:id="2"/>'
+        '<w:bookmarkEnd w:id="1"/></w:p>'
+        "<w:tbl><w:tr><w:tc><w:p/></w:tc></w:tr></w:tbl><w:p/>"
+        "<w:sectPr/></w:body></w:document>"
+    ).encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+    boundary = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="应删除说明",
+        style=None,
+        format={},
+        object_ref={"object_id": "obj-boundary"},
+    )
+    wrapper = InspectedObject(
+        locator="/body/p[2]",
+        kind="paragraph",
+        text="",
+        style=None,
+        format={},
+        object_ref={"object_id": "obj-wrapper"},
+    )
+
+    receipt = mutate_objects(
+        source,
+        output,
+        mutations=[
+            ObjectMutation(selected=boundary, action="remove_object"),
+            ObjectMutation(selected=wrapper, action="remove_object"),
+        ],
+    )
+
+    kinds = {item["kind"] for item in receipt["preserved_boundaries"]}
+    assert kinds == {
+        "section_boundary",
+        "page_break_before",
+        "explicit_page_break",
+        "bookmark_range",
+        "comment_range",
+        "footnote_reference",
+        "endnote_reference",
+        "field_boundary",
+        "drawing_anchor",
+        "table_wrapper_paragraph",
+    }
+    with zipfile.ZipFile(output) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    assert "应删除说明" not in "".join(node.text or "" for node in root.iter(f"{W}t"))
+    for tag in (
+        "sectPr",
+        "pageBreakBefore",
+        "br",
+        "bookmarkStart",
+        "bookmarkEnd",
+        "commentRangeStart",
+        "commentRangeEnd",
+        "fldChar",
+        "instrText",
+        "drawing",
+        "footnoteReference",
+        "endnoteReference",
+    ):
+        assert next(root.iter(f"{W}{tag}"), None) is not None
+    assert len(root.findall(f".//{W}body/{W}p")) == 2
+
+
+def test_ensure_page_start_is_idempotent_and_never_inserts_a_blank_page(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "page-start-source.docx"
+    first = tmp_path / "page-start-first.docx"
+    second = tmp_path / "page-start-second.docx"
+    xml = (
+        f'<w:document xmlns:w="{W[1:-1]}"><w:body>'
+        "<w:p><w:r><w:t>前置内容</w:t></w:r></w:p>"
+        "<w:p><w:r><w:t>摘  要</w:t></w:r></w:p><w:sectPr/>"
+        "</w:body></w:document>"
+    ).encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+    abstract = InspectedObject(
+        locator="/body/p[2]",
+        kind="paragraph",
+        text="摘  要",
+        style=None,
+        format={},
+        object_ref={"object_id": "obj-abstract"},
+    )
+
+    first_receipt = mutate_objects(
+        source,
+        first,
+        mutations=[ObjectMutation(selected=abstract, action="ensure_page_start")],
+    )
+    second_receipt = mutate_objects(
+        first,
+        second,
+        mutations=[ObjectMutation(selected=abstract, action="ensure_page_start")],
+    )
+
+    assert first_receipt["page_start_results"][0]["changed"] is True
+    assert second_receipt["page_start_results"][0]["changed"] is False
+    with zipfile.ZipFile(second) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    paragraphs = root.findall(f".//{W}body/{W}p")
+    assert len(paragraphs) == 2
+    assert len(paragraphs[1].findall(f"{W}pPr/{W}pageBreakBefore")) == 1
 
 
 def test_remove_only_batch_returns_immediate_fill_interface_recovery_hint(
@@ -2365,7 +2714,7 @@ def test_remove_only_batch_returns_immediate_fill_interface_recovery_hint(
 def test_vml_textbox_is_one_visible_editable_shape_object(tmp_path: Path) -> None:
     root, source = _task(tmp_path)
     _inject_vml_textbox(source, "本说明阅读后请删除，包括本文本框")
-    service = TemplateWorkspaceService(
+    service = _ContractTemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=FakeVisual(),  # type: ignore[arg-type]
