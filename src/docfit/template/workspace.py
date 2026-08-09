@@ -1639,21 +1639,34 @@ class TemplateWorkspaceService:
         )
 
     def registry_query(self, args: dict[str, Any]) -> JsonObject:
-        raw_queries = args.get("queries")
-        if (
-            not isinstance(raw_queries, list)
-            or not 1 <= len(raw_queries) <= 16
-            or not all(isinstance(item, dict) for item in raw_queries)
-        ):
+        if set(args) - {"lookups", "searches"}:
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
                 code="registry_queries_invalid",
-                message="Provide one through sixteen object-specific Registry queries.",
+                message="template_registry accepts only lookups and searches lanes.",
+            )
+        raw_queries: list[tuple[str, JsonObject]] = []
+        for lane, operation in (("lookups", "lookup"), ("searches", "search")):
+            values = args.get(lane, [])
+            if not isinstance(values, list) or any(not isinstance(item, dict) for item in values):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="registry_queries_invalid",
+                    message=f"{lane} must be an array of object-specific requests.",
+                )
+            raw_queries.extend((operation, item) for item in values)
+        if not 1 <= len(raw_queries) <= 16:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="registry_queries_invalid",
+                message="Provide one through sixteen total Registry lookups/searches.",
             )
         document_hash: str | None = None
         results: list[JsonObject] = []
-        for raw in raw_queries:
+        for request_type, raw in raw_queries:
             _, inspection, selected = self._resolve_object(raw.get("object_ref"))
             if document_hash is None:
                 document_hash = inspection.document_sha256
@@ -1666,7 +1679,7 @@ class TemplateWorkspaceService:
                 )
             query = raw.get("query")
             field_id = raw.get("field_id")
-            if isinstance(field_id, str) and field_id:
+            if request_type == "lookup" and isinstance(field_id, str) and field_id:
                 try:
                     matches = [_with_semantic_type(self.registry.lookup(field_id))]
                     operation = "lookup"
@@ -1681,7 +1694,7 @@ class TemplateWorkspaceService:
                         )
                     ]
                     operation = "suggest"
-            elif isinstance(query, str) and query.strip():
+            elif request_type == "search" and isinstance(query, str) and query.strip():
                 matches = [
                     _with_semantic_type(item)
                     for item in self.registry.search(query, limit=_MAX_SEARCH_RESULTS)
@@ -1692,7 +1705,10 @@ class TemplateWorkspaceService:
                     status="needs_input",
                     origin="request",
                     code="registry_query_missing",
-                    message="Each item needs one exact field_id or object-specific search query.",
+                    message=(
+                        "Each lookup needs field_id beside object_ref; each search needs query "
+                        "beside object_ref."
+                    ),
                 )
             results.append(
                 {

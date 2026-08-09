@@ -540,6 +540,7 @@ def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
     }
     assert set(TEMPLATE_TOOLS[2].input_schema["properties"]) == {"query"}
     assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {"object_ref", "scope"}
+    assert set(TEMPLATE_TOOLS[4].input_schema["properties"]) == {"lookups", "searches"}
     edit_lanes = set(TEMPLATE_TOOLS[5].input_schema["properties"])
     assert edit_lanes == {
         "materialize_slots",
@@ -1006,28 +1007,28 @@ def test_registry_batches_only_current_objects_from_one_version(tmp_path: Path) 
 
     result = service.registry_query(
         {
-            "queries": [
-                {"object_ref": selected.object_ref, "query": "中文姓名"},
+            "lookups": [
                 {"object_ref": second.object_ref, "field_id": "abstract.zh"},
                 {
                     "object_ref": second.object_ref,
                     "field_id": "body.heading.level1",
                 },
-            ]
+            ],
+            "searches": [{"object_ref": selected.object_ref, "query": "中文姓名"}],
         }
     )
 
     assert result["document_ref"] == document_ref
     assert len(result["results"]) == 3
-    assert result["results"][0]["matches"][0]["field_id"] == "author.name.zh"
-    assert result["results"][1]["matches"][0]["field_id"] == "abstract.zh"
-    assert result["results"][2]["matches"][0]["semantic_object_type"] == {
+    assert result["results"][0]["matches"][0]["field_id"] == "abstract.zh"
+    assert result["results"][1]["matches"][0]["semantic_object_type"] == {
         "type_id": "body.heading.level1",
         "role": "heading",
         "repeatable": True,
         "parent_type": "body.chapters",
         "toc_level": 1,
     }
+    assert result["results"][2]["matches"][0]["field_id"] == "author.name.zh"
     assert "fields" not in result
 
 
@@ -1042,7 +1043,7 @@ def test_registry_keeps_batch_useful_when_agent_guesses_a_partial_field_id(
 
     result = service.registry_query(
         {
-            "queries": [
+            "lookups": [
                 {
                     "object_ref": selected.object_ref,
                     "field_id": "thesis.title",
@@ -1073,9 +1074,7 @@ def test_registry_search_ranks_domain_terms_in_an_agent_phrase(tmp_path: Path) -
     assert author[0]["field_id"] == "author.name.zh"
 
 
-def test_registry_ignores_an_empty_optional_field_id_when_query_is_present(
-    tmp_path: Path,
-) -> None:
+def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> None:
     service, _, _ = _service(tmp_path)
     _, document = service._register_source()
     selected = next(
@@ -1084,10 +1083,9 @@ def test_registry_ignores_an_empty_optional_field_id_when_query_is_present(
 
     result = service.registry_query(
         {
-            "queries": [
+            "searches": [
                 {
                     "object_ref": selected.object_ref,
-                    "field_id": "",
                     "query": "thesis title on cover",
                 }
             ]
@@ -1109,7 +1107,7 @@ def test_template_object_identity_does_not_depend_on_model_echoed_fingerprint(
 
     result = service.registry_query(
         {
-            "queries": [
+            "lookups": [
                 {
                     "object_ref": advisory_ref,
                     "field_id": "thesis.title.zh",
@@ -1118,7 +1116,7 @@ def test_template_object_identity_does_not_depend_on_model_echoed_fingerprint(
         }
     )
 
-    ref_schema = TEMPLATE_REGISTRY_SCHEMA["properties"]["queries"]["items"]["properties"][
+    ref_schema = TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"][
         "object_ref"
     ]
     assert ref_schema["required"] == ["object_id"]

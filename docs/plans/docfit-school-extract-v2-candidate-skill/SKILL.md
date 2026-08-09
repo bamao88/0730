@@ -28,7 +28,20 @@ output/final-template.docx
    - `ensure_page_starts`
 
    Tool 会吸收“删父对象 + 冗余删/清子对象”等重复操作；“删父对象 + 要求子对象物化”是真冲突，需要修改决定。
-4. 已知准确 `field_id` 时直接提交。只有含义不确定时调用 `template_registry`，并把同一区域的多个查询放在一次调用中。Registry 是词典，不是待办清单。
+4. 已知准确 `field_id` 时直接提交。只有含义不确定时调用 `template_registry`，并把同一区域的多个请求按类型分栏。`field_id` / `query` 与 `object_ref` 同级，不能放进 `object_ref`：
+
+   ```json
+   {
+     "lookups": [
+       {"object_ref": {"object_id": "obj-..."}, "field_id": "thesis.title.zh"}
+     ],
+     "searches": [
+       {"object_ref": {"object_id": "obj-..."}, "query": "中文导师职称"}
+     ]
+   }
+   ```
+
+   Registry 是词典，不是待办清单。
 5. 查看 `template_edit` 返回的修改区域、`absorbed_operations`、边界回执、有效格式前后来源、`materialized_members`、`style_signatures` 和 `structural_risks`。这些是执行事实；根据事实判断结果是否符合当前学校。
 6. 结果正确后调用 `template_next(region_ref, outcome="handled")`。当前区域确实只有应原样保留的固定内容时，使用 `outcome="preserve"` 并说明理由。不得用 preserve 跳过说明、样例或缺少填写接口的学生内容区。
 7. 只有当前局部证据不足时才使用 `template_search(query)` 或 `template_focus(object_ref, scope)`。不要逐页巡检，也不要对刚返回的修改区域重复 focus。

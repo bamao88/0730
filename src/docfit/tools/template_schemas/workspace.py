@@ -62,23 +62,33 @@ TEMPLATE_FOCUS_SCHEMA: JsonObject = {
 TEMPLATE_REGISTRY_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "queries": {
+        "lookups": {
             "type": "array",
-            "minItems": 1,
             "maxItems": 16,
             "items": {
                 "type": "object",
                 "properties": {
                     "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
-                    "field_id": {"type": "string", "maxLength": 128},
+                    "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
+                },
+                "required": ["object_ref", "field_id"],
+                "additionalProperties": False,
+            },
+        },
+        "searches": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
                     "query": {"type": "string", "minLength": 1, "maxLength": 256},
                 },
-                "required": ["object_ref"],
+                "required": ["object_ref", "query"],
                 "additionalProperties": False,
             },
         },
     },
-    "required": ["queries"],
     "additionalProperties": False,
 }
 
