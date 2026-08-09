@@ -1,174 +1,94 @@
 ---
 name: docfit-school-extract
-description: 逐对象理解和整理学校论文 Word，直接清除说明/示例并物化必要内容槽，检查结构与局部视觉反馈，最终只发布一份可填写 Word。
+description: 逐对象理解和整理学校论文 Word，直接清除说明/示例、物化必要内容槽、维护生成内容与分页边界，并最终只发布一份可填写 Word。凡是准备、清理或提取学校论文模板都应使用本 Skill。
 ---
 
 # 学校模板整理
 
-你的目标不是复刻 Registry，也不是产出一份分析报告，而是把当前学校 Word 整理成一份真正干净、
-可填写、保留学校固定版式的最终模板：
+把当前学校 Word 整理成一份真正干净、可填写、保留学校固定版式的最终模板：
 
 ```text
 output/final-template.docx
 ```
 
-你对语义判断、修改范围和最终质量负责。Tool 提供对象、修改能力、机械回读和局部视觉反馈；它不替你
-判断某段内容是否该删，也没有独立的语义检查器。
+你负责语义判断、修改范围和最终质量。Tool 负责对象身份、Word 执行、结构安全、有效结果回读和局部视觉反馈；不要把 Tool 返回的样式、风险或成员事实当成语义结论。
 
 ## 核心循环
 
-1. 调用 `template_view open`。它从应用 checkpoint 恢复最新 Word 和当前视觉游标，但不会恢复旧
-   Agent transcript。默认只返回一个目标对象裁剪图，以及该对象、父对象和有界的必要邻接对象；
-   不返回整页图片、整页对象清单或完整 Registry。`checkpoint_summary` 是已提交槽位/结构的短摘要：
-   用它判断已有正文结构是否需要被更完整的代表块替换，并持续检查
-   `toc.refresh_needed` 是否已变为 false。`style` / `format_hint` 只提供当前判断所需事实。
-   若 `pending_edit_intents` 非空，它表示你在旧会话中已请求、但从未提交成功的语义编辑；先用当前引用
-   重新定位并完成它，再刷新目录或发布。这是你自己的失败操作意图，不是 Tool 的语义判断。
-2. 根据当前裁剪图判断这个局部区域中哪些对象是学校固定内容、可填写值、应删除的说明/示例。只
-   处理你在这张图和局部对象中能够明确识别的对象；Tool 的区域导航不替你做语义分类。空白或
-   含义不明确的 run 必须结合其 `parent_context` 标签判断字段，不得仅按相邻空白对象的出现顺序
-   猜测“题目”“姓名”等对应关系。
-3. 把当前局部区域、同一 `document_ref` 上已经判断清楚的对象合并成一次 `template_edit`：普通对象可批量
-   `materialize_slot`、`normalize_format`、`remove_object` 或 `clear_content`；正文代表单元用一次
-   `materialize_structure`；目录复合域用一次 `refresh_toc`。若稍后看到更完整的代表章节，再次
-   `materialize_structure` 会原子替换旧结构，不会生成第二份。不要为同一区域的每个对象各开 Tool 回合。
-4. 已经确信 Registry `field_id` 时直接随 `materialize_slot` 提交；只有字段含义不确定时才调用
-   `template_registry`。同一区域有多个不确定对象时，在一次调用中批量查询；每个对象只返回精确
-   字段或最多五个候选。Registry 是词典，不是待办清单。
-5. `template_edit` 原子执行整批操作、重开 Word、逐项检查效果，保存最新文档 checkpoint，并自动
-   返回修改目标附近的裁剪图和新对象引用。直接检查结果图：正确则调用 `template_view next`，传回
-   它的 `region_ref` 和 `region_outcome=handled`；有残留或误伤则基于新引用再处理。若当前区域确实
-   只有必须原样保留的学校固定内容，可用 `region_outcome=preserve` 并给出简短理由。不得用 preserve
-   跳过写作说明、示例/学生内容，或尚未建立填写接口的学生撰写区域。
-6. `next` 只推进到下一个尚未遍历的物理视觉区域，不判断语义。只有当前裁剪确实缺少判断依据时才
-   使用 `search` 或 `focus`；不要请求整页、逐页加载，也不要对刚由 `template_edit` 返回的区域重复
-   `focus`。
-7. Agent 可见的 `object_ref` 只是当前 checkpoint 上的短 `object_id`；修改后旧 ID 自动失效，继续操作必须
-   使用最新 Tool 结果中的引用，不要复制或猜测文档 hash/fingerprint。会话达到上下文
-   边界或 backend 切换时，新会话从最新 Word、视觉游标和待复核区域继续，不从封面重做，也不加载
-   已处理图片历史；未提交的语义编辑意图则通过 `pending_edit_intents` 继续。内部版本不是用户产物。
-8. 当你根据实际修改区域的反馈确认模板干净、可填写且版式正常后，直接调用 `template_publish`。
-   发布没有全页打卡门禁，最终只能发布一次、只发布一份 Word。
+1. 调用 `template_open()`，从最新应用 checkpoint 取得当前有界区域、短对象引用、事实摘要和未完成的 Agent 编辑意图。它不恢复旧 transcript，也不返回完整 Registry 或整篇图片历史。
+2. 只判断当前目标、父对象和必要邻接对象。区分学校固定内容、学生值、写作说明、样例、生成内容、条件区和结构对象。标签与值同段时聚焦最小 run，不按空白对象的位置猜字段。
+3. 把同一 checkpoint 上已判断清楚的对象合并为一次 `template_edit`。使用对应动作分栏：
 
-## 对象判断
+   - `materialize_slots`
+   - `materialize_structures`
+   - `normalize_effective_formats`
+   - `refresh_tocs`
+   - `clear_contents`
+   - `remove_objects`
+   - `ensure_page_starts`
 
-优先保留学校身份和制度责任：校名、固定封面标签、声明原文、学校表格、页眉页脚、节设置、目录
-机制和样式骨架。优先清理会污染学生成稿的内容：
+   Tool 会吸收“删父对象 + 冗余删/清子对象”等重复操作；“删父对象 + 要求子对象物化”是真冲突，需要修改决定。
+4. 已知准确 `field_id` 时直接提交。只有含义不确定时调用 `template_registry`，并把同一区域的多个查询放在一次调用中。Registry 是词典，不是待办清单。
+5. 查看 `template_edit` 返回的修改区域、`absorbed_operations`、边界回执、有效格式前后来源、`materialized_members`、`style_signatures` 和 `structural_risks`。这些是执行事实；根据事实判断结果是否符合当前学校。
+6. 结果正确后调用 `template_next(region_ref, outcome="handled")`。当前区域确实只有应原样保留的固定内容时，使用 `outcome="preserve"` 并说明理由。不得用 preserve 跳过说明、样例或缺少填写接口的学生内容区。
+7. 只有当前局部证据不足时才使用 `template_search(query)` 或 `template_focus(object_ref, scope)`。不要逐页巡检，也不要对刚返回的修改区域重复 focus。
+8. 旧 `object_ref` 在编辑后失效；继续使用新 checkpoint 返回的短引用，不复制或猜测 document hash/fingerprint。
+9. 处理完当前学校实际展示的责任并确认局部反馈后，调用一次 `template_publish(document_ref)`。内部版本不是用户产物。
 
-- 操作说明、编写提示、格式讲解和括号中的指导文字；
-- 示例题目、示例摘要、示例关键词、示例章节、示例图表、示例参考文献；
-- 只用于展示格式的样本文本、目录缓存示例和多余占位词；
-- 删除样例后遗留的空白页、孤立标题、错误分页或无意义空段落。
+## 对象责任
 
-一个对象看起来像标题，不代表它就是填写槽。先判断它是固定标签、结构标题、学生值还是示例。
-若标签和值在同一段，聚焦到具体 run：保留标签 run，把值/空白 run 物化为槽。不要为了方便而
-清空整个段落。
+优先保留学校身份和制度责任：校名、固定封面标签、声明原文、学校表格、页眉页脚、节设置、目录机制和样式骨架。优先清理会污染学生成稿的内容：
 
-对每个学生实际要填写的内容区，清理样例后必须留下至少一个可填写槽。不能只保留“参考文献”、
-“致谢”或“第 X 章”等标题，却把它们下面的学生内容承载位一起删掉。在同一批中，选一个格式
-最合适的样例对象物化为槽，再批量删除其余说明和样例。常见承载字段包括 `abstract.zh`、
-`abstract.en`、`references.entries`、`appendix.body`、
-`achievements.entries` 和 `acknowledgement.body`；只根据当前对象判断，不需要遍历这个列表。
+- 操作说明、编写提示、格式讲解和括号指导文字；
+- 示例题目、摘要、关键词、章节、图表、公式和参考文献；
+- 只用于展示格式的目录缓存样例、多余占位词和学生实例；
+- 清理后无职责的孤立标题、空白页或空容器。
+
+一个对象看起来像标题，不代表它是填写槽。先判断它是固定标签、结构标题、学生值还是示例。每个需要学生填写的内容区在清理后都应保留明确的填写或生成接口；不能只留下标题。
 
 ## 内容槽
 
-`materialize_slot` 会内部完成 Registry 字段校验、`alias/tag`、唯一 slot ID、可见填写占位、格式保留、包重开、
-效果回读和新版本创建。你只在当前批次操作中提交 `object_ref` 与已经判断好的 `field_id`，不写
-决定文件，不调用 compiler，也不管理 DOCX 路径。
+`materialize_slots` 内部处理 Registry 校验、唯一 tag、Human 可读括号占位、格式保留、包重开和效果回读。只提交当前对象引用、字段 ID 和必要的有效格式结果；不写 YAML，不调用 compiler，不管理中间 DOCX 路径。
 
-目标已有可见示例文字或空白时，物化会用 Registry 的 Human 可读标签替换为可见填写占位，后续填充时
-整体替换。占位协议只有 `【字段标签】`，不添加灰色、底纹或 `w:showingPlcHdr`；学校对象原有的实际
-字体、字号、段落和容器样式仍作为槽值样式保留。字段匹配仍由你判断。若最多五个 Registry 候选仍无法区分，结合当前标签、上下文和
-可选书面要求继续判断；确有实质歧义再询问用户。
+可见占位只用 `【字段标签】`，不增加灰底、底纹或 `w:showingPlcHdr`。带下划线的空白 run 可能用空格宽度形成填写线；物化后检查它没有缩成占位文字长度。
 
-当前对象的红、蓝或其他颜色是语义证据，不是全局删除规则。判断颜色只用于标示说明/示例、而非学校
-正式版式时，在 `materialize_slot` / `materialize_structure` 成员中提交
-`clear_direct_format: ["color"]`，或对固定文字使用 `normalize_format`。Tool 只移除直接颜色，保留学校
-字体、字号、段距等其余样式；颜色本身有正式含义时不提交该选项。
-
-## 正文代表结构
-
-正文不是一个大字符串槽，也不是把 Registry 的所有 `body.*` 字段逐一塞进学校 Word。看到一个能够
-代表学校正文体系的局部章节时，按需读取 `references/body-structure.md`：只选择当前章节中确实出现且
-样式不同的对象，逐个映射为代码内置的 `body.heading.level1/2/3`、`body.paragraph` 等语义类型，然后
-用一次 `materialize_structure` 将这些按文档顺序选择的代表对象物化为 `body.chapters`。成员不要求
-相邻：Tool 只提取被选中的学校对象，夹在中间的写作说明和冗余样例仍留给后续清理。不要因为先看到
-H2 和一个正文段落就过早锁定不完整结构；继续查看当前章节，直到找到能代表该校层级体系的 H1、
-H2、H3 和正文对象。
-裁剪图可能同时包含 H1 前后的视觉邻近对象；用响应中的 `document_order` 核对物理顺序，只选择位于
-当前代表 H1 之后、属于同一章的 H2/H3/正文，Tool 不会据此替你判断语义。
-Tool 保留每个学校对象的真实样式并建立成员槽；后续正文可以按这个结构重复。语义映射由你负责，
-Tool 只检查 Word 对象是否能承载该类型。后续发现更完整的代表块时直接替换旧结构。看到视觉样式
-不同的正文标题或复合对象，而其语义类型尚未出现在 `checkpoint_summary.materialized_fields` 时，不要
-当作重复样例删除；先保留并继续导航，直到找到可按物理顺序提交的更完整代表对象集。
-源目录和正文若共同展示了具名首章或末章，例如“第一章 文献综述”和“第 X 章 结论与展望”，它们
-是学校模板的独立章节地标，不是普通重复样例。保留对应正文标题位置并加入代表目录；中间可重复
-章节仍只保留一套完整的 H1/H2/H3/正文能力结构。
-保留具名地标不等于保留该页的样例和说明：它们下方的红蓝格式文字、`×××`样文和写作指导仍应清理；
-需要学生填写的章内容必须留下一个真正正文样式的 `body.paragraph` 槽，不能把写作说明当成正文。
+同一语义值可以在多个视觉位置出现。已有一个 `thesis.title.zh` 不代表摘要页的题名位置自动可填写；当前可见位置仍需单独判断和物化。
 
 ## 删除与清空
 
-- 一整段说明或示例都不应存在：用 `remove_object`。
-- 容器、边框、行距、表格单元格或固定标签必须保留，只去掉内部示例值：聚焦更小的 run 后用
-  `clear_content`，或将该 run 直接物化为槽。
-- 删除后检查相邻对象，防止标题失去正文、分页断裂、表格行列缺口、目录或声明被误伤。
-- Tool 的“修改已提交”只代表机械执行成功；语义和视觉是否正确仍由你根据新反馈判断。
-- 目录页中的点引导线和章节列表是复合域的可见缓存；不要逐行 `clear_content`。完成最终标题结构后，
-  对目录域调用一次 `refresh_toc`，提交应在模板中可见的标题对象及 1–3 级层级，让 Tool 保留真实 TOC
-  域、复用 `TOC 1/2/3` 样式并生成非空代表缓存。
-- 每次新会话都查看 `checkpoint_summary.toc.sample_marker_count`；大于 0 表示目录缓存仍含 `XXX`、
-  `XX` 等学校样例，不能发布。合法的“第 X 章”章节号占位本身不是残留。目录在流程前部出现也不能
-  把这项工作只留在旧会话记忆里。
-- `checkpoint_summary.toc.missing_body_heading_types` 来自你已经物化的正文语义对象；非空时，目录尚未
-  展示正文所支持的标题深度。`pending_generated_content.required_body_heading_candidates` 中的对象必须
-  按对应 1–3 级加入代表缓存，直到 `toc.refresh_needed` 为 false。
-- 视觉区域完成后若目录仍待刷新，`open`/`next` 会用 `pending_generated_content` 一次返回目录目标、
-  目录裁剪图和有界标题候选。候选不是 Tool 的语义结论；由你选择应进入本校模板的标题、指定 1–3 级，
-  然后在一次 `refresh_toc` 中提交，不再用多轮 `search/focus` 拼装引用。
-- 固定标题与蓝/红色字号说明在同一段时，保留标题 run，批量删除说明 run；不得因为整段也含固定标题就
-  把说明一并保留。
+- 一整段说明或样例不应存在：放入 `remove_objects`。
+- 容器、边框、行距、单元格或固定标签必须保留，只去掉值：聚焦更小的 run 后放入 `clear_contents`，或直接物化该 run。
+- 不逐行清空目录缓存；目录是复合生成对象。
+- 删除成功只证明机械执行与结构校验通过；语义和视觉是否正确仍由你判断。
 
-## 视觉反馈
+## 按信号加载知识
 
-- `open` 和 `next` 一次只给一个目标对象裁剪图、父对象和必要邻接对象。
-- `focus` 一次只给一个具体对象的局部图；默认导航已经提供足够上下文时不要重复调用。
-- `template_edit` 总是优先把修改目标附近的裁剪图作为反馈返回。先看这张图，再决定继续修改还是 `next`。
-- 没有“最终必须看完每一页”的规则。检查范围由你根据实际对象、修改影响和疑点决定；不为覆盖
-  率重复加载无关图片。
+不要在开始时一次读取所有 Reference。`knowledge_signals` 只提示当前涉及哪类客观机制，不替你决定删除或保留。命中时只读取对应短卡：
 
-LibreOffice 页面是近似反馈，不是 Word 像素级认证；但已知视觉问题不能被忽略或用“工具通过”
-掩盖。
-
-## 常见错误
-
-- 把 Registry 当成 54 个（或任何数量的）必做槽位；
-- 先写决定文件，再编译，再把路径交给 Tool；
-- 把旧 `object_ref` 误当成新 checkpoint 对象；
-- 一个区域已经支持多个明确决定，却为每个对象分别 focus/edit/review；
-- 只增加内容控件，不删除说明和示例；
-- 只删除说明和示例，却没有给学生内容区留下可填写槽；
-- 把固定标签、章节标题、参考文献标题误当成学生填写值；
-- 不看 `template_edit` 自动返回的修改后区域图；
-- 在全部内容完成前发布 Word，或把内部版本当作多份候选 Word 交付。
-
-## 按当前信号加载知识
-
-不要在开始时一次读取所有 Reference。只当当前区域/对象命中下列信号时，用 `Read` 加载对应短文：
-
-| 当前信号 | 读取 |
+| 信号或当前问题 | 读取 |
 |---|---|
-| 不确定对象是固定标签、学生值还是示例，或不确定字段方向 | `references/object-decisions.md` |
-| 要删说明/样例或建立封面、摘要、正文、参考文献、致谢填写区 | `references/cleaning-and-fill-interfaces.md` |
-| 当前出现多个重复章节、正文各级标题/段落/图表公式样例，需要保留一个可复用章节 | `references/body-structure.md` |
-| 当前出现目录、点引导线、页码、题注、字段缓存或交叉引用 | `references/generated-content.md` |
-| 删除对象靠近分页/分节/表格边界，包含图表公式书签，或产生异常空白页 | `references/boundaries-and-object-safety.md` |
+| 颜色、下划线、主题色、字符样式或 `effective.*.src` | [有效样式](references/effective-style.md) |
+| 摘要/章节是否另起页，删除后空白页或重复分页 | [逻辑页起点](references/logical-page-starts.md) |
+| 当前学校展示了正文标题、段落、列表、图表、公式等可复用体系 | [正文代表结构](references/body-structure.md) |
+| 目录、点引导线、页码、题注、字段缓存或交叉引用 | [生成内容](references/generated-content.md) |
+| 参考文献、附录、成果等集合或可选区 | [集合与可选区](references/collection-and-optional-sections.md) |
+| 删除靠近节/页/表格，或含书签、字段、图片、批注、脚注 | [对象安全](references/object-safety.md) |
 
-读完只应用于当前对象/局部区域；不把 Reference 里的案例数量、学校结构或验收步骤当成每个任务的全局待办清单。
+只把知识卡应用到当前对象或局部区域；卡片中的案例不是每个学校的全局清单。
 
-## 完成输出
+## 完成判断
 
-发布成功后，structured output 必须与 `template_publish` 和磁盘一致：
+发布前确认：
+
+- 学校固定内容与版式责任仍在；
+- 当前学校展示的学生内容责任都有填写或生成接口；
+- 说明、样例、旧缓存和无职责残留已清理；
+- `structural_risks` 已由你根据当前语义处理或接受；
+- 目录、分页与删除后的局部图没有已知异常；
+- 没有未完成的 `pending_edit_intents`；
+- 发布的精确 `document_ref` 就是已检查版本。
+
+发布成功后 structured output 必须与 `template_publish` 和磁盘一致：
 
 ```yaml
 status: built
@@ -182,4 +102,4 @@ counts:
   unresolved: 0
 ```
 
-确有无法消除的实质歧义时才返回 `blocked`，产物路径和 hash 必须为 null，不伪造 Word。
+只有无法从当前对象、模板、可选书面要求、Tool 反馈和按需知识中消除的实质歧义才返回 `blocked`；此时产物路径和 hash 为 null。
