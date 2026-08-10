@@ -45,6 +45,36 @@ output/final-template.docx
      ]
    }
    ```
+
+   `materialize_slot` 只用于一个可以独立填写的值位置。当前学校已经证明标题、正文、列表、图表等对象共同构成可重复正文能力时，不要把这些 `body.*` 成员分别做成互不相关的 slot；使用一次 `materialize_structure` 把实际出现的成员按文档顺序纳入 `body.chapters`：
+
+   ```json
+   {
+     "operations": [
+       {
+         "action": "materialize_structure",
+         "object_ref": {"object_id": "obj-heading-1"},
+         "field_id": "body.chapters",
+         "members": [
+           {
+             "object_ref": {"object_id": "obj-heading-1"},
+             "field_id": "body.heading.level1"
+           },
+           {
+             "object_ref": {"object_id": "obj-heading-2"},
+             "field_id": "body.heading.level2"
+           },
+           {
+             "object_ref": {"object_id": "obj-body"},
+             "field_id": "body.paragraph"
+           }
+         ]
+       }
+     ]
+   }
+   ```
+
+   `object_ref` 是其中一个成员锚点，`members` 只列当前学校实际证明存在的类型；不要为满足示例凭空补 H1/H2/H3。固定首章/末章地标下的单个填写位置仍可独立物化，但它不能替代中间可重复正文体系。
 4. 新任务中每个 `field_id` 第一次使用前，都必须通过一次 `template_registry` 的精确 lookup 或对象相关 search 确认；把同一区域的多个请求合并查询。此后只有 Registry 或 checkpoint 已明确给出的准确 ID 才能直接复用，绝不按命名习惯猜造。Registry 分栏项是扁平结构：`object_id` 与 `field_id` / `query` 同级，不使用嵌套 `object_ref`：
 
    ```json
