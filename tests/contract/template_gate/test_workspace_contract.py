@@ -2399,6 +2399,66 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
     assert begin.get(f"{W}dirty") == "true"
 
 
+def test_toc_refresh_resolves_live_field_after_its_visible_title(tmp_path: Path) -> None:
+    source = tmp_path / "toc-title.docx"
+    output = tmp_path / "toc-title-refreshed.docx"
+    xml = (
+        f'<w:document xmlns:w="{W[1:-1]}"><w:body>'
+        "<w:p><w:r><w:t>目  录</w:t></w:r></w:p>"
+        '<w:p><w:pPr><w:pStyle w:val="TOC1"/></w:pPr>'
+        '<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
+        '<w:r><w:instrText> TOC \\o "1-3" </w:instrText></w:r>'
+        '<w:r><w:fldChar w:fldCharType="separate"/></w:r>'
+        '<w:r><w:t>旧目录</w:t><w:tab/><w:fldChar w:fldCharType="end"/></w:r></w:p>'
+        "<w:p><w:r><w:t>摘  要</w:t></w:r></w:p>"
+        "<w:sectPr/></w:body></w:document>"
+    ).encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+        archive.writestr(
+            "word/settings.xml",
+            (f'<w:settings xmlns:w="{W[1:-1]}"><w:compat/></w:settings>').encode(),
+        )
+
+    mutate_objects(
+        source,
+        output,
+        mutations=[
+            ObjectMutation(
+                selected=InspectedObject(
+                    locator="/body/p[1]",
+                    kind="paragraph",
+                    text="目  录",
+                    style=None,
+                    format={},
+                    object_ref={},
+                ),
+                action="refresh_toc",
+                toc_entries=(
+                    TocEntry(
+                        selected=InspectedObject(
+                            locator="/body/p[3]",
+                            kind="paragraph",
+                            text="摘  要",
+                            style=None,
+                            format={},
+                            object_ref={},
+                        ),
+                        level=1,
+                    ),
+                ),
+            )
+        ],
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    paragraphs = root.findall(f"{W}body/{W}p")
+    assert "".join(node.text or "" for node in paragraphs[0].iter(f"{W}t")) == "目  录"
+    assert "".join(node.text or "" for node in paragraphs[1].iter(f"{W}t")) == "摘  要1"
+    assert "TOC" in "".join(node.text or "" for node in root.iter(f"{W}instrText"))
+
+
 def test_toc_refresh_does_not_duplicate_a_preserved_next_page_section(tmp_path: Path) -> None:
     source = tmp_path / "toc-with-boundary.docx"
     output = tmp_path / "toc-with-boundary-refreshed.docx"

@@ -872,15 +872,9 @@ def _field_interval(
     siblings: list[ET.Element],
     selected_index: int,
 ) -> tuple[int, int]:
-    """Resolve the complete live TOC field even when a cache row is selected."""
+    """Resolve a live TOC from one cache row or its immediately preceding title."""
 
-    candidates = [
-        index
-        for index, paragraph in enumerate(siblings[: selected_index + 1])
-        if "TOC" in "".join(node.text or "" for node in paragraph.iter(f"{_W}instrText")).upper()
-        and any(node.get(f"{_W}fldCharType") == "begin" for node in paragraph.iter(f"{_W}fldChar"))
-    ]
-    for start in reversed(candidates):
+    def interval_from(start: int) -> tuple[int, int] | None:
         depth = 0
         for index in range(start, len(siblings)):
             for node in siblings[index].iter(f"{_W}fldChar"):
@@ -889,8 +883,38 @@ def _field_interval(
                     depth += 1
                 elif kind == "end" and depth:
                     depth -= 1
-                    if depth == 0 and start <= selected_index <= index:
+                    if depth == 0:
                         return start, index
+        return None
+
+    candidates = [
+        index
+        for index, paragraph in enumerate(siblings[: selected_index + 1])
+        if "TOC" in "".join(node.text or "" for node in paragraph.iter(f"{_W}instrText")).upper()
+        and any(node.get(f"{_W}fldCharType") == "begin" for node in paragraph.iter(f"{_W}fldChar"))
+    ]
+    for start in reversed(candidates):
+        interval = interval_from(start)
+        if interval is not None and selected_index <= interval[1]:
+            return interval
+
+    # The visible region is commonly anchored on the fixed “目录” title, while
+    # the live field begins in the next non-empty paragraph. Resolve only that
+    # structurally adjacent field; stop at any intervening visible content.
+    for start in range(selected_index + 1, len(siblings)):
+        paragraph = siblings[start]
+        is_toc_start = "TOC" in "".join(
+            node.text or "" for node in paragraph.iter(f"{_W}instrText")
+        ).upper() and any(
+            node.get(f"{_W}fldCharType") == "begin" for node in paragraph.iter(f"{_W}fldChar")
+        )
+        if is_toc_start:
+            interval = interval_from(start)
+            if interval is not None:
+                return interval
+            break
+        if "".join(node.text or "" for node in paragraph.iter(f"{_W}t")).strip():
+            break
     raise ToolFailure(
         status="needs_input",
         origin="document",
