@@ -13,6 +13,7 @@ import re
 import shutil
 import tempfile
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -237,6 +238,17 @@ def _normalize_prepared_operations(
             ),
         )
 
+    def merge_effective_format(format_index: int, owner_index: int) -> None:
+        outcomes = dict(prepared[format_index].get("effective_format", {}))
+        owner_outcomes = dict(prepared[owner_index].get("effective_format", {}))
+        owner_outcomes.update(outcomes)
+        prepared[owner_index]["effective_format"] = owner_outcomes
+        mutations[owner_index] = replace(
+            mutations[owner_index],
+            effective_format=tuple(owner_outcomes.items()),
+        )
+        absorb(format_index, owner_index, "effective_format_merged_into_compound_action")
+
     harmless_under_removal = {
         "remove_object",
         "clear_content",
@@ -277,6 +289,24 @@ def _normalize_prepared_operations(
                     "ensure_page_start",
                 }:
                     continue
+                elif "normalize_effective_format" in {first_action, second_action}:
+                    owner_index = (
+                        second_index
+                        if first_action == "normalize_effective_format"
+                        else first_index
+                    )
+                    format_index = (
+                        first_index
+                        if first_action == "normalize_effective_format"
+                        else second_index
+                    )
+                    if prepared[owner_index]["action"] in {
+                        "materialize_slot",
+                        "refresh_toc",
+                    }:
+                        merge_effective_format(format_index, owner_index)
+                    else:
+                        conflict(first_index, second_index)
                 else:
                     conflict(first_index, second_index)
                 continue
@@ -298,6 +328,11 @@ def _normalize_prepared_operations(
                 "clear_content",
             }:
                 absorb(child_index, parent_index, "materialized_parent_replaces_content")
+            elif child_action == "normalize_effective_format" and parent_action in {
+                "materialize_slot",
+                "refresh_toc",
+            }:
+                merge_effective_format(child_index, parent_index)
 
     for index, item in enumerate(prepared):
         if index in absorbed or item.get("action") not in {"remove_object", "clear_content"}:

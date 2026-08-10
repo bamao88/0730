@@ -236,6 +236,9 @@ def _inject_vml_textbox(document: Path, text: str) -> None:
     body = root.find(f"{W}body")
     assert body is not None
     paragraph = ET.Element(f"{W}p")
+    paragraph_properties = ET.SubElement(paragraph, f"{W}pPr")
+    ET.SubElement(paragraph_properties, f"{W}snapToGrid")
+    ET.SubElement(paragraph_properties, f"{W}spacing", {f"{W}after": "0"})
     run = ET.SubElement(paragraph, f"{W}r")
     pict = ET.SubElement(run, f"{W}pict")
     shape = ET.SubElement(
@@ -1218,6 +1221,7 @@ def test_materialize_slot_narrows_a_label_paragraph_to_its_unique_blank_value_ru
                     "action": "materialize_slot",
                     "object_ref": paragraph.object_ref,
                     "field_id": "advisor.name.zh",
+                    "effective_format": {"color": "black", "underline": "none"},
                 }
             ]
         }
@@ -1367,6 +1371,40 @@ def test_atomic_edit_rejects_conflicting_actions_on_the_same_object(
         )
 
     assert caught.value.code == "batch_operations_conflict"
+
+
+def test_materialize_slot_absorbs_same_target_effective_format_normalization(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+
+    result, _ = service.edit(
+        {
+            "materialize_slots": [{"object_ref": selected.object_ref, "field_id": "abstract.en"}],
+            "normalize_effective_formats": [
+                {
+                    "object_ref": selected.object_ref,
+                    "format": {"color": "black", "underline": "none"},
+                }
+            ],
+        }
+    )
+
+    assert result["committed"] is True
+    assert result["effects"]["operations"] == 1
+    assert result["effects"]["absorbed_operations"][0]["reason"] == (
+        "effective_format_merged_into_compound_action"
+    )
+    assert result["effects"]["effective_format_changes"][0]["requested"] == {
+        "color": "black",
+        "underline": "none",
+    }
 
 
 def test_structure_materialization_absorbs_redundant_descendant_cleanup(
@@ -2489,6 +2527,12 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
 
     result, _ = service.edit(
         {
+            "normalize_effective_formats": [
+                {
+                    "object_ref": toc.object_ref,
+                    "format": {"color": "black", "underline": "none"},
+                }
+            ],
             "refresh_tocs": [
                 {
                     "object_ref": toc.object_ref,
@@ -2521,6 +2565,9 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         "color": "black",
         "underline": "none",
     }
+    assert result["effects"]["absorbed_operations"][0]["reason"] == (
+        "effective_format_merged_into_compound_action"
+    )
     assert result["effects"]["style_scope_changes"] == [
         {
             "style_id": "Hyperlink",

@@ -30,6 +30,20 @@ output/final-template.docx
    - `ensure_page_starts`
 
    `template_edit` 顶层只允许这些动作分栏；`field_id`、`object_ref` 等参数必须放在对应分栏的 item 内。Tool 会吸收“删父对象 + 冗余删/清子对象”等重复操作；“删父对象 + 要求子对象物化”是真冲突，需要修改决定。
+
+   每个分栏值始终是数组，不使用 `item` 包装，也不把 item 参数放到顶层。最小合法调用形状：
+
+   ```json
+   {
+     "materialize_slots": [
+       {
+         "object_ref": {"object_id": "obj-..."},
+         "field_id": "abstract.zh",
+         "effective_format": {"color": "black", "underline": "none"}
+       }
+     ]
+   }
+   ```
 4. 新任务中每个 `field_id` 第一次使用前，都必须通过一次 `template_registry` 的精确 lookup 或对象相关 search 确认；把同一区域的多个请求合并查询。此后只有 Registry 或 checkpoint 已明确给出的准确 ID 才能直接复用，绝不按命名习惯猜造。Registry 分栏项是扁平结构：`object_id` 与 `field_id` / `query` 同级，不使用嵌套 `object_ref`：
 
    ```json

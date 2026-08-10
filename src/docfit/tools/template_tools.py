@@ -145,7 +145,8 @@ async def template_registry(args: dict[str, Any]) -> dict[str, Any]:
     (
         "Atomically execute one action-partitioned batch against current object refs. The Agent "
         "passes only lane arrays at the top level; field_id and object_ref belong inside each "
-        "lane item. The Agent "
+        "lane item, with no item wrapper. Example: materialize_slots is an array of "
+        "{object_ref:{object_id:...}, field_id:...} objects. The Agent "
         "chooses semantic fields, members, generated-content entries, and page-start intent; the "
         "Tool normalizes redundant operations, preserves Word boundaries, verifies effective "
         "results, checkpoints the immutable version, and returns changed-region feedback plus "

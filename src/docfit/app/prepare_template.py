@@ -352,7 +352,11 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "fillable final Word. Start with template_open; it resumes the latest application "
         "checkpoint without loading a prior Agent transcript. Work from the current bounded "
         "region and batch up to thirty-two decisions into the action-partitioned template_edit "
-        "lanes. Resolve the current region before exploring another landmark: after open, the "
+        "lanes. Every lane value is an array of direct items; never use an item wrapper or put "
+        "item fields at template_edit's top level. A minimal shape is "
+        '{"materialize_slots":[{"object_ref":{"object_id":"obj-..."},'
+        '"field_id":"abstract.zh"}]}. Resolve the '
+        "current region before exploring another landmark: after open, the "
         "next semantic action must be template_edit or template_next(preserve), except for one "
         "bounded focus, search, or Registry lookup needed to decide that same region. Never "
         "inventory the "
