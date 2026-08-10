@@ -630,6 +630,29 @@ def test_heading_context_routes_body_structure_before_instruction_color() -> Non
     assert _context_knowledge_signals([heading]) == ["body-structure"]
 
 
+def test_collection_landmark_routes_collection_knowledge_before_heading_style() -> None:
+    heading = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="参考文献",
+        style="heading 1",
+        format={},
+        object_ref={},
+    )
+    sample = InspectedObject(
+        locator="/body/p[2]",
+        kind="paragraph",
+        text="[1] 示例条目",
+        style="Normal",
+        format={"effective.color": "#0000FF"},
+        object_ref={},
+    )
+
+    assert _context_knowledge_signals([sample, heading]) == [
+        "collection-and-optional-sections"
+    ]
+
+
 def test_next_requires_an_explicit_agent_outcome_and_committed_handling(
     tmp_path: Path,
 ) -> None:

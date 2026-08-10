@@ -441,6 +441,20 @@ def _context_knowledge_signals(objects: list[InspectedObject]) -> list[str]:
         item.style and item.style.casefold().replace(" ", "").startswith("toc") for item in objects
     ):
         return ["generated-content"]
+    collection_markers = (
+        "参考文献",
+        "附录",
+        "致谢",
+        "攻读学位期间",
+        "在学期间发表",
+        "科研成果",
+    )
+    if any(
+        item.kind == "paragraph"
+        and any(marker in item.text.replace(" ", "") for marker in collection_markers)
+        for item in objects
+    ):
+        return ["collection-and-optional-sections"]
     if any(
         item.kind == "paragraph"
         and item.style
