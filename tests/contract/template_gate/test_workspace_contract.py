@@ -2357,10 +2357,23 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     fill_contract = json.loads(
         (service.root / "publication/fill-contract.json").read_text(encoding="utf-8")
     )
-    assert len(fill_contract["structures"]) == 1
-    assert [item["field"]["field_id"] for item in fill_contract["slots"]] == [
+    assert fill_contract["schema_version"] == "docfit-template-fill-contract/v2"
+    assert fill_contract["provenance"]["structure_count"] == 1
+    assert [item["field_id"] for item in fill_contract["slots"]] == [
         field_id for _, _, field_id in replacement_samples
     ]
+    assert len(fill_contract["styles"]) == 4
+    assert fill_contract["validation"]["style_capture"]["validation"]["counts"] == {
+        "passed": 4,
+        "failed": 0,
+        "unresolved": 0,
+    }
+    styles = {item["style_contract_id"]: item for item in fill_contract["styles"]}
+    assert all(
+        styles[slot["style_contract_ref"]["style_contract_id"]]["contract_digest"]
+        == slot["style_contract_ref"]["contract_digest"]
+        for slot in fill_contract["slots"]
+    )
 
 
 def test_clear_content_preserves_selected_container_and_its_metadata(tmp_path: Path) -> None:

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://docfit.local/schemas/template-fill-contract-v1.json",
-  "title": "DocFit template fill contract v1",
+  "$id": "https://docfit.local/schemas/template-fill-contract-v2.json",
+  "title": "DocFit template fill contract v2 with legacy v1 read support",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,12 @@
     "slots"
   ],
   "properties": {
-    "schema_version": {"const": "docfit-template-fill-contract/v1"},
+    "schema_version": {
+      "enum": [
+        "docfit-template-fill-contract/v1",
+        "docfit-template-fill-contract/v2"
+      ]
+    },
     "contract_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
     "artifact_role": {"const": "template_fill_contract"},
     "status": {
@@ -44,12 +49,13 @@
     },
     "slots": {
       "type": "array",
-      "items": {"$ref": "#/$defs/slot"}
+      "items": {"type": "object"}
     },
     "styles": {
       "type": "array",
-      "items": {"$ref": "#/$defs/style"}
+      "items": {"type": "object"}
     },
+    "style_contract_set_digest": {"$ref": "#/$defs/sha256"},
     "logical_pages": {
       "type": "array",
       "items": {"type": "object"}
@@ -58,6 +64,35 @@
     "validation": {"type": "object"}
   },
   "allOf": [
+    {
+      "if": {
+        "required": ["schema_version"],
+        "properties": {
+          "schema_version": {"const": "docfit-template-fill-contract/v1"}
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "items": {"$ref": "#/$defs/legacySlotV1"}
+          },
+          "styles": {
+            "items": {"$ref": "#/$defs/legacyStyleV1"}
+          }
+        }
+      },
+      "else": {
+        "required": ["styles", "style_contract_set_digest"],
+        "properties": {
+          "slots": {
+            "items": {"$ref": "#/$defs/slotV2"}
+          },
+          "styles": {
+            "items": {"$ref": "#/$defs/styleContractV2"}
+          }
+        }
+      }
+    },
     {
       "if": {
         "required": ["status"],
@@ -280,7 +315,7 @@
         }
       ]
     },
-    "slot": {
+    "legacySlotV1": {
       "type": "object",
       "additionalProperties": false,
       "required": ["slot_id", "field_id", "content_type", "required", "locator"],
@@ -314,7 +349,7 @@
         {"required": ["style_id"]}
       ]
     },
-    "style": {
+    "legacyStyleV1": {
       "type": "object",
       "additionalProperties": false,
       "required": ["style_id", "effective_properties"],
@@ -329,6 +364,137 @@
         "word_style_name": {"type": ["string", "null"]},
         "effective_properties": {"type": "object"},
         "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}}
+      }
+    },
+    "styleContractRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style_contract_id", "contract_digest"],
+      "properties": {
+        "style_contract_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "contract_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "slotV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "field_id",
+        "content_type",
+        "required",
+        "locator",
+        "style_contract_ref"
+      ],
+      "properties": {
+        "slot_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "owner": {"const": "slot"},
+        "field_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+        },
+        "label": {"type": "string", "minLength": 1},
+        "content_type": {
+          "enum": [
+            "text",
+            "rich_text",
+            "section",
+            "image",
+            "table",
+            "formula",
+            "equation",
+            "asset"
+          ]
+        },
+        "required": {"type": "boolean"},
+        "cardinality": {"enum": ["one", "many", "optional"]},
+        "locator": {"$ref": "#/$defs/locator"},
+        "component_locators": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/componentLocator"}
+        },
+        "fill_mode": {"type": "string", "minLength": 1},
+        "style_contract_ref": {"$ref": "#/$defs/styleContractRef"},
+        "placeholder_policy": {"type": "string", "minLength": 1},
+        "empty_policy": {"type": "string", "minLength": 1},
+        "mapping_status": {"type": "string", "minLength": 1},
+        "value_contract": {"type": "object"},
+        "layout_contract": {"type": "object"},
+        "evidence_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/evidenceRef"}
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "overridePolicyV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["managed_direct_formatting", "unmanaged_properties"],
+      "properties": {
+        "managed_direct_formatting": {"const": "clear_conflicts"},
+        "unmanaged_properties": {"const": "preserve"}
+      }
+    },
+    "styleContractV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "style_contract_id",
+        "contract_digest",
+        "owned_properties",
+        "effective_properties",
+        "application_scope",
+        "override_policy",
+        "dependencies"
+      ],
+      "properties": {
+        "style_contract_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "contract_digest": {"$ref": "#/$defs/sha256"},
+        "label": {"type": "string", "minLength": 1},
+        "applies_to": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "word_style_id": {"type": ["string", "null"]},
+        "word_style_name": {"type": ["string", "null"]},
+        "owned_properties": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(run|paragraph|container|page)\\.[a-z][a-z0-9_]*$"
+          }
+        },
+        "effective_properties": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "pattern": "^(run|paragraph|container|page)\\.[a-z][a-z0-9_]*$"
+          }
+        },
+        "application_scope": {
+          "enum": ["text", "run", "paragraph", "block", "table", "section"]
+        },
+        "override_policy": {"$ref": "#/$defs/overridePolicyV2"},
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/styleContractRef"}
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/evidenceRef"}
+        }
       }
     },
     "review": {

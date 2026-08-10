@@ -9,11 +9,12 @@ import yaml
 
 from docfit.app.student_content_fill import _document_visible_text, _force_inline_inspection
 from docfit.content.extraction import extraction_output_schema, validate_extraction
-from docfit.content.placement import build_placement
+from docfit.content.placement import build_placement, load_fill_contract
 from docfit.content.student import build_student_inventory
 from docfit.fields.registry import FieldRegistrySnapshot
+from docfit.styles import style_contract_digest
 from docfit.tools.inspection import InspectedObject, Inspection
-from docfit.tools.runtime import ToolFailure, sha256_file
+from docfit.tools.runtime import ToolFailure, sha256_file, sha256_json
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
@@ -367,19 +368,52 @@ def test_placement_maps_body_once_and_leaves_required_missing_explicit(
     )
     template = tmp_path / "template.docx"
     template.write_bytes(b"hash-bound synthetic template")
+    styles = [
+        _style("style.cover.title"),
+        _style("style.body.chapter_title"),
+        _style("style.body.chapter_body"),
+        _style("style.other.title"),
+    ]
     contract = {
+        "schema_version": "docfit-template-fill-contract/v2",
         "contract_id": "synthetic",
         "revision": "1",
         "status": "candidate_pending_human_acceptance",
         "template_sha256": sha256_file(template),
         "contract_sha256": "c" * 64,
         "field_registry_ref": registry.identity(),
+        "styles": styles,
+        "style_contract_set_digest": _style_set_digest(template, styles),
         "regions": [{"region_id": "region.generated.toc", "required": True}],
         "slots": [
-            _slot("slot.title", "thesis.title.en", "docfit.cover.title_en", True),
-            _slot("slot.body.title", "body.heading.level1", "docfit.body.chapter_title", True),
-            _slot("slot.body.text", "body.paragraph", "docfit.body.chapter_body", True),
-            _slot("slot.missing", "thesis.title.en", "docfit.other.title", False),
+            _slot(
+                "slot.title",
+                "thesis.title.en",
+                "docfit.cover.title_en",
+                True,
+                styles[0],
+            ),
+            _slot(
+                "slot.body.title",
+                "body.heading.level1",
+                "docfit.body.chapter_title",
+                True,
+                styles[1],
+            ),
+            _slot(
+                "slot.body.text",
+                "body.paragraph",
+                "docfit.body.chapter_body",
+                True,
+                styles[2],
+            ),
+            _slot(
+                "slot.missing",
+                "thesis.title.en",
+                "docfit.other.title",
+                False,
+                styles[3],
+            ),
         ],
     }
 
@@ -396,6 +430,16 @@ def test_placement_maps_body_once_and_leaves_required_missing_explicit(
     ]
     assert len(body_operations) == 1
     assert body_operations[0]["tag"] == "docfit.body.chapter_title"
+    assert body_operations[0]["style_role_refs"]["body.heading.level1"][
+        "style_contract_id"
+    ] == "style.body.chapter_title"
+    title_targets = [
+        item for item in placement["targets"] if item["field_id"] == "thesis.title.en"
+    ]
+    assert {item["style_contract_ref"]["style_contract_id"] for item in title_targets} == {
+        "style.cover.title",
+        "style.other.title",
+    }
     assert "template_fill_contract_not_human_accepted" in placement["partial_reasons"]
 
 
@@ -415,10 +459,88 @@ def test_placement_rejects_stale_template_hash(tmp_path: Path) -> None:
     assert failure.value.code == "placement_template_stale"
 
 
-def _slot(slot_id: str, field_id: str, tag: str, required: bool) -> dict[str, object]:
+def test_fill_contract_v2_rejects_inline_slot_style_even_with_a_valid_ref(
+    tmp_path: Path,
+) -> None:
+    template = tmp_path / "template.docx"
+    template.write_bytes(b"template")
+    style = _style("style.title")
+    contract = {
+        "schema_version": "docfit-template-fill-contract/v2",
+        "template_sha256": sha256_file(template),
+        "styles": [style],
+        "style_contract_set_digest": _style_set_digest(template, [style]),
+        "slots": [
+            {
+                **_slot(
+                    "slot.title",
+                    "thesis.title.en",
+                    "docfit.cover.title_en",
+                    True,
+                    style,
+                ),
+                "expected_value_style": {"font": {"size_pt": 12}},
+            }
+        ],
+    }
+    path = tmp_path / "fill-contract.yaml"
+    path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+
+    with pytest.raises(ToolFailure) as failure:
+        load_fill_contract(path)
+
+    assert failure.value.code == "fill_contract_inline_style_forbidden"
+
+
+def _slot(
+    slot_id: str,
+    field_id: str,
+    tag: str,
+    required: bool,
+    style: dict[str, object],
+) -> dict[str, object]:
     return {
         "slot_id": slot_id,
         "field_id": field_id,
         "required": required,
         "locator": {"type": "content_control_tag", "value": tag},
+        "style_contract_ref": {
+            "style_contract_id": style["style_contract_id"],
+            "contract_digest": style["contract_digest"],
+        },
     }
+
+
+def _style(style_contract_id: str) -> dict[str, object]:
+    value: dict[str, object] = {
+        "style_contract_id": style_contract_id,
+        "application_scope": "paragraph",
+        "owned_properties": ["paragraph.alignment"],
+        "effective_properties": {"paragraph.alignment": "left"},
+        "override_policy": {
+            "managed_direct_formatting": "clear_conflicts",
+            "unmanaged_properties": "preserve",
+        },
+        "dependencies": [],
+    }
+    value["contract_digest"] = style_contract_digest(value)
+    return value
+
+
+def _style_set_digest(template: Path, styles: list[dict[str, object]]) -> str:
+    return sha256_json(
+        {
+            "schema_version": "docfit-template-fill-contract/v2",
+            "template_sha256": sha256_file(template),
+            "styles": sorted(
+                (
+                    {
+                        "style_contract_id": style["style_contract_id"],
+                        "contract_digest": style["contract_digest"],
+                    }
+                    for style in styles
+                ),
+                key=lambda item: str(item["style_contract_id"]),
+            ),
+        }
+    )

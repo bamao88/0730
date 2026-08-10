@@ -18,11 +18,56 @@ from docfit.app.student_content_fill import (
     run_student_content_fill,
 )
 from docfit.content.fill import fill_template
+from docfit.styles import StyleContractSet, style_contract_digest
 from docfit.tools.inspection import inspect_document
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import ToolFailure, sha256_file
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+
+def _style(
+    style_contract_id: str,
+    properties: dict[str, str | float | bool] | None = None,
+) -> dict[str, object]:
+    effective = properties or {"paragraph.alignment": "left"}
+    value: dict[str, object] = {
+        "style_contract_id": style_contract_id,
+        "application_scope": "paragraph",
+        "owned_properties": sorted(effective),
+        "effective_properties": effective,
+        "override_policy": {
+            "managed_direct_formatting": "clear_conflicts",
+            "unmanaged_properties": "preserve",
+        },
+        "dependencies": [],
+        "word_style_id": "Normal",
+    }
+    value["contract_digest"] = style_contract_digest(value)
+    return value
+
+
+def _style_contracts(template: Path, *styles: dict[str, object]) -> StyleContractSet:
+    return StyleContractSet.from_mapping(
+        {
+            "schema_version": "docfit-style-contract-set/v2",
+            "template_sha256": sha256_file(template),
+            "styles": list(styles),
+        }
+    )
+
+
+def _style_ref(style: dict[str, object]) -> dict[str, object]:
+    return {
+        "style_contract_id": style["style_contract_id"],
+        "contract_digest": style["contract_digest"],
+    }
+
+
+def _bind_placement_styles(
+    placement: dict[str, object], contracts: StyleContractSet
+) -> None:
+    placement["contract"] = {"style_contract_set_digest": contracts.digest}
 
 
 def _officecli(*arguments: str) -> None:
@@ -227,6 +272,9 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
     source_paragraph = next(item for item in source_inspection.objects if item.kind == "paragraph")
     source_hash = sha256_file(source)
     template_hash = sha256_file(template)
+    title_style = _style("style.cover.title")
+    body_style = _style("style.body.chapter_body")
+    contracts = _style_contracts(template, title_style, body_style)
     placement = {
         "status": "PARTIAL",
         "source_sha256": source_hash,
@@ -236,6 +284,7 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
                 "action": "replace_text_content_control",
                 "tag": "docfit.cover.title_en",
                 "value": "Verified title",
+                "style_contract_ref": _style_ref(title_style),
             },
             {
                 "action": "replace_block_content_control",
@@ -243,14 +292,17 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
                 "tag": "docfit.body.chapter_title",
                 "source_locators": [source_paragraph.locator],
                 "remove_tags_after_fill": [],
+                "style_contract_ref": _style_ref(body_style),
             },
         ],
     }
+    _bind_placement_styles(placement, contracts)
 
     result = fill_template(
         source_docx=source,
         template_docx=template,
         placement=placement,
+        style_contracts=contracts,
         output_docx=output,
     )
 
@@ -280,15 +332,20 @@ def test_fill_template_rejects_existing_output(tmp_path: Path) -> None:
     source.write_bytes(b"source")
     template.write_bytes(b"template")
     output.write_bytes(b"existing")
+    style = _style("style.test")
+    contracts = _style_contracts(template, style)
+    placement = {
+        "source_sha256": sha256_file(source),
+        "template_sha256": sha256_file(template),
+    }
+    _bind_placement_styles(placement, contracts)
 
     with pytest.raises(ToolFailure) as failure:
         fill_template(
             source_docx=source,
             template_docx=template,
-            placement={
-                "source_sha256": sha256_file(source),
-                "template_sha256": sha256_file(template),
-            },
+            placement=placement,
+            style_contracts=contracts,
             output_docx=output,
         )
 
@@ -310,23 +367,29 @@ def test_fill_creates_numbering_infrastructure_when_template_has_none(
     paragraph = next(
         item for item in inspect_document(source, office).objects if item.kind == "paragraph"
     )
+    body_style = _style("style.body.chapter_body")
+    contracts = _style_contracts(template, body_style)
+    placement = {
+        "status": "PARTIAL",
+        "source_sha256": sha256_file(source),
+        "template_sha256": sha256_file(template),
+        "operations": [
+            {
+                "action": "replace_block_content_control",
+                "field_id": "body.chapters",
+                "tag": "docfit.body.chapter_title",
+                "source_locators": [paragraph.locator],
+                "remove_tags_after_fill": [],
+                "style_contract_ref": _style_ref(body_style),
+            }
+        ],
+    }
+    _bind_placement_styles(placement, contracts)
     fill_template(
         source_docx=source,
         template_docx=template,
-        placement={
-            "status": "PARTIAL",
-            "source_sha256": sha256_file(source),
-            "template_sha256": sha256_file(template),
-            "operations": [
-                {
-                    "action": "replace_block_content_control",
-                    "field_id": "body.chapters",
-                    "tag": "docfit.body.chapter_title",
-                    "source_locators": [paragraph.locator],
-                    "remove_tags_after_fill": [],
-                }
-            ],
-        },
+        placement=placement,
+        style_contracts=contracts,
         output_docx=output,
     )
 
@@ -342,6 +405,8 @@ def test_fill_template_rejects_stale_source_snapshot(tmp_path: Path) -> None:
     template = tmp_path / "template.docx"
     source.write_bytes(b"source")
     template.write_bytes(b"template")
+    style = _style("style.test")
+    contracts = _style_contracts(template, style)
 
     with pytest.raises(ToolFailure) as failure:
         fill_template(
@@ -351,6 +416,7 @@ def test_fill_template_rejects_stale_source_snapshot(tmp_path: Path) -> None:
                 "source_sha256": "0" * 64,
                 "template_sha256": sha256_file(template),
             },
+            style_contracts=contracts,
             output_docx=tmp_path / "candidate.docx",
         )
 
@@ -366,10 +432,19 @@ def test_independent_student_content_app_publishes_partial_candidate(
     contract_path = tmp_path / "fill-contract.yaml"
     output = tmp_path / "output"
     _make_docx(source, "Verified title", "Student body paragraph")
-    _make_docx(template, "TITLE PLACEHOLDER", "BODY PLACEHOLDER")
+    _make_docx(
+        template,
+        "TITLE PLACEHOLDER",
+        "BODY TITLE PLACEHOLDER",
+        "BODY TEXT PLACEHOLDER",
+    )
     _wrap_paragraphs_as_controls(
         template,
-        ("docfit.cover.title_en", "docfit.body.chapter_title"),
+        (
+            "docfit.cover.title_en",
+            "docfit.body.chapter_title",
+            "docfit.body.chapter_body",
+        ),
     )
     registry_path.write_text(
         yaml.safe_dump(
@@ -394,24 +469,41 @@ def test_independent_student_content_app_publishes_partial_candidate(
         "registry_version": "0.1.0",
         "sha256": sha256_file(registry_path),
     }
+    title_style = _style(
+        "style.cover.title",
+        {"run.color": "000000", "run.font_size_pt": 12.0},
+    )
+    chapter_title_style = _style(
+        "style.body.chapter_title",
+        {"paragraph.alignment": "left", "run.color": "000000"},
+    )
+    body_style = _style(
+        "style.body.chapter_body",
+        {
+            "paragraph.alignment": "left",
+            "run.color": "000000",
+            "run.font_size_pt": 12.0,
+        },
+    )
+    contracts = _style_contracts(template, title_style, chapter_title_style, body_style)
     contract_path.write_text(
         yaml.safe_dump(
             {
-                "schema_version": "docfit-template-fill-contract/v1",
+                "schema_version": "docfit-template-fill-contract/v2",
                 "contract_id": "synthetic",
                 "status": "candidate_pending_human_acceptance",
                 "revision": "1",
                 "template_sha256": sha256_file(template),
                 "field_registry_ref": registry,
                 "regions": [],
+                "styles": [title_style, chapter_title_style, body_style],
+                "style_contract_set_digest": contracts.digest,
                 "slots": [
                     {
                         "slot_id": "slot.title",
                         "field_id": "thesis.title.en",
                         "required": True,
-                        "expected_value_style": {
-                            "font": {"color": "000000", "size_pt": 12.0}
-                        },
+                        "style_contract_ref": _style_ref(title_style),
                         "locator": {
                             "type": "content_control_tag",
                             "value": "docfit.cover.title_en",
@@ -421,9 +513,20 @@ def test_independent_student_content_app_publishes_partial_candidate(
                         "slot_id": "slot.body",
                         "field_id": "body.heading.level1",
                         "required": True,
+                        "style_contract_ref": _style_ref(chapter_title_style),
                         "locator": {
                             "type": "content_control_tag",
                             "value": "docfit.body.chapter_title",
+                        },
+                    },
+                    {
+                        "slot_id": "slot.body.text",
+                        "field_id": "body.paragraph",
+                        "required": True,
+                        "style_contract_ref": _style_ref(body_style),
+                        "locator": {
+                            "type": "content_control_tag",
+                            "value": "docfit.body.chapter_body",
                         },
                     },
                 ],
@@ -495,7 +598,10 @@ def test_independent_student_content_app_publishes_partial_candidate(
     assert projection["text_replacements"] == []
     assert projection["content_invariants"]["template_style_set_preserved"] is True
     fill_result = json.loads(Path(report["fill_result"]).read_text())
-    assert fill_result["text_controls_formatted"] == 1
+    assert fill_result["text_controls_formatted"] == 0
+    assert report["style_occurrence_counts"]["failed"] == 0
+    assert report["style_occurrence_counts"]["unresolved"] == 0
+    assert Path(report["style_audit"]).is_file()
     assert (
         _content_control_color(Path(report["candidate_docx"]), "docfit.cover.title_en")
         == "000000"

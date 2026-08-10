@@ -11,7 +11,7 @@ from xml.etree import ElementTree as ET
 
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.package import validate_docx_package
-from docfit.tools.runtime import JsonObject, sha256_file, sha256_json
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_json
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
@@ -60,6 +60,7 @@ class InspectedObject:
     style: str | None
     format: JsonObject
     object_ref: JsonObject
+    resolved_style: JsonObject | None = None
 
     def public(self) -> JsonObject:
         result: JsonObject = {
@@ -152,9 +153,12 @@ def inspect_document(
     *,
     selector: str = "paragraph, table, picture",
 ) -> Inspection:
+    from docfit.styles.resolver import EffectiveStyleResolver
+
     package_warnings = validate_docx_package(document)
     document_sha256 = sha256_file(document)
     raw_objects = office.query(document, selector)
+    style_resolver = EffectiveStyleResolver(document)
     objects: list[InspectedObject] = []
     counts: dict[str, int] = {}
     for raw in raw_objects:
@@ -167,12 +171,17 @@ def inspect_document(
         raw_style = raw.get("style")
         style = raw_style if isinstance(raw_style, str) else None
         safe_format = _safe_format(raw.get("format"))
+        try:
+            resolved_style = style_resolver.resolve(locator).as_dict()
+        except ToolFailure:
+            resolved_style = None
         fingerprint = sha256_json(
             {
                 "type": kind,
                 "text": text,
                 "style": style,
                 "format": safe_format,
+                "resolved_style": resolved_style,
             }
         )
         identity = {
@@ -186,7 +195,17 @@ def inspect_document(
             "object_id": object_id,
             "expected_fingerprint": fingerprint,
         }
-        objects.append(InspectedObject(locator, kind, text, style, safe_format, object_ref))
+        objects.append(
+            InspectedObject(
+                locator,
+                kind,
+                text,
+                style,
+                safe_format,
+                object_ref,
+                resolved_style,
+            )
+        )
         counts[kind] = counts.get(kind, 0) + 1
     facts = _package_facts(document)
     risks: list[JsonObject] = []

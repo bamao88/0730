@@ -81,6 +81,55 @@ class EffectiveStyle:
 
 
 @dataclass(frozen=True)
+class StyleContractRef:
+    style_contract_id: str
+    contract_digest: str
+
+
+@dataclass(frozen=True)
+class StyleOverridePolicy:
+    managed_direct_formatting: str
+    unmanaged_properties: str
+
+
+@dataclass(frozen=True)
+class StyleContract:
+    style_contract_id: str
+    contract_digest: str
+    owned_properties: tuple[str, ...]
+    effective_properties: dict[str, Any]
+    application_scope: str
+    override_policy: StyleOverridePolicy
+    dependencies: tuple[StyleContractRef, ...]
+    word_style_id: str | None = None
+    word_style_name: str | None = None
+
+    @property
+    def effective_style(self) -> EffectiveStyle:
+        font: dict[str, Any] = {}
+        paragraph: dict[str, Any] = {}
+        container: dict[str, Any] = {}
+        page: dict[str, Any] = {}
+        projections = {
+            "run": font,
+            "paragraph": paragraph,
+            "container": container,
+            "page": page,
+        }
+        for property_path, value in self.effective_properties.items():
+            namespace, property_name = property_path.split(".", 1)
+            if namespace == "run" and property_name.startswith("font_"):
+                property_name = property_name.removeprefix("font_")
+            projections[namespace][property_name] = value
+        return EffectiveStyle(
+            font=font,
+            paragraph=paragraph,
+            container=container,
+            page=page,
+        )
+
+
+@dataclass(frozen=True)
 class RegionContract:
     region_id: str
     owner: Owner
@@ -113,6 +162,7 @@ class SlotContract:
     expected_value_style: EffectiveStyle
     cardinality: str = "one"
     component_locators: tuple[ComponentLocator, ...] = ()
+    style_contract_ref: StyleContractRef | None = None
 
 
 @dataclass(frozen=True)
@@ -135,8 +185,14 @@ class FillContract:
     marker_protocol: str
     regions: tuple[RegionContract, ...]
     slots: tuple[SlotContract, ...]
+    styles: tuple[StyleContract, ...] = ()
+    style_contract_set_digest: str | None = None
     status: str | None = None
     responsibility_policy: ResponsibilityPolicy | None = None
+
+    @property
+    def styles_by_id(self) -> dict[str, StyleContract]:
+        return {style.style_contract_id: style for style in self.styles}
 
 
 @dataclass(frozen=True)

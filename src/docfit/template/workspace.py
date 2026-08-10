@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from docfit.fields import FieldRegistrySnapshot
+from docfit.styles.capture import capture_template_style_contracts
 from docfit.template.object_mutation import (
     ObjectMutation,
     StructureMember,
@@ -3068,66 +3069,125 @@ class TemplateWorkspaceService:
         ]
         inspection = self._inspection(document)
         controls = [item for item in inspection.objects if item.kind == "sdt"]
-        fill_contract: JsonObject = {
-            "schema_version": 1,
-            "template_sha256": document_hash,
-            "registry": self.registry.identity(),
-            "slots": [
-                {
-                    "slot_id": item.get("slot_id"),
-                    "field": item.get("field"),
-                    "object_ref": next(
-                        (
-                            control.object_ref
-                            for control in controls
-                            if control.format.get("tag") == item.get("slot_id")
-                        ),
-                        None,
+        published_slots: list[JsonObject] = []
+        for item in slots:
+            slot_id = item.get("slot_id")
+            field = item.get("field")
+            field_id = field.get("field_id") if isinstance(field, dict) else None
+            content_type = field.get("content_type") if isinstance(field, dict) else None
+            control = next(
+                (
+                    candidate
+                    for candidate in controls
+                    if candidate.format.get("tag") == slot_id
+                ),
+                None,
+            )
+            if (
+                not isinstance(slot_id, str)
+                or not isinstance(field_id, str)
+                or not isinstance(content_type, str)
+                or control is None
+            ):
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="created_slot_missing",
+                    message=(
+                        "A content control created during this task is absent from the final "
+                        "Word or lacks Registry identity."
                     ),
-                }
-                for item in slots
-            ],
-            "structures": [
-                {
-                    "slot_id": item.get("slot_id"),
-                    "field": item.get("field"),
-                    "member_slot_ids": [
-                        member.get("slot_id")
-                        for member in item.get("members", [])
-                        if isinstance(member, dict)
-                    ],
-                    "object_ref": next(
-                        (
-                            control.object_ref
-                            for control in controls
-                            if control.format.get("tag") == item.get("slot_id")
-                        ),
-                        None,
-                    ),
-                }
-                for item in structures
-            ],
-            "generated_content": [
-                {
-                    "field": item.get("field"),
-                    "entry_count": len(item.get("entries", [])),
-                    "live_field": True,
-                    "update_on_open": True,
-                }
-                for item in generated_content
-            ],
-        }
-        if any(
-            item.get("object_ref") is None
-            for key in ("slots", "structures")
-            for item in fill_contract[key]
-        ):
+                )
+            assert isinstance(field, dict)
+            published_slot: JsonObject = {
+                "slot_id": slot_id,
+                "field_id": field_id,
+                "content_type": content_type,
+                "required": True,
+                "locator": {
+                    "type": "content_control_tag",
+                    "value": slot_id,
+                    "story": "document",
+                    "part": "word/document.xml",
+                    "expected_match_count": 1,
+                },
+            }
+            label = field.get("label")
+            if isinstance(label, str) and label:
+                published_slot["label"] = label
+            published_slots.append(published_slot)
+        missing_structures = [
+            item.get("slot_id")
+            for item in structures
+            if not any(
+                control.format.get("tag") == item.get("slot_id") for control in controls
+            )
+        ]
+        if missing_structures:
             raise ToolFailure(
                 status="error",
                 origin="postcondition",
                 code="created_slot_missing",
-                message="A content control created during this task is absent from the final Word.",
+                message="A materialized structure is absent from the final Word.",
             )
+        style_contracts, style_capture = capture_template_style_contracts(
+            document, published_slots
+        )
+        style_refs = {
+            style.style_contract_id.removeprefix("style.slot."): {
+                "style_contract_id": style.style_contract_id,
+                "contract_digest": style.contract_digest,
+            }
+            for style in style_contracts.styles
+        }
+        for slot in published_slots:
+            slot["style_contract_ref"] = style_refs[str(slot["slot_id"])]
+        fill_contract: JsonObject = {
+            "schema_version": "docfit-template-fill-contract/v2",
+            "contract_id": f"docfit.template.{document_hash[:16]}",
+            "artifact_role": "template_fill_contract",
+            "status": "candidate_pending_human_acceptance",
+            "revision": "1",
+            "template_sha256": document_hash,
+            "field_registry_ref": self.registry.identity(),
+            "marker_protocol": "docfit-content-control-marker/v1",
+            "regions": [],
+            "slots": published_slots,
+            "styles": [style.as_dict() for style in style_contracts.styles],
+            "style_contract_set_digest": style_contracts.digest,
+            "provenance": {
+                "structure_count": len(structures),
+                "structure_slots": [
+                    {
+                        "slot_id": item.get("slot_id"),
+                        "field_id": (
+                            item.get("field", {}).get("field_id")
+                            if isinstance(item.get("field"), dict)
+                            else None
+                        ),
+                        "member_slot_ids": [
+                            member.get("slot_id")
+                            for member in item.get("members", [])
+                            if isinstance(member, dict)
+                        ],
+                    }
+                    for item in structures
+                ],
+                "generated_content_count": len(generated_content),
+            },
+            "review": {
+                "status": "machine_checked_pending_human_signoff",
+                "reviewer": None,
+                "reviewed_at": None,
+                "conclusion": "pending",
+                "blockers": [],
+                "prepared_by": "docfit-template-workspace",
+            },
+            "validation": {
+                "style_capture": style_capture,
+                "officecli_validation": office_validation,
+            },
+        }
         audit_dir = self.root / "publication"
         audit_dir.mkdir(parents=True, exist_ok=True)
         atomic_write_json(audit_dir / "fill-contract.json", fill_contract)
@@ -3148,6 +3208,8 @@ class TemplateWorkspaceService:
                 "counts": counts,
                 "review": review,
                 "officecli_validation": office_validation,
+                "style_contract_set_digest": style_contracts.digest,
+                "style_occurrence_counts": style_capture["validation"]["counts"],
             },
         )
         output = self.task_root / "output" / "final-template.docx"
@@ -3198,6 +3260,7 @@ class TemplateWorkspaceService:
                 {"name": "package_reopens", "result": "ok"},
                 {"name": "officecli_validate", "result": "ok"},
                 {"name": "current_version_local_feedback_returned", "result": "ok"},
+                {"name": "style_contract_occurrences_validated", "result": "ok"},
                 {"name": "single_word_published", "result": "ok"},
             ],
         }

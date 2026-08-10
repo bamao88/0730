@@ -38,8 +38,10 @@ from docfit.content.placement import build_placement, load_fill_contract
 from docfit.content.projection import project_student_content, resolve_template_style_map
 from docfit.content.quality_patches import load_quality_patches
 from docfit.content.student import build_student_inventory
+from docfit.content.style_application import apply_and_validate_candidate_styles
 from docfit.fields.registry import FieldRegistrySnapshot
 from docfit.observability.transcript import SDKTranscriptManager, isolated_sdk_environment
+from docfit.styles import StyleContractSet
 from docfit.tools.inspection import inspect_document
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.package import validate_docx_package
@@ -135,6 +137,7 @@ def prepare_student_content_fill(
         sha256_file(quality_patches_path) if quality_patches_path is not None else None
     )
     contract = load_fill_contract(contract_path)
+    StyleContractSet.from_fill_contract(contract)
     registry = FieldRegistrySnapshot.load(registry_path)
     if contract.get("template_sha256") != template_hash:
         raise _failure("prepare_template_stale", "The fill contract does not bind this template.")
@@ -509,6 +512,7 @@ def finalize_saved_student_content_fill(
     raw_extraction = read_json(raw_extraction_path)
     evidence = read_json(evidence_path)
     contract = load_fill_contract(contract_path)
+    style_contracts = StyleContractSet.from_fill_contract(contract)
     registry = FieldRegistrySnapshot.load(registry_path)
     quality_patches_path = root / "input" / "quality-patches.yaml"
     quality_patches = (
@@ -543,6 +547,7 @@ def finalize_saved_student_content_fill(
         source_docx=source,
         template_docx=template,
         placement=placement,
+        style_contracts=style_contracts,
         output_docx=filled_candidate,
     )
     fill_result_path = root / "fill-result.json"
@@ -556,6 +561,16 @@ def finalize_saved_student_content_fill(
         styles=resolve_template_style_map(contract=contract, template_docx=template),
         text_replacements=quality_patches,
     )
+    style_audit = apply_and_validate_candidate_styles(
+        candidate_docx=candidate,
+        contract=contract,
+        fill_result=fill_result,
+        projection=projection,
+    )
+    style_audit_path = root / "style-audit.json"
+    atomic_write_json(style_audit_path, style_audit)
+    projection["style_contract_set_digest"] = style_contracts.digest
+    projection["post_style_output_sha256"] = style_audit["output_sha256"]
     projection_path = root / "quality-projection.json"
     atomic_write_json(projection_path, projection)
     office_adapter = office or OfficeCliAdapter()
@@ -631,6 +646,9 @@ def finalize_saved_student_content_fill(
         "placement": str(placement_path),
         "fill_result": str(fill_result_path),
         "quality_projection": str(projection_path),
+        "style_audit": str(style_audit_path),
+        "style_contract_set_digest": style_contracts.digest,
+        "style_occurrence_counts": dict(style_audit["validation"]["counts"]),
         "content_audit": str(content_audit_path),
         "validation": str(validation_path),
         "missing_required_count": len(placement["missing_required"]),

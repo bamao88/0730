@@ -7,6 +7,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from docfit.styles import StyleContractSet
 from docfit.tools.ooxml import import_content_objects, mutate_content_controls
 from docfit.tools.package import validate_docx_package
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
@@ -17,6 +18,7 @@ def fill_template(
     source_docx: Path,
     template_docx: Path,
     placement: JsonObject,
+    style_contracts: StyleContractSet,
     output_docx: Path,
 ) -> JsonObject:
     """Create a new candidate DOCX without mutating either bound input snapshot."""
@@ -27,6 +29,16 @@ def fill_template(
         raise _invalid("fill_source_stale", "Placement is bound to another student snapshot.")
     if placement.get("template_sha256") != template_hash:
         raise _invalid("fill_template_stale", "Placement is bound to another template snapshot.")
+    placement_contract = placement.get("contract")
+    if (
+        style_contracts.template_sha256 != template_hash
+        or not isinstance(placement_contract, dict)
+        or placement_contract.get("style_contract_set_digest") != style_contracts.digest
+    ):
+        raise _invalid(
+            "fill_style_contracts_stale",
+            "Placement and template must bind the same Style Contract Set.",
+        )
     if output_docx.exists():
         raise _invalid("fill_output_exists", "The candidate output path must not already exist.")
     output_docx.parent.mkdir(parents=True, exist_ok=True)
@@ -37,10 +49,28 @@ def fill_template(
     text_formats: dict[str, JsonObject] = {}
     block_operations: list[JsonObject] = []
     remove_tags: list[str] = []
+    occurrence_manifest: list[JsonObject] = []
     for operation in operations:
         if not isinstance(operation, dict):
             raise _invalid("fill_operation_invalid", "A placement operation has an invalid shape.")
         action = operation.get("action")
+        raw_style_ref = operation.get("style_contract_ref")
+        if not isinstance(raw_style_ref, dict):
+            raise _invalid(
+                "fill_style_contract_ref_invalid",
+                "Every fill operation must carry a complete Style Contract reference.",
+            )
+        try:
+            style_contract = style_contracts.resolve(raw_style_ref)
+        except ToolFailure as error:
+            raise _invalid(
+                "fill_style_contract_ref_invalid",
+                "Every fill operation must carry a current Style Contract reference.",
+            ) from error
+        style_ref: JsonObject = {
+            "style_contract_id": style_contract.style_contract_id,
+            "contract_digest": style_contract.contract_digest,
+        }
         if action == "replace_text_content_control":
             tag = operation.get("tag")
             value = operation.get("value")
@@ -49,15 +79,33 @@ def fill_template(
                     "fill_text_operation_invalid", "A text fill operation is invalid or duplicated."
                 )
             text_replacements[tag] = value
-            raw_format = operation.get("expected_value_style", {})
-            if not isinstance(raw_format, dict):
-                raise _invalid(
-                    "fill_text_format_invalid",
-                    "A text fill operation contains an invalid expected value style.",
-                )
-            text_formats[tag] = dict(raw_format)
+            text_formats[tag] = {}
+            occurrence_manifest.append(
+                {
+                    "occurrence_id": f"slot:{operation.get('slot_id', tag)}",
+                    "locator": {"type": "content_control_tag", "value": tag},
+                    "style_contract_ref": style_ref,
+                }
+            )
         elif action == "replace_block_content_control":
-            block_operations.append(operation)
+            normalized_operation = dict(operation)
+            normalized_operation["style_contract_ref"] = style_ref
+            raw_role_refs = operation.get("style_role_refs", {})
+            if not isinstance(raw_role_refs, dict):
+                raise _invalid(
+                    "fill_style_role_refs_invalid",
+                    "A block fill operation has invalid role Style Contract references.",
+                )
+            normalized_operation["style_role_refs"] = {
+                str(field_id): {
+                    "style_contract_id": resolved.style_contract_id,
+                    "contract_digest": resolved.contract_digest,
+                }
+                for field_id, reference in raw_role_refs.items()
+                if isinstance(field_id, str)
+                for resolved in (style_contracts.resolve(reference),)
+            }
+            block_operations.append(normalized_operation)
             raw_remove = operation.get("remove_tags_after_fill", [])
             if not isinstance(raw_remove, list) or not all(
                 isinstance(value, str) for value in raw_remove
@@ -118,9 +166,28 @@ def fill_template(
                     "field_id": operation.get("field_id"),
                     "tag": tag,
                     "source_object_ids": list(source_object_ids),
+                    "style_contract_ref": dict(operation["style_contract_ref"]),
+                    "style_role_refs": dict(operation.get("style_role_refs", {})),
                     **evidence,
                 }
             )
+            if operation.get("field_id") != "body.chapters":
+                for inserted_index, inserted in enumerate(
+                    evidence.get("inserted_body_refs", []), start=1
+                ):
+                    target_locator = (
+                        inserted.get("target_locator") if isinstance(inserted, dict) else None
+                    )
+                    if isinstance(target_locator, str):
+                        occurrence_manifest.append(
+                            {
+                                "occurrence_id": (
+                                    f"block:{operation.get('field_id')}:{inserted_index}"
+                                ),
+                                "locator": target_locator,
+                                "style_contract_ref": dict(operation["style_contract_ref"]),
+                            }
+                        )
             current = next_docx
         final_temporary = temporary_root / "final.docx"
         mutate_content_controls(
@@ -143,10 +210,11 @@ def fill_template(
             message="A read-only input changed during deterministic template fill.",
         )
     return {
-        "schema_version": "docfit-template-fill-result/v1",
+        "schema_version": "docfit-template-fill-result/v2",
         "status": placement.get("status"),
         "source_sha256": source_hash,
         "template_sha256": template_hash,
+        "style_contract_set_digest": style_contracts.digest,
         "output_docx": str(output_docx.resolve()),
         "output_sha256": sha256_file(output_docx),
         "text_controls_replaced": len(text_replacements),
@@ -154,6 +222,7 @@ def fill_template(
         "block_operations": block_evidence,
         "body_controls_removed": len(set(remove_tags)),
         "package_warnings": list(package_warnings),
+        "style_occurrence_manifest": {"occurrences": occurrence_manifest},
     }
 
 

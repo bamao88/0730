@@ -175,6 +175,7 @@ def project_student_content(
         "run_spacing_properties_removed": 0,
         "adjacent_text_runs_merged": 0,
     }
+    style_occurrence_roles: dict[int, tuple[ET.Element, str]] = {}
 
     source_elements = _resolve_imported_source_elements(document, fill_result)
     replacement_report = _apply_replacements(
@@ -210,9 +211,11 @@ def project_student_content(
             report["floating_drawings_converted_inline"] = int(
                 report["floating_drawings_converted_inline"]
             ) + _normalize_drawing_paragraph(paragraph, styles.normal, usable_width)
+            style_occurrence_roles[id(paragraph)] = (paragraph, "drawing")
             continue
         if list(paragraph.iter(_q(M_NS, "oMath"))):
             _normalize_formula(paragraph, styles.body)
+            style_occurrence_roles[id(paragraph)] = (paragraph, "formula")
             report["formula_paragraphs"] = int(report["formula_paragraphs"]) + 1
             report["run_spacing_properties_removed"] = int(
                 report["run_spacing_properties_removed"]
@@ -221,6 +224,10 @@ def project_student_content(
         text = _paragraph_text(paragraph).strip()
         if _FIGURE_CAPTION.match(text) or _TABLE_CAPTION.match(text):
             _normalize_caption(paragraph, styles.caption)
+            presentation_role = (
+                "figure_caption" if _FIGURE_CAPTION.match(text) else "table_caption"
+            )
+            style_occurrence_roles[id(paragraph)] = (paragraph, presentation_role)
             report["caption_paragraphs"] = int(report["caption_paragraphs"]) + 1
         else:
             role = _body_role(text)
@@ -230,6 +237,12 @@ def project_student_content(
                 "heading_3": styles.heading_3,
             }.get(role, styles.body)
             _normalize_text_paragraph(paragraph, style_id)
+            presentation_role = {
+                "heading_1": "chapter_title",
+                "heading_2": "section_title",
+                "heading_3": "subsection_title",
+            }.get(role, "body")
+            style_occurrence_roles[id(paragraph)] = (paragraph, presentation_role)
             if role.startswith("heading_"):
                 level_key = f"level_{role[-1]}"
                 headings = cast(dict[str, int], report["heading_counts"])
@@ -252,6 +265,7 @@ def project_student_content(
 
     for paragraph in [item for item in reference_elements if item.tag == _q(W_NS, "p")]:
         _normalize_reference(paragraph, styles.reference)
+        style_occurrence_roles[id(paragraph)] = (paragraph, "reference")
         report["reference_paragraphs"] = int(report["reference_paragraphs"]) + 1
         report["run_spacing_properties_removed"] = int(
             report["run_spacing_properties_removed"]
@@ -276,6 +290,10 @@ def project_student_content(
 
     report["figure_caption_chains_bound"] = _bind_figure_captions(body)
     report["table_caption_chains_bound"] = _bind_table_captions(body, current_body_elements)
+    report["style_occurrences"] = _style_occurrence_evidence(
+        body,
+        list(style_occurrence_roles.values()),
+    )
     report["toc"] = _request_toc_update(parts, document)
 
     parts["word/document.xml"] = _serialize(document)
@@ -336,6 +354,58 @@ def _resolve_imported_elements(
             elements.append(_find_body_element(document, locator))
         resolved.setdefault(str(block["field_id"]), []).extend(elements)
     return resolved
+
+
+def _style_occurrence_evidence(
+    body: ET.Element,
+    occurrences: list[tuple[ET.Element, str]],
+) -> list[JsonObject]:
+    """Bind normalized paragraph roles to locators that survive package writing."""
+
+    body_paragraphs = body.findall(_q(W_NS, "p"))
+    paragraph_order = {id(paragraph): index for index, paragraph in enumerate(body_paragraphs)}
+    if any(id(paragraph) not in paragraph_order for paragraph, _ in occurrences):
+        raise _document_error(
+            "projection_style_occurrence_not_top_level",
+            "A normalized style occurrence is no longer a top-level body paragraph.",
+        )
+
+    evidence: list[JsonObject] = []
+    for paragraph, presentation_role in sorted(
+        occurrences,
+        key=lambda item: paragraph_order[id(item[0])],
+    ):
+        style = paragraph.find(f"{_q(W_NS, 'pPr')}/{_q(W_NS, 'pStyle')}")
+        word_style_id = style.get(_q(W_NS, "val")) if style is not None else None
+        if not word_style_id:
+            raise _document_error(
+                "projection_style_occurrence_style_missing",
+                "A normalized paragraph has no final Word paragraph style.",
+            )
+        evidence.append(
+            {
+                "target_locator": _stable_paragraph_locator(body, paragraph),
+                "presentation_role": presentation_role,
+                "word_style_id": word_style_id,
+            }
+        )
+    return evidence
+
+
+def _stable_paragraph_locator(body: ET.Element, paragraph: ET.Element) -> str:
+    para_id = paragraph.get(_q(W14_NS, "paraId"))
+    if para_id is not None and re.fullmatch(r"[0-9A-Fa-f]{8}", para_id):
+        matches = [
+            item
+            for item in body.findall(_q(W_NS, "p"))
+            if item.get(_q(W14_NS, "paraId"), "").upper() == para_id.upper()
+        ]
+        if len(matches) == 1:
+            return f"/body/p[@paraId={para_id.upper()}]"
+    _assign_new_para_id(body, paragraph)
+    assigned = paragraph.get(_q(W14_NS, "paraId"))
+    assert assigned is not None
+    return f"/body/p[@paraId={assigned}]"
 
 
 def _resolve_imported_source_elements(
@@ -984,13 +1054,16 @@ def _contract_style_map(contract: JsonObject, available: set[str]) -> dict[str, 
         "style.body.figure.caption",
         "style.body.table.caption",
     }
+    frozen_v1 = contract.get("schema_version") == "docfit-template-fill-contract/v1"
     for item in raw_styles:
         if not isinstance(item, dict):
             raise _invalid(
                 "projection_contract_style_invalid",
                 "A fill-contract style entry has an invalid shape.",
             )
-        logical_id = item.get("style_id")
+        logical_id = item.get("style_contract_id")
+        if not isinstance(logical_id, str) and frozen_v1:
+            logical_id = item.get("style_id")
         word_style_id = item.get("word_style_id")
         if not isinstance(logical_id, str) or not isinstance(word_style_id, str):
             continue
