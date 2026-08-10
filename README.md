@@ -10,6 +10,13 @@ LibreOffice PDF，并按需生成联系表、完整页面、局部图和前后�
 选择、自动回退、第二视觉路径或旧 `render_ref` 兼容层。视觉结果始终标记为
 `approximate`，不声称与 Microsoft Word 像素一致。
 
+模板发布与学生内容填充现在共享 Fill Contract v2 中不可变的 Style Contract Set。
+每个目标 slot 只引用 `style_contract_id + contract_digest`；最终 DOCX 对每个实际
+occurrence 显式应用受管有效属性并重新打开校验，避免学生源格式、相邻段落或 Word
+样式继承改变同一合同的结果。当前覆盖段落/Run 的核心字体、字号、粗斜体、颜色、
+对齐、间距和分页属性；编号、表格条件样式、Theme 求值及跨 story/section 上下文仍是
+后续扩展边界，不计为已完成能力。
+
 架构基线从 [docs/docfit-00-index.md](docs/docfit-00-index.md) 开始；视觉 V2 的决策和
 验收见
 [docs/plans/docfit-libreoffice-visual-evidence-v2.md](docs/plans/docfit-libreoffice-visual-evidence-v2.md)。

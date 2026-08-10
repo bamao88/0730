@@ -624,26 +624,43 @@ ask-user、denied-tools、subagent smoke 继续通过，其中 denied-tools 只�
 未注册 Tool 拒绝。该切片不调用
 OfficeCLI/LibreOffice，不启动视觉容器。
 
-### 6.8 M2 后候选切片：样式观测与确定性补全（仅长期合同，未实现）
+### 6.8 M2 后切片：稳定 Style Contract 与 occurrence 门禁（第一垂直切片已实现）
 
-该候选切片用属性级合同稳定模板提取、Agent 语义判断与下游写入之间的耦合。
-它不要求 Agent 服从固定内容树或样式模型，也不把可直接套用的样式值交给 Agent。
-目标范围只包括：
+2026-08-10 经用户批准后，第一垂直切片已经把样式从临时观测升级为模板发布与学生填写
+共享的不可变合同。稳定性不变量是：同一 `style_contract_id + contract_digest` 的全部
+最终 occurrence，其受管有效属性必须一致。样式归属于展示 slot/role，而不是
+`field_id`；同一字段在封面、摘要或正文可以合法引用不同合同。
 
-- 扩展现有 Tool 内部观测，完整报告命名样式、直接格式、继承链、有效值、覆盖、
-  缺失和冲突；
-- Agent/Skill 只完成语义角色识别、观测绑定、冲突解释和未决项暴露，不生成
-  缺失样式值；
-- 缺失属性只由程序使用经明确选定、版本化且适用性可验证的国家级标准明文解析；
-- 每个属性保留当前任务要求、模板观测、继承后有效值、国家级标准或未决的来源，
-  以及标准版本、条款、适用性和规则集 digest；
-- 无明文、不适用或来源冲突时保持未决，不增加通用默认样式、学校 profile、第六个 Tool
-  或 Agent 可读的国家标准数值表。
+已实现边界：
 
-开始实现前必须另行批准计划，并先确认标准来源的授权/维护方式、精确标识与版本、
-适用性输入、条款映射、冲突语义、属性级来源和合成契约测试。任何公开 Tool schema
-调整都必须单独审批并保持五个 Tool 名称。本节不启动 O1、M3 或 M4，不改变 M2 已完成
-状态，也不声称当前代码已具备该能力。
+- Fill Contract v2 的 `styles[]` 是唯一真源，slot 只携带完整 `style_contract_ref`；
+  `expected_value_style` 与旧 `style_id` 在 v2 中被拒绝，v1 只保留冻结的只读解析路径，
+  不参与新合同写入；
+- 产品 resolver 解析 `docDefaults`、默认段落/字符样式、`basedOn`、toggle、段落/字符样式
+  和直接格式，并输出属性级 provenance、coverage 与 unresolved；
+- 模板 publish 从最终 DOCX 快照捕获每个 slot 的有效属性，生成 template-bound Style
+  Contract Set，并在发布前重新打开代表 occurrence 验证；用户可见输出仍只有一个
+  `final-template.docx`，正式合同与审计留在任务内部；
+- Placement、Fill 与 Projection 共用 digest-bound 引用。正文、参考文献、题注、公式和
+  drawing 的最终段落都生成稳定 paraId occurrence；写入层不修改共享学校命名样式，而是
+  只对每个 occurrence 显式写入合同拥有的属性；
+- 最终候选在内容审计和渲染前执行 occurrence-level style audit；任何 failed 或 unresolved
+  都是阻断错误，不能被 `PARTIAL` 状态掩盖；同一合同重复 1、10、100 次的回归已经覆盖；
+- 独立模板提取 Eval 已升级 v2 schema/model/loader/digest/引用闭包验证，并保持不 import
+  产品 resolver；现有 v1 Gold 无需迁移。
+
+当前切片只承诺段落/Run 的核心字体、字号、粗斜体、颜色、对齐、段前后/行距和段前分页。
+Theme token 的最终求值、编号合同、表格条件样式、复杂 section/page/container 依赖、
+跨 header/footer/footnote/textbox story 的完整物化，以及国家标准缺失值补全仍未实现；
+遇到这些范围时必须明确 unresolved 或拒绝发布，不得回退到经验默认值。国家标准来源的
+授权、版本、条款映射和适用性仍需独立批准。五个公开 Tool、Claude Agent SDK runtime、
+Field Registry 语义和 renderer 均未改变；未来若要扩展公开 Tool schema，仍需单独审批。
+
+通用兜底是后续阶段硬门，不采用“已有部分样式即可继续”的渐进放行：只有角色覆盖、属性来源、
+稳定取值、整角色二选一实现和全链路验收全部通过，才能进入模板融合、正式 Student Fill 与
+M3 产品阶段；任一维度为 `PARTIAL`、`UNKNOWN`、`UNRESOLVED`、`FAILED` 或未验收时均保持
+`next_stage_allowed=false`。当前通用兜底状态为 `BLOCKED_INCOMPLETE`，Style Contract 基础设施
+的第一垂直切片完成不改变该结论。
 
 ### 6.9 M2 后候选切片：字段槽定位、学生内容投影与 Placement
 
