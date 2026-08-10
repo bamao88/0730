@@ -1366,6 +1366,43 @@ def test_materialize_slot_absorbs_same_target_effective_format_normalization(
     }
 
 
+def test_child_cleanup_and_parent_effective_format_commit_together(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(source, [("保留标题（删除说明）", "0000FF")])
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    parent = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "保留标题（删除说明）"
+    )
+    child = next(
+        item
+        for item in inspection.objects
+        if item.kind == "run" and item.locator.startswith(f"{parent.locator}/")
+    )
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {"action": "clear_content", "object_ref": child.object_ref},
+                {
+                    "action": "normalize_effective_format",
+                    "object_ref": parent.object_ref,
+                    "effective_format": {"color": "black", "underline": "none"},
+                },
+            ]
+        }
+    )
+
+    assert result["committed"] is True
+    assert result["effects"]["actions"] == {
+        "clear_content": 1,
+        "normalize_effective_format": 1,
+    }
+    assert result["effects"]["operations"] == 2
+
+
 def test_structure_materialization_absorbs_redundant_descendant_cleanup(
     tmp_path: Path,
 ) -> None:

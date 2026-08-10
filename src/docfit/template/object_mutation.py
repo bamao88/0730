@@ -1232,7 +1232,12 @@ def mutate_objects(
             other_action
             for other, other_action in mutable_operations[index + 1 :]
             if _overlap(target, other)
-            and {action, other_action} != {"normalize_effective_format", "ensure_page_start"}
+            and frozenset({action, other_action})
+            not in {
+                frozenset({"normalize_effective_format", "ensure_page_start"}),
+                frozenset({"normalize_effective_format", "clear_content"}),
+                frozenset({"normalize_effective_format", "remove_object"}),
+            }
         ]
         if conflicts:
             raise ToolFailure(
