@@ -22,13 +22,13 @@ template_open()
 template_next(region_ref, outcome, reason?)
 template_search(query)
 template_focus(object_ref, scope?)
-template_registry(queries)
-template_edit(batch)
+template_registry(lookups?, searches?)
+template_edit(operations)
 template_publish(document_ref)
 ```
 
 - Navigation reads the latest checkpoint implicitly. Only publish confirms an exact `document_ref`.
-- `template_edit` exposes action-partitioned lanes with narrow schemas; it does not expose a union of irrelevant properties.
+- `template_edit` exposes one atomic `operations` array. Each item directly declares an action and the small superset of action parameters; action-specific requirements are validated by the Tool without `oneOf`/`anyOf` schema branches.
 - Effective formatting is outcome-oriented: `normalize_effective_format` specifies the desired visible result and succeeds only when the effective value verifies after mutation.
 - Parent removal absorbs redundant descendant removal/clear/format operations. Removal that conflicts with descendant materialization remains an error.
 - `ensure_page_start(mode="new_page")` is idempotent and selects a stable Word representation inside the Tool.
@@ -87,6 +87,10 @@ template_publish(document_ref)
 ## Discovery Note
 
 The unknown-unknown scout is intentionally skipped. The preceding investigation already inspected current code, tests, git history, official Claude Agent SDK/Skills documentation, and the r29 live transcript, and identified the exact contract and OOXML seams. New P2 cleanup found during implementation is parked unless it is required to prevent a P0/P1 regression.
+
+## Official SDK Basis
+
+The architecture keeps the Agent loop, in-process MCP Tool hosting, structured output, and Skill lifecycle on the Claude Agent SDK's native surfaces. DocFit adds only thesis-domain Tools and checkpointed Word execution: [custom tools](https://code.claude.com/docs/en/agent-sdk/custom-tools), [Agent Skills](https://code.claude.com/docs/en/agent-sdk/skills), and [Skills overview](https://code.claude.com/docs/en/skills).
 
 ## Parked
 

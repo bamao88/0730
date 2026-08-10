@@ -102,10 +102,12 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 - 任务结束后，材料和推导结论按任务数据策略处理，不复制到产品 Knowledge；
 - Eval 可以保存合成、脱敏或授权的学校场景，但 Eval fixture 不是运行时 Knowledge。
 
-模板准备使用四个聚焦 Tool：`template_view` 按需返回当前页或对象的有界局部图与新引用，
-`template_registry` 只在字段含义不确定时惰性批量查询；`template_edit` 接受同一版本、同一页最多
-32 个对象决定，物化时由 Tool 生成可见填写占位，原子修改后自动返回修改页的新图与新引用；`template_publish` 只要求 Agent 已看
-到最终版本的局部反馈，不设全页覆盖门，只发布 `output/final-template.docx`。它们复用
+模板准备使用七个聚焦 Tool：`template_open` / `template_next` 从最新 checkpoint 推进当前有界
+对象区域，`template_search` / `template_focus` 只补充当前决定所需事实，`template_registry` 按
+对象惰性批量确认字段；`template_edit` 接受同一版本最多 32 个直接 action operation，物化时由
+Tool 生成可见填写占位，并在一次原子提交中归一化重复操作、保护 Word 边界、回读有效结果、返回
+修改区域的新证据与引用；`template_publish` 只要求 Agent 已看到最终版本的局部反馈，不设全页
+覆盖门，只发布 `output/final-template.docx`。它们复用
 OfficeCLI、V2 visual evidence 与包验证，不建立第二套 Agent loop；Agent 不提交 plan path、
 compiler 输出或 Word output path。
 

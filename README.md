@@ -102,11 +102,12 @@ uv run docfit prepare-template \
 ```
 
 `--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
-的开发期 Registry，也可显式替换。模板 Agent 用 `template_view` 按需查看一张当前页图，
-把同页已经判断清楚的对象批量交给 `template_edit`；Tool 原子修改并自动返回修改后同页图。
-`template_registry` 只在字段含义不确定时惰性查询，`template_publish` 一次性发布，不生成
-plan/compiler/attempt 文件，也不要求全页覆盖。成功目录的 `output/` 只包含
-`final-template.docx`。
+的开发期 Registry，也可显式替换。模板 Agent 通过 `template_open` / `template_next` 浏览
+当前 checkpoint 的有界对象区域，只在当前判断缺少事实时使用 `template_search` /
+`template_focus`，并用扁平批量 `template_registry` 确认字段。已经判断清楚的对象由一次
+`template_edit.operations[]` 原子执行；Tool 负责 Word 结构安全、有效格式回读和修改后局部
+反馈。`template_publish` 一次性发布，不生成 plan/compiler/attempt 文件，也不要求全页覆盖。
+成功目录的 `output/` 只包含 `final-template.docx`。
 
 转换：
 

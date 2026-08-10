@@ -90,11 +90,14 @@ DOCX 中提取。当前三校 candidate 文件仍待 Human 签署和 schema 冻�
 
 ### 3.3 工具与反馈边界
 
-`prepare-template` 会话只开放 `template_view`、`template_registry`、`template_edit`、
-`template_publish`，以及 Skill、受限只读材料和必要的用户提问。它不开放 Bash、Write、
-Agent，也不包含 semantic checker、决定文件或 compiler。Tool 机械验证引用、Registry 字段、
-内容控件、包重开、非目标文本、修改页回传和原子发布；语义/视觉是否正确由 Agent 根据反馈负责。
-同一页中已经判断清楚的多个对象可以在一次原子 batch 中处理；模板准备不设最终全页覆盖门禁。
+`prepare-template` 会话只开放 `template_open`、`template_next`、`template_search`、
+`template_focus`、`template_registry`、`template_edit`、`template_publish`，以及 Skill、受限
+只读材料和必要的用户提问。它不开放 Bash、Write、Agent，也不包含 semantic checker、决定文件
+或 compiler。读取 Tool 默认使用最新 checkpoint；只有最终发布确认精确 `document_ref`。
+`template_edit` 只接收一个 `operations` 数组，每个成员直接声明动作、对象引用和必要意图。
+Tool 机械验证引用、Registry 字段、对象承载能力、Word 边界、有效格式、包重开、非目标文本、
+修改区域回传和原子发布；语义/视觉是否正确由 Agent 根据事实反馈负责，模板准备不设最终全页
+覆盖门禁，也不要求固定 H1/H2/H3 正文集合。
 
 ## 4. `convert-thesis`
 
