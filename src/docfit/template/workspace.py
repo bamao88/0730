@@ -65,15 +65,6 @@ _DURABLE_EDIT_INTENT_ACTIONS = {
     "refresh_toc",
 }
 _MAX_PENDING_EDIT_INTENTS = 8
-_EDIT_LANES = {
-    "materialize_slots": "materialize_slot",
-    "materialize_structures": "materialize_structure",
-    "normalize_effective_formats": "normalize_effective_format",
-    "refresh_tocs": "refresh_toc",
-    "clear_contents": "clear_content",
-    "remove_objects": "remove_object",
-    "ensure_page_starts": "ensure_page_start",
-}
 
 
 def _normalize(value: str) -> str:
@@ -173,26 +164,26 @@ def _effective_format(value: Any, *, required: bool = False) -> JsonObject:
 
 
 def _edit_operations(args: dict[str, Any]) -> list[JsonObject]:
-    """Expand narrow public action lanes into one internal atomic operation list."""
+    """Validate the public atomic operation list before resolving Word objects."""
 
-    if set(args) - set(_EDIT_LANES):
+    if set(args) != {"operations"}:
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="template_edit_batch_invalid",
-            message="template_edit accepts only the documented action-partitioned batch lanes.",
+            message="template_edit accepts exactly one operations array.",
         )
-    operations: list[JsonObject] = []
-    for lane, action in _EDIT_LANES.items():
-        values = args.get(lane, [])
-        if not isinstance(values, list) or any(not isinstance(item, dict) for item in values):
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="template_edit_batch_invalid",
-                message=f"{lane} must be an array of operation objects.",
-            )
-        operations.extend({**item, "action": action} for item in values)
+    raw_operations = args.get("operations")
+    if not isinstance(raw_operations, list) or any(
+        not isinstance(item, dict) for item in raw_operations
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="template_edit_batch_invalid",
+            message="operations must be an array of direct action objects.",
+        )
+    operations = [dict(item) for item in raw_operations]
     if not 1 <= len(operations) <= _MAX_BATCH_OPERATIONS:
         raise ToolFailure(
             status="needs_input",
@@ -1981,9 +1972,7 @@ class TemplateWorkspaceService:
             slot_id: str | None = None
             placeholder: str | None = None
             effective_format = _effective_format(
-                raw.get("format")
-                if action == "normalize_effective_format"
-                else raw.get("effective_format"),
+                raw.get("effective_format"),
                 required=action == "normalize_effective_format",
             )
             structure_members: list[StructureMember] = []
@@ -2006,29 +1995,19 @@ class TemplateWorkspaceService:
                         writable_runs = [
                             item for item in blank_runs if len(item.text) == widest and widest > 1
                         ]
-                        if len(writable_runs) != 1:
-                            raise ToolFailure(
-                                status="needs_input",
-                                origin="request",
-                                code="slot_boundary_too_broad",
-                                message=(
-                                    "This paragraph mixes fixed label text with multiple "
-                                    "indistinguishable blank runs. Focus the intended value run."
+                        if len(writable_runs) == 1:
+                            requested = selected
+                            selected = writable_runs[0]
+                            target_adjustment = {
+                                "action": "materialize_slot",
+                                "reason": "unique_widest_blank_value_run",
+                                "requested_object_id": str(
+                                    requested.object_ref.get("object_id", requested.locator)
                                 ),
-                                suggested_actions=("use_child_run_object_ref",),
-                            )
-                        requested = selected
-                        selected = writable_runs[0]
-                        target_adjustment = {
-                            "action": "materialize_slot",
-                            "reason": "unique_widest_blank_value_run",
-                            "requested_object_id": str(
-                                requested.object_ref.get("object_id", requested.locator)
-                            ),
-                            "effective_object_id": str(
-                                selected.object_ref.get("object_id", selected.locator)
-                            ),
-                        }
+                                "effective_object_id": str(
+                                    selected.object_ref.get("object_id", selected.locator)
+                                ),
+                            }
                 raw_field_id = raw.get("field_id")
                 if not isinstance(raw_field_id, str):
                     raise ToolFailure(

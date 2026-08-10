@@ -97,64 +97,6 @@ class FakeVisual:
         return located
 
 
-def _v5_batch(operations: list[JsonObject]) -> JsonObject:
-    """Keep behavior-heavy fixtures concise while exercising the v5 public lanes."""
-
-    lanes: JsonObject = {}
-    lane_names = {
-        "materialize_slot": "materialize_slots",
-        "materialize_structure": "materialize_structures",
-        "normalize_format": "normalize_effective_formats",
-        "normalize_effective_format": "normalize_effective_formats",
-        "refresh_toc": "refresh_tocs",
-        "clear_content": "clear_contents",
-        "remove_object": "remove_objects",
-        "ensure_page_start": "ensure_page_starts",
-    }
-    for original in operations:
-        operation = dict(original)
-        action = str(operation.pop("action"))
-        lane = lane_names.get(action, "unsupported")
-        direct = operation.pop("clear_direct_format", None)
-        if direct is not None:
-            outcome = {"color": "black"} if "color" in direct else {}
-            if action == "normalize_format":
-                operation["format"] = outcome
-            else:
-                operation["effective_format"] = outcome
-        if action == "normalize_effective_format" and "effective_format" in operation:
-            operation["format"] = operation.pop("effective_format")
-        members = operation.get("members")
-        if isinstance(members, list):
-            converted_members: list[JsonObject] = []
-            for original_member in members:
-                member = dict(original_member)
-                member_direct = member.pop("clear_direct_format", None)
-                if member_direct is not None:
-                    member["effective_format"] = (
-                        {"color": "black"} if "color" in member_direct else {}
-                    )
-                converted_members.append(member)
-            operation["members"] = converted_members
-        lanes.setdefault(lane, []).append(operation)
-    return lanes
-
-
-class _ContractTemplateWorkspaceService(TemplateWorkspaceService):
-    def edit(self, args: dict[str, object]) -> tuple[JsonObject, list[Path]]:
-        operations = args.get("operations")
-        if isinstance(operations, list):
-            return super().edit(_v5_batch(operations))  # type: ignore[arg-type]
-        return super().edit(args)
-
-    def record_edit_failure(self, args: JsonObject, error: ToolFailure) -> None:
-        operations = args.get("operations")
-        if isinstance(operations, list):
-            super().record_edit_failure(_v5_batch(operations), error)
-            return
-        super().record_edit_failure(args, error)
-
-
 class PageSplitVisual(FakeVisual):
     def physical_locations(
         self,
@@ -499,7 +441,7 @@ def _service(
     root, source = _task(tmp_path, fixture)
     visual = FakeVisual()
     return (
-        _ContractTemplateWorkspaceService(
+        TemplateWorkspaceService(
             task_root=root,
             field_registry=REGISTRY,
             visual=visual,  # type: ignore[arg-type]
@@ -544,15 +486,16 @@ def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
     assert set(TEMPLATE_TOOLS[2].input_schema["properties"]) == {"query"}
     assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {"object_ref", "scope"}
     assert set(TEMPLATE_TOOLS[4].input_schema["properties"]) == {"lookups", "searches"}
-    edit_lanes = set(TEMPLATE_TOOLS[5].input_schema["properties"])
-    assert edit_lanes == {
-        "materialize_slots",
-        "materialize_structures",
-        "normalize_effective_formats",
-        "refresh_tocs",
-        "clear_contents",
-        "remove_objects",
-        "ensure_page_starts",
+    assert set(TEMPLATE_TOOLS[5].input_schema["properties"]) == {"operations"}
+    operation_schema = TEMPLATE_TOOLS[5].input_schema["properties"]["operations"]["items"]
+    assert set(operation_schema["properties"]["action"]["enum"]) == {
+        "materialize_slot",
+        "materialize_structure",
+        "normalize_effective_format",
+        "refresh_toc",
+        "clear_content",
+        "remove_object",
+        "ensure_page_start",
     }
     assert "clear_direct_format" not in schemas
     assert "template_view" not in TEMPLATE_LOGICAL_TOOL_NAMES
@@ -829,7 +772,7 @@ def test_navigation_regions_never_mix_objects_from_different_visual_pages(
     root, source = _task(tmp_path, "S07-ambiguous-anchor")
     _append_plain_paragraphs(source, [f"视觉对象{index}" for index in range(8)])
     visual = PageSplitVisual()
-    service = _ContractTemplateWorkspaceService(
+    service = TemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -863,7 +806,7 @@ def test_unmappable_paragraph_never_falls_back_to_an_unrelated_region(
 ) -> None:
     root, _ = _task(tmp_path, "S07-ambiguous-anchor")
     visual = MissingFirstRegionVisual()
-    service = _ContractTemplateWorkspaceService(
+    service = TemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -895,7 +838,7 @@ def test_open_resumes_latest_document_and_pending_region_without_transcript(
         {"operations": [{"action": "clear_content", "object_ref": selected["object_ref"]}]}
     )
 
-    resumed = _ContractTemplateWorkspaceService(
+    resumed = TemplateWorkspaceService(
         task_root=service.task_root,
         field_registry=REGISTRY,
         visual=FakeVisual(),  # type: ignore[arg-type]
@@ -1250,7 +1193,9 @@ def test_materialize_slot_narrows_a_label_paragraph_to_its_unique_blank_value_ru
     assert slot.text.strip() == "【导师中文姓名】"
 
 
-def test_materialize_slot_rejects_indistinguishable_blank_value_runs(tmp_path: Path) -> None:
+def test_materialize_slot_trusts_paragraph_when_blank_value_runs_are_ambiguous(
+    tmp_path: Path,
+) -> None:
     service, _, source = _service(tmp_path)
     _append_label_and_blank_paragraph(source)
     with zipfile.ZipFile(source) as archive:
@@ -1282,19 +1227,28 @@ def test_materialize_slot_rejects_indistinguishable_blank_value_runs(tmp_path: P
         if item.kind == "paragraph" and item.text.startswith("指导教师：")
     )
 
-    with pytest.raises(ToolFailure) as caught:
-        service.edit(
-            {
-                "materialize_slots": [
-                    {
-                        "object_ref": selected.object_ref,
-                        "field_id": "advisor.name.zh",
-                    }
-                ]
-            }
-        )
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": selected.object_ref,
+                    "field_id": "advisor.name.zh",
+                }
+            ]
+        }
+    )
 
-    assert caught.value.code == "slot_boundary_too_broad"
+    assert result["committed"] is True
+    assert result["effects"]["target_adjustments"] == []
+    _, changed_path = service._resolve_document(result["document_ref"])
+    slots = [
+        item
+        for item in service._inspection(changed_path).objects
+        if item.kind == "sdt" and item.format.get("alias") == "advisor.name.zh"
+    ]
+    assert len(slots) == 1
+    assert slots[0].text == "【导师中文姓名】"
 
 
 def test_materialize_slot_preserves_underlined_blank_run_width_budget(tmp_path: Path) -> None:
@@ -1386,12 +1340,17 @@ def test_materialize_slot_absorbs_same_target_effective_format_normalization(
 
     result, _ = service.edit(
         {
-            "materialize_slots": [{"object_ref": selected.object_ref, "field_id": "abstract.en"}],
-            "normalize_effective_formats": [
+            "operations": [
                 {
+                    "action": "materialize_slot",
                     "object_ref": selected.object_ref,
-                    "format": {"color": "black", "underline": "none"},
-                }
+                    "field_id": "abstract.en",
+                },
+                {
+                    "action": "normalize_effective_format",
+                    "object_ref": selected.object_ref,
+                    "effective_format": {"color": "black", "underline": "none"},
+                },
             ],
         }
     )
@@ -1456,22 +1415,22 @@ def test_structure_materialization_absorbs_redundant_descendant_cleanup(
                         {
                             "object_ref": heading.object_ref,
                             "field_id": "body.heading.level1",
-                            "clear_direct_format": ["color"],
+                            "effective_format": {"color": "black"},
                         },
                         {
                             "object_ref": level2.object_ref,
                             "field_id": "body.heading.level2",
-                            "clear_direct_format": ["color"],
+                            "effective_format": {"color": "black"},
                         },
                         {
                             "object_ref": level3.object_ref,
                             "field_id": "body.heading.level3",
-                            "clear_direct_format": ["color"],
+                            "effective_format": {"color": "black"},
                         },
                         {
                             "object_ref": paragraph.object_ref,
                             "field_id": "body.paragraph",
-                            "clear_direct_format": ["color"],
+                            "effective_format": {"color": "black"},
                         },
                     ],
                 },
@@ -1885,9 +1844,17 @@ def test_failed_batch_persists_only_registered_semantic_intents(tmp_path: Path) 
     )
     service.record_edit_failure(
         {
-            "materialize_slots": [
-                {"object_ref": selected.object_ref, "field_id": "abstract.zh"},
-                {"object_ref": selected.object_ref, "field_id": "invented.field"},
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": selected.object_ref,
+                    "field_id": "abstract.zh",
+                },
+                {
+                    "action": "materialize_slot",
+                    "object_ref": selected.object_ref,
+                    "field_id": "invented.field",
+                },
             ]
         },
         ToolFailure(
@@ -2035,7 +2002,7 @@ def test_run_level_slot_feedback_falls_back_to_its_own_paragraph_crop(
 ) -> None:
     root, _ = _task(tmp_path)
     visual = MissingFirstRegionVisual()
-    service = _ContractTemplateWorkspaceService(
+    service = TemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=visual,  # type: ignore[arg-type]
@@ -2088,8 +2055,9 @@ def test_slot_uses_brackets_only_and_normalizes_effective_color_without_losing_s
 
     result, _ = service.edit(
         {
-            "materialize_slots": [
+            "operations": [
                 {
+                    "action": "materialize_slot",
                     "object_ref": selected.object_ref,
                     "field_id": "abstract.zh",
                     "effective_format": {"color": "black", "underline": "none"},
@@ -2158,7 +2126,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         {
             "object_ref": selected[text].object_ref,
             "field_id": field_id,
-            "clear_direct_format": ["color"],
+            "effective_format": {"color": "black"},
         }
         for text, _, field_id in samples
     ]
@@ -2228,7 +2196,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
                         {
                             "object_ref": {"object_id": replacements[text].object_ref["object_id"]},
                             "field_id": field_id,
-                            "clear_direct_format": ["color"],
+                            "effective_format": {"color": "black"},
                         }
                         for text, _, field_id in replacement_samples
                     ],
@@ -2527,14 +2495,14 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
 
     result, _ = service.edit(
         {
-            "normalize_effective_formats": [
+            "operations": [
                 {
+                    "action": "normalize_effective_format",
                     "object_ref": toc.object_ref,
-                    "format": {"color": "black", "underline": "none"},
-                }
-            ],
-            "refresh_tocs": [
+                    "effective_format": {"color": "black", "underline": "none"},
+                },
                 {
+                    "action": "refresh_toc",
                     "object_ref": toc.object_ref,
                     "effective_format": {"color": "black", "underline": "none"},
                     "entries": list(
@@ -2548,7 +2516,7 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
                             ]
                         )
                     ),
-                }
+                },
             ],
         }
     )
@@ -2684,8 +2652,9 @@ def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> No
     with pytest.raises(ToolFailure) as duplicate:
         service.edit(
             {
-                "refresh_tocs": [
+                "operations": [
                     {
+                        "action": "refresh_toc",
                         "object_ref": toc.object_ref,
                         "entries": [
                             {"object_ref": title.object_ref, "level": 1},
@@ -2747,9 +2716,9 @@ def test_parent_removal_absorbs_descendant_cleanup_and_commits_once(tmp_path: Pa
 
     result, _ = service.edit(
         {
-            "remove_objects": [
-                {"object_ref": parent.object_ref},
-                {"object_ref": child.object_ref},
+            "operations": [
+                {"action": "remove_object", "object_ref": parent.object_ref},
+                {"action": "remove_object", "object_ref": child.object_ref},
             ]
         }
     )
@@ -2792,8 +2761,14 @@ def test_parent_removal_rejects_descendant_materialization_as_true_conflict(
     with pytest.raises(ToolFailure) as caught:
         service.edit(
             {
-                "remove_objects": [{"object_ref": parent.object_ref}],
-                "materialize_slots": [{"object_ref": child.object_ref, "field_id": "abstract.zh"}],
+                "operations": [
+                    {"action": "remove_object", "object_ref": parent.object_ref},
+                    {
+                        "action": "materialize_slot",
+                        "object_ref": child.object_ref,
+                        "field_id": "abstract.zh",
+                    },
+                ]
             }
         )
 
@@ -2947,7 +2922,7 @@ def test_remove_only_batch_returns_immediate_fill_interface_recovery_hint(
 def test_vml_textbox_is_one_visible_editable_shape_object(tmp_path: Path) -> None:
     root, source = _task(tmp_path)
     _inject_vml_textbox(source, "本说明阅读后请删除，包括本文本框")
-    service = _ContractTemplateWorkspaceService(
+    service = TemplateWorkspaceService(
         task_root=root,
         field_registry=REGISTRY,
         visual=FakeVisual(),  # type: ignore[arg-type]

@@ -19,24 +19,25 @@ output/final-template.docx
 
 1. 调用 `template_open()`，从最新应用 checkpoint 取得当前有界区域、短对象引用、事实摘要和未完成的 Agent 编辑意图。它不恢复旧 transcript，也不返回完整 Registry 或整篇图片历史。
 2. 只判断当前目标、父对象和必要邻接对象。打开后应先编辑当前区域，或把确实固定的当前区域标记为 preserve；除非同一区域缺少一个必要事实，否则不要先搜索其他地标。`template_search` 不是模板盘点器。区分学校固定内容、学生值、写作说明、样例、生成内容、条件区和结构对象。标签与值同段时聚焦最小 run，不按空白对象的位置猜字段。
-3. 把同一 checkpoint 上已判断清楚的对象合并为一次 `template_edit`。使用对应动作分栏：
+3. 把同一 checkpoint 上已判断清楚的对象合并为一次 `template_edit`。每个 `operations` 成员直接声明一种动作：
 
-   - `materialize_slots`
-   - `materialize_structures`
-   - `normalize_effective_formats`
-   - `refresh_tocs`
-   - `clear_contents`
-   - `remove_objects`
-   - `ensure_page_starts`
+   - `materialize_slot`
+   - `materialize_structure`
+   - `normalize_effective_format`
+   - `refresh_toc`
+   - `clear_content`
+   - `remove_object`
+   - `ensure_page_start`
 
-   `template_edit` 顶层只允许这些动作分栏；`field_id`、`object_ref` 等参数必须放在对应分栏的 item 内。Tool 会吸收“删父对象 + 冗余删/清子对象”等重复操作；“删父对象 + 要求子对象物化”是真冲突，需要修改决定。
+   `template_edit` 顶层只允许一个 `operations` 数组；`action`、`field_id`、`object_ref` 等参数必须放在数组成员内。Tool 会吸收“删父对象 + 冗余删/清子对象”等重复操作；“删父对象 + 要求子对象物化”是真冲突，需要修改决定。
 
-   每个分栏值始终是数组，不使用 `item` 包装，也不把 item 参数放到顶层。最小合法调用形状：
+   不使用 `item` 包装，也不把 operation 参数放到顶层。最小合法调用形状：
 
    ```json
    {
-     "materialize_slots": [
+     "operations": [
        {
+         "action": "materialize_slot",
          "object_ref": {"object_id": "obj-..."},
          "field_id": "abstract.zh",
          "effective_format": {"color": "black", "underline": "none"}
@@ -77,7 +78,7 @@ output/final-template.docx
 
 ## 内容槽
 
-`materialize_slots` 内部处理 Registry 校验、唯一 tag、Human 可读括号占位、格式保留、包重开和效果回读。只提交当前对象引用、字段 ID 和必要的有效格式结果；不写 YAML，不调用 compiler，不管理中间 DOCX 路径。
+`materialize_slot` 内部处理 Registry 校验、唯一 tag、Human 可读括号占位、格式保留、包重开和效果回读。只提交当前对象引用、字段 ID 和必要的有效格式结果；不写 YAML，不调用 compiler，不管理中间 DOCX 路径。
 
 可见占位只用 `【字段标签】`，不增加灰底、底纹或 `w:showingPlcHdr`。带下划线的空白 run 可能用空格宽度形成填写线；物化后检查它没有缩成占位文字长度。
 
@@ -85,8 +86,8 @@ output/final-template.docx
 
 ## 删除与清空
 
-- 一整段说明或样例不应存在：放入 `remove_objects`。
-- 容器、边框、行距、单元格或固定标签必须保留，只去掉值：聚焦更小的 run 后放入 `clear_contents`，或直接物化该 run。
+- 一整段说明或样例不应存在：使用 `remove_object`。
+- 容器、边框、行距、单元格或固定标签必须保留，只去掉值：聚焦更小的 run 后使用 `clear_content`，或直接物化该 run。
 - 不逐行清空目录缓存；目录是复合生成对象。
 - 删除成功只证明机械执行与结构校验通过；语义和视觉是否正确仍由你判断。
 

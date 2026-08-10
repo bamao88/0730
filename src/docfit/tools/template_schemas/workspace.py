@@ -106,34 +106,6 @@ EFFECTIVE_FORMAT_SCHEMA: JsonObject = {
     "additionalProperties": False,
 }
 
-_SIMPLE_TARGET_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {"object_ref": TEMPLATE_OBJECT_REF_SCHEMA},
-    "required": ["object_ref"],
-    "additionalProperties": False,
-}
-
-_FORMAT_TARGET_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
-        "format": EFFECTIVE_FORMAT_SCHEMA,
-    },
-    "required": ["object_ref", "format"],
-    "additionalProperties": False,
-}
-
-_MATERIALIZE_SLOT_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
-        "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
-        "effective_format": EFFECTIVE_FORMAT_SCHEMA,
-    },
-    "required": ["object_ref", "field_id"],
-    "additionalProperties": False,
-}
-
 _STRUCTURE_MEMBER_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
@@ -142,22 +114,6 @@ _STRUCTURE_MEMBER_SCHEMA: JsonObject = {
         "effective_format": EFFECTIVE_FORMAT_SCHEMA,
     },
     "required": ["object_ref", "field_id"],
-    "additionalProperties": False,
-}
-
-_MATERIALIZE_STRUCTURE_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
-        "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
-        "members": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 32,
-            "items": _STRUCTURE_MEMBER_SCHEMA,
-        },
-    },
-    "required": ["object_ref", "members"],
     "additionalProperties": False,
 }
 
@@ -171,71 +127,53 @@ _TOC_ENTRY_SCHEMA: JsonObject = {
     "additionalProperties": False,
 }
 
-_REFRESH_TOC_SCHEMA: JsonObject = {
+_EDIT_OPERATION_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
+        "action": {
+            "type": "string",
+            "enum": [
+                "materialize_slot",
+                "materialize_structure",
+                "normalize_effective_format",
+                "refresh_toc",
+                "clear_content",
+                "remove_object",
+                "ensure_page_start",
+            ],
+        },
         "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+        "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "effective_format": EFFECTIVE_FORMAT_SCHEMA,
+        "members": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": _STRUCTURE_MEMBER_SCHEMA,
+        },
         "entries": {
             "type": "array",
             "minItems": 1,
             "maxItems": 64,
             "items": _TOC_ENTRY_SCHEMA,
         },
-        "effective_format": EFFECTIVE_FORMAT_SCHEMA,
-    },
-    "required": ["object_ref", "entries"],
-    "additionalProperties": False,
-}
-
-_ENSURE_PAGE_START_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
         "mode": {"type": "string", "enum": ["new_page"]},
     },
-    "required": ["object_ref", "mode"],
+    "required": ["action", "object_ref"],
     "additionalProperties": False,
 }
 
 TEMPLATE_EDIT_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "materialize_slots": {
+        "operations": {
             "type": "array",
+            "minItems": 1,
             "maxItems": 32,
-            "items": _MATERIALIZE_SLOT_SCHEMA,
-        },
-        "materialize_structures": {
-            "type": "array",
-            "maxItems": 4,
-            "items": _MATERIALIZE_STRUCTURE_SCHEMA,
-        },
-        "normalize_effective_formats": {
-            "type": "array",
-            "maxItems": 32,
-            "items": _FORMAT_TARGET_SCHEMA,
-        },
-        "refresh_tocs": {
-            "type": "array",
-            "maxItems": 1,
-            "items": _REFRESH_TOC_SCHEMA,
-        },
-        "clear_contents": {
-            "type": "array",
-            "maxItems": 32,
-            "items": _SIMPLE_TARGET_SCHEMA,
-        },
-        "remove_objects": {
-            "type": "array",
-            "maxItems": 32,
-            "items": _SIMPLE_TARGET_SCHEMA,
-        },
-        "ensure_page_starts": {
-            "type": "array",
-            "maxItems": 32,
-            "items": _ENSURE_PAGE_START_SCHEMA,
+            "items": _EDIT_OPERATION_SCHEMA,
         },
     },
+    "required": ["operations"],
     "additionalProperties": False,
 }
 
