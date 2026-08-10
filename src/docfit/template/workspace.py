@@ -248,6 +248,58 @@ def _normalize_prepared_operations(
     }
     materializing = {"materialize_slot", "materialize_structure", "refresh_toc"}
 
+    # A structure already materializes each declared member as a slot. Agents may
+    # still state the same member decisions explicitly in the surrounding batch;
+    # preserve the explicit slot id/format and absorb the redundant operation.
+    for structure_index, structure in enumerate(prepared):
+        if structure.get("action") != "materialize_structure":
+            continue
+        members = [item for item in structure.get("members", []) if isinstance(item, dict)]
+        structure_mutation = mutations[structure_index]
+        updated_members = list(structure_mutation.structure_members)
+        for slot_index, slot in enumerate(prepared):
+            if slot_index == structure_index or slot_index in absorbed:
+                continue
+            if slot.get("action") != "materialize_slot":
+                continue
+            slot_locator = str(slot.get("target_locator", ""))
+            member_index = next(
+                (
+                    index
+                    for index, member in enumerate(members)
+                    if slot_locator == str(member.get("target_locator", ""))
+                    or slot_locator.startswith(f"{member.get('target_locator', '')}/")
+                ),
+                None,
+            )
+            if member_index is None:
+                continue
+            member = members[member_index]
+            slot_field = slot.get("field")
+            member_field = member.get("field")
+            if (
+                not isinstance(slot_field, dict)
+                or not isinstance(member_field, dict)
+                or slot_field.get("field_id") != member_field.get("field_id")
+            ):
+                conflict(structure_index, slot_index)
+            merged_format = dict(member.get("effective_format", {}))
+            merged_format.update(slot.get("effective_format", {}))
+            member["effective_format"] = merged_format
+            member["slot_id"] = slot.get("slot_id")
+            member["effective_before"] = dict(slot.get("effective_before", {}))
+            member_mutation = updated_members[member_index]
+            updated_members[member_index] = replace(
+                member_mutation,
+                slot_id=str(slot.get("slot_id")),
+                effective_format=tuple(merged_format.items()),
+            )
+            absorb(slot_index, structure_index, "materialization_absorbed_by_structure_member")
+        mutations[structure_index] = replace(
+            structure_mutation,
+            structure_members=tuple(updated_members),
+        )
+
     for first_index, first in enumerate(prepared):
         if first_index in absorbed:
             continue

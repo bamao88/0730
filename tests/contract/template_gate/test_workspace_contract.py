@@ -1572,6 +1572,65 @@ def test_structure_preserves_empty_layout_paragraphs_between_semantic_members(
     assert len(structure.findall(f"{W}sdtContent/{W}p")) == 5
 
 
+def test_structure_absorbs_redundant_member_slot_operations(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    samples = [
+        ("第一章 样例", "FF0000", "body.heading.level1"),
+        ("1.1 样例", "FF0000", "body.heading.level2"),
+        ("1.1.1 样例", "FF0000", "body.heading.level3"),
+        ("正文样例", "0000FF", "body.paragraph"),
+    ]
+    _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    selected = {
+        item.text: item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text in {text for text, _, _ in samples}
+    }
+    members = [
+        {"object_ref": selected[text].object_ref, "field_id": field_id}
+        for text, _, field_id in samples
+    ]
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                *[
+                    {
+                        "action": "materialize_slot",
+                        "object_ref": selected[text].object_ref,
+                        "field_id": field_id,
+                        "effective_format": {"color": "black", "underline": "none"},
+                    }
+                    for text, _, field_id in samples
+                ],
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected[samples[0][0]].object_ref,
+                    "field_id": "body.chapters",
+                    "members": members,
+                },
+            ]
+        }
+    )
+
+    assert result["committed"] is True
+    assert result["effects"]["operations"] == 1
+    assert result["effects"]["actions"] == {"materialize_structure": 1}
+    absorbed = result["effects"]["absorbed_operations"]
+    assert len(absorbed) == len(samples)
+    assert {item["reason"] for item in absorbed} == {
+        "materialization_absorbed_by_structure_member"
+    }
+    assert result["materialized_members"] == sorted(field_id for _, _, field_id in samples)
+    assert len(result["effects"]["effective_format_changes"]) == len(samples)
+    assert all(
+        change["requested"] == {"color": "black", "underline": "none"}
+        for change in result["effects"]["effective_format_changes"]
+    )
+
+
 def test_structure_leaves_empty_section_boundary_outside_repeatable_unit(
     tmp_path: Path,
 ) -> None:
