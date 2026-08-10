@@ -712,8 +712,10 @@ inspect/render/edit/visual-review/validate 契约或完成门。Bash/Write 的�
 
 ### 3.5 双侧提取与 Placement 数据连接合同
 
-本节定义未来 M3 和需要显式调试证据的任务如何连接模板与学生内容；它不表示当前代码
-已实现下列 schema，也不新增 Skill、公共 Tool、产品 Knowledge 类型或固定工作流。
+本节定义未来 M3 和需要显式调试证据的任务如何连接模板与学生内容。当前已有一个经
+单独批准的内部调试切片，物化了受限 Student Content、Placement、模板填写和质量投影
+候选，见 `docs/plans/docfit-student-content-placement-debug.md`；该切片不等于正式产品
+schema 或运行时合同，也不新增 Skill、公共 Tool、产品 Knowledge 类型或固定工作流。
 
 四种身份必须分离：
 

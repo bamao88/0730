@@ -656,7 +656,9 @@ M3 的分层 Eval 提供同一事实基础。它不是恢复 M3 的执行批准�
 `content-fields-v0.1.yaml`（`docfit.thesis.content_fields@0.1.0`）。Registry 的责任边界、
 未注册字段和版本规则，以及模板提取 Eval 的 candidate fill-contract/case schema 已完成
 G1；独立模板 Actual—Gold 静态 runner 及其合成评分证据已完成 G3。Student/Placement
-正式 schema、产品运行时消费、Human-accepted 学校 Gold/回归和完整 M3 仍未实现。
+正式 schema、产品运行时消费、Human-accepted 学校 Gold/回归和完整 M3 仍未实现。一个
+经单独批准的内部 Student Content → Placement → template-fill 调试切片已经物化并通过
+合成测试与真实样本 `PARTIAL` 证据；它不提供公共 CLI/Tool，不构成上述正式能力完成。
 
 目标范围包括：
 
@@ -678,8 +680,10 @@ G1；独立模板 Actual—Gold 静态 runner 及其合成评分证据已完成 
 - 默认把 Human Truth 标为 `oracle_only`，只有受控执行能力 Eval 才逐文件暴露为
   `subject_input`；Student Content 文件继承源 DOCX 的隐私和授权边界。
 
-开始 Template/Student/Placement schema 或运行时实现前必须另行批准计划。v0.1 已可作为
-开发期相同语义输入，但下一个可升级快照仍需完成：54 字段的逐项 Human review；值来源和
+本轮内部调试切片的批准范围和证据记录在
+`docs/plans/docfit-student-content-placement-debug.md` 与对应 active status。任何正式
+Template/Student/Placement schema、产品运行时消费、公共接口或 Eval/Gold 晋升仍必须
+另行批准计划。v0.1 已可作为开发期相同语义输入，但下一个可升级快照仍需完成：54 字段的逐项 Human review；值来源和
 学生提取策略补全；把 `optional` 与 `one/many` 数量约束分开；移出
 `body.inline_emphasis` meaning 中的 PKU 特定样式语义；重新确认图表注的允许父对象、
 `author.cohort_class` 等复合值与原子值的关系；字段改义/别名/版本政策；

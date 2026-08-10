@@ -180,6 +180,25 @@ def _find_body_element(root: ET.Element, locator: str) -> ET.Element:
     )
 
 
+def _find_direct_body_content_control(body: ET.Element, tag: str) -> ET.Element:
+    matches: list[ET.Element] = []
+    for child in body.findall(_q(W_NS, "sdt")):
+        tag_element = child.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
+        if tag_element is not None and tag_element.get(_q(W_NS, "val")) == tag:
+            matches.append(child)
+    if len(matches) != 1:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="content_control_tag_not_unique",
+            message=(
+                "A block replacement tag must identify exactly one body-level content control."
+            ),
+            suggested_actions=("inspect_template_again", "repair_fill_contract"),
+        )
+    return matches[0]
+
+
 @dataclass(slots=True)
 class _Closure:
     source: dict[str, bytes]
@@ -309,6 +328,20 @@ def _copy_referenced_styles(
     return mapping, copied_count
 
 
+def _strip_style_references(copied: list[ET.Element]) -> int:
+    """Remove source style IDs while retaining concrete OOXML content and formatting."""
+
+    removed = 0
+    style_tags = {_q(W_NS, value) for value in ("pStyle", "rStyle", "tblStyle")}
+    for item in copied:
+        for parent in item.iter():
+            for child in list(parent):
+                if child.tag in style_tags:
+                    parent.remove(child)
+                    removed += 1
+    return removed
+
+
 def _copy_numbering(
     copied: list[ET.Element],
     source_parts: dict[str, bytes],
@@ -323,7 +356,7 @@ def _copy_numbering(
     if not requested:
         return {}, 0
     source_numbering = _xml(source_parts, "word/numbering.xml")
-    target_numbering = _xml(target_parts, "word/numbering.xml")
+    target_numbering = _ensure_numbering_part(target_parts)
     source_nums = {
         item.get(_q(W_NS, "numId"), ""): item for item in source_numbering.findall(_q(W_NS, "num"))
     }
@@ -379,6 +412,42 @@ def _copy_numbering(
                 num_id.set(_q(W_NS, "val"), mapping[old])
     target_parts["word/numbering.xml"] = _serialize(target_numbering)
     return mapping, len(mapping)
+
+
+def _ensure_numbering_part(target_parts: dict[str, bytes]) -> ET.Element:
+    """Create the standard numbering infrastructure when a target has none."""
+
+    if "word/numbering.xml" in target_parts:
+        return _xml(target_parts, "word/numbering.xml")
+    numbering = ET.Element(_q(W_NS, "numbering"))
+    target_relationships = _xml(target_parts, "word/_rels/document.xml.rels")
+    numbering_type = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"
+    if not any(
+        relationship.get("Type") == numbering_type
+        for relationship in target_relationships.findall(_q(REL_NS, "Relationship"))
+    ):
+        relationship = ET.SubElement(
+            target_relationships,
+            _q(REL_NS, "Relationship"),
+        )
+        relationship.set("Id", _next_relationship_id(target_relationships))
+        relationship.set("Type", numbering_type)
+        relationship.set("Target", "numbering.xml")
+    target_parts["word/_rels/document.xml.rels"] = _serialize(target_relationships)
+
+    content_types = _xml(target_parts, "[Content_Types].xml")
+    part_name = "/word/numbering.xml"
+    if not any(
+        item.get("PartName") == part_name for item in content_types.findall(_q(CT_NS, "Override"))
+    ):
+        override = ET.SubElement(content_types, _q(CT_NS, "Override"))
+        override.set("PartName", part_name)
+        override.set(
+            "ContentType",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml",
+        )
+    target_parts["[Content_Types].xml"] = _serialize(content_types)
+    return numbering
 
 
 def _remap_local_ids(copied: list[ET.Element], target_document: ET.Element) -> int:
@@ -446,6 +515,209 @@ def _write_package(path: Path, parts: dict[str, bytes]) -> None:
             archive.writestr(entry, parts[name])
 
 
+def _set_run_property(parent: ET.Element, name: str, value: str | None) -> None:
+    existing = parent.find(_q(W_NS, name))
+    if value is None:
+        if existing is not None:
+            parent.remove(existing)
+        return
+    if existing is None:
+        existing = ET.SubElement(parent, _q(W_NS, name))
+    existing.set(_q(W_NS, "val"), value)
+
+
+def _apply_expected_value_run_style(content: ET.Element, style: JsonObject) -> bool:
+    font = style.get("font")
+    if not isinstance(font, dict) or not font:
+        return False
+    text_node = next(content.iter(_q(W_NS, "t")), None)
+    run = next(
+        (
+            candidate
+            for candidate in content.iter(_q(W_NS, "r"))
+            if text_node is not None and text_node in set(candidate.iter())
+        ),
+        None,
+    )
+    if run is None:
+        return False
+    properties = run.find(_q(W_NS, "rPr"))
+    if properties is None:
+        properties = ET.Element(_q(W_NS, "rPr"))
+        run.insert(0, properties)
+
+    latin = font.get("latin")
+    east_asia = font.get("east_asia")
+    complex_script = font.get("complex_script", latin)
+    if any(
+        value is not None and not isinstance(value, str)
+        for value in (latin, east_asia, complex_script)
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="content_control_expected_font_invalid",
+            message="A fill-contract expected font contains a non-string value.",
+        )
+    if any(isinstance(value, str) and value for value in (latin, east_asia, complex_script)):
+        fonts = properties.find(_q(W_NS, "rFonts"))
+        if fonts is None:
+            fonts = ET.SubElement(properties, _q(W_NS, "rFonts"))
+        if isinstance(latin, str) and (latin_value := _first_declared_font(latin)):
+            fonts.set(_q(W_NS, "ascii"), latin_value)
+            fonts.set(_q(W_NS, "hAnsi"), latin_value)
+        if isinstance(east_asia, str) and (east_asia_value := _first_declared_font(east_asia)):
+            fonts.set(_q(W_NS, "eastAsia"), east_asia_value)
+        if isinstance(complex_script, str) and (
+            complex_script_value := _first_declared_font(complex_script)
+        ):
+            fonts.set(_q(W_NS, "cs"), complex_script_value)
+
+    size = font.get("size_pt")
+    if size is not None:
+        if not isinstance(size, (int, float)) or isinstance(size, bool) or size <= 0:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_expected_size_invalid",
+                message="A fill-contract expected font size must be a positive number.",
+            )
+        half_points = str(round(float(size) * 2))
+        _set_run_property(properties, "sz", half_points)
+        _set_run_property(properties, "szCs", half_points)
+
+    for key, word_name, complex_name in (
+        ("bold", "b", "bCs"),
+        ("italic", "i", "iCs"),
+    ):
+        value = font.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, bool):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_expected_emphasis_invalid",
+                message="Fill-contract bold and italic values must be booleans.",
+            )
+        encoded = "1" if value else "0"
+        _set_run_property(properties, word_name, encoded)
+        _set_run_property(properties, complex_name, encoded)
+
+    color = font.get("color")
+    if color is None:
+        # Placeholder examples often carry a gray direct color that must not leak into
+        # a real value.  With no explicit contract color, inherit from the template style.
+        _set_run_property(properties, "color", None)
+    else:
+        if not isinstance(color, str) or re.fullmatch(r"[0-9A-Fa-f]{6}", color) is None:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_expected_color_invalid",
+                message="A fill-contract expected font color must be six hexadecimal digits.",
+            )
+        _set_run_property(properties, "color", color.upper())
+    return True
+
+
+def _first_declared_font(value: str) -> str:
+    """Choose the first contract-declared alternative that Word can store as one font."""
+
+    return next((item.strip() for item in value.split(";") if item.strip()), "")
+
+
+def mutate_content_controls(
+    *,
+    input_docx: Path,
+    text_replacements: dict[str, str],
+    text_formats: dict[str, JsonObject] | None = None,
+    remove_body_tags: tuple[str, ...],
+    output_docx: Path,
+) -> JsonObject:
+    """Replace tagged text and remove declared body-level controls in one snapshot."""
+
+    parts = _read_package(input_docx)
+    document = _xml(parts, "word/document.xml")
+    body = document.find(_q(W_NS, "body"))
+    if body is None:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="document_body_missing",
+            message="The DOCX document body is missing.",
+        )
+    formats = text_formats or {}
+    if set(formats) - set(text_replacements):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="content_control_format_without_value",
+            message="Expected value formatting may only target a replaced content control.",
+        )
+    controls_by_tag: dict[str, list[ET.Element]] = {}
+    formatted = 0
+    for control in document.iter(_q(W_NS, "sdt")):
+        tag_element = control.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
+        tag = tag_element.get(_q(W_NS, "val")) if tag_element is not None else None
+        if tag:
+            controls_by_tag.setdefault(tag, []).append(control)
+    for tag, value in text_replacements.items():
+        matches = controls_by_tag.get(tag, [])
+        if len(matches) != 1:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_tag_not_unique",
+                message="A text replacement tag must identify exactly one content control.",
+            )
+        content = matches[0].find(_q(W_NS, "sdtContent"))
+        if content is None:
+            raise ToolFailure(
+                status="error",
+                origin="document",
+                code="content_control_content_missing",
+                message="A target content control has no editable content container.",
+            )
+        text_nodes = list(content.iter(_q(W_NS, "t")))
+        if text_nodes:
+            text_nodes[0].text = value
+            text_nodes[0].set(
+                "{http://www.w3.org/XML/1998/namespace}space",
+                "preserve",
+            )
+            for text_node in text_nodes[1:]:
+                text_node.text = None
+        else:
+            run = next(content.iter(_q(W_NS, "r")), None)
+            if run is None:
+                run = ET.SubElement(content, _q(W_NS, "r"))
+            text_node = ET.SubElement(run, _q(W_NS, "t"))
+            text_node.set(
+                "{http://www.w3.org/XML/1998/namespace}space",
+                "preserve",
+            )
+            text_node.text = value
+        formatted += int(_apply_expected_value_run_style(content, formats.get(tag, {})))
+        properties = matches[0].find(_q(W_NS, "sdtPr"))
+        if properties is not None:
+            placeholder_flag = properties.find(_q(W_NS, "showingPlcHdr"))
+            if placeholder_flag is not None:
+                properties.remove(placeholder_flag)
+    removed = 0
+    for tag in remove_body_tags:
+        control = _find_direct_body_content_control(body, tag)
+        body.remove(control)
+        removed += 1
+    parts["word/document.xml"] = _serialize(document)
+    _write_package(output_docx, parts)
+    return {
+        "text_controls_replaced": len(text_replacements),
+        "text_controls_formatted": formatted,
+        "body_controls_removed": removed,
+    }
+
+
 def import_content_objects(
     *,
     target_docx: Path,
@@ -455,6 +727,8 @@ def import_content_objects(
     position: str,
     include_source_final_section_properties: bool,
     output_docx: Path,
+    replace_content_control_tag: str | None = None,
+    copy_source_styles: bool = True,
 ) -> JsonObject:
     """Copy selected body objects and their concrete package dependencies."""
 
@@ -472,7 +746,7 @@ def import_content_objects(
             code="invalid_insert_position",
             message="Content insertion position must be before, after, or end.",
         )
-    if position != "end" and anchor_locator is None:
+    if replace_content_control_tag is None and position != "end" and anchor_locator is None:
         raise ToolFailure(
             status="needs_input",
             origin="request",
@@ -504,7 +778,12 @@ def import_content_objects(
             paragraph_properties.append(copy.deepcopy(final_section))
             copied.append(paragraph)
 
-    style_mapping, copied_styles = _copy_referenced_styles(copied, source_parts, target_parts)
+    stripped_style_references = 0
+    if copy_source_styles:
+        style_mapping, copied_styles = _copy_referenced_styles(copied, source_parts, target_parts)
+    else:
+        style_mapping, copied_styles = {}, 0
+        stripped_style_references = _strip_style_references(copied)
     numbering_mapping, copied_numbering = _copy_numbering(copied, source_parts, target_parts)
     remapped_local_ids = _remap_local_ids(copied, target_document)
 
@@ -550,7 +829,14 @@ def import_content_objects(
                 closure.copied_relationships += 1
                 element.set(attribute, new_id)
 
-    if position == "end":
+    if replace_content_control_tag is not None:
+        replaced = _find_direct_body_content_control(
+            target_body,
+            replace_content_control_tag,
+        )
+        insert_index = list(target_body).index(replaced)
+        target_body.remove(replaced)
+    elif position == "end":
         final_sect_pr = target_body.find(_q(W_NS, "sectPr"))
         insert_index = (
             list(target_body).index(final_sect_pr)
@@ -565,6 +851,32 @@ def import_content_objects(
     for offset, item in enumerate(copied):
         target_body.insert(insert_index + offset, item)
 
+    inserted_body_refs: list[JsonObject] = []
+    table_positions = {
+        id(table): index
+        for index, table in enumerate(target_body.findall(_q(W_NS, "tbl")), start=1)
+    }
+    for source_locator, item in zip(source_locators, copied, strict=False):
+        target_locator: str | None = None
+        if item.tag == _q(W_NS, "p"):
+            para_id = next(
+                (value for key, value in item.attrib.items() if key.endswith("}paraId")),
+                None,
+            )
+            if para_id:
+                target_locator = f"/body/p[@paraId={para_id}]"
+        elif item.tag == _q(W_NS, "tbl"):
+            table_index = table_positions.get(id(item))
+            if table_index is not None:
+                target_locator = f"/body/tbl[{table_index}]"
+        inserted_body_refs.append(
+            {
+                "source_locator": source_locator,
+                "target_locator": target_locator,
+                "kind": "table" if item.tag == _q(W_NS, "tbl") else "paragraph",
+            }
+        )
+
     target_parts["word/document.xml"] = _serialize(target_document)
     target_parts["word/_rels/document.xml.rels"] = _serialize(target_document_rels)
     target_parts["[Content_Types].xml"] = _serialize(target_content_types)
@@ -574,11 +886,14 @@ def import_content_objects(
         "inserted_objects": len(copied),
         "styles_copied": copied_styles,
         "style_id_map": style_mapping,
+        "source_style_references_stripped": stripped_style_references,
         "numbering_copied": copied_numbering,
         "numbering_id_map": numbering_mapping,
         "package_parts_copied": len(closure.copied_parts),
         "relationships_copied": closure.copied_relationships,
+        "replaced_content_control_tag": replace_content_control_tag,
         "local_ids_remapped": remapped_local_ids,
+        "inserted_body_refs": inserted_body_refs,
         "headers_or_footers_copied": sum(
             1
             for value in closure.copied_parts
