@@ -118,9 +118,15 @@ def test_prepare_options_remove_bash_write_compilers_and_checker(tmp_path: Path)
     assert options.skills == ["docfit-school-extract"]
     assert set(options.mcp_servers or {}) == {"docfit"}
     assert options.allowed_tools == []
-    assert {"Bash", "Write", "Agent"} <= set(options.disallowed_tools or ())
+    assert {"Bash", "Write", "Agent", "Glob", "Grep"} <= set(
+        options.disallowed_tools or ()
+    )
     assert "Bash" not in (options.tools or ())
     assert "Write" not in (options.tools or ())
+    assert "Glob" not in (options.tools or ())
+    assert "Grep" not in (options.tools or ())
+    assert options.tools == ["Skill", "Read", "AskUserQuestion"]
+    assert options.hooks["PreToolUse"][1].matcher == "Read"
     assert options.max_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT
 
 

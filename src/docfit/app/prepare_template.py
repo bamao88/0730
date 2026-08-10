@@ -25,7 +25,6 @@ from claude_agent_sdk.types import (
 from docfit.app.agent import (
     AGENT_SDK_MAX_BUFFER_BYTES,
     FORBIDDEN_TOOLS,
-    READ_ONLY_BUILTIN_TOOLS,
     build_read_path_policy,
     make_docfit_schema_version_hook,
     make_permission_callback,
@@ -412,14 +411,10 @@ def build_prepare_template_options(
     backend: AgentBackend,
     config_directory: Path,
 ) -> ClaudeAgentOptions:
-    policy = build_read_path_policy(
-        project=prepared.task_root,
-        cwd=prepared.task_root,
-        task_root=prepared.task_root,
-    )
+    policy = build_read_path_policy(project=prepared.task_root, cwd=prepared.task_root)
     environment = isolated_sdk_environment(backend.sdk_environment(), config_directory)
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
-    builtin_tools = ("Skill", *READ_ONLY_BUILTIN_TOOLS, "AskUserQuestion")
+    builtin_tools = ("Skill", "Read", "AskUserQuestion")
     permission_callback = make_permission_callback(
         terminal_ask_user,
         read_path_policy=policy,
@@ -428,7 +423,14 @@ def build_prepare_template_options(
     return ClaudeAgentOptions(
         tools=list(builtin_tools),
         allowed_tools=[],
-        disallowed_tools=[*FORBIDDEN_TOOLS, "Bash", "Write", "Agent"],
+        disallowed_tools=[
+            *FORBIDDEN_TOOLS,
+            "Bash",
+            "Write",
+            "Agent",
+            "Glob",
+            "Grep",
+        ],
         mcp_servers={
             "docfit": build_template_tool_server(
                 prepared.task_root,
@@ -444,10 +446,7 @@ def build_prepare_template_options(
                     matcher="mcp__docfit__.*",
                     hooks=[make_docfit_schema_version_hook()],
                 ),
-                HookMatcher(
-                    matcher="Read|Glob|Grep",
-                    hooks=[make_read_path_gate_hook(policy)],
-                ),
+                HookMatcher(matcher="Read", hooks=[make_read_path_gate_hook(policy)]),
             ]
         },
         setting_sources=["project"],
