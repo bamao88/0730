@@ -263,6 +263,38 @@ def test_context_boundary_starts_fresh_sdk_session_and_keeps_application_progres
     assert execution.num_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT + 2
 
 
+def test_backend_timeout_is_scoped_to_one_sdk_segment(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+
+    class StalledClient:
+        def __init__(self, *, options: Any) -> None:
+            self.options = options
+
+        async def __aenter__(self) -> StalledClient:
+            return self
+
+        async def __aexit__(self, *_args: Any) -> None:
+            return None
+
+        async def query(self, _prompt: str) -> None:
+            return None
+
+        async def receive_response(self) -> Any:
+            await asyncio.Event().wait()
+            yield None
+
+    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", StalledClient)
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS", 0.01
+    )
+
+    with pytest.raises(TimeoutError):
+        asyncio.run(_run_backend(prepared, _backend()))
+
+
 def test_cli_requirements_and_registry_are_optional() -> None:
     parsed = build_parser().parse_args(
         [

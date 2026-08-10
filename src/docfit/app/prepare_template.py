@@ -83,7 +83,7 @@ PREPARE_TEMPLATE_OUTPUT_SCHEMA: JsonObject = {
     ],
 }
 
-PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS = 1800
+PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS = 1800
 # Claude Agent SDK sessions retain prior Tool images. Keep each native session
 # deliberately short, then continue from DocFit's application checkpoint in a
 # fresh session instead of resuming the transcript.
@@ -564,6 +564,75 @@ def _validated_sdk_output(
     return result.structured_output
 
 
+async def _run_backend_segment(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    tool_uses: list[str],
+    skills: list[str],
+) -> ResultMessage | None:
+    """Run one bounded SDK transcript while progress remains application-owned."""
+
+    options = build_prepare_template_options(prepared, backend, config_directory)
+    result: ResultMessage | None = None
+    async with asyncio.timeout(PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS):
+        async with ClaudeSDKClient(options=options) as client:
+            await client.query(build_prepare_template_prompt(prepared))
+            async for message in client.receive_response():
+                if isinstance(message, AssistantMessage):
+                    for block in message.content:
+                        if isinstance(block, ToolUseBlock):
+                            tool_uses.append(block.name)
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "tool_use",
+                                    "backend": backend.name,
+                                    "tool": block.name,
+                                    "input": block.input,
+                                },
+                            )
+                            if block.name == "Skill":
+                                value = block.input.get("skill") or block.input.get("name")
+                                if isinstance(value, str):
+                                    skills.append(value)
+                        elif isinstance(block, TextBlock) and block.text.strip():
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "assistant_text",
+                                    "backend": backend.name,
+                                    "text": block.text[:2000],
+                                },
+                            )
+                elif isinstance(message, UserMessage) and isinstance(message.content, list):
+                    for block in message.content:
+                        if isinstance(block, ToolResultBlock):
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "tool_result",
+                                    "backend": backend.name,
+                                    "is_error": bool(block.is_error),
+                                    "content": _agent_result_summary(block.content),
+                                },
+                            )
+                if isinstance(message, ResultMessage):
+                    result = message
+                    _append_agent_live_event(
+                        prepared,
+                        {
+                            "event": "session_result",
+                            "backend": backend.name,
+                            "is_error": result.is_error,
+                            "subtype": result.subtype,
+                            "terminal_reason": result.terminal_reason,
+                            "num_turns": result.num_turns,
+                        },
+                    )
+    return result
+
+
 async def _run_backend(
     prepared: PreparedTemplateTask,
     backend: AgentBackend,
@@ -575,62 +644,13 @@ async def _run_backend(
         total_duration_ms = 0
         total_duration_api_ms = 0
         while True:
-            options = build_prepare_template_options(prepared, backend, Path(config_name))
-            result: ResultMessage | None = None
-            async with ClaudeSDKClient(options=options) as client:
-                await client.query(build_prepare_template_prompt(prepared))
-                async for message in client.receive_response():
-                    if isinstance(message, AssistantMessage):
-                        for block in message.content:
-                            if isinstance(block, ToolUseBlock):
-                                tool_uses.append(block.name)
-                                _append_agent_live_event(
-                                    prepared,
-                                    {
-                                        "event": "tool_use",
-                                        "backend": backend.name,
-                                        "tool": block.name,
-                                        "input": block.input,
-                                    },
-                                )
-                                if block.name == "Skill":
-                                    value = block.input.get("skill") or block.input.get("name")
-                                    if isinstance(value, str):
-                                        skills.append(value)
-                            elif isinstance(block, TextBlock) and block.text.strip():
-                                _append_agent_live_event(
-                                    prepared,
-                                    {
-                                        "event": "assistant_text",
-                                        "backend": backend.name,
-                                        "text": block.text[:2000],
-                                    },
-                                )
-                    elif isinstance(message, UserMessage) and isinstance(message.content, list):
-                        for block in message.content:
-                            if isinstance(block, ToolResultBlock):
-                                _append_agent_live_event(
-                                    prepared,
-                                    {
-                                        "event": "tool_result",
-                                        "backend": backend.name,
-                                        "is_error": bool(block.is_error),
-                                        "content": _agent_result_summary(block.content),
-                                    },
-                                )
-                    if isinstance(message, ResultMessage):
-                        result = message
-                        _append_agent_live_event(
-                            prepared,
-                            {
-                                "event": "session_result",
-                                "backend": backend.name,
-                                "is_error": result.is_error,
-                                "subtype": result.subtype,
-                                "terminal_reason": result.terminal_reason,
-                                "num_turns": result.num_turns,
-                            },
-                        )
+            result = await _run_backend_segment(
+                prepared,
+                backend,
+                Path(config_name),
+                tool_uses,
+                skills,
+            )
             if result is not None:
                 total_turns += result.num_turns
                 total_duration_ms += result.duration_ms
@@ -701,12 +721,11 @@ async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExe
     failures: list[str] = []
     for backend in backends:
         try:
-            async with asyncio.timeout(PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS):
-                return await _run_backend(prepared, backend)
+            return await _run_backend(prepared, backend)
         except TimeoutError:
             failures.append(
                 f"{backend.name}: exceeded the "
-                f"{PREPARE_TEMPLATE_BACKEND_TIMEOUT_SECONDS}s backend timeout"
+                f"{PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS}s SDK segment timeout"
             )
         except ToolFailure as error:
             failures.append(f"{backend.name}: {error.message}")
