@@ -390,6 +390,16 @@ def _context_knowledge_signals(objects: list[InspectedObject]) -> list[str]:
     ):
         return ["generated-content"]
     if any(
+        item.kind == "paragraph"
+        and item.style
+        and (
+            item.style.casefold().replace(" ", "").startswith("heading")
+            or item.style.replace(" ", "").startswith("标题")
+        )
+        for item in objects
+    ):
+        return ["body-structure"]
+    if any(
         (
             str(item.format.get("effective.color", "")).casefold()
             not in {"", "#000000", "000000", "black", "auto"}

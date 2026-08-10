@@ -13,7 +13,7 @@ from docfit.template.object_mutation import (
     TocEntry,
     mutate_objects,
 )
-from docfit.template.workspace import TemplateWorkspaceService
+from docfit.template.workspace import TemplateWorkspaceService, _context_knowledge_signals
 from docfit.tools.inspection import InspectedObject, Inspection
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 from docfit.tools.template_schemas.workspace import TEMPLATE_REGISTRY_SCHEMA
@@ -615,6 +615,19 @@ def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
         "missing_body_heading_types": ["body.heading.level1"],
         "refresh_needed": True,
     }
+
+
+def test_heading_context_routes_body_structure_before_instruction_color() -> None:
+    heading = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="2 结果与分析（四号黑体）",
+        style="标题 2",
+        format={"effective.color": "#0000FF"},
+        object_ref={},
+    )
+
+    assert _context_knowledge_signals([heading]) == ["body-structure"]
 
 
 def test_next_requires_an_explicit_agent_outcome_and_committed_handling(
