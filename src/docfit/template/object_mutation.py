@@ -841,13 +841,17 @@ def _stabilize_toc_styles(
     # Word can recreate the Hyperlink character style when a TOC with the \h
     # switch is updated. If the current TOC cache already uses a character
     # style, normalize that exact style as the durable field-update fallback.
-    character_style_ids = {
-        value
-        for template in templates.values()
-        for run_properties in template.iter(f"{_W}rPr")
-        if (run_style := run_properties.find(f"{_W}rStyle")) is not None
-        and (value := run_style.get(f"{_W}val"))
-    }
+    character_style_ids = (
+        {
+            value
+            for template in templates.values()
+            for run_properties in template.iter(f"{_W}rPr")
+            if (run_style := run_properties.find(f"{_W}rStyle")) is not None
+            and (value := run_style.get(f"{_W}val"))
+        }
+        if effective_format
+        else set()
+    )
     style_scope_changes: list[JsonObject] = []
     for character_style_id in character_style_ids:
         character_style = by_id.get(character_style_id)
@@ -866,6 +870,19 @@ def _stabilize_toc_styles(
         )
     parts["word/styles.xml"] = _serialize(styles)
     return style_scope_changes
+
+
+def _existing_toc_templates(
+    document_root: ET.Element,
+    style_ids: dict[int, str],
+) -> dict[int, ET.Element]:
+    style_levels = {style_id: level for level, style_id in style_ids.items()}
+    templates: dict[int, ET.Element] = {}
+    for paragraph in document_root.iter(f"{_W}p"):
+        level = _toc_level(paragraph, style_levels)
+        if level is not None:
+            templates.setdefault(level, paragraph)
+    return templates
 
 
 def _field_interval(
@@ -1282,6 +1299,17 @@ def mutate_objects(
             )
         elif mutation.action == "normalize_effective_format":
             _apply_effective_format(target, mutation.effective_format)
+            if mutation.selected.style and mutation.selected.style.casefold().replace(
+                " ", ""
+            ).startswith("toc"):
+                for change in _stabilize_toc_styles(
+                    parts,
+                    _existing_toc_templates(document_root, toc_style_ids),
+                    toc_style_ids,
+                    mutation.effective_format,
+                ):
+                    if change not in style_scope_changes:
+                        style_scope_changes.append(change)
         elif mutation.action == "refresh_toc":
             element_order = {id(element): rank for rank, element in enumerate(document_root.iter())}
             toc_entries = tuple(

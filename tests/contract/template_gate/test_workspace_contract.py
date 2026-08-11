@@ -2937,6 +2937,89 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
     )
 
 
+def test_toc_row_effective_normalization_stabilizes_hyperlink_style(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_toc_and_titles(source)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    toc = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.style
+        and item.style.casefold().replace(" ", "") == "toc1"
+    )
+    title = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "【一级章标题】"
+    )
+
+    refreshed, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "refresh_toc",
+                    "object_ref": toc.object_ref,
+                    "field_id": "generated.toc",
+                    "entries": [{"object_ref": title.object_ref, "level": 1}],
+                }
+            ]
+        }
+    )
+
+    assert refreshed["effects"]["style_scope_changes"] == []
+    _, refreshed_path = service._resolve_document(refreshed["document_ref"])
+    refreshed_inspection = service._inspection(refreshed_path)
+    refreshed_row = next(
+        item
+        for item in refreshed_inspection.objects
+        if item.kind == "paragraph"
+        and item.style
+        and item.style.casefold().replace(" ", "") == "toc1"
+    )
+    normalized, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "normalize_effective_format",
+                    "object_ref": refreshed_row.object_ref,
+                    "effective_format": {"color": "black", "underline": "none"},
+                }
+            ]
+        }
+    )
+
+    assert normalized["effects"]["style_scope_changes"] == [
+        {
+            "style_id": "Hyperlink",
+            "scope": "document_character_style",
+            "reason": "preserve_toc_effective_format_after_field_update",
+        }
+    ]
+    assert normalized["structural_risks"] == [
+        {
+            "code": "shared_character_style_override",
+            "severity": "warning",
+            "style_id": "Hyperlink",
+            "scope": "document_character_style",
+            "reason": "preserve_toc_effective_format_after_field_update",
+        }
+    ]
+    _, normalized_path = service._resolve_document(normalized["document_ref"])
+    with zipfile.ZipFile(normalized_path) as archive:
+        styles_root = ET.fromstring(archive.read("word/styles.xml"))
+    hyperlink_style = next(
+        style
+        for style in styles_root.findall(f"{W}style")
+        if style.get(f"{W}styleId") == "Hyperlink"
+    )
+    assert hyperlink_style.find(f"{W}rPr/{W}color").get(f"{W}val") == "000000"
+    assert hyperlink_style.find(f"{W}rPr/{W}u").get(f"{W}val") == "none"
+
+
 def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
     _append_toc_and_titles(source)
