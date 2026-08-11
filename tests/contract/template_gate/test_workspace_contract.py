@@ -653,6 +653,19 @@ def test_collection_landmark_routes_collection_knowledge_before_heading_style() 
     ]
 
 
+def test_collection_words_inside_body_prose_do_not_route_collection_knowledge() -> None:
+    paragraph = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="本文参考文献部分综合讨论既有研究，并在正文中继续展开分析。",
+        style="Normal",
+        format={},
+        object_ref={},
+    )
+
+    assert _context_knowledge_signals([paragraph]) == []
+
+
 def test_next_requires_an_explicit_agent_outcome_and_committed_handling(
     tmp_path: Path,
 ) -> None:

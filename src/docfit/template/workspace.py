@@ -450,9 +450,19 @@ def _context_knowledge_signals(objects: list[InspectedObject]) -> list[str]:
         "在学期间发表",
         "科研成果",
     )
+
+    def is_collection_landmark(item: InspectedObject) -> bool:
+        if item.kind != "paragraph":
+            return False
+        text = item.text.replace(" ", "")
+        marker_match = any(text.startswith(marker) for marker in collection_markers)
+        if not marker_match:
+            return False
+        style = (item.style or "").casefold().replace(" ", "")
+        return style.startswith("heading") or style.startswith("标题") or len(text) <= 32
+
     if any(
-        item.kind == "paragraph"
-        and any(marker in item.text.replace(" ", "") for marker in collection_markers)
+        is_collection_landmark(item)
         for item in objects
     ):
         return ["collection-and-optional-sections"]
