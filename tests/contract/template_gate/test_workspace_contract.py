@@ -1173,6 +1173,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "migrated_boundaries": [],
         "page_start_results": [],
         "style_scope_changes": [],
+        "toc_source_levels": [],
         "effective_format_changes": [],
     }
     assert "applied" not in result
