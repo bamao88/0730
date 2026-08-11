@@ -78,6 +78,8 @@ def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
     assert "第X章（正文标题）" in skill_text
     assert "不得随后把该通用章标题当说明文字删除" in skill_text
     assert "不要从固定地标下截取 H2/H3/正文后就提前提交一个缺 H1 的结构" in body_knowledge
+    assert "不得为了立即处理当前区域" in body_knowledge
+    assert "最终所有 `body.heading.level*` 槽都必须列在唯一的" in body_knowledge
     assert "应把整段物化为 `body.heading.level1`" in body_knowledge
     optional_knowledge = (
         skill / "references/collection-and-optional-sections.md"
