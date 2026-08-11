@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import inspect
 import re
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+import docfit.content.projection as projection_module
 from docfit.content.projection import TemplateStyleMap, project_student_content
 from docfit.tools.runtime import sha256_file
 
@@ -58,6 +60,14 @@ def _write_projection_fixture(path: Path, document_xml: str) -> None:
         archive.writestr("word/document.xml", document_xml)
         archive.writestr("word/styles.xml", styles_xml)
         archive.writestr("word/settings.xml", f'<w:settings xmlns:w="{W_NS}"/>')
+
+
+def test_projection_has_no_fallback_selection_surface() -> None:
+    parameters = inspect.signature(project_student_content).parameters
+
+    assert "standard_fallback" not in parameters
+    assert not hasattr(projection_module, "StandardFallbackPolicy")
+    assert not hasattr(projection_module, "GB_T_7713_1_2025_PUBLIC_DRAFT_FALLBACK")
 
 
 def test_projection_reports_final_roles_and_persistent_paragraph_locators(
@@ -117,6 +127,9 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
     )
 
     occurrences = report["style_occurrences"]
+    assert report["scope"] == "template_styles_only_no_builtin_fallback_styles"
+    assert "standard_fallback" not in report
+    assert "fallback_style_ids" not in report
     assert [item["presentation_role"] for item in occurrences] == [
         "chapter_title",
         "section_title",

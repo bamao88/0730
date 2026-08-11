@@ -79,9 +79,16 @@ def test_style_roles_resolve_only_to_bound_template_styles(tmp_path: Path) -> No
     resolved = resolve_template_style_map(
         template_docx=template,
         contract={
+            "schema_version": "docfit-template-fill-contract/v2",
             "styles": [
-                {"style_id": "style.body.chapter_body", "word_style_id": "Body"},
-                {"style_id": "style.body.chapter_title", "word_style_id": "H1"},
+                {
+                    "style_contract_id": "style.body.chapter_body",
+                    "word_style_id": "Body",
+                },
+                {
+                    "style_contract_id": "style.body.chapter_title",
+                    "word_style_id": "H1",
+                },
             ]
         },
     )
@@ -92,6 +99,38 @@ def test_style_roles_resolve_only_to_bound_template_styles(tmp_path: Path) -> No
     assert resolved.heading_2 == "Body"
     assert resolved.reference == "Body"
     assert resolved.caption == "caption"
+
+
+def test_v2_style_roles_do_not_read_the_frozen_v1_style_id_alias(tmp_path: Path) -> None:
+    template = tmp_path / "template.docx"
+    styles = f'''<w:styles xmlns:w="{W_NS}">
+    <w:style w:type="paragraph" w:default="1" w:styleId="Normal"/>
+    <w:style w:type="paragraph" w:styleId="H1"/>
+    </w:styles>'''
+    with zipfile.ZipFile(template, "w") as archive:
+        archive.writestr("word/styles.xml", styles)
+
+    v2 = resolve_template_style_map(
+        template_docx=template,
+        contract={
+            "schema_version": "docfit-template-fill-contract/v2",
+            "styles": [
+                {"style_id": "style.body.chapter_title", "word_style_id": "H1"}
+            ],
+        },
+    )
+    frozen_v1 = resolve_template_style_map(
+        template_docx=template,
+        contract={
+            "schema_version": "docfit-template-fill-contract/v1",
+            "styles": [
+                {"style_id": "style.body.chapter_title", "word_style_id": "H1"}
+            ],
+        },
+    )
+
+    assert v2.heading_1 == "Normal"
+    assert frozen_v1.heading_1 == "H1"
 
 
 def test_expected_value_style_removes_gray_placeholder_color() -> None:
