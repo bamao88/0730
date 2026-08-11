@@ -2572,6 +2572,7 @@ class TemplateWorkspaceService:
                         "migrated_boundaries": mutation_effects["migrated_boundaries"],
                         "page_start_results": mutation_effects["page_start_results"],
                         "style_scope_changes": mutation_effects["style_scope_changes"],
+                        "toc_source_levels": mutation_effects["toc_source_levels"],
                         "effective_format_changes": format_changes,
                     },
                     "structures": [

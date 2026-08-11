@@ -349,12 +349,13 @@ def _append_toc_and_titles(document: Path) -> None:
         paragraph = ET.Element(f"{W}p")
         properties = ET.SubElement(paragraph, f"{W}pPr")
         ET.SubElement(properties, f"{W}pStyle", {f"{W}val": f"TOC{level}"})
-        tabs = ET.SubElement(properties, f"{W}tabs")
-        ET.SubElement(
-            tabs,
-            f"{W}tab",
-            {f"{W}val": "right", f"{W}leader": "dot", f"{W}pos": "9060"},
-        )
+        if level != 3:
+            tabs = ET.SubElement(properties, f"{W}tabs")
+            ET.SubElement(
+                tabs,
+                f"{W}tab",
+                {f"{W}val": "right", f"{W}leader": "dot", f"{W}pos": "9060"},
+            )
         ET.SubElement(
             properties,
             f"{W}spacing",
@@ -2849,6 +2850,10 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
             "reason": "preserve_toc_effective_format_after_field_update",
         }
     ]
+    assert [
+        (item["level"], item["outline_level"])
+        for item in result["effects"]["toc_source_levels"]
+    ] == [(1, 0), (1, 0), (1, 0), (2, 1), (3, 2), (1, 0)]
     assert result["structural_risks"] == [
         {
             "code": "shared_character_style_override",
@@ -2916,6 +2921,19 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         for paragraph in refreshed_paragraphs
         for underline in paragraph.findall(f".//{W}u")
     )
+    source_outline_levels = {
+        "".join(node.text or "" for node in paragraph.iter(f"{W}t")): outline.get(f"{W}val")
+        for paragraph in document_root.iter(f"{W}p")
+        if (outline := paragraph.find(f"{W}pPr/{W}outlineLvl")) is not None
+    }
+    assert source_outline_levels == {
+        "【中文摘要】": "0",
+        "【英文摘要】": "0",
+        "【一级章标题】": "0",
+        "【二级标题】": "1",
+        "【三级标题】": "2",
+        "【附录标题】": "0",
+    }
     toc_locators = [
         item.locator
         for item in changed.objects

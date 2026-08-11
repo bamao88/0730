@@ -624,6 +624,54 @@ def _toc_level(
     return int(match.group(1)) if match else None
 
 
+def _containing_paragraph(document_root: ET.Element, target: ET.Element) -> ET.Element:
+    if _local_name(target.tag) == "p":
+        return target
+    for paragraph in document_root.iter(f"{_W}p"):
+        if any(node is target for node in paragraph.iter()):
+            return paragraph
+    raise ToolFailure(
+        status="error",
+        origin="document",
+        code="toc_entry_paragraph_missing",
+        message="A requested TOC entry is not contained by a document paragraph.",
+    )
+
+
+def _materialize_toc_source_levels(
+    document_root: ET.Element,
+    entries: tuple[TocEntry, ...],
+) -> list[JsonObject]:
+    """Persist Agent-assigned TOC levels on source paragraphs for Word field updates."""
+
+    results: list[JsonObject] = []
+    for entry in entries:
+        _, target = _resolve(document_root, entry.selected.locator)
+        paragraph = _containing_paragraph(document_root, target)
+        properties = paragraph.find(f"{_W}pPr")
+        if properties is None:
+            properties = ET.Element(f"{_W}pPr")
+            paragraph.insert(0, properties)
+        outline = properties.find(f"{_W}outlineLvl")
+        if outline is None:
+            outline = ET.SubElement(properties, f"{_W}outlineLvl")
+        requested = str(entry.level - 1)
+        previous = outline.get(f"{_W}val")
+        outline.set(f"{_W}val", requested)
+        properties[:] = _ordered_children(list(properties), _PPR_ORDER)
+        results.append(
+            {
+                "object_id": str(
+                    entry.selected.object_ref.get("object_id", entry.selected.locator)
+                ),
+                "level": entry.level,
+                "outline_level": int(requested),
+                "changed": previous != requested,
+            }
+        )
+    return results
+
+
 _PPR_ORDER = {
     name: index
     for index, name in enumerate(
@@ -775,6 +823,26 @@ def _stabilize_toc_styles(
         ) from error
     default_run = styles.find(f"{_W}docDefaults/{_W}rPrDefault/{_W}rPr")
     by_id = {style.get(f"{_W}styleId", ""): style for style in styles.findall(f"{_W}style")}
+    fallback_tabs = next(
+        (
+            deepcopy(tabs)
+            for template in templates.values()
+            if (tabs := template.find(f"{_W}pPr/{_W}tabs")) is not None
+            and tabs.find(f'{_W}tab[@{_W}val="right"]') is not None
+        ),
+        None,
+    )
+    if fallback_tabs is None:
+        fallback_tabs = next(
+            (
+                deepcopy(tabs)
+                for style_id in style_ids.values()
+                if (style := by_id.get(style_id)) is not None
+                and (tabs := style.find(f"{_W}pPr/{_W}tabs")) is not None
+                and tabs.find(f'{_W}tab[@{_W}val="right"]') is not None
+            ),
+            None,
+        )
     for level, style_id in style_ids.items():
         style = by_id.get(style_id)
         template = templates.get(level)
@@ -797,6 +865,8 @@ def _stabilize_toc_styles(
                 source = template_paragraph_properties.find(f"{_W}{name}")
                 if source is not None:
                     paragraph_properties.append(deepcopy(source))
+        if paragraph_properties.find(f"{_W}tabs") is None and fallback_tabs is not None:
+            paragraph_properties.append(deepcopy(fallback_tabs))
         spacing = paragraph_properties.find(f"{_W}spacing")
         if spacing is not None:
             spacing.attrib.setdefault(f"{_W}before", "0")
@@ -1271,6 +1341,7 @@ def mutate_objects(
     migrated_boundaries: list[JsonObject] = []
     page_start_results: list[JsonObject] = []
     style_scope_changes: list[JsonObject] = []
+    toc_source_levels: list[JsonObject] = []
     toc_style_ids = _toc_style_ids(parts)
     for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
@@ -1319,6 +1390,9 @@ def mutate_objects(
                         id(_resolve(document_root, entry.selected.locator)[1])
                     ],
                 )
+            )
+            toc_source_levels.extend(
+                _materialize_toc_source_levels(document_root, toc_entries)
             )
             style_scope_changes.extend(
                 _refresh_toc(
@@ -1388,4 +1462,5 @@ def mutate_objects(
         "migrated_boundaries": migrated_boundaries,
         "page_start_results": page_start_results,
         "style_scope_changes": style_scope_changes,
+        "toc_source_levels": toc_source_levels,
     }
