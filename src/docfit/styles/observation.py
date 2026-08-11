@@ -275,7 +275,8 @@ def aggregate_observation_closure(
             and not definition.implicit_default_is_candidate_eligible
             )
             or (
-                item.effective_state == EffectiveState.NONE
+                item.effective_state
+                in {EffectiveState.VALUE, EffectiveState.NONE}
                 and not (
                     definition.explicitly_materializable
                     and definition.reopen_validatable

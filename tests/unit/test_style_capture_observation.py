@@ -119,7 +119,7 @@ def test_capture_returns_fixed_dual_axis_observation_and_complete_candidate(
     assert len(capture.school_candidates) == 1
     assert capture.known_gaps == ()
     assert capture.failed_observations == ()
-    contracts = compile_school_style_contracts(capture)
+    contracts = compile_school_style_contracts(capture, registry=registry)
     assert contracts is not None
     assert len(contracts.styles) == 1
 

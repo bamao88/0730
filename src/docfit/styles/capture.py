@@ -24,7 +24,7 @@ from docfit.styles.profiles import (
     StylePropertyProfileRegistry,
 )
 from docfit.styles.resolver import EffectiveStyleResolver
-from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_json
 
 CAPTURE_SCHEMA_VERSION = "docfit-school-style-capture/v1"
 
@@ -182,9 +182,7 @@ def capture_template_style_observations(
         profile_registry_digest=registry.registry_digest,
         observations=observations,
     )
-    candidates, compiler_gaps, role_failures = _school_candidates(
-        observation_set, registry
-    )
+    candidates, compiler_gaps, role_failures = _school_candidates(observation_set)
     known_gaps = [
         _gap_for_observation(item)
         for item in observation_set.observations
@@ -209,16 +207,24 @@ def capture_template_style_observations(
 
 def compile_school_style_contracts(
     capture: SchoolStyleCapture,
+    *,
+    registry: StylePropertyProfileRegistry = DEFAULT_STYLE_PROPERTY_PROFILES,
 ) -> StyleContractSet | None:
-    """Compile only a trustworthy set of complete school candidates."""
+    """Compile candidates that the current executable v2 seam can represent."""
 
     if capture.failed_observations or not capture.school_candidates:
+        return None
+    styles = [
+        _legacy_contract_from_candidate(item, registry)
+        for item in capture.school_candidates
+    ]
+    if any(item is None for item in styles):
         return None
     return StyleContractSet.from_mapping(
         {
             "schema_version": "docfit-style-contract-set/v2",
             "template_sha256": capture.observation_set.template_sha256,
-            "styles": list(capture.school_candidates),
+            "styles": [item for item in styles if item is not None],
         }
     )
 
@@ -302,7 +308,6 @@ def _missing_role_observation(
 
 def _school_candidates(
     observation_set: FieldStyleObservationSet,
-    registry: StylePropertyProfileRegistry,
 ) -> tuple[list[JsonObject], list[JsonObject], list[JsonObject]]:
     by_role: dict[str, list[FieldStyleObservation]] = {}
     compiler_gaps: list[JsonObject] = []
@@ -312,12 +317,7 @@ def _school_candidates(
     candidates: list[JsonObject] = []
     failures: list[JsonObject] = []
     for role_id, role_observations in sorted(by_role.items()):
-        compiled = [
-            _candidate_from_observation(
-                item, registry.resolve(item.profile_ref)
-            )
-            for item in role_observations
-        ]
+        compiled = [_candidate_from_observation(item) for item in role_observations]
         if any(item is None for item in compiled):
             compiler_gaps.append(
                 {
@@ -328,14 +328,14 @@ def _school_candidates(
             )
             continue
         concrete = [item for item in compiled if item is not None]
-        digests = {str(item["contract_digest"]) for item in concrete}
+        digests = {str(item["candidate_digest"]) for item in concrete}
         if len(digests) != 1:
             failures.append(
                 {
                     "style_role_id": role_id,
                     "reason": "conflicting_complete_school_observations",
                     "slot_ids": [item.slot_id for item in role_observations],
-                    "contract_digests": sorted(digests),
+                    "candidate_digests": sorted(digests),
                 }
             )
             continue
@@ -360,23 +360,75 @@ def _school_candidates(
 
 def _candidate_from_observation(
     observation: FieldStyleObservation,
-    profile: StylePropertyProfile,
 ) -> JsonObject | None:
     executable = [
         item
         for item in observation.properties
         if item.effective_state != EffectiveState.NOT_APPLICABLE
     ]
-    if any(item.effective_state != EffectiveState.VALUE for item in executable):
+    if any(
+        item.effective_state not in {EffectiveState.VALUE, EffectiveState.NONE}
+        for item in executable
+    ):
         return None
-    canonical = {item.property_path: item.value for item in executable}
+    semantic_payload: JsonObject = {
+        "schema_version": "docfit-school-style-role-candidate/v1",
+        "style_role_id": observation.style_role_id,
+        "style_role_type": observation.style_role_type,
+        "property_profile_ref": dict(observation.profile_ref),
+        "properties": [
+            {
+                "property_path": item.property_path,
+                "effective_state": item.effective_state.value,
+                **(
+                    {"value": item.value}
+                    if item.effective_state == EffectiveState.VALUE
+                    else {}
+                ),
+            }
+            for item in executable
+        ],
+    }
+    return {
+        **semantic_payload,
+        "candidate_digest": sha256_json(semantic_payload),
+    }
+
+
+def _legacy_contract_from_candidate(
+    candidate: Mapping[str, Any],
+    registry: StylePropertyProfileRegistry,
+) -> JsonObject | None:
+    role_id = candidate.get("style_role_id")
+    role_type = candidate.get("style_role_type")
+    profile_ref = candidate.get("property_profile_ref")
+    raw_properties = candidate.get("properties")
+    if (
+        not isinstance(role_id, str)
+        or not isinstance(role_type, str)
+        or not isinstance(profile_ref, Mapping)
+        or not isinstance(raw_properties, Sequence)
+        or isinstance(raw_properties, str | bytes)
+    ):
+        return None
+    profile = registry.resolve(profile_ref)
+    canonical: dict[str, Any] = {}
+    for item in raw_properties:
+        if (
+            not isinstance(item, Mapping)
+            or item.get("effective_state") != EffectiveState.VALUE.value
+            or not isinstance(item.get("property_path"), str)
+            or "value" not in item
+        ):
+            return None
+        canonical[str(item["property_path"])] = item["value"]
     properties = _materializer_properties(profile, canonical)
     if properties is None or set(properties) - SUPPORTED_MATERIALIZED_PROPERTIES:
         return None
     style: JsonObject = {
-        "style_contract_id": f"school.{observation.style_role_id}",
-        "label": f"School role {observation.style_role_id}",
-        "application_scope": _application_scope(observation.style_role_type),
+        "style_contract_id": f"school.{role_id}",
+        "label": f"School role {role_id}",
+        "application_scope": _application_scope(role_type),
         "owned_properties": sorted(properties),
         "effective_properties": dict(sorted(properties.items())),
         "override_policy": {
@@ -384,6 +436,8 @@ def _candidate_from_observation(
             "unmanaged_properties": "preserve",
         },
         "dependencies": [],
+        "applies_to": list(candidate.get("applies_to", [])),
+        "evidence_refs": list(candidate.get("evidence_refs", [])),
     }
     style["contract_digest"] = style_contract_digest(style)
     return style
