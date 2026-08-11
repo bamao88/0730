@@ -541,13 +541,25 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
             "run.bold": (("run.bold",), "identity", ("run.bold",)),
             "run.italic": (("run.italic",), "identity", ("run.italic",)),
             "run.color": (("run.color",), "word_hex_color_v1", ("run.color",)),
-            "run.underline": (("run.underline",), "identity", ()),
-            "run.strikethrough": (("run.strikethrough",), "identity", ()),
-            "run.vertical_position": (("run.vertical_position",), "identity", ()),
+            "run.underline": (
+                ("run.underline",),
+                "identity",
+                ("run.underline",),
+            ),
+            "run.strikethrough": (
+                ("run.strikethrough",),
+                "identity",
+                ("run.strikethrough",),
+            ),
+            "run.vertical_position": (
+                ("run.vertical_position",),
+                "identity",
+                ("run.vertical_position",),
+            ),
             "run.character_spacing_pt": (
                 ("run.character_spacing_pt",),
                 "identity",
-                (),
+                ("run.character_spacing_pt",),
             ),
             "paragraph.alignment": (
                 ("paragraph.alignment",), "identity", ("paragraph.alignment",)
@@ -555,22 +567,22 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
             "paragraph.first_line_indent_chars": (
                 ("paragraph.first_line_indent_chars",),
                 "identity",
-                (),
+                ("paragraph.first_line_indent_chars",),
             ),
             "paragraph.left_indent_chars": (
                 ("paragraph.left_indent_chars",),
                 "identity",
-                (),
+                ("paragraph.left_indent_chars",),
             ),
             "paragraph.right_indent_chars": (
                 ("paragraph.right_indent_chars",),
                 "identity",
-                (),
+                ("paragraph.right_indent_chars",),
             ),
             "paragraph.hanging_indent_chars": (
                 ("paragraph.hanging_indent_chars",),
                 "identity",
-                (),
+                ("paragraph.hanging_indent_chars",),
             ),
             "paragraph.line_spacing.mode": (
                 (
@@ -604,24 +616,28 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
             "paragraph.keep_with_next": (
                 ("paragraph.keep_with_next",),
                 "identity",
-                (),
+                ("paragraph.keep_with_next",),
             ),
             "paragraph.keep_together": (
                 ("paragraph.keep_together",),
                 "identity",
-                (),
+                ("paragraph.keep_together",),
             ),
             "paragraph.widow_control": (
                 ("paragraph.widow_control",),
                 "identity",
-                (),
+                ("paragraph.widow_control",),
             ),
             "paragraph.outline_level": (
                 ("paragraph.outline_level",),
                 "identity",
-                (),
+                ("paragraph.outline_level",),
             ),
-            "numbering": (("paragraph.numbering",), "identity", ()),
+            "numbering": (
+                ("paragraph.numbering",),
+                "identity",
+                ("paragraph.numbering",),
+            ),
             "tab_stops": (("paragraph.tab_stops",), "identity", ()),
             "toc_inclusion": (
                 ("paragraph.outline_level",),

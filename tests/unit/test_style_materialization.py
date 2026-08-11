@@ -35,8 +35,17 @@ def _write_occurrences(path: Path, count: int) -> None:
 def _style() -> dict[str, Any]:
     properties = {
         "paragraph.alignment": "center",
+        "paragraph.first_line_indent_chars": 2.0,
+        "paragraph.left_indent_chars": 0.0,
+        "paragraph.right_indent_chars": 0.0,
+        "paragraph.hanging_indent_chars": 0.0,
         "paragraph.space_before_pt": 12.0,
         "paragraph.space_after_pt": 6.0,
+        "paragraph.keep_with_next": False,
+        "paragraph.keep_together": True,
+        "paragraph.widow_control": False,
+        "paragraph.outline_level": 9,
+        "paragraph.numbering": None,
         "run.font_ascii": "Times New Roman",
         "run.font_hansi": "Times New Roman",
         "run.font_east_asia": "宋体",
@@ -44,6 +53,10 @@ def _style() -> dict[str, Any]:
         "run.bold": False,
         "run.italic": False,
         "run.color": "000000",
+        "run.underline": None,
+        "run.strikethrough": False,
+        "run.vertical_position": "baseline",
+        "run.character_spacing_pt": 0.0,
     }
     value: dict[str, Any] = {
         "style_contract_id": "style.body.paragraph",

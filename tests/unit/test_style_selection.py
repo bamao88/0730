@@ -1,18 +1,28 @@
 from __future__ import annotations
 
+import zipfile
+from pathlib import Path
 from typing import Any
 
 import pytest
 
 from docfit.styles.actual_roles import ActualStyleRoleSet
+from docfit.styles.materialization import materialize_style_contracts
 from docfit.styles.presets import GeneralStylePreset
 from docfit.styles.profiles import (
     PropertyDefinition,
     StylePropertyProfile,
     StylePropertyProfileRegistry,
 )
-from docfit.styles.selection import select_complete_style_roles
-from docfit.tools.runtime import ToolFailure, sha256_json
+from docfit.styles.selection import (
+    compile_selected_style_contracts,
+    select_complete_style_roles,
+)
+from docfit.styles.validator import StyleContractValidator
+from docfit.tools.runtime import ToolFailure, sha256_file, sha256_json
+
+W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+W14_NS = "http://schemas.microsoft.com/office/word/2010/wordml"
 
 
 def _registry() -> tuple[StylePropertyProfileRegistry, StylePropertyProfile]:
@@ -192,3 +202,90 @@ def test_selection_digests_are_deterministic_and_separate_from_observation() -> 
     )
     assert first.selection_receipt_digest == second.selection_receipt_digest
     assert first.selected_style_contract_set_digest != first.school_observation_set_digest
+
+
+def test_typed_none_compiles_to_an_explicit_occurrence_contract() -> None:
+    registry, _ = _registry()
+    preset = _preset(registry)
+    receipt = select_complete_style_roles(
+        actual_roles=_actual(preset),
+        school_candidates=[],
+        school_observation_set_digest="a" * 64,
+        preset=preset,
+        registry=registry,
+    )
+
+    contracts = compile_selected_style_contracts(
+        receipt=receipt,
+        template_sha256="c" * 64,
+        registry=registry,
+    )
+
+    style = contracts.styles[0]
+    assert style.effective_properties == {
+        "run.bold": False,
+        "run.underline": None,
+    }
+    assert style.style_contract_id == "selected.style.caption.table"
+
+
+@pytest.mark.parametrize("count", [1, 10, 100])
+def test_missing_school_table_caption_preset_is_stable_for_every_occurrence(
+    tmp_path: Path,
+    count: int,
+) -> None:
+    source = tmp_path / "hunau-non-publishable-style-fixture.docx"
+    output = tmp_path / "styled.docx"
+    paragraphs = "".join(
+        f'''<w:p w14:paraId="{index:08X}"><w:r><w:rPr><w:b/>
+          <w:u w:val="double"/></w:rPr><w:t>表 {index}</w:t></w:r></w:p>'''
+        for index in range(1, count + 1)
+    )
+    document = f'''<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+      <w:body>{paragraphs}</w:body></w:document>'''
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", document)
+    registry, _ = _registry()
+    preset = _preset(registry)
+    receipt = select_complete_style_roles(
+        actual_roles=_actual(preset),
+        school_candidates=[],
+        school_observation_set_digest="a" * 64,
+        preset=preset,
+        registry=registry,
+    )
+    contracts = compile_selected_style_contracts(
+        receipt=receipt,
+        template_sha256=sha256_file(source),
+        registry=registry,
+    )
+    style = contracts.styles[0]
+    manifest = {
+        "occurrences": [
+            {
+                "occurrence_id": f"table-caption-{index}",
+                "locator": f"/body/p[@paraId={index:08X}]",
+                "style_contract_ref": {
+                    "style_contract_id": style.style_contract_id,
+                    "contract_digest": style.contract_digest,
+                },
+            }
+            for index in range(1, count + 1)
+        ]
+    }
+
+    materialize_style_contracts(
+        input_docx=source,
+        output_docx=output,
+        contracts=contracts,
+        occurrence_manifest=manifest,
+    )
+    validation = StyleContractValidator(contracts).validate(output, manifest)
+
+    assert receipt.selections[0].source == "preset"
+    assert validation.status == "passed"
+    assert validation.as_dict()["counts"] == {
+        "passed": count,
+        "failed": 0,
+        "unresolved": 0,
+    }

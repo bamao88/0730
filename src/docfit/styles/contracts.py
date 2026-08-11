@@ -64,15 +64,26 @@ def _optional_string(value: object, *, field: str) -> str | None:
     return _required_string(value, field=field)
 
 
-def _normalized_scalar(value: object, *, field: str) -> str | int | float | bool | None:
+def _normalized_value(value: object, *, field: str) -> Any:
     if value is None or isinstance(value, bool | str):
-        result: str | int | float | bool | None = value
+        result: Any = value
     elif isinstance(value, int | float):
         result = value
+    elif isinstance(value, Mapping):
+        result = {
+            _required_string(key, field=f"{field} key"): _normalized_value(
+                item, field=f"{field}.{key}"
+            )
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
+    elif isinstance(value, Sequence) and not isinstance(value, str | bytes):
+        result = [
+            _normalized_value(item, field=f"{field}[]") for item in value
+        ]
     else:
         raise _failure(
             "style_contract_invalid",
-            f"{field} must be a JSON scalar so its effective value is deterministic.",
+            f"{field} must be a deterministic JSON value.",
         )
     if isinstance(result, str):
         if result != result.strip():
@@ -167,7 +178,7 @@ class StyleContract:
     contract_digest: str
     application_scope: str
     owned_properties: tuple[str, ...]
-    effective_properties: Mapping[str, str | int | float | bool | None]
+    effective_properties: Mapping[str, Any]
     override_policy: OverridePolicy
     dependencies: tuple[StyleContractRef, ...]
     word_style_id: str | None = None
@@ -239,14 +250,14 @@ class StyleContract:
         raw_effective = value.get("effective_properties")
         if not isinstance(raw_effective, Mapping):
             raise _failure("style_contract_invalid", "effective_properties must be an object.")
-        effective: dict[str, str | int | float | bool | None] = {}
+        effective: dict[str, Any] = {}
         for raw_key, item in raw_effective.items():
             key = _required_string(raw_key, field="effective_properties key")
             if not _PROPERTY_PATH.fullmatch(key):
                 raise _failure(
                     "style_contract_invalid", f"Unsupported effective property path: {key}."
                 )
-            effective[key] = _normalized_scalar(item, field=key)
+            effective[key] = _normalized_value(item, field=key)
         missing = sorted(set(owned) - set(effective))
         if missing:
             raise _failure(
@@ -384,7 +395,7 @@ def style_contract_digest(value: Mapping[str, Any]) -> str:
     effective = payload.get("effective_properties")
     if isinstance(effective, Mapping):
         payload["effective_properties"] = {
-            str(key): _normalized_scalar(item, field=str(key))
+            str(key): _normalized_value(item, field=str(key))
             for key, item in sorted(effective.items(), key=lambda pair: str(pair[0]))
         }
     dependencies = payload.get("dependencies")

@@ -32,13 +32,26 @@ SUPPORTED_MATERIALIZED_PROPERTIES = frozenset(
         "run.italic",
         "run.color",
         "run.color_theme",
+        "run.underline",
+        "run.strikethrough",
+        "run.vertical_position",
+        "run.character_spacing_pt",
         "paragraph.alignment",
+        "paragraph.first_line_indent_chars",
+        "paragraph.left_indent_chars",
+        "paragraph.right_indent_chars",
+        "paragraph.hanging_indent_chars",
         "paragraph.space_before_pt",
         "paragraph.space_after_pt",
         "paragraph.line_spacing_rule",
         "paragraph.line_spacing_pt",
         "paragraph.line_value",
         "paragraph.page_break_before",
+        "paragraph.keep_with_next",
+        "paragraph.keep_together",
+        "paragraph.widow_control",
+        "paragraph.outline_level",
+        "paragraph.numbering",
     }
 )
 _PARAGRAPH_PATH = re.compile(r"/body/p\[@paraId=([0-9A-Fa-f]{8})\]")
@@ -213,6 +226,26 @@ def _apply_run_properties(
             "themeColor",
             _text(effective["run.color_theme"], "run.color_theme"),
         )
+    if "run.underline" in owned:
+        value = effective["run.underline"]
+        encoded = "none" if value is None else _text(value, "run.underline")
+        _set_value(properties, "u", encoded)
+    if "run.strikethrough" in owned:
+        encoded = "1" if _boolean(
+            effective["run.strikethrough"], "run.strikethrough"
+        ) else "0"
+        _set_value(properties, "strike", encoded)
+    if "run.vertical_position" in owned:
+        _set_value(
+            properties,
+            "vertAlign",
+            _text(effective["run.vertical_position"], "run.vertical_position"),
+        )
+    if "run.character_spacing_pt" in owned:
+        spacing = _number(
+            effective["run.character_spacing_pt"], "run.character_spacing_pt"
+        )
+        _set_value(properties, "spacing", str(round(spacing * 20)))
 
 
 def _apply_paragraph_properties(
@@ -226,6 +259,15 @@ def _apply_paragraph_properties(
             "jc",
             _text(effective["paragraph.alignment"], "paragraph.alignment"),
         )
+    for path, attribute in (
+        ("paragraph.first_line_indent_chars", "firstLineChars"),
+        ("paragraph.left_indent_chars", "leftChars"),
+        ("paragraph.right_indent_chars", "rightChars"),
+        ("paragraph.hanging_indent_chars", "hangingChars"),
+    ):
+        if path in owned:
+            value = _nonnegative_number(effective[path], path)
+            _set_attribute(properties, "ind", attribute, str(round(value * 100)))
     for path, attribute in (
         ("paragraph.space_before_pt", "before"),
         ("paragraph.space_after_pt", "after"),
@@ -264,6 +306,51 @@ def _apply_paragraph_properties(
             effective["paragraph.page_break_before"], "paragraph.page_break_before"
         ) else "0"
         _set_value(properties, "pageBreakBefore", encoded)
+    for path, tag in (
+        ("paragraph.keep_with_next", "keepNext"),
+        ("paragraph.keep_together", "keepLines"),
+        ("paragraph.widow_control", "widowControl"),
+    ):
+        if path in owned:
+            encoded = "1" if _boolean(effective[path], path) else "0"
+            _set_value(properties, tag, encoded)
+    if "paragraph.outline_level" in owned:
+        level = effective["paragraph.outline_level"]
+        if not isinstance(level, int) or isinstance(level, bool) or not 0 <= level <= 9:
+            raise _failure(
+                "style_property_invalid",
+                "paragraph.outline_level must be an integer from 0 through 9.",
+            )
+        _set_value(properties, "outlineLvl", str(level))
+    if "paragraph.numbering" in owned:
+        _apply_numbering(properties, effective["paragraph.numbering"])
+
+
+def _apply_numbering(properties: ET.Element, value: Any) -> None:
+    numbering = properties.find(f"{W}numPr")
+    if numbering is None:
+        numbering = ET.SubElement(properties, f"{W}numPr")
+    for child in list(numbering):
+        if child.tag in {f"{W}ilvl", f"{W}numId"}:
+            numbering.remove(child)
+    if value is None:
+        _set_value(numbering, "numId", "0")
+        return
+    if not isinstance(value, Mapping):
+        raise _failure(
+            "style_property_invalid",
+            "paragraph.numbering must be NONE or a numbering definition.",
+        )
+    num_id = value.get("num_id")
+    level = value.get("level", 0)
+    if not isinstance(num_id, str | int) or isinstance(num_id, bool):
+        raise _failure("style_property_invalid", "paragraph.numbering needs num_id.")
+    if not isinstance(level, int) or isinstance(level, bool) or level < 0:
+        raise _failure(
+            "style_property_invalid", "paragraph.numbering level must be nonnegative."
+        )
+    _set_value(numbering, "ilvl", str(level))
+    _set_value(numbering, "numId", str(num_id))
 
 
 def _properties(owner: ET.Element, tag: str) -> ET.Element:

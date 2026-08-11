@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from docfit.styles.actual_roles import ActualStyleRoleSet
+from docfit.styles.contracts import StyleContractSet, style_contract_digest
+from docfit.styles.materialization import SUPPORTED_MATERIALIZED_PROPERTIES
 from docfit.styles.presets import GeneralStylePreset, PresetProperty
 from docfit.styles.profiles import StylePropertyProfile, StylePropertyProfileRegistry
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
@@ -196,6 +198,127 @@ def select_complete_style_roles(
     )
 
 
+def compile_selected_style_contracts(
+    *,
+    receipt: StyleRoleSelectionReceipt,
+    template_sha256: str,
+    registry: StylePropertyProfileRegistry,
+) -> StyleContractSet:
+    """Compile typed selected roles only when every property has an executable codec."""
+
+    if receipt.profile_registry_digest != registry.registry_digest:
+        raise _failure(
+            "style_selection_profile_registry_mismatch",
+            "The selection receipt is bound to another Style Property Profile Registry.",
+        )
+    styles: list[JsonObject] = []
+    for selection in receipt.selections:
+        profile = registry.for_role_type(selection.style_role_type)
+        if selection.property_profile_ref != profile.ref().as_dict():
+            raise _failure(
+                "style_selection_profile_registry_mismatch",
+                f"Selected role {selection.style_role_id} has a stale profile ref.",
+            )
+        effective = _execution_properties(selection.properties, profile)
+        style: JsonObject = {
+            "style_contract_id": f"selected.{selection.style_role_id}",
+            "label": f"Selected role {selection.style_role_id}",
+            "application_scope": _application_scope(selection.style_role_type),
+            "owned_properties": sorted(effective),
+            "effective_properties": dict(sorted(effective.items())),
+            "override_policy": {
+                "managed_direct_formatting": "clear_conflicts",
+                "unmanaged_properties": "preserve",
+            },
+            "dependencies": [],
+            "evidence_refs": [
+                {
+                    "type": "style_role_selection",
+                    "source": selection.source,
+                    "source_digest": selection.source_digest,
+                    "selected_style_contract_set_digest": (
+                        receipt.selected_style_contract_set_digest
+                    ),
+                }
+            ],
+        }
+        style["contract_digest"] = style_contract_digest(style)
+        styles.append(style)
+    return StyleContractSet.from_mapping(
+        {
+            "schema_version": "docfit-style-contract-set/v2",
+            "template_sha256": template_sha256,
+            "styles": styles,
+        }
+    )
+
+
+def _execution_properties(
+    properties: Sequence[SelectedStyleProperty],
+    profile: StylePropertyProfile,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    values = {item.property_path: item for item in properties}
+    line_mode = values.get("paragraph.line_spacing.mode")
+    for item in properties:
+        if item.effective_state == "N/A":
+            continue
+        definition = profile.definition(item.property_path)
+        targets = definition.materializer_targets
+        if not targets or any(
+            target not in SUPPORTED_MATERIALIZED_PROPERTIES for target in targets
+        ):
+            raise _failure(
+                "style_selection_property_codec_missing",
+                f"{item.property_path} has no complete materializer/reopen codec.",
+            )
+        if item.effective_state == "NONE":
+            for target in targets:
+                result[target] = None
+            continue
+        value = item.value
+        if item.property_path == "run.color":
+            value = value.removeprefix("#") if isinstance(value, str) else value
+            result[targets[0]] = value
+        elif item.property_path == "paragraph.line_spacing.mode":
+            rule = {
+                "single": "auto",
+                "multiple": "auto",
+                "exact_pt": "exact",
+                "at_least_pt": "atLeast",
+            }.get(value)
+            if rule is None:
+                raise _failure(
+                    "style_selection_property_value_invalid",
+                    "paragraph.line_spacing.mode has an unsupported value.",
+                )
+            result["paragraph.line_spacing_rule"] = rule
+        elif item.property_path == "paragraph.line_spacing.value":
+            if line_mode is None or line_mode.effective_state != "VALUE":
+                raise _failure(
+                    "style_selection_property_value_invalid",
+                    "Line-spacing value requires a selected line-spacing mode.",
+                )
+            target = (
+                "paragraph.line_value"
+                if line_mode.value in {"single", "multiple"}
+                else "paragraph.line_spacing_pt"
+            )
+            result[target] = value
+        else:
+            for target in targets:
+                result[target] = value
+    return result
+
+
+def _application_scope(role_type: str) -> str:
+    if role_type == "character":
+        return "run"
+    if role_type == "table_cell":
+        return "table"
+    return "paragraph"
+
+
 def _school_selection(
     candidate: Mapping[str, Any],
     *,
@@ -374,5 +497,6 @@ __all__ = [
     "SelectedStyleProperty",
     "SelectedStyleRole",
     "StyleRoleSelectionReceipt",
+    "compile_selected_style_contracts",
     "select_complete_style_roles",
 ]

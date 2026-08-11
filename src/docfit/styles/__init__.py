@@ -56,6 +56,7 @@ from docfit.styles.selection import (
     SelectedStyleProperty,
     SelectedStyleRole,
     StyleRoleSelectionReceipt,
+    compile_selected_style_contracts,
     select_complete_style_roles,
 )
 from docfit.styles.validator import (
@@ -109,6 +110,7 @@ __all__ = [
     "StyleRoleSelectionReceipt",
     "capture_template_style_observations",
     "capture_template_style_contracts",
+    "compile_selected_style_contracts",
     "compile_school_style_contracts",
     "materialize_style_contracts",
     "observe_effective_style",
