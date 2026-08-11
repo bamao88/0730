@@ -12,6 +12,12 @@
 - Product boundary: 模板生成只报告学校样式事实、完整学校候选和已知缺口，禁止选择或注入兜底；最终内容填写才在实际角色集上执行学校完整角色与版本化兜底完整角色二选一，禁止逐属性混合
 - Artifact boundary: Profile、Observation、Style Contract 和选择 receipt 都是三模块内部能力，不新增产品模块、学校资产类型或用户交付物；用户仍只获得一个最终 Word
 - Approval boundary: 本文获批后才可修改产品代码；新增 Tool 名称、修改 Tool 输入 schema、改变 Claude Agent SDK runtime 或发现真实外部合同消费者时必须重新审批
+- Unknown-unknown scout: `COMPLETE_2026_08_11`。现有提交 `819fb50` 已完成 Style Contract v2、
+  核心 resolver/materializer、模板代表 occurrence、Placement ref 和最终 occurrence audit 的第一垂直
+  切片；尚缺 Profile Registry、双轴 Observation、学校 candidate/gap 发布、actual role set 与整角色
+  preset 选择。仓库内消费者仅为当前产品代码、测试/Eval 和临时运行产物，未发现真实外部 v2
+  消费者。脏工作区中的属性级国标 fallback 实验与本计划冲突，只保留其稳定 occurrence 证据，
+  不得按属性混入；用户内容提取 v2 改动为 no-touch scope。
 
 ## 1. 结论
 
