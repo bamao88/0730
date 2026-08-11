@@ -14,6 +14,9 @@ from pathlib import Path
 from typing import cast
 from xml.etree import ElementTree as ET
 
+from docfit.content.presentation_roles import FIGURE_CAPTION_PATTERN as _FIGURE_CAPTION
+from docfit.content.presentation_roles import TABLE_CAPTION_PATTERN as _TABLE_CAPTION
+from docfit.content.presentation_roles import classify_body_text
 from docfit.tools.ooxml import (
     W_NS,
     WP_NS,
@@ -35,12 +38,7 @@ ET.register_namespace("m", M_NS)
 ET.register_namespace("a", A_NS)
 ET.register_namespace("w14", W14_NS)
 
-_HEADING_1 = re.compile(r"^第[一二三四五六七八九十百]+章(?:\s|$)")
-_HEADING_2 = re.compile(r"^\d+[.、]?\s*[^\d.]", re.DOTALL)
-_HEADING_3 = re.compile(r"^\d+\.\d+(?!\.)")
 _MINOR_HEADING = re.compile(r"^[（(]\d+[）)]")
-_FIGURE_CAPTION = re.compile(r"^(?:图\s*\d|Fig(?:ure)?\.?\s*\d)", re.IGNORECASE)
-_TABLE_CAPTION = re.compile(r"^(?:表\s*\d|Table\s*\d)", re.IGNORECASE)
 _LATIN_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9_-]{7,}")
 _CJK = re.compile(r"[\u3400-\u9fff]")
 
@@ -481,13 +479,11 @@ def _elements_between_imported_boundaries(
 
 
 def _body_role(text: str) -> str:
-    if _HEADING_1.match(text):
-        return "heading_1"
-    if len(text) <= 100 and _HEADING_3.match(text):
-        return "heading_3"
-    if len(text) <= 80 and _HEADING_2.match(text):
-        return "heading_2"
-    return "body"
+    return {
+        "body.heading.level1": "heading_1",
+        "body.heading.level2": "heading_2",
+        "body.heading.level3": "heading_3",
+    }.get(classify_body_text(text), "body")
 
 
 def _normalize_text_paragraph(paragraph: ET.Element, style_id: str) -> None:
