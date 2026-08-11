@@ -11,6 +11,10 @@ from typing import Any, Literal
 
 import yaml
 
+from docfit.styles.profiles import (
+    DEFAULT_STYLE_PROPERTY_PROFILES,
+    StylePropertyProfileRegistry,
+)
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
 
 PresetPropertyState = Literal["VALUE", "NONE", "N/A"]
@@ -173,25 +177,37 @@ class GeneralStylePreset:
         parameters: Mapping[str, Any],
         roles: Mapping[str, PresetRole],
         fields: Mapping[str, FieldStyleBinding],
+        profile_registry_digest: str | None,
     ) -> None:
         self.preset_id = preset_id
         self.preset_version = preset_version
         self.parameters = MappingProxyType(dict(parameters))
         self._roles = MappingProxyType(dict(roles))
         self._fields = MappingProxyType(dict(fields))
+        self.profile_registry_digest = profile_registry_digest
         self.digest = sha256_json(self.as_dict(include_digest=False))
 
     @classmethod
-    def load(cls, path: Path) -> GeneralStylePreset:
+    def load(
+        cls,
+        path: Path,
+        *,
+        registry: StylePropertyProfileRegistry = DEFAULT_STYLE_PROPERTY_PROFILES,
+    ) -> GeneralStylePreset:
         source = path.expanduser().resolve(strict=True)
         try:
             value = yaml.safe_load(source.read_text(encoding="utf-8"))
         except (OSError, yaml.YAMLError) as error:
             raise _failure("style_preset_unreadable", "The style preset cannot be read.") from error
-        return cls.from_mapping(value)
+        return cls.from_mapping(value, registry=registry)
 
     @classmethod
-    def from_mapping(cls, value: object) -> GeneralStylePreset:
+    def from_mapping(
+        cls,
+        value: object,
+        *,
+        registry: StylePropertyProfileRegistry | None = None,
+    ) -> GeneralStylePreset:
         if not isinstance(value, Mapping):
             raise _failure("style_preset_invalid", "The style preset must be an object.")
         schema_version = value.get("schema_version")
@@ -209,7 +225,9 @@ class GeneralStylePreset:
         if not isinstance(preset_version, str) or not preset_version:
             raise _failure("style_preset_invalid", "preset_version must be a non-empty string.")
         parameters = _parameter_defaults(value.get("parameters"))
-        required = _required_property_profiles(value.get("required_effective_properties"))
+        required = _required_property_profiles(
+            value.get("required_effective_properties"), registry=registry
+        )
         type_profiles = value.get("complete_style_type_profiles")
         role_values = value.get("style_roles")
         if not isinstance(type_profiles, Mapping) or not isinstance(role_values, Mapping):
@@ -229,6 +247,9 @@ class GeneralStylePreset:
             parameters=parameters,
             roles=roles,
             fields=fields,
+            profile_registry_digest=(
+                registry.registry_digest if registry is not None else None
+            ),
         )
 
     def resolve_role(self, role_id: str) -> PresetRole:
@@ -263,6 +284,8 @@ class GeneralStylePreset:
                 for _, binding in sorted(self._fields.items())
             ],
         }
+        if self.profile_registry_digest is not None:
+            result["profile_registry_digest"] = self.profile_registry_digest
         if include_digest:
             result["preset_digest"] = self.digest
         return result
@@ -288,7 +311,11 @@ def _parameter_defaults(value: object) -> dict[str, Any]:
     return defaults
 
 
-def _required_property_profiles(value: object) -> dict[str, tuple[str, ...]]:
+def _required_property_profiles(
+    value: object,
+    *,
+    registry: StylePropertyProfileRegistry | None,
+) -> dict[str, tuple[str, ...]]:
     if not isinstance(value, Mapping):
         raise _failure("style_preset_invalid", "The preset requires property profiles.")
     profiles: dict[str, tuple[str, ...]] = {}
@@ -304,6 +331,13 @@ def _required_property_profiles(value: object) -> dict[str, tuple[str, ...]]:
                 "style_preset_profile_invalid",
                 f"Profile {role_type} must contain unique non-empty properties.",
             )
+        if registry is not None:
+            expected = registry.for_role_type(role_type).property_paths
+            if paths != expected:
+                raise _failure(
+                    "style_preset_profile_registry_mismatch",
+                    f"Preset profile {role_type} does not match the accepted Registry list.",
+                )
         profiles[role_type] = paths
     return profiles
 

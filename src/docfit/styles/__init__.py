@@ -1,6 +1,11 @@
 """Stable Style Contract extraction, resolution, and conformance checks."""
 
-from docfit.styles.capture import capture_template_style_contracts
+from docfit.styles.actual_roles import ActualRoleSource, ActualStyleRole, ActualStyleRoleSet
+from docfit.styles.capture import (
+    SchoolStyleCapture,
+    capture_template_style_observations,
+    compile_school_style_contracts,
+)
 from docfit.styles.contracts import (
     STYLE_CONTRACT_SCHEMA_VERSION,
     OverridePolicy,
@@ -12,6 +17,34 @@ from docfit.styles.contracts import (
 from docfit.styles.materialization import (
     SUPPORTED_MATERIALIZED_PROPERTIES,
     materialize_style_contracts,
+)
+from docfit.styles.observation import (
+    EffectiveState,
+    FieldStyleObservation,
+    FieldStyleObservationSet,
+    ObservationClosure,
+    ObservationClosureSummary,
+    PropertyObservation,
+    SchoolEvidenceStatus,
+    SchoolRoleEligibility,
+    observe_effective_style,
+)
+from docfit.styles.presets import (
+    FieldStyleBinding,
+    GeneralStylePreset,
+    PresetProperty,
+    PresetRole,
+)
+from docfit.styles.profiles import (
+    DEFAULT_STYLE_PROPERTY_PROFILES,
+    DOCUMENT_ROLE_PROPERTY_PATHS,
+    PROFILE_REGISTRY_SCHEMA_VERSION,
+    PROFILE_SCHEMA_VERSION,
+    STYLE_ROLE_PROPERTY_PATHS,
+    PropertyDefinition,
+    StylePropertyProfile,
+    StylePropertyProfileRef,
+    StylePropertyProfileRegistry,
 )
 from docfit.styles.resolver import (
     EffectiveStyleResolver,
@@ -26,6 +59,9 @@ from docfit.styles.validator import (
 )
 
 __all__ = [
+    "ActualRoleSource",
+    "ActualStyleRole",
+    "ActualStyleRoleSet",
     "STYLE_CONTRACT_SCHEMA_VERSION",
     "OverridePolicy",
     "StyleContract",
@@ -39,7 +75,31 @@ __all__ = [
     "OccurrenceStyleValidation",
     "StyleValidationReport",
     "SUPPORTED_MATERIALIZED_PROPERTIES",
-    "capture_template_style_contracts",
+    "DEFAULT_STYLE_PROPERTY_PROFILES",
+    "DOCUMENT_ROLE_PROPERTY_PATHS",
+    "EffectiveState",
+    "FieldStyleObservation",
+    "FieldStyleObservationSet",
+    "FieldStyleBinding",
+    "GeneralStylePreset",
+    "ObservationClosure",
+    "ObservationClosureSummary",
+    "PROFILE_REGISTRY_SCHEMA_VERSION",
+    "PROFILE_SCHEMA_VERSION",
+    "PropertyDefinition",
+    "PropertyObservation",
+    "PresetProperty",
+    "PresetRole",
+    "STYLE_ROLE_PROPERTY_PATHS",
+    "SchoolEvidenceStatus",
+    "SchoolRoleEligibility",
+    "SchoolStyleCapture",
+    "StylePropertyProfile",
+    "StylePropertyProfileRef",
+    "StylePropertyProfileRegistry",
+    "capture_template_style_observations",
+    "compile_school_style_contracts",
     "materialize_style_contracts",
+    "observe_effective_style",
     "style_contract_digest",
 ]

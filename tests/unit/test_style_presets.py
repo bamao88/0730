@@ -5,6 +5,7 @@ from typing import Any
 import pytest
 
 from docfit.styles.presets import GeneralStylePreset
+from docfit.styles.profiles import DEFAULT_STYLE_PROPERTY_PROFILES
 from docfit.tools.runtime import ToolFailure
 
 
@@ -111,3 +112,11 @@ def test_rejects_role_inheritance_cycle() -> None:
 
     with pytest.raises(ToolFailure, match="cycle"):
         GeneralStylePreset.from_mapping(value)
+
+
+def test_rejects_a_preset_property_list_that_drifted_from_the_registry() -> None:
+    with pytest.raises(ToolFailure, match="accepted Registry list"):
+        GeneralStylePreset.from_mapping(
+            _preset(),
+            registry=DEFAULT_STYLE_PROPERTY_PROFILES,
+        )
