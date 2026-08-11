@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import zipfile
 from collections.abc import Mapping
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
@@ -68,7 +69,7 @@ class PropertyProvenance:
     source_kind: str
     source_id: str
     action: str
-    value: str | float | bool | None
+    value: Any
 
     def as_dict(self) -> JsonObject:
         return {
@@ -84,12 +85,12 @@ class EffectiveStyleResult:
     """Flattened effective properties plus complete contribution trails."""
 
     locator: str
-    properties: Mapping[str, str | float | bool | None]
+    properties: Mapping[str, Any]
     provenance: Mapping[str, tuple[PropertyProvenance, ...]]
     coverage: frozenset[str]
     unresolved: tuple[str, ...]
 
-    def value(self, property_path: str) -> str | float | bool | None:
+    def value(self, property_path: str) -> Any:
         return self.properties.get(property_path)
 
     def as_dict(self) -> JsonObject:
@@ -108,7 +109,7 @@ class EffectiveStyleResult:
 @dataclass(frozen=True, slots=True)
 class _Instruction:
     path: str
-    value: str | float | bool | None
+    value: Any
     toggle: bool = False
 
 
@@ -124,7 +125,7 @@ class _NamedStyle:
 
 class _Accumulator:
     def __init__(self) -> None:
-        self.values: dict[str, str | float | bool | None] = {}
+        self.values: dict[str, Any] = {}
         self.trails: dict[str, list[PropertyProvenance]] = {}
 
     def apply(
@@ -160,7 +161,7 @@ class _Accumulator:
             PropertyProvenance("word_font_fallback", source_path, "derive", value),
         ]
 
-    def implicit(self, path: str, value: str | float | bool | None) -> None:
+    def implicit(self, path: str, value: Any) -> None:
         if path in self.values:
             return
         self.values[path] = value
@@ -282,9 +283,15 @@ class EffectiveStyleResolver:
         accumulator.implicit("run.bold", False)
         accumulator.implicit("run.italic", False)
         accumulator.implicit("run.color", "auto")
+        accumulator.implicit("run.underline", None)
+        accumulator.implicit("run.strikethrough", False)
+        accumulator.implicit("run.vertical_position", "baseline")
+        accumulator.implicit("run.character_spacing_pt", 0.0)
         accumulator.implicit("paragraph.space_before_pt", 0.0)
         accumulator.implicit("paragraph.space_after_pt", 0.0)
         accumulator.implicit("paragraph.page_break_before", False)
+        accumulator.implicit("paragraph.numbering", None)
+        accumulator.implicit("paragraph.tab_stops", None)
         properties = MappingProxyType(dict(sorted(accumulator.values.items())))
         provenance = MappingProxyType(
             {
@@ -498,6 +505,24 @@ def _run_properties(properties: ET.Element | None) -> tuple[_Instruction, ...]:
         toggle_value = _on_off(element)
         if toggle_value is not None:
             result.append(_Instruction(path, toggle_value, toggle=True))
+    underline = properties.find(f"{W}u")
+    if underline is not None:
+        raw_underline = _attribute(underline, "val") or "single"
+        result.append(
+            _Instruction(
+                "run.underline",
+                None if raw_underline in {"none", "0", "false", "off"} else raw_underline,
+            )
+        )
+    strike = _on_off(properties.find(f"{W}strike"))
+    if strike is not None:
+        result.append(_Instruction("run.strikethrough", strike))
+    vertical_position = _attribute(properties.find(f"{W}vertAlign"), "val")
+    if vertical_position is not None:
+        result.append(_Instruction("run.vertical_position", vertical_position))
+    character_spacing = _twips(_attribute(properties.find(f"{W}spacing"), "val"))
+    if character_spacing is not None:
+        result.append(_Instruction("run.character_spacing_pt", character_spacing))
     color = properties.find(f"{W}color")
     if color is not None:
         color_value = _attribute(color, "val")
@@ -516,6 +541,18 @@ def _paragraph_properties(properties: ET.Element | None) -> tuple[_Instruction, 
     alignment = _attribute(properties.find(f"{W}jc"), "val")
     if alignment is not None:
         result.append(_Instruction("paragraph.alignment", alignment))
+    indentation = properties.find(f"{W}ind")
+    if indentation is not None:
+        for attribute, path in (
+            ("firstLineChars", "paragraph.first_line_indent_chars"),
+            ("leftChars", "paragraph.left_indent_chars"),
+            ("rightChars", "paragraph.right_indent_chars"),
+            ("hangingChars", "paragraph.hanging_indent_chars"),
+        ):
+            raw_value = _attribute(indentation, attribute)
+            if raw_value is not None:
+                with suppress(ValueError):
+                    result.append(_Instruction(path, int(raw_value) / 100))
     spacing = properties.find(f"{W}spacing")
     if spacing is not None:
         before = _twips(_attribute(spacing, "before"))
@@ -540,4 +577,49 @@ def _paragraph_properties(properties: ET.Element | None) -> tuple[_Instruction, 
     page_break = _on_off(properties.find(f"{W}pageBreakBefore"))
     if page_break is not None:
         result.append(_Instruction("paragraph.page_break_before", page_break))
+    for tag, path in (
+        ("keepNext", "paragraph.keep_with_next"),
+        ("keepLines", "paragraph.keep_together"),
+        ("widowControl", "paragraph.widow_control"),
+    ):
+        value = _on_off(properties.find(f"{W}{tag}"))
+        if value is not None:
+            result.append(_Instruction(path, value))
+    outline_level = _attribute(properties.find(f"{W}outlineLvl"), "val")
+    if outline_level is not None:
+        with suppress(ValueError):
+            result.append(_Instruction("paragraph.outline_level", int(outline_level)))
+    numbering = properties.find(f"{W}numPr")
+    if numbering is not None:
+        num_id = _attribute(numbering.find(f"{W}numId"), "val")
+        level = _attribute(numbering.find(f"{W}ilvl"), "val")
+        if num_id in {None, "0"}:
+            result.append(_Instruction("paragraph.numbering", None))
+        else:
+            result.append(
+                _Instruction(
+                    "paragraph.numbering",
+                    {
+                        "num_id": num_id,
+                        **({"level": int(level)} if level is not None and level.isdigit() else {}),
+                    },
+                )
+            )
+    tabs = properties.find(f"{W}tabs")
+    if tabs is not None:
+        values: list[JsonObject] = []
+        for tab in tabs.findall(f"{W}tab"):
+            position = _attribute(tab, "pos")
+            values.append(
+                {
+                    "alignment": _attribute(tab, "val") or "left",
+                    "leader": _attribute(tab, "leader") or "none",
+                    **(
+                        {"position_twips": int(position)}
+                        if position and position.isdigit()
+                        else {}
+                    ),
+                }
+            )
+        result.append(_Instruction("paragraph.tab_stops", values or None))
     return tuple(result)

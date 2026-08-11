@@ -464,6 +464,22 @@ def _canonical_resolved_property(
         if source not in resolved.coverage:
             return "missing", None, provenance, f"{source}_absent"
         return "value", resolved.properties[source], provenance, None
+    if strategy == "word_outline_toc_inclusion_v1":
+        source = "paragraph.outline_level"
+        if source not in resolved.coverage:
+            return "missing", None, provenance, "outline_level_absent"
+        level = resolved.properties[source]
+        if not isinstance(level, int):
+            return "conflict", None, provenance, "outline_level_not_integer"
+        return "value", level < 9, provenance, None
+    if strategy == "word_outline_toc_level_v1":
+        source = "paragraph.outline_level"
+        if source not in resolved.coverage:
+            return "missing", None, provenance, "outline_level_absent"
+        level = resolved.properties[source]
+        if not isinstance(level, int) or not 0 <= level <= 8:
+            return "conflict", None, provenance, "outline_level_out_of_range"
+        return "value", level + 1, provenance, None
     return "missing", None, provenance, "canonicalization_not_implemented"
 
 

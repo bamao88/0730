@@ -15,6 +15,7 @@ from docfit.styles.observation import (
     SchoolEvidenceStatus,
 )
 from docfit.styles.profiles import (
+    DEFAULT_STYLE_PROPERTY_PROFILES,
     PropertyDefinition,
     StylePropertyProfile,
     StylePropertyProfileRegistry,
@@ -192,3 +193,24 @@ def test_resolver_unsupported_is_not_relabelled_as_a_school_gap(tmp_path: Path) 
     assert capture.failed_observations[0]["failed_properties"] == [
         "paragraph.keep_with_next"
     ]
+
+
+def test_default_paragraph_profile_is_fully_classified_without_resolver_failure(
+    tmp_path: Path,
+) -> None:
+    document = tmp_path / "school.docx"
+    _write_docx(document)
+    profile = DEFAULT_STYLE_PROPERTY_PROFILES.for_role_type("paragraph")
+
+    capture = capture_template_style_observations(
+        document,
+        [_slot(profile)],
+    )
+
+    assert capture.status == "passed_with_known_gaps"
+    assert capture.failed_observations == ()
+    observation = capture.observation_set.observations[0]
+    assert tuple(item.property_path for item in observation.properties) == (
+        profile.property_paths
+    )
+    assert observation.closure.observation_closure.value == "COMPLETE"

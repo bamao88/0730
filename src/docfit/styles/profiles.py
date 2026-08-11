@@ -541,8 +541,36 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
             "run.bold": (("run.bold",), "identity", ("run.bold",)),
             "run.italic": (("run.italic",), "identity", ("run.italic",)),
             "run.color": (("run.color",), "word_hex_color_v1", ("run.color",)),
+            "run.underline": (("run.underline",), "identity", ()),
+            "run.strikethrough": (("run.strikethrough",), "identity", ()),
+            "run.vertical_position": (("run.vertical_position",), "identity", ()),
+            "run.character_spacing_pt": (
+                ("run.character_spacing_pt",),
+                "identity",
+                (),
+            ),
             "paragraph.alignment": (
                 ("paragraph.alignment",), "identity", ("paragraph.alignment",)
+            ),
+            "paragraph.first_line_indent_chars": (
+                ("paragraph.first_line_indent_chars",),
+                "identity",
+                (),
+            ),
+            "paragraph.left_indent_chars": (
+                ("paragraph.left_indent_chars",),
+                "identity",
+                (),
+            ),
+            "paragraph.right_indent_chars": (
+                ("paragraph.right_indent_chars",),
+                "identity",
+                (),
+            ),
+            "paragraph.hanging_indent_chars": (
+                ("paragraph.hanging_indent_chars",),
+                "identity",
+                (),
             ),
             "paragraph.line_spacing.mode": (
                 (
@@ -572,6 +600,38 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
                 ("paragraph.page_break_before",),
                 "identity",
                 ("paragraph.page_break_before",),
+            ),
+            "paragraph.keep_with_next": (
+                ("paragraph.keep_with_next",),
+                "identity",
+                (),
+            ),
+            "paragraph.keep_together": (
+                ("paragraph.keep_together",),
+                "identity",
+                (),
+            ),
+            "paragraph.widow_control": (
+                ("paragraph.widow_control",),
+                "identity",
+                (),
+            ),
+            "paragraph.outline_level": (
+                ("paragraph.outline_level",),
+                "identity",
+                (),
+            ),
+            "numbering": (("paragraph.numbering",), "identity", ()),
+            "tab_stops": (("paragraph.tab_stops",), "identity", ()),
+            "toc_inclusion": (
+                ("paragraph.outline_level",),
+                "word_outline_toc_inclusion_v1",
+                (),
+            ),
+            "toc_source_level": (
+                ("paragraph.outline_level",),
+                "word_outline_toc_level_v1",
+                (),
             ),
         }
     )

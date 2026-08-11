@@ -180,3 +180,40 @@ def test_run_locator_selects_the_requested_run(tmp_path: Path) -> None:
 
     assert resolver.resolve("/body/p[1]/r[1]").properties["run.color"] == "FF0000"
     assert resolver.resolve("/body/p[1]/r[2]").properties["run.color"] == "0000FF"
+
+
+def test_resolver_covers_extended_run_paragraph_numbering_and_tab_properties(
+    tmp_path: Path,
+) -> None:
+    document = tmp_path / "extended-styles.docx"
+    xml = f'''<w:document xmlns:w="{W_NS}"><w:body><w:p><w:pPr>
+      <w:ind w:firstLineChars="200" w:leftChars="100" w:rightChars="50"
+        w:hangingChars="25"/>
+      <w:keepNext/><w:keepLines w:val="0"/><w:widowControl/>
+      <w:outlineLvl w:val="1"/>
+      <w:numPr><w:ilvl w:val="2"/><w:numId w:val="7"/></w:numPr>
+      <w:tabs><w:tab w:val="right" w:leader="dot" w:pos="720"/></w:tabs>
+      </w:pPr><w:r><w:rPr><w:u w:val="double"/><w:strike/>
+        <w:vertAlign w:val="superscript"/><w:spacing w:val="30"/>
+      </w:rPr><w:t>Extended</w:t></w:r></w:p></w:body></w:document>'''
+    with zipfile.ZipFile(document, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+
+    resolved = EffectiveStyleResolver(document).resolve("/body/p[1]")
+
+    assert resolved.properties["run.underline"] == "double"
+    assert resolved.properties["run.strikethrough"] is True
+    assert resolved.properties["run.vertical_position"] == "superscript"
+    assert resolved.properties["run.character_spacing_pt"] == 1.5
+    assert resolved.properties["paragraph.first_line_indent_chars"] == 2
+    assert resolved.properties["paragraph.left_indent_chars"] == 1
+    assert resolved.properties["paragraph.right_indent_chars"] == 0.5
+    assert resolved.properties["paragraph.hanging_indent_chars"] == 0.25
+    assert resolved.properties["paragraph.keep_with_next"] is True
+    assert resolved.properties["paragraph.keep_together"] is False
+    assert resolved.properties["paragraph.widow_control"] is True
+    assert resolved.properties["paragraph.outline_level"] == 1
+    assert resolved.properties["paragraph.numbering"] == {"num_id": "7", "level": 2}
+    assert resolved.properties["paragraph.tab_stops"] == [
+        {"alignment": "right", "leader": "dot", "position_twips": 720}
+    ]
