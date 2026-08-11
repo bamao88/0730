@@ -1667,6 +1667,54 @@ def test_structure_absorbs_redundant_member_slot_operations(tmp_path: Path) -> N
     )
 
 
+def test_structure_order_failure_returns_objective_reselection_feedback(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    samples = [
+        ("第 X 章", "FF0000", "body.heading.level1"),
+        ("1 节标题", "0000FF", "body.heading.level2"),
+        ("正文样例", "0000FF", "body.paragraph"),
+    ]
+    _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    selected = {
+        item.text: item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text in {text for text, _, _ in samples}
+    }
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_structure",
+                        "object_ref": selected[samples[-1][0]].object_ref,
+                        "field_id": "body.chapters",
+                        "members": [
+                            {
+                                "object_ref": selected[text].object_ref,
+                                "field_id": field_id,
+                            }
+                            for text, _, field_id in reversed(samples)
+                        ],
+                    }
+                ]
+            }
+        )
+
+    assert caught.value.code == "body_structure_not_in_document_order"
+    assert "body.paragraph@" in caught.value.message
+    assert "body.heading.level1@" in caught.value.message
+    assert "Do not repair a cross-block selection by only reordering" in caught.value.message
+    assert caught.value.suggested_actions == (
+        "reselect_members_from_one_forward_document_block",
+        "do_not_only_reorder_cross_block_members",
+    )
+
+
 def test_structure_leaves_empty_section_boundary_outside_repeatable_unit(
     tmp_path: Path,
 ) -> None:

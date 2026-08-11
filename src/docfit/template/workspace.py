@@ -2201,6 +2201,36 @@ class TemplateWorkspaceService:
                             },
                         }
                     )
+                member_orders = [
+                    next(
+                        index
+                        for index, candidate in enumerate(candidate_before.objects)
+                        if candidate.locator == member.selected.locator
+                    )
+                    for member in structure_members
+                ]
+                if member_orders != sorted(member_orders):
+                    order_facts = ", ".join(
+                        f"{member.field_id}@{document_order}"
+                        for member, document_order in zip(
+                            structure_members, member_orders, strict=True
+                        )
+                    )
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_not_in_document_order",
+                        message=(
+                            "Body structure members are not in forward document order "
+                            f"({order_facts}). Do not repair a cross-block selection by only "
+                            "reordering its array. Re-select one coherent forward school block "
+                            "whose physical order already matches the intended repeat unit."
+                        ),
+                        suggested_actions=(
+                            "reselect_members_from_one_forward_document_block",
+                            "do_not_only_reorder_cross_block_members",
+                        ),
+                    )
             elif action == "refresh_toc":
                 raw_field_id = raw.get("field_id", "generated.toc")
                 if raw_field_id != "generated.toc":
