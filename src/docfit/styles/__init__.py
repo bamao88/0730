@@ -51,6 +51,12 @@ from docfit.styles.resolver import (
     EffectiveStyleResult,
     PropertyProvenance,
 )
+from docfit.styles.selection import (
+    SelectedStyleProperty,
+    SelectedStyleRole,
+    StyleRoleSelectionReceipt,
+    select_complete_style_roles,
+)
 from docfit.styles.validator import (
     OccurrenceStyleValidation,
     StyleContractValidator,
@@ -94,12 +100,16 @@ __all__ = [
     "SchoolEvidenceStatus",
     "SchoolRoleEligibility",
     "SchoolStyleCapture",
+    "SelectedStyleProperty",
+    "SelectedStyleRole",
     "StylePropertyProfile",
     "StylePropertyProfileRef",
     "StylePropertyProfileRegistry",
+    "StyleRoleSelectionReceipt",
     "capture_template_style_observations",
     "compile_school_style_contracts",
     "materialize_style_contracts",
     "observe_effective_style",
+    "select_complete_style_roles",
     "style_contract_digest",
 ]
