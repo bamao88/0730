@@ -3,6 +3,7 @@
 from docfit.styles.actual_roles import ActualRoleSource, ActualStyleRole, ActualStyleRoleSet
 from docfit.styles.capture import (
     SchoolStyleCapture,
+    capture_template_style_contracts,
     capture_template_style_observations,
     compile_school_style_contracts,
 )
@@ -107,6 +108,7 @@ __all__ = [
     "StylePropertyProfileRegistry",
     "StyleRoleSelectionReceipt",
     "capture_template_style_observations",
+    "capture_template_style_contracts",
     "compile_school_style_contracts",
     "materialize_style_contracts",
     "observe_effective_style",

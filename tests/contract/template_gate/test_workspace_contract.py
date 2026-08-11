@@ -8,6 +8,7 @@ from xml.etree import ElementTree as ET
 
 import pytest
 
+from docfit.styles.profiles import DEFAULT_STYLE_PROPERTY_PROFILES
 from docfit.template.object_mutation import (
     ObjectMutation,
     TocEntry,
@@ -2486,6 +2487,42 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         == slot["style_contract_ref"]["contract_digest"]
         for slot in fill_contract["slots"]
     )
+    observation_artifact = json.loads(
+        (service.root / "publication/school-style-observations.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert fill_contract["profile_registry_digest"] == (
+        DEFAULT_STYLE_PROPERTY_PROFILES.registry_digest
+    )
+    assert fill_contract["school_observation_set_digest"] == observation_artifact[
+        "school_observation_set_digest"
+    ]
+    observed = {
+        item["style_role_id"]: item
+        for item in observation_artifact["observation_set"]["observations"]
+    }
+    assert [
+        item["property_path"] for item in observed["style.body.heading.1"]["properties"]
+    ] == list(DEFAULT_STYLE_PROPERTY_PROFILES.for_role_type("heading").property_paths)
+    table_caption_gap = next(
+        item
+        for item in fill_contract["known_school_style_gaps"]
+        if item["field_id"] == "body.table.caption"
+    )
+    assert table_caption_gap["reason"] == "school_role_representative_missing"
+    assert published["school_style"]["known_gap_count"] > 0
+    assert published["school_style"]["failed_observation_count"] == 0
+    forbidden_publish_payload = json.dumps(
+        {
+            "published": published,
+            "fill_contract": fill_contract,
+        },
+        ensure_ascii=False,
+    )
+    assert "selected_style_contract_set_digest" not in forbidden_publish_payload
+    assert "fallback_selection" not in forbidden_publish_payload
+    assert "preset_digest" not in forbidden_publish_payload
 
 
 def test_structure_replacement_reuses_existing_members_and_adds_new_level(

@@ -18,7 +18,11 @@ from pathlib import Path
 from typing import Any
 
 from docfit.fields import FieldRegistrySnapshot
-from docfit.styles.capture import capture_template_style_contracts
+from docfit.styles.capture import (
+    capture_template_style_contracts,
+    capture_template_style_observations,
+)
+from docfit.styles.profiles import DEFAULT_STYLE_PROPERTY_PROFILES
 from docfit.template.object_mutation import (
     ObjectMutation,
     StructureMember,
@@ -66,6 +70,27 @@ _DURABLE_EDIT_INTENT_ACTIONS = {
     "refresh_toc",
 }
 _MAX_PENDING_EDIT_INTENTS = 8
+
+_FIELD_STYLE_ROLES: dict[str, tuple[str, str]] = {
+    "body.heading.level1": ("style.body.heading.1", "heading"),
+    "body.heading.level2": ("style.body.heading.2", "heading"),
+    "body.heading.level3": ("style.body.heading.3", "heading"),
+    "body.heading.level4": ("style.body.heading.4", "heading"),
+    "body.heading.level5": ("style.body.heading.5", "heading"),
+    "body.paragraph": ("style.body.paragraph", "paragraph"),
+    "body.numbered_list_item": ("style.body.numbered_list_item", "paragraph"),
+    "body.inline_emphasis": ("style.inline.emphasis", "character"),
+    "body.inline_quote": ("style.inline.quote", "character"),
+    "body.block_quote": ("style.body.block_quote", "paragraph"),
+    "body.figure.caption": ("style.caption.figure", "caption"),
+    "body.equation": ("style.equation.block", "equation"),
+    "body.table.caption": ("style.caption.table", "caption"),
+    "body.table.note": ("style.table.note", "paragraph"),
+}
+_BODY_COMPONENT_STYLE_ROLES: tuple[tuple[str, str, str], ...] = (
+    ("body.table", "style.table.header", "table_cell"),
+    ("body.table", "style.table.body", "table_cell"),
+)
 
 
 def _normalize(value: str) -> str:
@@ -134,6 +159,63 @@ def _with_semantic_type(field: JsonObject) -> JsonObject:
     if semantic is not None:
         value["semantic_object_type"] = semantic.public()
     return value
+
+
+def _school_style_slot_metadata(
+    *,
+    field_id: str,
+    slot_id: str,
+    content_type: str,
+) -> JsonObject:
+    binding = _FIELD_STYLE_ROLES.get(field_id)
+    if binding is None:
+        if content_type not in {"text", "rich_text"}:
+            return {"handling": "non_style"}
+        binding = (f"style.slot.{slot_id}", "paragraph")
+    style_role_id, style_role_type = binding
+    profile = DEFAULT_STYLE_PROPERTY_PROFILES.for_role_type(style_role_type)
+    return {
+        "handling": "styled",
+        "style_role_id": style_role_id,
+        "style_role_type": style_role_type,
+        "property_profile_ref": profile.ref().as_dict(),
+    }
+
+
+def _expected_body_style_roles(published_slots: list[JsonObject]) -> list[JsonObject]:
+    observed_role_ids = {
+        str(item["style_role_id"])
+        for item in published_slots
+        if isinstance(item.get("style_role_id"), str)
+    }
+    expected: list[JsonObject] = []
+    for field_id, (style_role_id, style_role_type) in _FIELD_STYLE_ROLES.items():
+        if not field_id.startswith("body.") or style_role_id in observed_role_ids:
+            continue
+        profile = DEFAULT_STYLE_PROPERTY_PROFILES.for_role_type(style_role_type)
+        expected.append(
+            {
+                "field_id": field_id,
+                "slot_id": f"expected.{field_id}",
+                "style_role_id": style_role_id,
+                "style_role_type": style_role_type,
+                "property_profile_ref": profile.ref().as_dict(),
+            }
+        )
+    for field_id, style_role_id, style_role_type in _BODY_COMPONENT_STYLE_ROLES:
+        if style_role_id in observed_role_ids:
+            continue
+        profile = DEFAULT_STYLE_PROPERTY_PROFILES.for_role_type(style_role_type)
+        expected.append(
+            {
+                "field_id": field_id,
+                "slot_id": f"expected.{style_role_id}",
+                "style_role_id": style_role_id,
+                "style_role_type": style_role_type,
+                "property_profile_ref": profile.ref().as_dict(),
+            }
+        )
+    return expected
 
 
 def _effective_format(value: Any, *, required: bool = False) -> JsonObject:
@@ -3169,6 +3251,13 @@ class TemplateWorkspaceService:
                     "expected_match_count": 1,
                 },
             }
+            published_slot.update(
+                _school_style_slot_metadata(
+                    field_id=field_id,
+                    slot_id=slot_id,
+                    content_type=content_type,
+                )
+            )
             label = field.get("label")
             if isinstance(label, str) and label:
                 published_slot["label"] = label
@@ -3190,6 +3279,35 @@ class TemplateWorkspaceService:
         style_contracts, style_capture = capture_template_style_contracts(
             document, published_slots
         )
+        expected_style_roles = (
+            _expected_body_style_roles(published_slots) if structures else []
+        )
+        school_style_capture = capture_template_style_observations(
+            document,
+            published_slots,
+            expected_roles=expected_style_roles,
+        )
+        audit_dir = self.root / "publication"
+        audit_dir.mkdir(parents=True, exist_ok=True)
+        atomic_write_json(
+            audit_dir / "school-style-observations.json",
+            school_style_capture.as_dict(),
+        )
+        if school_style_capture.failed_observations:
+            failure_counts = school_style_capture.as_dict()["audit_counts"]
+            raise ToolFailure(
+                status="error",
+                origin="postcondition",
+                code="school_style_observation_failed",
+                message=(
+                    "School style observation could not classify the full fixed profile: "
+                    f"{failure_counts['failed_observation_count']} observations failed."
+                ),
+                suggested_actions=(
+                    "inspect_school_style_observation_artifact",
+                    "extend_effective_style_resolver",
+                ),
+            )
         style_refs = {
             style.style_contract_id.removeprefix("style.slot."): {
                 "style_contract_id": style.style_contract_id,
@@ -3208,6 +3326,14 @@ class TemplateWorkspaceService:
             "template_sha256": document_hash,
             "field_registry_ref": self.registry.identity(),
             "marker_protocol": "docfit-content-control-marker/v1",
+            "profile_registry_digest": (
+                school_style_capture.observation_set.profile_registry_digest
+            ),
+            "school_observation_set_digest": (
+                school_style_capture.school_observation_set_digest
+            ),
+            "school_style_candidates": list(school_style_capture.school_candidates),
+            "known_school_style_gaps": list(school_style_capture.known_gaps),
             "regions": [],
             "slots": published_slots,
             "styles": [style.as_dict() for style in style_contracts.styles],
@@ -3242,18 +3368,31 @@ class TemplateWorkspaceService:
             },
             "validation": {
                 "style_capture": style_capture,
+                "school_style_observation": {
+                    "status": school_style_capture.status,
+                    "profile_registry_digest": (
+                        school_style_capture.observation_set.profile_registry_digest
+                    ),
+                    "school_observation_set_digest": (
+                        school_style_capture.school_observation_set_digest
+                    ),
+                    "audit_counts": school_style_capture.as_dict()["audit_counts"],
+                    "artifact_path": "publication/school-style-observations.json",
+                },
                 "officecli_validation": office_validation,
             },
         }
-        audit_dir = self.root / "publication"
-        audit_dir.mkdir(parents=True, exist_ok=True)
         atomic_write_json(audit_dir / "fill-contract.json", fill_contract)
         counts: JsonObject = {
             "slot": len(slots),
             "remove": len(removes),
             "manual": 0,
-            "gap": 0,
-            "unresolved": 0,
+            "gap": len(school_style_capture.known_gaps),
+            "unresolved": sum(
+                len(item.get("unresolved_properties", []))
+                for item in school_style_capture.known_gaps
+                if isinstance(item, dict)
+            ),
         }
         atomic_write_json(
             audit_dir / "build-report.json",
@@ -3267,6 +3406,15 @@ class TemplateWorkspaceService:
                 "officecli_validation": office_validation,
                 "style_contract_set_digest": style_contracts.digest,
                 "style_occurrence_counts": style_capture["validation"]["counts"],
+                "profile_registry_digest": (
+                    school_style_capture.observation_set.profile_registry_digest
+                ),
+                "school_observation_set_digest": (
+                    school_style_capture.school_observation_set_digest
+                ),
+                "school_style_audit_counts": school_style_capture.as_dict()[
+                    "audit_counts"
+                ],
             },
         )
         output = self.task_root / "output" / "final-template.docx"
@@ -3311,6 +3459,17 @@ class TemplateWorkspaceService:
             "artifact_path": "output/final-template.docx",
             "template_sha256": document_hash,
             "counts": counts,
+            "school_style": {
+                "profile_registry_digest": (
+                    school_style_capture.observation_set.profile_registry_digest
+                ),
+                "school_observation_set_digest": (
+                    school_style_capture.school_observation_set_digest
+                ),
+                "school_candidate_count": len(school_style_capture.school_candidates),
+                "known_gap_count": len(school_style_capture.known_gaps),
+                "failed_observation_count": 0,
+            },
             "checks": [
                 {"name": "source_unchanged", "result": "ok"},
                 {"name": "registry_unchanged", "result": "ok"},
