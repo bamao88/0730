@@ -30,15 +30,15 @@ from docfit.styles.observation import (
     SchoolRoleEligibility,
     observe_effective_style,
 )
+from docfit.styles.preflight import (
+    TaskLocalStyleTarget,
+    compile_task_local_style_target,
+)
 from docfit.styles.presets import (
     FieldStyleBinding,
     GeneralStylePreset,
     PresetProperty,
     PresetRole,
-)
-from docfit.styles.preflight import (
-    TaskLocalStyleTarget,
-    compile_task_local_style_target,
 )
 from docfit.styles.profiles import (
     DEFAULT_STYLE_PROPERTY_PROFILES,
