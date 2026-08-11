@@ -321,11 +321,27 @@ def _normalize_prepared_operations(
                     absorb(first_index, second_index, "ancestor_removal")
                     break
                 elif (
-                    first_action in materializing
-                    and second_action in {"remove_object", "clear_content"}
+                    first_action in materializing and second_action == "clear_content"
                 ) or (
-                    second_action in materializing
-                    and first_action in {"remove_object", "clear_content"}
+                    second_action in materializing and first_action == "clear_content"
+                ):
+                    owner_index = (
+                        first_index if first_action in materializing else second_index
+                    )
+                    cleanup_index = (
+                        second_index if first_action in materializing else first_index
+                    )
+                    absorb(
+                        cleanup_index,
+                        owner_index,
+                        "materialized_target_replaces_content",
+                    )
+                    if cleanup_index == first_index:
+                        break
+                elif (
+                    first_action in materializing and second_action == "remove_object"
+                ) or (
+                    second_action in materializing and first_action == "remove_object"
                 ):
                     conflict(first_index, second_index)
                 elif {first_action, second_action} == {

@@ -1376,6 +1376,46 @@ def test_atomic_edit_rejects_conflicting_actions_on_the_same_object(
     assert caught.value.code == "batch_operations_conflict"
 
 
+@pytest.mark.parametrize("clear_first", [True, False])
+def test_materialize_slot_absorbs_same_target_clear_content(
+    tmp_path: Path,
+    *,
+    clear_first: bool,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+    clear = {"action": "clear_content", "object_ref": selected.object_ref}
+    materialize = {
+        "action": "materialize_slot",
+        "object_ref": selected.object_ref,
+        "field_id": "abstract.en",
+        "effective_format": {"color": "black", "underline": "none"},
+    }
+
+    result, _ = service.edit(
+        {"operations": [clear, materialize] if clear_first else [materialize, clear]}
+    )
+
+    assert result["committed"] is True
+    assert result["effects"]["operations"] == 1
+    assert result["effects"]["actions"] == {"materialize_slot": 1}
+    assert result["effects"]["absorbed_operations"][0]["reason"] == (
+        "materialized_target_replaces_content"
+    )
+    _, changed_path = service._resolve_document(result["document_ref"])
+    slot = next(
+        item
+        for item in service._inspection(changed_path).objects
+        if item.kind == "sdt" and item.format.get("alias") == "abstract.en"
+    )
+    assert slot.text == "【英文摘要】"
+
+
 def test_materialize_slot_absorbs_same_target_effective_format_normalization(
     tmp_path: Path,
 ) -> None:
