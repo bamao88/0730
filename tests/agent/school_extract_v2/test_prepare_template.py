@@ -201,6 +201,7 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
     assert "does not require a global H1/H2/H3 grammar" in prompt
     assert "effective_format={color:black, underline:none}" in prompt
     assert "ensure_page_start" in prompt
+    assert "ensure_page_starts" not in prompt
     assert "knowledge_signals" in prompt
     assert "Read only the matching relative reference" in prompt
     assert "application checkpoint" in prompt

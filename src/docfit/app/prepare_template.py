@@ -374,7 +374,7 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "Treat visible color and underline as evidence. If the intended outcome is formal black "
         "without underline, request effective_format={color:black, underline:none}; success means "
         "the effective value is re-read after inheritance, not merely that direct XML disappeared. "
-        "Use ensure_page_starts only after deciding that an object must begin a logical new page; "
+        "Use ensure_page_start only after deciding that an object must begin a logical new page; "
         "the Tool makes that request idempotent. Refresh a live TOC as one compound object with "
         "representative 1-3 entries; never clear cache rows individually. "
         "Judge the changed-region image and objective receipts returned by template_edit, then "
