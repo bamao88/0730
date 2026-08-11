@@ -289,7 +289,11 @@ def _append_styled_paragraphs(document: Path, values: list[tuple[str, str]]) -> 
             output.writestr(info, parts[info.filename])
 
 
-def _append_toc_and_titles(document: Path) -> None:
+def _append_toc_and_titles(
+    document: Path,
+    *,
+    cached_levels: tuple[int, ...] = (1, 2, 3),
+) -> None:
     with zipfile.ZipFile(document) as archive:
         infos = archive.infolist()
         parts = {info.filename: archive.read(info.filename) for info in infos}
@@ -345,7 +349,12 @@ def _append_toc_and_titles(document: Path) -> None:
     assert body is not None
     section = body.find(f"{W}sectPr")
     position = list(body).index(section) if section is not None else len(body)
-    for level, text in [(1, "第X章 XXX"), (2, "1 XXX"), (3, "1.1 XXX")]:
+    cached_rows = [
+        (level, text)
+        for level, text in [(1, "第X章 XXX"), (2, "1 XXX"), (3, "1.1 XXX")]
+        if level in cached_levels
+    ]
+    for row_index, (level, text) in enumerate(cached_rows):
         paragraph = ET.Element(f"{W}p")
         properties = ET.SubElement(paragraph, f"{W}pPr")
         ET.SubElement(properties, f"{W}pStyle", {f"{W}val": f"TOC{level}"})
@@ -378,7 +387,7 @@ def _append_toc_and_titles(document: Path) -> None:
         ET.SubElement(run, f"{W}t").text = text
         ET.SubElement(run, f"{W}tab")
         ET.SubElement(run, f"{W}t").text = str(level)
-        if level == 3:
+        if row_index == len(cached_rows) - 1:
             ET.SubElement(run, f"{W}fldChar", {f"{W}fldCharType": "end"})
         body.insert(position, paragraph)
         position += 1
@@ -2883,7 +2892,10 @@ def test_toc_refresh_does_not_duplicate_a_preserved_next_page_section(tmp_path: 
 
 def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
-    _append_toc_and_titles(source)
+    # The live cache may not contain every level that the Agent selects for the
+    # rebuilt TOC. Styles for newly introduced levels still need durable tabs
+    # and effective formatting before Word regenerates the field.
+    _append_toc_and_titles(source, cached_levels=(1, 2))
     _, document = service._register_source()
     inspection = service._inspection(document)
     toc = next(

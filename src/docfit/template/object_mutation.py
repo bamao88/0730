@@ -902,7 +902,7 @@ def _stabilize_toc_styles(
     for level, style_id in style_ids.items():
         style = by_id.get(style_id)
         template = templates.get(level)
-        if style is None or template is None:
+        if style is None:
             continue
 
         paragraph_properties = style.find(f"{_W}pPr")
@@ -913,7 +913,9 @@ def _stabilize_toc_styles(
                 len(style),
             )
             style.insert(run_properties_position, paragraph_properties)
-        template_paragraph_properties = template.find(f"{_W}pPr")
+        template_paragraph_properties = (
+            template.find(f"{_W}pPr") if template is not None else None
+        )
         if template_paragraph_properties is not None:
             for name in ("tabs", "spacing", "ind"):
                 if paragraph_properties.find(f"{_W}{name}") is not None:
@@ -943,7 +945,9 @@ def _stabilize_toc_styles(
             for item in _style_chain(styles, style_id)
             if (properties := item.find(f"{_W}rPr")) is not None
         )
-        template_run = _first_visible_run_properties(template)
+        template_run = (
+            _first_visible_run_properties(template) if template is not None else None
+        )
         if template_run is not None:
             sources.append(template_run)
         for source in sources:
