@@ -28,6 +28,14 @@ def _failure(code: str, message: str) -> ToolFailure:
     )
 
 
+def _json_value(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_json_value(item) for item in value]
+    return value
+
+
 @dataclass(frozen=True, slots=True)
 class SelectedStyleProperty:
     property_path: str
@@ -40,7 +48,7 @@ class SelectedStyleProperty:
             "effective_state": self.effective_state,
         }
         if self.effective_state == "VALUE":
-            result["value"] = self.value
+            result["value"] = _json_value(self.value)
         return result
 
 
