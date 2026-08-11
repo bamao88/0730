@@ -36,6 +36,10 @@ from docfit.styles.presets import (
     PresetProperty,
     PresetRole,
 )
+from docfit.styles.preflight import (
+    TaskLocalStyleTarget,
+    compile_task_local_style_target,
+)
 from docfit.styles.profiles import (
     DEFAULT_STYLE_PROPERTY_PROFILES,
     DOCUMENT_ROLE_PROPERTY_PATHS,
@@ -108,9 +112,11 @@ __all__ = [
     "StylePropertyProfileRef",
     "StylePropertyProfileRegistry",
     "StyleRoleSelectionReceipt",
+    "TaskLocalStyleTarget",
     "capture_template_style_observations",
     "capture_template_style_contracts",
     "compile_selected_style_contracts",
+    "compile_task_local_style_target",
     "compile_school_style_contracts",
     "materialize_style_contracts",
     "observe_effective_style",
