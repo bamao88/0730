@@ -305,6 +305,24 @@ def _execution_properties(
                 else "paragraph.line_spacing_pt"
             )
             result[target] = value
+        elif item.property_path == "numbering":
+            if not isinstance(value, Mapping) or "num_id" not in value:
+                raise _failure(
+                    "style_selection_property_codec_missing",
+                    "numbering VALUE requires a compiled Word numbering definition.",
+                )
+            result[targets[0]] = value
+        elif item.property_path == "tab_stops":
+            if not isinstance(value, Sequence) or isinstance(value, str | bytes) or any(
+                not isinstance(tab, Mapping)
+                or not isinstance(tab.get("position_twips"), int)
+                for tab in value
+            ):
+                raise _failure(
+                    "style_selection_property_codec_missing",
+                    "tab_stops VALUE requires layout-resolved Word positions.",
+                )
+            result[targets[0]] = list(value)
         else:
             for target in targets:
                 result[target] = value

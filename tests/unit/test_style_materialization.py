@@ -18,7 +18,9 @@ W = f"{{{W_NS}}}"
 def _write_occurrences(path: Path, count: int) -> None:
     paragraphs = "".join(
         f'''<w:p w14:paraId="{index:08X}">
-          <w:pPr><w:jc w:val="right"/><w:keepNext/></w:pPr>
+          <w:pPr><w:jc w:val="right"/><w:keepNext/>
+            <w:tabs><w:tab w:val="right" w:leader="dot" w:pos="720"/></w:tabs>
+          </w:pPr>
           <w:r><w:rPr><w:rFonts w:ascii="Courier New"/>
             <w:sz w:val="18"/><w:b/><w:i/><w:color w:val="FF0000"/>
             <w:caps/></w:rPr><w:t>Occurrence {index}</w:t></w:r>
@@ -46,6 +48,7 @@ def _style() -> dict[str, Any]:
         "paragraph.widow_control": False,
         "paragraph.outline_level": 9,
         "paragraph.numbering": None,
+        "paragraph.tab_stops": None,
         "run.font_ascii": "Times New Roman",
         "run.font_hansi": "Times New Roman",
         "run.font_east_asia": "宋体",

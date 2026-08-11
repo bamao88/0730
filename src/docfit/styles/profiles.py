@@ -638,7 +638,11 @@ _RESOLVER_MAPPINGS: Mapping[str, tuple[tuple[str, ...], str, tuple[str, ...]]] =
                 "identity",
                 ("paragraph.numbering",),
             ),
-            "tab_stops": (("paragraph.tab_stops",), "identity", ()),
+            "tab_stops": (
+                ("paragraph.tab_stops",),
+                "identity",
+                ("paragraph.tab_stops",),
+            ),
             "toc_inclusion": (
                 ("paragraph.outline_level",),
                 "word_outline_toc_inclusion_v1",

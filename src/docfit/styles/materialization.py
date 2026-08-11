@@ -10,6 +10,7 @@ from typing import Any, cast
 from xml.etree import ElementTree as ET
 
 from docfit.styles.contracts import StyleContract, StyleContractSet
+from docfit.styles.resolver import EffectiveStyleResolver
 from docfit.tools.runtime import JsonObject, ToolFailure
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -52,6 +53,7 @@ SUPPORTED_MATERIALIZED_PROPERTIES = frozenset(
         "paragraph.widow_control",
         "paragraph.outline_level",
         "paragraph.numbering",
+        "paragraph.tab_stops",
     }
 )
 _PARAGRAPH_PATH = re.compile(r"/body/p\[@paraId=([0-9A-Fa-f]{8})\]")
@@ -78,6 +80,7 @@ def materialize_style_contracts(
             "Occurrence manifest requires an occurrences array.",
         )
     parts = _read_package(input_docx)
+    effective_before = EffectiveStyleResolver(input_docx)
     roots: dict[str, ET.Element] = {}
     seen_ids: set[str] = set()
     seen_locators: set[str] = set()
@@ -126,7 +129,12 @@ def materialize_style_contracts(
                 "style_occurrence_paragraph_not_unique",
                 f"{occurrence_id} resolved to {len(paragraphs)} paragraphs; expected one.",
             )
-        counts = _apply_contract(paragraphs[0], contract)
+        resolved_before = effective_before.resolve(locator)
+        counts = _apply_contract(
+            paragraphs[0],
+            contract,
+            resolved_before.properties,
+        )
         roots[part] = roots[part]
         applied.append(
             {
@@ -153,7 +161,11 @@ def materialize_style_contracts(
     }
 
 
-def _apply_contract(paragraph: ET.Element, contract: StyleContract) -> JsonObject:
+def _apply_contract(
+    paragraph: ET.Element,
+    contract: StyleContract,
+    effective_before: Mapping[str, Any],
+) -> JsonObject:
     paragraph_paths = tuple(
         path for path in contract.owned_properties if path.startswith("paragraph.")
     )
@@ -164,6 +176,7 @@ def _apply_contract(paragraph: ET.Element, contract: StyleContract) -> JsonObjec
             paragraph_properties,
             paragraph_paths,
             contract.effective_properties,
+            effective_before,
         )
     runs = list(paragraph.iter(f"{W}r"))
     if run_paths and not runs:
@@ -252,6 +265,7 @@ def _apply_paragraph_properties(
     properties: ET.Element,
     owned: Sequence[str],
     effective: Mapping[str, Any],
+    effective_before: Mapping[str, Any],
 ) -> None:
     if "paragraph.alignment" in owned:
         _set_value(
@@ -324,6 +338,12 @@ def _apply_paragraph_properties(
         _set_value(properties, "outlineLvl", str(level))
     if "paragraph.numbering" in owned:
         _apply_numbering(properties, effective["paragraph.numbering"])
+    if "paragraph.tab_stops" in owned:
+        _apply_tab_stops(
+            properties,
+            effective["paragraph.tab_stops"],
+            effective_before.get("paragraph.tab_stops"),
+        )
 
 
 def _apply_numbering(properties: ET.Element, value: Any) -> None:
@@ -351,6 +371,52 @@ def _apply_numbering(properties: ET.Element, value: Any) -> None:
         )
     _set_value(numbering, "ilvl", str(level))
     _set_value(numbering, "numId", str(num_id))
+
+
+def _apply_tab_stops(properties: ET.Element, value: Any, existing: Any) -> None:
+    tabs = properties.find(f"{W}tabs")
+    if tabs is None:
+        tabs = ET.SubElement(properties, f"{W}tabs")
+    for child in list(tabs):
+        tabs.remove(child)
+    if value is None:
+        values = existing if isinstance(existing, Sequence) else ()
+        for item in values:
+            if not isinstance(item, Mapping):
+                continue
+            position = item.get("position_twips")
+            if not isinstance(position, int):
+                continue
+            tab = ET.SubElement(tabs, f"{W}tab")
+            tab.set(f"{W}val", "clear")
+            tab.set(f"{W}pos", str(position))
+        return
+    if not isinstance(value, Sequence) or isinstance(value, str | bytes):
+        raise _failure(
+            "style_property_invalid",
+            "paragraph.tab_stops must be NONE or an array of tab definitions.",
+        )
+    for item in value:
+        if not isinstance(item, Mapping):
+            raise _failure(
+                "style_property_invalid", "Every tab stop must be an object."
+            )
+        position = item.get("position_twips")
+        alignment = item.get("alignment")
+        leader = item.get("leader", "none")
+        if (
+            not isinstance(position, int)
+            or not isinstance(alignment, str)
+            or not isinstance(leader, str)
+        ):
+            raise _failure(
+                "style_property_invalid",
+                "Tab stops require position_twips, alignment, and optional leader.",
+            )
+        tab = ET.SubElement(tabs, f"{W}tab")
+        tab.set(f"{W}val", alignment)
+        tab.set(f"{W}leader", leader)
+        tab.set(f"{W}pos", str(position))
 
 
 def _properties(owner: ET.Element, tag: str) -> ET.Element:

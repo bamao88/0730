@@ -137,8 +137,31 @@ class _Accumulator:
         style_toggle: bool = False,
     ) -> None:
         for instruction in instructions:
+            if instruction.path == "paragraph.tab_stops":
+                current = {
+                    item["position_twips"]: dict(item)
+                    for item in self.values.get(instruction.path, []) or []
+                    if isinstance(item, Mapping)
+                    and isinstance(item.get("position_twips"), int)
+                }
+                for item in instruction.value or []:
+                    if not isinstance(item, Mapping):
+                        continue
+                    position = item.get("position_twips")
+                    if not isinstance(position, int):
+                        continue
+                    if item.get("alignment") == "clear":
+                        current.pop(position, None)
+                    else:
+                        current[position] = dict(item)
+                tab_value = [current[key] for key in sorted(current)] or None
+                self.values[instruction.path] = tab_value
+                self.trails.setdefault(instruction.path, []).append(
+                    PropertyProvenance(source_kind, source_id, "merge", tab_value)
+                )
+                continue
             action = "set"
-            value = instruction.value
+            value: Any = instruction.value
             if instruction.toggle and style_toggle:
                 if value is True:
                     value = not bool(self.values.get(instruction.path, False))
