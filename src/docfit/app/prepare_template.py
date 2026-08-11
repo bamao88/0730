@@ -84,9 +84,11 @@ PREPARE_TEMPLATE_OUTPUT_SCHEMA: JsonObject = {
 
 PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS = 1800
 # Claude Agent SDK sessions retain prior Tool images. Keep each native session
-# deliberately short, then continue from DocFit's application checkpoint in a
-# fresh session instead of resuming the transcript.
-PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT = 12
+# deliberately bounded, then continue from DocFit's application checkpoint in a
+# fresh session instead of resuming the transcript. Twenty-four turns gives one
+# complex local structure decision room for open/card/search/focus/registry/edit
+# without carrying old images into the next physical region indefinitely.
+PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT = 24
 PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT = 24
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
