@@ -2479,6 +2479,112 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     )
 
 
+def test_structure_replacement_reuses_existing_members_and_adds_new_level(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    samples = [
+        ("第一章 样例", "FF0000", "body.heading.level1"),
+        ("正文样例", "0000FF", "body.paragraph"),
+        ("1.1 样例", "FF0000", "body.heading.level2"),
+        ("1.1.1 后发现样例", "FF0000", "body.heading.level3"),
+    ]
+    _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    selected = {
+        item.text: item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text in {text for text, _, _ in samples}
+    }
+
+    initial, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected[samples[0][0]].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": selected[text].object_ref,
+                            "field_id": field_id,
+                        }
+                        for text, _, field_id in samples[:3]
+                    ],
+                }
+            ]
+        }
+    )
+    _, initial_path = service._resolve_document(initial["document_ref"])
+    initial_inspection = service._inspection(initial_path)
+    member_controls = {
+        str(item.format["alias"]): item
+        for item in initial_inspection.objects
+        if item.kind == "sdt"
+        and item.format.get("alias")
+        in {"body.heading.level1", "body.paragraph", "body.heading.level2"}
+    }
+
+    def containing_paragraph(control: InspectedObject) -> InspectedObject:
+        return max(
+            (
+                item
+                for item in initial_inspection.objects
+                if item.kind == "paragraph"
+                and control.locator.startswith(f"{item.locator}/")
+            ),
+            key=lambda item: len(item.locator),
+        )
+
+    reused = {
+        field_id: containing_paragraph(control)
+        for field_id, control in member_controls.items()
+    }
+    discovered = next(
+        item
+        for item in initial_inspection.objects
+        if item.kind == "paragraph" and item.text == samples[-1][0]
+    )
+    ordered_members = [
+        (reused["body.heading.level1"], "body.heading.level1"),
+        (reused["body.paragraph"], "body.paragraph"),
+        (reused["body.heading.level2"], "body.heading.level2"),
+        (discovered, "body.heading.level3"),
+    ]
+
+    replaced, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": reused["body.heading.level1"].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {"object_ref": item.object_ref, "field_id": field_id}
+                        for item, field_id in ordered_members
+                    ],
+                }
+            ]
+        }
+    )
+
+    assert replaced["committed"] is True
+    assert replaced["effects"]["actions"] == {"materialize_structure": 1}
+    assert replaced["materialized_members"] == sorted(
+        field_id for _, field_id in ordered_members
+    )
+    _, replaced_path = service._resolve_document(replaced["document_ref"])
+    replaced_inspection = service._inspection(replaced_path)
+    structures = [
+        item
+        for item in replaced_inspection.objects
+        if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
+    ]
+    assert len(structures) == 1
+    assert structures[0].text == "【一级章标题】【正文段落】【二级标题】【三级标题】"
+
+
 def test_clear_content_preserves_selected_container_and_its_metadata(tmp_path: Path) -> None:
     service, _, _ = _service(tmp_path)
     _, document = service._register_source()

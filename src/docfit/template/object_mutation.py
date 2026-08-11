@@ -197,6 +197,52 @@ def _inside_content_control(root: ET.Element, target: ET.Element) -> bool:
     return False
 
 
+def _element_parent(root: ET.Element, target: ET.Element) -> ET.Element | None:
+    return next((item for item in root.iter() if target in list(item)), None)
+
+
+def _unwrap_content_control(
+    document_root: ET.Element,
+    control: ET.Element,
+) -> None:
+    parent = _element_parent(document_root, control)
+    content = control.find(f"{_W}sdtContent")
+    if parent is None or content is None:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="structure_replacement_invalid",
+            message="An existing body structure cannot be safely unwrapped for replacement.",
+        )
+    position = list(parent).index(control)
+    children = list(content)
+    parent.remove(control)
+    for offset, child in enumerate(children):
+        content.remove(child)
+        parent.insert(position + offset, child)
+
+
+def _unwrap_replaced_structure(
+    document_root: ET.Element,
+    replaced_target: ET.Element,
+    targets: list[ET.Element],
+) -> None:
+    """Promote reused member blocks before rebuilding one structure in place."""
+
+    member_controls = [
+        control
+        for control in replaced_target.iter(f"{_W}sdt")
+        if control is not replaced_target
+        and any(
+            control in set(target.iter()) or target in set(control.iter())
+            for target in targets
+        )
+    ]
+    _unwrap_content_control(document_root, replaced_target)
+    for control in member_controls:
+        _unwrap_content_control(document_root, control)
+
+
 def _clear_visible_text(target: ET.Element) -> None:
     for node in target.iter(f"{_W}t"):
         node.text = None
@@ -494,7 +540,22 @@ def _materialize_structure(
             code="body_structure_members_missing",
             message="A body structure requires at least one representative member.",
         )
+    targets = [target for _, target, _ in members]
+    if replaced_structure is not None:
+        _unwrap_replaced_structure(document_root, replaced_structure[1], targets)
     parents = {id(parent): parent for parent, _, _ in members}
+    if replaced_structure is not None:
+        resolved_parents = [
+            _element_parent(document_root, target) for target in targets
+        ]
+        if any(parent is None for parent in resolved_parents):
+            raise ToolFailure(
+                status="error",
+                origin="document",
+                code="structure_replacement_invalid",
+                message="A reused body member was lost while replacing its structure.",
+            )
+        parents = {id(parent): parent for parent in resolved_parents if parent is not None}
     if len(parents) != 1:
         raise ToolFailure(
             status="needs_input",
@@ -503,7 +564,6 @@ def _materialize_structure(
             message="Body structure members must be sibling objects from one school section.",
         )
     parent = next(iter(parents.values()))
-    targets = [target for _, target, _ in members]
     if len({id(target) for target in targets}) != len(targets):
         raise ToolFailure(
             status="needs_input",
@@ -525,10 +585,6 @@ def _materialize_structure(
             code="target_already_fillable",
             message="A selected body member is already inside a content control.",
         )
-
-    if replaced_structure is not None:
-        replaced_parent, replaced_target = replaced_structure
-        replaced_parent.remove(replaced_target)
 
     siblings = list(parent)
     indices = [siblings.index(target) for target in targets]
@@ -1303,21 +1359,25 @@ def mutate_objects(
         for index, mutation in enumerate(mutations)
         if mutation.action == "materialize_structure" and mutation.replaced_structure is not None
     }
-    mutable_operations: list[tuple[ET.Element, str]] = []
+    mutable_operations: list[tuple[ET.Element, str, int]] = []
     for index, (_, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_structure":
             mutable_operations.extend(
-                (item, mutation.action) for _, item, _ in structure_resolved[index]
+                (item, mutation.action, index)
+                for _, item, _ in structure_resolved[index]
             )
             replacement = replaced_structures.get(index)
             if replacement is not None:
-                mutable_operations.append((replacement[1], mutation.action))
+                mutable_operations.append((replacement[1], mutation.action, index))
         else:
-            mutable_operations.append((target, mutation.action))
-    for index, (target, action) in enumerate(mutable_operations):
+            mutable_operations.append((target, mutation.action, index))
+    for operation_index, (target, action, owner_index) in enumerate(mutable_operations):
         conflicts = [
             other_action
-            for other, other_action in mutable_operations[index + 1 :]
+            for other, other_action, other_owner_index in mutable_operations[
+                operation_index + 1 :
+            ]
+            if owner_index != other_owner_index
             if _overlap(target, other)
             and frozenset({action, other_action})
             not in {
