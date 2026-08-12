@@ -32,6 +32,7 @@ from docfit.app.agent import (
     project_root,
     terminal_ask_user,
 )
+from docfit.app.sdk_execution import SDKResultMetrics
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.observability.transcript import isolated_sdk_environment
 from docfit.template.workspace import TemplateWorkspaceService
@@ -114,6 +115,7 @@ VISUAL_REVIEW_OUTPUT_SCHEMA: JsonObject = {
 }
 
 PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS = 1800
+PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS = 180
 PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT = 16
 PREPARE_TEMPLATE_VISUAL_TURN_LIMIT = 6
 PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS = 2
@@ -191,10 +193,11 @@ class _ExecutionMetrics:
     def add_result(self, result: ResultMessage | None) -> None:
         if result is None:
             return
+        result_metrics = SDKResultMetrics.from_result(result)
         self.session_id = result.session_id
-        self.num_turns += result.num_turns
-        self.duration_ms += result.duration_ms
-        self.duration_api_ms += result.duration_api_ms
+        self.num_turns += result_metrics.num_turns
+        self.duration_ms += result_metrics.duration_ms
+        self.duration_api_ms += result_metrics.duration_api_ms
 
 
 AgentRunner = Callable[[PreparedTemplateTask], Awaitable[TemplateAgentExecution]]
@@ -412,7 +415,9 @@ def build_prepare_template_prompt(
         "meaning, not just its lexical match. A cover submission-date field must never be reused "
         "for originality or "
         "authorization-statement signature dates; preserve those fixed physical signature/date "
-        "lines unless the Registry supplies a dedicated field. Submit exactly one apply or "
+        "lines unless the Registry supplies a dedicated field. Use preceding_landmarks to "
+        "identify the page/section owning an otherwise isolated line before choosing a field. "
+        "Submit exactly one apply or "
         "preserve decision, inspect the "
         "changed-region image when an edit is applied, then return accepted only when that local "
         "result is correct. Before removing samples, account for every student-content "
@@ -569,7 +574,28 @@ async def _run_sdk_session(
     async with asyncio.timeout(PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS):
         async with ClaudeSDKClient(options=options) as client:
             await client.query(build_prepare_template_prompt(prepared, role=role))
-            async for message in client.receive_response():
+            responses = client.receive_response().__aiter__()
+            while True:
+                try:
+                    message = await asyncio.wait_for(
+                        anext(responses),
+                        timeout=PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS,
+                    )
+                except StopAsyncIteration:
+                    break
+                except TimeoutError:
+                    _append_agent_live_event(
+                        prepared,
+                        {
+                            "event": "session_idle_timeout",
+                            "role": role,
+                            "backend": backend.name,
+                            "idle_timeout_seconds": (
+                                PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS
+                            ),
+                        },
+                    )
+                    raise
                 if isinstance(message, AssistantMessage):
                     for block in message.content:
                         if isinstance(block, ToolUseBlock):

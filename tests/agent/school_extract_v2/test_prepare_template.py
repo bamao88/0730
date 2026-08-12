@@ -10,6 +10,7 @@ from claude_agent_sdk.types import ResultMessage
 
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
+    PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS,
     PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS,
     PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT,
     PREPARE_TEMPLATE_VISUAL_TURN_LIMIT,
@@ -18,6 +19,7 @@ from docfit.app.prepare_template import (
     TemplateAgentExecution,
     _ExecutionMetrics,
     _review_final_document,
+    _run_sdk_session,
     _run_semantic_work_item,
     _validated_visual_pages,
     build_prepare_template_options,
@@ -172,6 +174,7 @@ def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> N
     assert "separate advisor-name and title blanks" in semantic
     assert "verify the candidate's meaning" in semantic
     assert "must never be reused" in semantic
+    assert "preceding_landmarks" in semantic
     assert "materialize one representative content interface" in semantic
     assert "prior locations only" in semantic
     assert "abstract page still needs its own slot" in semantic
@@ -232,11 +235,14 @@ def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
 
     with pytest.raises(ToolFailure) as local_error:
         _validated_work_item_operations(
-            {"kind": "local_region"},
+            {
+                "kind": "local_region",
+                "region": {"knowledge_signals": ["generated-content"]},
+            },
             "apply",
             [operation],
         )
-    assert local_error.value.code == "refresh_toc_wrong_work_item"
+    assert local_error.value.code == "local_generated_content_read_only"
 
     assert _validated_work_item_operations(
         {"kind": "generated_content"},
@@ -257,6 +263,31 @@ def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
             ],
         )
     assert mixed_error.value.code == "generated_content_action_invalid"
+
+
+@pytest.mark.parametrize(
+    "operation",
+    [
+        {"action": "clear_content", "object_id": "obj-" + "a" * 24},
+        {"action": "remove_object", "object_id": "obj-" + "a" * 24},
+        {
+            "action": "normalize_effective_format",
+            "object_id": "obj-" + "a" * 24,
+            "effective_format": {"color": "black"},
+        },
+    ],
+)
+def test_local_generated_content_rejects_every_mutation(operation: JsonObject) -> None:
+    with pytest.raises(ToolFailure) as caught:
+        _validated_work_item_operations(
+            {
+                "kind": "local_region",
+                "region": {"knowledge_signals": ["generated-content"]},
+            },
+            "apply",
+            [operation],
+        )
+    assert caught.value.code == "local_generated_content_read_only"
 
 
 def test_initial_registry_candidates_are_limited_to_current_target() -> None:
@@ -467,6 +498,60 @@ def test_max_turn_failure_has_a_hard_attempt_bound(
 
     assert caught.value.code == "semantic_work_item_attempts_exhausted"
     assert calls == PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS
+
+
+def test_sdk_session_times_out_when_backend_stops_emitting_events(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    exited = False
+
+    class HangingClient:
+        async def __aenter__(self) -> HangingClient:
+            return self
+
+        async def __aexit__(self, *_args: Any) -> None:
+            nonlocal exited
+            exited = True
+
+        async def query(self, _prompt: str) -> None:
+            return None
+
+        async def receive_response(self) -> Any:
+            await asyncio.sleep(60)
+            yield None
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.build_prepare_template_options",
+        lambda *_args, **_kwargs: object(),
+    )
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.ClaudeSDKClient",
+        lambda **_kwargs: HangingClient(),
+    )
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS",
+        0.01,
+    )
+
+    with pytest.raises(TimeoutError):
+        asyncio.run(
+            _run_sdk_session(
+                prepared,
+                _backend(),
+                tmp_path,
+                role="semantic",
+                mcp_server=object(),
+                metrics=_ExecutionMetrics(),
+            )
+        )
+
+    assert exited is True
+    events = prepared.task_root / "work/.docfit/template-agent-live.jsonl"
+    assert '"event": "session_idle_timeout"' in events.read_text(encoding="utf-8")
+    assert f'"idle_timeout_seconds": {0.01}' in events.read_text(encoding="utf-8")
+    assert PREPARE_TEMPLATE_IDLE_TIMEOUT_SECONDS == 180
 
 
 def test_application_advances_region_after_agent_accepts_one_decision(
