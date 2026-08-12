@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import shutil
 from pathlib import Path
 from typing import Any
@@ -11,18 +10,29 @@ from claude_agent_sdk.types import ResultMessage
 
 from docfit.app.cli import build_parser
 from docfit.app.prepare_template import (
-    PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT,
-    PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT,
+    PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS,
+    PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT,
+    PREPARE_TEMPLATE_VISUAL_TURN_LIMIT,
     PrepareTemplateRequest,
     TemplateAgentExecution,
-    _run_backend,
+    _ExecutionMetrics,
+    _review_final_document,
+    _run_semantic_work_item,
+    _validated_visual_pages,
     build_prepare_template_options,
     build_prepare_template_prompt,
     prepare_template_task,
     run_prepare_template,
+    run_template_agent,
 )
 from docfit.app.settings import AgentBackend
-from docfit.tools.runtime import ToolFailure, sha256_file
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+from docfit.tools.template_tools import (
+    ReviewBatchState,
+    _agent_payload,
+    _translate_operation,
+    build_template_review_tool_server,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TEMPLATE = PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
@@ -47,23 +57,19 @@ def _backend() -> AgentBackend:
     )
 
 
-def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
-    tmp_path: Path,
-) -> None:
+def test_prepare_task_copies_only_inputs_skill_and_empty_output(tmp_path: Path) -> None:
     prepared = prepare_template_task(_request(tmp_path))
 
     assert prepared.template_path.stat().st_mode & 0o222 == 0
-    assert prepared.requirements_path is None
     assert prepared.registry_source == REGISTRY.resolve()
     assert prepared.template_sha256 == sha256_file(TEMPLATE)
     skill = prepared.task_root / ".claude/skills/docfit-school-extract"
-    assert (skill / "SKILL.md").is_file()
-    assert not (skill / "scripts").exists()
     references = sorted(item.name for item in (skill / "references").iterdir())
     assert references == [
         "body-structure.md",
         "collection-and-optional-sections.md",
         "effective-style.md",
+        "final-visual-review.md",
         "generated-content.md",
         "logical-page-starts.md",
         "object-safety.md",
@@ -71,42 +77,27 @@ def test_prepare_task_has_only_inputs_internal_work_and_one_output_boundary(
     skill_text = (skill / "SKILL.md").read_text(encoding="utf-8")
     for reference in references:
         assert f"](references/{reference})" in skill_text
-        assert f"`references/{reference}`" not in skill_text
-    body_knowledge = (skill / "references/body-structure.md").read_text(
-        encoding="utf-8"
-    )
-    assert "第X章（正文标题）" in skill_text
-    assert "不得随后把该通用章标题当说明文字删除" in skill_text
-    assert "不要从固定地标下截取 H2/H3/正文后就提前提交一个缺 H1 的结构" in body_knowledge
-    assert "不得为了立即处理当前区域" in body_knowledge
-    assert "最终所有 `body.heading.level*` 槽都必须列在唯一的" in body_knowledge
-    assert "应把整段物化为 `body.heading.level1`" in body_knowledge
-    optional_knowledge = (
-        skill / "references/collection-and-optional-sections.md"
-    ).read_text(encoding="utf-8")
-    assert "不能因为缺少样例条目就保留集合标题却不提供" in optional_knowledge
-    assert "`appendix.title` 只承载标题，不能代替附录内容接口" in optional_knowledge
-    assert "保留成果目录标题就必须有 `achievements.entries`" in optional_knowledge
-    assert not (prepared.task_root / "work/decisions").exists()
-    assert not (prepared.task_root / "work/compiled").exists()
-    assert not (prepared.task_root / "work/attempts").exists()
+    assert "应用负责选择当前工作项、推进流程、限制重试" in skill_text
+    assert "此时禁止主动逐页巡检" in skill_text
+    assert "只有收到应用绑定的最终全页 PNG 批次时" in skill_text
+    assert "cursor" not in skill_text.casefold()
+    assert "document_ref" not in skill_text
+    assert "template_publish" not in skill_text
     assert not any((prepared.task_root / "output").iterdir())
 
 
-def test_prepare_task_resumes_an_unpublished_matching_checkpoint(tmp_path: Path) -> None:
+def test_prepare_task_resumes_matching_unpublished_checkpoint(tmp_path: Path) -> None:
     request = _request(tmp_path)
     prepared = prepare_template_task(request)
     progress = prepared.task_root / "work/.docfit/template-workspace-v1/task-progress.json"
     progress.parent.mkdir(parents=True)
     progress.write_text('{"region_index": 15}', encoding="utf-8")
 
-    resumed = prepare_template_task(request)
-
-    assert resumed == prepared
+    assert prepare_template_task(request) == prepared
     assert progress.read_text(encoding="utf-8") == '{"region_index": 15}'
 
 
-def test_prepare_task_rejects_resume_with_a_different_source(tmp_path: Path) -> None:
+def test_prepare_task_rejects_resume_with_different_source(tmp_path: Path) -> None:
     request = _request(tmp_path)
     prepare_template_task(request)
     different = tmp_path / "different.docx"
@@ -123,208 +114,359 @@ def test_prepare_task_rejects_resume_with_a_different_source(tmp_path: Path) -> 
     assert caught.value.code == "prepare_source_mismatch"
 
 
-def test_prepare_options_remove_bash_write_compilers_and_checker(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("role", "turn_limit"),
+    [
+        ("semantic", PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT),
+        ("visual", PREPARE_TEMPLATE_VISUAL_TURN_LIMIT),
+    ],
+)
+def test_options_are_role_scoped_and_application_owned(
+    tmp_path: Path,
+    role: str,
+    turn_limit: int,
+) -> None:
     prepared = prepare_template_task(_request(tmp_path))
     config = tmp_path / "config"
     config.mkdir()
+    server = build_template_review_tool_server(
+        ReviewBatchState(payload={"batch_pages": [1]}, images=[])
+    )
 
-    options = build_prepare_template_options(prepared, _backend(), config)
+    options = build_prepare_template_options(
+        prepared,
+        _backend(),
+        config,
+        role=role,  # type: ignore[arg-type]
+        mcp_server=server,
+    )
 
-    assert options.skills == ["docfit-school-extract"]
-    assert set(options.mcp_servers or {}) == {"docfit"}
-    assert options.allowed_tools == []
-    assert {"Bash", "Write", "Agent", "Glob", "Grep"} <= set(
+    assert options.max_turns == turn_limit
+    assert options.tools == ["Skill", "Read"]
+    assert {"AskUserQuestion", "Bash", "Write", "Agent", "Glob", "Grep"} <= set(
         options.disallowed_tools or ()
     )
-    assert "Bash" not in (options.tools or ())
-    assert "Write" not in (options.tools or ())
-    assert "Glob" not in (options.tools or ())
-    assert "Grep" not in (options.tools or ())
-    assert options.tools == ["Skill", "Read", "AskUserQuestion"]
-    assert options.hooks["PreToolUse"][1].matcher == "Read"
-    assert options.max_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT
+    assert options.mcp_servers is not None
+    assert options.output_format is not None
+    output_schema = str(options.output_format)
+    assert ("accepted" in output_schema) == (role == "semantic")
+    assert ("defect" in output_schema) == (role == "visual")
 
 
-def test_prepare_options_allow_one_longer_final_generated_content_session(
-    tmp_path: Path,
-) -> None:
+def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> None:
     prepared = prepare_template_task(_request(tmp_path))
-    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
-    workspace.mkdir(parents=True)
-    (workspace / "task-progress.json").write_text('{"region_index": 2}', encoding="utf-8")
-    (workspace / "visual-regions.json").write_text('{"regions": [[], []]}', encoding="utf-8")
-    config = tmp_path / "config"
-    config.mkdir()
+    semantic = build_prepare_template_prompt(prepared, role="semantic")
+    visual = build_prepare_template_prompt(prepared, role="visual")
 
-    options = build_prepare_template_options(prepared, _backend(), config)
-    prompt = build_prepare_template_prompt(prepared)
-
-    assert options.max_turns == PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
-    assert "materialized_members, style_signatures, and structural_risks" in prompt
-    assert "facts rather than a semantic completion verdict" in prompt
-    assert "template_search/template_focus only for a concrete missing capability" in prompt
-    assert "materialized_structures contains body.chapters" not in prompt
-    assert "visible Chinese 摘要 body needs abstract.zh" not in prompt
+    assert "a semantic decision only for that bound local item" in semantic
+    assert "application owns traversal" in semantic.casefold()
+    assert "final review" in semantic
+    assert "cursor" not in semantic.casefold()
+    assert "publish" not in semantic.casefold()
+    assert "every returned native full-page PNG" in visual
+    assert "exactly one verdict" in visual
+    assert "do not redo template semantics" in visual.casefold()
 
 
-def test_pending_edit_intent_takes_priority_over_narrow_toc_finalization(
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
-    workspace.mkdir(parents=True)
-    (workspace / "task-progress.json").write_text(
-        json.dumps(
-            {
-                "region_index": 2,
-                "pending_edit_intents": [
-                    {
-                        "action": "materialize_structure",
-                        "field_id": "body.chapters",
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-    (workspace / "visual-regions.json").write_text('{"regions": [[], []]}', encoding="utf-8")
-
-    prompt = build_prepare_template_prompt(prepared)
-
-    assert "resolve every returned pending_edit_intent" in prompt
-    assert "template_search or template_focus only to re-locate" in prompt
-    assert "resolve only the returned pending_generated_content" not in prompt
-
-
-def test_prompt_separates_local_object_work_from_terminal_full_page_qa(
-    tmp_path: Path,
-) -> None:
-    prepared = prepare_template_task(_request(tmp_path))
-
-    prompt = build_prepare_template_prompt(prepared)
-
-    assert "Start with template_open" in prompt
-    assert "template_next using outcome=handled" in prompt
-    assert "outcome=preserve" in prompt
-    assert "Never preserve writing instructions" in prompt
-    assert "one template_edit operations array" in prompt
-    assert "does not require a global H1/H2/H3 grammar" in prompt
-    assert "effective_format={color:black, underline:none}" in prompt
-    assert "ensure_page_start" in prompt
-    assert "ensure_page_starts" not in prompt
-    assert "knowledge_signals" in prompt
-    assert "Read only the matching relative reference" in prompt
-    assert "application checkpoint" in prompt
-    assert "Registry is Tool-private" in prompt
-    assert "not a task list" in prompt
-    assert "batch" in prompt.casefold()
-    assert "during local object processing" in prompt.casefold()
-    assert "do not review every page" in prompt.casefold()
-    assert "switch phases" in prompt.casefold()
-    assert "template_final_review" in prompt
-    assert "a title slot on the cover never authorizes" in prompt
-    assert "inspect every returned full-page PNG" in prompt
-    assert "until coverage_complete" in prompt
-    assert "old page evidence is stale" in prompt
-    assert "never publish an unreviewed Word" in prompt
-    assert "output/final-template.docx" in prompt
-    assert "compiler" not in prompt.casefold()
-    assert "attempt" not in prompt.casefold()
-
-
-def test_context_boundary_starts_fresh_sdk_session_and_keeps_application_progress(
+def test_max_turn_failure_has_a_hard_attempt_bound(
     tmp_path: Path,
     monkeypatch: Any,
 ) -> None:
     prepared = prepare_template_task(_request(tmp_path))
-    results = [
-        ResultMessage(
+    calls = 0
+
+    class FakeService:
+        registry = object()
+
+        def workflow_progress_snapshot(self) -> JsonObject:
+            return {
+                "source_sha256": "a" * 64,
+                "document_sha256": "a" * 64,
+                "region_index": 0,
+            }
+
+        def restore_workflow_progress(self, _snapshot: JsonObject) -> None:
+            return None
+
+    async def fake_session(*_args: Any, **_kwargs: Any) -> ResultMessage:
+        nonlocal calls
+        calls += 1
+        return ResultMessage(
             subtype="error_max_turns",
-            duration_ms=100,
-            duration_api_ms=80,
+            duration_ms=1,
+            duration_api_ms=1,
             is_error=True,
-            num_turns=PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT,
-            session_id="segment-one",
+            num_turns=PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT,
+            session_id=f"attempt-{calls}",
             terminal_reason="max_turns",
-        ),
-        ResultMessage(
+        )
+
+    monkeypatch.setattr("docfit.app.prepare_template._run_sdk_session", fake_session)
+
+    with pytest.raises(ToolFailure) as caught:
+        asyncio.run(
+            _run_semantic_work_item(
+                prepared,
+                _backend(),
+                tmp_path,
+                _ExecutionMetrics(),
+                FakeService(),  # type: ignore[arg-type]
+                work_item={"kind": "local_region"},
+                images=[],
+                internal_region_ref="internal",
+                allow_preserve=True,
+            )
+        )
+
+    assert caught.value.code == "semantic_work_item_attempts_exhausted"
+    assert calls == PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS
+
+
+def test_application_advances_region_after_agent_accepts_one_decision(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    bound: dict[str, Any] = {}
+
+    class FakeService:
+        registry = object()
+
+        def __init__(self) -> None:
+            self.navigation: list[JsonObject] = []
+
+        def workflow_progress_snapshot(self) -> JsonObject:
+            return {
+                "source_sha256": "a" * 64,
+                "document_sha256": "a" * 64,
+                "region_index": 0,
+            }
+
+        def restore_workflow_progress(self, _snapshot: JsonObject) -> None:
+            raise AssertionError("accepted preserve must not roll back")
+
+        def view(self, args: JsonObject) -> tuple[JsonObject, list[Path]]:
+            self.navigation.append(args)
+            return {"status": "ok"}, []
+
+    service = FakeService()
+
+    def fake_server(state: Any) -> object:
+        bound["state"] = state
+        return object()
+
+    async def fake_session(*_args: Any, **_kwargs: Any) -> ResultMessage:
+        state = bound["state"]
+        state.submission = {"outcome": "preserve", "reason": "fixed school label"}
+        state.post_region_ref = state.internal_region_ref
+        return ResultMessage(
             subtype="success",
-            duration_ms=50,
-            duration_api_ms=40,
+            duration_ms=1,
+            duration_api_ms=1,
             is_error=False,
             num_turns=2,
-            session_id="segment-two",
-            structured_output={
-                "status": "blocked",
-                "artifact_path": None,
-                "template_sha256": None,
-                "counts": {**COUNTS, "unresolved": 1},
-            },
+            session_id="semantic-one",
             terminal_reason="end_turn",
-        ),
+            structured_output={
+                "status": "accepted",
+                "reason": "The fixed label remains unchanged.",
+            },
+        )
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.build_template_semantic_tool_server",
+        fake_server,
+    )
+    monkeypatch.setattr("docfit.app.prepare_template._run_sdk_session", fake_session)
+
+    asyncio.run(
+        _run_semantic_work_item(
+            prepared,
+            _backend(),
+            tmp_path,
+            _ExecutionMetrics(),
+            service,  # type: ignore[arg-type]
+            work_item={"kind": "local_region"},
+            images=[],
+            internal_region_ref="internal-region-ref",
+            allow_preserve=True,
+        )
+    )
+
+    assert service.navigation == [
+        {
+            "action": "next",
+            "region_ref": "internal-region-ref",
+            "region_outcome": "preserve",
+            "reason": "fixed school label",
+        }
     ]
-    options_seen: list[Any] = []
-    prompts: list[str] = []
-
-    class FakeClient:
-        def __init__(self, *, options: Any) -> None:
-            options_seen.append(options)
-            self.result = results[len(options_seen) - 1]
-
-        async def __aenter__(self) -> FakeClient:
-            return self
-
-        async def __aexit__(self, *_args: Any) -> None:
-            return None
-
-        async def query(self, prompt: str) -> None:
-            prompts.append(prompt)
-
-        async def receive_response(self) -> Any:
-            yield self.result
-
-    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", FakeClient)
-
-    execution = asyncio.run(_run_backend(prepared, _backend()))
-
-    assert len(options_seen) == 2
-    assert all(option.resume is None for option in options_seen)
-    assert all(option.continue_conversation is False for option in options_seen)
-    assert all("application checkpoint" in prompt for prompt in prompts)
-    assert execution.session_id == "segment-two"
-    assert execution.num_turns == PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT + 2
 
 
-def test_backend_timeout_is_scoped_to_one_sdk_segment(
+def test_application_owns_visual_cursor_and_agent_sees_only_bound_pages(
     tmp_path: Path,
     monkeypatch: Any,
 ) -> None:
     prepared = prepare_template_task(_request(tmp_path))
+    bound: dict[str, Any] = {}
 
-    class StalledClient:
-        def __init__(self, *, options: Any) -> None:
-            self.options = options
+    class FakeService:
+        def __init__(self) -> None:
+            self.calls: list[JsonObject] = []
+            self.receipts: list[JsonObject] = []
 
-        async def __aenter__(self) -> StalledClient:
-            return self
+        def current_document_ref(self) -> str:
+            return "internal-document-ref"
 
-        async def __aexit__(self, *_args: Any) -> None:
-            return None
+        def final_review(self, args: JsonObject) -> tuple[JsonObject, list[Path]]:
+            self.calls.append(args)
+            page = len(self.calls)
+            return (
+                {
+                    "document_ref": "internal-document-ref",
+                    "render_ref": "internal-render-ref",
+                    "page_count": 2,
+                    "batch_pages": [page],
+                    "next_cursor": "internal-page-two" if page == 1 else None,
+                },
+                [],
+            )
 
-        async def query(self, _prompt: str) -> None:
-            return None
+        def record_final_review_verdict(self, **kwargs: Any) -> JsonObject:
+            self.receipts.append(kwargs)
+            return {"status": "clean"}
 
-        async def receive_response(self) -> Any:
-            await asyncio.Event().wait()
-            yield None
+    service = FakeService()
 
-    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", StalledClient)
+    def fake_server(state: Any) -> object:
+        bound["state"] = state
+        return object()
+
+    async def fake_session(*_args: Any, **_kwargs: Any) -> ResultMessage:
+        payload = _agent_payload(bound["state"].payload)
+        assert "next_cursor" not in payload
+        assert "document_ref" not in payload
+        page = payload["batch_pages"][0]
+        return ResultMessage(
+            subtype="success",
+            duration_ms=1,
+            duration_api_ms=1,
+            is_error=False,
+            num_turns=2,
+            session_id=f"visual-{page}",
+            terminal_reason="end_turn",
+            structured_output={
+                "pages": [{"page": page, "verdict": "clean", "defects": []}],
+                "summary": "No visible rendering defect.",
+            },
+        )
+
     monkeypatch.setattr(
-        "docfit.app.prepare_template.PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS", 0.01
+        "docfit.app.prepare_template.build_template_review_tool_server",
+        fake_server,
+    )
+    monkeypatch.setattr("docfit.app.prepare_template._run_sdk_session", fake_session)
+
+    defects = asyncio.run(
+        _review_final_document(
+            prepared,
+            _backend(),
+            tmp_path,
+            _ExecutionMetrics(),
+            service,  # type: ignore[arg-type]
+        )
     )
 
-    with pytest.raises(TimeoutError):
-        asyncio.run(_run_backend(prepared, _backend()))
+    assert defects == []
+    assert service.calls == [
+        {"document_ref": "internal-document-ref"},
+        {
+            "document_ref": "internal-document-ref",
+            "cursor": "internal-page-two",
+        },
+    ]
+    assert len(service.receipts) == 2
+
+
+def test_deterministic_renderer_failure_does_not_rotate_agent_backends(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    backends = (_backend(), _backend())
+    calls = 0
+
+    async def fake_backend(*_args: Any, **_kwargs: Any) -> TemplateAgentExecution:
+        nonlocal calls
+        calls += 1
+        raise ToolFailure(
+            status="error",
+            origin="renderer",
+            code="libreoffice_conversion_failed",
+            message="The fixed renderer could not convert the current Word.",
+        )
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.iter_agent_backends",
+        lambda: iter(backends),
+    )
+    monkeypatch.setattr("docfit.app.prepare_template._run_backend", fake_backend)
+
+    with pytest.raises(ToolFailure) as caught:
+        asyncio.run(run_template_agent(prepared))
+
+    assert caught.value.code == "libreoffice_conversion_failed"
+    assert calls == 1
+
+
+def test_visual_verdict_requires_exact_bound_pages() -> None:
+    clean = {
+        "pages": [
+            {"page": 1, "verdict": "clean", "defects": []},
+            {"page": 2, "verdict": "clean", "defects": []},
+        ]
+    }
+    assert len(_validated_visual_pages(clean, {1, 2})) == 2
+
+    with pytest.raises(ToolFailure) as caught:
+        _validated_visual_pages(
+            {"pages": [{"page": 1, "verdict": "clean", "defects": []}]},
+            {1, 2},
+        )
+
+    assert caught.value.code == "visual_page_coverage_mismatch"
+
+
+def test_agent_payload_hides_internal_refs_and_code_builds_them_back() -> None:
+    public = _agent_payload(
+        {
+            "document_ref": "document:v1:hidden",
+            "region_ref": "region:v1:hidden",
+            "next_cursor": "hidden",
+            "target": {
+                "object_ref": {"object_id": "obj-0123456789abcdef01234567"},
+                "text": "题目",
+            },
+        }
+    )
+    assert public == {
+        "target": {
+            "object_id": "obj-0123456789abcdef01234567",
+            "text": "题目",
+        }
+    }
+
+    translated = _translate_operation(
+        {
+            "action": "materialize_slot",
+            "object_id": "obj-0123456789abcdef01234567",
+            "field_id": "thesis.title.zh",
+        }
+    )
+    assert translated["object_ref"] == {
+        "object_id": "obj-0123456789abcdef01234567"
+    }
+    assert "object_id" not in translated
 
 
 def test_cli_requirements_and_registry_are_optional() -> None:
@@ -337,27 +479,27 @@ def test_cli_requirements_and_registry_are_optional() -> None:
             "task",
         ]
     )
-
     assert parsed.school_requirements is None
     assert parsed.field_registry is None
 
 
-def test_run_prepare_template_accepts_exactly_one_published_word(tmp_path: Path) -> None:
+def test_run_prepare_template_accepts_application_publication_only(tmp_path: Path) -> None:
     async def fake_agent(prepared: Any) -> TemplateAgentExecution:
         output = prepared.task_root / "output/final-template.docx"
         shutil.copyfile(prepared.template_path, output)
         return TemplateAgentExecution(
             structured_output={
-                "status": "built",
+                "status": "ok",
+                "published": True,
                 "artifact_path": "output/final-template.docx",
                 "template_sha256": sha256_file(output),
                 "counts": COUNTS,
             },
             tool_uses=(
                 "Skill",
-                "mcp__docfit__template_open",
-                "mcp__docfit__template_final_review",
-                "mcp__docfit__template_publish",
+                "mcp__docfit__template_get_current_work_item",
+                "mcp__docfit__template_submit_current_decision",
+                "mcp__docfit__template_get_review_batch",
             ),
             skills_loaded=("docfit-school-extract",),
             session_id="session-test",
@@ -370,36 +512,7 @@ def test_run_prepare_template_accepts_exactly_one_published_word(tmp_path: Path)
     report = asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
 
     assert report.status == "built"
-    assert report.artifact_path is not None
     assert Path(report.artifact_path).name == "final-template.docx"
-    assert [item.name for item in (Path(report.task_root) / "output").iterdir()] == [
-        "final-template.docx"
-    ]
     trace = Path(report.task_root) / "work/.docfit/template-agent-execution.json"
     assert trace.is_file()
-    assert report.num_turns == 4
-
-
-def test_run_prepare_template_preserves_true_blocked_result(tmp_path: Path) -> None:
-    async def fake_agent(_prepared: Any) -> TemplateAgentExecution:
-        return TemplateAgentExecution(
-            structured_output={
-                "status": "blocked",
-                "artifact_path": None,
-                "template_sha256": None,
-                "counts": {**COUNTS, "unresolved": 1},
-            },
-            tool_uses=("Skill", "mcp__docfit__template_open"),
-            skills_loaded=("docfit-school-extract",),
-            session_id="session-blocked",
-            backend="minimax",
-            num_turns=3,
-            duration_ms=1000,
-            duration_api_ms=800,
-        )
-
-    report = asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=fake_agent))
-
-    assert report.status == "blocked"
-    assert report.artifact_path is None
-    assert not any((Path(report.task_root) / "output").iterdir())
+    assert '"orchestrator": "application_owned"' in trace.read_text(encoding="utf-8")

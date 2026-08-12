@@ -1,4 +1,4 @@
-"""Agent-visible schemas for object-driven template preparation."""
+"""Role-scoped Agent schemas for application-orchestrated template preparation."""
 
 from __future__ import annotations
 
@@ -7,94 +7,6 @@ from docfit.tools.runtime import JsonObject
 TEMPLATE_OBJECT_ID_SCHEMA: JsonObject = {
     "type": "string",
     "pattern": "^obj-[0-9a-f]{24}$",
-}
-
-TEMPLATE_OBJECT_REF_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
-    },
-    "required": ["object_id"],
-    "additionalProperties": False,
-}
-
-DOCUMENT_REF_SCHEMA: JsonObject = {
-    "type": "string",
-    "pattern": "^document:v1:[0-9a-f]{64}$",
-}
-
-REGION_REF_SCHEMA: JsonObject = {
-    "type": "string",
-    "pattern": "^region:v1:[0-9a-f]{64}:[0-9]+:obj-[0-9a-f]{24}$",
-}
-
-TEMPLATE_OPEN_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {},
-    "additionalProperties": False,
-}
-
-TEMPLATE_NEXT_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "region_ref": REGION_REF_SCHEMA,
-        "outcome": {"type": "string", "enum": ["handled", "preserve"]},
-        "reason": {"type": "string", "minLength": 1, "maxLength": 256},
-    },
-    "required": ["region_ref", "outcome"],
-    "additionalProperties": False,
-}
-
-TEMPLATE_SEARCH_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "query": {"type": "string", "minLength": 1, "maxLength": 256},
-    },
-    "required": ["query"],
-    "additionalProperties": False,
-}
-
-TEMPLATE_FOCUS_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
-        "scope": {"type": "string", "enum": ["target", "context"]},
-    },
-    "required": ["object_ref"],
-    "additionalProperties": False,
-}
-
-TEMPLATE_REGISTRY_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "lookups": {
-            "type": "array",
-            "maxItems": 16,
-            "items": {
-                "type": "object",
-                "properties": {
-                    "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
-                    "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
-                },
-                "required": ["object_id", "field_id"],
-                "additionalProperties": False,
-            },
-        },
-        "searches": {
-            "type": "array",
-            "maxItems": 16,
-            "items": {
-                "type": "object",
-                "properties": {
-                    "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
-                    "query": {"type": "string", "minLength": 1, "maxLength": 256},
-                },
-                "required": ["object_id", "query"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    "additionalProperties": False,
 }
 
 EFFECTIVE_FORMAT_SCHEMA: JsonObject = {
@@ -109,25 +21,25 @@ EFFECTIVE_FORMAT_SCHEMA: JsonObject = {
 _STRUCTURE_MEMBER_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
         "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
         "effective_format": EFFECTIVE_FORMAT_SCHEMA,
     },
-    "required": ["object_ref", "field_id"],
+    "required": ["object_id", "field_id"],
     "additionalProperties": False,
 }
 
 _TOC_ENTRY_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
         "level": {"type": "integer", "minimum": 1, "maximum": 3},
     },
-    "required": ["object_ref", "level"],
+    "required": ["object_id", "level"],
     "additionalProperties": False,
 }
 
-_EDIT_OPERATION_SCHEMA: JsonObject = {
+_DECISION_OPERATION_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
         "action": {
@@ -142,7 +54,7 @@ _EDIT_OPERATION_SCHEMA: JsonObject = {
                 "ensure_page_start",
             ],
         },
-        "object_ref": TEMPLATE_OBJECT_REF_SCHEMA,
+        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
         "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
         "effective_format": EFFECTIVE_FORMAT_SCHEMA,
         "members": {
@@ -159,37 +71,60 @@ _EDIT_OPERATION_SCHEMA: JsonObject = {
         },
         "mode": {"type": "string", "enum": ["new_page"]},
     },
-    "required": ["action", "object_ref"],
+    "required": ["action", "object_id"],
     "additionalProperties": False,
 }
 
-TEMPLATE_EDIT_SCHEMA: JsonObject = {
+TEMPLATE_GET_CURRENT_WORK_ITEM_SCHEMA: JsonObject = {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": False,
+}
+
+TEMPLATE_REQUEST_CURRENT_CONTEXT_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
+        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
+        "visual_scope": {"type": "string", "enum": ["target", "context"]},
+        "field_query": {"type": "string", "minLength": 1, "maxLength": 256},
+        "text_query": {"type": "string", "minLength": 1, "maxLength": 256},
+    },
+    "additionalProperties": False,
+}
+
+TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA: JsonObject = {
+    "type": "object",
+    "properties": {
+        "outcome": {"type": "string", "enum": ["apply", "preserve"]},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 512},
         "operations": {
             "type": "array",
             "minItems": 1,
             "maxItems": 32,
-            "items": _EDIT_OPERATION_SCHEMA,
+            "items": _DECISION_OPERATION_SCHEMA,
         },
     },
-    "required": ["operations"],
+    "required": ["outcome", "reason"],
     "additionalProperties": False,
 }
 
-TEMPLATE_FINAL_REVIEW_SCHEMA: JsonObject = {
+TEMPLATE_REPORT_AMBIGUITY_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "document_ref": DOCUMENT_REF_SCHEMA,
-        "cursor": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 1000},
+        "missing_evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {"type": "string", "minLength": 1, "maxLength": 256},
+        },
     },
-    "required": ["document_ref"],
+    "required": ["reason", "missing_evidence"],
     "additionalProperties": False,
 }
 
-TEMPLATE_PUBLISH_SCHEMA: JsonObject = {
+TEMPLATE_GET_REVIEW_BATCH_SCHEMA: JsonObject = {
     "type": "object",
-    "properties": {"document_ref": DOCUMENT_REF_SCHEMA},
-    "required": ["document_ref"],
+    "properties": {},
     "additionalProperties": False,
 }

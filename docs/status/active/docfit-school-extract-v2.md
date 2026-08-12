@@ -1,37 +1,58 @@
 # DocFit 学校模板提取 v2 执行胶囊
 
-- Capsule status: `IN PROGRESS / PHASE-SEPARATED FINAL VISUAL GATE`
-- Latest user decision: 不做最小闭环；提交旧基线后完整重构，不保留兼容。最终验收是重新运行
-  MiniMax CLI 后只得到一份 Word，且模板清理、内容槽与可用质量相对旧运行有实质提高。
-- Baseline commit: `6660d46` 保存旧 snapshot → decisions YAML → compiler → mutate → compare →
-  four-file build 线路及 r6 失败证据。
-- Root cause: r6 把离线 Template Truth candidate 当作 requirements，驱动 Agent 尝试完成整份
-  Registry/32 槽任务；结构观察、视觉定位与 mutation 又使用不同身份，Agent 还要维护大量
-  YAML/compiled/attempt 路径。结果是耗时约 27 分钟、两轮错误物化、0 个清理操作且无最终 Word。
-- Approved contract: 对象判断阶段 Agent 只拿当前需要的一张页图或一个对象局部图；同一页中已判断清楚的多个
-  OfficeCLI 对象可以一次 batch。snapshot-bound `object_ref` 统一用于结构、视觉和修改；已知
-  `field_id` 直接提交，只有含义不确定时惰性查询 Registry；修改 Tool 原子执行 batch 并自动返回
-  修改后同页图/新 `document_ref`。局部处理和生成内容收尾完成后，独立终局阶段按 cursor 检查
-  最终 hash 的全部页面；内部版本和图片不对用户发布，最终 output 只允许 `final-template.docx`。
-- Runtime surface: `template_open`、`template_next`、`template_search`、`template_focus`、
-  `template_registry`、`template_edit`、`template_final_review`、`template_publish`。
-  模板会话不开放 Bash、Write、Subagent，不存在 Agent-authored YAML、compiler、attempt path 或
-  独立语义 checker。
-- Mechanical feedback retained: object hash/fingerprint、Registry exact field、content-control
-  alias/tag、包重开、OfficeCLI validation、batch 每项目标效果回读、非目标文字保护、修改页自动
-  回传、source/Registry hash、最终 hash 全页覆盖与 no-overwrite 单 Word 原子发布；全页门只存在于
-  所有内容处理完成后的终局阶段，不进入对象判断循环。
-- Implemented evidence: 新 contract/Agent tests 已覆盖按需当前页图、同页最多 32 项原子 batch、
-  惰性批量 Registry、可见 slot 占位、container clear/remove、修改页自动反馈、共享 object_ref、
-  版本绑定、终局逐页覆盖发布门和单 Word output。漏页、旧 hash、返工后证据失效与渲染失败均有
-  拒绝测试；旧 pipeline 模块、schema、compiler、permissions 和旧 contract tests 已删除。
-- Real CLI r1 evidence: MiniMax 正常完成 12 个 slot、7 个整对象删除和 16 个内容清空，但旧的逐项
-  Tool 调用与逐页 review 在 97 turns 触发 `max_turns`，25m07s 后未发布；Kimi fallback 随后 403。
-  这证明 API 额度不是根因，根因是把逐页 review 混入逐对象循环。当前实现保留有界对象处理，
-  但把全页 review 移到全部内容完成后的独立终局阶段，并由发布 Tool 对最终 hash 强制覆盖；
-  等待 r2 真实质量/耗时验收。
-- Official SDK basis: 保持 Claude Agent SDK 原生 Agent loop、custom in-process MCP Tools、
-  permissions/hooks、Skill 与 structured output；不在其上建立第二套工作流 runtime。
-- Next gate: 对 batch 改造跑全量 Ruff/mypy/pytest，真实 MiniMax 南农 r2 CLI，对最终 Word 做
-  结构、页面与离线 Template Truth 对比。
-- Stop condition: 未完成真实 MiniMax CLI 和最终 Word 质量对比前，不宣称重构完成或质量提高。
+- Capsule status: `IN PROGRESS / CLEAN-BREAK IMPLEMENTED, REAL E2E PENDING`
+- Latest user decision: 先提交当前代码，再按 clean break 完整重构；确定性流程控制归应用代码，
+  Agent 只提出当前语义判断或页面视觉结论；不保留旧协议兼容。
+- Baseline commit: `5b9e491 feat(content): checkpoint extraction and field contracts` 保存本轮开始前
+  已有的 Student Content / Registry / style 工作，聚焦 51 tests、Ruff、Mypy 通过。
+
+## 失败证据与根因
+
+- 南农原始模板上一轮 E2E 运行耗时 `79m47s`，产生 661 个事件、10 次
+  `error_max_turns`、53 次 final-review 调用、46 次无效 cursor、65 次 edit；最终没有发布 Word。
+- 旧实现把区域推进、跨 session 续跑、cursor、最终页面覆盖、publish 和 built/blocked 终态交给
+  同一个 Agent 做语义控制；`while True` 在 `max_turns` 后自动开新 session，缺少硬进度上限。
+- PNG 被 Tool 返回时就写入 reviewed coverage，没有独立的逐页 clean/defect 判断，导致“证据已
+  提供”和“证据已审查”混为一件事。旧 Agent 还需要复制 document/region ref 和 cursor，直接
+  造成高频无效调用。
+
+## 当前 clean-break 合同
+
+- 应用拥有当前工作项、checkpoint 推进、有界重试、终止状态、内部页面 batching、视觉证据失效
+  和自动 publication；没有 Agent 控制的流程循环。
+- 语义 Agent 只开放四个工作项 Tool：取得当前项、请求有界上下文、提交一次 typed decision、
+  报告具体歧义。字段 ID 必须来自当前工作项已提供的 Registry 候选；最多两次 bounded attempt。
+- 最终视觉审查使用独立 SDK session，只开放一个“取得当前页批次”Tool。Agent 为绑定批次的每页
+  返回 typed clean/defect；应用验证页码精确覆盖后才记录 verdict。
+- Agent schemas 中不存在 cursor、document_ref、region_ref、publish 或 built/blocked。内部
+  Template Workspace 和 VisualEvidenceService 仍使用 content-addressed ref/cursor 完成确定性
+  绑定，但不把它们暴露给模型。
+- 任一页面 defect 生成有界单页修复工作项；修改产生新 hash，旧视觉 receipt 自动失效，并从
+  第一页重查。最多三轮修复；无新版本或超限返回稳定错误，不继续猜测。
+- 全部页面显式 clean 后，应用内部执行 package/OfficeCLI/style/Registry 检查并原子发布；用户
+  output 仍只允许 `final-template.docx`，PNG/PDF/evidence 只作内部质检。
+- Skill 已减为领域手册：局部对象责任、填写接口、正文结构、按需 references 和最终视觉不变量。
+  遍历、cursor/ref、重试、终态、发布 API 和 structured output 示例均已移除；新增独立
+  `references/final-visual-review.md`，只在视觉角色使用。
+
+## SDK 基础与边界
+
+- 继续使用 Claude Agent SDK 原生 query/Tool loop、custom in-process MCP Tool、permissions/
+  hooks、Skill 和 structured output；语义与视觉使用独立短 session，避免旧图片长期滞留上下文。
+- 应用编排只表达模板准备已批准的确定性产品不变量，不复制 SDK 的通用 Agent runtime、session
+  store 或 transcript replay。
+- Official basis: [Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop),
+  [Custom tools](https://code.claude.com/docs/en/agent-sdk/custom-tools),
+  [Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs),
+  [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions).
+
+## 当前门禁
+
+- Code/static: role-scoped schemas、应用 orchestrator、typed visual receipt、Skill 和基线文档已改；
+  Ruff/Mypy 已对核心变更通过。
+- Automated: 模板专项 87 tests、全仓 487 tests、Ruff 和 strict Mypy 全部通过；新增测试直接证明
+  应用推进 region、内部续传 cursor 但不向视觉 Agent 暴露、`max_turns` 有硬上限、PNG 返回不
+  自动计审查、defect 阻止发布和 exact-version receipt 失效。
+- Real E2E: 必须重新用学校原始模板运行 CLI，确认不再出现无界 session/cursor 错误，生成唯一
+  Word，并完成结构、全页视觉和离线 Template Truth 对比。
+- Stop condition: 在真实 E2E 生成并复核最终 Word 前，不宣称质量提高或模板提取 v2 完成。

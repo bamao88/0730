@@ -109,12 +109,13 @@ uv run docfit prepare-template \
 ```
 
 `--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
-的开发期 Registry，也可显式替换。模板 Agent 通过 `template_open` / `template_next` 浏览
-当前 checkpoint 的有界对象区域，只在当前判断缺少事实时使用 `template_search` /
-`template_focus`，并用扁平批量 `template_registry` 确认字段。已经判断清楚的对象由一次
-`template_edit.operations[]` 原子执行；Tool 负责 Word 结构安全、有效格式回读和修改后局部
-反馈。`template_publish` 一次性发布，不生成 plan/compiler/attempt 文件，也不要求全页覆盖。
-成功目录的 `output/` 只包含 `final-template.docx`。
+的开发期 Registry，也可显式替换。应用逐个绑定局部工作项；语义 Agent 只取得当前图片、
+必要上下文和 Registry 候选并提交一次判断，应用负责执行、回读、推进、有界重试和失败状态。
+局部工作完成后，应用把精确最终版本的全部原生全页 PNG 分批交给独立视觉审查角色；每页必须
+有明确 `clean/defect` 结论，任何修改都会使旧版本页面结论失效并从第一页重查。全部页面
+`clean` 后由应用自动发布。Agent 不接触 cursor、文档/区域版本引用或发布动作，也不生成
+plan/compiler/attempt 文件。成功目录的 `output/` 只包含 `final-template.docx`；PNG 和渲染证据
+保留为内部质检材料。
 
 用户内容提取与 Gold 对比：
 

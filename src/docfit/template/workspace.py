@@ -254,7 +254,7 @@ def _edit_operations(args: dict[str, Any]) -> list[JsonObject]:
             status="needs_input",
             origin="request",
             code="template_edit_batch_invalid",
-            message="template_edit accepts exactly one operations array.",
+            message="A semantic apply decision accepts exactly one operations array.",
         )
     raw_operations = args.get("operations")
     if not isinstance(raw_operations, list) or any(
@@ -272,7 +272,7 @@ def _edit_operations(args: dict[str, Any]) -> list[JsonObject]:
             status="needs_input",
             origin="request",
             code="template_edit_operations_invalid",
-            message="template_edit requires one through thirty-two total operations.",
+            message="A semantic apply decision requires one through thirty-two operations.",
         )
     return operations
 
@@ -847,6 +847,45 @@ class TemplateWorkspaceService:
         self.root.mkdir(parents=True, exist_ok=True)
         atomic_write_json(self.progress_path, progress)
 
+    def workflow_progress_snapshot(self) -> JsonObject:
+        """Return the current application checkpoint for one bounded Agent attempt."""
+
+        source_reference, _ = self._register_source()
+        source_hash = source_reference.rsplit(":", 1)[-1]
+        copied: Any = json.loads(json.dumps(self._read_progress(source_hash)))
+        assert isinstance(copied, dict)
+        return copied
+
+    def restore_workflow_progress(self, snapshot: JsonObject) -> None:
+        """Rollback an unaccepted semantic attempt to its exact application checkpoint."""
+
+        source_hash = sha256_file(self.source)
+        document_hash = snapshot.get("document_sha256")
+        if snapshot.get("source_sha256") != source_hash or not isinstance(
+            document_hash, str
+        ):
+            raise ToolFailure(
+                status="error",
+                origin="application",
+                code="workflow_snapshot_invalid",
+                message="The semantic work-item checkpoint cannot be restored safely.",
+            )
+        self._resolve_document(_document_ref(document_hash))
+        if not isinstance(snapshot.get("region_index"), int):
+            raise ToolFailure(
+                status="error",
+                origin="application",
+                code="workflow_snapshot_invalid",
+                message="The semantic work-item checkpoint cannot be restored safely.",
+            )
+        self._write_progress(json.loads(json.dumps(snapshot)))
+
+    def current_document_ref(self) -> str:
+        """Return the latest immutable document reference to application code only."""
+
+        progress = self.workflow_progress_snapshot()
+        return _document_ref(str(progress["document_sha256"]))
+
     @staticmethod
     def _intent_already_satisfied(intent: JsonObject, summary: JsonObject) -> bool:
         action = intent.get("action")
@@ -1131,7 +1170,7 @@ class TemplateWorkspaceService:
                 status="needs_input",
                 origin="request",
                 code="invalid_object_ref",
-                message="A current object_ref from template_open/search/focus is required.",
+                message="A current object ID from the bound work-item context is required.",
             )
         source_hash = sha256_file(self.source)
         progress = self._read_progress(source_hash)
@@ -1957,7 +1996,7 @@ class TemplateWorkspaceService:
                 status="needs_input",
                 origin="request",
                 code="registry_queries_invalid",
-                message="template_registry accepts only lookups and searches lanes.",
+                message="Registry context accepts only bounded lookups and searches.",
             )
         raw_queries: list[tuple[str, JsonObject]] = []
         for lane, operation in (("lookups", "lookup"), ("searches", "search")):
@@ -2137,7 +2176,7 @@ class TemplateWorkspaceService:
                     origin="request",
                     code="template_edit_action_invalid",
                     message=(
-                        "Each operation must use one direct template_edit action from its schema."
+                        "Each operation must use one supported semantic decision action."
                     ),
                 )
             candidate_document, candidate_before, selected = self._resolve_object(
@@ -2158,7 +2197,7 @@ class TemplateWorkspaceService:
                     status="needs_input",
                     origin="request",
                     code="object_kind_not_editable",
-                    message="A selected object kind is not editable by template_edit.",
+                    message="The selected object kind cannot carry this semantic edit.",
                 )
             field: JsonObject | None = None
             slot_id: str | None = None
@@ -3178,7 +3217,11 @@ class TemplateWorkspaceService:
         )
 
     def final_review(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
-        """Return only the next terminal full-page QA batch for the current version."""
+        """Return one application-selected full-page QA batch.
+
+        Returning a PNG is not a review verdict.  Only
+        :meth:`record_final_review_verdict` may mark a page reviewed.
+        """
 
         document_hash, document = self._resolve_document(args.get("document_ref"))
         source_hash = sha256_file(self.source)
@@ -3255,18 +3298,7 @@ class TemplateWorkspaceService:
         batch_pages: set[int] = set()
         for evidence in review.get("evidence", []):
             batch_pages.update(self._evidence_pages(evidence))
-        self._record_final_review(
-            document_hash,
-            render_ref=str(render["render_ref"]),
-            page_count=int(render["page_count"]),
-            pages=batch_pages,
-        )
-        receipt = self._read_final_review(document_hash)
-        page_count = int(receipt["page_count"])
-        reviewed_pages = sorted(
-            page for page in receipt["reviewed_pages"] if isinstance(page, int)
-        )
-        coverage_complete = set(reviewed_pages) == set(range(1, page_count + 1))
+        page_count = int(render["page_count"])
         next_cursor = review.get("next_cursor")
         return (
             {
@@ -3278,61 +3310,164 @@ class TemplateWorkspaceService:
                 "render_ref": render["render_ref"],
                 "page_count": page_count,
                 "batch_pages": sorted(batch_pages),
-                "reviewed_pages": reviewed_pages,
-                "coverage_complete": coverage_complete,
                 "next_cursor": next_cursor,
-                "guidance": (
-                    "Inspect every returned full-page PNG. Continue with next_cursor; do not "
-                    "publish until coverage_complete is true. If a defect is visible, leave "
-                    "final QA, repair only that bounded defect, then restart final QA for the "
-                    "new document_ref."
-                    if not coverage_complete
-                    else (
-                        "All final pages for this exact document version were returned. Publish "
-                        "only if your visual inspection found no defect; otherwise repair the "
-                        "bounded defect and repeat final QA for the new document_ref."
-                    )
-                ),
             },
             images,
         )
 
-    def _record_final_review(
+    def record_final_review_verdict(
         self,
-        document_hash: str,
         *,
+        document_ref: str,
         render_ref: str,
         page_count: int,
-        pages: set[int],
-    ) -> None:
+        verdicts: list[JsonObject],
+    ) -> JsonObject:
+        """Persist typed visual judgments for the exact rendered document version."""
+
+        document_hash, document = self._resolve_document(document_ref)
+        progress = self.workflow_progress_snapshot()
+        if progress.get("document_sha256") != document_hash:
+            raise ToolFailure(
+                status="needs_input",
+                origin="application",
+                code="visual_verdict_document_stale",
+                message="Visual verdicts can only be recorded for the current checkpoint.",
+            )
+        rendered, _ = self.visual.render({"input_docx": str(document), "overview": False})
+        if (
+            rendered.get("render_ref") != render_ref
+            or rendered.get("page_count") != page_count
+        ):
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="visual_verdict_render_mismatch",
+                message="The visual verdict does not match the exact rendered Word version.",
+            )
+        normalized: dict[int, JsonObject] = {}
+        for verdict in verdicts:
+            page = verdict.get("page")
+            value = verdict.get("verdict")
+            defects = verdict.get("defects", [])
+            if (
+                not isinstance(page, int)
+                or page < 1
+                or page > page_count
+                or value not in {"clean", "defect"}
+                or not isinstance(defects, list)
+                or any(not isinstance(item, dict) for item in defects)
+                or (value == "clean" and defects)
+                or (value == "defect" and not defects)
+            ):
+                raise ToolFailure(
+                    status="error",
+                    origin="agent",
+                    code="visual_verdict_invalid",
+                    message="The visual reviewer returned an invalid per-page verdict.",
+                    retryable=True,
+                )
+            normalized[page] = {
+                "page": page,
+                "verdict": value,
+                "defects": defects,
+            }
         self.final_reviews.mkdir(parents=True, exist_ok=True)
         path = self.final_reviews / f"{document_hash}.json"
-        existing: JsonObject = {}
+        accumulated: dict[int, JsonObject] = {}
         if path.exists():
             try:
-                value: Any = json.loads(path.read_text(encoding="utf-8"))
-                existing = value if isinstance(value, dict) else {}
+                existing: Any = json.loads(path.read_text(encoding="utf-8"))
+                if (
+                    isinstance(existing, dict)
+                    and existing.get("render_ref") == render_ref
+                    and existing.get("page_count") == page_count
+                ):
+                    accumulated = {
+                        int(item["page"]): item
+                        for item in existing.get("page_verdicts", [])
+                        if isinstance(item, dict) and isinstance(item.get("page"), int)
+                    }
             except (OSError, json.JSONDecodeError):
-                existing = {}
-        accumulated = set()
-        if (
-            existing.get("render_ref") == render_ref
-            and existing.get("page_count") == page_count
-        ):
-            accumulated = {
-                page for page in existing.get("reviewed_pages", []) if isinstance(page, int)
+                accumulated = {}
+        accumulated.update(normalized)
+        page_verdicts = [accumulated[page] for page in sorted(accumulated)]
+        reviewed_pages = [item["page"] for item in page_verdicts]
+        defects = [
+            {"page": item["page"], **defect}
+            for item in page_verdicts
+            for defect in item["defects"]
+            if isinstance(defect, dict)
+        ]
+        coverage_complete = set(reviewed_pages) == set(range(1, page_count + 1))
+        receipt: JsonObject = {
+            "schema_version": 2,
+            "phase": "final_visual_qa",
+            "document_sha256": document_hash,
+            "render_ref": render_ref,
+            "page_count": page_count,
+            "reviewed_pages": reviewed_pages,
+            "page_verdicts": page_verdicts,
+            "defects": defects,
+            "coverage_complete": coverage_complete,
+            "status": (
+                "clean"
+                if coverage_complete and not defects
+                else "defects"
+                if defects
+                else "incomplete"
+            ),
+        }
+        atomic_write_json(path, receipt)
+        return receipt
+
+    def visual_repair_work_item(
+        self,
+        *,
+        page: int,
+        defects: list[JsonObject],
+    ) -> tuple[JsonObject, list[Path]]:
+        """Bind one defective page and its editable objects for semantic repair."""
+
+        document_ref = self.current_document_ref()
+        document_hash, document = self._resolve_document(document_ref)
+        inspection = self._inspection(document)
+        rendered, _ = self.visual.render({"input_docx": str(document), "overview": False})
+        page_count = int(rendered["page_count"])
+        if page < 1 or page > page_count or not defects:
+            raise ToolFailure(
+                status="error",
+                origin="application",
+                code="visual_repair_work_item_invalid",
+                message="A visual repair work item requires one defective rendered page.",
+            )
+        review, images = self.visual.review(
+            {
+                "render_ref": rendered["render_ref"],
+                "mode": "pages",
+                "pages": [page],
+                "quality": "detail",
             }
-        accumulated.update(pages)
-        atomic_write_json(
-            path,
+        )
+        objects, truncated = self.visual.objects_on_page(
+            str(rendered["render_ref"]),
+            inspection,
+            page,
+            limit=32,
+        )
+        return (
             {
                 "schema_version": 1,
-                "phase": "final_visual_qa",
-                "document_sha256": document_hash,
-                "render_ref": render_ref,
+                "kind": "visual_repair",
+                "page": page,
                 "page_count": page_count,
-                "reviewed_pages": sorted(accumulated),
+                "defects": defects,
+                "objects": objects,
+                "objects_truncated": truncated,
+                "evidence": review.get("evidence", []),
+                "document_sha256": document_hash,
             },
+            images,
         )
 
     def publish(self, args: dict[str, Any]) -> JsonObject:
@@ -3380,13 +3515,18 @@ class TemplateWorkspaceService:
         review = self._read_final_review(document_hash)
         reviewed_pages = {page for page in review["reviewed_pages"] if isinstance(page, int)}
         expected_pages = set(range(1, int(review["page_count"]) + 1))
-        if reviewed_pages != expected_pages:
+        if (
+            reviewed_pages != expected_pages
+            or review.get("status") != "clean"
+            or review.get("defects")
+        ):
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
                 code="final_visual_review_incomplete",
                 message=(
-                    "Inspect every full-page PNG for the exact final Word before publishing."
+                    "Every page of the exact final Word needs an explicit clean visual verdict "
+                    "before publication."
                 ),
                 suggested_actions=("continue_final_visual_review",),
             )
@@ -3727,19 +3867,23 @@ class TemplateWorkspaceService:
                 origin="request",
                 code="final_visual_review_missing",
                 message=(
-                    "Run template_final_review and inspect every full-page PNG for the exact "
-                    "final Word before publishing."
+                    "The application must obtain and record an explicit per-page visual verdict "
+                    "for the exact final Word before publishing."
                 ),
-                suggested_actions=("start_final_visual_review",),
+                suggested_actions=("run_application_visual_review",),
             ) from error
         if (
             not isinstance(value, dict)
             or value.get("phase") != "final_visual_qa"
+            or value.get("schema_version") != 2
             or value.get("document_sha256") != document_hash
             or not isinstance(value.get("render_ref"), str)
             or not isinstance(value.get("page_count"), int)
             or value["page_count"] < 1
             or not isinstance(value.get("reviewed_pages"), list)
+            or not isinstance(value.get("page_verdicts"), list)
+            or not isinstance(value.get("defects"), list)
+            or value.get("status") not in {"incomplete", "defects", "clean"}
         ):
             raise ToolFailure(
                 status="error",

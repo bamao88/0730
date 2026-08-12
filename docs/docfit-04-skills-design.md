@@ -43,7 +43,7 @@ Bash、管道、重定向或网络作为读取 references 的必要条件。
 
 | Skill | 用户目标 | 主要产物 |
 |---|---|---|
-| `docfit-school-extract` | 逐对象整理当前学校模板、要求和示例 | 一份清理完成、Registry 对齐且已根据实际修改区反馈自检的最终 Word |
+| `docfit-school-extract` | 逐对象整理当前学校模板、要求和示例；最终角色逐页判断渲染缺陷 | 一份清理完成、Registry 对齐、局部修改已确认且最终每页视觉 clean 的 Word |
 | `convert-thesis` | 使用通用 Knowledge 和当前任务学校材料，把学生论文转换成目标格式 | 最终 DOCX、预览和验证结果 |
 
 模板提取可以作为独立用户目标，也可以服务当前转换任务。两个 Skill 共享通用
@@ -90,20 +90,23 @@ DOCX 中提取。当前三校 candidate 文件仍待 Human 签署和 schema 冻�
 
 ### 3.3 工具与反馈边界
 
-`prepare-template` 会话只开放 `template_open`、`template_next`、`template_search`、
-`template_focus`、`template_registry`、`template_edit`、`template_final_review`、
-`template_publish`，以及 Skill、受限
-只读材料和必要的用户提问。它不开放 Bash、Write、Agent，也不包含 semantic checker、决定文件
-或 compiler。读取 Tool 默认使用最新 checkpoint；只有最终发布确认精确 `document_ref`。
-`template_edit` 只接收一个 `operations` 数组，每个成员直接声明动作、对象引用和必要意图。
-Tool 机械验证引用、Registry 字段、对象承载能力、Word 边界、有效格式、包重开、非目标文本、
-修改区域回传和原子发布；语义/视觉是否正确由 Agent 根据事实反馈负责，也不要求固定 H1/H2/H3
-正文集合。
+`prepare-template` 使用两个互相隔离的 Agent 角色。语义角色只开放
+`template_get_current_work_item`、`template_request_current_context`、
+`template_submit_current_decision` 和 `template_report_ambiguity`；视觉角色只开放
+`template_get_review_batch`。两个角色都只额外获得 Skill 和受限 Read，不开放 Bash、Write、
+AskUserQuestion 或 Subagent。字段 ID 必须来自当前工作项已返回的 Registry 候选；对象 ID 只在
+当前有界上下文中有效。
 
-视觉范围按阶段分离：对象处理和生成内容收尾只返回当前对象、必要邻接对象或修改后局部反馈，
-禁止用逐页扫描代替局部语义判断；只有这些工作完成后，`template_final_review` 才为精确最终
-`document_ref` 按 cursor 返回全部全页 PNG。任何后续编辑都会产生新版本并使旧全页覆盖失效；
-`template_publish` 只接受完成全部页面覆盖的当前版本。渲染证据保留在内部，不扩展用户交付集合。
+Skill 说明领域目标、对象判断、填写责任、按需知识和视觉缺陷标准，不描述遍历、cursor、
+document/region ref、重试、终态或发布 API。应用拥有这些确定性控制：选择工作项、原子执行修改、
+回读局部结果、推进 checkpoint、有界重试、组织全部页面批次、验证每页 verdict、失效旧版本证据
+并自动发布。Tool 机械验证对象承载能力、Registry 字段、Word 边界、有效格式、包重开和非目标
+文本保护；它不替 Agent 做局部语义或页面视觉判断。
+
+局部语义角色只看当前对象、必要邻接对象和修改后局部反馈，禁止主动逐页扫描；全部局部工作
+完成后，独立视觉角色才读取应用绑定的原生全页 PNG。图片成功返回不等于已审查，只有当前精确
+版本每页都有显式 clean 且没有 defect 才能通过。任何后续编辑都会使旧 hash 的页面结论失效，
+应用从第一页重新组织检查。PNG/PDF/evidence 保留在内部，不扩展用户交付集合。
 
 ## 4. `convert-thesis`
 

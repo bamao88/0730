@@ -92,8 +92,9 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 ### 1.5 当前任务证据
 
 - 学校模板、要求文件、官方示例和用户确认只放在授权任务目录；
-- `prepare-template` 的 Registry 源由 task-bound Tool 私下持有；Agent 可针对同一版本中最多十六个
-  当前对象批量做精确 lookup 或每对象最多五条 search，不能读取或枚举全 Registry；
+- `prepare-template` 的 Registry 源由 task-bound service 私下持有；应用先为当前工作项绑定至多
+  五条对象相关候选，Agent 只在证据不足时为一个已返回对象追加有界查询，不能读取或枚举全
+  Registry；提交的字段 ID 必须属于当前工作项已经提供的候选集合；
 - 每个学校专属结论必须能引用当前任务材料 hash 或当前用户确认；
 - 精确格式值可以被规范化为本次 Tool 调用参数，但不写入长期 profile；
 - 来源冲突或适用范围不明时，Agent 保留证据并询问，不用 Knowledge 补齐；
@@ -102,14 +103,23 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 - 任务结束后，材料和推导结论按任务数据策略处理，不复制到产品 Knowledge；
 - Eval 可以保存合成、脱敏或授权的学校场景，但 Eval fixture 不是运行时 Knowledge。
 
-模板准备使用七个聚焦 Tool：`template_open` / `template_next` 从最新 checkpoint 推进当前有界
-对象区域，`template_search` / `template_focus` 只补充当前决定所需事实，`template_registry` 按
-对象惰性批量确认字段；`template_edit` 接受同一版本最多 32 个直接 action operation，物化时由
-Tool 生成可见填写占位，并在一次原子提交中归一化重复操作、保护 Word 边界、回读有效结果、返回
-修改区域的新证据与引用；`template_publish` 只要求 Agent 已看到最终版本的局部反馈，不设全页
-覆盖门，只发布 `output/final-template.docx`。它们复用
-OfficeCLI、V2 visual evidence 与包验证，不建立第二套 Agent loop；Agent 不提交 plan path、
-compiler 输出或 Word output path。
+模板准备的 Agent 公共面只有五个角色化 Tool。语义角色使用
+`template_get_current_work_item`、`template_request_current_context`、
+`template_submit_current_decision`、`template_report_ambiguity`；视觉角色只使用
+`template_get_review_batch`。应用内部继续复用同一 Template Workspace、OfficeCLI、V2 visual
+evidence、对象修改和包验证能力，但不把其 document/region ref、visual cursor、导航或 publish
+入口暴露给 Agent。
+
+语义提交最多包含 32 个直接 action operation；应用把短对象 ID 编译为当前 checkpoint 的内部
+引用，校验字段候选集合，原子执行、保护 Word 边界、回读有效结果并返回修改后局部图片。每个
+语义 SDK session 只处理一个工作项，失败最多有界重试，`max_turns` 不会触发无上限新会话。
+
+最终视觉检查由应用按内部 cursor 取齐精确版本的所有原生全页 PNG；视觉 Agent 为当前批次每页
+返回 typed clean/defect。只有显式 verdict 才写入视觉 receipt，图片返回本身不计覆盖。缺陷生成
+单页修复工作项；任何编辑按新 document hash 自动失效旧 receipt，并从第一页重查。全页 clean
+后应用调用内部 publication service，只发布 `output/final-template.docx`。该实现沿用 Claude Agent
+SDK 原生 query/Tool loop、custom in-process MCP Tool 和 structured output，不建立通用 Agent
+runtime；Agent 不提交 plan path、compiler 输出或 Word output path。
 
 ### 1.6 加载与使用
 

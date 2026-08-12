@@ -50,13 +50,14 @@ Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval
 签署；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
 系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
-学校模板在线准备已切换为 checkpoint 驱动的按需对象路线：`template_open` / `template_next`
-只推进当前有界区域，`template_search` / `template_focus` 只补充当前决定需要的局部事实；同一
-版本中已明确的多个对象由 `template_edit.operations[]` 一次原子处理，并自动返回修改后局部证据。
-`template_registry` 按对象惰性批量查询；`template_publish` 不设全页覆盖门，只发布一份
-`final-template.docx`。旧 snapshot/decision YAML/
-compiler/mutate/compare/four-file build 协议已从开发线路移除，不保留兼容层。静态 Eval 的
-Template Truth 继续位于运行时之外，只用于生成后评分。
+学校模板在线准备采用应用编排、角色隔离的按需对象路线。应用选择当前局部工作项、绑定短对象
+ID 和 Registry 候选、执行 Agent 提交的语义决定、回读修改结果并推进 checkpoint；语义 Agent
+不管理区域遍历、重试、文档版本或终态。局部工作完成后，应用把精确最终版本的全部原生全页
+PNG 分批交给独立视觉审查角色，只有每页都有显式 clean 判定且没有缺陷时才自动发布一份
+`final-template.docx`。修改会生成新版本并使旧版本视觉结论失效。Agent 不接触 cursor、
+document/region ref 或发布动作。旧 snapshot/decision YAML/compiler/mutate/compare/four-file
+build 协议和旧八 Tool 会话协议均不保留兼容层；静态 Eval 的 Template Truth 继续位于运行时之外，
+只用于生成后评分。
 
 M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
 06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
@@ -187,7 +188,7 @@ text 对当前 Agent 可见，图片仍使用原生 image content block。应用
 | Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
 | Tools | DOCX 分析、修改、固定 LibreOffice V2 渲染、按需视觉视图、语义对象映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染声称为 Word 像素真值，或替当前 Agent 做语义判断 |
 | Eval | 离线样本、断言、回归与质量比较；在未来 M3 中保存相互 hash/版本绑定的字段、模板、学生内容与 placement 真值 | 在线运行编排、交付状态管理，或把 oracle 默认暴露给被测对象 |
-| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实主 Agent 直接读取路径策略、受信任 Bash/Write 与 Subagent 上下文隔离/最小权限、返回回复与产物；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域判断、委派策略、工作流引擎、第二套 shell/runtime、用监控事件控制或精确回放 Agent |
+| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实权限和上下文隔离、返回回复与产物；为模板准备等确定性产品合同管理有界工作项、重试、页面批次、证据失效与发布门；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域语义判断、通用 Agent runtime、替代 SDK 的会话/Tool loop、用监控事件控制或精确回放 Agent |
 
 Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、
 阶段、checkpoint、Subagent 或恢复协议。`AgentDefinition` 只是 SDK 接线配置，不与
@@ -219,7 +220,8 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 
 以下内容不属于当前 DocFit 架构：
 
-- 自定义工作流引擎、阶段 DAG 或任务调度器；
+- 跨领域的通用工作流引擎、可配置阶段 DAG 或任务调度器（不包括为确定性产品不变量编写的
+  有限应用编排）；
 - 六个或更多文档单元专家目录、固定 AgentDefinition 注册表或穷尽式文档类型枚举；
 - “发现某单元就必须委派”的规则、固定复杂度阈值或应用壳领域路由；
 - `StageExecution`、Run Evidence Module、事件 hash chain；

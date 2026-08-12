@@ -1,4 +1,4 @@
-"""Application shell for one object-driven template preparation Agent session."""
+"""Application-owned orchestration for clean school-template preparation."""
 
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ import shutil
 import tempfile
 import time
 from collections.abc import Awaitable, Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 from claude_agent_sdk.types import (
@@ -34,67 +34,101 @@ from docfit.app.agent import (
 )
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.observability.transcript import isolated_sdk_environment
+from docfit.template.workspace import TemplateWorkspaceService
 from docfit.tools.runtime import JsonObject, ToolFailure, atomic_write_json, sha256_file
 from docfit.tools.template_tools import (
-    TEMPLATE_FULL_TOOL_NAMES,
-    build_template_tool_server,
+    TEMPLATE_REVIEW_FULL_TOOL_NAMES,
+    TEMPLATE_SEMANTIC_FULL_TOOL_NAMES,
+    ReviewBatchState,
+    SemanticWorkItemState,
+    build_template_review_tool_server,
+    build_template_semantic_tool_server,
 )
 
-PREPARE_TEMPLATE_OUTPUT_SCHEMA: JsonObject = {
+SEMANTIC_WORK_ITEM_OUTPUT_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
-        "status": {"type": "string", "enum": ["built", "blocked"]},
-        "artifact_path": {
-            "type": ["string", "null"],
-            "enum": ["output/final-template.docx", None],
+        "status": {
+            "type": "string",
+            "enum": ["accepted", "revise", "needs_input"],
         },
-        "template_sha256": {"type": ["string", "null"]},
-        "counts": {
-            "type": "object",
-            "properties": {
-                name: {"type": "integer", "minimum": 0}
-                for name in ("slot", "remove", "manual", "gap", "unresolved")
-            },
-            "required": ["slot", "remove", "manual", "gap", "unresolved"],
-            "additionalProperties": False,
-        },
+        "reason": {"type": "string", "minLength": 1, "maxLength": 1000},
     },
-    "required": ["status", "artifact_path", "template_sha256", "counts"],
+    "required": ["status", "reason"],
     "additionalProperties": False,
-    "oneOf": [
-        {
-            "properties": {
-                "status": {"const": "built"},
-                "artifact_path": {"const": "output/final-template.docx"},
-                "template_sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$",
+}
+
+VISUAL_REVIEW_OUTPUT_SCHEMA: JsonObject = {
+    "type": "object",
+    "properties": {
+        "pages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "page": {"type": "integer", "minimum": 1},
+                    "verdict": {"type": "string", "enum": ["clean", "defect"]},
+                    "defects": {
+                        "type": "array",
+                        "maxItems": 12,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "category": {
+                                    "type": "string",
+                                    "enum": [
+                                        "clipping",
+                                        "overlap",
+                                        "missing_glyph",
+                                        "table_damage",
+                                        "spacing",
+                                        "header_footer",
+                                        "pagination",
+                                        "residue",
+                                        "other",
+                                    ],
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 500,
+                                },
+                                "repair_hint": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 500,
+                                },
+                            },
+                            "required": ["category", "description"],
+                            "additionalProperties": False,
+                        },
+                    },
                 },
-            }
+                "required": ["page", "verdict", "defects"],
+                "additionalProperties": False,
+            },
         },
-        {
-            "properties": {
-                "status": {"const": "blocked"},
-                "artifact_path": {"type": "null"},
-                "template_sha256": {"type": "null"},
-            }
-        },
-    ],
+        "summary": {"type": "string", "minLength": 1, "maxLength": 1000},
+    },
+    "required": ["pages", "summary"],
+    "additionalProperties": False,
 }
 
 PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS = 1800
-# Claude Agent SDK sessions retain prior Tool images. Keep each native session
-# deliberately bounded, then continue from DocFit's application checkpoint in a
-# fresh session instead of resuming the transcript. Twenty-four turns gives one
-# complex local structure decision room for open/card/search/focus/registry/edit
-# without carrying old images into the next physical region indefinitely.
-PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT = 24
-PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT = 24
+PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT = 16
+PREPARE_TEMPLATE_VISUAL_TURN_LIMIT = 6
+PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS = 2
+PREPARE_TEMPLATE_MAX_VISUAL_ATTEMPTS = 2
+PREPARE_TEMPLATE_MAX_FINALIZATION_ITEMS = 8
+PREPARE_TEMPLATE_MAX_VISUAL_REPAIR_CYCLES = 3
+
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
-    "mcp__docfit__template_open",
-    "mcp__docfit__template_final_review",
-    "mcp__docfit__template_publish",
+    "mcp__docfit__template_get_current_work_item",
+    "mcp__docfit__template_submit_current_decision",
+    "mcp__docfit__template_get_review_batch",
 }
 _DEFAULT_REGISTRY = (
     project_root() / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
@@ -134,10 +168,10 @@ class TemplateAgentExecution:
 
 @dataclass(frozen=True, slots=True)
 class PrepareTemplateReport:
-    status: Literal["built", "blocked"]
+    status: Literal["built"]
     task_root: str
-    artifact_path: str | None
-    template_sha256: str | None
+    artifact_path: str
+    template_sha256: str
     counts: JsonObject
     backend: str
     session_id: str
@@ -146,6 +180,24 @@ class PrepareTemplateReport:
     num_turns: int
     duration_ms: int
     duration_api_ms: int
+
+
+@dataclass(slots=True)
+class _ExecutionMetrics:
+    tool_uses: list[str] = field(default_factory=list)
+    skills: list[str] = field(default_factory=list)
+    session_id: str = ""
+    num_turns: int = 0
+    duration_ms: int = 0
+    duration_api_ms: int = 0
+
+    def add_result(self, result: ResultMessage | None) -> None:
+        if result is None:
+            return
+        self.session_id = result.session_id
+        self.num_turns += result.num_turns
+        self.duration_ms += result.duration_ms
+        self.duration_api_ms += result.duration_api_ms
 
 
 AgentRunner = Callable[[PreparedTemplateTask], Awaitable[TemplateAgentExecution]]
@@ -228,7 +280,9 @@ def prepare_template_task(request: PrepareTemplateRequest) -> PreparedTemplateTa
             requirements_path=requirements_target,
             registry_source=registry,
             template_sha256=sha256_file(template_target),
-            requirements_sha256=(sha256_file(requirements_target) if requirements_target else None),
+            requirements_sha256=(
+                sha256_file(requirements_target) if requirements_target else None
+            ),
             registry_sha256=sha256_file(registry),
         )
     except BaseException:
@@ -275,8 +329,7 @@ def _resume_prepare_template_task(
             code="prepare_source_mismatch",
             message="The existing task belongs to a different school template.",
         )
-    output_files = [item for item in output_directory.iterdir()]
-    if output_files:
+    if any(output_directory.iterdir()):
         raise ToolFailure(
             status="needs_input",
             origin="request",
@@ -321,103 +374,37 @@ def _resume_prepare_template_task(
     )
 
 
-def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
+def build_prepare_template_prompt(
+    prepared: PreparedTemplateTask,
+    *,
+    role: Literal["semantic", "visual"],
+) -> str:
+    if role == "visual":
+        return (
+            "Load the docfit-school-extract Skill and follow its final visual review rules. "
+            "Call template_get_review_batch once. Inspect every returned native full-page PNG "
+            "at full resolution and return exactly one verdict for every supplied page number. "
+            "Judge rendering defects only: clipping, overlap, missing glyphs, damaged tables, "
+            "spacing drift, header/footer misalignment, pagination errors, or visible residue. "
+            "Do not redo template semantics and do not infer cleanliness from text or XML."
+        )
     requirements = (
-        f" Optional school requirements: "
-        f"{prepared.requirements_path.relative_to(prepared.task_root)} "
-        f"(sha256 {prepared.requirements_sha256})."
+        f" If the current decision requires an explicit school rule, read only "
+        f"{prepared.requirements_path.relative_to(prepared.task_root)}."
         if prepared.requirements_path is not None
-        else " No separate school-requirements file was supplied; use the template itself."
+        else " No separate school-requirements file was supplied."
     )
-    pending_edit_intents = _has_pending_edit_intents(prepared)
-    finalization_guidance = ""
-    if pending_edit_intents:
-        finalization_guidance = (
-            " Visual-region navigation may already be complete, but an Agent-requested semantic "
-            "edit did not commit. Call template_open and resolve every returned "
-            "pending_edit_intent before generated-content work. Use template_search or "
-            "template_focus only to re-locate the current objects needed for that intent. "
-            "Never publish while one remains."
-        )
-    elif _visual_navigation_complete(prepared):
-        finalization_guidance = (
-            " Visual-region navigation is already complete. Call template_open and treat "
-            "checkpoint_summary, materialized_members, style_signatures, and structural_risks as "
-            "facts rather than a semantic completion verdict. Decide whether this school's "
-            "surviving objects demonstrate every required fill interface; use bounded "
-            "template_search/template_focus only for a concrete missing capability. Resolve "
-            "pending_generated_content from its supplied target and candidates, inspect the "
-            "changed-region feedback, and publish."
-        )
     return (
-        "Load the docfit-school-extract Skill and turn the supplied school Word into one clean, "
-        "fillable final Word. Start with template_open; it resumes the latest application "
-        "checkpoint without loading a prior Agent transcript. Work from the current bounded "
-        "region and batch up to thirty-two decisions into one template_edit operations array. "
-        "Every array item is a direct action object; never use an item wrapper or put operation "
-        "fields at template_edit's top level. A minimal shape is "
-        '{"operations":[{"action":"materialize_slot",'
-        '"object_ref":{"object_id":"obj-..."},"field_id":"abstract.zh"}]}. Resolve the '
-        "current region before exploring another landmark: after open, the "
-        "next semantic action must be template_edit or template_next(preserve), except for one "
-        "bounded focus, search, or Registry lookup needed to decide that same region. Never "
-        "inventory the "
-        "document with repeated template_search calls. For a blank or ambiguous run, use its "
-        "parent_context label rather than positional "
-        "guessing. The Agent decides which visible objects are fixed school content, instructions, "
-        "examples, generated content, optional sections, fill slots, or representative body "
-        "members. The Tool verifies execution and reports facts; it does not require a global "
-        "H1/H2/H3 grammar or infer semantic completeness from Word style names. "
-        "When Tool feedback returns knowledge_signals, Read only the matching relative reference "
-        "linked by the Skill before deciding that batch; reading an un-signaled card or preloading "
-        "multiple cards is a workflow error. On a fresh task, verify every field_id's first use "
-        "through one batched template_registry lookup/search for the current objects; never invent "
-        "a field_id from a naming convention. Reuse an exact field_id only after the Registry or "
-        "checkpoint has established it. "
-        "Treat visible color and underline as evidence. If the intended outcome is formal black "
-        "without underline, request effective_format={color:black, underline:none}; success means "
-        "the effective value is re-read after inheritance, not merely that direct XML disappeared. "
-        "Use ensure_page_start only after deciding that an object must begin a logical new page; "
-        "the Tool makes that request idempotent. Refresh a live TOC as one compound object with "
-        "representative 1-3 entries; never clear cache rows individually. "
-        "Judge the changed-region image and objective receipts returned by template_edit, then "
-        "advance with template_next using outcome=handled. If the region is genuinely fixed and "
-        "needs no edit, use outcome=preserve plus a short reason. Never preserve writing "
-        "instructions, sample/student content, or a student-authored region that still lacks its "
-        "fill interface. On every fresh open, resolve pending_edit_intents first; they are prior "
-        "Agent-authored semantic operations that never committed, not Tool-generated semantic "
-        "guesses. Use their target, member_field_ids, and last_failure as compact recovery "
-        "context, re-locate only the necessary current objects, and submit an improved decision. "
-        f"Task root: {prepared.task_root}. School template: "
-        f"{prepared.template_path.relative_to(prepared.task_root)} "
-        f"(sha256 {prepared.template_sha256}).{requirements} "
-        "The Registry is Tool-private and lazily searchable; it is not a task list. Do not try to "
-        "enumerate or reproduce every Registry field. Remove template instructions, examples, "
-        "sample thesis content, and other content that should not survive in a reusable template; "
-        "preserve school-mandated fixed text and layout. The absence of existing content controls "
-        "is normal. Agent-visible object refs are short object IDs bound by the Tool to the latest "
-        "application checkpoint; after an edit, continue only from fresh refs returned by the Tool "
-        "and never copy or invent document hashes or fingerprints. template_next only navigates "
-        "to an unprocessed physical visual region; you remain responsible for every semantic "
-        "decision. During local object processing, focus or search only when the current crop "
-        "needs more context; do not review every page or request full pages for coverage, and do "
-        "not repeat visual feedback already returned by template_edit. Before editing any abstract "
-        "page, explicitly account for its title occurrence, fixed abstract heading, body, and "
-        "keywords in their current visual positions; a title slot on the cover never authorizes "
-        "deleting the abstract-page title occurrence. After navigation is done, "
-        "all pending_edit_intents are resolved, and generated content is final, switch phases: "
-        "call template_final_review for the exact current document_ref, inspect every returned "
-        "full-page PNG, and follow next_cursor until coverage_complete. This terminal page scan "
-        "checks rendering defects; it does not reopen whole-document semantic classification. "
-        "If a defect is visible, use bounded search/focus and template_edit only for that defect, "
-        "then restart final review for the new document_ref because old page evidence is stale. "
-        "Publish the exact reviewed document_ref once with template_publish only after coverage "
-        "is complete and clean. Only output/final-template.docx is user-visible; page PNGs and "
-        "render evidence "
-        "remain internal unless the user asks for them. Return blocked for a genuinely material "
-        "semantic ambiguity that cannot be resolved from the current evidence, or when final "
-        "rendering remains unavailable; never publish an unreviewed Word."
-        f"{finalization_guidance}"
+        "Load the docfit-school-extract Skill. Call template_get_current_work_item once and "
+        "make a semantic decision only for that bound local item. Request extra context only "
+        "when the supplied crop is insufficient. Select field IDs only from candidates returned "
+        "during this work item. Submit exactly one apply or preserve decision, inspect the "
+        "changed-region image when an edit is applied, then return accepted only when that local "
+        "result is correct. Return revise when the submitted edit must be discarded and retried. "
+        "Use template_report_ambiguity before needs_input and name the concrete missing evidence. "
+        "The application owns traversal, retries, page batching, final review, publication, and "
+        "terminal status; do not try to manage any of them."
+        f"{requirements}"
     )
 
 
@@ -425,33 +412,36 @@ def build_prepare_template_options(
     prepared: PreparedTemplateTask,
     backend: AgentBackend,
     config_directory: Path,
+    *,
+    role: Literal["semantic", "visual"],
+    mcp_server: Any,
 ) -> ClaudeAgentOptions:
     policy = build_read_path_policy(project=prepared.task_root, cwd=prepared.task_root)
     environment = isolated_sdk_environment(backend.sdk_environment(), config_directory)
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
-    builtin_tools = ("Skill", "Read", "AskUserQuestion")
+    registered = (
+        TEMPLATE_SEMANTIC_FULL_TOOL_NAMES
+        if role == "semantic"
+        else TEMPLATE_REVIEW_FULL_TOOL_NAMES
+    )
     permission_callback = make_permission_callback(
         terminal_ask_user,
         read_path_policy=policy,
-        registered_tool_names=TEMPLATE_FULL_TOOL_NAMES,
+        registered_tool_names=registered,
     )
     return ClaudeAgentOptions(
-        tools=list(builtin_tools),
+        tools=["Skill", "Read"],
         allowed_tools=[],
         disallowed_tools=[
             *FORBIDDEN_TOOLS,
+            "AskUserQuestion",
             "Bash",
             "Write",
             "Agent",
             "Glob",
             "Grep",
         ],
-        mcp_servers={
-            "docfit": build_template_tool_server(
-                prepared.task_root,
-                prepared.registry_source,
-            )
-        },
+        mcp_servers={"docfit": mcp_server},
         strict_mcp_config=True,
         permission_mode="default",
         can_use_tool=permission_callback,
@@ -469,222 +459,30 @@ def build_prepare_template_options(
         cwd=prepared.task_root,
         env=environment,
         model=backend.model,
-        max_turns=_prepare_template_turn_limit(prepared),
+        max_turns=(
+            PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT
+            if role == "semantic"
+            else PREPARE_TEMPLATE_VISUAL_TURN_LIMIT
+        ),
         max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
-        output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
+        output_format={
+            "type": "json_schema",
+            "schema": (
+                SEMANTIC_WORK_ITEM_OUTPUT_SCHEMA
+                if role == "semantic"
+                else VISUAL_REVIEW_OUTPUT_SCHEMA
+            ),
+        },
         system_prompt=(
-            "You are the single DocFit template-preparation Agent. Trust your semantic and visual "
-            "judgment. The SDK-native Agent loop and eight focused template Tools are the entire "
-            "workflow. During object work, view one bounded region, batch the visible decisions, "
-            "and inspect only changed-region feedback. Only after local work and generated content "
-            "are complete, enter terminal visual QA and inspect every full-page PNG for the exact "
-            "final document version before publishing one Word. "
-            "Inputs are read-only. "
-            "There are no plan files, compilers, attempt paths, semantic checker, or compatibility "
-            "protocol. Tool checks are mechanical feedback, not a substitute for your judgment."
+            "You are DocFit's semantic template analyst. Work on exactly one application-bound "
+            "item; tools execute mechanics while you own the local semantic judgment."
+            if role == "semantic"
+            else (
+                "You are DocFit's independent final visual reviewer. Inspect every supplied "
+                "full-page image and report page-local rendering defects precisely."
+            )
         ),
     )
-
-
-def _prepare_template_turn_limit(prepared: PreparedTemplateTask) -> int:
-    """Allow one longer, single-image session only for final generated content."""
-
-    return (
-        PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT
-        if _visual_navigation_complete(prepared)
-        else PREPARE_TEMPLATE_CONTEXT_TURN_LIMIT
-    )
-
-
-def _visual_navigation_complete(prepared: PreparedTemplateTask) -> bool:
-    """Read only the durable cursor needed to choose the bounded Agent phase."""
-
-    workspace = prepared.task_root / "work/.docfit/template-workspace-v1"
-    try:
-        progress: object = json.loads(
-            (workspace / "task-progress.json").read_text(encoding="utf-8")
-        )
-        blueprint: object = json.loads(
-            (workspace / "visual-regions.json").read_text(encoding="utf-8")
-        )
-    except (OSError, json.JSONDecodeError):
-        return False
-    region_index = progress.get("region_index") if isinstance(progress, dict) else None
-    regions = blueprint.get("regions") if isinstance(blueprint, dict) else None
-    return (
-        isinstance(region_index, int) and isinstance(regions, list) and region_index >= len(regions)
-    )
-
-
-def _has_pending_edit_intents(prepared: PreparedTemplateTask) -> bool:
-    progress_path = prepared.task_root / "work/.docfit/template-workspace-v1/task-progress.json"
-    try:
-        progress: object = json.loads(progress_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return False
-    return bool(
-        isinstance(progress, dict)
-        and isinstance(progress.get("pending_edit_intents"), list)
-        and progress["pending_edit_intents"]
-    )
-
-
-def _validated_sdk_output(
-    result: ResultMessage | None,
-    *,
-    backend: AgentBackend,
-) -> JsonObject:
-    if result is None:
-        raise ToolFailure(
-            status="error",
-            origin="agent",
-            code="template_agent_result_missing",
-            message=f"The {backend.name} Agent backend returned no SDK result.",
-            retryable=True,
-        )
-    terminal_reason = result.terminal_reason or "unknown"
-    if result.is_error:
-        if result.api_error_status is not None:
-            status = result.api_error_status
-            raise ToolFailure(
-                status="error",
-                origin="agent",
-                code="template_agent_backend_api_error",
-                message=(
-                    f"The {backend.name} Agent backend returned HTTP {status} "
-                    f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
-                ),
-                retryable=status not in {400, 401, 402, 403},
-            )
-        raise ToolFailure(
-            status="error",
-            origin="agent",
-            code="template_agent_backend_error",
-            message=(
-                f"The {backend.name} Agent backend ended with an SDK error "
-                f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
-            ),
-            retryable=True,
-        )
-    if not isinstance(result.structured_output, dict):
-        raise ToolFailure(
-            status="error",
-            origin="agent",
-            code="template_agent_structured_output_missing",
-            message=(
-                f"The {backend.name} Agent backend returned no structured output "
-                f"(terminal_reason={terminal_reason}, turns={result.num_turns})."
-            ),
-            retryable=True,
-        )
-    return result.structured_output
-
-
-async def _run_backend_segment(
-    prepared: PreparedTemplateTask,
-    backend: AgentBackend,
-    config_directory: Path,
-    tool_uses: list[str],
-    skills: list[str],
-) -> ResultMessage | None:
-    """Run one bounded SDK transcript while progress remains application-owned."""
-
-    options = build_prepare_template_options(prepared, backend, config_directory)
-    result: ResultMessage | None = None
-    async with asyncio.timeout(PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS):
-        async with ClaudeSDKClient(options=options) as client:
-            await client.query(build_prepare_template_prompt(prepared))
-            async for message in client.receive_response():
-                if isinstance(message, AssistantMessage):
-                    for block in message.content:
-                        if isinstance(block, ToolUseBlock):
-                            tool_uses.append(block.name)
-                            _append_agent_live_event(
-                                prepared,
-                                {
-                                    "event": "tool_use",
-                                    "backend": backend.name,
-                                    "tool": block.name,
-                                    "input": block.input,
-                                },
-                            )
-                            if block.name == "Skill":
-                                value = block.input.get("skill") or block.input.get("name")
-                                if isinstance(value, str):
-                                    skills.append(value)
-                        elif isinstance(block, TextBlock) and block.text.strip():
-                            _append_agent_live_event(
-                                prepared,
-                                {
-                                    "event": "assistant_text",
-                                    "backend": backend.name,
-                                    "text": block.text[:2000],
-                                },
-                            )
-                elif isinstance(message, UserMessage) and isinstance(message.content, list):
-                    for block in message.content:
-                        if isinstance(block, ToolResultBlock):
-                            _append_agent_live_event(
-                                prepared,
-                                {
-                                    "event": "tool_result",
-                                    "backend": backend.name,
-                                    "is_error": bool(block.is_error),
-                                    "content": _agent_result_summary(block.content),
-                                },
-                            )
-                if isinstance(message, ResultMessage):
-                    result = message
-                    _append_agent_live_event(
-                        prepared,
-                        {
-                            "event": "session_result",
-                            "backend": backend.name,
-                            "is_error": result.is_error,
-                            "subtype": result.subtype,
-                            "terminal_reason": result.terminal_reason,
-                            "num_turns": result.num_turns,
-                        },
-                    )
-    return result
-
-
-async def _run_backend(
-    prepared: PreparedTemplateTask,
-    backend: AgentBackend,
-) -> TemplateAgentExecution:
-    with tempfile.TemporaryDirectory(prefix="docfit-template-sdk-") as config_name:
-        tool_uses: list[str] = []
-        skills: list[str] = []
-        total_turns = 0
-        total_duration_ms = 0
-        total_duration_api_ms = 0
-        while True:
-            result = await _run_backend_segment(
-                prepared,
-                backend,
-                Path(config_name),
-                tool_uses,
-                skills,
-            )
-            if result is not None:
-                total_turns += result.num_turns
-                total_duration_ms += result.duration_ms
-                total_duration_api_ms += result.duration_api_ms
-            if _context_segment_exhausted(result):
-                continue
-            structured_output = _validated_sdk_output(result, backend=backend)
-            assert result is not None
-            return TemplateAgentExecution(
-                structured_output=structured_output,
-                tool_uses=tuple(tool_uses),
-                skills_loaded=tuple(dict.fromkeys(skills)),
-                session_id=result.session_id,
-                backend=backend.name,
-                num_turns=total_turns,
-                duration_ms=total_duration_ms,
-                duration_api_ms=total_duration_api_ms,
-            )
 
 
 def _agent_result_summary(value: object) -> object:
@@ -706,10 +504,7 @@ def _agent_result_summary(value: object) -> object:
     return summarized
 
 
-def _append_agent_live_event(
-    prepared: PreparedTemplateTask,
-    event: JsonObject,
-) -> None:
+def _append_agent_live_event(prepared: PreparedTemplateTask, event: JsonObject) -> None:
     path = prepared.task_root / "work/.docfit/template-agent-live.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {"timestamp_unix": time.time(), **event}
@@ -717,12 +512,564 @@ def _append_agent_live_event(
         handle.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
 
 
-def _context_segment_exhausted(result: ResultMessage | None) -> bool:
-    if result is None or not result.is_error:
-        return False
-    reason = (result.terminal_reason or "").casefold()
-    subtype = result.subtype.casefold()
-    return "max_turn" in reason or "max_turn" in subtype
+async def _run_sdk_session(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    *,
+    role: Literal["semantic", "visual"],
+    mcp_server: Any,
+    metrics: _ExecutionMetrics,
+) -> ResultMessage | None:
+    options = build_prepare_template_options(
+        prepared,
+        backend,
+        config_directory,
+        role=role,
+        mcp_server=mcp_server,
+    )
+    result: ResultMessage | None = None
+    async with asyncio.timeout(PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS):
+        async with ClaudeSDKClient(options=options) as client:
+            await client.query(build_prepare_template_prompt(prepared, role=role))
+            async for message in client.receive_response():
+                if isinstance(message, AssistantMessage):
+                    for block in message.content:
+                        if isinstance(block, ToolUseBlock):
+                            metrics.tool_uses.append(block.name)
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "tool_use",
+                                    "role": role,
+                                    "backend": backend.name,
+                                    "tool": block.name,
+                                    "input": block.input,
+                                },
+                            )
+                            if block.name == "Skill":
+                                value = block.input.get("skill") or block.input.get("name")
+                                if isinstance(value, str):
+                                    metrics.skills.append(value)
+                        elif isinstance(block, TextBlock) and block.text.strip():
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "assistant_text",
+                                    "role": role,
+                                    "backend": backend.name,
+                                    "text": block.text[:2000],
+                                },
+                            )
+                elif isinstance(message, UserMessage) and isinstance(message.content, list):
+                    for block in message.content:
+                        if isinstance(block, ToolResultBlock):
+                            _append_agent_live_event(
+                                prepared,
+                                {
+                                    "event": "tool_result",
+                                    "role": role,
+                                    "backend": backend.name,
+                                    "is_error": bool(block.is_error),
+                                    "content": _agent_result_summary(block.content),
+                                },
+                            )
+                if isinstance(message, ResultMessage):
+                    result = message
+                    _append_agent_live_event(
+                        prepared,
+                        {
+                            "event": "session_result",
+                            "role": role,
+                            "backend": backend.name,
+                            "is_error": result.is_error,
+                            "subtype": result.subtype,
+                            "terminal_reason": result.terminal_reason,
+                            "num_turns": result.num_turns,
+                        },
+                    )
+    metrics.add_result(result)
+    return result
+
+
+def _validated_session_output(
+    result: ResultMessage | None,
+    *,
+    backend: AgentBackend,
+    role: str,
+) -> JsonObject:
+    if result is None:
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code=f"template_{role}_result_missing",
+            message=f"The {backend.name} {role} session returned no SDK result.",
+            retryable=True,
+        )
+    terminal_reason = result.terminal_reason or "unknown"
+    if result.is_error:
+        status = result.api_error_status
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code=f"template_{role}_session_failed",
+            message=(
+                f"The {backend.name} {role} session failed "
+                f"(terminal_reason={terminal_reason}, turns={result.num_turns}"
+                f"{f', http={status}' if status is not None else ''})."
+            ),
+            retryable=status not in {400, 401, 402, 403},
+        )
+    if not isinstance(result.structured_output, dict):
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code=f"template_{role}_structured_output_missing",
+            message=f"The {backend.name} {role} session returned no structured output.",
+            retryable=True,
+        )
+    return result.structured_output
+
+
+async def _run_semantic_work_item(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    metrics: _ExecutionMetrics,
+    service: TemplateWorkspaceService,
+    *,
+    work_item: JsonObject,
+    images: list[Path],
+    internal_region_ref: str | None,
+    allow_preserve: bool,
+) -> None:
+    last_failure: ToolFailure | None = None
+    last_ambiguity: JsonObject | None = None
+    for _attempt in range(PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS):
+        state = SemanticWorkItemState(
+            service=service,
+            work_item=work_item,
+            images=images,
+            internal_region_ref=internal_region_ref,
+            allow_preserve=allow_preserve,
+            start_progress=service.workflow_progress_snapshot(),
+        )
+        try:
+            result = await _run_sdk_session(
+                prepared,
+                backend,
+                config_directory,
+                role="semantic",
+                mcp_server=build_template_semantic_tool_server(state),
+                metrics=metrics,
+            )
+            output = _validated_session_output(
+                result,
+                backend=backend,
+                role="semantic",
+            )
+        except (TimeoutError, ToolFailure) as error:
+            state.rollback()
+            last_failure = (
+                error
+                if isinstance(error, ToolFailure)
+                else ToolFailure(
+                    status="error",
+                    origin="agent",
+                    code="template_semantic_session_timeout",
+                    message="A bounded semantic work-item session timed out.",
+                    retryable=True,
+                )
+            )
+            continue
+        status = output.get("status")
+        if status == "accepted" and state.submission is not None:
+            outcome = state.submission.get("outcome")
+            if outcome == "handled" and not state.mutated:
+                state.rollback()
+                last_failure = ToolFailure(
+                    status="error",
+                    origin="application",
+                    code="semantic_decision_not_committed",
+                    message="The accepted semantic edit did not create a verified checkpoint.",
+                    retryable=True,
+                )
+                continue
+            if internal_region_ref is not None or state.post_region_ref is not None:
+                region_ref = state.post_region_ref or internal_region_ref
+                assert region_ref is not None
+                service.view(
+                    {
+                        "action": "next",
+                        "region_ref": region_ref,
+                        "region_outcome": outcome,
+                        "reason": state.submission.get("reason"),
+                    }
+                )
+            return
+        state.rollback()
+        if status == "needs_input" and state.ambiguity is not None:
+            last_ambiguity = state.ambiguity
+            continue
+        last_failure = ToolFailure(
+            status="error",
+            origin="agent",
+            code="semantic_work_item_not_accepted",
+            message=(
+                "The semantic Agent did not submit and accept one valid decision for the "
+                "current bounded work item."
+            ),
+            retryable=True,
+        )
+    if last_ambiguity is not None:
+        raise ToolFailure(
+            status="needs_input",
+            origin="agent",
+            code="semantic_ambiguity_unresolved",
+            message=str(last_ambiguity.get("reason", "Semantic evidence is insufficient.")),
+            suggested_actions=tuple(
+                str(item) for item in last_ambiguity.get("missing_evidence", [])
+            ),
+        )
+    raise ToolFailure(
+        status="error",
+        origin="agent",
+        code="semantic_work_item_attempts_exhausted",
+        message=(
+            last_failure.message
+            if last_failure is not None
+            else "The bounded semantic work item made no accepted progress."
+        ),
+        retryable=True,
+    )
+
+
+def _work_item_from_opened(
+    opened: JsonObject,
+) -> tuple[JsonObject | None, list[Path], str | None, bool]:
+    current = opened.get("current_region")
+    if isinstance(current, dict):
+        return (
+            {
+                "kind": "local_region",
+                "region": current,
+                "checkpoint_summary": opened.get("checkpoint_summary", {}),
+            },
+            [],
+            current.get("region_ref") if isinstance(current.get("region_ref"), str) else None,
+            True,
+        )
+    pending = opened.get("pending_edit_intents")
+    if isinstance(pending, list) and pending:
+        return (
+            {
+                "kind": "semantic_recovery",
+                "pending_intents": pending,
+                "checkpoint_summary": opened.get("checkpoint_summary", {}),
+            },
+            [],
+            None,
+            False,
+        )
+    generated = opened.get("pending_generated_content")
+    if isinstance(generated, dict):
+        return (
+            {
+                "kind": "generated_content",
+                **generated,
+                "checkpoint_summary": opened.get("checkpoint_summary", {}),
+            },
+            [],
+            None,
+            False,
+        )
+    return None, [], None, False
+
+
+async def _complete_semantic_work(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    metrics: _ExecutionMetrics,
+    service: TemplateWorkspaceService,
+) -> None:
+    opened, opened_images = service.view({"action": "open"})
+    current = opened.get("current_region")
+    region_count = int(current.get("count", 0)) if isinstance(current, dict) else 0
+    budget = region_count + PREPARE_TEMPLATE_MAX_FINALIZATION_ITEMS
+    for _item_index in range(budget):
+        work_item, _, internal_region_ref, allow_preserve = _work_item_from_opened(opened)
+        if work_item is None:
+            return
+        await _run_semantic_work_item(
+            prepared,
+            backend,
+            config_directory,
+            metrics,
+            service,
+            work_item=work_item,
+            images=opened_images,
+            internal_region_ref=internal_region_ref,
+            allow_preserve=allow_preserve,
+        )
+        opened, opened_images = service.view({"action": "open"})
+    raise ToolFailure(
+        status="error",
+        origin="application",
+        code="semantic_work_item_budget_exhausted",
+        message="Template semantic work exceeded its deterministic work-item budget.",
+        retryable=False,
+    )
+
+
+def _validated_visual_pages(output: JsonObject, expected_pages: set[int]) -> list[JsonObject]:
+    raw = output.get("pages")
+    if not isinstance(raw, list) or any(not isinstance(item, dict) for item in raw):
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="visual_page_verdicts_invalid",
+            message="The visual reviewer did not return typed per-page verdicts.",
+            retryable=True,
+        )
+    verdicts = [dict(item) for item in raw]
+    returned_pages = {
+        int(item["page"]) for item in verdicts if isinstance(item.get("page"), int)
+    }
+    if returned_pages != expected_pages or len(verdicts) != len(expected_pages):
+        raise ToolFailure(
+            status="error",
+            origin="agent",
+            code="visual_page_coverage_mismatch",
+            message="The visual reviewer must return exactly one verdict for every bound page.",
+            retryable=True,
+        )
+    for item in verdicts:
+        verdict = item.get("verdict")
+        defects = item.get("defects")
+        if (
+            verdict not in {"clean", "defect"}
+            or not isinstance(defects, list)
+            or (verdict == "clean" and defects)
+            or (verdict == "defect" and not defects)
+        ):
+            raise ToolFailure(
+                status="error",
+                origin="agent",
+                code="visual_page_verdicts_invalid",
+                message="Clean pages cannot contain defects and defective pages need details.",
+                retryable=True,
+            )
+    return verdicts
+
+
+async def _review_final_document(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    metrics: _ExecutionMetrics,
+    service: TemplateWorkspaceService,
+) -> list[JsonObject]:
+    document_ref = service.current_document_ref()
+    defects: list[JsonObject] = []
+    batch, images = service.final_review({"document_ref": document_ref})
+    page_count = batch.get("page_count")
+    if not isinstance(page_count, int) or page_count < 1:
+        raise ToolFailure(
+            status="error",
+            origin="evidence",
+            code="final_visual_batch_invalid",
+            message="The renderer returned an invalid final-page count.",
+        )
+    for _batch_index in range(page_count):
+        current_page_count = batch.get("page_count")
+        batch_pages = {
+            int(page) for page in batch.get("batch_pages", []) if isinstance(page, int)
+        }
+        if current_page_count != page_count or not batch_pages:
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="final_visual_batch_invalid",
+                message="The renderer returned an invalid final-page batch.",
+            )
+        last_failure: ToolFailure | None = None
+        verdicts: list[JsonObject] | None = None
+        for _attempt in range(PREPARE_TEMPLATE_MAX_VISUAL_ATTEMPTS):
+            try:
+                result = await _run_sdk_session(
+                    prepared,
+                    backend,
+                    config_directory,
+                    role="visual",
+                    mcp_server=build_template_review_tool_server(
+                        ReviewBatchState(payload=batch, images=images)
+                    ),
+                    metrics=metrics,
+                )
+                output = _validated_session_output(
+                    result,
+                    backend=backend,
+                    role="visual",
+                )
+                verdicts = _validated_visual_pages(output, batch_pages)
+                break
+            except (TimeoutError, ToolFailure) as error:
+                last_failure = (
+                    error
+                    if isinstance(error, ToolFailure)
+                    else ToolFailure(
+                        status="error",
+                        origin="agent",
+                        code="template_visual_session_timeout",
+                        message="A bounded visual-review session timed out.",
+                        retryable=True,
+                    )
+                )
+        if verdicts is None:
+            raise ToolFailure(
+                status="error",
+                origin="agent",
+                code="visual_review_attempts_exhausted",
+                message=(
+                    last_failure.message
+                    if last_failure is not None
+                    else "The visual reviewer returned no usable page verdicts."
+                ),
+                retryable=True,
+            )
+        service.record_final_review_verdict(
+            document_ref=document_ref,
+            render_ref=str(batch["render_ref"]),
+            page_count=page_count,
+            verdicts=verdicts,
+        )
+        defects.extend(
+            {"page": item["page"], **defect}
+            for item in verdicts
+            for defect in item["defects"]
+            if isinstance(defect, dict)
+        )
+        next_cursor = batch.get("next_cursor")
+        if next_cursor is None:
+            return defects
+        if not isinstance(next_cursor, str):
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="final_visual_cursor_invalid",
+                message="The renderer returned an invalid internal page-batch cursor.",
+            )
+        if _batch_index + 1 >= page_count:
+            break
+        batch, images = service.final_review(
+            {"document_ref": document_ref, "cursor": next_cursor}
+        )
+    raise ToolFailure(
+        status="error",
+        origin="application",
+        code="final_visual_batch_budget_exhausted",
+        message="Final visual review exceeded the rendered page-count bound.",
+    )
+
+
+async def _repair_visual_defects(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+    config_directory: Path,
+    metrics: _ExecutionMetrics,
+    service: TemplateWorkspaceService,
+    defects: list[JsonObject],
+) -> None:
+    grouped: dict[int, list[JsonObject]] = {}
+    for defect in defects:
+        page = defect.get("page")
+        if isinstance(page, int):
+            grouped.setdefault(page, []).append(
+                {key: value for key, value in defect.items() if key != "page"}
+            )
+    starting_ref = service.current_document_ref()
+    for page, page_defects in sorted(grouped.items()):
+        work_item, images = service.visual_repair_work_item(
+            page=page,
+            defects=page_defects,
+        )
+        await _run_semantic_work_item(
+            prepared,
+            backend,
+            config_directory,
+            metrics,
+            service,
+            work_item=work_item,
+            images=images,
+            internal_region_ref=None,
+            allow_preserve=False,
+        )
+    if service.current_document_ref() == starting_ref:
+        raise ToolFailure(
+            status="error",
+            origin="application",
+            code="visual_repair_no_progress",
+            message="Confirmed visual defects produced no new verified Word version.",
+        )
+
+
+async def _run_backend(
+    prepared: PreparedTemplateTask,
+    backend: AgentBackend,
+) -> TemplateAgentExecution:
+    service = TemplateWorkspaceService(
+        task_root=prepared.task_root,
+        field_registry=prepared.registry_source,
+    )
+    metrics = _ExecutionMetrics()
+    with tempfile.TemporaryDirectory(prefix="docfit-template-sdk-") as config_name:
+        config_directory = Path(config_name)
+        await _complete_semantic_work(
+            prepared,
+            backend,
+            config_directory,
+            metrics,
+            service,
+        )
+        for repair_cycle in range(PREPARE_TEMPLATE_MAX_VISUAL_REPAIR_CYCLES + 1):
+            defects = await _review_final_document(
+                prepared,
+                backend,
+                config_directory,
+                metrics,
+                service,
+            )
+            if not defects:
+                publication = service.publish(
+                    {"document_ref": service.current_document_ref()}
+                )
+                return TemplateAgentExecution(
+                    structured_output=publication,
+                    tool_uses=tuple(metrics.tool_uses),
+                    skills_loaded=tuple(dict.fromkeys(metrics.skills)),
+                    session_id=metrics.session_id,
+                    backend=backend.name,
+                    num_turns=metrics.num_turns,
+                    duration_ms=metrics.duration_ms,
+                    duration_api_ms=metrics.duration_api_ms,
+                )
+            if repair_cycle >= PREPARE_TEMPLATE_MAX_VISUAL_REPAIR_CYCLES:
+                break
+            await _repair_visual_defects(
+                prepared,
+                backend,
+                config_directory,
+                metrics,
+                service,
+                defects,
+            )
+    raise ToolFailure(
+        status="error",
+        origin="application",
+        code="visual_repair_cycles_exhausted",
+        message="Final visual defects remain after the bounded repair cycles.",
+    )
 
 
 async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExecution:
@@ -735,16 +1082,23 @@ async def run_template_agent(prepared: PreparedTemplateTask) -> TemplateAgentExe
             message="No configured Agent backend is available for template preparation.",
         )
     failures: list[str] = []
+    needs_input: ToolFailure | None = None
     for backend in backends:
         try:
             return await _run_backend(prepared, backend)
         except TimeoutError:
             failures.append(
                 f"{backend.name}: exceeded the "
-                f"{PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS}s SDK segment timeout"
+                f"{PREPARE_TEMPLATE_SEGMENT_TIMEOUT_SECONDS}s SDK session timeout"
             )
         except ToolFailure as error:
+            if error.origin not in {"agent", "application"}:
+                raise
             failures.append(f"{backend.name}: {error.message}")
+            if error.status == "needs_input":
+                needs_input = error
+    if needs_input is not None:
+        raise needs_input
     raise ToolFailure(
         status="error",
         origin="agent",
@@ -775,47 +1129,19 @@ def _validated_report(
             code="prepare_input_changed",
             message="A task requirement or Registry source changed during preparation.",
         )
-    structured = execution.structured_output
-    status = structured.get("status")
-    counts = structured.get("counts")
-    if status not in {"built", "blocked"} or not isinstance(counts, dict):
+    publication = execution.structured_output
+    counts = publication.get("counts")
+    if (
+        publication.get("status") != "ok"
+        or publication.get("published") is not True
+        or publication.get("artifact_path") != "output/final-template.docx"
+        or not isinstance(counts, dict)
+    ):
         raise ToolFailure(
             status="error",
-            origin="agent",
-            code="template_agent_result_invalid",
-            message="The template Agent result does not match the output contract.",
-        )
-    if status == "blocked":
-        if (
-            structured.get("artifact_path") is not None
-            or structured.get("template_sha256") is not None
-        ):
-            raise ToolFailure(
-                status="error",
-                origin="agent",
-                code="blocked_result_fabricated_artifact",
-                message="A blocked Agent result included fabricated delivery fields.",
-            )
-        return PrepareTemplateReport(
-            status="blocked",
-            task_root=str(prepared.task_root),
-            artifact_path=None,
-            template_sha256=None,
-            counts=counts,
-            backend=execution.backend,
-            session_id=execution.session_id,
-            tool_uses=execution.tool_uses,
-            skills_loaded=execution.skills_loaded,
-            num_turns=execution.num_turns,
-            duration_ms=execution.duration_ms,
-            duration_api_ms=execution.duration_api_ms,
-        )
-    if structured.get("artifact_path") != "output/final-template.docx":
-        raise ToolFailure(
-            status="error",
-            origin="agent",
-            code="built_result_artifact_mismatch",
-            message="The built result does not identify the one canonical final Word.",
+            origin="application",
+            code="template_publication_result_invalid",
+            message="The application did not produce a valid publication result.",
         )
     if (
         "docfit-school-extract" not in execution.skills_loaded
@@ -825,10 +1151,10 @@ def _validated_report(
             status="error",
             origin="postcondition",
             code="template_agent_evidence_incomplete",
-            message="The built result lacks required Skill/view/publication evidence.",
+            message="The built result lacks required semantic and visual Agent evidence.",
         )
-    output = prepared.task_root / "output" / "final-template.docx"
-    output_files = [item for item in (prepared.task_root / "output").iterdir()]
+    output = prepared.task_root / "output/final-template.docx"
+    output_files = list((prepared.task_root / "output").iterdir())
     if output_files != [output] or not output.is_file():
         raise ToolFailure(
             status="error",
@@ -837,21 +1163,12 @@ def _validated_report(
             message="The output directory must contain exactly one final Word.",
         )
     template_hash = sha256_file(output)
-    if structured.get("template_sha256") != template_hash:
+    if publication.get("template_sha256") != template_hash:
         raise ToolFailure(
             status="error",
             origin="postcondition",
             code="built_result_artifact_mismatch",
-            message="The Agent result disagrees with the final Word hash.",
-        )
-    if template_hash != prepared.template_sha256 and "mcp__docfit__template_edit" not in (
-        execution.tool_uses
-    ):
-        raise ToolFailure(
-            status="error",
-            origin="postcondition",
-            code="template_agent_evidence_incomplete",
-            message="The changed final Word lacks direct edit Tool evidence.",
+            message="The publication receipt disagrees with the final Word hash.",
         )
     return PrepareTemplateReport(
         status="built",
@@ -873,12 +1190,11 @@ def _write_execution_trace(
     prepared: PreparedTemplateTask,
     execution: TemplateAgentExecution,
 ) -> None:
-    """Persist metadata-only evidence even when final result validation fails."""
-
     atomic_write_json(
         prepared.task_root / "work/.docfit/template-agent-execution.json",
         {
-            "schema_version": 1,
+            "schema_version": 2,
+            "orchestrator": "application_owned",
             "backend": execution.backend,
             "session_id": execution.session_id,
             "num_turns": execution.num_turns,
@@ -886,7 +1202,7 @@ def _write_execution_trace(
             "duration_api_ms": execution.duration_api_ms,
             "tool_uses": list(execution.tool_uses),
             "skills_loaded": list(execution.skills_loaded),
-            "structured_output": execution.structured_output,
+            "publication": execution.structured_output,
         },
     )
 

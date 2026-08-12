@@ -17,10 +17,15 @@ from docfit.template.object_mutation import (
 from docfit.template.workspace import TemplateWorkspaceService, _context_knowledge_signals
 from docfit.tools.inspection import InspectedObject, Inspection
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
-from docfit.tools.template_schemas.workspace import TEMPLATE_REGISTRY_SCHEMA
+from docfit.tools.template_schemas.workspace import (
+    TEMPLATE_REQUEST_CURRENT_CONTEXT_SCHEMA,
+    TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA,
+)
 from docfit.tools.template_tools import (
     TEMPLATE_FULL_TOOL_NAMES,
     TEMPLATE_LOGICAL_TOOL_NAMES,
+    TEMPLATE_REVIEW_LOGICAL_TOOL_NAMES,
+    TEMPLATE_SEMANTIC_LOGICAL_TOOL_NAMES,
     TEMPLATE_TOOLS,
 )
 from docfit.visual.service import VisualEvidenceService
@@ -532,17 +537,28 @@ def _finish_local_work(service: TemplateWorkspaceService, source: Path) -> None:
     service._write_progress(progress)
 
 
-def test_agent_surface_separates_local_tools_from_terminal_full_page_review() -> None:
-    assert TEMPLATE_LOGICAL_TOOL_NAMES == (
-        "template_open",
-        "template_next",
-        "template_search",
-        "template_focus",
-        "template_registry",
-        "template_edit",
-        "template_final_review",
-        "template_publish",
+def _record_clean_batch(service: TemplateWorkspaceService, batch: JsonObject) -> JsonObject:
+    return service.record_final_review_verdict(
+        document_ref=batch["document_ref"],
+        render_ref=batch["render_ref"],
+        page_count=batch["page_count"],
+        verdicts=[
+            {"page": page, "verdict": "clean", "defects": []}
+            for page in batch["batch_pages"]
+        ],
     )
+
+
+def test_agent_surface_is_role_scoped_and_hides_application_flow_control() -> None:
+    assert TEMPLATE_LOGICAL_TOOL_NAMES == (
+        "template_get_current_work_item",
+        "template_request_current_context",
+        "template_submit_current_decision",
+        "template_report_ambiguity",
+        "template_get_review_batch",
+    )
+    assert TEMPLATE_LOGICAL_TOOL_NAMES[:4] == TEMPLATE_SEMANTIC_LOGICAL_TOOL_NAMES
+    assert TEMPLATE_LOGICAL_TOOL_NAMES[4:] == TEMPLATE_REVIEW_LOGICAL_TOOL_NAMES
     assert (
         tuple(f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES)
         == TEMPLATE_FULL_TOOL_NAMES
@@ -555,26 +571,30 @@ def test_agent_surface_separates_local_tools_from_terminal_full_page_review() ->
         "plan_path",
         "output_docx",
         "attempt",
-        "review_page",
+        "publish",
+        "document_ref",
+        "region_ref",
+        "cursor",
     ):
         assert forbidden not in schemas
-    assert "'page'" not in str(TEMPLATE_TOOLS[0].input_schema)
     assert TEMPLATE_TOOLS[0].input_schema["properties"] == {}
     assert set(TEMPLATE_TOOLS[1].input_schema["properties"]) == {
-        "region_ref",
+        "object_id",
+        "visual_scope",
+        "field_query",
+        "text_query",
+    }
+    assert set(TEMPLATE_TOOLS[2].input_schema["properties"]) == {
         "outcome",
         "reason",
+        "operations",
     }
-    assert set(TEMPLATE_TOOLS[2].input_schema["properties"]) == {"query"}
-    assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {"object_ref", "scope"}
-    assert set(TEMPLATE_TOOLS[4].input_schema["properties"]) == {"lookups", "searches"}
-    assert set(TEMPLATE_TOOLS[5].input_schema["properties"]) == {"operations"}
-    assert set(TEMPLATE_TOOLS[6].input_schema["properties"]) == {
-        "document_ref",
-        "cursor",
+    assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {
+        "reason",
+        "missing_evidence",
     }
-    assert set(TEMPLATE_TOOLS[7].input_schema["properties"]) == {"document_ref"}
-    operation_schema = TEMPLATE_TOOLS[5].input_schema["properties"]["operations"]["items"]
+    assert TEMPLATE_TOOLS[4].input_schema["properties"] == {}
+    operation_schema = TEMPLATE_TOOLS[2].input_schema["properties"]["operations"]["items"]
     assert set(operation_schema["properties"]["action"]["enum"]) == {
         "materialize_slot",
         "materialize_structure",
@@ -584,8 +604,8 @@ def test_agent_surface_separates_local_tools_from_terminal_full_page_review() ->
         "remove_object",
         "ensure_page_start",
     }
+    assert "object_ref" not in schemas
     assert "clear_direct_format" not in schemas
-    assert "template_view" not in TEMPLATE_LOGICAL_TOOL_NAMES
 
 
 def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path) -> None:
@@ -1182,7 +1202,7 @@ def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> N
     assert result["results"][0]["matches"][0]["field_id"] == "thesis.title.zh"
 
 
-def test_registry_schema_uses_flat_short_object_ids(
+def test_agent_decision_schemas_use_flat_short_object_ids(
     tmp_path: Path,
 ) -> None:
     service, _, _ = _service(tmp_path)
@@ -1199,21 +1219,20 @@ def test_registry_schema_uses_flat_short_object_ids(
         }
     )
 
-    object_id_schema = TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"][
-        "object_id"
-    ]
+    object_id_schema = TEMPLATE_REQUEST_CURRENT_CONTEXT_SCHEMA["properties"]["object_id"]
     assert object_id_schema == {
         "type": "string",
         "pattern": "^obj-[0-9a-f]{24}$",
     }
-    assert set(TEMPLATE_REGISTRY_SCHEMA["properties"]["lookups"]["items"]["properties"]) == {
+    operation = TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA["properties"]["operations"][
+        "items"
+    ]
+    assert set(operation["properties"]) >= {
         "object_id",
         "field_id",
+        "action",
     }
-    assert set(TEMPLATE_REGISTRY_SCHEMA["properties"]["searches"]["items"]["properties"]) == {
-        "object_id",
-        "query",
-    }
+    assert "object_ref" not in str(TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA)
     assert result["results"][0]["operation"] == "lookup"
 
 
@@ -2649,13 +2668,16 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     first_review, _ = service.final_review(
         {"document_ref": replacement_result["document_ref"]}
     )
+    _record_clean_batch(service, first_review)
     final_review, _ = service.final_review(
         {
             "document_ref": replacement_result["document_ref"],
             "cursor": first_review["next_cursor"],
         }
     )
-    assert final_review["coverage_complete"] is True
+    receipt = _record_clean_batch(service, final_review)
+    assert receipt["coverage_complete"] is True
+    assert receipt["status"] == "clean"
     published = service.publish({"document_ref": replacement_result["document_ref"]})
     assert published["counts"]["slot"] == 4
     fill_contract = json.loads(
@@ -3754,7 +3776,7 @@ def test_object_ref_is_shared_by_focus_visual_and_edit_and_is_version_bound(
     }
 
 
-def test_final_review_is_terminal_sequential_and_publish_requires_every_page(
+def test_final_review_requires_explicit_clean_verdict_for_every_page(
     tmp_path: Path,
 ) -> None:
     service, _, source = _service(tmp_path)
@@ -3776,10 +3798,12 @@ def test_final_review_is_terminal_sequential_and_publish_requires_every_page(
 
     assert first["phase"] == "final_visual_qa"
     assert first["batch_pages"] == [1]
-    assert first["reviewed_pages"] == [1]
-    assert first["coverage_complete"] is False
     assert first["next_cursor"] == "fake-final-page-2"
     assert first_images == [Path("/tmp/final-page-1.png")]
+    assert not service.final_reviews.exists()
+    first_receipt = _record_clean_batch(service, first)
+    assert first_receipt["reviewed_pages"] == [1]
+    assert first_receipt["coverage_complete"] is False
     with pytest.raises(ToolFailure) as incomplete:
         service.publish({"document_ref": changed["document_ref"]})
     assert incomplete.value.code == "final_visual_review_incomplete"
@@ -3792,10 +3816,12 @@ def test_final_review_is_terminal_sequential_and_publish_requires_every_page(
     )
 
     assert second["batch_pages"] == [2]
-    assert second["reviewed_pages"] == [1, 2]
-    assert second["coverage_complete"] is True
     assert second["next_cursor"] is None
     assert second_images == [Path("/tmp/final-page-2.png")]
+    final_receipt = _record_clean_batch(service, second)
+    assert final_receipt["reviewed_pages"] == [1, 2]
+    assert final_receipt["coverage_complete"] is True
+    assert final_receipt["status"] == "clean"
     published = service.publish({"document_ref": changed["document_ref"]})
 
     output = service.task_root / "output/final-template.docx"
@@ -3821,6 +3847,42 @@ def test_publish_rejects_an_unreviewed_exact_version(tmp_path: Path) -> None:
     assert missing.value.code == "final_visual_review_missing"
 
 
+def test_publish_rejects_complete_page_coverage_with_a_visual_defect(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    document_ref, _ = service._register_source()
+    _finish_local_work(service, source)
+    first, _ = service.final_review({"document_ref": document_ref})
+    _record_clean_batch(service, first)
+    second, _ = service.final_review(
+        {"document_ref": document_ref, "cursor": first["next_cursor"]}
+    )
+    receipt = service.record_final_review_verdict(
+        document_ref=document_ref,
+        render_ref=second["render_ref"],
+        page_count=second["page_count"],
+        verdicts=[
+            {
+                "page": 2,
+                "verdict": "defect",
+                "defects": [
+                    {
+                        "category": "clipping",
+                        "description": "The bottom line is visibly clipped.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    assert receipt["coverage_complete"] is True
+    assert receipt["status"] == "defects"
+    with pytest.raises(ToolFailure) as rejected:
+        service.publish({"document_ref": document_ref})
+    assert rejected.value.code == "final_visual_review_incomplete"
+
+
 def test_final_review_rejects_local_work_and_stale_document_versions(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
     original_ref, document = service._register_source()
@@ -3831,10 +3893,12 @@ def test_final_review_rejects_local_work_and_stale_document_versions(tmp_path: P
 
     _finish_local_work(service, source)
     first, _ = service.final_review({"document_ref": original_ref})
+    _record_clean_batch(service, first)
     second, _ = service.final_review(
         {"document_ref": original_ref, "cursor": first["next_cursor"]}
     )
-    assert second["coverage_complete"] is True
+    receipt = _record_clean_batch(service, second)
+    assert receipt["coverage_complete"] is True
 
     inspection = service._inspection(document)
     selected = next(item for item in inspection.objects if item.kind == "paragraph")
