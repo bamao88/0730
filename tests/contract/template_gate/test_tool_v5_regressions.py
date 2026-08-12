@@ -124,3 +124,35 @@ def test_final_review_does_not_deadlock_after_terminal_edit_without_feedback_tar
     reviewed, _ = service.final_review({"document_ref": document_ref})
 
     assert reviewed["batch_pages"] == [1]
+
+
+def test_distinct_fields_on_one_effective_target_are_not_absorbed_as_duplicates(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+
+    with pytest.raises(_workspace_contract.ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_slot",
+                        "object_ref": selected.object_ref,
+                        "field_id": "abstract.en",
+                    },
+                    {
+                        "action": "materialize_slot",
+                        "object_ref": selected.object_ref,
+                        "field_id": "keywords.en",
+                    },
+                ]
+            }
+        )
+
+    assert caught.value.code == "batch_operations_conflict"

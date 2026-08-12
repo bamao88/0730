@@ -310,6 +310,62 @@ def _set_visible_text(target: ET.Element, value: str) -> None:
     text.text = value
 
 
+def _materialize_effective_fonts(
+    target: ET.Element,
+    selected: InspectedObject,
+) -> None:
+    """Freeze the inspected target fonts onto the new slot's visible run.
+
+    A paragraph can contain conflicting paragraph-mark and run-level font
+    declarations.  Inspection has already resolved the font that is visibly in
+    force for the Agent-selected object.  Once that paragraph is turned into a
+    content control, leaving the placeholder run's fonts implicit can expose a
+    different inheritance path to later style capture (and to text inserted by
+    Word).  Persist the resolved script fonts as a deterministic part of slot
+    materialization so the reusable fill interface keeps the selected sample's
+    typography.
+    """
+
+    resolved = {
+        script: selected.format.get(f"effective.font.{script}")
+        for script in ("ascii", "hAnsi", "eastAsia", "cs")
+    }
+    fonts = {
+        script: value
+        for script, value in resolved.items()
+        if isinstance(value, str) and value.strip()
+    }
+    if not fonts:
+        return
+    visible_run = next(
+        (
+            run
+            for run in target.iter(f"{_W}r")
+            if any((node.text or "") for node in run.iter(f"{_W}t"))
+        ),
+        None,
+    )
+    if visible_run is None:
+        return
+    properties = visible_run.find(f"{_W}rPr")
+    if properties is None:
+        properties = ET.Element(f"{_W}rPr")
+        visible_run.insert(0, properties)
+    font_properties = properties.find(f"{_W}rFonts")
+    if font_properties is None:
+        font_properties = ET.SubElement(properties, f"{_W}rFonts")
+    theme_attributes = {
+        "ascii": "asciiTheme",
+        "hAnsi": "hAnsiTheme",
+        "eastAsia": "eastAsiaTheme",
+        "cs": "cstheme",
+    }
+    for script, value in fonts.items():
+        font_properties.set(f"{_W}{script}", value)
+        font_properties.attrib.pop(f"{_W}{theme_attributes[script]}", None)
+    properties[:] = _ordered_children(list(properties), _RPR_ORDER)
+
+
 def _display_width_units(value: str) -> int:
     """Estimate the source run's East-Asian inline width without using len()."""
 
@@ -494,6 +550,7 @@ def _materialize(
                 content.append(child)
         _discard_render_history(content)
         _set_visible_text(content, placeholder_text)
+        _materialize_effective_fonts(content, selected)
         target.extend(leading_boundaries)
         target.append(sdt)
         target.extend(trailing_boundaries)
@@ -522,6 +579,7 @@ def _materialize(
         placeholder_text=placeholder_text,
     )
     _set_visible_text(content, visible_placeholder)
+    _materialize_effective_fonts(content, selected)
     target_parent.insert(position, sdt)
     return []
 

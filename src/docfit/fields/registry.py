@@ -42,14 +42,33 @@ _SEARCH_ALIASES = {
     "院系": "department",
     "指导教师": "advisor",
     "导师": "advisor",
-    "论文题目": "title",
+    "职称": "advisor.title",
+    "论文题目": "thesis.title",
     "题目": "title",
+    "学号": "author.student_id",
+    "专业": "author.major",
 }
 
 
 def _search_terms(value: str) -> tuple[str, ...]:
     raw = re.findall(r"[a-z0-9]+|[\u3400-\u9fff]+", value.casefold())
-    terms = [_SEARCH_ALIASES.get(term, term) for term in raw if term not in _SEARCH_STOP_WORDS]
+    terms: list[str] = []
+    for term in raw:
+        if term in _SEARCH_STOP_WORDS:
+            continue
+        if re.fullmatch(r"[\u3400-\u9fff]+", term):
+            expanded = [
+                mapped
+                for source, mapped in sorted(
+                    _SEARCH_ALIASES.items(),
+                    key=lambda item: len(item[0]),
+                    reverse=True,
+                )
+                if source in term
+            ]
+            terms.extend(expanded or [term])
+            continue
+        terms.append(_SEARCH_ALIASES.get(term, term))
     return tuple(dict.fromkeys(terms))
 
 

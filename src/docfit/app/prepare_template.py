@@ -85,9 +85,6 @@ VISUAL_REVIEW_OUTPUT_SCHEMA: JsonObject = {
                                         "table_damage",
                                         "spacing",
                                         "header_footer",
-                                        "pagination",
-                                        "residue",
-                                        "other",
                                     ],
                                 },
                                 "description": {
@@ -385,8 +382,11 @@ def build_prepare_template_prompt(
             "Call template_get_review_batch once. Inspect every returned native full-page PNG "
             "at full resolution and return exactly one verdict for every supplied page number. "
             "Judge rendering defects only: clipping, overlap, missing glyphs, damaged tables, "
-            "spacing drift, header/footer misalignment, pagination errors, or visible residue. "
-            "Do not redo template semantics and do not infer cleanliness from text or XML."
+            "spacing drift, or header/footer misalignment. A blank page alone is not proof of "
+            "a defect, and visible bracketed SDT labels are legitimate fill interfaces. Do not "
+            "redo template semantics or reclassify sample text, instructions, field meaning, "
+            "page intent, or pagination semantics during visual QA. Do not infer cleanliness "
+            "from text or XML."
         )
     requirements = (
         f" If the current decision requires an explicit school rule, read only "
@@ -396,11 +396,35 @@ def build_prepare_template_prompt(
     )
     return (
         "Load the docfit-school-extract Skill. Call template_get_current_work_item once and "
-        "make a semantic decision only for that bound local item. Request extra context only "
-        "when the supplied crop is insufficient. Select field IDs only from candidates returned "
-        "during this work item. Submit exactly one apply or preserve decision, inspect the "
+        "make one semantic decision that accounts for every clear responsibility in that bound "
+        "local crop, not only its target anchor. Treat adjacent top-level objects as part of the "
+        "decision boundary; request their field/visual context when needed and batch all clear "
+        "operations into the single submission. Initial Registry candidates are intentionally "
+        "target-only: for every other object you judge fillable, call "
+        "template_request_current_context with that exact object_id and a field_query before "
+        "submitting. An unqueried sibling never counts as having no candidate. Context may "
+        "return mechanical_blank_segments: these are physical facts, "
+        "not field assignments. Judge each label-separated segment independently; when one "
+        "paragraph contains separate advisor-name and title blanks, they are two visible "
+        "responsibilities and require separate child-run targets. "
+        "Request extra context only when the supplied crop is insufficient. Select field IDs "
+        "only from candidates returned during this work item, and verify the candidate's "
+        "meaning, not just its lexical match. A cover submission-date field must never be reused "
+        "for originality or "
+        "authorization-statement signature dates; preserve those fixed physical signature/date "
+        "lines unless the Registry supplies a dedicated field. Submit exactly one apply or "
+        "preserve decision, inspect the "
         "changed-region image when an edit is applied, then return accepted only when that local "
-        "result is correct. Return revise when the submitted edit must be discarded and retried. "
+        "result is correct. Before removing samples, account for every student-content "
+        "responsibility visible in this item: if a fixed chapter or collection title remains, "
+        "materialize one representative content interface in the same decision before removing "
+        "the rest. Checkpoint materialized-field counts describe prior locations only and never "
+        "satisfy another visible location in the current crop; for example, a thesis-title "
+        "placeholder on an abstract page still needs its own slot even when the cover already "
+        "has one. A visible student value followed by a formatting annotation is not thereby a "
+        "fixed label. When a body structure is being formed, do not delete a demonstrated member "
+        "type until it belongs to that structure. Return revise when the submitted edit must be "
+        "discarded and retried. "
         "Use template_report_ambiguity before needs_input and name the concrete missing evidence. "
         "The application owns traversal, retries, page batching, final review, publication, and "
         "terminal status; do not try to manage any of them."
@@ -475,11 +499,24 @@ def build_prepare_template_options(
         },
         system_prompt=(
             "You are DocFit's semantic template analyst. Work on exactly one application-bound "
-            "item; tools execute mechanics while you own the local semantic judgment."
+            "local crop; its target is an anchor, not the only responsibility. Your single "
+            "decision must account for every semantically clear top-level object visible in the "
+            "crop. Tools execute mechanics while you own the local semantic judgment. Never "
+            "leave a retained fixed student-content region with only its title: materialize one "
+            "representative content interface before deleting its samples. Counts in the "
+            "checkpoint are evidence about prior locations, not permission to skip a visible "
+            "fillable occurrence in this crop. Initial field candidates cover only the target; "
+            "query each other fillable object's own ID before claiming no field exists. Treat "
+            "label-separated mechanical blank segments as separate physical evidence and decide "
+            "each one, selecting separate child runs for multiple fields in one paragraph. A "
+            "lexical candidate is not enough: its Registry meaning must match the local role; "
+            "never use a cover date field for declaration-page signatures."
             if role == "semantic"
             else (
                 "You are DocFit's independent final visual reviewer. Inspect every supplied "
-                "full-page image and report page-local rendering defects precisely."
+                "full-page image and report page-local rendering defects precisely. Do not "
+                "redo template semantics: bracketed content-control labels are expected, and a "
+                "blank page alone is not a rendering defect."
             )
         ),
     )
@@ -695,6 +732,8 @@ async def _run_semantic_work_item(
                     retryable=True,
                 )
                 continue
+            if state.navigation_done:
+                return
             if internal_region_ref is not None or state.post_region_ref is not None:
                 region_ref = state.post_region_ref or internal_region_ref
                 assert region_ref is not None

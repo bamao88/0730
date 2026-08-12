@@ -96,10 +96,9 @@ TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
         "outcome": {"type": "string", "enum": ["apply", "preserve"]},
-        "reason": {"type": "string", "minLength": 1, "maxLength": 512},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 1000},
         "operations": {
             "type": "array",
-            "minItems": 1,
             "maxItems": 32,
             "items": _DECISION_OPERATION_SCHEMA,
         },

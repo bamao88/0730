@@ -72,6 +72,9 @@ _HIDDEN_KEYS = {
     "region_ref",
     "render_ref",
 }
+_MAX_TARGET_CHILD_OBJECTS = 8
+_MAX_SIBLING_OBJECTS = 12
+_MIN_MEANINGFUL_BLANK_CHARACTERS = 4
 
 
 def _agent_payload(value: Any) -> Any:
@@ -92,6 +95,95 @@ def _agent_payload(value: Any) -> Any:
             continue
         result[key] = _agent_payload(item)
     return result
+
+
+def _bounded_work_item_payload(work_item: JsonObject) -> JsonObject:
+    """Expose only the local context needed for the bound semantic decision."""
+
+    public = _agent_payload(work_item)
+    if not isinstance(public, dict):
+        return {}
+    region = public.get("region")
+    if not isinstance(region, dict):
+        return public
+    adjacent = region.get("adjacent_objects")
+    if isinstance(adjacent, list):
+        target = region.get("target")
+        target_id = target.get("object_id") if isinstance(target, dict) else None
+        target_children: list[JsonObject] = []
+        siblings: list[JsonObject] = []
+        for raw in adjacent:
+            if not isinstance(raw, dict):
+                continue
+            parent = raw.get("parent_context")
+            parent_id = parent.get("object_id") if isinstance(parent, dict) else None
+            if isinstance(target_id, str) and parent_id == target_id:
+                target_children.append(raw)
+            elif raw.get("type") != "run":
+                siblings.append(raw)
+        selected = [
+            *target_children[:_MAX_TARGET_CHILD_OBJECTS],
+            *siblings[:_MAX_SIBLING_OBJECTS],
+        ]
+        region["adjacent_objects"] = selected
+        region["visible_adjacent_count"] = len(selected)
+        region["total_adjacent_count"] = len(adjacent)
+        blank_segments = _mechanical_blank_segments(selected)
+        if blank_segments:
+            region["mechanical_blank_segments"] = blank_segments
+    return public
+
+
+def _mechanical_blank_segments(objects: list[Any]) -> list[JsonObject]:
+    """Describe physical whitespace groups without assigning field semantics."""
+
+    runs_by_parent: dict[str, list[JsonObject]] = {}
+    for raw in objects:
+        if not isinstance(raw, dict) or raw.get("type") != "run":
+            continue
+        parent = raw.get("parent_context")
+        parent_id = parent.get("object_id") if isinstance(parent, dict) else None
+        if isinstance(parent_id, str):
+            runs_by_parent.setdefault(parent_id, []).append(raw)
+
+    segments: list[JsonObject] = []
+    for parent_id, runs in runs_by_parent.items():
+        index = 0
+        while index < len(runs):
+            text = runs[index].get("text")
+            if not isinstance(text, str) or not text or not text.isspace():
+                index += 1
+                continue
+            start = index
+            character_count = 0
+            object_ids: list[str] = []
+            while index < len(runs):
+                candidate_text = runs[index].get("text")
+                if (
+                    not isinstance(candidate_text, str)
+                    or not candidate_text
+                    or not candidate_text.isspace()
+                ):
+                    break
+                character_count += len(candidate_text)
+                candidate_id = runs[index].get("object_id")
+                if isinstance(candidate_id, str):
+                    object_ids.append(candidate_id)
+                index += 1
+            if character_count < _MIN_MEANINGFUL_BLANK_CHARACTERS or not object_ids:
+                continue
+            before = runs[start - 1].get("text") if start > 0 else None
+            after = runs[index].get("text") if index < len(runs) else None
+            segments.append(
+                {
+                    "parent_object_id": parent_id,
+                    "object_ids": object_ids,
+                    "character_count": character_count,
+                    "before_text": before if isinstance(before, str) and before.strip() else None,
+                    "after_text": after if isinstance(after, str) and after.strip() else None,
+                }
+            )
+    return segments
 
 
 def _objects(value: Any) -> tuple[tuple[str, str], ...]:
@@ -156,6 +248,59 @@ def _translate_operation(operation: JsonObject) -> JsonObject:
     return translated
 
 
+def _validated_decision_operations(outcome: Any, operations: Any) -> list[JsonObject]:
+    """Enforce the cross-field decision contract outside provider JSON Schema."""
+
+    if outcome == "preserve":
+        if operations not in (None, []):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="preserve_operations_invalid",
+                message="A preserve decision cannot include edit operations.",
+            )
+        return []
+    if outcome != "apply" or not isinstance(operations, list) or not operations:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="apply_operations_missing",
+            message="An apply decision requires at least one operation.",
+        )
+    return [dict(item) for item in operations if isinstance(item, dict)]
+
+
+def _validated_work_item_operations(
+    work_item: JsonObject,
+    outcome: Any,
+    operations: Any,
+) -> list[JsonObject]:
+    """Keep phase-owned compound edits inside their application-bound work item."""
+
+    direct = _validated_decision_operations(outcome, operations)
+    actions = {str(item.get("action")) for item in direct}
+    kind = work_item.get("kind")
+    if "refresh_toc" in actions and kind != "generated_content":
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="refresh_toc_wrong_work_item",
+            message=(
+                "Preserve the local TOC cache region. The application will provide one "
+                "generated-content work item after all title sources are finalized; refresh "
+                "the live TOC only from that item's curated source-title candidates."
+            ),
+        )
+    if kind == "generated_content" and actions != {"refresh_toc"}:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="generated_content_action_invalid",
+            message="The generated-content work item accepts exactly one refresh_toc action.",
+        )
+    return direct
+
+
 @dataclass(slots=True)
 class SemanticWorkItemState:
     """Mutable evidence captured by one bounded semantic SDK session."""
@@ -172,9 +317,12 @@ class SemanticWorkItemState:
     ambiguity: JsonObject | None = None
     post_region_ref: str | None = None
     mutated: bool = False
+    navigation_done: bool = False
+    agent_work_item: JsonObject = field(init=False)
 
     def __post_init__(self) -> None:
-        for object_id, _ in _objects(self.work_item):
+        self.agent_work_item = _bounded_work_item_payload(self.work_item)
+        for object_id, _ in _objects(self.agent_work_item):
             self.allowed_object_ids.add(object_id)
         generated_field = self.work_item.get("field_id")
         if isinstance(generated_field, str):
@@ -186,28 +334,36 @@ class SemanticWorkItemState:
             self.mutated = False
 
     def initial_candidates(self) -> list[JsonObject]:
-        results: list[JsonObject] = []
-        for object_id, text in _objects(self.work_item)[:12]:
-            if not text.strip():
-                continue
-            try:
-                matches = self.service.registry.search(text, limit=5)
-            except ToolFailure:
-                continue
-            if not matches:
-                continue
-            self.offered_field_ids.update(
-                str(item["field_id"])
-                for item in matches
-                if isinstance(item.get("field_id"), str)
+        region = self.agent_work_item.get("region")
+        target = region.get("target") if isinstance(region, dict) else None
+        if not isinstance(target, dict):
+            return []
+        object_id = target.get("object_ref", target.get("object_id"))
+        if isinstance(object_id, dict):
+            object_id = object_id.get("object_id")
+        text = target.get("text")
+        if not isinstance(object_id, str) or not isinstance(text, str) or not text.strip():
+            return []
+        try:
+            matches = self.service.registry.search(
+                f"{text} {''.join(text.split())}",
+                limit=5,
             )
-            results.append(
-                {
-                    "object_id": object_id,
-                    "matches": [_agent_payload(item) for item in matches],
-                }
-            )
-        return results
+        except ToolFailure:
+            return []
+        self.offered_field_ids.update(
+            str(item["field_id"])
+            for item in matches
+            if isinstance(item.get("field_id"), str)
+        )
+        if not matches:
+            return []
+        return [
+            {
+                "object_id": object_id,
+                "matches": [_agent_payload(item) for item in matches],
+            }
+        ]
 
 
 @dataclass(frozen=True, slots=True)
@@ -253,8 +409,9 @@ async def template_request_current_context(args: dict[str, Any]) -> dict[str, An
 @tool(
     "template_submit_current_decision",
     (
-        "Submit one semantic decision for the current work item. Field IDs must come from "
-        "candidates returned in this work item; the application performs and verifies the edit."
+        "Submit one semantic decision for the current work item. For preserve, omit operations "
+        "or pass an empty array. For apply, pass at least one operation; field IDs must come "
+        "from candidates returned in this work item. The application performs and verifies edits."
     ),
     TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA,
     annotations=_WRITE,
@@ -314,8 +471,15 @@ def build_template_semantic_tool_server(
         payload = {
             "schema_version": 1,
             "status": "ok",
-            "work_item": _agent_payload(state.work_item),
+            "work_item": state.agent_work_item,
             "field_candidates": state.initial_candidates(),
+            "candidate_protocol": {
+                "initial_scope": "target_only",
+                "sibling_rule": (
+                    "For every adjacent object you judge fillable, request that exact "
+                    "object_id with field_query before deciding it has no Registry candidate."
+                ),
+            },
         }
         return tool_result(payload, image_paths=state.images)
 
@@ -368,7 +532,20 @@ def build_template_semantic_tool_server(
                             "scope": visual_scope,
                         }
                     )
-                    result["visual_context"] = _agent_payload(focused)
+                    public_focus = _agent_payload(focused)
+                    result["visual_context"] = public_focus
+                    local_context = public_focus.get("local_context")
+                    adjacent = (
+                        local_context.get("adjacent_objects")
+                        if isinstance(local_context, dict)
+                        else None
+                    )
+                    if isinstance(adjacent, list):
+                        blank_segments = _mechanical_blank_segments(adjacent)
+                        if blank_segments:
+                            result["mechanical_blank_segments"] = blank_segments
+                    for candidate_id, _ in _objects(public_focus):
+                        state.allowed_object_ids.add(candidate_id)
                 field_query = args.get("field_query")
                 if isinstance(field_query, str):
                     registry = state.service.registry_query(
@@ -415,13 +592,7 @@ def build_template_semantic_tool_server(
                         code="repair_requires_edit",
                         message="A confirmed final-page defect requires a concrete repair edit.",
                     )
-                if operations is not None:
-                    raise ToolFailure(
-                        status="needs_input",
-                        origin="request",
-                        code="preserve_operations_invalid",
-                        message="A preserve decision cannot include edit operations.",
-                    )
+                _validated_work_item_operations(state.work_item, outcome, operations)
                 state.submission = {"outcome": "preserve", "reason": reason}
                 state.post_region_ref = state.internal_region_ref
                 return tool_result(
@@ -432,14 +603,11 @@ def build_template_semantic_tool_server(
                         "changed": False,
                     }
                 )
-            if outcome != "apply" or not isinstance(operations, list) or not operations:
-                raise ToolFailure(
-                    status="needs_input",
-                    origin="request",
-                    code="apply_operations_missing",
-                    message="An apply decision requires at least one operation.",
-                )
-            direct_operations = [dict(item) for item in operations if isinstance(item, dict)]
+            direct_operations = _validated_work_item_operations(
+                state.work_item,
+                outcome,
+                operations,
+            )
             operation_objects = {
                 object_id
                 for item in direct_operations
@@ -481,6 +649,10 @@ def build_template_semantic_tool_server(
                 if isinstance(current_region, dict)
                 and isinstance(current_region.get("region_ref"), str)
                 else None
+            )
+            navigation = structured.get("navigation")
+            state.navigation_done = bool(
+                isinstance(navigation, dict) and navigation.get("done") is True
             )
             return tool_result(_agent_payload(structured), image_paths=images)
         except ToolFailure as error:

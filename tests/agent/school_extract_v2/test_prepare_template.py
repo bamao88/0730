@@ -13,6 +13,7 @@ from docfit.app.prepare_template import (
     PREPARE_TEMPLATE_MAX_SEMANTIC_ATTEMPTS,
     PREPARE_TEMPLATE_SEMANTIC_TURN_LIMIT,
     PREPARE_TEMPLATE_VISUAL_TURN_LIMIT,
+    VISUAL_REVIEW_OUTPUT_SCHEMA,
     PrepareTemplateRequest,
     TemplateAgentExecution,
     _ExecutionMetrics,
@@ -29,8 +30,13 @@ from docfit.app.settings import AgentBackend
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 from docfit.tools.template_tools import (
     ReviewBatchState,
+    SemanticWorkItemState,
     _agent_payload,
+    _bounded_work_item_payload,
+    _mechanical_blank_segments,
     _translate_operation,
+    _validated_decision_operations,
+    _validated_work_item_operations,
     build_template_review_tool_server,
 )
 
@@ -158,14 +164,255 @@ def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> N
     semantic = build_prepare_template_prompt(prepared, role="semantic")
     visual = build_prepare_template_prompt(prepared, role="visual")
 
-    assert "a semantic decision only for that bound local item" in semantic
+    assert "not only its target anchor" in semantic
+    assert "batch all clear operations" in semantic
+    assert "Initial Registry candidates are intentionally target-only" in semantic
+    assert "An unqueried sibling never counts as having no candidate" in semantic
+    assert "mechanical_blank_segments" in semantic
+    assert "separate advisor-name and title blanks" in semantic
+    assert "verify the candidate's meaning" in semantic
+    assert "must never be reused" in semantic
+    assert "materialize one representative content interface" in semantic
+    assert "prior locations only" in semantic
+    assert "abstract page still needs its own slot" in semantic
+    assert "formatting annotation is not thereby a fixed label" in semantic
+    assert "do not delete a demonstrated member type" in semantic
     assert "application owns traversal" in semantic.casefold()
     assert "final review" in semantic
     assert "cursor" not in semantic.casefold()
     assert "publish" not in semantic.casefold()
     assert "every returned native full-page PNG" in visual
     assert "exactly one verdict" in visual
+    assert "blank page alone is not proof" in visual
+    assert "bracketed SDT labels are legitimate" in visual
     assert "do not redo template semantics" in visual.casefold()
+
+    categories = set(
+        VISUAL_REVIEW_OUTPUT_SCHEMA["properties"]["pages"]["items"]["properties"][
+            "defects"
+        ]["items"]["properties"]["category"]["enum"]
+    )
+    assert categories == {
+        "clipping",
+        "overlap",
+        "missing_glyph",
+        "table_damage",
+        "spacing",
+        "header_footer",
+    }
+
+
+def test_decision_contract_accepts_zero_operations_only_for_preserve() -> None:
+    assert _validated_decision_operations("preserve", None) == []
+    assert _validated_decision_operations("preserve", []) == []
+
+    with pytest.raises(ToolFailure) as preserve_error:
+        _validated_decision_operations(
+            "preserve",
+            [{"action": "clear_content", "object_id": "obj-" + "a" * 24}],
+        )
+    assert preserve_error.value.code == "preserve_operations_invalid"
+
+    with pytest.raises(ToolFailure) as apply_error:
+        _validated_decision_operations("apply", [])
+    assert apply_error.value.code == "apply_operations_missing"
+
+
+def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
+    operation = {
+        "action": "refresh_toc",
+        "object_id": "obj-" + "a" * 24,
+        "entries": [
+            {
+                "object_id": "obj-" + "b" * 24,
+                "level": 1,
+            }
+        ],
+    }
+
+    with pytest.raises(ToolFailure) as local_error:
+        _validated_work_item_operations(
+            {"kind": "local_region"},
+            "apply",
+            [operation],
+        )
+    assert local_error.value.code == "refresh_toc_wrong_work_item"
+
+    assert _validated_work_item_operations(
+        {"kind": "generated_content"},
+        "apply",
+        [operation],
+    ) == [operation]
+
+    with pytest.raises(ToolFailure) as mixed_error:
+        _validated_work_item_operations(
+            {"kind": "generated_content"},
+            "apply",
+            [
+                operation,
+                {
+                    "action": "clear_content",
+                    "object_id": "obj-" + "c" * 24,
+                },
+            ],
+        )
+    assert mixed_error.value.code == "generated_content_action_invalid"
+
+
+def test_initial_registry_candidates_are_limited_to_current_target() -> None:
+    calls: list[str] = []
+
+    class FakeRegistry:
+        def search(self, text: str, *, limit: int) -> list[JsonObject]:
+            calls.append(text)
+            assert limit == 5
+            return [{"field_id": "submission.date"}]
+
+    class FakeService:
+        registry = FakeRegistry()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {
+                    "object_id": "obj-" + "a" * 24,
+                    "text": "20 年 月 日",
+                },
+                "adjacent_objects": [
+                    {
+                        "object_id": "obj-" + "b" * 24,
+                        "text": "无关的相邻对象",
+                    }
+                ],
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+
+    assert state.initial_candidates() == [
+        {
+            "object_id": "obj-" + "a" * 24,
+            "matches": [{"field_id": "submission.date"}],
+        }
+    ]
+    assert calls == ["20 年 月 日 20年月日"]
+    assert state.offered_field_ids == {"submission.date"}
+
+
+def test_agent_work_item_caps_adjacent_context_and_hides_unseen_objects() -> None:
+    target_id = "obj-" + "f" * 24
+    target_children = [
+        {
+            "object_id": f"obj-{index:024x}",
+            "text": f"目标 run {index}",
+            "type": "run",
+            "parent_context": {"object_id": target_id},
+        }
+        for index in range(10)
+    ]
+    sibling_runs = [
+        {
+            "object_id": f"obj-{100 + index:024x}",
+            "text": f"邻居 run {index}",
+            "type": "run",
+        }
+        for index in range(4)
+    ]
+    sibling_paragraphs = [
+        {
+            "object_id": f"obj-{200 + index:024x}",
+            "text": f"邻居段落 {index}",
+            "type": "paragraph",
+        }
+        for index in range(14)
+    ]
+    adjacent = [*target_children, *sibling_runs, *sibling_paragraphs]
+    internal = {
+        "document_ref": "document:v1:hidden",
+        "region": {
+            "region_ref": "region:v1:hidden",
+            "target": {"object_id": target_id, "text": "当前目标"},
+            "adjacent_objects": adjacent,
+        },
+    }
+
+    public = _bounded_work_item_payload(internal)
+
+    assert "document_ref" not in public
+    assert "region_ref" not in public["region"]
+    assert public["region"]["adjacent_objects"] == [
+        *target_children[:8],
+        *sibling_paragraphs[:12],
+    ]
+    assert public["region"]["visible_adjacent_count"] == 20
+    assert public["region"]["total_adjacent_count"] == len(adjacent)
+
+
+def test_mechanical_blank_segments_keep_label_separated_values_distinct() -> None:
+    parent_id = "obj-" + "f" * 24
+    runs = [
+        {
+            "object_id": "obj-" + "1" * 24,
+            "type": "run",
+            "text": "指导教师:",
+            "parent_context": {"object_id": parent_id},
+        },
+        {
+            "object_id": "obj-" + "2" * 24,
+            "type": "run",
+            "text": "                 ",
+            "parent_context": {"object_id": parent_id},
+        },
+        {
+            "object_id": "obj-" + "3" * 24,
+            "type": "run",
+            "text": "职称",
+            "parent_context": {"object_id": parent_id},
+        },
+        {
+            "object_id": "obj-" + "4" * 24,
+            "type": "run",
+            "text": "          ",
+            "parent_context": {"object_id": parent_id},
+        },
+        {
+            "object_id": "obj-" + "5" * 24,
+            "type": "run",
+            "text": " ",
+            "parent_context": {"object_id": parent_id},
+        },
+        {
+            "object_id": "obj-" + "6" * 24,
+            "type": "run",
+            "text": "    ",
+            "parent_context": {"object_id": parent_id},
+        },
+    ]
+
+    assert _mechanical_blank_segments(runs) == [
+        {
+            "parent_object_id": parent_id,
+            "object_ids": ["obj-" + "2" * 24],
+            "character_count": 17,
+            "before_text": "指导教师:",
+            "after_text": "职称",
+        },
+        {
+            "parent_object_id": parent_id,
+            "object_ids": [
+                "obj-" + "4" * 24,
+                "obj-" + "5" * 24,
+                "obj-" + "6" * 24,
+            ],
+            "character_count": 15,
+            "before_text": "职称",
+            "after_text": None,
+        },
+    ]
 
 
 def test_max_turn_failure_has_a_hard_attempt_bound(
@@ -301,6 +548,77 @@ def test_application_advances_region_after_agent_accepts_one_decision(
             "reason": "fixed school label",
         }
     ]
+
+
+def test_application_does_not_advance_again_when_edit_completed_navigation(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    bound: dict[str, Any] = {}
+
+    class FakeService:
+        registry = object()
+
+        def workflow_progress_snapshot(self) -> JsonObject:
+            return {
+                "source_sha256": "a" * 64,
+                "document_sha256": "a" * 64,
+                "region_index": 39,
+            }
+
+        def restore_workflow_progress(self, _snapshot: JsonObject) -> None:
+            raise AssertionError("accepted final edit must not roll back")
+
+        def view(self, _args: JsonObject) -> tuple[JsonObject, list[Path]]:
+            raise AssertionError("the edit response already completed navigation")
+
+    def fake_server(state: Any) -> object:
+        bound["state"] = state
+        return object()
+
+    async def fake_session(*_args: Any, **_kwargs: Any) -> ResultMessage:
+        state = bound["state"]
+        state.submission = {
+            "outcome": "handled",
+            "reason": "removed final instruction shape",
+        }
+        state.mutated = True
+        state.post_region_ref = None
+        state.navigation_done = True
+        return ResultMessage(
+            subtype="success",
+            duration_ms=1,
+            duration_api_ms=1,
+            is_error=False,
+            num_turns=2,
+            session_id="semantic-final",
+            terminal_reason="end_turn",
+            structured_output={
+                "status": "accepted",
+                "reason": "The final edit completed the semantic traversal.",
+            },
+        )
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template.build_template_semantic_tool_server",
+        fake_server,
+    )
+    monkeypatch.setattr("docfit.app.prepare_template._run_sdk_session", fake_session)
+
+    asyncio.run(
+        _run_semantic_work_item(
+            prepared,
+            _backend(),
+            tmp_path,
+            _ExecutionMetrics(),
+            FakeService(),  # type: ignore[arg-type]
+            work_item={"kind": "local_region"},
+            images=[],
+            internal_region_ref="stale-pre-edit-region-ref",
+            allow_preserve=True,
+        )
+    )
 
 
 def test_application_owns_visual_cursor_and_agent_sees_only_bound_pages(

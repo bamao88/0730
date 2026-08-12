@@ -290,6 +290,49 @@ def _append_label_and_blank_paragraph(document: Path) -> None:
             output.writestr(info, parts[info.filename])
 
 
+def _append_conflicting_font_paragraph(document: Path) -> None:
+    """Add a sample whose paragraph mark disagrees with its visible run fonts."""
+
+    with zipfile.ZipFile(document) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    root = ET.fromstring(parts["word/document.xml"])
+    body = root.find(f"{W}body")
+    assert body is not None
+    paragraph = ET.Element(f"{W}p")
+    paragraph_properties = ET.SubElement(paragraph, f"{W}pPr")
+    paragraph_mark = ET.SubElement(paragraph_properties, f"{W}rPr")
+    ET.SubElement(
+        paragraph_mark,
+        f"{W}rFonts",
+        {f"{W}ascii": "楷体_GB2312", f"{W}eastAsia": "楷体_GB2312"},
+    )
+    run = ET.SubElement(paragraph, f"{W}r")
+    run_properties = ET.SubElement(run, f"{W}rPr")
+    ET.SubElement(
+        run_properties,
+        f"{W}rFonts",
+        {
+            f"{W}ascii": "Times New Roman",
+            f"{W}hAnsi": "Times New Roman",
+            f"{W}eastAsia": "宋体",
+        },
+    )
+    ET.SubElement(run_properties, f"{W}b")
+    ET.SubElement(run_properties, f"{W}sz", {f"{W}val": "28"})
+    ET.SubElement(run, f"{W}t").text = "KEY WORDS：×××；×××"
+    section = body.find(f"{W}sectPr")
+    body.insert(list(body).index(section) if section is not None else len(body), paragraph)
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(document, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+
 def _append_styled_paragraphs(document: Path, values: list[tuple[str, str]]) -> None:
     """Append visibly different school samples without changing the fixture styles part."""
 
@@ -589,6 +632,8 @@ def test_agent_surface_is_role_scoped_and_hides_application_flow_control() -> No
         "reason",
         "operations",
     }
+    assert "minItems" not in TEMPLATE_TOOLS[2].input_schema["properties"]["operations"]
+    assert "omit operations or pass an empty array" in TEMPLATE_TOOLS[2].description
     assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {
         "reason",
         "missing_evidence",
@@ -1178,6 +1223,11 @@ def test_registry_search_ranks_domain_terms_in_an_agent_phrase(tmp_path: Path) -
     assert author[0]["field_id"] == "author.name.zh"
     assert service.registry.search("学生 学院")[0]["field_id"] == "author.department"
     assert service.registry.search("指导教师 职称")[0]["field_id"] == "advisor.title"
+    assert service.registry.search("封面论文题目填写字段")[0]["field_id"] == "thesis.title.zh"
+    assert service.registry.search("封面学号填写字段")[0]["field_id"] == "author.student_id"
+    assert service.registry.search("封面学院填写字段")[0]["field_id"] == "author.department"
+    assert service.registry.search("封面专业填写字段")[0]["field_id"] == "author.major"
+    assert service.registry.search("封面指导教师和职称填写字段")[0]["field_id"] == "advisor.title"
 
 
 def test_registry_search_lane_has_no_optional_lookup_fields(tmp_path: Path) -> None:
@@ -1406,6 +1456,51 @@ def test_materialize_slot_trusts_paragraph_when_blank_value_runs_are_ambiguous(
     ]
     assert len(slots) == 1
     assert slots[0].text == "【导师中文姓名】"
+
+
+def test_materialize_slot_freezes_resolved_fonts_onto_placeholder_run(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_conflicting_font_paragraph(source)
+    _, document = service._register_source()
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "paragraph" and item.text.startswith("KEY WORDS")
+    )
+    assert selected.format["effective.font.ascii"] == "Times New Roman"
+    assert selected.format["effective.font.hAnsi"] == "Times New Roman"
+    assert selected.format["effective.font.eastAsia"] == "宋体"
+
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": selected.object_ref,
+                    "field_id": "keywords.en",
+                }
+            ]
+        }
+    )
+
+    _, changed_path = service._resolve_document(result["document_ref"])
+    with zipfile.ZipFile(changed_path) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    control = next(
+        item
+        for item in root.iter(f"{W}sdt")
+        if (
+            (tag := item.find(f"{W}sdtPr/{W}tag")) is not None
+            and tag.get(f"{W}val") == "keywords.en.1"
+        )
+    )
+    fonts = control.find(f"{W}sdtContent/{W}r/{W}rPr/{W}rFonts")
+    assert fonts is not None
+    assert fonts.get(f"{W}ascii") == "Times New Roman"
+    assert fonts.get(f"{W}hAnsi") == "Times New Roman"
+    assert fonts.get(f"{W}eastAsia") == "宋体"
 
 
 def test_materialize_paragraph_moves_ranges_outside_slot_and_discards_render_history(
@@ -3465,6 +3560,35 @@ def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> No
         )
 
     assert duplicate.value.code == "toc_entry_duplicate"
+
+
+def test_template_edit_rejects_generated_toc_row_as_source_title(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    _append_toc_and_titles(source)
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    toc = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.style
+        and item.style.casefold().replace(" ", "") == "toc1"
+    )
+
+    with pytest.raises(ToolFailure) as generated_cache:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "refresh_toc",
+                        "object_ref": toc.object_ref,
+                        "entries": [{"object_ref": toc.object_ref, "level": 1}],
+                    }
+                ]
+            }
+        )
+
+    assert generated_cache.value.code == "toc_entry_is_generated_cache"
 
 
 def test_batch_remove_checks_every_effect_and_returns_one_fresh_version(tmp_path: Path) -> None:

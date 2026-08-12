@@ -312,6 +312,20 @@ def _normalize_prepared_operations(
             ),
         )
 
+    def same_target_conflict(first_index: int, second_index: int) -> None:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="batch_operations_conflict",
+            message=(
+                "Two distinct semantic operations resolved to the same Word object. "
+                "Select separate child objects or revise the decision; different fields or "
+                "structures are never absorbed as duplicate operations. "
+                f"Conflict: {prepared[first_index]['action']} and "
+                f"{prepared[second_index]['action']} on one target."
+            ),
+        )
+
     def merge_effective_format(format_index: int, owner_index: int) -> None:
         outcomes = dict(prepared[format_index].get("effective_format", {}))
         owner_outcomes = dict(prepared[owner_index].get("effective_format", {}))
@@ -396,7 +410,24 @@ def _normalize_prepared_operations(
                 first_action = str(first["action"])
                 second_action = str(second["action"])
                 if first_action == second_action:
-                    absorb(second_index, first_index, "duplicate_operation")
+                    if first_action == "materialize_slot":
+                        first_field = first.get("field")
+                        second_field = second.get("field")
+                        if (
+                            not isinstance(first_field, dict)
+                            or not isinstance(second_field, dict)
+                            or first_field.get("field_id") != second_field.get("field_id")
+                        ):
+                            same_target_conflict(first_index, second_index)
+                        absorb(second_index, first_index, "duplicate_operation")
+                    elif first_action in {"materialize_structure", "refresh_toc"}:
+                        if first != second:
+                            same_target_conflict(first_index, second_index)
+                        absorb(second_index, first_index, "duplicate_operation")
+                    elif first_action == "normalize_effective_format":
+                        merge_effective_format(second_index, first_index)
+                    else:
+                        absorb(second_index, first_index, "duplicate_operation")
                 elif first_action == "remove_object" and second_action in harmless_under_removal:
                     absorb(second_index, first_index, "ancestor_removal")
                 elif second_action == "remove_object" and first_action in harmless_under_removal:
@@ -2049,7 +2080,10 @@ class TemplateWorkspaceService:
             elif request_type == "search" and isinstance(query, str) and query.strip():
                 matches = [
                     _with_semantic_type(item)
-                    for item in self.registry.search(query, limit=_MAX_SEARCH_RESULTS)
+                    for item in self.registry.search(
+                        f"{query} {_normalize(selected.text)}",
+                        limit=_MAX_SEARCH_RESULTS,
+                    )
                 ]
                 operation = "search"
             else:
@@ -2459,6 +2493,18 @@ class TemplateWorkspaceService:
                             origin="request",
                             code="toc_entry_text_empty",
                             message="A representative TOC entry must point to a visible title.",
+                        )
+                    if entry_object.style and entry_object.style.casefold().replace(
+                        " ", ""
+                    ).startswith("toc"):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entry_is_generated_cache",
+                            message=(
+                                "A live TOC cache row cannot be its own source title. Select a "
+                                "title object outside the generated TOC field."
+                            ),
                         )
                     toc_entries.append(TocEntry(selected=entry_object, level=level))
                     prepared_entries.append(
