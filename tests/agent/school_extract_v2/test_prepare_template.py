@@ -17,6 +17,7 @@ from docfit.app.prepare_template import (
     VISUAL_REVIEW_OUTPUT_SCHEMA,
     PrepareTemplateRequest,
     TemplateAgentExecution,
+    _append_agent_live_event,
     _ExecutionMetrics,
     _review_final_document,
     _run_sdk_session,
@@ -105,6 +106,17 @@ def test_prepare_task_resumes_matching_unpublished_checkpoint(tmp_path: Path) ->
     assert progress.read_text(encoding="utf-8") == '{"region_index": 15}'
 
 
+def test_prepare_task_rejects_symlinked_completed_output(tmp_path: Path) -> None:
+    request = _request(tmp_path)
+    prepared = prepare_template_task(request)
+    (prepared.task_root / "output/final-template.docx").symlink_to(TEMPLATE)
+
+    with pytest.raises(ToolFailure) as caught:
+        prepare_template_task(request)
+
+    assert caught.value.code == "prepare_checkpoint_invalid"
+
+
 def test_prepare_task_rejects_resume_with_different_source(tmp_path: Path) -> None:
     request = _request(tmp_path)
     prepare_template_task(request)
@@ -176,10 +188,17 @@ def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> N
     assert "must never be reused" in semantic
     assert "preceding_landmarks" in semantic
     assert "materialize one representative content interface" in semantic
+    assert "One content responsibility on one logical page gets exactly one interface" in semantic
+    assert "materialize the actual sample object, never both" in semantic
+    assert "第一章 文献综述" in semantic
+    assert "Never turn that fixed heading into a standalone" in semantic
+    assert "Reserve the repeatable body.chapters structure" in semantic
+    assert "materialize a real sample body paragraph as body.paragraph" in semantic
     assert "prior locations only" in semantic
     assert "abstract page still needs its own slot" in semantic
     assert "formatting annotation is not thereby a fixed label" in semantic
     assert "do not delete a demonstrated member type" in semantic
+    assert "1000-character limit" in semantic
     assert "application owns traversal" in semantic.casefold()
     assert "final review" in semantic
     assert "cursor" not in semantic.casefold()
@@ -919,3 +938,63 @@ def test_run_prepare_template_accepts_application_publication_only(tmp_path: Pat
     trace = Path(report.task_root) / "work/.docfit/template-agent-execution.json"
     assert trace.is_file()
     assert '"orchestrator": "application_owned"' in trace.read_text(encoding="utf-8")
+
+
+def test_completed_resume_uses_cross_process_agent_evidence_without_rerunning(
+    tmp_path: Path,
+) -> None:
+    calls = 0
+
+    async def first_run(prepared: Any) -> TemplateAgentExecution:
+        nonlocal calls
+        calls += 1
+        output = prepared.task_root / "output/final-template.docx"
+        shutil.copyfile(prepared.template_path, output)
+        for role, tool in (
+            ("semantic", "mcp__docfit__template_get_current_work_item"),
+            ("semantic", "mcp__docfit__template_submit_current_decision"),
+        ):
+            _append_agent_live_event(
+                prepared,
+                {
+                    "event": "tool_use",
+                    "role": role,
+                    "backend": "minimax",
+                    "tool": tool,
+                    "input": {},
+                },
+            )
+        return TemplateAgentExecution(
+            structured_output={
+                "status": "ok",
+                "published": True,
+                "artifact_path": "output/final-template.docx",
+                "template_sha256": sha256_file(output),
+                "counts": COUNTS,
+            },
+            tool_uses=("Skill", "mcp__docfit__template_get_review_batch"),
+            skills_loaded=("docfit-school-extract",),
+            session_id="visual-session",
+            backend="minimax",
+            num_turns=2,
+            duration_ms=600,
+            duration_api_ms=500,
+        )
+
+    first = asyncio.run(run_prepare_template(_request(tmp_path), agent_runner=first_run))
+
+    async def must_not_run(_prepared: Any) -> TemplateAgentExecution:
+        raise AssertionError("a completed checkpoint must not launch another Agent session")
+
+    resumed = asyncio.run(
+        run_prepare_template(_request(tmp_path), agent_runner=must_not_run)
+    )
+
+    assert calls == 1
+    assert resumed.template_sha256 == first.template_sha256
+    assert set(resumed.tool_uses) >= {
+        "Skill",
+        "mcp__docfit__template_get_current_work_item",
+        "mcp__docfit__template_submit_current_decision",
+        "mcp__docfit__template_get_review_batch",
+    }

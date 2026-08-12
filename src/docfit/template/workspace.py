@@ -57,7 +57,7 @@ _EDITABLE_KINDS = {"paragraph", "run", "table", "picture", "sdt", "shape"}
 _MAX_SEARCH_RESULTS = 5
 _MAX_BATCH_OPERATIONS = 32
 _MAX_TOC_TITLE_CANDIDATES = 24
-_REGION_SOURCE_OBJECTS = 6
+_REGION_SOURCE_OBJECTS = 8
 _REGION_LAYOUT_STRATEGY = "page-proximity-v1"
 _REGION_MAX_HEIGHT_POINTS = 300.0
 _REGION_MAX_VERTICAL_GAP_POINTS = 120.0
@@ -1313,10 +1313,31 @@ class TemplateWorkspaceService:
             for item in inspection.objects
             if str(item.object_ref.get("object_id", "")) in visible_ids
         ]
+        preceding_landmarks: list[JsonObject] = []
+        if selected_index is not None:
+            preceding = candidates[max(0, selected_index - 4) : selected_index]
+            preceding_landmarks = [
+                {
+                    "document_order": next(
+                        index
+                        for index, candidate in enumerate(inspection.objects)
+                        if candidate is item
+                    ),
+                    "distance": selected_index - index,
+                    "type": item.kind,
+                    "text": item.text[:240],
+                    **({"style": item.style} if item.style else {}),
+                }
+                for index, item in enumerate(
+                    preceding,
+                    start=selected_index - len(preceding),
+                )
+            ]
         return {
             "target": _agent_context_object(inspection, selected),
             "parent_object": (_agent_object(inspection, parent) if parent is not None else None),
             "adjacent_objects": adjacent,
+            "preceding_landmarks": preceding_landmarks,
             "knowledge_signals": _context_knowledge_signals(signal_objects),
         }
 
@@ -1627,6 +1648,7 @@ class TemplateWorkspaceService:
                 "target": context["target"],
                 "parent_object": context["parent_object"],
                 "adjacent_objects": context["adjacent_objects"],
+                "preceding_landmarks": context["preceding_landmarks"],
                 "knowledge_signals": context["knowledge_signals"],
                 "evidence": reviewed["visual_review"].get("evidence", []),
             },
@@ -3593,7 +3615,23 @@ class TemplateWorkspaceService:
             if isinstance(field_id, str):
                 latest_structures[field_id] = item
         structures = list(latest_structures.values())
-        slots = [item for item in operations if item.get("action") == "materialize_slot"] + [
+        active_independent_slots: dict[str, JsonObject] = {}
+        for item in operations:
+            if item.get("action") == "materialize_slot":
+                slot_id = item.get("slot_id")
+                if isinstance(slot_id, str):
+                    active_independent_slots[slot_id] = item
+                continue
+            if item.get("action") != "remove_object":
+                continue
+            target = item.get("target")
+            target_format = target.get("format") if isinstance(target, dict) else None
+            retired_slot_id = (
+                target_format.get("tag") if isinstance(target_format, dict) else None
+            )
+            if isinstance(retired_slot_id, str):
+                active_independent_slots.pop(retired_slot_id, None)
+        slots = list(active_independent_slots.values()) + [
             member
             for item in structures
             for member in item.get("members", [])

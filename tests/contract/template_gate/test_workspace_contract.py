@@ -699,11 +699,12 @@ def test_open_next_and_search_expose_only_one_local_visual_region(tmp_path: Path
         "index",
         "count",
         "target",
-        "parent_object",
-        "adjacent_objects",
-        "knowledge_signals",
-        "evidence",
-    }
+            "parent_object",
+            "adjacent_objects",
+            "preceding_landmarks",
+            "knowledge_signals",
+            "evidence",
+        }
     assert len(opened["current_region"]["knowledge_signals"]) <= 1
     assert next_region["current_region"]["region_ref"] != opened["current_region"]["region_ref"]
     assert next_region["navigation"]["completed_regions"] == 1
@@ -1002,6 +1003,24 @@ def test_navigation_splits_large_vertical_gaps_on_the_same_page() -> None:
     ]
 
 
+def test_navigation_keeps_eight_object_logical_page_responsibility_atomic() -> None:
+    anchors: list[JsonObject] = [
+        {
+            "page": 1,
+            "bbox_pdf": [72.0, float(20 + index * 30), 500.0, float(40 + index * 30)],
+            "text": f"摘要对象{index}",
+        }
+        for index in range(9)
+    ]
+
+    regions = TemplateWorkspaceService._cluster_physical_regions(anchors)
+
+    assert [len(region) for region in regions] == [8, 1]
+    assert [item["text"] for item in regions[0]] == [
+        f"摘要对象{index}" for index in range(8)
+    ]
+
+
 def test_unmappable_paragraph_never_falls_back_to_an_unrelated_region(
     tmp_path: Path,
 ) -> None:
@@ -1117,6 +1136,41 @@ def test_local_region_gives_blank_run_its_immediate_parent_label(tmp_path: Path)
     }
     adjacent_label = next(item for item in context["adjacent_objects"] if item["text"] == "题目：")
     assert adjacent_label["parent_context"]["text"] == "题目："
+
+
+def test_local_context_returns_bounded_preceding_landmark_facts(tmp_path: Path) -> None:
+    service, _, _ = _service(tmp_path)
+    texts = [
+        "南京农业大学本科生毕业论文（设计）使用授权声明",
+        "本学位论文作者完全了解学校有关保留、使用毕业论文的规定。",
+        "论文作者签名：        导师签名：",
+        "日期： 年 月 日 日期： 年 月 日",
+    ]
+    objects = tuple(
+        InspectedObject(
+            locator=f"/body/p[{index}]",
+            kind="paragraph",
+            text=text,
+            style="Normal",
+            format={},
+            object_ref={"object_id": f"obj-landmark-{index}"},
+        )
+        for index, text in enumerate(texts, start=1)
+    )
+    inspection = Inspection(
+        document_sha256="a" * 64,
+        objects=objects,
+        summary={},
+        risks=(),
+        warnings=(),
+        provider={},
+    )
+
+    context = service._local_context(inspection, objects[-1], region_objects=[objects[-1]])
+
+    assert [item["text"] for item in context["preceding_landmarks"]] == texts[:-1]
+    assert [item["distance"] for item in context["preceding_landmarks"]] == [3, 2, 1]
+    assert all("object_ref" not in item for item in context["preceding_landmarks"])
 
 
 def test_page_object_exposes_bounded_style_facts_needed_for_agent_judgment() -> None:
@@ -3969,6 +4023,83 @@ def test_publish_rejects_an_unreviewed_exact_version(tmp_path: Path) -> None:
         service.publish({"document_ref": document_ref})
 
     assert missing.value.code == "final_visual_review_missing"
+
+
+def test_publish_validates_active_slots_not_retired_duplicate_history(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_plain_paragraphs(source, ["第二个中文摘要样例"])
+    _, document = service._register_source()
+    first_target = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+    first, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": first_target.object_ref,
+                    "field_id": "abstract.zh",
+                }
+            ]
+        }
+    )
+    _, first_path = service._resolve_document(first["document_ref"])
+    second_target = next(
+        item
+        for item in service._inspection(first_path).objects
+        if item.kind == "paragraph" and item.text == "第二个中文摘要样例"
+    )
+    second, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "object_ref": second_target.object_ref,
+                    "field_id": "abstract.zh",
+                }
+            ]
+        }
+    )
+    _, second_path = service._resolve_document(second["document_ref"])
+    duplicate = next(
+        item
+        for item in service._inspection(second_path).objects
+        if item.kind == "sdt" and item.format.get("tag") == "abstract.zh.2"
+    )
+    final, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "remove_object",
+                    "object_ref": duplicate.object_ref,
+                }
+            ]
+        }
+    )
+    _finish_local_work(service, source)
+    first_batch, _ = service.final_review({"document_ref": final["document_ref"]})
+    _record_clean_batch(service, first_batch)
+    second_batch, _ = service.final_review(
+        {
+            "document_ref": final["document_ref"],
+            "cursor": first_batch["next_cursor"],
+        }
+    )
+    _record_clean_batch(service, second_batch)
+
+    published = service.publish({"document_ref": final["document_ref"]})
+
+    assert published["counts"]["slot"] == 1
+    fill_contract = json.loads(
+        (
+            service.root / "publication/fill-contract.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert [item["slot_id"] for item in fill_contract["slots"]] == ["abstract.zh.1"]
 
 
 def test_publish_rejects_complete_page_coverage_with_a_visual_defect(

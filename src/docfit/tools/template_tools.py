@@ -280,16 +280,33 @@ def _validated_work_item_operations(
     direct = _validated_decision_operations(outcome, operations)
     actions = {str(item.get("action")) for item in direct}
     kind = work_item.get("kind")
+    region = work_item.get("region")
+    knowledge_signals = (
+        region.get("knowledge_signals") if isinstance(region, dict) else None
+    )
+    if (
+        kind == "local_region"
+        and isinstance(knowledge_signals, list)
+        and "generated-content" in knowledge_signals
+        and direct
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="local_generated_content_read_only",
+            message=(
+                "Preserve this local generated-content cache without clearing, deleting, "
+                "formatting, or refreshing any row or child run. The application will provide "
+                "one generated-content work item after all title sources are finalized; mutate "
+                "the live TOC only from that dedicated item."
+            ),
+        )
     if "refresh_toc" in actions and kind != "generated_content":
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="refresh_toc_wrong_work_item",
-            message=(
-                "Preserve the local TOC cache region. The application will provide one "
-                "generated-content work item after all title sources are finalized; refresh "
-                "the live TOC only from that item's curated source-title candidates."
-            ),
+            message="Refresh the live TOC only from the generated-content work item.",
         )
     if kind == "generated_content" and actions != {"refresh_toc"}:
         raise ToolFailure(

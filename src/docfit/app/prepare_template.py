@@ -329,12 +329,18 @@ def _resume_prepare_template_task(
             code="prepare_source_mismatch",
             message="The existing task belongs to a different school template.",
         )
-    if any(output_directory.iterdir()):
+    output_files = list(output_directory.iterdir())
+    expected_output = output_directory / "final-template.docx"
+    if output_files and (
+        output_files != [expected_output]
+        or expected_output.is_symlink()
+        or not expected_output.is_file()
+    ):
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="prepare_already_published",
-            message="The existing prepare-template task has already published output.",
+            code="prepare_checkpoint_invalid",
+            message="A completed prepare-template task may contain only final-template.docx.",
         )
     existing_requirements = sorted(input_directory.glob("school-requirements.*"))
     requirements_target: Path | None = None
@@ -423,7 +429,17 @@ def build_prepare_template_prompt(
         "result is correct. Before removing samples, account for every student-content "
         "responsibility visible in this item: if a fixed chapter or collection title remains, "
         "materialize one representative content interface in the same decision before removing "
-        "the rest. Checkpoint materialized-field counts describe prior locations only and never "
+        "the rest. One content responsibility on one logical page gets exactly one interface: "
+        "when explanatory prose and a separate styled sample both describe that responsibility, "
+        "remove the explanation and materialize the actual sample object, never both. A named "
+        "first/final chapter such as 第一章 文献综述 or 第X章 结论与展望 "
+        "is a fixed landmark when the current template proves that role: keep its heading, "
+        "remove only its trailing format annotation, and materialize a real sample body "
+        "paragraph as body.paragraph. Never turn that fixed heading into a standalone "
+        "body.heading.level* slot or use its sample hierarchy as body.chapters. Reserve the "
+        "repeatable body.chapters structure for a generic middle chapter such as "
+        "第X章（正文标题）, with every member type actually demonstrated by this school. "
+        "Checkpoint materialized-field counts describe prior locations only and never "
         "satisfy another visible location in the current crop; for example, a thesis-title "
         "placeholder on an abstract page still needs its own slot even when the cover already "
         "has one. A visible student value followed by a formatting annotation is not thereby a "
@@ -432,7 +448,8 @@ def build_prepare_template_prompt(
         "discarded and retried. "
         "Use template_report_ambiguity before needs_input and name the concrete missing evidence. "
         "The application owns traversal, retries, page batching, final review, publication, and "
-        "terminal status; do not try to manage any of them."
+        "terminal status; do not try to manage any of them. Keep every tool and final-output "
+        "reason concise and within the schema's 1000-character limit."
         f"{requirements}"
     )
 
@@ -515,7 +532,15 @@ def build_prepare_template_options(
             "label-separated mechanical blank segments as separate physical evidence and decide "
             "each one, selecting separate child runs for multiple fields in one paragraph. A "
             "lexical candidate is not enough: its Registry meaning must match the local role; "
-            "never use a cover date field for declaration-page signatures."
+            "never use a cover date field for declaration-page signatures. Named first/final "
+            "chapters such as 第一章 文献综述 and 第X章 结论与展望 are fixed landmarks when "
+            "the template proves that role: retain the heading, strip only its annotation, and "
+            "use a real body sample for its body.paragraph interface. Never materialize the "
+            "fixed heading as body.heading.level* or use it to form body.chapters; form the "
+            "repeatable structure only from the school's generic middle-chapter evidence. One "
+            "logical-page responsibility gets one interface: when an instruction paragraph and "
+            "a separate styled sample describe the same content, remove the instruction and "
+            "materialize the sample, never both. Keep reasons within 1000 characters."
             if role == "semantic"
             else (
                 "You are DocFit's independent final visual reviewer. Inspect every supplied "
@@ -1251,6 +1276,113 @@ def _validated_report(
     )
 
 
+def _with_persistent_agent_evidence(
+    prepared: PreparedTemplateTask,
+    execution: TemplateAgentExecution,
+) -> TemplateAgentExecution:
+    """Merge append-only cross-process Agent evidence into the terminal execution."""
+
+    tool_uses = list(execution.tool_uses)
+    skills_loaded = list(execution.skills_loaded)
+    live_trace = prepared.task_root / "work/.docfit/template-agent-live.jsonl"
+    if live_trace.is_file() and not live_trace.is_symlink():
+        with live_trace.open(encoding="utf-8") as handle:
+            for line in handle:
+                try:
+                    event: Any = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if not isinstance(event, dict) or event.get("event") != "tool_use":
+                    continue
+                tool = event.get("tool")
+                if not isinstance(tool, str):
+                    continue
+                tool_uses.append(tool)
+                if tool != "Skill":
+                    continue
+                tool_input = event.get("input")
+                if not isinstance(tool_input, dict):
+                    continue
+                skill = tool_input.get("skill") or tool_input.get("name")
+                if isinstance(skill, str):
+                    skills_loaded.append(skill)
+    return TemplateAgentExecution(
+        structured_output=execution.structured_output,
+        tool_uses=tuple(dict.fromkeys(tool_uses)),
+        skills_loaded=tuple(dict.fromkeys(skills_loaded)),
+        session_id=execution.session_id,
+        backend=execution.backend,
+        num_turns=execution.num_turns,
+        duration_ms=execution.duration_ms,
+        duration_api_ms=execution.duration_api_ms,
+    )
+
+
+def _load_completed_execution(
+    prepared: PreparedTemplateTask,
+) -> TemplateAgentExecution | None:
+    output = prepared.task_root / "output/final-template.docx"
+    if output.is_symlink():
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="completed_prepare_artifact_invalid",
+            message="The completed final Word must be a regular file inside the task output.",
+        )
+    if not output.is_file():
+        return None
+    trace_path = prepared.task_root / "work/.docfit/template-agent-execution.json"
+    if trace_path.is_symlink():
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="completed_prepare_trace_invalid",
+            message="The completed application execution trace must be a regular task file.",
+        )
+    try:
+        trace: Any = json.loads(trace_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="completed_prepare_trace_missing",
+            message="The final Word exists but its application execution trace is unavailable.",
+        ) from error
+    publication = trace.get("publication") if isinstance(trace, dict) else None
+    tool_uses = trace.get("tool_uses") if isinstance(trace, dict) else None
+    skills_loaded = trace.get("skills_loaded") if isinstance(trace, dict) else None
+    if (
+        not isinstance(publication, dict)
+        or not isinstance(tool_uses, list)
+        or not all(isinstance(item, str) for item in tool_uses)
+        or not isinstance(skills_loaded, list)
+        or not all(isinstance(item, str) for item in skills_loaded)
+    ):
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="completed_prepare_trace_invalid",
+            message="The final Word exists but its application execution trace is invalid.",
+        )
+
+    def integer(name: str) -> int:
+        value = trace.get(name)
+        return value if isinstance(value, int) and not isinstance(value, bool) else 0
+
+    backend = trace.get("backend")
+    session_id = trace.get("session_id")
+    return TemplateAgentExecution(
+        structured_output=publication,
+        tool_uses=tuple(tool_uses),
+        skills_loaded=tuple(skills_loaded),
+        session_id=session_id if isinstance(session_id, str) else "",
+        backend=backend if isinstance(backend, str) else "",
+        num_turns=integer("num_turns"),
+        duration_ms=integer("duration_ms"),
+        duration_api_ms=integer("duration_api_ms"),
+    )
+
+
 def _write_execution_trace(
     prepared: PreparedTemplateTask,
     execution: TemplateAgentExecution,
@@ -1278,6 +1410,9 @@ async def run_prepare_template(
     agent_runner: AgentRunner = run_template_agent,
 ) -> PrepareTemplateReport:
     prepared = prepare_template_task(request)
-    execution = await agent_runner(prepared)
+    execution = _load_completed_execution(prepared)
+    if execution is None:
+        execution = await agent_runner(prepared)
+    execution = _with_persistent_agent_evidence(prepared, execution)
     _write_execution_trace(prepared, execution)
     return _validated_report(prepared, execution)
