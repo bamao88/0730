@@ -222,6 +222,7 @@ def test_prompt_separates_local_object_work_from_terminal_full_page_qa(
     assert "do not review every page" in prompt.casefold()
     assert "switch phases" in prompt.casefold()
     assert "template_final_review" in prompt
+    assert "a title slot on the cover never authorizes" in prompt
     assert "inspect every returned full-page PNG" in prompt
     assert "until coverage_complete" in prompt
     assert "old page evidence is stale" in prompt
