@@ -25,10 +25,10 @@ RELATION_TYPES = frozenset(
 _HEADING_FIELD = re.compile(r"body\.heading\.level([1-5])\Z")
 _PHYSICAL_TO_REGISTRY_TYPES = {
     "text": frozenset({"text", "rich_text", "section"}),
-    "image": frozenset({"image"}),
-    "table": frozenset({"table"}),
-    "equation": frozenset({"equation"}),
-    "structured_object": frozenset({"image", "table", "equation"}),
+    "image": frozenset({"image", "section"}),
+    "table": frozenset({"table", "section"}),
+    "equation": frozenset({"equation", "section"}),
+    "structured_object": frozenset({"image", "table", "equation", "section"}),
 }
 
 
@@ -317,10 +317,12 @@ def _validate_annotation(
         field = registry.lookup(field_id)
         _validate_content_type(source_item, field)
     elif field_id is not None:
-        raise _invalid(
-            "student_content_unclassified_field_id",
-            "Only classified content items may bind to a Registry field_id.",
-        )
+        field_id = None
+        raw = dict(raw)
+        raw["note"] = (
+            f"{raw.get('note', '')} Ignored field_id because classification_status "
+            f"is {status}."
+        ).strip()
     return {
         "classification_status": status,
         "field_id": field_id,

@@ -124,6 +124,12 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
                         "meaning": "One entry in the reference list.",
                         "content_type": "rich_text",
                     },
+                    {
+                        "field_id": "appendix.body",
+                        "label": "Appendix body",
+                        "meaning": "Structured content in one or more appendices.",
+                        "content_type": "section",
+                    },
                 ],
             },
             sort_keys=False,
@@ -250,6 +256,38 @@ def test_agent_schema_can_only_annotate_existing_content_items(tmp_path: Path) -
     assert "source_order" not in rendered
     assert "body_sequence" not in rendered
     assert "value" not in annotations["items"]["properties"]
+
+
+def test_postprocessing_ignores_field_id_on_an_unclassified_annotation(
+    tmp_path: Path,
+) -> None:
+    inventory = build_student_inventory(_inspection())
+    ids = [item["source_content_id"] for item in inventory["content_items"]]
+    annotation = _annotation(ids[0], "thesis.title.en")
+    annotation["classification_status"] = "layout_only"
+    payload = {
+        "schema_version": 3,
+        "annotations": [
+            annotation,
+            _annotation(ids[1], "body.figure"),
+            _annotation(ids[2], "body.heading.level1"),
+            _annotation(ids[3], "body.paragraph"),
+            _annotation(ids[4], "references.entries"),
+        ],
+        "relations": [],
+        "summary": "Synthetic semantic annotations.",
+        "uncertainties": [],
+    }
+
+    model = validate_extraction(
+        payload,
+        inventory=inventory,
+        registry=_registry(tmp_path),
+    )
+
+    assert model["items"][0]["classification_status"] == "layout_only"
+    assert model["items"][0]["field_id"] is None
+    assert "Ignored field_id" in model["items"][0]["note"]
 
 
 def test_postprocessing_preserves_source_order_and_derives_field_results(
@@ -462,6 +500,39 @@ def test_postprocessing_binds_a_preceding_table_caption_by_typed_adjacency(
     ]
 
 
+def test_section_field_accepts_a_structured_physical_content_item(
+    tmp_path: Path,
+) -> None:
+    inspection = Inspection(
+        "a" * 64,
+        (_object("obj-appendix-table", "/body/tbl[1]", "Appendix table"),),
+        {"tables": 1},
+        (),
+        (),
+        {},
+    )
+    inventory = build_student_inventory(inspection)
+    source_content_id = inventory["content_items"][0]["source_content_id"]
+
+    model = validate_extraction(
+        {
+            "schema_version": 3,
+            "annotations": [
+                _annotation(source_content_id, "appendix.body"),
+            ],
+            "relations": [],
+            "summary": "Synthetic appendix table.",
+            "uncertainties": [],
+        },
+        inventory=inventory,
+        registry=_registry(tmp_path),
+    )
+
+    assert model["items"][0]["physical_type"] == "table"
+    assert model["items"][0]["content_type"] == "section"
+    assert model["items"][0]["field_id"] == "appendix.body"
+
+
 def test_postprocessing_rejects_agent_attempt_to_omit_content(tmp_path: Path) -> None:
     inventory = build_student_inventory(_inspection())
     first = inventory["content_items"][0]["source_content_id"]
@@ -528,11 +599,28 @@ def test_batching_is_execution_only_and_merges_every_source_item_once(
                     "note": "Synthetic batch annotation.",
                 }
             )
+        relations = []
+        if batch.batch["index"] == 2:
+            context_only_ids = [
+                source_content_id
+                for source_content_id in batch.batch["context_content_ids"]
+                if source_content_id not in primary_ids
+            ]
+            assert len(context_only_ids) >= 2
+            relations.append(
+                {
+                    "relation_type": "same_fact_as",
+                    "source_content_id": context_only_ids[0],
+                    "target_content_id": context_only_ids[1],
+                    "confidence": 1.0,
+                    "note": "Synthetic relation outside this batch's write scope.",
+                }
+            )
         return StudentExtractionExecution(
             structured_output={
                 "schema_version": 3,
                 "annotations": annotations,
-                "relations": [],
+                "relations": relations,
                 "summary": "Synthetic batch.",
                 "uncertainties": [],
             },
@@ -556,6 +644,12 @@ def test_batching_is_execution_only_and_merges_every_source_item_once(
     )
 
     assert len(execution.batch_evidence) == 3
+    assert execution.batch_evidence[1]["ignored_out_of_scope_relation_count"] == 1
+    assert execution.structured_output["relations"] == []
+    assert any(
+        "ignored 1 relation(s) without a primary endpoint" in uncertainty
+        for uncertainty in execution.structured_output["uncertainties"]
+    )
     assert [item["source_order"] for item in model["items"]] == [
         item["source_order"] for item in inventory["content_items"]
     ]

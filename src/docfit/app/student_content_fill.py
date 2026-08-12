@@ -675,6 +675,7 @@ async def _run_batched_student_extraction(
                 "student_extraction_batch_relations_invalid",
                 "An extraction batch returned invalid semantic relations.",
             )
+        ignored_out_of_scope_relation_count = 0
         for relation in raw_relations:
             if not isinstance(relation, dict):
                 raise _failure(
@@ -684,10 +685,8 @@ async def _run_batched_student_extraction(
             source = relation.get("source_content_id")
             target = relation.get("target_content_id")
             if source not in primary_ids and target not in primary_ids:
-                raise _failure(
-                    "student_extraction_batch_relation_out_of_scope",
-                    "A batch relation must involve at least one primary content item.",
-                )
+                ignored_out_of_scope_relation_count += 1
+                continue
             key = (
                 str(relation.get("relation_type")),
                 str(source),
@@ -702,12 +701,20 @@ async def _run_batched_student_extraction(
         raw_uncertainties = raw.get("uncertainties")
         if isinstance(raw_uncertainties, list):
             uncertainties.extend(str(value) for value in raw_uncertainties)
+        if ignored_out_of_scope_relation_count:
+            uncertainties.append(
+                f"Batch {batch_index}/{len(batches)} ignored "
+                f"{ignored_out_of_scope_relation_count} relation(s) without a primary endpoint."
+            )
         batch_evidence.append(
             {
                 "batch_index": batch_index,
                 "batch_count": len(batches),
                 "primary_content_item_count": len(primary_ids),
                 "context_content_item_count": len(context_ids) - len(primary_ids),
+                "ignored_out_of_scope_relation_count": (
+                    ignored_out_of_scope_relation_count
+                ),
                 "backend": execution.backend,
                 "session_id": execution.session_id,
                 "tool_uses": list(execution.tool_uses),
