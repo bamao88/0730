@@ -2,13 +2,15 @@
 
 - Capsule status: `PARTIAL` QUALITY CANDIDATE PRODUCED
 - Source plan: `docs/plans/docfit-student-content-placement-debug.md`
+- Dependency/blocker register: `docs/status/active/docfit-student-content-dependencies-and-blockers.md`
 - Branch/baseline: `agent/refine-docfit-plan` / `592f7d26d15520c4f62ffeea9ba1f02aeeee741b`
 - User boundary: 学生内容提取、识别和模板填写作为独立模块调试，不与当前模板提取流程联调
 - Architecture: 一个 SDK 原生只读 Agent extraction；inventory、schema validation、Placement、
   OOXML fill、质量投影和审计均由确定性应用层负责
 - Public surface: 未新增 CLI、公共 Tool、第三 Skill、第二 Agent loop 或正式产品 schema
 - Style boundary: 当前只使用目标模板已有 style 和对象安全 direct formatting；学校样式缺失时的
-  DocFit 内置兜底样式库是长期产品能力，不在本切片
+  DocFit 内置兜底样式库不在本历史调试切片，但已经是进入后续正式阶段前必须完整通过的硬门；
+  当前状态见 `docs/status/active/docfit-stable-style-contract.md`
 - Privacy: 真实学生 DOCX、正文、Agent structured output 和质量修补 YAML 只在私有任务目录；
   Git 文档仅保存 hash、计数和结论
 - Real inventory: 371 objects = 214 mapped + 92 dependency-covered + 65 unmapped；记账闭合
@@ -30,5 +32,5 @@
   both unchanged template and candidate without diagnostics, so regression status is `UNKNOWN`
 - Stop conditions: 猜测缺失个人信息、静默丢弃 source、把 candidate 冒充 accepted、硬编码真实学生
   修补进产品代码、创建模板不存在的样式、扩张公共接口或与模板提取 Agent 联调
-- Next decision gate: 用户复核候选质量；随后分别决定缺失字段输入、unmapped source 处置、目录
-  Word 更新证据，以及何时启动统一内置兜底样式设计
+- Next decision gate: 用户复核候选质量；随后分别关闭缺失字段输入、unmapped source 处置、目录
+  Word 更新证据，并完成统一内置兜底样式的五维硬门

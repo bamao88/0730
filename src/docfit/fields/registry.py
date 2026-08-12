@@ -90,6 +90,7 @@ class FieldRegistrySnapshot:
             raise _invalid_registry()
         fields: list[JsonObject] = []
         seen: set[str] = set()
+        extraction_policy_contract = isinstance(value.get("policy_schema"), dict)
         for item in raw_fields:
             if not isinstance(item, dict) or not isinstance(item.get("field_id"), str):
                 raise _invalid_registry()
@@ -109,10 +110,40 @@ class FieldRegistrySnapshot:
                         "language",
                         "parent_field_id",
                         "notes",
+                        "value_sources",
+                        "student_extraction_policy",
+                        "normalization",
                     )
                     if key in item
                 }
             )
+        for field in fields:
+            parent_field_id = field.get("parent_field_id")
+            if parent_field_id is not None and (
+                not isinstance(parent_field_id, str) or parent_field_id not in seen
+            ):
+                raise _invalid_registry()
+            value_sources = field.get("value_sources")
+            if extraction_policy_contract and value_sources is None:
+                raise _invalid_registry()
+            if value_sources is not None and (
+                not isinstance(value_sources, list)
+                or not value_sources
+                or not all(isinstance(value, str) and value for value in value_sources)
+            ):
+                raise _invalid_registry()
+            extraction_policy = field.get("student_extraction_policy")
+            if extraction_policy_contract and extraction_policy is None:
+                raise _invalid_registry()
+            if extraction_policy is not None and extraction_policy not in {
+                "required",
+                "optional",
+                "not_applicable",
+            }:
+                raise _invalid_registry()
+            normalization = field.get("normalization")
+            if normalization is not None and not isinstance(normalization, dict):
+                raise _invalid_registry()
         return cls(
             source,
             sha256_file(source),

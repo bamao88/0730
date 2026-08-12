@@ -116,6 +116,26 @@ uv run docfit prepare-template \
 反馈。`template_publish` 一次性发布，不生成 plan/compiler/attempt 文件，也不要求全页覆盖。
 成功目录的 `output/` 只包含 `final-template.docx`。
 
+用户内容提取与 Gold 对比：
+
+```bash
+uv run docfit extract-student-content \
+  --input path/to/student.docx \
+  --field-registry docs/plans/docfit-content-field-registry/content-fields-v0.4.yaml \
+  --output .tmp/student-extraction
+
+uv run docfit eval-student-content \
+  --actual .tmp/student-extraction \
+  --gold path/to/accepted-extraction-gold-package \
+  --output .tmp/student-extraction/eval \
+  --json
+```
+
+Eval 在提取 Agent 完成后才读取独立的 Gold，不把答案注入 Agent。它自动发现任务目录中的
+Actual、inventory 和 Agent evidence，生成 `student-content-eval-report.json` 与面向人
+阅读的 `student-content-eval-report.md`；报告覆盖字段、值、源覆盖、语义实例拆分/合并、
+内容顺序和父子关系，且不复制学生正文。PASS 返回 0，质量失败或输入错误返回 2。
+
 转换：
 
 ```bash

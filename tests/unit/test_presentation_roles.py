@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from docfit.content.presentation_roles import (
-    classify_body_text,
     compile_actual_roles_from_student,
     compile_presentation_role_inventory,
 )
@@ -12,56 +11,40 @@ from docfit.styles.presets import GeneralStylePreset
 
 def _student_content() -> dict[str, Any]:
     return {
-        "fields": [
-            {"field_id": "thesis.title.zh", "status": "extracted", "value": "题目"}
+        "schema_version": "docfit-student-content-model/v2",
+        "source_sha256": "a" * 64,
+        "items": [
+            _item("c0", "s0", "p0", "thesis.title.zh", "text", 1),
+            _item("c1", "s1", "p1", "body.heading.level1", "text", 2),
+            _item("c2", "s2", "p2", "body.table.caption", "text", 3),
+            _item("c3", "s3", "p3", "body.equation", "equation", 4),
+            _item("c4", "s4", "t1", "body.table", "table", 5),
         ],
-        "segments": [
-            {
-                "field_id": "body.chapters",
-                "status": "extracted",
-                "source_object_ids": ["p1", "p2", "p3", "t1"],
-            }
-        ],
+    }
+
+
+def _item(
+    content_id: str,
+    source_content_id: str,
+    source_object_id: str,
+    field_id: str,
+    physical_type: str,
+    block: int,
+) -> dict[str, Any]:
+    return {
+        "content_id": content_id,
+        "source_content_id": source_content_id,
+        "transport_source_object_id": source_object_id,
+        "field_id": field_id,
+        "classification_status": "classified",
+        "physical_type": physical_type,
+        "source_order": {"block": block, "inline": 0},
     }
 
 
 def _student_inventory() -> dict[str, Any]:
     return {
         "source_sha256": "a" * 64,
-        "objects": [
-            {
-                "kind": "paragraph",
-                "content_type": "rich_text",
-                "text": "第一章 绪论",
-                "style": "",
-                "body_sequence": 1,
-                "source_object_ref": {"object_id": "p1"},
-            },
-            {
-                "kind": "paragraph",
-                "content_type": "rich_text",
-                "text": "表 1-1 样本分布",
-                "style": "",
-                "body_sequence": 2,
-                "source_object_ref": {"object_id": "p2"},
-            },
-            {
-                "kind": "paragraph",
-                "content_type": "equation",
-                "text": "E=mc2",
-                "style": "",
-                "body_sequence": 3,
-                "source_object_ref": {"object_id": "p3"},
-            },
-            {
-                "kind": "table",
-                "content_type": "table",
-                "text": "A B",
-                "style": "",
-                "body_sequence": 4,
-                "source_object_ref": {"object_id": "t1"},
-            },
-        ],
     }
 
 
@@ -129,16 +112,7 @@ def _preset() -> GeneralStylePreset:
     return GeneralStylePreset.from_mapping(value)
 
 
-def test_classifier_is_shared_product_vocabulary() -> None:
-    assert classify_body_text("第一章 绪论") == "body.heading.level1"
-    assert classify_body_text("1.1 研究方法") == "body.heading.level3"
-    assert classify_body_text("Table 2 Results") == "body.table.caption"
-    assert classify_body_text("任意正文", word_style_id="Heading 4") == (
-        "body.heading.level4"
-    )
-
-
-def test_prewrite_inventory_and_actual_roles_include_table_caption_before_fill() -> None:
+def test_prewrite_inventory_consumes_model_roles_without_reclassification() -> None:
     inventory = compile_presentation_role_inventory(
         student_content=_student_content(),
         student_inventory=_student_inventory(),
@@ -155,6 +129,7 @@ def test_prewrite_inventory_and_actual_roles_include_table_caption_before_fill()
         "body.table",
         "body.table.caption",
     )
+    assert [item.content_id for item in inventory.occurrences] == ["c1", "c2", "c3", "c4"]
     assert {item.style_role_id for item in actual.roles} == {
         "style.body.heading.1",
         "style.caption.table",

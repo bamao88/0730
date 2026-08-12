@@ -1,11 +1,11 @@
 # DocFit Eval 数据与 Gold（03）
 
 > 状态：最终方案
-> 日期：2026-08-06
+> 日期：2026-08-12
 
-本文是后续 M3 质量工作的长期设计，不属于当前已完成的 M0–M2 产品开发范围。现有
-合成 case 元数据可以保留；新增或确认 Gold、授权/脱敏复杂样本和人工复核结果，必须
-在新的 M3 计划获批后进行。
+本文是 M3 质量工作的长期设计。M0–M2 之后，用户已另行批准 Content Field Registry、
+Student 001/002/003 Extraction Gold 及其离线 Eval；其余 Template/Placement/Filling、
+授权/脱敏复杂样本和外部人工复核仍需按各自质量计划推进。
 
 模板提取静态产物 Eval 的 Gold 形态由
 `docs/plans/docfit-template-extraction-eval/DESIGN.md` 进一步收窄：每个 case 以人工确认的
@@ -17,11 +17,19 @@ Agent 路径。该顶层设计和独立 Actual—Gold 静态评分 runner 已实
 但三校数据仍为 candidate、预期 `INPUT_ERROR`，尚未成为 Human-accepted Gold，学校
 自比较和单错误回归也尚未启用。
 
-完整转换 case 还需要 Human-confirmed Student Content Truth 与 Placement Truth。它们与
-Template Truth 共同引用同一版 Content Field Registry 快照，却各自保留来源 locator、
+完整转换 case 还需要 Human-confirmed Student Content Truth 与 Placement Truth。接受后的
+Student Content Truth 构成 Extraction Gold；接受后的 Placement Truth、Expected facts 和
+必要的参考成品共同构成 Filling Gold。它们与 Template Truth 共同引用同一版 Content
+Field Registry 快照，却各自保留来源 locator、
 目标 locator 和放置动作。Registry 是跨阶段研发语义依赖，后三者才是业务 case 的
 Human Prepared Truth；它们不构成多层运行 Gold、阶段胶囊或新的在线数据系统。当前
-Registry v0.1 与三校 candidate 定位文件尚待字段级 Human signoff，不能直接改名为 Gold。
+Extraction 侧 Registry v0.3/v0.4 与三份 Student Gold 已签署；三校模板定位与 Filling
+候选仍须独立验收，不能因 Extraction Gold 已接受而直接改名为 Filling Gold。
+
+用户内容相关 Gold 固定拆为两类独立业务 Oracle：**用户内容提取 Gold** 回答“从冻结的
+用户源论文中正确提取出了什么”；**模板填写 Gold** 回答“已验收的用户内容应如何进入
+指定模板，以及正确结果是什么”。二者不得用同一份混合 Word 代替。模板自身的
+Template Gold 继续作为独立上游事实，不并入这两类用户内容 Gold。
 
 ## 1. Gold 的定位
 
@@ -48,6 +56,201 @@ Tool tests 使用普通 fixture 和期望值；Skill eval 与端到端 Eval 只�
 或脱敏的复杂真实样本与人工确认结果。
 
 ## 2. 最小形式
+
+### 2.1 用户内容相关 Gold 的固定拆分
+
+| Gold 类型 | 被验收责任 | 身份键 | 不负责 |
+|---|---|---|---|
+| Student Content Extraction Gold（用户内容提取 Gold） | 用户源中的字段事实、章节、段落、图、表、公式、引用、来源定位、父子关系、顺序、缺失与未决项 | `student_source_sha256 + registry_id/version/hash + gold_revision` | 目标学校、模板槽位、目标样式、placement、分页和最终 Word |
+| Template Filling Gold（模板填写 Gold） | 已验收内容进入指定模板的目标位置、动作、顺序、条件、样式来源、固定内容保留、缺失处理和最终文档事实 | `template_truth_revision + extraction_gold_revision + task/supplement_revision + gold_revision` | 重新解释用户源、重新做内容提取或修改 Extraction Gold |
+
+这两类 Gold 是两个产品责任边界的独立 Oracle，不是运行阶段、轨迹或“多层 Gold”。同一
+用户源只需维护一份与学校无关的 Extraction Gold；每个学校模板与用户内容的有效组合可以
+维护一份 Filling Gold。模板版本、内容 Gold 版本或任务补充信息发生变化时，必须创建新
+revision，不能只凭相同的 `school_id + student_id` 复用旧结果。
+
+#### 2.1.1 用户内容提取 Gold
+
+逻辑文件合同如下；物理存储可以引用已冻结的用户源文件，避免复制真实学生数据：
+
+```text
+student-content-extraction/<student-id>/
+├── manifest.yaml
+├── student-source.docx            # 或 manifest 中的 accepted source ref
+├── student-content.gold.json
+├── content-assets/                # 可选，只保存必须独立比较/搬运的复杂对象
+├── product-review.md               # Human 唯一评审界面
+├── review-assets/                  # 可选，供产品核对的图片/页面证据
+└── review.yaml                     # 签署后的机器可读记录
+```
+
+Human 核对必须通过面向产品决策的 `product-review.md` 完成，不能把 YAML、JSON、content ID
+列表或机器检查日志直接当作评审界面。产品文档至少展示：当前建议、用户可见/评测影响、需
+确认的原文内容、复杂对象预览、可选择的接受/修改/阻止结论和最终签署区。`review.yaml` 只
+保存文档签署后的结构化结论、审核人、时间和 hash 引用，不能替代产品文档。
+标题/列表、题注边界等依赖文档结构的人工判断不得只展示孤立片段；至少同时展示所属上级、
+前一条和后一条可见内容。默认分类还应优先保留用户显式写出的编号、列表等表达特征，除非
+完整上下文或排版证据足以支持覆盖该特征。
+
+`student-content.gold.json` 至少包含：
+
+- `student_document_sha256` 与完整 `field_registry_ref`；
+- `field_results[]`，对所绑定 Registry 快照中的每个 `field_id` 恰有一条字段级结论，
+  记录该字段对学生源的适用性、`present/missing/not_applicable/unresolved/unsupported`
+  状态和对应 `content_ids`；
+- `items[]`，每项包含稳定 `content_id`、Registry `field_id` 或未注册状态、
+  `value/content_ref`、`source_locator`、唯一 `source_order.block + source_order.inline` 和
+  `status`；`items` 数组本身必须按该顺序严格递增；
+- 适用时的 `parent_content_id`、`language`、`asset_refs`、`source_span` 和共享事实
+  `source_occurrences[]`；每个 occurrence 同样保存自己的物理 `source_order`；
+- 对所有可见源对象的覆盖记账：`mapped`、`covered_dependency`、`excluded` 或
+  `unresolved`，禁止静默丢弃；
+- Human review 的 revision、结论、审核人、时间和证据引用。
+
+Extraction Gold 的主语义目录是它所绑定的 Content Field Registry 快照，不得先建立一套
+候选自有字段/类型体系，再把 Registry 当作可选标签。具体约束如下：
+
+- 已注册内容项的 `field_id` 必须精确等于 Registry canonical `field_id`；
+- `content_type`、语义 cardinality、`parent_field_id` 和字段级 language 继承 Registry，
+  Gold 可以冗余保存以便校验，但不得给出不同定义；
+- `content_id` 只标识某字段的一份事实或一次有序内容实例。同一 `field_id` 可以对应多个
+  `content_id`，但不能因此合并正文段落、标题、图、表、公式或参考文献的顺序和父子关系；
+- `parent_field_id` 表达 Registry 中的语义关系，`parent_content_id` 表达 Student 002 等
+  具体文档中的实例关系，二者不得混用；
+- Registry 保持开放：工作候选中发现未注册语义时使用 `field_id: null` 与
+  `classification_status: unregistered` 阻断物化，不得猜造正式 ID 或因对齐要求而丢弃；
+  若属于通用内容，必须先升级 Registry，再同步 Extraction Gold、Template Projection 和
+  Placement；Gold 候选验收时不得长期保留 `unregistered`；
+- `missing` 只用于 Registry 明确声明学生源可提取的字段。`generated.*`、任务配置、外部
+  资产或其他非学生源字段，必须按 Registry 的 value-source/student-extraction policy
+  记为 `not_applicable`，不能误报成提取遗漏。
+
+因此，Registry 不只是 Extraction Gold 的版本依赖，也是字段级覆盖率的分母和类型/基数/
+关系校验权威；Gold 自有的 `field_results[]` 是 Registry 在当前学生源上的逐字段投影，
+`items[]` 是这些字段在文档中的事实与 occurrence。两者缺一不可。
+
+顺序是 Extraction Gold 的独立真值维度，不属于 Registry，也不能从字段分组推断：
+
+- `items[]` 是内容实例及其顺序的唯一权威；`field_results[]` 只是可删除、可重建的字段索引，
+  不得承担或覆盖顺序；
+- `source_order.block` 绑定冻结 Word 主故事中首个来源 occurrence 的顶层 block，
+  `source_order.inline` 表示同一 block 内已识别语义内容实例的稳定先后；两者共同构成完整、
+  唯一、严格递增的总序；
+- 标题、段落、图、题注、表、公式、列表和参考文献不能因 `field_id` 相同而按类型聚合后重排；
+  分类、父子组装与 Agent 返回数组顺序都无权修改 `items`；
+- 同一论文级共享事实在多处出现时只保留一份事实 `content_id`，该 item 使用最早 occurrence
+  的顺序；所有原始位置与观察值继续按物理顺序保存在 `source_occurrences[]`，不能因事实合并
+  丢失后续出现位置；
+- `body.chapters` 等结构 span 只表达包含范围，在首个子项前打开并保存 `source_span`，不得被
+  Filling 当成第二份可运输正文；
+- Gold 验收必须机器证明 `items` 顺序完整、唯一、递增，逐 occurrence 顺序可回查冻结源，且
+  删除后重建 `field_results` 不改变任何 item 或顺序。
+
+Extraction Gold 必须忠实描述冻结用户源。人工批准的拼写、空格或内容修订应作为独立
+authorized patch/evidence 记录；除非 Gold 合同明确区分 `observed_value` 与
+`normalized_value`，否则不得把后续质量修订静默写回用户内容真值。
+
+Extraction Gold 的最低验收门为：源 hash 和 Registry 固定；Registry 每个字段都有唯一
+字段级结论，且类型、基数和关系闭包通过；普通字段与连续内容区域完成
+Human 确认；图片、表格、公式、题注、引用等复杂对象的数量、顺序、父子关系和引用可
+追溯；适用但源中不存在的字段明确为 `missing`，非学生源字段明确为 `not_applicable`；
+全部 `unresolved` 有显式结论；隐私、存储、
+CI 和外部处理权限已记录；manifest、review 与资产 hash 相互一致。
+人工验收材料必须同时具备可读的产品核对表；仅有上述机器闭包或 `review.yaml` 不通过
+Human acceptance 门。
+
+Registry v0.1 已明确记录“value-source 和 student-extraction policy 未补齐”，继续仅供
+已绑定的历史 case 使用。v0.2 在相同 54 个字段上补齐这两项政策；Student 002 当前绑定的
+不可变 v0.3 进一步明确图表题注的规范值排除源类型标签和编号，Placement 由目标模板
+重新生成编号。全文审计未发现需要新增的通用字段。v0.3 和 Student 002 的 Human 签署门
+已于 2026-08-12 关闭：两者均已接受。该结论不晋升模板或 Filling Gold；
+不得在任何 Gold 中私自按字段名前缀补造政策。
+
+Student 002 的 18 个显式括号编号项按 2026-08-12 产品结论统一使用 Registry 既有的
+`body.numbered_list_item`，不再依据文本长短拆成四级标题；该变化不需要升级 Registry，
+Extraction revision、产品核对文档和模板 Placement 已同步更新并重新绑定 hash。
+
+Student 001/003 扩样继续保持 Student 002/v0.3 的 accepted 事实不可变，并绑定已验收的
+Registry v0.4。v0.4 不新增字段，只补齐同一语义图的一对多图片资产、只承载图片的
+布局表、题注可缺失源编号、邻接优先的题注配对、Word 自动列表编号和 final-visible 修订/批注
+来源合同。2026-08-12 产品负责人接受两份提取识别结果，并补充要求 Gold 显式保存识别内容
+顺序；Student 001/002/003 均已升级为 Extraction Gold v2 顺序合同，要求 54 字段投影、全源
+覆盖、0 unresolved、0 unregistered、完整唯一 `source_order` 和产品验收记录。
+
+#### 2.1.2 模板填写 Gold
+
+逻辑文件合同如下：
+
+```text
+template-filling/<school-id>__<student-id>/
+├── manifest.yaml
+├── template-truth.ref.yaml
+├── student-content-extraction-gold.ref.yaml
+├── task-and-supplements.yaml
+├── placement-map.gold.yaml
+├── expected-facts.yaml
+├── expected-final.docx            # COMPLETE 实际交付基线必需；其他状态按 case 声明
+├── evidence/                       # 可选，保存必要的页面/结构证据
+├── product-review.md               # Human 唯一评审界面
+└── review.yaml                     # 签署后的机器可读记录
+```
+
+Filling Gold 必须显式引用已验收的 Template Truth 和 Extraction Gold，不得从参考成品
+反向覆盖用户内容真值。用户在原论文之外提供的姓名、日期等值属于
+`task-and-supplements.yaml`，不能伪装成从用户源提取所得。任何内容合并、格式化、授权
+改写、故意排除或一对多放置，都必须在 `placement-map.gold.yaml` 中有可审计动作。
+
+`expected-final.docx` 是人工查看和复杂结构的强参考，但评分不得依赖 DOCX 字节完全相等；
+稳定判断应提取到 `expected-facts.yaml`，至少覆盖内容守恒、placement、学校固定内容、
+必填/选填处理、样式来源、复杂对象、目录、页码、分页、占位符和高风险页面。
+
+每个 Filling Gold 必须声明预期业务状态：
+
+- `COMPLETE`：存在经过目标 Word 环境与 Human 验收的可交付 `expected-final.docx`；
+- `NEEDS_INPUT`：正确结果是请求缺失输入，不得把含必填占位符的候选冒充 final；
+- `REVIEW_DRAFT`：仅用于保留已确认的历史或专项诊断基线，必须列出未关闭项，不能用于
+  宣称产品完成。
+
+#### 2.1.3 独立 Eval 与端到端 Eval
+
+| Eval | `subject_input` | `oracle_only` | 主要 verdict |
+|---|---|---|---|
+| 用户内容提取 | 冻结的 `student-source.docx`、任务说明、允许的 Registry 语义 | `student-content.gold.json`、必要 `content-assets/*` | Extraction verdict |
+| 模板填写 | 已验收模板/填写契约、**已验收 Extraction Gold**、任务补充信息 | `placement-map.gold.yaml`、`expected-facts.yaml`、`expected-final.docx` | Filling verdict |
+| 完整端到端 | 用户原始输入、目标模板和任务输入 | Extraction Gold、Filling Gold 及其 Expected | Extraction、Filling、Final document 三个独立 verdict |
+
+独立填写 Eval 不重新运行内容提取；这样失败可以准确归因到填写责任。端到端 Eval 可以运行
+完整链路，但报告不得用最终总分掩盖某个上游失败，也不得因最终 Word 看似正确就跳过
+Extraction verdict。
+
+用户内容提取的正式离线比较入口为 `docfit eval-student-content`。它只在提取完成后读取
+Actual 任务目录和单独提供的 Accepted Extraction Gold，自动绑定 Actual、inventory、
+Agent evidence 与 Gold hash，并生成机器 JSON 与产品可读 Markdown。报告不得复制学生
+正文；内容顺序、字段语义、值、覆盖、跨源实例分组和关系分别给出 verdict。候选/未签署
+Gold、错误 schema、源或 Registry 漂移必须 fail closed，不能降级为宽松对比。
+
+#### 2.1.4 现有手工资产的过渡映射与首个 pilot
+
+在正式 Gold 存储位置确定前，现有手工准备目录按以下语义解释：
+
+- `temp/manual-gold-preparation/gold/20-student-assets/` 对应 Extraction Gold；Student 002
+  绑定 Registry v0.3，Student 001/003 绑定 Registry v0.4；三份包均为 Human-accepted
+  `gold`，并使用 `source_order` v1 顺序合同；
+- `temp/manual-gold-preparation/gold/30-cross-conversions/` 对应 Filling Gold；其中历史
+  `REVIEW_DRAFT` 或已复核转换 Word 只证明该模板—内容组合的填写参考，不反向产生
+  Extraction Gold；
+- `temp/manual-gold-preparation/gold/10-school-assets/` 继续承载独立 Template Truth/Gold。
+
+首个 pilot 固定使用 `student-002`。当前已完成历史提取结果的 Registry v0.3 规范化、全源
+对象覆盖和填写映射同步；Extraction 已通过产品验收，Filling 仍是独立候选。下一门是以
+Accepted Extraction Gold 为输入评审 Filling。湖南农大当前模板仍是诊断候选，因此填写候选的预期业务
+状态保持 `NEEDS_INPUT`，不执行自动 Gold 晋升。
+
+Student 001/003 扩样只以各自冻结源 Word 为内容真值，不使用历史转换稿补字段；Extraction 与
+Registry 增量现已验收。后续仍需单独准备 Filling，不因已有跨模板转换 Word 而跳过 Filling
+责任边界与验收。
+
+### 2.2 完整业务 case 的组合形式
 
 一个 Eval case 至少需要输入和断言。只有断言无法清楚表达时，才附参考产物。
 
@@ -95,7 +298,7 @@ assertions:
 manual_review: [cover_page, toc_pagination]
 ```
 
-对需要同时评测模板提取、学生内容提取、placement 与最终转换的完整业务 case，
+对需要同时评测模板提取、用户内容提取、模板填写与最终文档的完整业务 case，
 `case.yaml` 固定外部 Registry 引用，并可在同一 case 下附一组 Human Prepared Truth：
 
 ```yaml
@@ -237,6 +440,11 @@ Student Content 和 Placement Truth 可以由 Human 直接对受控输入和格�
 国家级标准的样式值补全表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存必要的
 标识、版本、条款引用、digest 和人工确认事实。
 
+用户内容相关 Gold 按责任顺序晋升：先冻结 Extraction Gold，再以其 revision 作为输入
+制作 Filling Gold。已有人工确认的 `reference-final.docx` 可以通过“用户源—模板—成品”
+三方对齐生成两类候选和 Human review queue，但不得一次签署后同时隐式晋升两类 Gold；
+Extraction 与 Filling 必须各自拥有 review 结论、manifest 和 hash 绑定。
+
 ## 6. Gold 的更新
 
 回归失败时先判断：
@@ -269,7 +477,8 @@ Student Content 和 Placement Truth 可以由 Human 直接对受控输入和格�
 
 当前架构不采用：
 
-- 多层 Gold 体系；
+- 多层运行/轨迹 Gold 体系；用户内容 Extraction Gold 与 Template Filling Gold 是两个
+  产品责任边界的业务 Oracle，不属于本条所禁止的多层 Gold；
 - Stage Harness；
 - 阶段输入胶囊；
 - exact/comparative replay；

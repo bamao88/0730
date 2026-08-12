@@ -22,11 +22,11 @@ def _q(local: str) -> str:
     return f"{{{W_NS}}}{local}"
 
 
-def test_body_role_projects_source_numbering_to_template_heading_levels() -> None:
-    assert _body_role("第一章 文献综述") == "heading_1"
-    assert _body_role("1材料与方法") == "heading_2"
-    assert _body_role("1.2复合菌群种子液") == "heading_3"
-    assert _body_role("（1）供试土壤") == "body"
+def test_body_role_uses_extracted_field_ids_without_reading_text() -> None:
+    assert _body_role({"body.heading.level1"}) == "heading_1"
+    assert _body_role({"body.heading.level2"}) == "heading_2"
+    assert _body_role({"body.heading.level3"}) == "heading_3"
+    assert _body_role({"body.paragraph"}) == "body"
 
 
 def test_text_replacement_crosses_runs_without_flattening_them() -> None:

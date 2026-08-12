@@ -28,6 +28,7 @@ _IGNORABLE_NAMESPACES = {
     "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
     "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
     "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+    "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
     "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
     "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing",
 }
@@ -81,16 +82,13 @@ def _serialize(root: ET.Element) -> bytes:
     missing = [
         (prefix, _IGNORABLE_NAMESPACES[prefix])
         for prefix in ignorable
-        if prefix in _IGNORABLE_NAMESPACES
-        and f"xmlns:{prefix}=".encode() not in payload
+        if prefix in _IGNORABLE_NAMESPACES and f"xmlns:{prefix}=".encode() not in payload
     ]
     if missing:
         declaration_end = payload.find(b"?>")
         root_start = payload.find(b"<", declaration_end + 2)
         root_end = payload.find(b">", root_start)
-        declarations = b"".join(
-            f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing
-        )
+        declarations = b"".join(f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing)
         payload = payload[:root_end] + declarations + payload[root_end:]
     return payload
 
@@ -459,10 +457,13 @@ def _remap_local_ids(copied: list[ET.Element], target_document: ET.Element) -> i
             for key, value in element.attrib.items()
             if key.endswith(f"}}{local_name}")
         }
-        next_value = max(
-            (int(value, 16) for value in used if re.fullmatch(r"[0-9A-F]+", value)),
-            default=0x100000,
-        ) + 1
+        next_value = (
+            max(
+                (int(value, 16) for value in used if re.fullmatch(r"[0-9A-F]+", value)),
+                default=0x100000,
+            )
+            + 1
+        )
         for item in copied:
             for element in item.iter():
                 for key in tuple(element.attrib):

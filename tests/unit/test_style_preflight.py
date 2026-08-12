@@ -86,27 +86,22 @@ def _preset(
 
 def _student() -> tuple[dict[str, Any], dict[str, Any]]:
     student_content = {
-        "fields": [],
-        "segments": [
+        "schema_version": "docfit-student-content-model/v2",
+        "source_sha256": "a" * 64,
+        "items": [
             {
-                "field_id": "body.chapters",
-                "status": "extracted",
-                "source_object_ids": ["p1"],
+                "content_id": "c1",
+                "source_content_id": "s1",
+                "transport_source_object_id": "p1",
+                "field_id": "body.table.caption",
+                "classification_status": "classified",
+                "physical_type": "text",
+                "source_order": {"block": 1, "inline": 0},
             }
         ],
     }
     student_inventory = {
         "source_sha256": "a" * 64,
-        "objects": [
-            {
-                "kind": "paragraph",
-                "content_type": "rich_text",
-                "text": "表 1-1 样本分布",
-                "style": "",
-                "body_sequence": 1,
-                "source_object_ref": {"object_id": "p1"},
-            }
-        ],
     }
     return student_content, student_inventory
 

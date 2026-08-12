@@ -14,9 +14,6 @@ from pathlib import Path
 from typing import cast
 from xml.etree import ElementTree as ET
 
-from docfit.content.presentation_roles import FIGURE_CAPTION_PATTERN as _FIGURE_CAPTION
-from docfit.content.presentation_roles import TABLE_CAPTION_PATTERN as _TABLE_CAPTION
-from docfit.content.presentation_roles import classify_body_text
 from docfit.tools.ooxml import (
     W_NS,
     WP_NS,
@@ -38,7 +35,6 @@ ET.register_namespace("m", M_NS)
 ET.register_namespace("a", A_NS)
 ET.register_namespace("w14", W14_NS)
 
-_MINOR_HEADING = re.compile(r"^[（(]\d+[）)]")
 _LATIN_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9_-]{7,}")
 _CJK = re.compile(r"[\u3400-\u9fff]")
 
@@ -145,7 +141,7 @@ def project_student_content(
         )
 
     imported = _resolve_imported_elements(document, fill_result)
-    body_elements = imported.get("body.chapters", [])
+    body_elements = imported.get("body.ordered_items", [])
     reference_elements = imported.get("references.entries", [])
     if not body_elements:
         raise _invalid("projection_body_evidence_missing", "No imported body evidence was found.")
@@ -174,6 +170,10 @@ def project_student_content(
         "adjacent_text_runs_merged": 0,
     }
     style_occurrence_roles: dict[int, tuple[ET.Element, str]] = {}
+    semantic_by_element, content_targets, semantic_relations = _resolve_semantic_evidence(
+        document,
+        fill_result,
+    )
 
     source_elements = _resolve_imported_source_elements(document, fill_result)
     replacement_report = _apply_replacements(
@@ -197,21 +197,56 @@ def project_student_content(
     for paragraph in [item for item in body_elements if item.tag == _q(W_NS, "p")]:
         if paragraph not in list(body):
             continue
+        drawing_items = [
+            item
+            for item in semantic_by_element.get(id(paragraph), [])
+            if item.get("physical_type") == "image"
+        ]
         drawings = list(paragraph.iter(_q(W_NS, "drawing")))
-        if drawings:
+        if drawings and drawing_items:
             report["drawing_paragraphs_split"] = int(report["drawing_paragraphs_split"]) + 1
-            _split_drawing_paragraph(body, paragraph, styles.normal)
+            image_paragraphs = _split_drawing_paragraph(body, paragraph, styles.normal)
+            if len(image_paragraphs) != len(drawing_items):
+                raise _invalid(
+                    "projection_semantic_drawing_count_mismatch",
+                    "Imported drawings do not match the extracted image content items.",
+                )
+            remaining = [
+                item
+                for item in semantic_by_element.get(id(paragraph), [])
+                if item.get("physical_type") != "image"
+            ]
+            semantic_by_element[id(paragraph)] = remaining
+            for item, image_paragraph in zip(drawing_items, image_paragraphs, strict=True):
+                semantic_by_element[id(image_paragraph)] = [item]
+                content_targets[str(item["content_id"])] = image_paragraph
+            if not remaining and _is_safe_layout_empty(paragraph):
+                body.remove(paragraph)
 
     current_body_elements = _elements_between_imported_boundaries(body, body_elements)
     usable_width = _usable_width_dxa(body, current_body_elements)
     for paragraph in [item for item in current_body_elements if item.tag == _q(W_NS, "p")]:
-        if list(paragraph.iter(_q(W_NS, "drawing"))):
+        semantic_items = semantic_by_element.get(id(paragraph), [])
+        if not semantic_items:
+            if _is_safe_layout_empty(paragraph):
+                continue
+            raise _invalid(
+                "projection_semantic_evidence_missing",
+                "An imported paragraph has no Student Content Model item.",
+            )
+        field_ids = {
+            str(item["field_id"])
+            for item in semantic_items
+            if isinstance(item.get("field_id"), str)
+        }
+        physical_types = {str(item.get("physical_type")) for item in semantic_items}
+        if "image" in physical_types:
             report["floating_drawings_converted_inline"] = int(
                 report["floating_drawings_converted_inline"]
             ) + _normalize_drawing_paragraph(paragraph, styles.normal, usable_width)
             style_occurrence_roles[id(paragraph)] = (paragraph, "drawing")
             continue
-        if list(paragraph.iter(_q(M_NS, "oMath"))):
+        if "equation" in physical_types:
             _normalize_formula(paragraph, styles.body)
             style_occurrence_roles[id(paragraph)] = (paragraph, "formula")
             report["formula_paragraphs"] = int(report["formula_paragraphs"]) + 1
@@ -219,16 +254,17 @@ def project_student_content(
                 report["run_spacing_properties_removed"]
             ) + _clear_run_layout(paragraph)
             continue
-        text = _paragraph_text(paragraph).strip()
-        if _FIGURE_CAPTION.match(text) or _TABLE_CAPTION.match(text):
+        if field_ids & {"body.figure.caption", "body.table.caption"}:
             _normalize_caption(paragraph, styles.caption)
             presentation_role = (
-                "figure_caption" if _FIGURE_CAPTION.match(text) else "table_caption"
+                "figure_caption"
+                if "body.figure.caption" in field_ids
+                else "table_caption"
             )
             style_occurrence_roles[id(paragraph)] = (paragraph, presentation_role)
             report["caption_paragraphs"] = int(report["caption_paragraphs"]) + 1
         else:
-            role = _body_role(text)
+            role = _body_role(field_ids)
             style_id = {
                 "heading_1": styles.heading_1,
                 "heading_2": styles.heading_2,
@@ -247,12 +283,7 @@ def project_student_content(
                 headings[level_key] += 1
             else:
                 report["body_paragraphs"] = int(report["body_paragraphs"]) + 1
-            if _MINOR_HEADING.match(text):
-                _set_paragraph_flag(paragraph, "keepNext", True)
-                _set_paragraph_value(paragraph, "jc", "left")
-                _clear_indent(paragraph)
-                report["minor_headings"] = int(report["minor_headings"]) + 1
-            elif _high_risk_mixed_paragraph(paragraph, text):
+            if _high_risk_mixed_paragraph(paragraph, _paragraph_text(paragraph).strip()):
                 _set_paragraph_value(paragraph, "jc", "left")
                 report["high_risk_mixed_paragraphs_left_aligned"] = (
                     int(report["high_risk_mixed_paragraphs_left_aligned"]) + 1
@@ -270,6 +301,14 @@ def project_student_content(
         ) + _clear_run_layout(paragraph)
 
     for table in [item for item in current_body_elements if item.tag == _q(W_NS, "tbl")]:
+        if not any(
+            item.get("field_id") == "body.table"
+            for item in semantic_by_element.get(id(table), [])
+        ):
+            raise _invalid(
+                "projection_semantic_table_missing",
+                "An imported body table has no body.table semantic item.",
+            )
         _normalize_table(table, usable_width)
         report["tables_normalized"] = int(report["tables_normalized"]) + 1
 
@@ -286,8 +325,9 @@ def project_student_content(
             report["adjacent_text_runs_merged"]
         ) + _merge_adjacent_text_runs(paragraph)
 
-    report["figure_caption_chains_bound"] = _bind_figure_captions(body)
-    report["table_caption_chains_bound"] = _bind_table_captions(body, current_body_elements)
+    bound_relations = _bind_semantic_relations(body, semantic_relations, content_targets)
+    report["figure_caption_chains_bound"] = bound_relations["figure"]
+    report["table_caption_chains_bound"] = bound_relations["table"]
     report["style_occurrences"] = _style_occurrence_evidence(
         body,
         list(style_occurrence_roles.values()),
@@ -445,6 +485,75 @@ def _resolve_imported_source_elements(
     return resolved
 
 
+def _resolve_semantic_evidence(
+    document: ET.Element,
+    fill_result: JsonObject,
+) -> tuple[dict[int, list[JsonObject]], dict[str, ET.Element], list[JsonObject]]:
+    """Bind extracted semantic items to their imported transport elements."""
+
+    imported_sources = _resolve_imported_source_elements(document, fill_result)
+    by_element: dict[int, list[JsonObject]] = {}
+    content_targets: dict[str, ET.Element] = {}
+    relations: list[JsonObject] = []
+    relation_keys: set[tuple[str, str, str]] = set()
+    for block in fill_result.get("block_operations", []):
+        if not isinstance(block, dict):
+            continue
+        raw_items = block.get("source_content_items", [])
+        if not isinstance(raw_items, list):
+            raise _invalid(
+                "projection_semantic_evidence_invalid",
+                "Imported semantic content evidence must be an array.",
+            )
+        for raw in raw_items:
+            if not isinstance(raw, dict):
+                raise _invalid(
+                    "projection_semantic_evidence_invalid",
+                    "An imported semantic content item has an invalid shape.",
+                )
+            content_id = raw.get("content_id")
+            transport_id = raw.get("transport_source_object_id")
+            if (
+                not isinstance(content_id, str)
+                or not isinstance(transport_id, str)
+                or transport_id not in imported_sources
+            ):
+                raise _invalid(
+                    "projection_semantic_source_missing",
+                    "A semantic content item has no imported source transport.",
+                )
+            if content_id in content_targets:
+                raise _invalid(
+                    "projection_semantic_content_duplicate",
+                    "A Student Content item was imported more than once.",
+                )
+            target = imported_sources[transport_id]
+            normalized = dict(raw)
+            by_element.setdefault(id(target), []).append(normalized)
+            content_targets[content_id] = target
+        raw_relations = block.get("relations", [])
+        if not isinstance(raw_relations, list):
+            raise _invalid(
+                "projection_semantic_relations_invalid",
+                "Imported semantic relations must be an array.",
+            )
+        for raw_relation in raw_relations:
+            if not isinstance(raw_relation, dict):
+                raise _invalid(
+                    "projection_semantic_relation_invalid",
+                    "An imported semantic relation has an invalid shape.",
+                )
+            key = (
+                str(raw_relation.get("relation_type")),
+                str(raw_relation.get("source_content_id")),
+                str(raw_relation.get("target_content_id")),
+            )
+            if key not in relation_keys:
+                relation_keys.add(key)
+                relations.append(dict(raw_relation))
+    return by_element, content_targets, relations
+
+
 def _find_body_element(document: ET.Element, locator: str) -> ET.Element:
     body = document.find(_q(W_NS, "body"))
     assert body is not None
@@ -478,12 +587,15 @@ def _elements_between_imported_boundaries(
     return existing[start : end + 1]
 
 
-def _body_role(text: str) -> str:
-    return {
-        "body.heading.level1": "heading_1",
-        "body.heading.level2": "heading_2",
-        "body.heading.level3": "heading_3",
-    }.get(classify_body_text(text), "body")
+def _body_role(field_ids: set[str]) -> str:
+    for field_id, role in (
+        ("body.heading.level1", "heading_1"),
+        ("body.heading.level2", "heading_2"),
+        ("body.heading.level3", "heading_3"),
+    ):
+        if field_id in field_ids:
+            return role
+    return "body"
 
 
 def _normalize_text_paragraph(paragraph: ET.Element, style_id: str) -> None:
@@ -544,9 +656,12 @@ def _normalize_drawing_paragraph(
     return converted
 
 
-def _split_drawing_paragraph(body: ET.Element, paragraph: ET.Element, normal_style: str) -> None:
+def _split_drawing_paragraph(
+    body: ET.Element,
+    paragraph: ET.Element,
+    normal_style: str,
+) -> list[ET.Element]:
     drawings = list(paragraph.iter(_q(W_NS, "drawing")))
-    original_text = _paragraph_text(paragraph).strip()
     image_paragraphs: list[ET.Element] = []
     for drawing in drawings:
         parent = _parent(paragraph, drawing)
@@ -564,9 +679,10 @@ def _split_drawing_paragraph(body: ET.Element, paragraph: ET.Element, normal_sty
             if run_parent is not None:
                 run_parent.remove(parent)
     index = list(body).index(paragraph)
-    insert_at = index if _FIGURE_CAPTION.match(original_text) else index + 1
+    insert_at = index + 1
     for offset, image_paragraph in enumerate(image_paragraphs):
         body.insert(insert_at + offset, image_paragraph)
+    return image_paragraphs
 
 
 def _anchor_to_inline(anchor: ET.Element) -> ET.Element:
@@ -603,33 +719,6 @@ def _clamp_drawing(drawing: ET.Element, max_width_emu: int) -> None:
         if transform_extent.get("cx") is not None:
             transform_extent.set("cx", str(new_width))
             transform_extent.set("cy", str(new_height))
-
-
-def _bind_figure_captions(body: ET.Element) -> int:
-    children = list(body)
-    bound = 0
-    for index, item in enumerate(children):
-        if item.tag != _q(W_NS, "p") or not list(item.iter(_q(W_NS, "drawing"))):
-            continue
-        captions: list[ET.Element] = []
-        for candidate in children[index + 1 :]:
-            if candidate.tag != _q(W_NS, "p"):
-                break
-            text = _paragraph_text(candidate).strip()
-            if not text:
-                continue
-            if _FIGURE_CAPTION.match(text):
-                captions.append(candidate)
-                continue
-            break
-        if not captions:
-            continue
-        _set_paragraph_flag(item, "keepNext", True)
-        for caption_index, caption in enumerate(captions):
-            _set_paragraph_flag(caption, "keepLines", True)
-            _set_paragraph_flag(caption, "keepNext", caption_index < len(captions) - 1)
-        bound += 1
-    return bound
 
 
 def _normalize_table(table: ET.Element, usable_width_dxa: int | None) -> None:
@@ -677,37 +766,58 @@ def _normalize_table(table: ET.Element, usable_width_dxa: int | None) -> None:
             ET.SubElement(tr_pr, _q(W_NS, "cantSplit"))
 
 
-def _bind_table_captions(body: ET.Element, imported: list[ET.Element]) -> int:
-    imported_tables = {id(item) for item in imported if item.tag == _q(W_NS, "tbl")}
+def _bind_semantic_relations(
+    body: ET.Element,
+    relations: list[JsonObject],
+    content_targets: dict[str, ET.Element],
+) -> dict[str, int]:
+    """Apply pagination bonds from explicit semantic relations without text guessing."""
+
+    counts = {"figure": 0, "table": 0}
     children = list(body)
-    bound = 0
-    for index, table in enumerate(children):
-        if id(table) not in imported_tables:
+    for relation in relations:
+        if relation.get("relation_type") != "caption_of":
             continue
-        previous = _nearest_paragraph(children, index, -1)
-        following = _nearest_paragraph(children, index, 1)
-        if previous is not None and _TABLE_CAPTION.match(_paragraph_text(previous).strip()):
-            _set_paragraph_flag(previous, "keepNext", True)
-            bound += 1
-        elif following is not None and _TABLE_CAPTION.match(_paragraph_text(following).strip()):
-            last_paragraph = next(reversed(list(table.iter(_q(W_NS, "p")))), None)
+        source_id = relation.get("source_content_id")
+        target_id = relation.get("target_content_id")
+        if not isinstance(source_id, str) or not isinstance(target_id, str):
+            raise _invalid(
+                "projection_semantic_relation_invalid",
+                "A caption relation lacks content identities.",
+            )
+        caption = content_targets.get(source_id)
+        target = content_targets.get(target_id)
+        if caption is None or target is None or caption not in children or target not in children:
+            raise _invalid(
+                "projection_semantic_relation_stale",
+                "A caption relation does not resolve to imported content.",
+            )
+        caption_index = children.index(caption)
+        target_index = children.index(target)
+        if target.tag == _q(W_NS, "tbl"):
+            kind = "table"
+        elif list(target.iter(_q(W_NS, "drawing"))):
+            kind = "figure"
+        else:
+            raise _invalid(
+                "projection_semantic_caption_target_invalid",
+                "A caption relation must target a figure or table content item.",
+            )
+        if caption_index < target_index:
+            if caption.tag != _q(W_NS, "p"):
+                raise _invalid(
+                    "projection_semantic_caption_invalid",
+                    "A caption content item must resolve to a paragraph.",
+                )
+            _set_paragraph_flag(caption, "keepNext", True)
+        elif target.tag == _q(W_NS, "p"):
+            _set_paragraph_flag(target, "keepNext", True)
+        else:
+            last_paragraph = next(reversed(list(target.iter(_q(W_NS, "p")))), None)
             if last_paragraph is not None:
                 _set_paragraph_flag(last_paragraph, "keepNext", True)
-                bound += 1
-    return bound
-
-
-def _nearest_paragraph(children: list[ET.Element], index: int, direction: int) -> ET.Element | None:
-    position = index + direction
-    while 0 <= position < len(children):
-        item = children[position]
-        if item.tag == _q(W_NS, "p"):
-            if _paragraph_text(item).strip():
-                return item
-        elif item.tag != _q(W_NS, "bookmarkEnd"):
-            return None
-        position += direction
-    return None
+        counts[kind] += 1
+    return counts
 
 
 def _request_toc_update(parts: dict[str, bytes], document: ET.Element) -> JsonObject:

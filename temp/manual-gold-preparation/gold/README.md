@@ -11,17 +11,17 @@
 
 外层原件保留不动，同时用规范名复制到 `gold/00-inputs/`。外层原件与 Gold 副本必须具有相同的 SHA-256。
 
-`gold/` 最终应有 27 个核心文件：
+`gold/` 最终应有 27 个核心资产组；一个逻辑分页集合或 Extraction Gold 包仍按一个资产组计：
 
 | 资产组 | 计算方式 | 数量 |
 |---|---:|---:|
 | 原始输入 | 3 个学校模板 + 3 个学生论文 | 6 |
 | 学校基础件 | 3 个学校 ×（逻辑单元分页文档、可填写空白模板、带样式字段映射文件） | 9 |
-| 学生内容件 | 3 个学生 × 内容提取处理文档 | 3 |
+| 学生内容件 | 3 个学生 × Registry 绑定的 Extraction Gold 包 | 3 |
 | 交叉转换件 | 3 个学校 × 3 个学生 | 9 |
 | 合计 |  | 27 |
 
-`README.md`、`manifest.csv`、`hash-bindings.sha256` 和验收证据属于管理文件，不计入 27 个核心文件。
+`README.md`、`manifest.csv`、`hash-bindings.sha256` 和验收证据属于管理文件，不计入 27 个核心资产组。
 
 ## 2. 固定项目标识
 
@@ -39,7 +39,7 @@
 
 ### 3.1 入库时间与状态
 
-下表以 `manifest.csv` 为状态真值；没有正式入库日期的项目用 `—` 表示。验收证据不属于 27 个核心文件，因此使用管理状态 `validation-evidence`。
+下表以 `manifest.csv` 为状态真值；没有正式入库日期的项目用 `—` 表示。验收证据不属于 27 个核心资产组，因此使用管理状态 `validation-evidence`。
 
 | 目录或资产 | 已有数据 | 入库时间 | 状态 |
 |---|---|---|---|
@@ -53,7 +53,9 @@
 | `10-school-assets/03-pku-graduate/pku-graduate__fillable-template.docx` | 北大可填写干净 Word | 2026-08-05 | `gold` |
 | `90-validation-evidence/03-pku-graduate/` | Word PDF、40 项验证 JSON、分页审计 | 2026-08-05 | `validation-evidence` |
 | 三校带样式字段映射 | 尚未制作 | — | `missing` |
-| `20-student-assets/` | 3 个结构化学生内容件尚未制作 | — | `missing` |
+| `20-student-assets/student-002/` | Registry v0.3 Accepted Extraction Gold 包；含唯一内容源顺序 | 2026-08-12 | `gold` |
+| `20-student-assets/student-001/`、`student-003/` | Registry v0.4 Accepted Extraction Gold 包；含唯一内容源顺序 | 2026-08-12 | `gold` |
+| `30-cross-conversions/01-hunau-undergraduate/student-002/` | 与同一 Registry/Extraction revision 同步的填写映射 | — | `candidate_ready_for_independent_review`；`NEEDS_INPUT` |
 | `30-cross-conversions/02-njau-undergraduate/` | 南农 3 个学生转换基准稿 | 2026-08-05 | `gold`；文档状态均为 `review_draft` |
 | 其他学校交叉转换件 | 尚未生成 | — | `missing` |
 
@@ -101,11 +103,20 @@ gold/
 │           ├── 12-declarations.docx
 │           └── unit-manifest.json
 ├── 20-student-assets/
-│   ├── student-001/  [missing]
-│   ├── student-002/  [missing]
-│   └── student-003/  [missing]
+│   ├── student-001/  [gold · 2026-08-12]
+│   ├── student-002/  [gold · 2026-08-12]
+│   │   ├── manifest.yaml
+│   │   ├── product-review.md
+│   │   ├── review-assets/
+│   │   ├── student-content.gold.json
+│   │   └── review.yaml
+│   └── student-003/  [gold · 2026-08-12]
 ├── 30-cross-conversions/
-│   ├── 01-hunau-undergraduate/  [missing]
+│   ├── 01-hunau-undergraduate/
+│   │   └── student-002/  [placement candidate · NEEDS_INPUT]
+│   │       ├── manifest.yaml
+│   │       ├── placement-map.gold.yaml
+│   │       └── template-fill-contract.yaml
 │   ├── 02-njau-undergraduate/  [gold · 2026-08-05；document_state=review_draft]
 │   │   ├── njau-undergraduate__student-001__converted.docx
 │   │   ├── njau-undergraduate__student-002__converted.docx
@@ -146,13 +157,23 @@ gold/
 - `fillable-template`：保留学校固定内容、提供唯一填写槽位的空白论文模板；
 - `styled-field-mapping`：学生内容字段到模板槽位的映射，并同时记录目标样式、逻辑单元和填充规则。
 
-### 每个学生 1 个内容件
+### 每个学生 1 个 Extraction Gold 包
 
 ```text
-<student-id>__extracted-content.docx
+<student-id>/
+├── manifest.yaml
+├── product-review.md
+├── review-assets/                 # 供产品核对的受限图片证据
+├── student-content.gold.json
+└── review.yaml
 ```
 
-此文件只保存从学生原文识别、清洗并结构化后的内容，不混入任何目标学校的固定页面。
+该包只保存从学生原文提取的 Registry 字段投影、内容实例、源定位、覆盖和审核结论，不混入
+任何目标学校的固定页面。`product-review.md` 是唯一人工评审界面，展示产品决策、原文内容
+和可勾选结论；`review.yaml` 仅保存签署后的机器状态，不能单独交给 Human 审核。复杂对象
+引用保留在结构化内容项或受限资产目录中，不以一份清洗 DOCX 代替语义 Gold。
+标题、列表等依赖结构的核对必须展示所属上级和相邻可见内容，不能只把孤立 YAML 值或原文
+片段交给产品负责人判断。
 
 ### 学校与学生交叉转换件
 
@@ -210,9 +231,37 @@ gold/
 
 南京农业大学 3 份学生转换基准稿已于 2026-08-05 晋升到 `30-cross-conversions/02-njau-undergraduate/`。三份最终字节均通过 `layout_contract`、`conversion_integrity`、`internal_links`，并与 Microsoft Word 直接打开及全页复核时锁定的 SHA-256 一致。它们作为转换结果 Gold 已验收，但均保留模板缺失策略产生的待补信息，因此 `document_state=review_draft`：student-001 尚有学术成果选填及一处双语表题提示；student-002 尚缺必填致谢并有附录/成果选填提示；student-003 的致谢为 `present_but_suspicious`，同时按要求保留 9 条批注、11 个插入和 10 个删除节点。
 
-按“逻辑分页集合计为一个学校基础件”的核心资产口径，当前已有 13/27 个**已验收**核心文件：6 个原始输入、3 个学校逻辑分页集合、1 个北大可填写模板和 3 个南农交叉转换件。湖南农大和南京农大的 2 个可填写模板虽已落入标准路径，但仍是 `candidate`，不计入这 13 个 Gold。
+按“逻辑分页集合和 Extraction Gold 包各计为一个资产组”的口径，当前已有 14/27 个
+**已验收**核心资产组：6 个原始输入、3 个学校逻辑分页集合、1 个北大可填写模板、3 个
+南农交叉转换件和 1 个 Student 002 Extraction Gold。湖南农大和南京农大的 2 个可填写
+模板仍是 `candidate`，不计入这 14 个 Gold。
 
-两份候选可填写模板、字段映射、学生内容件和其他交叉转换件仍按 `manifest.csv` 的实际状态管理。
+Student 002 Extraction Gold 已于 2026-08-12 通过产品验收并绑定 accepted Content Field
+Registry v0.3：54 个字段各有唯一
+结论，189 个内容项复用了现有提取结果，371 个源对象全部有去向，`unregistered_items`
+为空。产品文档生成时发现并修正了旧候选中 6 张图片与图号反向配对的问题。机器闭包不等于
+Human Gold。2026-08-12 产品结论把 18 个显式括号编号项全部保留为
+`body.numbered_list_item`，不再按文本长短猜为四级标题，并在产品文档中补齐逐条上下文；
+v0.3 还把 12 条图题和 1 条双语表题的源标签/编号只保留在 `observed_value`，填写使用去编号
+的 `normalized_value`，由目标模板重新生成题注标签和编号；
+Registry 政策、其余正文层级、图表题注、公式、负证据和隐私存储均已按
+[Student 002 产品核对表](20-student-assets/student-002/product-review.md)完成验收，结论已
+同步进 `review.yaml`，human review queue 为空。
+
+湖南农大 Student 002 模板填写契约与 placement 已同步绑定同一 Registry/Extraction hash，
+并获准进入独立 Filling 评审，但未随 Extraction 自动晋升。
+该目标模板仍是诊断候选，且有 11 个必填槽缺少用户输入，所以预期业务状态为
+`NEEDS_INPUT`，不计为转换 Gold。两份候选可填写模板、其他学生内容件、字段映射和其他
+交叉转换件继续按 `manifest.csv` 的实际状态管理。
+
+Student 001/003 已按 Student 002 的 accepted Extraction 合同晋升 Gold。扩样没有增加字段；
+accepted Registry v0.4 在相同 54 个 ID 上补齐了多资产语义图、可选源编号题注、结构邻接
+配对、Word 自动列表编号和 final-visible 修订/批注政策。Student 001 Gold 有 244 个内容实例、
+414 个源对象；Student 003 Gold 有 111 个内容实例、249 个源对象；两者均为 0 unresolved、
+0 unregistered，并已加入完整唯一的 `source_order`。人工验收记录分别是
+[Student 001 产品核对表](20-student-assets/student-001/product-review.md)和
+[Student 003 产品核对表](20-student-assets/student-003/product-review.md)。两份包均已计入
+Extraction Gold；后续 Filling 仍需独立制作和验收。
 
 ## 10. 分页 Gold 校对集
 

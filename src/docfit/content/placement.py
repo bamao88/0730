@@ -18,19 +18,13 @@ _BODY_ROLE_FIELDS = frozenset(
         "body.paragraph",
         "body.figure",
         "body.figure.caption",
+        "body.table",
         "body.table.caption",
         "body.equation",
         "conclusion.title",
         "conclusion.body",
     }
 )
-_SEGMENT_TAGS = {
-    "references.entries": "docfit.references",
-    "acknowledgement.body": "docfit.acknowledgement",
-    "appendix.body": "docfit.appendix",
-}
-
-
 def load_fill_contract(path: Path) -> JsonObject:
     source = path.expanduser().resolve(strict=True)
     try:
@@ -133,16 +127,23 @@ def build_placement(
             "Student content is bound to another Registry snapshot.",
         )
 
-    fields = {
-        value.get("field_id"): value
-        for value in student_content.get("fields", [])
-        if isinstance(value, dict) and isinstance(value.get("field_id"), str)
-    }
-    segments = {
-        value.get("field_id"): value
-        for value in student_content.get("segments", [])
-        if isinstance(value, dict) and isinstance(value.get("field_id"), str)
-    }
+    if student_content.get("schema_version") != "docfit-student-content-model/v2":
+        raise _invalid(
+            "placement_student_content_invalid",
+            "Placement requires the ordered Student Content Model.",
+        )
+    if student_content.get("status") != "READY":
+        raise _invalid(
+            "placement_student_content_not_ready",
+            "Student content must resolve every semantic content item before placement.",
+        )
+    items = _ordered_items(student_content)
+    items_by_field: dict[str, list[JsonObject]] = {}
+    for item in items:
+        field_id = item.get("field_id")
+        if isinstance(field_id, str):
+            items_by_field.setdefault(field_id, []).append(item)
+    body_items = [item for item in items if _is_body_item(item)]
     operations: list[JsonObject] = []
     targets: list[JsonObject] = []
     missing_required: list[JsonObject] = []
@@ -156,7 +157,7 @@ def build_placement(
     slots = contract.get("slots")
     if not isinstance(slots, list):
         raise _invalid("placement_slots_invalid", "The fill contract contains no slot list.")
-    body_present = segments.get("body.chapters", {}).get("status") == "extracted"
+    body_present = bool(body_items)
     declared_body_tags = tuple(
         str(slot.get("locator", {}).get("value"))
         for slot in slots
@@ -213,42 +214,44 @@ def build_placement(
         }
         target_status = "missing"
         if tag in declared_body_tag_set:
-            target_status = "filled_by_body_segment" if body_present else "missing"
+            matching_body_items = items_by_field.get(field_id, [])
+            target_status = "filled_by_body_items" if matching_body_items else "missing"
             body_role_refs[field_id] = style_ref
             if tag == body_anchor_tag:
                 body_anchor_ref = style_ref
-        elif field_id in _SEGMENT_TAGS:
-            segment = segments.get(field_id)
-            if isinstance(segment, dict) and segment.get("status") == "extracted":
+        else:
+            field_items = items_by_field.get(field_id, [])
+            if field_items:
                 target_status = "filled"
-                operations.append(
-                    {
+                if _requires_block_copy(field_items, registry):
+                    operation: JsonObject = {
                         "action": "replace_block_content_control",
                         "slot_id": slot_id,
                         "field_id": field_id,
                         "tag": tag,
-                        "source_object_ids": list(segment.get("source_object_ids", [])),
-                        "source_locators": list(segment.get("source_locators", [])),
                         "style_contract_ref": style_ref,
                     }
-                )
-        else:
-            field = fields.get(field_id)
-            if isinstance(field, dict) and field.get("status") == "extracted":
-                target_status = "filled"
-                operations.append(
-                    {
+                    operation.update(_block_source(field_items))
+                    operations.append(operation)
+                else:
+                    operations.append({
                         "action": "replace_text_content_control",
                         "slot_id": slot_id,
                         "field_id": field_id,
                         "tag": tag,
-                        "value": field.get("value"),
-                        "source_object_ids": list(field.get("source_object_ids", [])),
+                        "value": "\n".join(
+                            str(item["value"])
+                            for item in field_items
+                            if isinstance(item.get("value"), str)
+                        ),
+                        "source_object_ids": [
+                            str(object_id)
+                            for item in field_items
+                            for object_id in item.get("source_object_ids", [])
+                        ],
+                        "source_content_items": [dict(item) for item in field_items],
                         "style_contract_ref": style_ref,
-                    }
-                )
-            elif isinstance(field, dict) and field.get("status") == "conflict":
-                target_status = "conflict"
+                    })
         targets.append(
             {
                 "slot_id": slot_id,
@@ -262,28 +265,27 @@ def build_placement(
         if slot.get("required") is True and target_status == "missing":
             missing_required.append({"slot_id": slot_id, "field_id": field_id, "tag": tag})
 
-    body = segments.get("body.chapters")
-    if isinstance(body, dict) and body.get("status") == "extracted":
+    if body_items:
         if body_anchor_ref is None:
             raise _invalid(
                 "placement_body_style_contract_missing",
                 "The body aggregate has no anchor Style Contract reference.",
             )
-        operations.append(
-            {
+        body_operation: JsonObject = {
                 "action": "replace_block_content_control",
                 "slot_id": "slot.body.aggregate",
-                "field_id": "body.chapters",
+                "field_id": "body.ordered_items",
                 "tag": body_anchor_tag,
-                "source_object_ids": list(body.get("source_object_ids", [])),
-                "source_locators": list(body.get("source_locators", [])),
                 "style_contract_ref": body_anchor_ref,
                 "style_role_refs": body_role_refs,
+                "relations": [dict(value) for value in student_content.get("relations", [])],
+                "ordering_policy": "student_source_order_only",
                 "remove_tags_after_fill": [
                     tag for tag in declared_body_tags if tag != body_anchor_tag
                 ],
             }
-        )
+        body_operation.update(_block_source(body_items))
+        operations.append(body_operation)
     unresolved_regions = [
         str(value.get("region_id"))
         for value in contract.get("regions", [])
@@ -296,8 +298,6 @@ def build_placement(
         reasons.append("required_slots_missing")
     if unresolved_regions:
         reasons.append("generated_regions_not_materialized")
-    if any(value.get("status") == "conflict" for value in targets):
-        reasons.append("source_field_conflict")
     return {
         "schema_version": "docfit-placement-actual/v1",
         "status": "COMPLETE" if not reasons else "PARTIAL",
@@ -316,6 +316,82 @@ def build_placement(
         "missing_required": missing_required,
         "unresolved_regions": unresolved_regions,
         "partial_reasons": reasons,
+    }
+
+
+def _ordered_items(student_content: JsonObject) -> list[JsonObject]:
+    raw_items = student_content.get("items")
+    if not isinstance(raw_items, list) or any(not isinstance(item, dict) for item in raw_items):
+        raise _invalid(
+            "placement_student_items_invalid",
+            "Student Content items must be one ordered array.",
+        )
+    items = [dict(item) for item in raw_items]
+    orders = [_source_order(item) for item in items]
+    if orders != sorted(orders) or len(orders) != len(set(orders)):
+        raise _invalid(
+            "placement_student_order_invalid",
+            "Student Content item order must be complete, unique, and unchanged.",
+        )
+    return items
+
+
+def _source_order(item: JsonObject) -> tuple[int, int]:
+    source_order = item.get("source_order")
+    if not isinstance(source_order, dict):
+        raise _invalid("placement_student_order_invalid", "A content item has no source order.")
+    block = source_order.get("block")
+    inline = source_order.get("inline")
+    if (
+        not isinstance(block, int)
+        or isinstance(block, bool)
+        or not isinstance(inline, int)
+        or isinstance(inline, bool)
+    ):
+        raise _invalid("placement_student_order_invalid", "A content item has invalid order.")
+    return block, inline
+
+
+def _is_body_item(item: JsonObject) -> bool:
+    field_id = item.get("field_id")
+    return isinstance(field_id, str) and (
+        field_id.startswith("body.") or field_id.startswith("conclusion.")
+    )
+
+
+def _requires_block_copy(
+    items: list[JsonObject],
+    registry: FieldRegistrySnapshot,
+) -> bool:
+    field_id = items[0].get("field_id")
+    if not isinstance(field_id, str):
+        return False
+    return registry.lookup(field_id).get("content_type") != "text"
+
+
+def _block_source(items: list[JsonObject]) -> JsonObject:
+    """Deduplicate transport blocks without changing the first item source order."""
+
+    transport: dict[str, tuple[str, str]] = {}
+    for item in items:
+        object_id = item.get("transport_source_object_id")
+        locator = item.get("transport_source_locator")
+        if not isinstance(object_id, str) or not isinstance(locator, str):
+            raise _invalid(
+                "placement_transport_source_invalid",
+                "A block content item has no source transport reference.",
+            )
+        current = transport.get(object_id)
+        if current is not None and current[1] != locator:
+            raise _invalid(
+                "placement_transport_source_conflict",
+                "One source transport object has conflicting locators.",
+            )
+        transport.setdefault(object_id, (object_id, locator))
+    return {
+        "source_object_ids": [value[0] for value in transport.values()],
+        "source_locators": [value[1] for value in transport.values()],
+        "source_content_items": [dict(item) for item in items],
     }
 
 

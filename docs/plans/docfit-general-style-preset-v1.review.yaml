@@ -1,0 +1,2084 @@
+schema_version: docfit-general-style-preset/v1.0
+preset_id: docfit.general_thesis.zh
+preset_version: 1.0.0
+revision: 2026-08-11.2
+status: product_definition_accepted
+scope: complete_fallback_for_registered_thesis_fields
+language_context: zh_primary_with_en_parallel_content
+description: >-
+  DocFit 通用学位论文兜底样式的首个产品验收版本。它覆盖内容字段注册表 v0.1 的全部
+  54 个字段：50 个字段具有明确的完整样式或版面角色，4 个字段具有明确的非样式处理。
+  v1 按角色类型定义完整属性集合，并可展开得到不依赖 Word 隐式默认值的最终有效值。
+  产品负责人已于 2026-08-11 接受三张产品评审表和其中的产品决策。该接受不构成
+  国家标准符合性声明，也不代表运行时已经实现。
+
+artifact_readiness:
+  product_review_document: docs/human/docfit-general-style-preset-v1-product-review.md
+  field_registry:
+    path: docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
+    registry_id: docfit.thesis.content_fields
+    registry_version: 0.1.0
+    sha256: 9779d0272fc395245002184d43e8356b0722a6821e8ca0a36ced0db6d26d522d
+  property_closure: passed_for_declared_product_property_scope
+  product_definition_complete: true
+  human_product_acceptance: accepted_2026_08_11
+  next_stage_allowed: true
+  production_runtime_readiness: out_of_scope_for_this_revision
+  counts:
+    registry_fields: 54
+    styled_or_layout_fields: 50
+    explicit_non_style_fields: 4
+    unhandled_fields: 0
+    style_roles: 44
+    document_roles: 13
+    source_records: 8
+  property_closure_definition:
+    - every_registry_field_has_exactly_one_handling_record
+    - every_styled_field_references_existing_complete_roles
+    - every_role_has_a_traceable_evidence_profile
+    - every_inherited_style_resolves_without_cycles_or_missing_bases
+    - every_style_role_has_a_declared_role_type
+    - every_style_role_resolves_every_property_required_by_its_role_type
+    - zero_values_are_explicit_zero
+    - non_applicable_values_are_explicit_N_A
+    - absent_numbering_and_tab_stops_are_explicit_none
+    - no_resolved_value_is_blank_null_or_word_default
+    - every_value_is_classified_as_national_standard_institutional_consensus_or_product_decision
+  product_definition_blockers: []
+  accepted_product_decisions:
+    - cover_fallback_boundary_and_geometry_as_reviewed
+    - duplex_binding_and_non_mirrored_margin_choice_as_reviewed
+    - product_gap_fill_roles_as_reviewed
+    - table_body_alignment_and_cell_padding_as_reviewed
+    - five_controlled_font_parameter_boundary_as_reviewed
+    - configuration_defaults_and_field_semantics_as_reviewed
+  non_blocking_external_review:
+    - licensed_or_authorized_final_standard_text_review_before_any_national_conformance_claim
+  review_governance:
+    every_fallback_style_discussion_or_change_requires_updated_product_review_tables: true
+    required_human_views:
+      - global_fallback_style_table
+      - complete_field_handling_mapping_table
+      - inheritance_expanded_effective_style_table
+    yaml_alone_is_sufficient_for_product_review: false
+
+authority_policy:
+  precedence:
+    - verified_school_complete_role
+    - this_complete_versioned_preset_role
+  selection_granularity: complete_semantic_role
+  property_level_school_preset_mixing: forbidden
+  word_normal_counts_as_school_role_coverage: false
+  model_generated_or_inferred_values_at_runtime: forbidden
+  school_template_observations_as_general_preset_values: forbidden
+  materialize_complete_template_before_student_fill: true
+  global_container_rule: copy_school_word_template_and_preserve_it_as_final_document_container
+  global_role_rule: preserve_verified_complete_school_global_roles_otherwise_use_complete_preset_global_roles
+  conformance_claim: forbidden_until_authorized_final_standard_text_is_reviewed
+  interpretation: >-
+    高校官方指南只作为形成通用产品预设的权威参考，不被标注为国家标准；精确数值即使得到
+    多校官方材料一致支持，仍属于 DocFit 预设值。学校已提供的完整角色永远覆盖本预设角色。
+
+source_catalog:
+  gb_t_7713_1_2025_metadata:
+    authority: national_standard_official_metadata
+    title: 信息与文献 编写规则 第1部分：学位论文
+    standard_id: GB/T 7713.1-2025
+    status: current
+    issued_on: 2025-08-01
+    effective_on: 2026-02-01
+    verified_on: 2026-08-10
+    url: https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=36C05B5738C54D42B4B262525320B52F
+    usable_for:
+      - standard_identity_and_status
+      - thesis_presentation_scope
+    limitation: official_platform_withholds_full_text_due_adopted_standard_copyright
+  gb_t_7714_2025_metadata:
+    authority: national_standard_official_metadata
+    title: 信息与文献 参考文献著录规则
+    standard_id: GB/T 7714-2025
+    status: current
+    issued_on: 2025-12-02
+    effective_on: 2026-07-01
+    verified_on: 2026-08-10
+    url: https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=C6CE52E55AC09B9C79A20AEA77CEDD14
+    usable_for:
+      - standard_identity_and_status
+      - bibliography_and_citation_system_scope
+    limitation: official_platform_withholds_full_text_due_adopted_standard_copyright
+  gb_t_7713_1_public_draft:
+    authority: national_standard_official_public_draft_not_final_text
+    title: 学位论文编写规则（公开征求意见稿）
+    plan_id: 20220023-T-469
+    verified_on: 2026-08-10
+    url: https://std.samr.gov.cn/dcpspTools/gbPlan/download?path=%2Fzxd%2F2022002311%2F20_%E6%A0%87%E5%87%86%E8%B5%B7%E8%8D%89%2F20_DI_2022002311_%E5%AD%A6%E4%BD%8D%E8%AE%BA%E6%96%87%E7%BC%96%E5%86%99%E8%A7%84%E5%88%99.pdf
+    usable_for:
+      - provisional_structure_and_minimum_layout_constraints
+    provisional_clauses:
+      chapter_starts_new_page: 5.3.1
+      formula_number_right_aligned: 5.3.4
+      references_start_new_page: 5.4
+      minimum_page_margins: 6.10
+    limitation: every_rule_must_be_rechecked_against_authorized_final_text_before_conformance_claim
+  tsinghua_2023_guide:
+    authority: university_official_guide
+    institution: 清华大学研究生院
+    title: 研究生学位论文写作指南
+    edition: 2023-03
+    verified_on: 2026-08-10
+    url: https://www.dhs.tsinghua.edu.cn/wp-content/uploads/2023/12/2024031107044595.pdf
+    usable_for:
+      - exact_typography_operationalization
+      - page_layout
+      - heading_hierarchy
+      - abstract_toc_figure_table_equation_reference_and_note_styles
+    limitation: institution_specific_reference_not_national_standard
+  pku_2014_guide:
+    authority: university_official_guide
+    institution: 北京大学学位办公室
+    title: 研究生学位论文写作指南
+    edition: 2014-05
+    published_page_date: 2018-03-01
+    verified_on: 2026-08-10
+    url: https://grs.pku.edu.cn/docs/2018-03/20180301082929918531.pdf
+    usable_for:
+      - exact_typography_operationalization
+      - page_layout_cross_check
+      - heading_hierarchy
+      - abstract_toc_figure_table_equation_reference_and_note_styles
+    limitation: institution_specific_reference_not_national_standard
+  sjtu_official_requirement:
+    authority: university_official_requirement
+    institution: 上海交通大学
+    title: 博士、硕士学位论文撰写要求
+    verified_on: 2026-08-10
+    url: https://gk.sjtu.edu.cn/Data/View/648
+    usable_for:
+      - heading_size_cross_check
+      - body_size_cross_check
+      - figure_table_caption_position_cross_check
+      - equation_alignment_cross_check
+    limitation: institution_specific_reference_not_national_standard
+  whu_official_requirement:
+    authority: university_official_requirement
+    institution: 武汉大学测绘学院
+    title: 研究生硕士学位论文印制规定
+    verified_on: 2026-08-10
+    url: https://www.sgg.whu.edu.cn/info/1337/1186.htm
+    usable_for:
+      - A4_duplex_cross_check
+      - margin_floor_cross_check
+      - abstract_body_and_reference_typography_cross_check
+      - chapter_new_page_cross_check
+    limitation: institution_specific_reference_not_national_standard
+  docfit_product_decisions_v1:
+    authority: explicit_product_preset_decision
+    owner: DocFit
+    version: 1.0.0
+    verified_on: 2026-08-11
+    usable_for:
+      - resolving_silence_or_conflict_between_sources
+      - defining_roles_beyond_common_official_guides
+      - fixing_stable_defaults_and_parameter_boundaries
+    limitation: product_values_accepted_but_national_conformance_claim_requires_authorized_final_text_review
+
+evidence_profiles:
+  national_structure_provisional:
+    classification: provisional_national_rule
+    source_refs:
+      - gb_t_7713_1_2025_metadata
+      - gb_t_7713_1_public_draft
+    confidence: provisional_until_final_text_review
+  bibliography_current_standard:
+    classification: current_national_bibliography_scope_plus_institutional_typography
+    source_refs:
+      - gb_t_7714_2025_metadata
+      - tsinghua_2023_guide
+      - pku_2014_guide
+    confidence: standard_identity_and_typography_confirmed_full_bibliography_rule_implementation_pending
+  reference_section_combined:
+    classification: provisional_national_structure_plus_institutional_typography
+    source_refs:
+      - gb_t_7713_1_2025_metadata
+      - gb_t_7713_1_public_draft
+      - tsinghua_2023_guide
+      - pku_2014_guide
+    confidence: typography_high_structure_provisional_until_final_text_review
+  official_cover_consensus:
+    classification: institutional_consensus_adopted_as_product_value
+    source_refs:
+      - tsinghua_2023_guide
+      - pku_2014_guide
+    confidence: high_for_typography_not_universal_requirement
+  official_core_typography_consensus:
+    classification: institutional_consensus_adopted_as_product_value
+    source_refs:
+      - tsinghua_2023_guide
+      - pku_2014_guide
+      - sjtu_official_requirement
+      - whu_official_requirement
+    confidence: high_for_body_and_major_heading_values
+  official_abstract_and_toc_consensus:
+    classification: institutional_consensus_adopted_as_product_value
+    source_refs:
+      - tsinghua_2023_guide
+      - pku_2014_guide
+    confidence: high_for_typography_and_spacing
+  official_object_and_note_consensus:
+    classification: institutional_consensus_adopted_as_product_value
+    source_refs:
+      - tsinghua_2023_guide
+      - pku_2014_guide
+      - sjtu_official_requirement
+    confidence: high_for_caption_position_size_and_equation_alignment
+  official_page_consensus_product_resolution:
+    classification: product_resolution_satisfying_available_official_constraints
+    source_refs:
+      - gb_t_7713_1_public_draft
+      - tsinghua_2023_guide
+      - pku_2014_guide
+      - whu_official_requirement
+      - docfit_product_decisions_v1
+    confidence: high_as_safe_default_not_universal_requirement
+  explicit_product_gap_fill:
+    classification: product_decision_where_no_stable_general_rule_was_found
+    source_refs:
+      - docfit_product_decisions_v1
+    confidence: requires_human_acceptance
+
+parameters:
+  body_cjk_font:
+    type: string
+    default: 宋体
+    enabled: true
+    allowed_sources: [preset_default, verified_school_requirement, approved_task_requirement]
+    user_free_form_configuration: forbidden
+  body_latin_font:
+    type: string
+    default: Times New Roman
+    enabled: true
+    allowed_sources: [preset_default, verified_school_requirement, approved_task_requirement]
+    user_free_form_configuration: forbidden
+  heading_cjk_font:
+    type: string
+    default: 黑体
+    enabled: true
+    allowed_sources: [preset_default, verified_school_requirement, approved_task_requirement]
+    user_free_form_configuration: forbidden
+  heading_latin_font:
+    type: string
+    default: Arial
+    enabled: true
+    allowed_sources: [preset_default, verified_school_requirement, approved_task_requirement]
+    user_free_form_configuration: forbidden
+  math_font:
+    type: string
+    default: Cambria Math
+    enabled: true
+    allowed_sources: [preset_default, verified_school_requirement, approved_task_requirement]
+    user_free_form_configuration: forbidden
+parameter_policy:
+  undeclared_parameters: forbidden
+  observed_school_value_as_parameter_source: forbidden
+  resolved_values_recorded_in_output_manifest: required
+  parameter_change_applies_to_entire_preset_role_graph: true
+  parameters_are_not_user_facing_style_controls: true
+parameterization_review:
+  fixed_in_v1:
+    - all_font_sizes
+    - all_spacing_values
+    - page_geometry
+    - heading_numbering_depth_and_format
+    - caption_placement
+    - bibliography_list_layout
+  deliberately_not_parameterized_in_v1:
+    - all_font_sizes
+    - all_line_spacing
+    - all_paragraph_spacing
+    - all_page_margins
+    - heading_numbering
+    - front_matter_roman_case
+    - duplex_and_mirrored_margins
+  task_configuration_not_typography_parameter:
+    - references.style_system
+    - review.mode
+
+resolution_contract:
+  resolution_order:
+    - complete_style_type_profile
+    - based_on_role
+    - role_properties
+    - overrides
+  inheritance_key: based_on
+  override_key: overrides
+  merge_rule: deep_merge_base_then_overrides
+  list_merge_rule: replace
+  cycle_policy: reject
+  missing_base_policy: reject
+  complete_role_definition: all_role_type_required_effective_properties_exist_and_are_non_blank_after_resolution
+  deterministic_identity: preset_id_plus_preset_version_plus_resolved_parameters
+
+complete_style_type_profiles:
+  paragraph:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: false
+      widow_control: true
+      outline_level: body_text
+    numbering: none
+    tab_stops: none
+  heading:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: true
+      keep_together: false
+      widow_control: true
+      outline_level: body_text
+    numbering: none
+    tab_stops: none
+    toc_inclusion: none
+  toc_entry:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: exact_pt, value: 20}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: false
+      widow_control: true
+      outline_level: body_text
+    numbering: none
+    tab_stops:
+      - {position: right_margin, alignment: right, leader: dot}
+    toc_source_level: N/A
+  character:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph: N/A
+    pagination_controls: N/A
+    numbering: N/A
+    tab_stops: N/A
+  table_cell:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+    pagination_controls: N/A
+    numbering: N/A
+    tab_stops: N/A
+    cell:
+      padding_mm: {top: 0, bottom: 0, left: 1.9, right: 1.9}
+      text_wrap: true
+  caption:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: true
+      widow_control: true
+      outline_level: body_text
+    numbering: none
+    tab_stops: none
+  equation:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: true
+      widow_control: true
+      outline_level: body_text
+    numbering: {scope: chapter, format: chapter.sequence}
+    tab_stops: none
+  header_footer:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 0
+      right_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: false
+      widow_control: false
+      outline_level: N/A
+    numbering: none
+    tab_stops: none
+  footnote:
+    run:
+      color: "#000000"
+      underline: none
+      strikethrough: false
+      vertical_position: baseline
+      character_spacing_pt: 0
+    paragraph:
+      first_line_indent_chars: 0
+      left_indent_chars: 1.5
+      right_indent_chars: 0
+      hanging_indent_chars: 1.5
+      line_spacing: {mode: single, value: 1.0}
+      page_break_before: false
+      keep_with_next: false
+      keep_together: false
+      widow_control: true
+      outline_level: N/A
+    tab_stops: none
+    footnote:
+      separator: {type: horizontal_line, color: "#000000", width_mm: 50, thickness_pt: 0.5, alignment: left, space_after_pt: 3}
+
+complete_style_type_profile_sources:
+  paragraph:
+    neutral_text_effects_and_zero_pagination_controls: explicit_product_gap_fill
+  heading:
+    neutral_text_effects_zero_indents_and_default_non_numbering: explicit_product_gap_fill
+  toc_entry:
+    neutral_text_effects_zero_controls_and_right_dot_tab: explicit_product_gap_fill
+  character:
+    neutral_text_effects_and_explicit_non_applicable_groups: explicit_product_gap_fill
+  table_cell:
+    neutral_text_effects_zero_indents_explicit_non_applicable_groups_cell_padding_and_wrap: explicit_product_gap_fill
+  caption:
+    neutral_text_effects_zero_indents_and_keep_together: explicit_product_gap_fill
+  equation:
+    neutral_text_effects_zero_indents_and_keep_together: explicit_product_gap_fill
+  header_footer:
+    neutral_text_effects_zero_indents_and_no_numbering: explicit_product_gap_fill
+  footnote:
+    neutral_text_effects_zero_controls_and_separator_line: explicit_product_gap_fill
+
+property_source_contract:
+  role_explicit_properties: role_evidence_profile
+  type_profile_properties: complete_style_type_profile_sources
+  inherited_properties: retain_source_classification_of_base_or_type_profile
+  overrides: overriding_role_evidence_profile_unless_property_source_overrides_is_declared
+  unclassified_property: forbidden
+
+required_effective_properties:
+  paragraph:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+  heading:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+    - toc_inclusion
+  toc_entry:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+    - toc_source_level
+  character:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph
+    - pagination_controls
+    - numbering
+    - tab_stops
+  table_cell:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - pagination_controls
+    - numbering
+    - tab_stops
+    - cell.vertical_alignment
+    - cell.padding_mm.top
+    - cell.padding_mm.bottom
+    - cell.padding_mm.left
+    - cell.padding_mm.right
+    - cell.text_wrap
+  caption:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+    - caption.object_type
+    - caption.placement
+    - caption.numbering_scope
+    - caption.numbering_format
+  equation:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+    - equation.number_alignment
+    - equation.number_delimiters
+    - equation.leader
+  header_footer:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+  footnote:
+    - run.cjk_font
+    - run.latin_font
+    - run.size_pt
+    - run.bold
+    - run.italic
+    - run.color
+    - run.underline
+    - run.strikethrough
+    - run.vertical_position
+    - run.character_spacing_pt
+    - paragraph.alignment
+    - paragraph.first_line_indent_chars
+    - paragraph.left_indent_chars
+    - paragraph.right_indent_chars
+    - paragraph.hanging_indent_chars
+    - paragraph.line_spacing.mode
+    - paragraph.line_spacing.value
+    - paragraph.space_before_pt
+    - paragraph.space_after_pt
+    - paragraph.page_break_before
+    - paragraph.keep_with_next
+    - paragraph.keep_together
+    - paragraph.widow_control
+    - paragraph.outline_level
+    - numbering
+    - tab_stops
+    - footnote.separator.type
+    - footnote.separator.color
+    - footnote.separator.width_mm
+    - footnote.separator.thickness_pt
+    - footnote.separator.alignment
+    - footnote.separator.space_after_pt
+
+required_document_role_properties:
+  page_layout:
+    - page_size
+    - width_mm
+    - height_mm
+    - orientation
+    - print_sides
+    - mirrored_margins
+    - binding_edge
+    - margins_mm.top
+    - margins_mm.bottom
+    - margins_mm.left
+    - margins_mm.right
+    - gutter_mm
+    - header_distance_mm
+    - footer_distance_mm
+    - header
+    - footer
+    - page_number
+  pagination:
+    - front_matter.starts_at
+    - front_matter.ends_before
+    - front_matter.format
+    - front_matter.restart_at
+    - body_and_back_matter.starts_at
+    - body_and_back_matter.ends_at
+    - body_and_back_matter.format
+    - body_and_back_matter.restart_at
+    - placement
+    - show_on_first_page_of_section
+  header_layout:
+    - starts_at
+    - ends_at
+    - first_page
+    - odd_page_content
+    - even_page_content
+    - separator_line
+    - style_role
+  footer_layout:
+    - starts_at
+    - ends_at
+    - first_page_content
+    - odd_page_content
+    - even_page_content
+    - separator_line
+    - style_role
+  section_start:
+    - break_type
+    - start_side
+    - page_number_restart
+    - link_header_footer_to_previous
+    - applies_to
+  figure_layout:
+    - object_alignment
+    - text_wrapping
+    - max_width_mm
+    - max_height_mm
+    - allow_upscale
+    - oversize_action
+    - caption_placement
+    - keep_object_and_caption_together
+    - numbering_scope
+    - numbering_format
+    - subfigure_format
+  table_layout:
+    - object_alignment
+    - max_width_mm
+    - width_policy
+    - caption_placement
+    - repeat_header_row
+    - allow_row_break_across_pages
+    - continuation_caption_prefix
+    - border_model
+    - border_width_pt.top
+    - border_width_pt.header_bottom
+    - border_width_pt.bottom
+    - border_width_pt.internal_horizontal
+    - border_width_pt.internal_vertical
+    - default_body_alignment
+    - numbering_scope
+    - numbering_format
+  equation_layout:
+    - equation_alignment
+    - max_width_mm
+    - overflow_action
+    - number_alignment
+    - number_delimiters
+    - leader_between_equation_and_number
+    - numbering_scope
+    - numbering_format
+  landscape_layout:
+    - page_size
+    - width_mm
+    - height_mm
+    - orientation
+    - print_sides
+    - mirrored_margins
+    - binding_edge
+    - margins_mm.top
+    - margins_mm.bottom
+    - margins_mm.left
+    - margins_mm.right
+    - gutter_mm
+    - section_break_before
+    - section_break_after
+    - header_footer_behavior
+    - page_number_behavior
+    - restore_previous_section_geometry
+  protected_page:
+    - insertion_mode
+    - page_geometry
+    - content_reflow
+    - restyling
+    - image_reconstruction
+    - header
+    - footer
+    - page_number
+  reviewer_list_layout:
+    - break_type
+    - start_side
+    - page_geometry
+    - preferred_container
+    - table_borders
+    - repeat_header_row
+    - allow_row_break_across_pages
+    - signature_required
+    - header
+    - footer
+    - page_number
+
+document_roles:
+  layout.document.body_page:
+    role_type: page_layout
+    complete: true
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: docfit_product_preset_value
+    page_size: A4
+    width_mm: 210
+    height_mm: 297
+    orientation: portrait
+    print_sides: duplex
+    mirrored_margins: false
+    binding_edge: left
+    margins_mm: {top: 30, bottom: 30, left: 30, right: 30}
+    gutter_mm: 0
+    header_distance_mm: 22
+    footer_distance_mm: 22
+    header: layout.document.header
+    footer: layout.document.footer
+    page_number: layout.document.pagination
+    rationale: >-
+      30mm 四边距采用清华官方值，并满足公开稿所示最低边距；统一四边距比综合多校不同数值更稳定。
+  layout.document.cover_page.zh:
+    role_type: page_layout
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    page_size: A4
+    width_mm: 210
+    height_mm: 297
+    orientation: portrait
+    print_sides: single_sided
+    mirrored_margins: false
+    binding_edge: left
+    margins_mm: {top: 60, bottom: 60, left: 40, right: 40}
+    gutter_mm: 0
+    header_distance_mm: N/A
+    footer_distance_mm: N/A
+    header: none
+    footer: none
+    page_number: none
+  layout.document.pagination:
+    role_type: pagination
+    complete: true
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: docfit_product_preset_value
+    front_matter:
+      starts_at: abstract.zh
+      ends_before: body.chapters
+      format: upper_roman
+      restart_at: 1
+    body_and_back_matter:
+      starts_at: body.chapters
+      ends_at: document_end
+      format: arabic
+      restart_at: 1
+    placement: footer_center
+    show_on_first_page_of_section: true
+  layout.document.header:
+    role_type: header_layout
+    complete: true
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: institutional_reference_adopted_as_product_value
+    starts_at: abstract.zh
+    ends_at: document_end
+    first_page: same_as_other_pages
+    odd_page_content: current_major_part_or_chapter_title
+    even_page_content: current_major_part_or_chapter_title
+    separator_line: none
+    style_role: style.header
+  layout.document.footer:
+    role_type: footer_layout
+    complete: true
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: institutional_reference_adopted_as_product_value
+    starts_at: abstract.zh
+    ends_at: document_end
+    first_page_content: page_number
+    odd_page_content: page_number
+    even_page_content: page_number
+    separator_line: none
+    style_role: style.footer
+  layout.major_part.start:
+    role_type: section_start
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    break_type: next_page
+    start_side: any
+    page_number_restart: none
+    link_header_footer_to_previous: true
+    applies_to:
+      - abstract.zh
+      - abstract.en
+      - generated.toc
+      - generated.list_of_figures
+      - generated.list_of_tables
+      - references.entries
+      - achievements.journal_articles
+      - achievements.conference_papers
+      - achievements.projects
+      - achievements.intellectual_property
+      - achievements.entries
+      - acknowledgement.body
+      - appendix.body
+  layout.chapter.start:
+    role_type: section_start
+    complete: true
+    evidence_profile: national_structure_provisional
+    value_authority: provisional_national_rule_reinforced_by_institutional_consensus
+    break_type: next_page
+    start_side: any
+    page_number_restart: none
+    link_header_footer_to_previous: true
+    applies_to: [body.heading.level1]
+    draft_clause: 5.3.1
+  layout.figure:
+    role_type: figure_layout
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_plus_docfit_size_policy
+    object_alignment: center
+    text_wrapping: inline
+    max_width_mm: 150
+    max_height_mm: 220
+    allow_upscale: false
+    oversize_action: scale_down_proportionally
+    caption_placement: below_object
+    keep_object_and_caption_together: true
+    numbering_scope: chapter
+    numbering_format: chapter.sequence
+    subfigure_format: lowercase_letter_in_parentheses
+  layout.table:
+    role_type: table_layout
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_plus_docfit_table_policy
+    object_alignment: center
+    max_width_mm: 150
+    width_policy: fit_within_text_area
+    caption_placement: above_object
+    repeat_header_row: true
+    allow_row_break_across_pages: false
+    continuation_caption_prefix: 续
+    border_model: three_line_table
+    border_width_pt: {top: 1.5, header_bottom: 1.0, bottom: 1.5, internal_horizontal: 0, internal_vertical: 0}
+    default_body_alignment: center
+    numbering_scope: chapter
+    numbering_format: chapter.sequence
+  layout.equation:
+    role_type: equation_layout
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: provisional_national_rule_reinforced_by_institutional_consensus
+    equation_alignment: center
+    max_width_mm: 150
+    overflow_action: block_and_require_manual_review
+    number_alignment: right
+    number_delimiters: parentheses
+    leader_between_equation_and_number: none
+    numbering_scope: chapter
+    numbering_format: chapter.sequence
+    draft_clause: 5.3.4
+  layout.landscape_block:
+    role_type: landscape_layout
+    complete: true
+    evidence_profile: explicit_product_gap_fill
+    value_authority: docfit_product_preset_value
+    page_size: A4
+    width_mm: 297
+    height_mm: 210
+    orientation: landscape
+    print_sides: duplex
+    mirrored_margins: false
+    binding_edge: left
+    margins_mm: {top: 30, bottom: 30, left: 30, right: 30}
+    gutter_mm: 0
+    section_break_before: next_page
+    section_break_after: next_page
+    header_footer_behavior: continue_body_header_footer
+    page_number_behavior: continue_without_restart
+    restore_previous_section_geometry: true
+  layout.authoritative_qr_page:
+    role_type: protected_page
+    complete: true
+    evidence_profile: explicit_product_gap_fill
+    value_authority: product_safety_boundary
+    insertion_mode: retain_authoritative_whole_page
+    page_geometry: preserve_source
+    content_reflow: forbidden
+    restyling: forbidden
+    image_reconstruction: forbidden
+    header: preserve_source
+    footer: preserve_source
+    page_number: preserve_source
+  layout.reviewer_list:
+    role_type: reviewer_list_layout
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    break_type: next_page
+    start_side: any
+    page_geometry: layout.document.body_page
+    preferred_container: borderless_table
+    table_borders: none
+    repeat_header_row: true
+    allow_row_break_across_pages: false
+    signature_required: false
+    header: none
+    footer: none
+    page_number: none
+
+style_roles:
+  style.base.body:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: false
+      italic: false
+    paragraph:
+      alignment: justified
+      first_line_indent_chars: 2
+      left_indent_chars: 0
+      right_indent_chars: 0
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 0
+      space_after_pt: 0
+      keep_with_next: false
+      keep_together: false
+      widow_control: true
+
+  style.front.title.zh:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 26
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: multiple, value: 1.25}
+      space_before_pt: 0
+      space_after_pt: 18
+      keep_with_next: true
+  style.front.metadata.value:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: 仿宋
+      latin_font: ${body_latin_font}
+      size_pt: 16
+      bold: false
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: exact_pt, value: 24}
+      space_before_pt: 0
+      space_after_pt: 0
+      keep_with_next: false
+  style.front.committee.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 16
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 24
+      space_after_pt: 18
+      keep_with_next: true
+  style.front.committee.body:
+    role_type: table_cell
+    kind: table_cell_paragraph
+    complete: true
+    evidence_profile: official_cover_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: false
+      italic: false
+    paragraph:
+      alignment: left
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 0
+      space_after_pt: 0
+    cell:
+      vertical_alignment: center
+
+  style.abstract.title.zh:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 16
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 24
+      space_after_pt: 18
+      keep_with_next: true
+      outline_level: body_text
+    toc_inclusion: included_as_unnumbered_major_part
+  style.abstract.title.en:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 16
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 24
+      space_after_pt: 18
+      keep_with_next: true
+      outline_level: body_text
+    toc_inclusion: included_as_unnumbered_major_part
+  style.abstract.document_title.en:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 16
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 24
+      space_after_pt: 18
+      keep_with_next: true
+  style.abstract.identity.en:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: false
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 0
+      space_after_pt: 0
+      keep_with_next: true
+  style.abstract.body.zh:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides: {}
+  style.abstract.body.en:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      paragraph:
+        first_line_indent_chars: 0
+  style.abstract.keywords.zh:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      paragraph:
+        first_line_indent_chars: 0
+        space_before_pt: 6
+    inline_label: {text: 关键词：, bold: true}
+    separator: ；
+  style.abstract.keywords.en:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.abstract.body.en
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      paragraph:
+        space_before_pt: 6
+    inline_label: {text: "Keywords: ", bold: true}
+    separator: "; "
+
+  style.toc.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.abstract.title.zh
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      toc_inclusion: none
+  style.toc.chapter:
+    role_type: toc_entry
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 12
+      bold: true
+      italic: false
+    paragraph:
+      alignment: left
+      left_indent_chars: 0
+      hanging_indent_chars: 0
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 6
+      space_after_pt: 0
+    toc_source_level: 1
+  style.toc.level1:
+    role_type: toc_entry
+    kind: paragraph
+    complete: true
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: false
+      italic: false
+    paragraph:
+      alignment: left
+      left_indent_chars: 1
+      hanging_indent_chars: 0
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 0
+      space_after_pt: 0
+    toc_source_level: 2
+  style.toc.level2:
+    role_type: toc_entry
+    kind: paragraph
+    complete: true
+    based_on: style.toc.level1
+    evidence_profile: official_abstract_and_toc_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      paragraph:
+        left_indent_chars: 2
+      toc_source_level: 3
+
+  style.body.heading.1:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 16
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 24
+      space_after_pt: 18
+      page_break_before: true
+      keep_with_next: true
+      outline_level: 1
+    numbering: {format: decimal, level: 1, separator: space}
+    toc_inclusion: included_at_level_1
+  style.body.heading.2:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 14
+      bold: true
+      italic: false
+    paragraph:
+      alignment: left
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 24
+      space_after_pt: 6
+      keep_with_next: true
+      outline_level: 2
+    numbering: {format: decimal_hierarchy, level: 2, separator: space}
+    toc_inclusion: included_at_level_2
+  style.body.heading.3:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 13
+      bold: true
+      italic: false
+    paragraph:
+      alignment: left
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 12
+      space_after_pt: 6
+      keep_with_next: true
+      outline_level: 3
+    numbering: {format: decimal_hierarchy, level: 3, separator: space}
+    toc_inclusion: included_at_level_3
+  style.body.heading.4:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${heading_cjk_font}
+      latin_font: ${heading_latin_font}
+      size_pt: 12
+      bold: true
+      italic: false
+    paragraph:
+      alignment: left
+      line_spacing: {mode: exact_pt, value: 20}
+      space_before_pt: 12
+      space_after_pt: 6
+      keep_with_next: true
+      outline_level: body_text
+    numbering: {format: decimal_hierarchy, level: 4, separator: space}
+    toc_inclusion: none
+  style.body.heading.5:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.body.heading.4
+    evidence_profile: explicit_product_gap_fill
+    value_authority: docfit_product_preset_value
+    overrides:
+      paragraph:
+        space_before_pt: 6
+        space_after_pt: 3
+      numbering:
+        format: decimal_hierarchy
+        level: 5
+        separator: space
+      toc_inclusion: none
+    rationale: official_guides_generally_discourage_depth_beyond_level4_but_registry_requires_level5
+  style.body.paragraph:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides: {}
+  style.body.numbered_list_item:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: explicit_product_gap_fill
+    value_authority: docfit_product_preset_value
+    overrides:
+      paragraph:
+        first_line_indent_chars: 0
+        left_indent_chars: 2
+        hanging_indent_chars: 2
+    numbering: {format: arabic_period, restart_scope: list}
+  style.body.block_quote:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: explicit_product_gap_fill
+    value_authority: docfit_product_preset_value
+    overrides:
+      paragraph:
+        first_line_indent_chars: 0
+        left_indent_chars: 2
+        right_indent_chars: 2
+        space_before_pt: 6
+        space_after_pt: 6
+  style.inline.emphasis:
+    role_type: character
+    kind: character
+    complete: true
+    evidence_profile: explicit_product_gap_fill
+    value_authority: docfit_product_preset_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: true
+      italic: false
+  style.inline.quote:
+    role_type: character
+    kind: character
+    complete: true
+    evidence_profile: explicit_product_gap_fill
+    value_authority: preserve_body_typography
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 12
+      bold: false
+      italic: false
+
+  style.caption.figure:
+    role_type: caption
+    kind: paragraph
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 11
+      bold: false
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 6
+      space_after_pt: 12
+      keep_with_next: false
+    numbering: {scope: chapter, format: chapter.sequence, label_zh: 图, label_en: Figure}
+    caption:
+      object_type: figure
+      placement: below_object
+      numbering_scope: chapter
+      numbering_format: chapter.sequence
+  style.caption.table:
+    role_type: caption
+    kind: paragraph
+    complete: true
+    based_on: style.caption.figure
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      paragraph:
+        space_before_pt: 12
+        space_after_pt: 6
+        keep_with_next: true
+      numbering: {scope: chapter, format: chapter.sequence, label_zh: 表, label_en: Table}
+      caption:
+        object_type: table
+        placement: above_object
+        numbering_scope: chapter
+        numbering_format: chapter.sequence
+  style.table.header:
+    role_type: table_cell
+    kind: table_cell_paragraph
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 11
+      bold: true
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 3
+      space_after_pt: 3
+    cell:
+      vertical_alignment: center
+  style.table.body:
+    role_type: table_cell
+    kind: table_cell_paragraph
+    complete: true
+    based_on: style.table.header
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      run:
+        bold: false
+  style.table.note:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 10.5
+      bold: false
+      italic: false
+    paragraph:
+      alignment: left
+      first_line_indent_chars: 0
+      line_spacing: {mode: single}
+      space_before_pt: 6
+      space_after_pt: 12
+  style.equation.block:
+    role_type: equation
+    kind: paragraph
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${math_font}
+      size_pt: 12
+      bold: false
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 6
+      space_after_pt: 6
+      keep_together: true
+    equation:
+      number_alignment: right
+      number_delimiters: parentheses
+      leader: none
+
+  style.references.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.body.heading.1
+    evidence_profile: reference_section_combined
+    value_authority: provisional_national_structure_plus_institutional_typography
+    overrides:
+      numbering: none
+      toc_inclusion: included_as_unnumbered_major_part
+  style.references.entry:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    evidence_profile: bibliography_current_standard
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 10.5
+      bold: false
+      italic: false
+    paragraph:
+      alignment: justified
+      first_line_indent_chars: 0
+      left_indent_chars: 2
+      hanging_indent_chars: 2
+      line_spacing: {mode: exact_pt, value: 16}
+      space_before_pt: 3
+      space_after_pt: 0
+    content_standard: GB/T 7714-2025
+  style.appendix.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.body.heading.1
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      numbering: {format: appendix_upper_letter, separator: space}
+      toc_inclusion: included_as_unnumbered_major_part
+  style.appendix.body:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides: {}
+  style.acknowledgement.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.body.heading.1
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      numbering: none
+      toc_inclusion: included_as_unnumbered_major_part
+  style.acknowledgement.body:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.base.body
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides: {}
+  style.achievements.title:
+    role_type: heading
+    kind: paragraph
+    complete: true
+    based_on: style.body.heading.1
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides:
+      numbering: none
+      toc_inclusion: included_as_unnumbered_major_part
+  style.achievements.entry:
+    role_type: paragraph
+    kind: paragraph
+    complete: true
+    based_on: style.references.entry
+    evidence_profile: official_core_typography_consensus
+    value_authority: institutional_reference_adopted_as_product_value
+    overrides: {}
+  style.header:
+    role_type: header_footer
+    kind: paragraph
+    complete: true
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 10.5
+      bold: false
+      italic: false
+    paragraph:
+      alignment: center
+      line_spacing: {mode: single}
+      space_before_pt: 0
+      space_after_pt: 0
+  style.footer:
+    role_type: header_footer
+    kind: paragraph
+    complete: true
+    based_on: style.header
+    evidence_profile: official_page_consensus_product_resolution
+    value_authority: institutional_consensus_adopted_as_product_value
+    overrides: {}
+  style.footnote:
+    role_type: footnote
+    kind: paragraph
+    complete: true
+    evidence_profile: official_object_and_note_consensus
+    value_authority: institutional_consensus_adopted_as_product_value
+    run:
+      cjk_font: ${body_cjk_font}
+      latin_font: ${body_latin_font}
+      size_pt: 9
+      bold: false
+      italic: false
+    paragraph:
+      alignment: justified
+      first_line_indent_chars: 0
+      left_indent_chars: 1.5
+      hanging_indent_chars: 1.5
+      line_spacing: {mode: single}
+      space_before_pt: 0
+      space_after_pt: 0
+    numbering: {format: circled_arabic, restart_scope: page}
+
+field_handling:
+  thesis.title.zh:
+    handling: styled_content
+    components: {content: style.front.title.zh, page: layout.document.cover_page.zh}
+  author.name.zh:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.student_id:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.department:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.major:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.research_direction:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  advisor.name.zh:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  degree.type:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  submission.date:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  review.mode:
+    handling: task_configuration_only
+    controls: reviewer_list_presence
+    allowed_values: [blind, named]
+    default: blind
+  reviewer.list:
+    handling: styled_content
+    components:
+      layout: layout.reviewer_list
+      generated_heading: style.front.committee.title
+      table_content: style.front.committee.body
+  submission.copyright_qr_page:
+    handling: protected_authoritative_whole_page
+    components: {layout: layout.authoritative_qr_page}
+  abstract.zh:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.abstract.title.zh
+      content: style.abstract.body.zh
+  keywords.zh:
+    handling: styled_content
+    components: {content: style.abstract.keywords.zh}
+  thesis.title.en:
+    handling: styled_content
+    components: {content: style.abstract.document_title.en}
+  author.name.en:
+    handling: styled_content
+    components: {content: style.abstract.identity.en}
+  advisor.name.en:
+    handling: styled_content
+    components: {content: style.abstract.identity.en}
+  abstract.en:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.abstract.title.en
+      content: style.abstract.body.en
+  keywords.en:
+    handling: styled_content
+    components: {content: style.abstract.keywords.en}
+  generated.toc:
+    handling: generated_styled_content
+    components:
+      part_start: layout.major_part.start
+      title: style.toc.title
+      chapter_entry: style.toc.chapter
+      level1_entry: style.toc.level1
+      level2_entry: style.toc.level2
+  generated.list_of_figures:
+    handling: generated_styled_content
+    components:
+      part_start: layout.major_part.start
+      title: style.toc.title
+      entry: style.toc.level1
+  generated.list_of_tables:
+    handling: generated_styled_content
+    components:
+      part_start: layout.major_part.start
+      title: style.toc.title
+      entry: style.toc.level1
+  body.chapters:
+    handling: structured_content_container
+    components: {chapter_start: layout.chapter.start, page: layout.document.body_page}
+  body.heading.level1:
+    handling: styled_content
+    components: {content: style.body.heading.1, chapter_start: layout.chapter.start}
+  body.heading.level2:
+    handling: styled_content
+    components: {content: style.body.heading.2}
+  body.heading.level3:
+    handling: styled_content
+    components: {content: style.body.heading.3}
+  body.heading.level4:
+    handling: styled_content
+    components: {content: style.body.heading.4}
+  body.heading.level5:
+    handling: styled_content
+    components: {content: style.body.heading.5}
+  body.paragraph:
+    handling: styled_content
+    components: {content: style.body.paragraph}
+  body.numbered_list_item:
+    handling: styled_content
+    components: {content: style.body.numbered_list_item}
+  body.inline_emphasis:
+    handling: styled_content
+    components: {content: style.inline.emphasis}
+  body.inline_quote:
+    handling: styled_content
+    components: {content: style.inline.quote}
+  body.block_quote:
+    handling: styled_content
+    components: {content: style.body.block_quote}
+  body.figure:
+    handling: preserved_object_with_layout
+    components: {layout: layout.figure}
+  body.figure.caption:
+    handling: styled_content
+    components: {content: style.caption.figure, layout: layout.figure}
+  body.equation:
+    handling: preserved_object_with_layout
+    components: {content: style.equation.block, layout: layout.equation}
+  body.table:
+    handling: preserved_object_with_layout
+    components:
+      layout: layout.table
+      header_cell: style.table.header
+      body_cell: style.table.body
+  body.table.caption:
+    handling: styled_content
+    components: {content: style.caption.table, layout: layout.table}
+  body.table.note:
+    handling: styled_content
+    components: {content: style.table.note}
+  body.landscape_block:
+    handling: structured_content_container
+    components: {layout: layout.landscape_block}
+  references.entries:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.references.title
+      entry: style.references.entry
+  references.style_system:
+    handling: task_configuration_only
+    allowed_values: [numeric, author_date]
+    default: numeric
+    content_standard: GB/T 7714-2025
+  achievements.journal_articles:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.achievements.title
+      entry: style.achievements.entry
+  achievements.conference_papers:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.achievements.title
+      entry: style.achievements.entry
+  achievements.projects:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.achievements.title
+      entry: style.achievements.entry
+  achievements.intellectual_property:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.achievements.title
+      entry: style.achievements.entry
+  acknowledgement.body:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.acknowledgement.title
+      content: style.acknowledgement.body
+  submission.declaration_qr_page:
+    handling: protected_authoritative_whole_page
+    components: {layout: layout.authoritative_qr_page}
+  advisor.title:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.cohort_class:
+    handling: styled_content
+    components: {content: style.front.metadata.value, page: layout.document.cover_page.zh}
+  author.department.en:
+    handling: styled_content
+    components: {content: style.abstract.identity.en}
+  appendix.title:
+    handling: styled_content
+    components: {content: style.appendix.title}
+  appendix.body:
+    handling: structured_styled_content
+    components:
+      part_start: layout.major_part.start
+      content: style.appendix.body
+  achievements.entries:
+    handling: styled_content
+    components:
+      part_start: layout.major_part.start
+      generated_heading: style.achievements.title
+      entry: style.achievements.entry
+
+template_level_roles:
+  - layout.document.body_page
+  - layout.document.pagination
+  - layout.document.header
+  - layout.document.footer
+  - style.header
+  - style.footer
+  - style.footnote
+
+engineering_appendix_outside_product_review:
+  current_supported_property_paths:
+    - paragraph.alignment
+    - paragraph.line_spacing_pt
+    - paragraph.line_spacing_rule
+    - paragraph.line_value
+    - paragraph.page_break_before
+    - paragraph.space_after_pt
+    - paragraph.space_before_pt
+    - run.bold
+    - run.color
+    - run.color_theme
+    - run.font_ascii
+    - run.font_ascii_theme
+    - run.font_complex_script
+    - run.font_complex_script_theme
+    - run.font_east_asia
+    - run.font_east_asia_theme
+    - run.font_hansi
+    - run.font_hansi_theme
+    - run.font_size_pt
+    - run.italic
+  required_future_capabilities:
+    - page_geometry_and_section_breaks
+    - header_footer_and_page_numbering
+    - first_line_left_right_and_hanging_indents
+    - keep_with_next_keep_together_and_widow_control
+    - outline_levels
+    - numbering_and_multilevel_lists
+    - tab_stops_and_leaders
+    - table_borders_cell_alignment_and_repeat_headers
+    - object_caption_and_equation_layout
+    - cross_story_style_materialization
+
+product_definition_gate:
+  required_before_product_definition_complete:
+    - declared_property_scope_closure_passes_for_all_style_and_document_role_types
+    - all_54_field_handling_rows_are_human_accepted
+    - all_three_product_review_tables_are_human_accepted
+    - all_product_definition_blockers_are_resolved_or_explicitly_accepted
+    - parameter_boundary_is_human_accepted
+    - source_classification_and_non_conformance_wording_are_human_accepted
+  current_result: passed_2026_08_11
+
+engineering_entry_gate:
+  before_template_fusion:
+    - product_definition_gate_is_complete
+    - all_field_role_reference_validation_passes
+    - all_style_inheritance_and_effective_property_validation_passes
+    - all_source_and_evidence_profile_reference_validation_passes
+    - human_accepts_explicit_product_gap_fill_roles
+  current_result: allowed_to_start_implementation
+  conformance_claim_gate: authorized_final_standard_text_differences_are_resolved
+  before_student_fill:
+    - complete_school_or_preset_role_is_selected_for_every_required_role
+    - no_property_level_school_preset_mixing_exists
+    - complete_fused_target_template_is_materialized
+    - resolved_preset_identity_and_parameters_are_recorded
+    - word_and_pdf_visual_regression_passes
+  failure_disposition: block_pipeline_and_report_exact_missing_or_rejected_roles

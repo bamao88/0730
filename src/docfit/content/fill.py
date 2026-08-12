@@ -166,12 +166,23 @@ def fill_template(
                     "field_id": operation.get("field_id"),
                     "tag": tag,
                     "source_object_ids": list(source_object_ids),
+                    "source_content_items": [
+                        dict(item)
+                        for item in operation.get("source_content_items", [])
+                        if isinstance(item, dict)
+                    ],
+                    "relations": [
+                        dict(item)
+                        for item in operation.get("relations", [])
+                        if isinstance(item, dict)
+                    ],
+                    "ordering_policy": operation.get("ordering_policy"),
                     "style_contract_ref": dict(operation["style_contract_ref"]),
                     "style_role_refs": dict(operation.get("style_role_refs", {})),
                     **evidence,
                 }
             )
-            if operation.get("field_id") != "body.chapters":
+            if operation.get("field_id") != "body.ordered_items":
                 for inserted_index, inserted in enumerate(
                     evidence.get("inserted_body_refs", []), start=1
                 ):

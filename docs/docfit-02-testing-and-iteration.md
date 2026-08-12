@@ -4,10 +4,10 @@
 > 日期：2026-08-06
 > 前提：测试与 Eval 是开发系统，不进入正常论文转换的运行路径。
 
-本文件保留长期 Eval 设计。当前开发范围只要求 M0–M2 的单元、契约、集成和 live
-产品门；M3 Skill/E2E Eval 扩展、真实样本资格验证、Gold 与人工交付复核已延期，需
-新的用户批准计划。已经存在的 core runner 和 fixture 可以继续作为可选开发资产，
-但不作为当前产品开发完成门。
+本文件保留长期 Eval 设计。M0–M2 之后，用户已另行批准并完成 Content Field Registry、
+Student 001/002/003 Extraction Gold 和独立 Student Content Extraction Eval 入口；这是一条
+有界质量切片。Placement/Filling、完整 Skill/E2E Eval、真实样本资格验证和人工交付复核
+仍未完成，因此不构成完整 M3 或当前产品运行门。
 
 模板提取结果的静态 Actual—Gold 比较已经在
 `docs/plans/docfit-template-extraction-eval/DESIGN.md` 中形成独立顶层设计。它把已经生成的
@@ -18,11 +18,12 @@
 最终目录；三校仍为 `INPUT_ERROR`，Human-accepted Gold 与学校回归尚未完成。这不改变
 本文件对完整 M3、Student/Placement Eval 和真实样本资格门的判定。
 
-完整质量闭环不能止于模板侧。未来 M3 还必须使用同一版 Content Field Registry 快照分别
-评测学生内容提取 Actual、显式 Placement Actual 和最终转换结果。模板槽与学生内容共享
+完整质量闭环不能止于模板侧。当前 Student Content Extraction Actual 已可与其绑定的
+Accepted Gold 独立比较；完整 M3 还必须继续评测显式 Placement Actual 和最终转换结果。
+模板槽与学生内容共享
 `field_id`，但模板目标 locator、学生 source locator 和 placement 动作分别比较；字段同名
-本身不构成正确映射。当前 `content-fields-v0.1.yaml` 是固定的研发语义基线；
-三校 `field-alignment.yaml` 和 `template-spec.yaml` 仍是 candidate。这些都不是 M3 已通过的证据。
+本身不构成正确映射。Extraction Gold 当前分别绑定 accepted Registry v0.3/v0.4；三校
+`field-alignment.yaml` 和 `template-spec.yaml` 仍是 candidate。这些都不是完整 M3 已通过的证据。
 
 M2 之后的核心转换优化属于非 Eval 工程轨道。它继续运行普通单元、契约、集成、
 doctor 和 live 产品门，并使用同一合成链路做前后测量；这些检查不会因为 M3 延期而
@@ -282,6 +283,14 @@ limit      成本或重复调用上限
 或 source locator 与绑定 hash 不一致。能力不足且没有明确错误时为 `UNKNOWN`，不进入
 通过率分子。
 
+已实现的稳定研发入口是 `docfit eval-student-content`。它在提取 Agent 完成后读取一个
+Actual 任务目录，并把 Accepted `student-content.gold.json` 作为独立 `oracle_only` 输入；
+Gold 不进入 Agent prompt。入口自动发现 Actual 模型、全源 inventory 和 Agent evidence，
+输出隐私安全的 `student-content-eval-report.json` 与面向研发/产品判断的 Markdown 报告。
+Verdict 分开保留来源/Registry、源覆盖、字段语义、值忠实度、语义实例拆分/合并、内容
+顺序、父子/题注关系和真实运行证据，任何硬失败维度都不能被总分掩盖。顺序唯一以 Gold
+v2 的 `items[]` / `docfit-source-order/v1` 为权威，`field_results[]` 不参与排序。
+
 **Placement Eval**比较当前任务 placement Actual 与 Placement Truth：
 
 - 每条边引用有效的 source `content_id` 集合、共享 `field_id`、具体 target
@@ -431,9 +440,21 @@ agent-smoke doctor，以及受影响的真实合成产品 smoke。已有缓存�
 模板的固定结构与内容，同时把学生内容按已确认映射放入目标槽位或区域。仅证明“学生
 副本中出现了模板内容”不能通过该断言。
 
+用户内容相关 Eval 使用两类独立 Gold，详细合同见 `docs/docfit-03-gold-system-design.md`：
+
+- 用户内容提取 Eval 以用户源 DOCX 为 `subject_input`，以 Human-accepted
+  `student-content.gold.json` 为 `oracle_only`，只判断提取事实、结构、复杂对象、顺序、
+  缺失和未决项；
+- 模板填写 Eval 以已验收模板/填写契约和已验收 Extraction Gold 为 `subject_input`，以
+  Placement Gold、Expected facts 和参考成品为 `oracle_only`，不重新运行内容提取；
+- 完整端到端 Eval 才从用户源运行两段链路，并分别输出 Extraction、Filling 和 Final
+  document verdict，不能用最终总分掩盖任一责任边界失败。
+
 ## 4. Eval case
 
-一个用例保持小而自包含：
+一个用例保持小而自包含。以下示例是完整端到端 Case，因此 Student Content Truth 默认
+仍为 `oracle_only`；独立模板填写 Case 必须改为引用 accepted Extraction Gold，并将其
+声明为 `subject_input`：
 
 ```yaml
 id: hunannongye-basic-001

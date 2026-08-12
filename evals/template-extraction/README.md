@@ -4,6 +4,10 @@
 的 Actual 模板与 Actual 填写契约，和 case 绑定的 Gold 模板、Gold 填写契约做确定性对比；
 不关心模板由哪个 Agent、模型或提取流程生成。
 
+正文模板如何分析、槽化并准备成 candidate Gold，见
+`../../docs/plans/docfit-body-template-extraction-spec.md`。该生成规范不属于本 Eval 的运行时
+依赖；Eval 仍只读取产物并做独立评分。
+
 ## 评测目标与输出
 
 评测分为两个各 50 分的业务视角：

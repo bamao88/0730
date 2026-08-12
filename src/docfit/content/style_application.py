@@ -134,7 +134,7 @@ def build_style_occurrence_manifest(
         style_ref = block.get("style_contract_ref")
         if isinstance(field_id, str) and isinstance(style_ref, Mapping):
             role_refs[field_id] = style_ref
-        if field_id == "body.chapters":
+        if field_id == "body.ordered_items":
             body_refs = block.get("style_role_refs")
             if not isinstance(body_refs, Mapping):
                 raise _failure(

@@ -11,6 +11,17 @@
 > Human Truth Package；case 只固定 Registry ID/version/hash。本讨论稿其余未批准内容
 > 仍不定义当前架构。
 
+> 2026-08-11 已批准决策：用户内容相关 Gold 拆为 Student Content Extraction Gold 与
+> Template Filling Gold。前者与学校无关，后者显式引用前者和已验收模板；独立填写 Eval
+> 直接消费 accepted Extraction Gold，完整端到端 Eval 分别报告 Extraction、Filling 与
+> Final document verdict。权威合同见 `docs/docfit-03-gold-system-design.md`；本文其他未批准
+> 讨论仍不定义当前架构。
+
+> 2026-08-12 已批准顺序合同：Extraction Gold 的 `items[]` 是识别内容实例与顺序的唯一
+> 权威，每项使用唯一、严格递增的 `source_order.block + source_order.inline`；共享事实的
+> 多次来源位置保存在有序 `source_occurrences[]`。本文早期示例中的局部标量 `order` 已被
+> 正式合同替代，不能继续作为 Gold 顺序格式。
+
 ## 0. 这次讨论按什么顺序进行
 
 这份文档先不讨论代码怎么实现。我们需要依次确认五件事：
@@ -111,6 +122,11 @@ Placement Truth
 | 模板准备 | 原模板、要求、示例与 Human 判断 | `fillable-template.docx` + `template-spec.yaml` | 模板准备 Oracle、转换输入与格式 Oracle |
 | 学生内容准备 | `student-source.docx` | `student-content.json` + 按需 `content-assets/*` | 内容提取 Oracle、转换内容保留 Oracle |
 | 内容放置确认 | 模板真值 + 学生内容真值 | `placement-map.yaml` | 槽位填写与内容放置 Oracle |
+
+接受后的 Student Content Truth Pack 独立晋升为 Extraction Gold。接受后的 Placement
+Truth、Expected facts 和必要参考成品与指定 Template Truth、Extraction Gold revision
+绑定，共同构成 Filling Gold。两类 Gold 分别签署、版本化和做 hash 绑定；一份混合了
+用户内容、目标模板和样式的转换 Word 不能反向替代 Extraction Gold。
 
 ### 2.2 三类真值如何连接
 
@@ -336,14 +352,15 @@ styles:
 | `content_type` | 是 | text、rich_text、image、table、equation、section 等 |
 | `value` 或 `content_ref` | 是 | 简单文本直接保存；复杂对象引用源文件对象或附属资产 |
 | `source_locator` | 是 | 内容在 `student-source.docx` 中的可核对位置 |
-| `order` | 是 | 同类或同一父项中的顺序 |
+| `source_order` | 是 | 冻结 Word 阅读顺序中的 `{block, inline}`；在 `items` 中完整、唯一、严格递增 |
 | `parent_content_id` | 可选 | 章节、图题、表题等层级归属 |
 | `language` | 可选 | 内容语言 |
 | `asset_refs` | 可选 | 图片、附件或其他二进制对象引用 |
 | `notes` | 可选 | Human 对歧义或边界的说明 |
 
-从业务语义看，真正的核心就是 `field_id` 与 `value/content_ref`；`content_id`、
-`source_locator` 和 `order` 是为了让代码能够比较、追溯和处理重复内容而增加的工程字段。
+从业务语义看，`field_id` 与 `value/content_ref` 回答“是什么”，`source_order` 回答“在原文
+哪里先后出现”；两者是 Extraction Gold 的独立真值维度。`content_id`、`source_locator` 和
+逐 occurrence 证据用于稳定比较、追溯和处理重复内容。
 
 简单文字内容的最小示意：
 
@@ -357,7 +374,7 @@ styles:
     "type": "object_ref",
     "value": "<ref-bound-to-student-document-sha256>"
   },
-  "order": 1,
+  "source_order": {"block": 12, "inline": 0},
   "language": "zh"
 }
 ```
@@ -735,6 +752,9 @@ flowchart LR
 | `asset-metadata` | 必需 | Eval 系统使用 | 保存身份、hash、来源和使用权限，不提供给被评测对象 |
 
 关键点是：系统接收的不是一堆无法理解关系的文件，而是一个经过确认的输入包。
+上表描述完整端到端转换 Case。独立模板填写 Case 不读取用户源并重新提取，而是把已验收
+的 Extraction Gold 作为 `subject_input`；Placement Gold、Expected facts 和参考成品仍为
+`oracle_only`。
 
 ### 4.5 D. Case Definition：业务用例定义
 

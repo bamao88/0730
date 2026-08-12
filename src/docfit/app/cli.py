@@ -115,6 +115,37 @@ def build_parser() -> argparse.ArgumentParser:
     prepare_parser.add_argument("--field-registry")
     prepare_parser.add_argument("--output", required=True, dest="output_directory")
 
+    extraction_parser = subparsers.add_parser(
+        "extract-student-content",
+        help="run the independent read-only student content extraction module",
+    )
+    extraction_parser.add_argument("--input", required=True, dest="input_docx")
+    extraction_parser.add_argument("--field-registry", required=True)
+    extraction_parser.add_argument("--output", required=True, dest="output_directory")
+
+    student_eval_parser = subparsers.add_parser(
+        "eval-student-content",
+        help="compare one saved student extraction with accepted Extraction Gold",
+    )
+    student_eval_parser.add_argument(
+        "--actual",
+        required=True,
+        dest="actual_directory",
+        help="extraction output directory containing student-content.json and work artifacts",
+    )
+    student_eval_parser.add_argument(
+        "--gold",
+        required=True,
+        help="accepted student-content.gold.json or its package directory",
+    )
+    student_eval_parser.add_argument(
+        "--output",
+        required=True,
+        dest="output_directory",
+        help="directory for JSON and Markdown evaluation reports",
+    )
+    student_eval_parser.add_argument("--json", action="store_true", dest="as_json")
+
     observe_parser = subparsers.add_parser(
         "observe",
         help="start the local DocFit observation website",
@@ -319,6 +350,68 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 2
         print(json.dumps(asdict(report), ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if report.status == "built" else 2
+    if args.command == "extract-student-content":
+        from docfit.app.student_content_fill import (
+            StudentContentExtractionRequest,
+            run_student_content_extraction,
+        )
+
+        extraction_report = asyncio.run(
+            run_student_content_extraction(
+                StudentContentExtractionRequest(
+                    source_docx=Path(args.input_docx),
+                    field_registry=Path(args.field_registry),
+                    output_directory=Path(args.output_directory),
+                )
+            )
+        )
+        stream = sys.stdout if extraction_report.get("status") == "READY" else sys.stderr
+        print(
+            json.dumps(extraction_report, ensure_ascii=False, indent=2, sort_keys=True),
+            file=stream,
+        )
+        return 0 if extraction_report.get("status") == "READY" else 2
+    if args.command == "eval-student-content":
+        from docfit.evals.student_content import (
+            StudentContentEvalInputError,
+            run_student_content_eval,
+        )
+
+        try:
+            eval_result = run_student_content_eval(
+                actual_directory=Path(args.actual_directory),
+                gold=Path(args.gold),
+                output_directory=Path(args.output_directory),
+            )
+        except StudentContentEvalInputError as error:
+            payload = {
+                "schema_version": "docfit-student-content-extraction-eval-cli/v1",
+                "status": "INPUT_ERROR",
+                "failure": {"code": error.code, "message": error.message},
+            }
+            print(json.dumps(payload, ensure_ascii=False, indent=2), file=sys.stderr)
+            return 2
+        summary = {
+            "schema_version": "docfit-student-content-extraction-eval-cli/v1",
+            "status": eval_result.report["status"],
+            "gold_id": eval_result.report["gold_id"],
+            "gold_revision": eval_result.report["gold_revision"],
+            "blockers": eval_result.report["blockers"],
+            "json_report": str(eval_result.json_report),
+            "markdown_report": str(eval_result.markdown_report),
+        }
+        if args.as_json:
+            print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
+        else:
+            print(
+                "Student Content Extraction Eval "
+                f"{summary['status']}: {summary['gold_id']} @ {summary['gold_revision']}"
+            )
+            print(f"JSON report: {summary['json_report']}")
+            print(f"Markdown report: {summary['markdown_report']}")
+            if summary["blockers"]:
+                print(f"Blockers: {', '.join(summary['blockers'])}")
+        return 0 if eval_result.passed else 2
     if args.command == "eval":
         from dataclasses import asdict
 

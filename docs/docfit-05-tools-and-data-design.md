@@ -170,6 +170,13 @@ Registry ID/version/hash 作用域内稳定；改义、拆分、合并或别名�
 `content-fields-v0.1.yaml`。v0.1 保留 54 个字段作为可复现开发基线，但尚未补齐所有值来源、
 Human signoff 和复合关系，不构成公共运行协议、完整 Registry 或 Accepted Gold。
 
+Registry 的一个字段不等于一个 Word 样式。字段只定义内容语义；独立的模板/兜底绑定
+根据实际展示结构为它声明零个、一个或多个组件角色。配置字段可以不绑定展示角色，
+叶子文本通常绑定一个角色，目录、表格或复合章节可以绑定多个角色。字段覆盖检查负责
+证明每个字段都有明确处理；角色完整性检查必须另外按角色类型展开继承，并证明全部适用
+有效属性都有具体值、`0`、`none` 或 `N/A`，不能把字段已绑定或最小 schema 通过误报为
+完整兜底。
+
 Registry 中没有的内容不得丢弃，也不得临时伪造永久 `field_id`。Template/Student
 产物必须使用 `field_id: null`、`classification_status: unregistered`、产物内唯一
 `local_field_key`、可读含义、内容类型和绑定快照的来源证据。`proposed_canonical_id` 只是
@@ -753,7 +760,7 @@ fill/empty/placeholder policy、目标显示/投影合同、样式、区域责�
 学生内容结果绑定只读源文件并保留内容覆盖。根级至少保存学生源 hash、Registry
 ID/version/hash、items、unregistered items、review 和来源证据。每项至少保存任务内
 `content_id`、`field_id` 或未注册状态、`content_type`、规范值和原始观测值或复杂对象引用、一个或多个
-source occurrence/locator、父项、顺序和冲突/确认状态。
+source occurrence/locator、父项、唯一 `source_order.block + source_order.inline` 和冲突/确认状态。
 
 简单标量可以保存规范化 `value`；rich text、图片、表格、公式、脚注、文本框和其他复杂
 对象保存绑定学生源 hash 的 `content_ref`、结构摘要和必要资产 hash，不能只保存提取
@@ -763,7 +770,8 @@ source occurrence/locator、父项、顺序和冲突/确认状态。
 论文级共享事实与 source occurrence 分离：题名、作者等一份内容事实可以由多个页面
 位置观察支持；观察一致时共同指向一个 `content_id`，冲突时保留各 occurrence、观察值
 hash 和 conflict 状态，等待证据/Human 裁决。章节、段落、图、表、公式等局部有序内容
-各自拥有 `content_id`、`parent_content_id` 和 `order`，不能因 `field_id` 相同而合并。
+各自拥有 `content_id`、`parent_content_id` 和唯一 `source_order`，不能因 `field_id` 相同而
+合并或按类型重排。`items` 数组是顺序唯一权威，`field_results` 只允许作为派生字段索引。
 
 Actual extraction 必须保留未注册、不支持和没有目标字段的可见内容。未注册项使用
 `field_id: null`、`classification_status: unregistered` 和产物内 `local_field_key`，不能丢弃。

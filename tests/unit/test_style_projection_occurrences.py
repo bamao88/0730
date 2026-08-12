@@ -80,7 +80,7 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
 <w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}" xmlns:m="{M_NS}">
  <w:body>
   <w:p w14:paraId="00000001"><w:r><w:t>第一章 绪论</w:t></w:r></w:p>
-  <w:p><w:r><w:t>1 材料与方法</w:t></w:r></w:p>
+  <w:p w14:paraId="00000002"><w:r><w:t>1 材料与方法</w:t></w:r></w:p>
   <w:p w14:paraId="00000003"><w:r><w:t>1.2试验设计</w:t></w:r></w:p>
   <w:p w14:paraId="00000004"><w:r><w:t>正文内容</w:t></w:r></w:p>
   <w:p w14:paraId="00000005"><w:r><w:t>图 1 结构</w:t></w:r></w:p>
@@ -102,15 +102,54 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
             "template_sha256": sha256_file(template_docx),
             "block_operations": [
                 {
-                    "field_id": "body.chapters",
+                    "field_id": "body.ordered_items",
+                    "source_object_ids": [f"p{index}" for index in range(1, 10)],
                     "inserted_body_refs": [
-                        {"target_locator": "/body/p[@paraId=00000001]"},
-                        {"target_locator": "/body/p[@paraId=00000009]"},
+                        {"target_locator": f"/body/p[@paraId={index:08X}]"}
+                        for index in range(1, 10)
                     ],
+                    "source_content_items": [
+                        {
+                            "content_id": f"c{index}",
+                            "source_content_id": f"sc{index}",
+                            "transport_source_object_id": f"p{index}",
+                            "field_id": field_id,
+                            "classification_status": "classified",
+                            "physical_type": physical_type,
+                            "source_order": {"block": index, "inline": 0},
+                        }
+                        for index, (field_id, physical_type) in enumerate(
+                            (
+                                ("body.heading.level1", "text"),
+                                ("body.heading.level2", "text"),
+                                ("body.heading.level3", "text"),
+                                ("body.paragraph", "text"),
+                                ("body.figure.caption", "text"),
+                                ("body.table.caption", "text"),
+                                ("body.equation", "equation"),
+                                ("body.figure", "image"),
+                                ("body.paragraph", "text"),
+                            ),
+                            start=1,
+                        )
+                    ],
+                    "relations": [],
                 },
                 {
                     "field_id": "references.entries",
+                    "source_object_ids": ["r1"],
                     "inserted_body_refs": [{"target_locator": "/body/p[@paraId=0000000A]"}],
+                    "source_content_items": [
+                        {
+                            "content_id": "c10",
+                            "source_content_id": "sc10",
+                            "transport_source_object_id": "r1",
+                            "field_id": "references.entries",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "source_order": {"block": 10, "inline": 0},
+                        }
+                    ],
                 },
             ],
         },

@@ -10,9 +10,9 @@ OfficeCLI 结构/编辑适配、固定 Docker LibreOffice V2 视觉证据、`doc
 AppleScript、macOS 图形会话或用户电脑，也不上传 DOCX 到远程视觉转换服务。本地调试
 壳可以提供可选的平台适配器，但核心代码不得导入该实现，
 平台适配能力也不构成核心完成门。确定性与 live 完成情况仍分别按 06 判定。当前用户
-批准的产品开发范围已在 M2 结束并完成；M3 的
-Eval 扩展、真实样本资格验证、Gold 和外部人工复核保留为后续独立范围，不能因此
-宣称 M3 已通过，也不再作为当前计划 blocker。
+批准的产品开发范围已在 M2 结束并完成；此后另行批准的 Content Field Registry、三份
+Student Content Extraction Gold 和独立提取 Eval 已完成。Placement/Filling、完整端到端
+Eval、真实样本资格验证和外部人工复核仍是后续范围，因此不能宣称 M3 已通过。
 
 模板提取静态产物 Eval 已有一份独立的顶层设计：
 `docs/plans/docfit-template-extraction-eval/DESIGN.md`。该切片只读取已经生成的模板与
@@ -22,7 +22,15 @@ fixture、共享事实分析、两套断言、评分 runner、同源报告和四
 candidate case 的最终目录。三校仍固定为 `INPUT_ERROR`；Human-accepted Gold 与学校
 评分回归尚未完成，因此这项合成静态证据不构成完整 M3 通过或可试用 MVP 声明。
 
-该静态设计只覆盖连接链的一侧。长期 M3 数据合同还必须把三类 Human-confirmed
+正文模板提取与 Gold 准备的规则、内容模型、建议脚本能力和完整验收标准见
+`docs/plans/docfit-body-template-extraction-spec.md`。该规范属于产品/Gold 准备侧，明确要求
+正文全量盘点、细粒度 protected/slot/remove 责任划分、代表性正文槽和人工 Gold 验收；
+它不进入独立 Eval 运行时。
+
+该静态设计只覆盖连接链的一侧。当前已另行完成 Student Content Extraction 的一侧：
+Student 001/002/003 已有 Human-accepted Extraction Gold v2，`docfit eval-student-content`
+可在每次提取后读取 Actual 任务目录并生成 JSON/Markdown 对比报告。完整 M3 数据合同仍
+必须把三类 Human-confirmed
 任务事实连到同一语义基线：开放且版本化的 Content Field Registry 快照定义
 共享 `field_id`；模板提取结果用
 `slot_id` / `region_id → field_id` 和绑定模板 hash 的目标 locator 表达可填写位置；
@@ -34,11 +42,12 @@ source locator 表达来源内容；当前任务 `placement` 再把一个或多�
 
 当前 Registry 研发权威是
 `docs/plans/docfit-content-field-registry/DESIGN.md` 和固定的
-`content-fields-v0.1.yaml`。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
+accepted `content-fields-v0.4.yaml`；Student 002 的不可变历史 Gold 继续绑定 accepted
+v0.3。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
 Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval/Gold
 数据。二者都不是产品 Knowledge、全局学校 profile、运行时 Content Ledger 或新的第六类
-产品资产。v0.1 保留 54 个字段的开发基线，但尚未完成字段级 Human 签署、
-完整 Student/Placement schema 或 M3。后续审查仍必须区分学生源可提取值、任务输入、
+产品资产。v0.4 保留同一组 54 个 canonical 字段并已完成 Extraction Gold 所需的字段政策
+签署；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
 系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
 学校模板在线准备已切换为 checkpoint 驱动的按需对象路线：`template_open` / `template_next`
@@ -193,11 +202,14 @@ Knowledge Package 随产品发布且必须保持通用。学校事实只来自�
 成为长期 Knowledge。
 
 样式值也遵守同一边界：Agent 可以使用 Knowledge 中的通用概念识别语义角色、
-绑定模板观测与暴露缺口，但不读取或杜撰可直接套用的“样式经验表”。模板的
-有效样式由 Tool 确定性观测；只有当某一属性缺失且一份经产品明确选定、版本化、
-适用性可验证的国家级标准对它有明文规定时，程序才可逐属性确定性补全；否则保持
-未决。这类版本化规则数据属于现有 Tool/adapter 的内部确定性参考，不是 Agent
-Knowledge、学校 profile 或第六类产品资产；当前实现状态与后续实现门以 06 为准。
+绑定模板观测与暴露缺口，但不读取或杜撰可直接套用的“样式经验表”。学校 Word
+工作副本是页面、分节、页眉页脚、页码和已有样式的全局容器；Tool 确定性观测并
+验证这些事实。每个字段再绑定零个、一个或多个展示组件角色：学校存在经验证的完整
+角色时原样使用学校角色，缺失时完整使用经产品批准、稳定版本化的通用预设角色，
+不得在同一角色内逐属性拼接学校值与预设值。通用预设的属性必须来自正式标准、
+明确标记的暂定公开稿、获批产品预设或当前任务显式要求，并保留来源和版本；它属于
+现有确定性领域层的产品参考，不是 Agent Knowledge、学校 profile 或第六类产品资产。
+完整属性与产品验收合同见 01，当前实现状态与后续门禁以 06 为准。
 
 页面不是新的架构资产或稳定编辑身份。页码只在某次 `render_ref` 内有意义；
 不同 Provider 的同页码不得被视为同一内容范围。Agent 使用页面图片观察版式，

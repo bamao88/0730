@@ -12,8 +12,9 @@ OfficeCLI screenshot、远程转换路径和兼容层均不再属于产品。核
 AppleScript、GUI 会话或用户电脑。最新确定性与 live 结果只写入 active capsule。
 
 M1、M2 的完成门现在以当前 V2 render、原生图片、全页视觉覆盖、独立验证与源 hash
-不变为准。M3 Eval、Gold、授权/脱敏真实样本资格验证和外部人工复核仍是后续里程碑，
-不因三校 V2 链路 smoke 通过而自动完成。
+不变为准。其后另行批准的 Registry、三份 Student Extraction Gold 和独立提取 Eval 已
+完成；Placement/Filling、完整 M3、授权/脱敏真实样本资格验证和外部人工复核仍未完成，
+不因该有界切片或三校 V2 链路 smoke 通过而自动完成。
 
 用户随后批准把 M2 后 O0 细化为 DocFit 本地运行观测与问题定位界面；目标设计见
 `docfit-local-observability-design.md`。它仍属于薄应用壳的只读能力，不恢复 M3，
@@ -656,11 +657,20 @@ Theme token 的最终求值、编号合同、表格条件样式、复杂 section
 授权、版本、条款映射和适用性仍需独立批准。五个公开 Tool、Claude Agent SDK runtime、
 Field Registry 语义和 renderer 均未改变；未来若要扩展公开 Tool schema，仍需单独审批。
 
-通用兜底是后续阶段硬门，不采用“已有部分样式即可继续”的渐进放行：只有角色覆盖、属性来源、
-稳定取值、整角色二选一实现和全链路验收全部通过，才能进入模板融合、正式 Student Fill 与
-M3 产品阶段；任一维度为 `PARTIAL`、`UNKNOWN`、`UNRESOLVED`、`FAILED` 或未验收时均保持
-`next_stage_allowed=false`。当前通用兜底状态为 `BLOCKED_INCOMPLETE`，Style Contract 基础设施
-的第一垂直切片完成不改变该结论。
+通用兜底是后续阶段硬门，不采用“已有部分样式即可继续”的渐进放行。产品定义通过后可以进入
+模板融合工程实现；只有角色覆盖、属性来源、稳定取值、整角色二选一实现和全链路验收全部通过，
+才能进入正式 Student Fill 与 M3 产品阶段。任一工程维度为 `PARTIAL`、`UNKNOWN`、
+`UNRESOLVED`、`FAILED` 或未验收时均保持 `production_fill_allowed=false`。完整性必须使用按角色类型定义的属性规范，并在继承展开后检查最终
+有效属性；适用属性必须是具体值（包括明确的 `0`），无编号为 `none`，不适用为 `N/A`，
+空白、隐式 Word 默认值或依赖学校 `Normal` 补齐关键属性均为阻塞。
+
+当前 `docfit-general-style-preset-v1.review.yaml` v1 已完成注册表 v0.1 的 54 字段处理映射，
+并为 9 类样式类型、11 类全局/版面类型建立完整属性集合，覆盖 44 个样式角色和 13 个全局/版面角色。44 个样式角色展开继承后，声明范围内
+的全部适用属性均具有具体值、明确 `0`、`none` 或 `N/A`，产品属性闭包已通过。三张人评表已经
+形成，产品负责人已于2026-08-11接受全部产品值、角色边界、参数边界和三张评审表。因此当前状态为
+`PRODUCT_DEFINITION_ACCEPTED`，`product_definition_complete=true`，`next_stage_allowed=true`，
+允许开始整角色运行时融合的工程实现。正式标准全文仍待授权复核，故不得作国家标准符合性声明；
+Word 写入和全链路视觉验收尚未完成，`production_fill_allowed=false`。
 
 ### 6.9 M2 后候选切片：字段槽定位、学生内容投影与 Placement
 
@@ -669,13 +679,14 @@ M3 的分层 Eval 提供同一事实基础。它不是恢复 M3 的执行批准�
 第六个 Tool、全局 Content Ledger、学校数据库或固定 Agent 流程。
 
 当前已建立研发设计基线
-`docs/plans/docfit-content-field-registry/DESIGN.md` 和可引用的
-`content-fields-v0.1.yaml`（`docfit.thesis.content_fields@0.1.0`）。Registry 的责任边界、
-未注册字段和版本规则，以及模板提取 Eval 的 candidate fill-contract/case schema 已完成
-G1；独立模板 Actual—Gold 静态 runner 及其合成评分证据已完成 G3。Student/Placement
-正式 schema、产品运行时消费、Human-accepted 学校 Gold/回归和完整 M3 仍未实现。一个
-经单独批准的内部 Student Content → Placement → template-fill 调试切片已经物化并通过
-合成测试与真实样本 `PARTIAL` 证据；它不提供公共 CLI/Tool，不构成上述正式能力完成。
+`docs/plans/docfit-content-field-registry/DESIGN.md` 和 accepted v0.4；Student 002 的
+不可变历史 Extraction Gold 绑定 accepted v0.3。Registry 的责任边界、未注册字段和版本
+规则，以及模板提取 Eval 的 candidate fill-contract/case schema 已完成。Student
+Content Model v2、Student 001/002/003 Human-accepted Extraction Gold v2 和正式
+`docfit eval-student-content` 离线比较入口已经实现；入口自动读取 Actual、inventory 与
+Agent evidence，输出 JSON/Markdown，并独立评测字段、值、覆盖、跨源实例、顺序和关系。
+Placement/Filling Truth、学校级 Filling 回归和完整 M3 仍未实现。内部 Student Content →
+Placement → template-fill 调试切片不因 Extraction Eval 完成而升级为正式 Filling 能力。
 
 目标范围包括：
 
@@ -699,26 +710,22 @@ G1；独立模板 Actual—Gold 静态 runner 及其合成评分证据已完成 
 
 本轮内部调试切片的批准范围和证据记录在
 `docs/plans/docfit-student-content-placement-debug.md` 与对应 active status。任何正式
-Template/Student/Placement schema、产品运行时消费、公共接口或 Eval/Gold 晋升仍必须
-另行批准计划。v0.1 已可作为开发期相同语义输入，但下一个可升级快照仍需完成：54 字段的逐项 Human review；值来源和
-学生提取策略补全；把 `optional` 与 `one/many` 数量约束分开；移出
-`body.inline_emphasis` meaning 中的 PKU 特定样式语义；重新确认图表注的允许父对象、
-`author.cohort_class` 等复合值与原子值的关系；字段改义/别名/版本政策；
-Template、Student、Placement schema 与
-hash 绑定；共享事实 occurrence 与冲突语义；未注册/未映射内容政策；一对多/多对一和
-generated/external 表达；日期拆分、复合组装和目标显示 projection 的可追溯规则；
-Truth 可见性与隐私；最小正例和单错误反例。
+Template/Placement/Filling schema、产品运行时消费或 Gold 晋升仍必须另行批准。当前
+Extraction 侧已以 Registry v0.4、Student Content Model v2、Gold v2 和
+`docfit-source-order/v1` 关闭字段、来源、共享 occurrence、顺序、未注册政策、Truth
+可见性与隐私；后续字段语义变化仍必须先升级 Registry，再同步 Gold 与 Filling 映射。
 
 该切片的普通 schema/契约门必须验证字段引用闭包、locator 唯一与 stale 拒绝、Template—Registry
 双向一致、学生内容覆盖、placement 双向覆盖和确定性候选条件。实际 Template/Student/
-Placement Actual—Gold 评分、授权/脱敏真实样本和 Human Gold 晋升仍属于第 7 节 M3，
-不得用 candidate 文件或局部脚本冒充已通过。任何公开 Tool/CLI 变更另行审批并保持五个
-Tool 名称；不改变 M2、O0 或 O1 状态。
+Placement Actual—Gold 评分、授权/脱敏真实样本和 Filling Gold 晋升仍属于第 7 节 M3，
+不得用 Extraction PASS 冒充已通过。当前批准的 `eval-student-content` 是运行时之外的
+研发 CLI，不增加公开 Tool、不改变五个 Tool 名称，也不改变 M2、O0 或 O1 状态。
 
 ## 7. M3：达到可试用 MVP
 
-> 当前范围说明：M3 的 Eval、Gold、授权/脱敏真实样本资格验证和外部人工复核不在
-> 本轮开发范围；以下长期范围与完成门保持不变，恢复时必须新建并批准计划。
+> 当前范围说明：另行批准的 Registry、Student 001/002/003 Extraction Gold 与 Student
+> Content Extraction Eval 已完成；其余 Placement/Filling/端到端 Eval、授权/脱敏真实样本
+> 资格验证和外部人工复核仍未完成。以下完整 M3 完成门保持不变。
 
 模板提取静态产物 Eval 已先完成独立顶层设计，见
 `docs/plans/docfit-template-extraction-eval/DESIGN.md`。它定义 Actual 模板/填写契约与 Gold
@@ -727,7 +734,8 @@ Tool 名称；不改变 M2、O0 或 O1 状态。
 case 目录也已物化；但 Human-accepted Gold 与学校回归尚未完成。这些合成证据和
 candidate 数据不等于恢复完整 M3，也不满足本节任何完成门。
 
-完整 M3 还必须实现第 6.9 节的 Student Content 与 Placement Eval。模板静态高分不能
+完整 M3 还必须实现第 6.9 节的 Placement/Filling 与端到端 Eval，并用真实 Actual 运行
+Student Content Extraction 回归。模板静态高分不能
 证明学生内容已正确提取或放到正确目标；相同 `field_id` 也不能替代 source/target
 locator、动作、顺序、条件和未解决状态的独立比较。
 
@@ -876,7 +884,7 @@ M5 不是首个 MVP 的前置条件。只有真实使用数据证明需要时，
 | M2 后权限/Skill 渐进披露切片 | 主 Agent 可按需直接读取 Skill references、产品 Knowledge 与当前任务证据，并使用受信任 Bash/Write | realpath 受限的直接 Read/Glob/Grep、无路径 gate 的自动批准 Bash/Write、五 Tool 直调和不等权 Subagent 权限已验证 | Bash/Write 是 sandbox、所有 Agent 等权或 M3 已通过 |
 | M2 后观测/优化切片 | 本地只读运行观测页，以及同一转换链路在既有安全门下减少可测量的重复工作 | 已观测的实际轨迹、有效本地证据定位，以及已证明的单项耗时、调用或载荷改善 | 精确 replay、M3、MVP 或真实论文质量已通过 |
 | M2 后样式观测/补全候选切片 | 属性级模板观测、缺口和可追溯的确定性解析 | 仅在独立计划实施并通过契约门后，可声称已覆盖的属性可追溯解析 | Agent 可以杜撰样式、已覆盖任意国家标准，或当前能力已实现 |
-| M2 后字段槽/Placement 候选切片 | 固定 Registry 快照、模板 target、学生 source 与显式 placement 的数据连接 | 已建立 Registry 研发职责、v0.1 快照与 Eval 候选的显式版本/hash 引用；其他消费者只能在各自 schema/契约门通过后声称已实现 | v0.1 已完整或已是 Gold、字段同名可自动写入、M3 或学生内容 Eval 已通过 |
+| M2 后字段槽/Placement 候选切片 | 固定 Registry 快照、模板 target、学生 source 与显式 placement 的数据连接 | Registry v0.4、Student Model/Extraction Gold v2 和独立 Extraction Eval 已实现；Placement/Filling 仍按各自门推进 | 字段同名可自动写入、Placement/Filling 已通过或完整 M3 已通过 |
 | M3 | 核心 Eval 与真实样本复核 | 可受控试用 MVP | 已覆盖所有学校和长尾情况 |
 | M4 | 新版通用 Knowledge + 跨学校回归 | 通用知识可以从多任务证据中受控演进 | 可以持久化学校事实或自动晋升任务结论 |
 | M5 | 按需求增加的产品能力 | 对应能力已产品化 | 可以跳过证据直接扩平台 |

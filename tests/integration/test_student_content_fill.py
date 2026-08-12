@@ -13,8 +13,10 @@ import pytest
 import yaml
 
 from docfit.app.student_content_fill import (
+    StudentContentExtractionRequest,
     StudentContentFillRequest,
     StudentExtractionExecution,
+    run_student_content_extraction,
     run_student_content_fill,
 )
 from docfit.content.fill import fill_template
@@ -288,7 +290,7 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
             },
             {
                 "action": "replace_block_content_control",
-                "field_id": "body.chapters",
+                "field_id": "body.ordered_items",
                 "tag": "docfit.body.chapter_title",
                 "source_locators": [source_paragraph.locator],
                 "remove_tags_after_fill": [],
@@ -376,7 +378,7 @@ def test_fill_creates_numbering_infrastructure_when_template_has_none(
         "operations": [
             {
                 "action": "replace_block_content_control",
-                "field_id": "body.chapters",
+                "field_id": "body.ordered_items",
                 "tag": "docfit.body.chapter_title",
                 "source_locators": [paragraph.locator],
                 "remove_tags_after_fill": [],
@@ -452,11 +454,24 @@ def test_independent_student_content_app_publishes_partial_candidate(
                 "registry_id": "docfit.thesis.content_fields",
                 "registry_version": "0.1.0",
                 "fields": [
-                    {"field_id": "thesis.title.en", "content_type": "text"},
-                    {"field_id": "body.chapters", "content_type": "section"},
-                    {"field_id": "references.entries", "content_type": "rich_text"},
-                    {"field_id": "acknowledgement.body", "content_type": "rich_text"},
-                    {"field_id": "appendix.body", "content_type": "section"},
+                    {
+                        "field_id": "thesis.title.en",
+                        "label": "English title",
+                        "meaning": "The student's English thesis title.",
+                        "content_type": "text",
+                    },
+                    {
+                        "field_id": "body.heading.level1",
+                        "label": "Level-one body heading",
+                        "meaning": "A first-level heading in the thesis body.",
+                        "content_type": "text",
+                    },
+                    {
+                        "field_id": "body.paragraph",
+                        "label": "Body paragraph",
+                        "meaning": "A normal paragraph in the thesis body.",
+                        "content_type": "rich_text",
+                    },
                 ],
             },
             sort_keys=False,
@@ -537,42 +552,58 @@ def test_independent_student_content_app_publishes_partial_candidate(
     )
 
     async def fake_runner(prompt, prepared, schema, transcripts):
-        del schema, transcripts
+        del transcripts
         assert prepared.source_sha256 in prompt
-        objects = [item for item in prepared.inventory["objects"] if item["kind"] == "paragraph"]
-        title_id = objects[0]["source_object_ref"]["object_id"]
-        body_id = objects[1]["source_object_ref"]["object_id"]
+        assert '"schema_version": 3' in prompt
+        assert "ordered_source_content_items" in prompt
+        assert "Do not return any source_order" in prompt
+        assert str(template.resolve()) not in prompt
+        assert prepared.source_docx.is_relative_to(prepared.task_root)
+        items = prepared.inventory["content_items"]
+        title_id = next(
+            item["source_content_id"]
+            for item in items
+            if item["observed_text"] == "Verified title"
+        )
+        body_id = next(
+            item["source_content_id"]
+            for item in items
+            if item["observed_text"] == "Student body paragraph"
+        )
+        assert schema["properties"]["annotations"]["items"]["properties"][
+            "source_content_id"
+        ]["enum"] == [
+            item["source_content_id"] for item in items
+        ]
         return StudentExtractionExecution(
             structured_output={
-                "schema_version": 1,
-                "fields": [
+                "schema_version": 3,
+                "annotations": [
                     {
+                        "source_content_id": title_id,
+                        "classification_status": "classified",
                         "field_id": "thesis.title.en",
-                        "status": "extracted",
                         "value": "Verified title",
-                        "source_object_ids": [title_id],
                         "confidence": 1.0,
                         "note": "Synthetic exact title.",
-                    }
-                ],
-                "segments": [
+                    },
                     {
-                        "field_id": "body.chapters",
-                        "status": "extracted",
-                        "start_object_id": body_id,
-                        "end_object_id": body_id,
+                        "source_content_id": body_id,
+                        "classification_status": "classified",
+                        "field_id": "body.paragraph",
+                        "value": None,
                         "confidence": 1.0,
                         "note": "Synthetic body.",
-                    }
+                    },
                 ],
-                "unmapped_object_ids": [],
+                "relations": [],
                 "summary": "Synthetic extraction.",
                 "uncertainties": [],
             },
             backend="synthetic",
             session_id="synthetic-session",
-            tool_uses=("Skill", "mcp__docfit__docx_inspect"),
-            skills_loaded=("convert-thesis",),
+            tool_uses=(),
+            skills_loaded=(),
         )
 
     report = asyncio.run(
@@ -588,7 +619,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
         )
     )
 
-    assert report["status"] == "PARTIAL"
+    assert report["status"] == "PARTIAL", report
     assert Path(report["candidate_docx"]).is_file()
     assert Path(report["candidate_pdf"]).is_file()
     assert Path(report["student_content"]).is_file()
@@ -606,6 +637,80 @@ def test_independent_student_content_app_publishes_partial_candidate(
         _content_control_color(Path(report["candidate_docx"]), "docfit.cover.title_en")
         == "000000"
     )
-    assert report["missing_required_count"] == 0
+    assert report["missing_required_count"] == 1
+    assert "required_slots_missing" in report["partial_reasons"]
     assert "template_fill_contract_not_human_accepted" in report["partial_reasons"]
     assert json.loads((output / "run-report.json").read_text())["status"] == "PARTIAL"
+
+
+def test_extraction_module_runs_without_template_or_fill_contract(tmp_path: Path) -> None:
+    source = tmp_path / "student.docx"
+    registry_path = tmp_path / "registry.yaml"
+    output = tmp_path / "extraction-output"
+    _make_docx(source, "Verified title", "Student body paragraph")
+    registry_path.write_text(
+        yaml.safe_dump(
+            {
+                "registry_id": "docfit.thesis.content_fields",
+                "registry_version": "0.1.0",
+                "fields": [
+                    {
+                        "field_id": "thesis.title.en",
+                        "label": "English title",
+                        "meaning": "The student's English thesis title.",
+                        "content_type": "text",
+                    },
+                    {
+                        "field_id": "body.paragraph",
+                        "label": "Body paragraph",
+                        "meaning": "A normal paragraph in the thesis body.",
+                        "content_type": "rich_text",
+                    },
+                ],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    async def fake_runner(prompt, prepared, schema, transcripts):
+        del schema, transcripts
+        assert prepared.task_root == output.resolve()
+        assert "template" not in prompt.casefold()
+        annotations = []
+        for item in prepared.inventory["content_items"]:
+            title = item["observed_text"] == "Verified title"
+            annotations.append({
+                "source_content_id": item["source_content_id"],
+                "classification_status": "classified",
+                "field_id": "thesis.title.en" if title else "body.paragraph",
+                "value": "Verified title" if title else None,
+                "confidence": 1.0,
+                "note": "Synthetic exact annotation.",
+            })
+        return StudentExtractionExecution(
+            structured_output={
+                "schema_version": 3,
+                "annotations": annotations,
+                "relations": [],
+                "summary": "Synthetic extraction.",
+                "uncertainties": [],
+            },
+            backend="synthetic",
+            session_id="synthetic-extraction-session",
+            tool_uses=(),
+            skills_loaded=(),
+        )
+
+    report = asyncio.run(
+        run_student_content_extraction(
+            StudentContentExtractionRequest(source, registry_path, output),
+            runner=fake_runner,
+        )
+    )
+
+    assert report["status"] == "READY", report
+    assert not any("template" in path.name.casefold() for path in output.rglob("*"))
+    model = json.loads((output / "student-content.json").read_text())
+    assert [item["source_order"]["block"] for item in model["items"]] == [1, 2]
+    assert model["source_coverage"]["all_source_objects_accounted_for"] is True

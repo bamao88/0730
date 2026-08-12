@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import asyncio
 import zipfile
 from pathlib import Path
 
 import pytest
 import yaml
 
-from docfit.app.student_content_fill import _document_visible_text, _force_inline_inspection
+from docfit.app.student_content_fill import _document_visible_text
 from docfit.content.extraction import extraction_output_schema, validate_extraction
 from docfit.content.placement import build_placement, load_fill_contract
 from docfit.content.student import build_student_inventory
@@ -20,14 +19,21 @@ W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
 
 def _inspection() -> Inspection:
-    objects = (
-        _object("obj-title", "/body/p[@paraId=00000001]", "A verified title"),
-        _object("obj-body-1", "/body/p[@paraId=00000002]", "1 Introduction"),
-        _object("obj-picture", "/body/p[@paraId=00000002]/r[1]/drawing[1]", ""),
-        _object("obj-body-2", "/body/p[@paraId=00000003]", "Body text"),
-        _object("obj-ref", "/body/p[@paraId=00000004]", "References"),
+    body = "/body/p[@paraId=00000002]"
+    return Inspection(
+        "a" * 64,
+        (
+            _object("obj-title", "/body/p[@paraId=00000001]", "A verified title"),
+            _object("obj-body-1", body, "1 Introduction"),
+            _object("obj-picture", f"{body}/r[1]/drawing[1]", ""),
+            _object("obj-body-2", "/body/p[@paraId=00000003]", "Body text"),
+            _object("obj-ref", "/body/p[@paraId=00000004]", "Reference entry"),
+        ),
+        {"paragraphs": 4, "images": 1},
+        (),
+        (),
+        {},
     )
-    return Inspection("a" * 64, objects, {"paragraphs": 4, "images": 1}, (), (), {})
 
 
 def _object(object_id: str, locator: str, text: str) -> InspectedObject:
@@ -54,11 +60,13 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
                 "registry_id": "docfit.thesis.content_fields",
                 "registry_version": "0.1.0",
                 "fields": [
-                    {"field_id": "thesis.title.en", "content_type": "text"},
-                    {"field_id": "body.chapters", "content_type": "section"},
-                    {"field_id": "references.entries", "content_type": "rich_text"},
-                    {"field_id": "acknowledgement.body", "content_type": "rich_text"},
-                    {"field_id": "appendix.body", "content_type": "section"},
+                    _field("thesis.title.en", "text"),
+                    _field("body.heading.level1", "text"),
+                    _field("body.paragraph", "rich_text"),
+                    _field("body.figure", "image"),
+                    _field("body.table", "table"),
+                    _field("body.equation", "equation"),
+                    _field("references.entries", "rich_text"),
                 ],
             },
             sort_keys=False,
@@ -68,52 +76,55 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
     return FieldRegistrySnapshot.load(path)
 
 
-def _agent_payload() -> dict[str, object]:
+def _field(field_id: str, content_type: str) -> dict[str, str]:
     return {
-        "schema_version": 1,
-        "fields": [
-            {
-                "field_id": "thesis.title.en",
-                "status": "extracted",
-                "value": "A verified title",
-                "source_object_ids": ["obj-title"],
-                "confidence": 0.99,
-                "note": "Exact visible title.",
-            }
-        ],
-        "segments": [
-            {
-                "field_id": "body.chapters",
-                "status": "extracted",
-                "start_object_id": "obj-body-1",
-                "end_object_id": "obj-body-2",
-                "confidence": 0.9,
-                "note": "Continuous body range.",
-            },
-            {
-                "field_id": "references.entries",
-                "status": "extracted",
-                "start_object_id": "obj-ref",
-                "end_object_id": "obj-ref",
-                "confidence": 0.95,
-                "note": "Reference range.",
-            },
-        ],
-        "unmapped_object_ids": ["obj-picture"],
-        "summary": "Synthetic extraction.",
-        "uncertainties": [],
+        "field_id": field_id,
+        "label": field_id,
+        "meaning": f"Semantic meaning of {field_id}.",
+        "content_type": content_type,
     }
 
 
-def test_inventory_covers_objects_without_treating_nested_picture_as_transferable() -> None:
+def _student_content(tmp_path: Path) -> tuple[dict[str, object], FieldRegistrySnapshot]:
+    inventory = build_student_inventory(_inspection())
+    ids = [item["source_content_id"] for item in inventory["content_items"]]
+    fields = (
+        "thesis.title.en",
+        "body.figure",
+        "body.heading.level1",
+        "body.paragraph",
+        "references.entries",
+    )
+    payload = {
+        "schema_version": 3,
+        "annotations": [
+            {
+                "source_content_id": content_id,
+                "classification_status": "classified",
+                "field_id": field_id,
+                "confidence": 1.0,
+                "note": "Synthetic exact annotation.",
+            }
+            for content_id, field_id in zip(ids, fields, strict=True)
+        ],
+        "relations": [],
+        "summary": "Synthetic.",
+        "uncertainties": [],
+    }
+    registry = _registry(tmp_path)
+    return validate_extraction(payload, inventory=inventory, registry=registry), registry
+
+
+def test_inventory_keeps_nested_picture_as_a_separate_ordered_content_item() -> None:
     inventory = build_student_inventory(_inspection())
 
     assert inventory["object_count"] == 5
-    assert inventory["transferable_object_count"] == 4
-    assert len({item["content_id"] for item in inventory["objects"]}) == 5
-    picture = inventory["objects"][2]
-    assert picture["content_type"] == "image"
-    assert picture["transferable"] is False
+    assert inventory["content_item_count"] == 5
+    picture = inventory["content_items"][1]
+    assert picture["physical_type"] == "image"
+    assert picture["source_order"] == {"block": 2, "inline": 0}
+    assert picture["transport_source_object_id"] == "obj-body-1"
+    assert "field_id" not in picture
 
 
 def test_inventory_uses_ooxml_body_order_for_paragraph_table_interleaving(
@@ -144,38 +155,13 @@ def test_inventory_uses_ooxml_body_order_for_paragraph_table_interleaving(
         (),
         {},
     )
-    inventory = build_student_inventory(inspection, source_docx=source)
-    order = {
-        item["source_object_ref"]["object_id"]: item["body_sequence"]
-        for item in inventory["objects"]
-    }
 
-    assert order == {"obj-start": 1, "obj-end": 3, "obj-table": 2}
-    payload = {
-        "schema_version": 1,
-        "fields": [],
-        "segments": [
-            {
-                "field_id": "body.chapters",
-                "status": "extracted",
-                "start_object_id": "obj-start",
-                "end_object_id": "obj-end",
-                "confidence": 1.0,
-                "note": "Synthetic mixed body.",
-            }
-        ],
-        "unmapped_object_ids": [],
-        "summary": "Synthetic.",
-        "uncertainties": [],
-    }
-    actual = validate_extraction(
-        payload,
-        inventory=inventory,
-        registry=_registry(tmp_path),
-        expected_field_ids=(),
-    )
-    body = next(item for item in actual["segments"] if item["field_id"] == "body.chapters")
-    assert body["source_object_ids"] == ["obj-start", "obj-table", "obj-end"]
+    inventory = build_student_inventory(inspection, source_docx=source)
+
+    assert [
+        (item["physical_type"], item["source_order"]["block"])
+        for item in inventory["content_items"]
+    ] == [("text", 1), ("table", 2), ("text", 3)]
 
 
 def test_inventory_synthesizes_formula_only_top_level_paragraphs(
@@ -210,42 +196,159 @@ def test_inventory_synthesizes_formula_only_top_level_paragraphs(
 
     inventory = build_student_inventory(inspection, source_docx=source)
 
-    transferable = [item for item in inventory["objects"] if item["transferable"] is True]
-    assert [item["body_sequence"] for item in transferable] == [1, 3, 2]
-    formula = next(item for item in transferable if item["source_locator"].endswith("00000002]"))
-    assert formula["content_type"] == "equation"
-    assert formula["kind"] == "paragraph"
+    assert [item["physical_type"] for item in inventory["content_items"]] == [
+        "text",
+        "equation",
+        "text",
+    ]
     assert inventory["synthetic_transferable_object_count"] == 1
 
+
+def test_extraction_schema_contains_no_agent_order_or_composition_keywords(
+    tmp_path: Path,
+) -> None:
+    inventory = build_student_inventory(_inspection())
+    schema = extraction_output_schema(inventory, _registry(tmp_path))
+    rendered = str(schema)
+
+    assert schema["properties"]["schema_version"] == {"const": 3}
+    assert "source_order" not in str(schema["properties"]["annotations"])
+    assert "value" not in schema["properties"]["annotations"]["items"]["properties"]
+    assert all(keyword not in rendered for keyword in ("oneOf", "anyOf", "allOf"))
+
+
+def test_postprocessing_owns_source_value_and_ignores_legacy_agent_value(
+    tmp_path: Path,
+) -> None:
+    inventory = build_student_inventory(_inspection())
+    ids = [item["source_content_id"] for item in inventory["content_items"]]
+    first = _annotation(ids[0], "thesis.title.en")
+    first["value"] = "invented title"
     payload = {
-        "schema_version": 1,
-        "fields": [],
-        "segments": [
-            {
-                "field_id": "body.chapters",
-                "status": "extracted",
-                "start_object_id": "obj-start",
-                "end_object_id": "obj-end",
-                "confidence": 1.0,
-                "note": "The full body range includes a formula-only paragraph.",
-            }
+        "schema_version": 3,
+        "annotations": [
+            first,
+            _annotation(ids[1], "body.figure"),
+            _annotation(ids[2], "body.heading.level1"),
+            _annotation(ids[3], "body.paragraph"),
+            _annotation(ids[4], "references.entries"),
         ],
-        "unmapped_object_ids": [],
+        "relations": [],
         "summary": "Synthetic.",
         "uncertainties": [],
     }
-    actual = validate_extraction(
-        payload,
-        inventory=inventory,
-        registry=_registry(tmp_path),
-        expected_field_ids=(),
-    )
-    body = next(item for item in actual["segments"] if item["field_id"] == "body.chapters")
-    assert body["source_locators"] == [
-        "/body/p[@paraId=00000001]",
-        "/body/p[@paraId=00000002]",
-        "/body/p[@paraId=00000003]",
+
+    model = validate_extraction(payload, inventory=inventory, registry=_registry(tmp_path))
+
+    assert model["items"][0]["value"] == "A verified title"
+
+
+def _annotation(
+    source_content_id: str,
+    field_id: str,
+) -> dict[str, object]:
+    return {
+        "source_content_id": source_content_id,
+        "classification_status": "classified",
+        "field_id": field_id,
+        "confidence": 1.0,
+        "note": "Synthetic.",
+    }
+
+
+def test_placement_copies_body_transport_once_in_student_source_order(
+    tmp_path: Path,
+) -> None:
+    student_content, registry = _student_content(tmp_path)
+    template = tmp_path / "template.docx"
+    template.write_bytes(b"hash-bound synthetic template")
+    styles = [
+        _style("style.cover.title"),
+        _style("style.body.chapter_title"),
+        _style("style.body.chapter_body"),
+        _style("style.body.figure"),
     ]
+    contract = {
+        "schema_version": "docfit-template-fill-contract/v2",
+        "contract_id": "synthetic",
+        "revision": "1",
+        "status": "accepted",
+        "template_sha256": sha256_file(template),
+        "contract_sha256": "c" * 64,
+        "field_registry_ref": registry.identity(),
+        "styles": styles,
+        "style_contract_set_digest": _style_set_digest(template, styles),
+        "regions": [],
+        "slots": [
+            _slot("slot.title", "thesis.title.en", "docfit.title", True, styles[0]),
+            _slot(
+                "slot.body.h1",
+                "body.heading.level1",
+                "docfit.body.h1",
+                True,
+                styles[1],
+            ),
+            _slot(
+                "slot.body.text",
+                "body.paragraph",
+                "docfit.body.text",
+                True,
+                styles[2],
+            ),
+            _slot(
+                "slot.body.figure",
+                "body.figure",
+                "docfit.body.figure",
+                True,
+                styles[3],
+            ),
+        ],
+    }
+
+    placement = build_placement(
+        student_content=student_content,
+        contract=contract,
+        registry=registry,
+        template_docx=template,
+    )
+
+    body = next(
+        operation
+        for operation in placement["operations"]
+        if operation["field_id"] == "body.ordered_items"
+    )
+    assert body["ordering_policy"] == "student_source_order_only"
+    assert body["source_object_ids"] == ["obj-body-1", "obj-body-2"]
+    assert [item["field_id"] for item in body["source_content_items"]] == [
+        "body.figure",
+        "body.heading.level1",
+        "body.paragraph",
+    ]
+    assert placement["status"] == "COMPLETE"
+
+
+def test_placement_refuses_unresolved_student_content(tmp_path: Path) -> None:
+    registry = _registry(tmp_path)
+    template = tmp_path / "template.docx"
+    template.write_bytes(b"template")
+
+    with pytest.raises(ToolFailure) as failure:
+        build_placement(
+            student_content={
+                "schema_version": "docfit-student-content-model/v2",
+                "status": "NEEDS_REVIEW",
+                "registry": registry.identity(),
+                "items": [],
+            },
+            contract={
+                "template_sha256": sha256_file(template),
+                "field_registry_ref": registry.identity(),
+            },
+            registry=registry,
+            template_docx=template,
+        )
+
+    assert failure.value.code == "placement_student_content_not_ready"
 
 
 def test_visible_text_audit_includes_omml_formula_text(tmp_path: Path) -> None:
@@ -261,205 +364,7 @@ def test_visible_text_audit_includes_omml_formula_text(tmp_path: Path) -> None:
     assert _document_visible_text(document) == "Before\nx=1"
 
 
-def test_extraction_schema_avoids_composition_keywords() -> None:
-    schema = extraction_output_schema(("thesis.title.en",))
-    rendered = str(schema)
-
-    assert "oneOf" not in rendered
-    assert "anyOf" not in rendered
-    assert "allOf" not in rendered
-
-
-def test_extraction_expands_transferable_ranges_and_normalizes_omissions(
-    tmp_path: Path,
-) -> None:
-    registry = _registry(tmp_path)
-    actual = validate_extraction(
-        _agent_payload(),
-        inventory=build_student_inventory(_inspection()),
-        registry=registry,
-        expected_field_ids=("thesis.title.en",),
-    )
-
-    body = next(item for item in actual["segments"] if item["field_id"] == "body.chapters")
-    assert body["source_object_ids"] == ["obj-body-1", "obj-body-2"]
-    assert all("drawing" not in value for value in body["source_locators"])
-    acknowledgement = next(
-        item for item in actual["segments"] if item["field_id"] == "acknowledgement.body"
-    )
-    assert acknowledgement["status"] == "missing"
-
-
-def test_extraction_rejects_untraceable_agent_value(tmp_path: Path) -> None:
-    payload = _agent_payload()
-    payload["fields"][0]["value"] = "invented title"  # type: ignore[index]
-
-    with pytest.raises(ToolFailure, match="not present") as failure:
-        validate_extraction(
-            payload,
-            inventory=build_student_inventory(_inspection()),
-            registry=_registry(tmp_path),
-            expected_field_ids=("thesis.title.en",),
-        )
-
-    assert failure.value.code == "student_extraction_value_untraceable"
-
-
-def test_missing_field_may_cite_review_evidence_without_becoming_fill_value(
-    tmp_path: Path,
-) -> None:
-    payload = _agent_payload()
-    field = payload["fields"][0]  # type: ignore[index]
-    field["status"] = "missing"
-    field["value"] = None
-
-    actual = validate_extraction(
-        payload,
-        inventory=build_student_inventory(_inspection()),
-        registry=_registry(tmp_path),
-        expected_field_ids=("thesis.title.en",),
-    )
-
-    assert actual["fields"][0]["status"] == "missing"
-    assert actual["fields"][0]["source_object_ids"] == ["obj-title"]
-
-
-def test_extraction_hook_removes_inspection_output_side_effect() -> None:
-    result = asyncio.run(
-        _force_inline_inspection(
-            {
-                "hook_event_name": "PreToolUse",
-                "tool_name": "mcp__docfit__docx_inspect",
-                "tool_input": {"input_docx": "input/student.docx", "output": "full"},
-            },  # type: ignore[arg-type]
-            None,
-            None,  # type: ignore[arg-type]
-        )
-    )
-
-    updated = result["hookSpecificOutput"]["updatedInput"]
-    assert updated == {"input_docx": "input/student.docx"}
-
-
-def test_extraction_rejects_overlapping_semantic_segments(tmp_path: Path) -> None:
-    payload = _agent_payload()
-    payload["segments"][1]["start_object_id"] = "obj-body-2"  # type: ignore[index]
-
-    with pytest.raises(ToolFailure) as failure:
-        validate_extraction(
-            payload,
-            inventory=build_student_inventory(_inspection()),
-            registry=_registry(tmp_path),
-            expected_field_ids=("thesis.title.en",),
-        )
-
-    assert failure.value.code == "student_extraction_segment_overlap"
-
-
-def test_placement_maps_body_once_and_leaves_required_missing_explicit(
-    tmp_path: Path,
-) -> None:
-    registry = _registry(tmp_path)
-    student_content = validate_extraction(
-        _agent_payload(),
-        inventory=build_student_inventory(_inspection()),
-        registry=registry,
-        expected_field_ids=("thesis.title.en",),
-    )
-    template = tmp_path / "template.docx"
-    template.write_bytes(b"hash-bound synthetic template")
-    styles = [
-        _style("style.cover.title"),
-        _style("style.body.chapter_title"),
-        _style("style.body.chapter_body"),
-        _style("style.other.title"),
-    ]
-    contract = {
-        "schema_version": "docfit-template-fill-contract/v2",
-        "contract_id": "synthetic",
-        "revision": "1",
-        "status": "candidate_pending_human_acceptance",
-        "template_sha256": sha256_file(template),
-        "contract_sha256": "c" * 64,
-        "field_registry_ref": registry.identity(),
-        "styles": styles,
-        "style_contract_set_digest": _style_set_digest(template, styles),
-        "regions": [{"region_id": "region.generated.toc", "required": True}],
-        "slots": [
-            _slot(
-                "slot.title",
-                "thesis.title.en",
-                "docfit.cover.title_en",
-                True,
-                styles[0],
-            ),
-            _slot(
-                "slot.body.title",
-                "body.heading.level1",
-                "docfit.body.chapter_title",
-                True,
-                styles[1],
-            ),
-            _slot(
-                "slot.body.text",
-                "body.paragraph",
-                "docfit.body.chapter_body",
-                True,
-                styles[2],
-            ),
-            _slot(
-                "slot.missing",
-                "thesis.title.en",
-                "docfit.other.title",
-                False,
-                styles[3],
-            ),
-        ],
-    }
-
-    placement = build_placement(
-        student_content=student_content,
-        contract=contract,
-        registry=registry,
-        template_docx=template,
-    )
-
-    assert placement["status"] == "PARTIAL"
-    body_operations = [
-        item for item in placement["operations"] if item["field_id"] == "body.chapters"
-    ]
-    assert len(body_operations) == 1
-    assert body_operations[0]["tag"] == "docfit.body.chapter_title"
-    assert body_operations[0]["style_role_refs"]["body.heading.level1"][
-        "style_contract_id"
-    ] == "style.body.chapter_title"
-    title_targets = [
-        item for item in placement["targets"] if item["field_id"] == "thesis.title.en"
-    ]
-    assert {item["style_contract_ref"]["style_contract_id"] for item in title_targets} == {
-        "style.cover.title",
-        "style.other.title",
-    }
-    assert "template_fill_contract_not_human_accepted" in placement["partial_reasons"]
-
-
-def test_placement_rejects_stale_template_hash(tmp_path: Path) -> None:
-    registry = _registry(tmp_path)
-    template = tmp_path / "template.docx"
-    template.write_bytes(b"template")
-
-    with pytest.raises(ToolFailure) as failure:
-        build_placement(
-            student_content={"registry": registry.identity(), "fields": [], "segments": []},
-            contract={"template_sha256": "0" * 64},
-            registry=registry,
-            template_docx=template,
-        )
-
-    assert failure.value.code == "placement_template_stale"
-
-
-def test_fill_contract_v2_rejects_inline_slot_style_even_with_a_valid_ref(
+def test_fill_contract_v2_rejects_inline_slot_style_even_with_valid_ref(
     tmp_path: Path,
 ) -> None:
     template = tmp_path / "template.docx"
