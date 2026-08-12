@@ -694,16 +694,64 @@ def _containing_paragraph(document_root: ET.Element, target: ET.Element) -> ET.E
     )
 
 
+def _paragraph_style_outline_source(
+    styles: ET.Element | None,
+    paragraph: ET.Element,
+) -> tuple[int, str] | None:
+    """Return the effective 1-3 TOC outline source for one paragraph."""
+
+    direct = paragraph.find(f"{_W}pPr/{_W}outlineLvl")
+    if direct is not None:
+        try:
+            level = int(direct.get(f"{_W}val", "9"))
+        except ValueError:
+            return None
+        return (level, "paragraph_outline_level") if level < 3 else None
+    if styles is None:
+        return None
+    paragraph_style = paragraph.find(f"{_W}pPr/{_W}pStyle")
+    style_id = paragraph_style.get(f"{_W}val", "") if paragraph_style is not None else ""
+    if not style_id:
+        return None
+    inherited_level: int | None = None
+    inherited_source: str | None = None
+    chain = _style_chain(styles, style_id)
+    for style in chain:
+        outline = style.find(f"{_W}pPr/{_W}outlineLvl")
+        if outline is not None:
+            try:
+                inherited_level = int(outline.get(f"{_W}val", "9"))
+            except ValueError:
+                inherited_level = None
+            inherited_source = "paragraph_style_outline_level"
+    if inherited_level is not None:
+        return (
+            (inherited_level, inherited_source or "paragraph_style_outline_level")
+            if inherited_level < 3
+            else None
+        )
+    current_style = chain[-1] if chain else None
+    name = current_style.find(f"{_W}name") if current_style is not None else None
+    style_name = name.get(f"{_W}val", "") if name is not None else ""
+    heading = re.fullmatch(r"(?:heading|标题)\s*([1-3])", style_name, re.IGNORECASE)
+    if heading is None:
+        return None
+    return int(heading.group(1)) - 1, "built_in_heading_style"
+
+
 def _materialize_toc_source_levels(
+    parts: dict[str, bytes],
     document_root: ET.Element,
     entries: tuple[TocEntry, ...],
-) -> list[JsonObject]:
-    """Persist Agent-assigned TOC levels on source paragraphs for Word field updates."""
+) -> tuple[list[JsonObject], list[JsonObject]]:
+    """Make the Agent-selected entries the exact 1-3 source set for Word updates."""
 
     results: list[JsonObject] = []
+    selected_paragraphs: set[int] = set()
     for entry in entries:
         _, target = _resolve(document_root, entry.selected.locator)
         paragraph = _containing_paragraph(document_root, target)
+        selected_paragraphs.add(id(paragraph))
         properties = paragraph.find(f"{_W}pPr")
         if properties is None:
             properties = ET.Element(f"{_W}pPr")
@@ -725,7 +773,47 @@ def _materialize_toc_source_levels(
                 "changed": previous != requested,
             }
         )
-    return results
+    raw_styles = parts.get("word/styles.xml")
+    styles: ET.Element | None = None
+    if raw_styles is not None:
+        try:
+            styles = ET.fromstring(raw_styles)
+        except ET.ParseError as error:
+            raise ToolFailure(
+                status="error",
+                origin="document",
+                code="styles_xml_invalid",
+                message="The Word styles part cannot be parsed.",
+            ) from error
+    suppressed: list[JsonObject] = []
+    for paragraph in document_root.iter(f"{_W}p"):
+        if id(paragraph) in selected_paragraphs:
+            continue
+        source = _paragraph_style_outline_source(styles, paragraph)
+        if source is None:
+            continue
+        previous_level, source_kind = source
+        properties = paragraph.find(f"{_W}pPr")
+        if properties is None:
+            properties = ET.Element(f"{_W}pPr")
+            paragraph.insert(0, properties)
+        outline = properties.find(f"{_W}outlineLvl")
+        if outline is None:
+            outline = ET.SubElement(properties, f"{_W}outlineLvl")
+        previous_direct = outline.get(f"{_W}val")
+        outline.set(f"{_W}val", "9")
+        properties[:] = _ordered_children(list(properties), _PPR_ORDER)
+        text = "".join(node.text or "" for node in paragraph.iter(f"{_W}t")).strip()
+        suppressed.append(
+            {
+                "text": text[:80],
+                "previous_outline_level": previous_level,
+                "source": source_kind,
+                "outline_level": 9,
+                "changed": previous_direct != "9",
+            }
+        )
+    return results, suppressed
 
 
 _PPR_ORDER = {
@@ -1406,6 +1494,7 @@ def mutate_objects(
     page_start_results: list[JsonObject] = []
     style_scope_changes: list[JsonObject] = []
     toc_source_levels: list[JsonObject] = []
+    toc_suppressed_sources: list[JsonObject] = []
     toc_style_ids = _toc_style_ids(parts)
     for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
@@ -1455,9 +1544,11 @@ def mutate_objects(
                     ],
                 )
             )
-            toc_source_levels.extend(
-                _materialize_toc_source_levels(document_root, toc_entries)
+            selected_levels, suppressed_sources = _materialize_toc_source_levels(
+                parts, document_root, toc_entries
             )
+            toc_source_levels.extend(selected_levels)
+            toc_suppressed_sources.extend(suppressed_sources)
             style_scope_changes.extend(
                 _refresh_toc(
                     parts,
@@ -1527,4 +1618,5 @@ def mutate_objects(
         "page_start_results": page_start_results,
         "style_scope_changes": style_scope_changes,
         "toc_source_levels": toc_source_levels,
+        "toc_suppressed_sources": toc_suppressed_sources,
     }

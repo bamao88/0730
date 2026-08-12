@@ -294,6 +294,7 @@ def _append_toc_and_titles(
     document: Path,
     *,
     cached_levels: tuple[int, ...] = (1, 2, 3),
+    unselected_sources: bool = False,
 ) -> None:
     with zipfile.ZipFile(document) as archive:
         infos = archive.infolist()
@@ -340,6 +341,14 @@ def _append_toc_and_titles(
             ET.SubElement(run_properties, f"{W}b")
         ET.SubElement(run_properties, f"{W}sz", {f"{W}val": "28"})
         ET.SubElement(run_properties, f"{W}szCs", {f"{W}val": "28"})
+    if unselected_sources:
+        heading = ET.SubElement(
+            styles,
+            f"{W}style",
+            {f"{W}type": "paragraph", f"{W}styleId": "UnselectedHeading1"},
+        )
+        ET.SubElement(heading, f"{W}name", {f"{W}val": "heading 1"})
+        ET.SubElement(heading, f"{W}basedOn", {f"{W}val": "Normal"})
     parts["word/styles.xml"] = ET.tostring(
         styles,
         encoding="utf-8",
@@ -391,6 +400,26 @@ def _append_toc_and_titles(
         if row_index == len(cached_rows) - 1:
             ET.SubElement(run, f"{W}fldChar", {f"{W}fldCharType": "end"})
         body.insert(position, paragraph)
+        position += 1
+    if unselected_sources:
+        toc_title = ET.Element(f"{W}p")
+        toc_title_properties = ET.SubElement(toc_title, f"{W}pPr")
+        ET.SubElement(
+            toc_title_properties,
+            f"{W}pStyle",
+            {f"{W}val": "UnselectedHeading1"},
+        )
+        toc_title_run = ET.SubElement(toc_title, f"{W}r")
+        ET.SubElement(toc_title_run, f"{W}t").text = "目  录"
+        body.insert(position, toc_title)
+        position += 1
+
+        body_paragraph = ET.Element(f"{W}p")
+        body_properties = ET.SubElement(body_paragraph, f"{W}pPr")
+        ET.SubElement(body_properties, f"{W}outlineLvl", {f"{W}val": "2"})
+        body_run = ET.SubElement(body_paragraph, f"{W}r")
+        ET.SubElement(body_run, f"{W}t").text = "【未入选正文】"
+        body.insert(position, body_paragraph)
         position += 1
     title_texts = [
         "【中文摘要】",
@@ -1184,6 +1213,7 @@ def test_batch_edit_is_atomic_returns_local_region_feedback_and_preserves_source
         "page_start_results": [],
         "style_scope_changes": [],
         "toc_source_levels": [],
+        "toc_suppressed_sources": [],
         "effective_format_changes": [],
     }
     assert "applied" not in result
@@ -2932,7 +2962,11 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
     # The live cache may not contain every level that the Agent selects for the
     # rebuilt TOC. Styles for newly introduced levels still need durable tabs
     # and effective formatting before Word regenerates the field.
-    _append_toc_and_titles(source, cached_levels=(1, 2))
+    _append_toc_and_titles(
+        source,
+        cached_levels=(1, 2),
+        unselected_sources=True,
+    )
     _, document = service._register_source()
     inspection = service._inspection(document)
     toc = next(
@@ -3010,6 +3044,23 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         (item["level"], item["outline_level"])
         for item in result["effects"]["toc_source_levels"]
     ] == [(1, 0), (1, 0), (1, 0), (2, 1), (3, 2), (1, 0)]
+    suppressed = {
+        item["text"]: item for item in result["effects"]["toc_suppressed_sources"]
+    }
+    assert suppressed["目  录"] == {
+        "text": "目  录",
+        "previous_outline_level": 0,
+        "source": "built_in_heading_style",
+        "outline_level": 9,
+        "changed": True,
+    }
+    assert suppressed["【未入选正文】"] == {
+        "text": "【未入选正文】",
+        "previous_outline_level": 2,
+        "source": "paragraph_outline_level",
+        "outline_level": 9,
+        "changed": True,
+    }
     assert result["structural_risks"] == [
         {
             "code": "shared_character_style_override",
@@ -3083,6 +3134,8 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         if (outline := paragraph.find(f"{W}pPr/{W}outlineLvl")) is not None
     }
     assert source_outline_levels == {
+        "目  录": "9",
+        "【未入选正文】": "9",
         "【中文摘要】": "0",
         "【英文摘要】": "0",
         "【一级章标题】": "0",

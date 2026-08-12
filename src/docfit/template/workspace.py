@@ -2655,6 +2655,9 @@ class TemplateWorkspaceService:
                         "page_start_results": mutation_effects["page_start_results"],
                         "style_scope_changes": mutation_effects["style_scope_changes"],
                         "toc_source_levels": mutation_effects["toc_source_levels"],
+                        "toc_suppressed_sources": mutation_effects[
+                            "toc_suppressed_sources"
+                        ],
                         "effective_format_changes": format_changes,
                     },
                     "structures": [
