@@ -177,6 +177,16 @@ TEMPLATE_EDIT_SCHEMA: JsonObject = {
     "additionalProperties": False,
 }
 
+TEMPLATE_FINAL_REVIEW_SCHEMA: JsonObject = {
+    "type": "object",
+    "properties": {
+        "document_ref": DOCUMENT_REF_SCHEMA,
+        "cursor": {"type": "string", "minLength": 1},
+    },
+    "required": ["document_ref"],
+    "additionalProperties": False,
+}
+
 TEMPLATE_PUBLISH_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {"document_ref": DOCUMENT_REF_SCHEMA},

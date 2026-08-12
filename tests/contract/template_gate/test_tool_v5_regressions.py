@@ -104,3 +104,23 @@ def test_final_review_accepts_conventional_first_batch_cursor(
     assert reviewed["batch_pages"] == [1]
     assert visual.last_review is not None
     assert "cursor" not in visual.last_review
+
+
+def test_final_review_does_not_deadlock_after_terminal_edit_without_feedback_target(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    document_ref, _ = service._register_source()
+    _finish_local_work(service, source)
+    progress = service._read_progress(_workspace_contract.sha256_file(source))
+    progress.update(
+        {
+            "current_region_edited": True,
+            "pending_object_ref": None,
+        }
+    )
+    service._write_progress(progress)
+
+    reviewed, _ = service.final_review({"document_ref": document_ref})
+
+    assert reviewed["batch_pages"] == [1]

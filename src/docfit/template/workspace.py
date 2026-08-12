@@ -749,6 +749,10 @@ class TemplateWorkspaceService:
         return self.root / "reviews"
 
     @property
+    def final_reviews(self) -> Path:
+        return self.root / "final-reviews"
+
+    @property
     def progress_path(self) -> Path:
         return self.root / "task-progress.json"
 
@@ -3173,6 +3177,164 @@ class TemplateWorkspaceService:
             },
         )
 
+    def final_review(self, args: dict[str, Any]) -> tuple[JsonObject, list[Path]]:
+        """Return only the next terminal full-page QA batch for the current version."""
+
+        document_hash, document = self._resolve_document(args.get("document_ref"))
+        source_hash = sha256_file(self.source)
+        progress = self._read_progress(source_hash)
+        if progress.get("document_sha256") != document_hash:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="final_review_document_not_current",
+                message=(
+                    "Final visual QA must use the latest application checkpoint. Reopen the "
+                    "task and use its current document_ref."
+                ),
+                suggested_actions=("open_latest_checkpoint",),
+            )
+        inspection = self._inspection(document)
+        progress = self._reconcile_satisfied_intents(progress, inspection)
+        if (
+            int(progress["region_index"]) < len(self._source_regions())
+            or progress.get("pending_object_ref") is not None
+        ):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="final_review_not_ready",
+                message=(
+                    "Complete the bounded local-object regions before starting full-page "
+                    "visual QA."
+                ),
+                suggested_actions=("complete_local_object_work",),
+            )
+        if progress.get("pending_edit_intents"):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="agent_edit_intent_unresolved",
+                message=(
+                    "Resolve every pending Agent edit intent before starting final visual QA."
+                ),
+                suggested_actions=("resolve_pending_edit_intents",),
+            )
+        summary = self._checkpoint_summary(inspection)
+        toc = summary.get("toc")
+        has_toc_target = any(
+            item.kind == "paragraph"
+            and item.style
+            and item.style.casefold().startswith("toc")
+            for item in inspection.objects
+        )
+        if isinstance(toc, dict) and toc.get("refresh_needed") and has_toc_target:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="final_generated_content_pending",
+                message=(
+                    "Finalize the generated TOC from template_open before starting full-page "
+                    "visual QA."
+                ),
+                suggested_actions=("finalize_generated_content",),
+            )
+
+        render, _ = self.visual.render({"input_docx": str(document), "overview": False})
+        visual_args: JsonObject = {
+            "render_ref": render["render_ref"],
+            "mode": "pages",
+            "quality": "detail",
+        }
+        cursor = args.get("cursor")
+        if cursor in {"start", "0"}:
+            cursor = None
+        if cursor is not None:
+            visual_args["cursor"] = cursor
+        review, images = self.visual.review(visual_args)
+        batch_pages: set[int] = set()
+        for evidence in review.get("evidence", []):
+            batch_pages.update(self._evidence_pages(evidence))
+        self._record_final_review(
+            document_hash,
+            render_ref=str(render["render_ref"]),
+            page_count=int(render["page_count"]),
+            pages=batch_pages,
+        )
+        receipt = self._read_final_review(document_hash)
+        page_count = int(receipt["page_count"])
+        reviewed_pages = sorted(
+            page for page in receipt["reviewed_pages"] if isinstance(page, int)
+        )
+        coverage_complete = set(reviewed_pages) == set(range(1, page_count + 1))
+        next_cursor = review.get("next_cursor")
+        return (
+            {
+                "schema_version": 1,
+                "status": "ok",
+                "phase": "final_visual_qa",
+                "document_ref": _document_ref(document_hash),
+                "document_sha256": document_hash,
+                "render_ref": render["render_ref"],
+                "page_count": page_count,
+                "batch_pages": sorted(batch_pages),
+                "reviewed_pages": reviewed_pages,
+                "coverage_complete": coverage_complete,
+                "next_cursor": next_cursor,
+                "guidance": (
+                    "Inspect every returned full-page PNG. Continue with next_cursor; do not "
+                    "publish until coverage_complete is true. If a defect is visible, leave "
+                    "final QA, repair only that bounded defect, then restart final QA for the "
+                    "new document_ref."
+                    if not coverage_complete
+                    else (
+                        "All final pages for this exact document version were returned. Publish "
+                        "only if your visual inspection found no defect; otherwise repair the "
+                        "bounded defect and repeat final QA for the new document_ref."
+                    )
+                ),
+            },
+            images,
+        )
+
+    def _record_final_review(
+        self,
+        document_hash: str,
+        *,
+        render_ref: str,
+        page_count: int,
+        pages: set[int],
+    ) -> None:
+        self.final_reviews.mkdir(parents=True, exist_ok=True)
+        path = self.final_reviews / f"{document_hash}.json"
+        existing: JsonObject = {}
+        if path.exists():
+            try:
+                value: Any = json.loads(path.read_text(encoding="utf-8"))
+                existing = value if isinstance(value, dict) else {}
+            except (OSError, json.JSONDecodeError):
+                existing = {}
+        accumulated = set()
+        if (
+            existing.get("render_ref") == render_ref
+            and existing.get("page_count") == page_count
+        ):
+            accumulated = {
+                page for page in existing.get("reviewed_pages", []) if isinstance(page, int)
+            }
+        accumulated.update(pages)
+        atomic_write_json(
+            path,
+            {
+                "schema_version": 1,
+                "phase": "final_visual_qa",
+                "document_sha256": document_hash,
+                "render_ref": render_ref,
+                "page_count": page_count,
+                "reviewed_pages": sorted(accumulated),
+            },
+        )
+
     def publish(self, args: dict[str, Any]) -> JsonObject:
         document_hash, document = self._resolve_document(args.get("document_ref"))
         if sha256_file(self.registry.path) != self.registry.sha256:
@@ -3208,15 +3370,25 @@ class TemplateWorkspaceService:
             )
         validate_docx_package(document)
         office_validation = self.office.validate(document)
-        review = self._read_review(document_hash)
-        reviewed_pages = {page for page in review["reviewed_pages"] if isinstance(page, int)}
-        if not reviewed_pages:
+        if progress.get("document_sha256") != document_hash:
             raise ToolFailure(
                 status="needs_input",
                 origin="request",
-                code="final_visual_review_missing",
-                message="Review the changed local region of the current Word before publishing.",
-                suggested_actions=("review_the_changed_region",),
+                code="publish_document_not_current",
+                message="Publish the latest application checkpoint after its final visual QA.",
+            )
+        review = self._read_final_review(document_hash)
+        reviewed_pages = {page for page in review["reviewed_pages"] if isinstance(page, int)}
+        expected_pages = set(range(1, int(review["page_count"]) + 1))
+        if reviewed_pages != expected_pages:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="final_visual_review_incomplete",
+                message=(
+                    "Inspect every full-page PNG for the exact final Word before publishing."
+                ),
+                suggested_actions=("continue_final_visual_review",),
             )
         lineage = self._lineage(document_hash, source_hash)
         operations = [
@@ -3514,7 +3686,7 @@ class TemplateWorkspaceService:
                 {"name": "registry_unchanged", "result": "ok"},
                 {"name": "package_reopens", "result": "ok"},
                 {"name": "officecli_validate", "result": "ok"},
-                {"name": "current_version_local_feedback_returned", "result": "ok"},
+                {"name": "all_final_pages_reviewed", "result": "ok"},
                 {"name": "style_contract_occurrences_validated", "result": "ok"},
                 {"name": "single_word_published", "result": "ok"},
             ],
@@ -3542,6 +3714,38 @@ class TemplateWorkspaceService:
                 origin="evidence",
                 code="final_visual_review_invalid",
                 message="The final visual review receipt is invalid.",
+            )
+        return value
+
+    def _read_final_review(self, document_hash: str) -> JsonObject:
+        path = self.final_reviews / f"{document_hash}.json"
+        try:
+            value: Any = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="final_visual_review_missing",
+                message=(
+                    "Run template_final_review and inspect every full-page PNG for the exact "
+                    "final Word before publishing."
+                ),
+                suggested_actions=("start_final_visual_review",),
+            ) from error
+        if (
+            not isinstance(value, dict)
+            or value.get("phase") != "final_visual_qa"
+            or value.get("document_sha256") != document_hash
+            or not isinstance(value.get("render_ref"), str)
+            or not isinstance(value.get("page_count"), int)
+            or value["page_count"] < 1
+            or not isinstance(value.get("reviewed_pages"), list)
+        ):
+            raise ToolFailure(
+                status="error",
+                origin="evidence",
+                code="final_visual_review_invalid",
+                message="The final full-page visual review receipt is invalid.",
             )
         return value
 

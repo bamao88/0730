@@ -93,6 +93,7 @@ PREPARE_TEMPLATE_FINALIZATION_TURN_LIMIT = 24
 _REQUIRED_BUILT_TOOL_EVIDENCE = {
     "Skill",
     "mcp__docfit__template_open",
+    "mcp__docfit__template_final_review",
     "mcp__docfit__template_publish",
 }
 _DEFAULT_REGISTRY = (
@@ -398,12 +399,21 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         "application checkpoint; after an edit, continue only from fresh refs returned by the Tool "
         "and never copy or invent document hashes or fingerprints. template_next only navigates "
         "to an unprocessed physical visual region; you remain responsible for every semantic "
-        "decision. Focus or search only when the current crop needs more context; do not review "
-        "every page or request full pages for coverage, and do not repeat visual feedback already "
-        "returned by template_edit. Publish the exact final document_ref once with "
-        "template_publish. Only output/final-template.docx is user-visible. Return blocked only "
-        "for a genuinely material semantic ambiguity that cannot be resolved from the current "
-        "object, template, optional requirements, Tool feedback, or Skill knowledge."
+        "decision. During local object processing, focus or search only when the current crop "
+        "needs more context; do not review every page or request full pages for coverage, and do "
+        "not repeat visual feedback already returned by template_edit. After navigation is done, "
+        "all pending_edit_intents are resolved, and generated content is final, switch phases: "
+        "call template_final_review for the exact current document_ref, inspect every returned "
+        "full-page PNG, and follow next_cursor until coverage_complete. This terminal page scan "
+        "checks rendering defects; it does not reopen whole-document semantic classification. "
+        "If a defect is visible, use bounded search/focus and template_edit only for that defect, "
+        "then restart final review for the new document_ref because old page evidence is stale. "
+        "Publish the exact reviewed document_ref once with template_publish only after coverage "
+        "is complete and clean. Only output/final-template.docx is user-visible; page PNGs and "
+        "render evidence "
+        "remain internal unless the user asks for them. Return blocked for a genuinely material "
+        "semantic ambiguity that cannot be resolved from the current evidence, or when final "
+        "rendering remains unavailable; never publish an unreviewed Word."
         f"{finalization_guidance}"
     )
 
@@ -461,9 +471,11 @@ def build_prepare_template_options(
         output_format={"type": "json_schema", "schema": PREPARE_TEMPLATE_OUTPUT_SCHEMA},
         system_prompt=(
             "You are the single DocFit template-preparation Agent. Trust your semantic and visual "
-            "judgment. The SDK-native Agent loop and seven focused template Tools are the entire "
-            "workflow: view one target-object region, batch the decisions visible there, inspect "
-            "the changed-region feedback, and publish one Word without an all-page coverage gate. "
+            "judgment. The SDK-native Agent loop and eight focused template Tools are the entire "
+            "workflow. During object work, view one bounded region, batch the visible decisions, "
+            "and inspect only changed-region feedback. Only after local work and generated content "
+            "are complete, enter terminal visual QA and inspect every full-page PNG for the exact "
+            "final document version before publishing one Word. "
             "Inputs are read-only. "
             "There are no plan files, compilers, attempt paths, semantic checker, or compatibility "
             "protocol. Tool checks are mechanical feedback, not a substitute for your judgment."

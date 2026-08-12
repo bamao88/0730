@@ -49,6 +49,24 @@ class FakeVisual:
 
     def review(self, args: JsonObject) -> tuple[JsonObject, list[Path]]:
         self.last_review = dict(args)
+        if args.get("mode") == "pages":
+            if args.get("cursor") is None:
+                return (
+                    {
+                        "evidence": [{"page": 1}],
+                        "next_cursor": "fake-final-page-2",
+                        "mode": "pages",
+                    },
+                    [Path("/tmp/final-page-1.png")],
+                )
+            return (
+                {
+                    "evidence": [{"page": 2}],
+                    "next_cursor": None,
+                    "mode": "pages",
+                },
+                [Path("/tmp/final-page-2.png")],
+            )
         pages = args.get("pages", [1])
         return (
             {
@@ -501,7 +519,20 @@ def _service(
     )
 
 
-def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
+def _finish_local_work(service: TemplateWorkspaceService, source: Path) -> None:
+    progress = service._read_progress(sha256_file(source))
+    progress.update(
+        {
+            "region_index": len(service._source_regions()),
+            "pending_object_ref": None,
+            "pending_edit_intents": [],
+            "current_region_edited": False,
+        }
+    )
+    service._write_progress(progress)
+
+
+def test_agent_surface_separates_local_tools_from_terminal_full_page_review() -> None:
     assert TEMPLATE_LOGICAL_TOOL_NAMES == (
         "template_open",
         "template_next",
@@ -509,6 +540,7 @@ def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
         "template_focus",
         "template_registry",
         "template_edit",
+        "template_final_review",
         "template_publish",
     )
     assert (
@@ -537,6 +569,11 @@ def test_agent_surface_is_seven_focused_tools_without_plan_protocol() -> None:
     assert set(TEMPLATE_TOOLS[3].input_schema["properties"]) == {"object_ref", "scope"}
     assert set(TEMPLATE_TOOLS[4].input_schema["properties"]) == {"lookups", "searches"}
     assert set(TEMPLATE_TOOLS[5].input_schema["properties"]) == {"operations"}
+    assert set(TEMPLATE_TOOLS[6].input_schema["properties"]) == {
+        "document_ref",
+        "cursor",
+    }
+    assert set(TEMPLATE_TOOLS[7].input_schema["properties"]) == {"document_ref"}
     operation_schema = TEMPLATE_TOOLS[5].input_schema["properties"]["operations"]["items"]
     assert set(operation_schema["properties"]["action"]["enum"]) == {
         "materialize_slot",
@@ -2608,6 +2645,17 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     ]
     assert len(structures) == 1
     assert structures[0].text == "【一级章标题】【二级标题】【三级标题】【正文段落】"
+    _finish_local_work(service, source)
+    first_review, _ = service.final_review(
+        {"document_ref": replacement_result["document_ref"]}
+    )
+    final_review, _ = service.final_review(
+        {
+            "document_ref": replacement_result["document_ref"],
+            "cursor": first_review["next_cursor"],
+        }
+    )
+    assert final_review["coverage_complete"] is True
     published = service.publish({"document_ref": replacement_result["document_ref"]})
     assert published["counts"]["slot"] == 4
     fill_contract = json.loads(
@@ -3706,10 +3754,10 @@ def test_object_ref_is_shared_by_focus_visual_and_edit_and_is_version_bound(
     }
 
 
-def test_publish_requires_local_feedback_not_all_page_coverage_and_outputs_one_word(
+def test_final_review_is_terminal_sequential_and_publish_requires_every_page(
     tmp_path: Path,
 ) -> None:
-    service, _, _ = _service(tmp_path)
+    service, _, source = _service(tmp_path)
     _, document = service._register_source()
     inspection = service._inspection(document)
     selected = next(
@@ -3722,6 +3770,32 @@ def test_publish_requires_local_feedback_not_all_page_coverage_and_outputs_one_w
             "operations": [{"action": "remove_object", "object_ref": selected.object_ref}],
         }
     )
+    _finish_local_work(service, source)
+
+    first, first_images = service.final_review({"document_ref": changed["document_ref"]})
+
+    assert first["phase"] == "final_visual_qa"
+    assert first["batch_pages"] == [1]
+    assert first["reviewed_pages"] == [1]
+    assert first["coverage_complete"] is False
+    assert first["next_cursor"] == "fake-final-page-2"
+    assert first_images == [Path("/tmp/final-page-1.png")]
+    with pytest.raises(ToolFailure) as incomplete:
+        service.publish({"document_ref": changed["document_ref"]})
+    assert incomplete.value.code == "final_visual_review_incomplete"
+
+    second, second_images = service.final_review(
+        {
+            "document_ref": changed["document_ref"],
+            "cursor": first["next_cursor"],
+        }
+    )
+
+    assert second["batch_pages"] == [2]
+    assert second["reviewed_pages"] == [1, 2]
+    assert second["coverage_complete"] is True
+    assert second["next_cursor"] is None
+    assert second_images == [Path("/tmp/final-page-2.png")]
     published = service.publish({"document_ref": changed["document_ref"]})
 
     output = service.task_root / "output/final-template.docx"
@@ -3737,10 +3811,64 @@ def test_publish_requires_local_feedback_not_all_page_coverage_and_outputs_one_w
 
 
 def test_publish_rejects_an_unreviewed_exact_version(tmp_path: Path) -> None:
-    service, _, _ = _service(tmp_path)
+    service, _, source = _service(tmp_path)
     document_ref, _ = service._register_source()
+    _finish_local_work(service, source)
 
     with pytest.raises(ToolFailure) as missing:
         service.publish({"document_ref": document_ref})
 
     assert missing.value.code == "final_visual_review_missing"
+
+
+def test_final_review_rejects_local_work_and_stale_document_versions(tmp_path: Path) -> None:
+    service, _, source = _service(tmp_path)
+    original_ref, document = service._register_source()
+
+    with pytest.raises(ToolFailure) as premature:
+        service.final_review({"document_ref": original_ref})
+    assert premature.value.code == "final_review_not_ready"
+
+    _finish_local_work(service, source)
+    first, _ = service.final_review({"document_ref": original_ref})
+    second, _ = service.final_review(
+        {"document_ref": original_ref, "cursor": first["next_cursor"]}
+    )
+    assert second["coverage_complete"] is True
+
+    inspection = service._inspection(document)
+    selected = next(item for item in inspection.objects if item.kind == "paragraph")
+    changed, _ = service.edit(
+        {
+            "operations": [{"action": "clear_content", "object_ref": selected.object_ref}],
+        }
+    )
+
+    with pytest.raises(ToolFailure) as stale_review:
+        service.final_review({"document_ref": original_ref})
+    assert stale_review.value.code == "final_review_document_not_current"
+    with pytest.raises(ToolFailure) as stale_publish:
+        service.publish({"document_ref": original_ref})
+    assert stale_publish.value.code == "publish_document_not_current"
+    with pytest.raises(ToolFailure) as changed_not_closed:
+        service.final_review({"document_ref": changed["document_ref"]})
+    assert changed_not_closed.value.code == "final_review_not_ready"
+
+
+def test_final_review_propagates_renderer_failure_without_publish_receipt(
+    tmp_path: Path,
+) -> None:
+    root, source = _task(tmp_path)
+    service = TemplateWorkspaceService(
+        task_root=root,
+        field_registry=REGISTRY,
+        visual=FailingVisual(),  # type: ignore[arg-type]
+    )
+    document_ref, _ = service._register_source()
+    _finish_local_work(service, source)
+
+    with pytest.raises(ToolFailure) as failed:
+        service.final_review({"document_ref": document_ref})
+
+    assert failed.value.code == "visual_renderer_failed"
+    assert not service.final_reviews.exists()

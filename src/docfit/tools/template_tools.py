@@ -16,6 +16,7 @@ from docfit.tools.runtime import ToolFailure
 from docfit.tools.service import failure_result, tool_result, unexpected_failure_result
 from docfit.tools.template_schemas import (
     TEMPLATE_EDIT_SCHEMA,
+    TEMPLATE_FINAL_REVIEW_SCHEMA,
     TEMPLATE_FOCUS_SCHEMA,
     TEMPLATE_NEXT_SCHEMA,
     TEMPLATE_OPEN_SCHEMA,
@@ -56,6 +57,7 @@ TEMPLATE_LOGICAL_TOOL_NAMES = (
     "template_focus",
     "template_registry",
     "template_edit",
+    "template_final_review",
     "template_publish",
 )
 TEMPLATE_FULL_TOOL_NAMES = tuple(f"mcp__docfit__{name}" for name in TEMPLATE_LOGICAL_TOOL_NAMES)
@@ -161,6 +163,21 @@ async def template_edit(args: dict[str, Any]) -> dict[str, Any]:
 
 
 @tool(
+    "template_final_review",
+    (
+        "After local object work and generated-content finalization are complete, return the "
+        "next sequential batch of full-page PNGs for the exact current document_ref. Continue "
+        "with its cursor until coverage_complete; this terminal visual QA never replaces local "
+        "object reasoning."
+    ),
+    TEMPLATE_FINAL_REVIEW_SCHEMA,
+    annotations=_OBSERVE,
+)
+async def template_final_review(args: dict[str, Any]) -> dict[str, Any]:
+    return await _unbound(args)
+
+
+@tool(
     "template_publish",
     (
         "Publish exactly one validated final Word from the supplied immutable document_ref after "
@@ -180,6 +197,7 @@ TEMPLATE_TOOLS: tuple[SdkMcpTool[Any], ...] = (
     template_focus,
     template_registry,
     template_edit,
+    template_final_review,
     template_publish,
 )
 
@@ -255,6 +273,15 @@ def build_template_tool_server(
         except Exception:
             return unexpected_failure_result(committed=False)
 
+    async def final_review(args: dict[str, Any]) -> dict[str, Any]:
+        try:
+            structured, images = service.final_review(args)
+            return tool_result(structured, image_paths=images)
+        except ToolFailure as error:
+            return failure_result(error)
+        except Exception:
+            return unexpected_failure_result()
+
     async def publish(args: dict[str, Any]) -> dict[str, Any]:
         try:
             return tool_result(service.publish(args))
@@ -263,10 +290,10 @@ def build_template_tool_server(
         except Exception:
             return unexpected_failure_result(committed=False)
 
-    runners = (open_, next_, search, focus, registry, edit, publish)
+    runners = (open_, next_, search, focus, registry, edit, final_review, publish)
     return create_sdk_mcp_server(
         name="docfit",
-        version="5.0.0",
+        version="6.0.0",
         tools=[
             _bind(registered, runner)
             for registered, runner in zip(TEMPLATE_TOOLS, runners, strict=True)

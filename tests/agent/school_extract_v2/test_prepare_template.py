@@ -196,7 +196,9 @@ def test_pending_edit_intent_takes_priority_over_narrow_toc_finalization(
     assert "resolve only the returned pending_generated_content" not in prompt
 
 
-def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
+def test_prompt_separates_local_object_work_from_terminal_full_page_qa(
+    tmp_path: Path,
+) -> None:
     prepared = prepare_template_task(_request(tmp_path))
 
     prompt = build_prepare_template_prompt(prepared)
@@ -216,7 +218,14 @@ def test_prompt_is_object_driven_and_publishes_one_word(tmp_path: Path) -> None:
     assert "Registry is Tool-private" in prompt
     assert "not a task list" in prompt
     assert "batch" in prompt.casefold()
+    assert "during local object processing" in prompt.casefold()
     assert "do not review every page" in prompt.casefold()
+    assert "switch phases" in prompt.casefold()
+    assert "template_final_review" in prompt
+    assert "inspect every returned full-page PNG" in prompt
+    assert "until coverage_complete" in prompt
+    assert "old page evidence is stale" in prompt
+    assert "never publish an unreviewed Word" in prompt
     assert "output/final-template.docx" in prompt
     assert "compiler" not in prompt.casefold()
     assert "attempt" not in prompt.casefold()
@@ -346,6 +355,7 @@ def test_run_prepare_template_accepts_exactly_one_published_word(tmp_path: Path)
             tool_uses=(
                 "Skill",
                 "mcp__docfit__template_open",
+                "mcp__docfit__template_final_review",
                 "mcp__docfit__template_publish",
             ),
             skills_loaded=("docfit-school-extract",),
