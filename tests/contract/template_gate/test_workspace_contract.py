@@ -144,6 +144,16 @@ class MissingFirstRegionVisual(FakeVisual):
         return super().review(args)
 
 
+class FailingVisual(FakeVisual):
+    def review(self, args: JsonObject) -> tuple[JsonObject, list[Path]]:
+        raise ToolFailure(
+            status="error",
+            origin="renderer",
+            code="visual_renderer_failed",
+            message="Synthetic changed-region render failure.",
+        )
+
+
 def _task(tmp_path: Path, fixture: str = "S08-forbidden-residue") -> tuple[Path, Path]:
     root = tmp_path / "task"
     (root / "input").mkdir(parents=True)
@@ -1340,6 +1350,109 @@ def test_materialize_slot_trusts_paragraph_when_blank_value_runs_are_ambiguous(
     ]
     assert len(slots) == 1
     assert slots[0].text == "【导师中文姓名】"
+
+
+def test_materialize_paragraph_moves_ranges_outside_slot_and_discards_render_history(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "materialize-boundary-source.docx"
+    output = tmp_path / "materialize-boundary-output.docx"
+    xml = (
+        f'<w:document xmlns:w="{W[1:-1]}"><w:body><w:p>'
+        '<w:bookmarkStart w:id="1" w:name="toc-source"/>'
+        '<w:commentRangeStart w:id="2"/><w:r><w:lastRenderedPageBreak/>'
+        '<w:t>附录名称</w:t></w:r><w:commentRangeEnd w:id="2"/>'
+        '<w:bookmarkEnd w:id="1"/></w:p><w:sectPr/></w:body></w:document>'
+    ).encode()
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+    paragraph = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="附录名称",
+        style=None,
+        format={},
+        object_ref={"object_id": "obj-appendix-title"},
+    )
+
+    effects = mutate_objects(
+        source,
+        output,
+        mutations=[
+            ObjectMutation(
+                selected=paragraph,
+                action="materialize_slot",
+                field_id="appendix.title",
+                slot_id="appendix.title.1",
+                placeholder_text="【附录标题】",
+            )
+        ],
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+    changed = root.find(f"{W}body/{W}p")
+    assert changed is not None
+    assert [item.tag for item in changed] == [
+        f"{W}bookmarkStart",
+        f"{W}commentRangeStart",
+        f"{W}sdt",
+        f"{W}commentRangeEnd",
+        f"{W}bookmarkEnd",
+    ]
+    assert next(changed.iter(f"{W}lastRenderedPageBreak"), None) is None
+    assert "".join(node.text or "" for node in changed.iter(f"{W}t")) == "【附录标题】"
+    assert effects["migrated_boundaries"] == [
+        {
+            "kind": "bookmark_range",
+            "object_id": "obj-appendix-title",
+            "representation": "outside_content_control",
+        },
+        {
+            "kind": "comment_range",
+            "object_id": "obj-appendix-title",
+            "representation": "outside_content_control",
+        },
+    ]
+
+
+def test_changed_region_failure_does_not_promote_unreviewed_checkpoint(
+    tmp_path: Path,
+) -> None:
+    root, source = _task(tmp_path)
+    service = TemplateWorkspaceService(
+        task_root=root,
+        field_registry=REGISTRY,
+        visual=FailingVisual(),  # type: ignore[arg-type]
+    )
+    _, document = service._register_source()
+    source_hash = sha256_file(source)
+    progress_before = service._read_progress(source_hash)
+    selected = next(
+        item
+        for item in service._inspection(document).objects
+        if item.kind == "run" and "请在此填写" in item.text
+    )
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_slot",
+                        "object_ref": selected.object_ref,
+                        "field_id": "abstract.en",
+                    }
+                ]
+            }
+        )
+
+    assert caught.value.code == "visual_renderer_failed"
+    assert service._read_progress(source_hash) == progress_before
+    assert not service.receipts.exists() or not any(service.receipts.iterdir())
+    versions = list(service.versions.glob("*.docx"))
+    assert len(versions) == 2
+    assert any(path.stem != source_hash for path in versions)
 
 
 def test_materialize_slot_preserves_underlined_blank_run_width_budget(tmp_path: Path) -> None:

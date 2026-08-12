@@ -377,6 +377,42 @@ def _sdt(
     return control, ET.SubElement(control, f"{_W}sdtContent")
 
 
+_RANGE_START_ELEMENTS = {
+    "bookmarkStart",
+    "commentRangeStart",
+    "customXmlDelRangeStart",
+    "customXmlInsRangeStart",
+    "customXmlMoveFromRangeStart",
+    "customXmlMoveToRangeStart",
+    "moveFromRangeStart",
+    "moveToRangeStart",
+    "permStart",
+}
+_RANGE_END_ELEMENTS = {
+    "bookmarkEnd",
+    "commentRangeEnd",
+    "customXmlDelRangeEnd",
+    "customXmlInsRangeEnd",
+    "customXmlMoveFromRangeEnd",
+    "customXmlMoveToRangeEnd",
+    "moveFromRangeEnd",
+    "moveToRangeEnd",
+    "permEnd",
+}
+
+
+def _discard_render_history(target: ET.Element) -> bool:
+    """Remove Word's unstable historical page-break cache from new slot content."""
+
+    changed = False
+    for parent in target.iter():
+        for child in list(parent):
+            if child.tag == f"{_W}lastRenderedPageBreak":
+                parent.remove(child)
+                changed = True
+    return changed
+
+
 def _materialize(
     document_root: ET.Element,
     target_parent: ET.Element,
@@ -387,7 +423,7 @@ def _materialize(
     slot_id: str,
     content_type: str,
     placeholder_text: str,
-) -> None:
+) -> list[str]:
     if selected.kind not in {"paragraph", "run"}:
         raise ToolFailure(
             status="needs_input",
@@ -409,17 +445,42 @@ def _materialize(
     )
 
     if selected.kind == "paragraph":
+        leading_boundaries: list[ET.Element] = []
+        trailing_boundaries: list[ET.Element] = []
         for child in list(target):
             if child.tag == f"{_W}pPr":
                 continue
             target.remove(child)
-            content.append(child)
+            name = _local_name(child.tag)
+            if name in _RANGE_START_ELEMENTS:
+                leading_boundaries.append(child)
+            elif name in _RANGE_END_ELEMENTS:
+                trailing_boundaries.append(child)
+            else:
+                content.append(child)
+        _discard_render_history(content)
         _set_visible_text(content, placeholder_text)
+        target.extend(leading_boundaries)
         target.append(sdt)
-        return
+        target.extend(trailing_boundaries)
+        kinds: list[str] = []
+        boundary_nodes = leading_boundaries + trailing_boundaries
+        if any(_local_name(item.tag).startswith("bookmark") for item in boundary_nodes):
+            kinds.append("bookmark_range")
+        if any(_local_name(item.tag).startswith("commentRange") for item in boundary_nodes):
+            kinds.append("comment_range")
+        if any(_local_name(item.tag).startswith("perm") for item in boundary_nodes):
+            kinds.append("permission_range")
+        if any(
+            _local_name(item.tag).startswith(("customXml", "moveFrom", "moveTo"))
+            for item in boundary_nodes
+        ):
+            kinds.append("revision_range")
+        return list(dict.fromkeys(kinds))
 
     position = list(target_parent).index(target)
     target_parent.remove(target)
+    _discard_render_history(target)
     content.append(target)
     visible_placeholder = _placeholder_preserving_underlined_fill(
         target,
@@ -428,6 +489,7 @@ def _materialize(
     )
     _set_visible_text(content, visible_placeholder)
     target_parent.insert(position, sdt)
+    return []
 
 
 def _remove_object_preserving_boundary(
@@ -1501,7 +1563,7 @@ def mutate_objects(
             if mutation.field_id is None or mutation.slot_id is None:
                 raise AssertionError("materialize_slot requires field and slot identifiers")
             _apply_effective_format(target, mutation.effective_format)
-            _materialize(
+            migrated = _materialize(
                 document_root,
                 parent,
                 target,
@@ -1510,6 +1572,18 @@ def mutate_objects(
                 slot_id=mutation.slot_id,
                 content_type=mutation.content_type,
                 placeholder_text=mutation.placeholder_text or f"【{mutation.field_id}】",
+            )
+            migrated_boundaries.extend(
+                {
+                    "kind": kind,
+                    "object_id": str(
+                        mutation.selected.object_ref.get(
+                            "object_id", mutation.selected.locator
+                        )
+                    ),
+                    "representation": "outside_content_control",
+                }
+                for kind in migrated
             )
         elif mutation.action == "materialize_structure":
             if mutation.field_id is None or mutation.slot_id is None:

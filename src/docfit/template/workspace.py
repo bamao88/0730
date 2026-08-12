@@ -1478,6 +1478,7 @@ class TemplateWorkspaceService:
         progress: JsonObject,
         *,
         selected: InspectedObject | None = None,
+        persist_progress: bool = True,
     ) -> tuple[JsonObject | None, list[Path], JsonObject]:
         index, count, target, region_objects = self._region_selection(inspection, progress)
         if selected is not None:
@@ -1488,7 +1489,8 @@ class TemplateWorkspaceService:
                 "region_index": index,
                 "current_region_edited": False,
             }
-            self._write_progress(progress)
+            if persist_progress:
+                self._write_progress(progress)
         if target is None:
             return None, [], progress
         reviewed, images = self._review(
@@ -1536,7 +1538,8 @@ class TemplateWorkspaceService:
             selected is not None or isinstance(progress.get("pending_object_ref"), dict)
         ) and progress.get("pending_object_ref") != target.object_ref:
             progress = {**progress, "pending_object_ref": target.object_ref}
-            self._write_progress(progress)
+            if persist_progress:
+                self._write_progress(progress)
         context = self._local_context(
             inspection,
             target,
@@ -2509,13 +2512,14 @@ class TemplateWorkspaceService:
                     ),
                     "current_region_edited": True,
                 }
-                self._write_progress(progress)
                 current_region, images, progress = self._region_view(
                     source_hash,
                     before,
                     progress,
                     selected=feedback_object,
+                    persist_progress=False,
                 )
+                self._write_progress(progress)
                 return (
                     {
                         "schema_version": 1,
@@ -2588,8 +2592,6 @@ class TemplateWorkspaceService:
                 "effective_format_changes": format_changes,
                 "officecli_validation": office_validation,
             }
-            self.receipts.mkdir(parents=True, exist_ok=True)
-            atomic_write_json(self.receipts / f"{output_hash}.json", receipt)
             task_source_hash = sha256_file(self.source)
             progress = self._read_progress(task_source_hash)
             feedback_object = self._feedback_object(after, prepared, progress)
@@ -2606,13 +2608,16 @@ class TemplateWorkspaceService:
                 ),
                 "current_region_edited": True,
             }
-            self._write_progress(progress)
             current_region, images, progress = self._region_view(
                 output_hash,
                 after,
                 progress,
                 selected=feedback_object,
+                persist_progress=False,
             )
+            self.receipts.mkdir(parents=True, exist_ok=True)
+            atomic_write_json(self.receipts / f"{output_hash}.json", receipt)
+            self._write_progress(progress)
             materialized_count = sum(
                 item["action"] in {"materialize_slot", "materialize_structure"} for item in prepared
             )
