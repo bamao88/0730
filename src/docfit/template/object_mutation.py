@@ -243,6 +243,40 @@ def _unwrap_replaced_structure(
         _unwrap_content_control(document_root, control)
 
 
+def _content_control_alias(control: ET.Element) -> str | None:
+    alias = control.find(f"{_W}sdtPr/{_W}alias")
+    return alias.get(f"{_W}val") if alias is not None else None
+
+
+def _unwrap_reused_member_controls(
+    document_root: ET.Element,
+    members: list[tuple[ET.Element, ET.Element, StructureMember]],
+) -> bool:
+    """Promote existing independent member slots before composing a structure.
+
+    The Agent may first materialize a body member as an independent slot and only
+    later decide that it belongs to a reusable body structure.  Re-materializing
+    the containing paragraph without this normalization would retain the old
+    member control inside the new one, producing duplicate aliases and an empty
+    TOC candidate.  Matching the requested member field keeps this mechanical:
+    the Agent still owns which members belong in the structure.
+    """
+
+    controls: list[ET.Element] = []
+    seen: set[int] = set()
+    for _, target, member in members:
+        for control in target.iter(f"{_W}sdt"):
+            if (
+                _content_control_alias(control) == member.field_id
+                and id(control) not in seen
+            ):
+                controls.append(control)
+                seen.add(id(control))
+    for control in controls:
+        _unwrap_content_control(document_root, control)
+    return bool(controls)
+
+
 def _clear_visible_text(target: ET.Element) -> None:
     for node in target.iter(f"{_W}t"):
         node.text = None
@@ -605,8 +639,9 @@ def _materialize_structure(
     targets = [target for _, target, _ in members]
     if replaced_structure is not None:
         _unwrap_replaced_structure(document_root, replaced_structure[1], targets)
+    reused_member_controls = _unwrap_reused_member_controls(document_root, members)
     parents = {id(parent): parent for parent, _, _ in members}
-    if replaced_structure is not None:
+    if replaced_structure is not None or reused_member_controls:
         resolved_parents = [
             _element_parent(document_root, target) for target in targets
         ]

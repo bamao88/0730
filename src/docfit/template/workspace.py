@@ -2267,9 +2267,40 @@ class TemplateWorkspaceService:
                             code="body_member_field_missing",
                             message="Each body member requires a semantic field_id.",
                         )
+                    if (
+                        member_object.kind == "sdt"
+                        and member_object.format.get("alias") == member_field_id
+                    ):
+                        containing_blocks = [
+                            item
+                            for item in member_inspection.objects
+                            if item.kind in {"paragraph", "table"}
+                            and member_object.locator.startswith(f"{item.locator}/")
+                        ]
+                        if containing_blocks:
+                            member_object = max(
+                                containing_blocks,
+                                key=lambda item: len(item.locator),
+                            )
                     semantic = require_body_member_type(member_field_id, member_object.kind)
                     member_field = self.registry.lookup(member_field_id)
-                    member_slot = allocate_slot(member_field_id)
+                    existing_member_controls = sorted(
+                        (
+                            item
+                            for item in member_inspection.objects
+                            if item.kind == "sdt"
+                            and item.format.get("alias") == member_field_id
+                            and item.locator.startswith(f"{member_object.locator}/")
+                            and isinstance(item.format.get("tag"), str)
+                            and item.format.get("tag")
+                        ),
+                        key=lambda item: (item.locator, str(item.format.get("tag"))),
+                    )
+                    member_slot = (
+                        str(existing_member_controls[0].format["tag"])
+                        if existing_member_controls
+                        else allocate_slot(member_field_id)
+                    )
                     member_placeholder = _placeholder_text(member_field)
                     member_format = _effective_format(raw_member.get("effective_format"))
                     structure_members.append(
