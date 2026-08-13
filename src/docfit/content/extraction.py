@@ -84,7 +84,6 @@ def extraction_output_schema(
             "source_content_id",
             "target_content_id",
             "confidence",
-            "note",
         ],
         "additionalProperties": False,
     }
@@ -99,15 +98,11 @@ def extraction_output_schema(
                 "maxItems": len(source_content_ids),
             },
             "relations": {"type": "array", "items": relation_schema},
-            "summary": {"type": "string"},
-            "uncertainties": {"type": "array", "items": {"type": "string"}},
         },
         "required": [
             "schema_version",
             "annotations",
             "relations",
-            "summary",
-            "uncertainties",
         ],
         "additionalProperties": False,
     }
@@ -147,7 +142,6 @@ def _annotation_schema(source_content_ids: list[str]) -> JsonObject:
             "classification_status",
             "field_id",
             "confidence",
-            "note",
         ],
         "additionalProperties": False,
     }

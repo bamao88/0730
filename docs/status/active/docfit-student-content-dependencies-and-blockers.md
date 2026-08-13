@@ -48,7 +48,7 @@ Placement、样式选择、目录更新、内容审计、渲染和 Eval 都是�
 | 模块 | 当前状态 | 已有事实 | 当前关闭条件 |
 |---|---|---|---|
 | 模板生成 | `FAIL` | 已有模板检查、对象编辑和后续行为修订 | 在真实学校模板上有界完成，忠实保留全部结构，并输出可直接消费的学校规则、槽位和样式事实 |
-| 用户内容提取 | `PASSED_STUDENT_002_GOLD_R5` | 新 Student Content Model v2 已通过 Student 002 的真实 API Actual–Gold 验收；188/188 个源绑定语义实例完全一致，8 个验收维度和 486 项全仓回归全部通过 | 后续扩展 Student 001/003 Gold，验证跨文档泛化，不在本轮重新扩大合同 |
+| 用户内容提取 | `STUDENT_002_QUALITY_AND_PERFORMANCE_PASSED` | Student Content Model v2 在真实 API 下保持 Gold r5 的 188/188 语义一致和 8/8 维度通过；编排优化后墙钟从 29 分 17 秒降至 2 分 05.82 秒 | 扩展 Student 001/003 Gold 验证跨文档泛化；全仓唯一模板合同测试滞后需在模板工作包关闭，不回退本模块 |
 | 最终内容填写 | `FAIL`，底层能力部分可用 | 已证明模板主干写入和图片、表格、公式运输能力 | 消费新 `items` 合同，完成实际角色样式选择/物化、必填补值、非填写标注、目录分页和最终逐页验收 |
 
 最新完整真实产品运行仍是
@@ -133,8 +133,11 @@ Claude Agent SDK 继续拥有单一 Agent loop，应用通过 SDK 原生 JSON Sc
 - `src/docfit/content/student.py`：从中立 inspection 生成 Source Inventory v2 和不可变有序内容实例；
 - `src/docfit/content/extraction.py`：v3 逐项标注 Schema、Registry 精简词典、确定性 Student Content
   Model v2 组装、层级、关系、字段摘要和覆盖率；
-- `src/docfit/app/student_content_fill.py`：增加独立提取请求/准备/运行/恢复接口；Agent 任务目录只含
-  学生 DOCX 与 Registry，不含模板或 Fill Contract；
+- `src/docfit/app/student_content_fill.py`：独立提取请求/准备/运行/恢复接口，以及预算分批、有界并发、
+  hash 绑定批次检查点和 task-local 轻量 SDK 运行时；Agent 任务目录只含学生 DOCX 与 Registry，
+  不含模板或 Fill Contract；
+- `src/docfit/app/sdk_execution.py`：模板生成与学生提取共同使用的 SDK metadata-only timing/usage 事实；
+  不包含任一模块的领域语义或学生正文；
 - `src/docfit/content/placement.py` 与 `fill.py`：直接按 `items` 原顺序去重运输 Word 顶层对象，并把
   内容语义和关系随 Fill evidence 传给下游；
 - `src/docfit/content/presentation_roles.py`、`projection.py`、`style_application.py`：消费正式
@@ -175,12 +178,119 @@ Claude Agent SDK 继续拥有单一 Agent loop，应用通过 SDK 原生 JSON Sc
 本轮确定性后处理只做两类不改变内容和顺序的闭合：同一文档中强共识编号形态的孤立标题层级
 偏差校正，以及按不可变源顺序绑定相邻的图/表题注。它不读取模板、不使用 Gold 规则、不重排正文。
 
-工程回归：`ruff check src tests` 通过；Mypy `83 source files` 通过；全仓测试 `486 passed`
-（1 条既有 Starlette/httpx 弃用警告）。
+旧质量基线工程回归：`ruff check src tests` 通过；Mypy `83 source files` 通过；全仓测试 `486 passed`
+（1 条既有 Starlette/httpx 弃用警告）。优化后回归与已知模板工作区测试滞后见 4.4.4。
 
 证据目录：
 `temp/student-content-extraction-eval-20260812/student-002-actual-live-v3/`；正式报告：
 `eval-final/student-content-eval-report.md` 与 `student-content-eval-report.json`。
+
+### 4.4 性能优化：Student 002 编排瓶颈已关闭
+
+#### 4.4.1 结论与测量边界
+
+优化前，Student 002 正式提取从任务目录创建到首次生成 `READY` 运行报告，共耗时
+**29 分 17 秒**：
+
+| 环节 | 当前可确认耗时 | 判断 |
+|---|---:|---|
+| 输入快照、Word inspection、Source Inventory | 约 8 秒 | 正常，不是当前主要瓶颈 |
+| 12 批 prompt 构建 | 本地重复测量中位数约 522 ms | 可忽略 |
+| 12 批 JSON Schema 构建 | 本地重复测量中位数约 3.6 ms | 可忽略 |
+| 真实 Agent 语义标注、SDK 会话、失败重试和路由切换 | 约 29 分 09 秒 | 占总耗时约 99.5%，是当前核心问题 |
+| 191 个 items 的确定性校验、层级和关系组装 | 本地重复测量中位数约 6.4 ms | 可忽略 |
+
+已知旧运行的 29 分 09 秒中包含一次约 600 秒的超时，以及首批一次 structured output 缺失后的重试。
+旧证据只能精确区分完整墙钟耗时和确定性本地耗时，不能继续可靠拆分 CLI、连接、模型与 API 时间，
+因为旧版没有保存 SDK `ResultMessage` 的 timing/usage。优化后已经补齐该观测合同，正式新数据见
+4.4.5。
+
+本节暂不把具体 API 服务商速度作为架构结论。即使假设每次 API 延迟不变，当前编排仍会系统性放大
+墙钟耗时、失败恢复时间和调用成本。
+
+#### 4.4.2 优化前已确认的架构问题
+
+1. **12 个小批次完全串行。** Student 002 的 191 个内容实例按固定 16 项拆成 12 批，后一批必须等待
+   前一批完成。正式顺序本来由 Source Inventory 决定，API 完成顺序不决定 `items` 顺序，因此全串行
+   不是产品合同要求。
+2. **每批都新建并关闭一个 SDK/CLI Session。** 12 个成功批次对应 12 个独立 SDK session；每批重复
+   启动 Claude CLI 子进程、加载配置、建立连接和关闭运行时，没有复用长生命周期客户端。
+3. **提取任务仍继承通用重型 Agent 配置。** 虽然最终禁用了工具，但配置仍从通用 Agent options
+   构建并携带 MCP、project settings、hooks、permission callback 和项目根目录上下文。提取任务实际
+   只需要读取应用传入的事实 JSON 并返回 structured output。
+4. **批次按固定实例数，而不是按 token/语义负载规划。** 16 个短标题和 16 个长正文段落被视为相同
+   工作量，容易同时产生批次数量过多和批次耗时不均衡。
+5. **输入重复传输。** 12 批 prompt 共约 453 KB，Schema 约 46 KB；191 个正式内容实例加相邻上下文
+   实际传输 257 次，上下文重复率约 34.6%。54 个 Registry 字段和不参与本批语义判断的 hash、locator、
+   transport 引用也被重复发送。
+6. **输出合同包含较多非必要生成文本。** 原始 structured output 压缩后约 77 KB；191 条强制 note
+   共约 23.8 KB，12 批 summary 约 6.6 KB。下游当前只消费 `caption_of`，但 Agent 还生成大量
+   `note_of`、`parallel_of` 和 `same_fact_as`，没有形成对应的当前产品价值。
+7. **没有应用级批次检查点。** 批次结果全部留在内存，只有 12 批全部完成后才写正式原始提取和
+   evidence。后段失败会导致重启后重复执行已经成功的批次。
+
+Claude Agent SDK 官方说明：每个 Agent session 对应一个 Claude CLI 子进程；Python
+`ClaudeSDKClient` 可以保持同一 session 并连续接收多个 query；官方 OpenTelemetry 可以提供每个
+`claude_code.interaction` 和 `claude_code.llm_request` 的延迟和 token 证据。当前优化应继续采用 SDK
+原生机制，不另造 Agent runtime。官方依据：
+[Python SDK](https://code.claude.com/docs/en/agent-sdk/python)、
+[Hosting](https://code.claude.com/docs/en/agent-sdk/hosting)、
+[Observability](https://code.claude.com/docs/en/agent-sdk/observability) 和
+[Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs)。
+
+#### 4.4.3 具体优化计划与实施状态
+
+本轮不改变 Student Content Model、Registry、正文顺序或三个产品模块的责任，只替换提取模块内部
+编排。计划、目标和实现结果如下：
+
+| 工作项 | 目标效果 | 实施结果 |
+|---|---|---|
+| 共享层收敛 | 模板与学生提取共享事实，不共享语义或编辑流程 | 保留 `inspect_document` 及其对象引用/OOXML 事实作为中立 Word 事实层；新增只含元数据的 `SDKResultMetrics` 供两个 Agent 模块复用。学生侧继续投影为 Source Inventory，模板侧继续投影为 Template Workspace |
+| 提取专用 SDK 配置 | 不加载模板、MCP、Skill、Subagent、文件工具和 project settings | 直接构造 task-local `ClaudeAgentOptions`；仅使用原生 structured output，所有读写/工具能力禁用。应用显式拥有路由和重试，官方 `CLAUDE_CODE_MAX_RETRIES` 设为 0，避免 SDK 内部默认 10 次重试与应用重试相乘 |
+| 语义输入精简 | Agent 只看做语义判断所需事实，完整追溯仍由应用保存 | Annotation View 只包含短内容 ID、物理类型、原文、局部源顺序和必要 source facts；删除任务绝对路径、package summary、locator、transport、content_ref 等重复输入 |
+| 双预算分批 | 减少批次数，同时避免长段落造成超大批次 | 每批最多 32 项且 Annotation View 最多约 24 KB；Student 002 从固定 16 项的 12 批变为 6 批（31/32/32/32/32/32），源顺序不变 |
+| 3 路有界并发 | API 完成顺序不再线性累加到产品墙钟 | 同时最多运行 3 批；全部结果只按 Source Inventory ID 序列确定性合并，完成先后无权改变 `items` |
+| 原子批次检查点 | 后段失败不重复支付前段成功调用 | 每个成功批次立即写入 task-local checkpoint；身份绑定 source、Registry、inventory、batch、prompt、schema 和 system prompt hash；任何一个变化都会使旧证据失效 |
+| 输出合同压缩 | 删除没有下游价值的生成文本 | classified annotation 和 relation 的 note 改为可选；逐批 summary/uncertainties 不再要求 Agent 生成，应用仍兼容并可聚合旧返回 |
+| 可观测性 | 能从证据区分本地、并发墙钟、SDK/API、attempt、usage、成本与收尾 | `run-report.json`、`agent-evidence.json` 和 batch checkpoint 保存 metadata-only SDK 指标；未来批次证据进一步拆分 queue wait 与 execution wall |
+
+本轮没有强行把多个批次塞进同一个长生命周期 session。原因是批次相互独立且需要有界并发，当前
+6 个隔离 session 已把墙钟降到可接受范围；复用 session 会重新引入串行依赖。只有更多 Gold 样本证明
+CLI 固定成本仍是主要瓶颈时，才把 warm client 作为可逆实验，而不是当前主架构。
+
+#### 4.4.4 性能优化验收标准与结果
+
+| 验收标准 | 正式结果 |
+|---|---|
+| Gold r5 质量不回退 | `PASS`；8/8 维度通过，188/188 源绑定字段、值、分组、顺序和层级一致 |
+| 正文顺序不受并发影响 | `PASS`；191 个 Actual items，188 个 Gold 语义实例完整原序对齐 |
+| 并发有界且结果确定 | `PASS`；受控异步测试证明最大并发为 3，逆序完成仍按源序合并 |
+| 失败可局部恢复 | `PASS`；测试中 5 批有 1 批首次失败，4 个成功 checkpoint 被复用，第二次只调用失败批 |
+| checkpoint 不错误复用 | `PASS`；source、Registry、inventory、batch、prompt/schema/system prompt 均参与身份 hash |
+| 真实 API 性能证据完整 | `PASS`；6/6 批、6 个真实 session、每批 1 次成功 attempt，无超时、无路由切换 |
+| 静态与模块回归 | `PASS`；Ruff、Mypy 84 个源文件、提取单元/集成/权限/Eval 合同测试均通过 |
+| 全仓无其他失败 | `OPEN（非提取回归）`；全仓 509 项中 508 通过，唯一失败是模板工作区已新增 `preceding_landmarks`，模板合同测试仍断言旧返回字段集合 |
+
+#### 4.4.5 Student 002 优化后真实数据
+
+2026-08-12 使用同一 Student 002 原始 DOCX 与 Registry v0.3 发起全新真实 API 调用；没有复用旧 12 批
+输出，Gold 仍只在生成正式模型后离线比较。
+
+| 指标 | 串行基线 | 优化后 | 变化 |
+|---|---:|---:|---:|
+| 完整 CLI 墙钟 | 29 分 17 秒 | 2 分 05.82 秒 | 减少约 92.8%，约 14.0 倍加速 |
+| 模块内总墙钟 | 未记录分项 | 125.262 秒 | 前处理、Agent、收尾已分项 |
+| 确定性前处理 | 约 8 秒 | 4.330 秒 | 均非主要瓶颈 |
+| Agent 编排墙钟 | 约 29 分 09 秒 | 120.900 秒 | 由 6 批、3 路并发完成 |
+| SDK duration 求和 | 未记录 | 296.455 秒 | 是 6 个并发 session 的总工作量，不等于用户等待时间 |
+| SDK API duration 求和 | 未记录 | 296.378 秒 | 与 SDK 总 duration 接近 |
+| 确定性组装收尾 | 约 6.4 ms 本地基准 | 29 ms 正式运行 | 可忽略 |
+| API attempt | 含 600 秒超时和 structured-output 重试 | 6 次调用全部一次成功 | 没有隐藏失败放大 |
+| SDK usage/cost | 未保存 | input 76,357；output 46,714；总成本 USD 1.5500355 | 已形成后续成本基线，不能与旧运行比较成本降幅 |
+
+正式证据目录：
+`temp/student-content-extraction-eval-20260812/student-002-actual-live-optimized-v1/`；Gold 报告：
+`eval-gold-r5/student-content-eval-report.md` 与 `student-content-eval-report.json`。
 
 ## 5. 另外两个模块的修复与验收计划
 
@@ -222,3 +332,5 @@ Claude Agent SDK 继续拥有单一 Agent loop，应用通过 SDK 原生 JSON Sc
 | 2026-08-11 | 旧提取合同升级为 keyed `fields + segments` v2，并完成两次真实重复性证明 | 该证据现为历史基线，已被新模型替代 |
 | 2026-08-12 | 用户内容提取改为有序 Source Items → v3 Agent 标注 → Student Content Model v2；填写端改为消费语义 | 代码已实现，470 项全仓回归通过；真实源事实层完成，但两条实时路由全量超时，紧凑批次仍无及时返回，状态为 `IMPLEMENTED_LIVE_PROOF_BLOCKED` |
 | 2026-08-12 | Student 002 完整真实 API 提取并与 Gold r5 正式比较 | 12/12 批次有 SDK structured-output 证据；188/188 源绑定实例一致，8/8 维度 `PASS`；提取模块升级为 `PASSED_STUDENT_002_GOLD_R5` |
+| 2026-08-12 | 记录 Student 002 正式提取 29 分 17 秒的性能问题 | 质量验收保持通过；当前瓶颈定位到提取编排层，状态调整为 `QUALITY_PASSED_PERFORMANCE_OPEN`，按观测、有界并发/检查点、轻量运行时、合同压缩和动态批次顺序关闭 |
+| 2026-08-12 | 完成提取编排优化并重新执行 Student 002 真实 API + Gold r5 | 6 批、3 路并发、2 分 05.82 秒；相对基线减少约 92.8%，Gold 仍为 188/188、8/8 `PASS`；状态升级为 `STUDENT_002_QUALITY_AND_PERFORMANCE_PASSED` |

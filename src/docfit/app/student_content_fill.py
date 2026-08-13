@@ -9,20 +9,22 @@ import os
 import secrets
 import shutil
 import tempfile
+import time
 import zipfile
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from claude_agent_sdk import ClaudeSDKClient
+from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient
 from claude_agent_sdk.types import (
     AssistantMessage,
     ResultMessage,
     ToolUseBlock,
 )
 
-from docfit.app.agent import build_agent_options, project_root, terminal_ask_user
+from docfit.app.agent import AGENT_SDK_MAX_BUFFER_BYTES, project_root
+from docfit.app.sdk_execution import SDKResultMetrics
 from docfit.app.settings import AgentBackend, iter_agent_backends
 from docfit.content.extraction import (
     extraction_output_schema,
@@ -47,14 +49,18 @@ from docfit.tools.runtime import (
     atomic_write_json,
     read_json,
     sha256_file,
+    sha256_json,
 )
 from docfit.tools.service import DocFitToolService
 from docfit.visual.evidence import EvidenceStore
 
 STUDENT_EXTRACTION_TIMEOUT_SECONDS = 600
-STUDENT_EXTRACTION_BATCH_SIZE = 16
+STUDENT_EXTRACTION_BATCH_SIZE = 32
+STUDENT_EXTRACTION_BATCH_TEXT_BYTES = 24_000
+STUDENT_EXTRACTION_CONCURRENCY = 3
 STUDENT_EXTRACTION_CONTEXT_ITEMS = 3
 STUDENT_EXTRACTION_MAX_ATTEMPTS_PER_BACKEND = 2
+STUDENT_EXTRACTION_CHECKPOINT_VERSION = 1
 _ALLOWED_EXTRACTION_TOOLS = frozenset({"StructuredOutput"})
 
 
@@ -113,6 +119,12 @@ class StudentExtractionExecution:
     session_id: str
     tool_uses: tuple[str, ...]
     skills_loaded: tuple[str, ...]
+    num_turns: int = 0
+    duration_ms: int = 0
+    duration_api_ms: int = 0
+    total_cost_usd: float | None = None
+    usage: JsonObject | None = None
+    attempt_evidence: tuple[JsonObject, ...] = ()
     batch_evidence: tuple[JsonObject, ...] = ()
 
 
@@ -135,11 +147,18 @@ def prepare_student_content_extraction(
     registry_hash = sha256_file(registry_path)
     FieldRegistrySnapshot.load(registry_path)
     output = request.output_directory.expanduser().resolve()
-    if output.exists() and (not output.is_dir() or any(output.iterdir())):
-        raise _failure(
-            "student_extraction_output_not_empty",
-            "The extraction output directory must be absent or empty.",
-        )
+    if output.exists():
+        if not output.is_dir() or output.is_symlink():
+            raise _failure(
+                "student_extraction_output_not_directory",
+                "The extraction output path must be a regular directory.",
+            )
+        if any(output.iterdir()):
+            return _resume_student_content_extraction(
+                output,
+                source_sha256=source_hash,
+                registry_sha256=registry_hash,
+            )
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-prepare-", dir=output.parent))
     try:
@@ -180,6 +199,50 @@ def prepare_student_content_extraction(
         inventory_path=output / "work" / "student-inventory.json",
         source_sha256=source_hash,
         registry_sha256=registry_hash,
+        inventory=inventory,
+    )
+
+
+def _resume_student_content_extraction(
+    task_root: Path,
+    *,
+    source_sha256: str,
+    registry_sha256: str,
+) -> PreparedStudentContentExtraction:
+    """Resume only an identity-bound extraction task created by this module."""
+
+    source = task_root / "input" / "student.docx"
+    registry = task_root / "input" / "content-fields.yaml"
+    inventory_path = task_root / "work" / "student-inventory.json"
+    required = (source, registry, inventory_path)
+    if any(path.is_symlink() or not path.is_file() for path in required):
+        raise _failure(
+            "student_extraction_output_not_resumable",
+            "The non-empty extraction directory is not a complete DocFit extraction task.",
+        )
+    if sha256_file(source) != source_sha256 or sha256_file(registry) != registry_sha256:
+        raise _failure(
+            "student_extraction_resume_input_mismatch",
+            "The existing extraction task is bound to different source inputs.",
+        )
+    FieldRegistrySnapshot.load(registry)
+    inventory = read_json(inventory_path)
+    if (
+        inventory.get("schema_version") != "docfit-student-source-inventory/v2"
+        or inventory.get("source_sha256") != source_sha256
+        or not isinstance(inventory.get("content_items"), list)
+    ):
+        raise _failure(
+            "student_extraction_resume_inventory_invalid",
+            "The existing extraction task has a stale or invalid Source Inventory.",
+        )
+    return PreparedStudentContentExtraction(
+        task_root=task_root,
+        source_docx=source,
+        field_registry=registry,
+        inventory_path=inventory_path,
+        source_sha256=source_sha256,
+        registry_sha256=registry_sha256,
         inventory=inventory,
     )
 
@@ -369,9 +432,7 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
         )
     task = {
         "schema_version": 3,
-        "authorized_task_root": str(prepared.task_root),
         "student_docx": {
-            "path": str(prepared.source_docx),
             "sha256": prepared.source_sha256,
             "read_only": True,
         },
@@ -379,7 +440,6 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
             "object_count": prepared.inventory.get("object_count"),
             "content_item_count": prepared.inventory.get("content_item_count"),
             "transferable_object_count": prepared.inventory.get("transferable_object_count"),
-            "package_summary": prepared.inventory.get("package_summary"),
             "semantic_neutral_profile": prepared.inventory.get(
                 "semantic_neutral_profile"
             ),
@@ -389,8 +449,12 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
             "count": batch.get("count", 1),
             "primary_content_ids": primary_ids,
         },
-        "ordered_source_content_items_to_annotate": primary_items,
-        "adjacent_context_items_do_not_annotate": context_items,
+        "ordered_source_content_items_to_annotate": [
+            _student_annotation_view(item) for item in primary_items
+        ],
+        "adjacent_context_items_do_not_annotate": [
+            _student_annotation_view(item) for item in context_items
+        ],
         "registry_semantic_lexicon": registry_semantic_lexicon(registry),
     }
     return (
@@ -419,10 +483,60 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
         "translate, complete, normalize, or infer student facts. Describe explicit relations "
         "such as caption_of without changing order. Relations may cite adjacent context items, "
         "but at least one endpoint must be a primary item. Do not return any source_order, "
-        "range, or body sequence field. Return only the requested structured output.\n\n"
+        "range, or body sequence field. Keep note absent unless it records a concrete ambiguity "
+        "or non-classified decision. Do not produce a batch summary. Return only the requested "
+        "structured output.\n\n"
         "CURRENT_TASK_JSON:\n"
         + json.dumps(task, ensure_ascii=False, sort_keys=True)
     )
+
+
+def _student_annotation_view(item: JsonObject) -> JsonObject:
+    """Project neutral Word facts into the minimum semantic-annotation input."""
+
+    return {
+        key: item[key]
+        for key in (
+            "source_content_id",
+            "physical_type",
+            "observed_text",
+            "source_order",
+            "source_facts",
+        )
+        if key in item
+    }
+
+
+def _plan_student_extraction_batches(
+    content_items: list[JsonObject],
+) -> list[list[JsonObject]]:
+    """Keep source order while enforcing both item-count and prompt-payload budgets."""
+
+    batches: list[list[JsonObject]] = []
+    current: list[JsonObject] = []
+    current_bytes = 0
+    for item in content_items:
+        item_bytes = len(
+            json.dumps(
+                _student_annotation_view(item),
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        )
+        exceeds_count = len(current) >= STUDENT_EXTRACTION_BATCH_SIZE
+        exceeds_bytes = bool(current) and (
+            current_bytes + item_bytes > STUDENT_EXTRACTION_BATCH_TEXT_BYTES
+        )
+        if exceeds_count or exceeds_bytes:
+            batches.append(current)
+            current = []
+            current_bytes = 0
+        current.append(item)
+        current_bytes += item_bytes
+    if current:
+        batches.append(current)
+    return batches
 
 
 def _student_extraction_system_prompt() -> str:
@@ -436,27 +550,21 @@ def _student_extraction_system_prompt() -> str:
     )
 
 
-async def _run_extraction_backend(
-    prompt: str,
-    prepared: PreparedStudentContentExtraction,
+def _build_student_extraction_options(
+    *,
+    task_root: Path,
+    environment: dict[str, str],
+    model: str,
     schema: JsonObject,
-    backend: AgentBackend,
-    config_directory: Path,
-) -> StudentExtractionExecution:
-    environment = isolated_sdk_environment(backend.sdk_environment(), config_directory)
-    environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
-    options = build_agent_options(
-        terminal_ask_user,
-        cwd=project_root(),
-        task_root=prepared.task_root,
-        agent_env=environment,
-        model=backend.model,
-        system_prompt=_student_extraction_system_prompt(),
-        output_format={"type": "json_schema", "schema": schema},
-        max_turns=2,
-    )
-    options = replace(
-        options,
+) -> ClaudeAgentOptions:
+    """Build the extraction-only SDK runtime without template or editing capabilities."""
+
+    agent_environment = dict(environment)
+    agent_environment["DOCFIT_TASK_ROOT"] = str(task_root)
+    # The application already owns explicit route attempts and a visible timeout. Avoid a
+    # second, hidden retry multiplier inside each isolated CLI process.
+    agent_environment["CLAUDE_CODE_MAX_RETRIES"] = "0"
+    return ClaudeAgentOptions(
         tools=[],
         allowed_tools=[],
         disallowed_tools=[
@@ -468,14 +576,40 @@ async def _run_extraction_backend(
             "Web",
             "WebSearch",
             "WebFetch",
-            "mcp__docfit__docx_edit",
-            "mcp__docfit__docx_render",
-            "mcp__docfit__docx_visual_review",
-            "mcp__docfit__docx_validate",
-            "mcp__docfit__docx_inspect",
+            "Read",
+            "Glob",
+            "Grep",
+            "Skill",
         ],
+        mcp_servers={},
+        strict_mcp_config=True,
+        permission_mode="default",
         agents={},
+        setting_sources=[],
         skills=[],
+        cwd=task_root,
+        env=agent_environment,
+        model=model,
+        max_turns=2,
+        max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
+        output_format={"type": "json_schema", "schema": schema},
+        system_prompt=_student_extraction_system_prompt(),
+    )
+
+
+async def _run_extraction_backend(
+    prompt: str,
+    prepared: PreparedStudentContentExtraction,
+    schema: JsonObject,
+    backend: AgentBackend,
+    config_directory: Path,
+) -> StudentExtractionExecution:
+    environment = isolated_sdk_environment(backend.sdk_environment(), config_directory)
+    options = _build_student_extraction_options(
+        task_root=prepared.task_root,
+        environment=environment,
+        model=backend.model,
+        schema=schema,
     )
     result: ResultMessage | None = None
     tool_uses: list[str] = []
@@ -525,12 +659,18 @@ async def _run_extraction_backend(
             origin="engine",
             retryable=True,
         )
+    metrics = SDKResultMetrics.from_result(result)
     return StudentExtractionExecution(
         structured_output=result.structured_output,
         backend=backend.name,
         session_id=result.session_id,
         tool_uses=tuple(tool_uses),
         skills_loaded=tuple(dict.fromkeys(skills_loaded)),
+        num_turns=metrics.num_turns,
+        duration_ms=metrics.duration_ms,
+        duration_api_ms=metrics.duration_api_ms,
+        total_cost_usd=metrics.total_cost_usd,
+        usage=metrics.usage,
     )
 
 
@@ -548,6 +688,7 @@ async def run_student_extraction_agent(
             origin="environment",
         )
     failures: list[str] = []
+    attempt_evidence: list[JsonObject] = []
     for backend in backends:
         route = hashlib.sha256(
             (
@@ -557,28 +698,76 @@ async def run_student_extraction_agent(
         ).hexdigest()
         route_label = f"{backend.name}:{route[:10]}"
         for attempt in range(1, STUDENT_EXTRACTION_MAX_ATTEMPTS_PER_BACKEND + 1):
+            attempt_started = time.perf_counter()
             try:
                 with transcripts.attempt() as config_directory:
                     async with asyncio.timeout(STUDENT_EXTRACTION_TIMEOUT_SECONDS):
-                        return await _run_extraction_backend(
+                        execution = await _run_extraction_backend(
                             prompt,
                             prepared,
                             schema,
                             backend,
                             config_directory,
                         )
+                attempt_evidence.append(
+                    {
+                        "route": route_label,
+                        "attempt": attempt,
+                        "outcome": "success",
+                        "wall_duration_ms": round(
+                            (time.perf_counter() - attempt_started) * 1000
+                        ),
+                    }
+                )
+                return replace(
+                    execution,
+                    attempt_evidence=tuple(attempt_evidence),
+                )
             except TimeoutError:
                 failures.append(f"{route_label}:attempt-{attempt}:timeout")
+                attempt_evidence.append(
+                    {
+                        "route": route_label,
+                        "attempt": attempt,
+                        "outcome": "timeout",
+                        "wall_duration_ms": round(
+                            (time.perf_counter() - attempt_started) * 1000
+                        ),
+                    }
+                )
                 break
             except ToolFailure as error:
                 failures.append(
                     f"{route_label}:attempt-{attempt}:{error.code}"
+                )
+                attempt_evidence.append(
+                    {
+                        "route": route_label,
+                        "attempt": attempt,
+                        "outcome": "failure",
+                        "failure_code": error.code,
+                        "retryable": error.retryable,
+                        "wall_duration_ms": round(
+                            (time.perf_counter() - attempt_started) * 1000
+                        ),
+                    }
                 )
                 if not error.retryable:
                     break
             except Exception as error:
                 failures.append(
                     f"{route_label}:attempt-{attempt}:{type(error).__name__}"
+                )
+                attempt_evidence.append(
+                    {
+                        "route": route_label,
+                        "attempt": attempt,
+                        "outcome": "exception",
+                        "exception_type": type(error).__name__,
+                        "wall_duration_ms": round(
+                            (time.perf_counter() - attempt_started) * 1000
+                        ),
+                    }
                 )
                 break
     raise _failure(
@@ -604,28 +793,20 @@ async def _run_batched_student_extraction(
             "The extraction inventory has no valid ordered content items.",
         )
     registry = FieldRegistrySnapshot.load(prepared.field_registry)
-    batches = [
-        content_items[index : index + STUDENT_EXTRACTION_BATCH_SIZE]
-        for index in range(0, len(content_items), STUDENT_EXTRACTION_BATCH_SIZE)
-    ]
+    batches = _plan_student_extraction_batches(content_items)
     if not batches:
         raise _failure(
             "student_extraction_inventory_empty",
             "The student document contains no semantic content items.",
         )
-    annotations: JsonObject = {}
-    relations: list[JsonObject] = []
-    relation_keys: set[tuple[str, str, str]] = set()
-    summaries: list[str] = []
-    uncertainties: list[str] = []
-    batch_evidence: list[JsonObject] = []
-    all_tool_uses: list[str] = []
-    all_skills: list[str] = []
-    backends: list[str] = []
-    sessions: list[str] = []
     all_ids = [str(item["source_content_id"]) for item in content_items]
     positions = {source_id: index for index, source_id in enumerate(all_ids)}
-    for batch_index, primary_items in enumerate(batches, start=1):
+    semaphore = asyncio.Semaphore(STUDENT_EXTRACTION_CONCURRENCY)
+
+    async def run_batch(
+        batch_index: int,
+        primary_items: list[JsonObject],
+    ) -> tuple[StudentExtractionExecution, str, int, int]:
         primary_ids = tuple(str(item["source_content_id"]) for item in primary_items)
         start = positions[primary_ids[0]]
         end = positions[primary_ids[-1]] + 1
@@ -645,12 +826,100 @@ async def _run_batched_student_extraction(
             annotation_content_ids=primary_ids,
             relation_content_ids=context_ids,
         )
-        execution = await runner(
-            build_student_extraction_prompt(batch_prepared),
-            batch_prepared,
-            schema,
-            transcripts,
+        prompt = build_student_extraction_prompt(batch_prepared)
+        identity = _student_extraction_checkpoint_identity(
+            prepared=batch_prepared,
+            prompt=prompt,
+            schema=schema,
         )
+        checkpoint = _load_student_extraction_checkpoint(
+            prepared.task_root,
+            batch_index=batch_index,
+            identity=identity,
+        )
+        if checkpoint is not None:
+            return checkpoint, "reused", 0, 0
+        queued_at = time.perf_counter()
+        await semaphore.acquire()
+        queue_wait_duration_ms = round((time.perf_counter() - queued_at) * 1000)
+        execution_started = time.perf_counter()
+        try:
+            execution = await runner(
+                prompt,
+                batch_prepared,
+                schema,
+                transcripts,
+            )
+        finally:
+            semaphore.release()
+        execution_wall_duration_ms = round(
+            (time.perf_counter() - execution_started) * 1000
+        )
+        _save_student_extraction_checkpoint(
+            prepared.task_root,
+            batch_index=batch_index,
+            identity=identity,
+            execution=execution,
+        )
+        return (
+            execution,
+            "created",
+            queue_wait_duration_ms,
+            execution_wall_duration_ms,
+        )
+
+    gathered = await asyncio.gather(
+        *(
+            run_batch(batch_index, primary_items)
+            for batch_index, primary_items in enumerate(batches, start=1)
+        ),
+        return_exceptions=True,
+    )
+    failures = [result for result in gathered if isinstance(result, BaseException)]
+    if failures:
+        first = failures[0]
+        if isinstance(first, ToolFailure):
+            raise first
+        raise _failure(
+            "student_extraction_batch_execution_failed",
+            f"An extraction batch failed with {type(first).__name__}.",
+            origin="engine",
+        ) from first
+
+    annotations: JsonObject = {}
+    relations: list[JsonObject] = []
+    relation_keys: set[tuple[str, str, str]] = set()
+    summaries: list[str] = []
+    uncertainties: list[str] = []
+    batch_evidence: list[JsonObject] = []
+    all_tool_uses: list[str] = []
+    all_skills: list[str] = []
+    backends: list[str] = []
+    sessions: list[str] = []
+    total_num_turns = 0
+    total_duration_ms = 0
+    total_duration_api_ms = 0
+    total_cost_usd: float | None = None
+    combined_usage: JsonObject = {}
+    all_attempt_evidence: list[JsonObject] = []
+    for batch_index, (primary_items, batch_result) in enumerate(
+        zip(batches, gathered, strict=True),
+        start=1,
+    ):
+        if not isinstance(batch_result, tuple):
+            raise AssertionError("Batch failures must be handled before merge.")
+        (
+            execution,
+            checkpoint_status,
+            queue_wait_duration_ms,
+            execution_wall_duration_ms,
+        ) = batch_result
+        primary_ids = tuple(str(item["source_content_id"]) for item in primary_items)
+        start = positions[primary_ids[0]]
+        end = positions[primary_ids[-1]] + 1
+        context_start = max(0, start - STUDENT_EXTRACTION_CONTEXT_ITEMS)
+        context_end = min(len(all_ids), end + STUDENT_EXTRACTION_CONTEXT_ITEMS)
+        context_ids = tuple(all_ids[context_start:context_end])
         raw = execution.structured_output
         raw_annotations = raw.get("annotations")
         annotation_map = {
@@ -719,16 +988,35 @@ async def _run_batched_student_extraction(
                 "session_id": execution.session_id,
                 "tool_uses": list(execution.tool_uses),
                 "skills_loaded": list(execution.skills_loaded),
+                "checkpoint_status": checkpoint_status,
+                "queue_wait_duration_ms": queue_wait_duration_ms,
+                "execution_wall_duration_ms": execution_wall_duration_ms,
+                "batch_wall_duration_ms": (
+                    queue_wait_duration_ms + execution_wall_duration_ms
+                ),
+                "sdk_num_turns": execution.num_turns,
+                "sdk_duration_ms": execution.duration_ms,
+                "sdk_duration_api_ms": execution.duration_api_ms,
+                "sdk_total_cost_usd": execution.total_cost_usd,
+                "sdk_usage": dict(execution.usage) if execution.usage else None,
+                "attempts": [dict(value) for value in execution.attempt_evidence],
             }
         )
         backends.append(execution.backend)
         sessions.append(execution.session_id)
         all_tool_uses.extend(execution.tool_uses)
         all_skills.extend(execution.skills_loaded)
+        total_num_turns += execution.num_turns
+        total_duration_ms += execution.duration_ms
+        total_duration_api_ms += execution.duration_api_ms
+        if execution.total_cost_usd is not None:
+            total_cost_usd = (total_cost_usd or 0.0) + execution.total_cost_usd
+        _merge_sdk_usage(combined_usage, execution.usage)
+        all_attempt_evidence.extend(execution.attempt_evidence)
     return StudentExtractionExecution(
         structured_output={
             "schema_version": 3,
-            "annotations": list(annotations.values()),
+            "annotations": [annotations[source_id] for source_id in all_ids],
             "relations": relations,
             "summary": "\n".join(summaries),
             "uncertainties": list(dict.fromkeys(uncertainties)),
@@ -737,8 +1025,136 @@ async def _run_batched_student_extraction(
         session_id=",".join(sessions),
         tool_uses=tuple(all_tool_uses),
         skills_loaded=tuple(all_skills),
+        num_turns=total_num_turns,
+        duration_ms=total_duration_ms,
+        duration_api_ms=total_duration_api_ms,
+        total_cost_usd=total_cost_usd,
+        usage=combined_usage or None,
+        attempt_evidence=tuple(all_attempt_evidence),
         batch_evidence=tuple(batch_evidence),
     )
+
+
+def _student_extraction_checkpoint_identity(
+    *,
+    prepared: PreparedStudentContentExtraction,
+    prompt: str,
+    schema: JsonObject,
+) -> JsonObject:
+    return {
+        "checkpoint_version": STUDENT_EXTRACTION_CHECKPOINT_VERSION,
+        "source_sha256": prepared.source_sha256,
+        "registry_sha256": prepared.registry_sha256,
+        "inventory_sha256": sha256_json(prepared.inventory),
+        "batch": dict(prepared.batch or {}),
+        "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+        "schema_sha256": sha256_json(schema),
+        "system_prompt_sha256": hashlib.sha256(
+            _student_extraction_system_prompt().encode("utf-8")
+        ).hexdigest(),
+    }
+
+
+def _student_extraction_checkpoint_path(task_root: Path, batch_index: int) -> Path:
+    return task_root / "work" / "extraction-batches" / f"batch-{batch_index:03d}.json"
+
+
+def _load_student_extraction_checkpoint(
+    task_root: Path,
+    *,
+    batch_index: int,
+    identity: JsonObject,
+) -> StudentExtractionExecution | None:
+    path = _student_extraction_checkpoint_path(task_root, batch_index)
+    if not path.exists():
+        return None
+    if path.is_symlink() or not path.is_file():
+        raise _failure(
+            "student_extraction_checkpoint_unsafe",
+            "An extraction checkpoint is not a regular task-local file.",
+        )
+    try:
+        payload = read_json(path)
+    except (OSError, ValueError, TypeError, ToolFailure):
+        return None
+    if any(payload.get(key) != value for key, value in identity.items()):
+        return None
+    execution = payload.get("execution")
+    if not isinstance(execution, dict) or not isinstance(
+        execution.get("structured_output"), dict
+    ):
+        return None
+    usage = execution.get("usage")
+    attempt_evidence = execution.get("attempt_evidence")
+    return StudentExtractionExecution(
+        structured_output=dict(execution["structured_output"]),
+        backend=str(execution.get("backend", "checkpoint")),
+        session_id=str(execution.get("session_id", "checkpoint")),
+        tool_uses=tuple(str(value) for value in execution.get("tool_uses", [])),
+        skills_loaded=tuple(str(value) for value in execution.get("skills_loaded", [])),
+        num_turns=int(execution.get("num_turns", 0)),
+        duration_ms=int(execution.get("duration_ms", 0)),
+        duration_api_ms=int(execution.get("duration_api_ms", 0)),
+        total_cost_usd=(
+            float(execution["total_cost_usd"])
+            if isinstance(execution.get("total_cost_usd"), (int, float))
+            else None
+        ),
+        usage=dict(usage) if isinstance(usage, dict) else None,
+        attempt_evidence=tuple(
+            dict(value)
+            for value in attempt_evidence
+            if isinstance(value, dict)
+        )
+        if isinstance(attempt_evidence, list)
+        else (),
+    )
+
+
+def _save_student_extraction_checkpoint(
+    task_root: Path,
+    *,
+    batch_index: int,
+    identity: JsonObject,
+    execution: StudentExtractionExecution,
+) -> None:
+    path = _student_extraction_checkpoint_path(task_root, batch_index)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write_json(
+        path,
+        {
+            "schema_version": "docfit-student-extraction-batch-checkpoint/v1",
+            **identity,
+            "execution": {
+                "structured_output": execution.structured_output,
+                "backend": execution.backend,
+                "session_id": execution.session_id,
+                "tool_uses": list(execution.tool_uses),
+                "skills_loaded": list(execution.skills_loaded),
+                "num_turns": execution.num_turns,
+                "duration_ms": execution.duration_ms,
+                "duration_api_ms": execution.duration_api_ms,
+                "total_cost_usd": execution.total_cost_usd,
+                "usage": dict(execution.usage) if execution.usage else None,
+                "attempt_evidence": [
+                    dict(value) for value in execution.attempt_evidence
+                ],
+            },
+        },
+    )
+
+
+def _merge_sdk_usage(target: JsonObject, usage: JsonObject | None) -> None:
+    if usage is None:
+        return
+    for key, value in usage.items():
+        if isinstance(value, bool):
+            target.setdefault(key, value)
+        elif isinstance(value, (int, float)):
+            current = target.get(key, 0)
+            target[key] = current + value if isinstance(current, (int, float)) else value
+        else:
+            target.setdefault(key, value)
 
 
 async def run_student_content_extraction(
@@ -751,16 +1167,26 @@ async def run_student_content_extraction(
     """Run the extraction module without a template, Fill Contract, or placement step."""
 
     prepared: PreparedStudentContentExtraction | None = None
+    run_started = time.perf_counter()
+    preparation_duration_ms = 0
+    agent_wall_duration_ms = 0
+    finalization_duration_ms = 0
+    agent_phase_started: float | None = None
     try:
+        phase_started = time.perf_counter()
         prepared = prepare_student_content_extraction(request, office=office)
+        preparation_duration_ms = round((time.perf_counter() - phase_started) * 1000)
         manager = transcripts or SDKTranscriptManager(
             forbidden_roots=(prepared.task_root, project_root())
         )
+        phase_started = time.perf_counter()
+        agent_phase_started = phase_started
         execution = await _run_batched_student_extraction(
             prepared=prepared,
             runner=runner,
             transcripts=manager,
         )
+        agent_wall_duration_ms = round((time.perf_counter() - phase_started) * 1000)
         atomic_write_json(
             prepared.task_root / "work" / "raw-agent-extraction.json",
             execution.structured_output,
@@ -772,11 +1198,20 @@ async def run_student_content_extraction(
                 "session_id": execution.session_id,
                 "tool_uses": list(execution.tool_uses),
                 "skills_loaded": list(execution.skills_loaded),
+                "sdk_execution": {
+                    "num_turns": execution.num_turns,
+                    "duration_ms": execution.duration_ms,
+                    "duration_api_ms": execution.duration_api_ms,
+                    "total_cost_usd": execution.total_cost_usd,
+                    "usage": dict(execution.usage) if execution.usage else None,
+                },
                 "batches": [dict(value) for value in execution.batch_evidence],
                 "privacy": "metadata_only_no_document_content",
             },
         )
+        phase_started = time.perf_counter()
         model = finalize_saved_student_content_extraction(prepared.task_root)
+        finalization_duration_ms = round((time.perf_counter() - phase_started) * 1000)
         report: JsonObject = {
             "schema_version": "docfit-student-content-extraction-report/v1",
             "status": model["status"],
@@ -788,9 +1223,23 @@ async def run_student_content_extraction(
             "source_coverage": dict(model["source_coverage"]),
             "backend": execution.backend,
             "session_id": execution.session_id,
+            "timing": {
+                "preparation_duration_ms": preparation_duration_ms,
+                "agent_wall_duration_ms": agent_wall_duration_ms,
+                "agent_sdk_duration_ms_sum": execution.duration_ms,
+                "agent_sdk_api_duration_ms_sum": execution.duration_api_ms,
+                "finalization_duration_ms": finalization_duration_ms,
+                "total_wall_duration_ms": round(
+                    (time.perf_counter() - run_started) * 1000
+                ),
+            },
             "privacy": "report_contains_metadata_and_paths_only",
         }
     except ToolFailure as error:
+        if agent_phase_started is not None and agent_wall_duration_ms == 0:
+            agent_wall_duration_ms = round(
+                (time.perf_counter() - agent_phase_started) * 1000
+            )
         report = {
             "schema_version": "docfit-student-content-extraction-report/v1",
             "status": "NEEDS_INPUT" if error.status == "needs_input" else "ERROR",
@@ -801,6 +1250,14 @@ async def run_student_content_extraction(
             },
             "source_sha256": prepared.source_sha256 if prepared else None,
             "registry_sha256": prepared.registry_sha256 if prepared else None,
+            "timing": {
+                "preparation_duration_ms": preparation_duration_ms,
+                "agent_wall_duration_ms": agent_wall_duration_ms,
+                "finalization_duration_ms": finalization_duration_ms,
+                "total_wall_duration_ms": round(
+                    (time.perf_counter() - run_started) * 1000
+                ),
+            },
             "privacy": "report_contains_metadata_and_paths_only",
         }
     report_root = prepared.task_root if prepared is not None else request.output_directory

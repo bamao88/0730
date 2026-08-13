@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -11,6 +12,8 @@ from docfit.app.settings import AgentBackend, BackendName
 from docfit.app.student_content_fill import (
     PreparedStudentContentExtraction,
     StudentExtractionExecution,
+    _build_student_extraction_options,
+    _plan_student_extraction_batches,
     _run_batched_student_extraction,
     run_student_extraction_agent,
 )
@@ -654,6 +657,218 @@ def test_batching_is_execution_only_and_merges_every_source_item_once(
         item["source_order"] for item in inventory["content_items"]
     ]
     assert model["status"] == "READY"
+
+
+def test_batch_planner_uses_item_and_payload_budgets() -> None:
+    content_items = [
+        {
+            "source_content_id": f"source-{index}",
+            "observed_text": "x" * 200,
+        }
+        for index in range(191)
+    ]
+
+    batches = _plan_student_extraction_batches(content_items)
+
+    assert len(batches) == 6
+    assert [len(batch) for batch in batches] == [32, 32, 32, 32, 32, 31]
+    assert [item["source_content_id"] for batch in batches for item in batch] == [
+        item["source_content_id"] for item in content_items
+    ]
+
+
+def test_extraction_options_are_task_local_and_do_not_load_template_runtime(
+    tmp_path: Path,
+) -> None:
+    backend = _backend("minimax")
+    task_root = tmp_path / "task"
+    task_root.mkdir()
+
+    options = _build_student_extraction_options(
+        task_root=task_root,
+        environment=backend.sdk_environment(),
+        model=backend.model,
+        schema={"type": "object"},
+    )
+
+    assert options.cwd == task_root
+    assert options.tools == []
+    assert options.allowed_tools == []
+    assert options.mcp_servers == {}
+    assert options.setting_sources == []
+    assert options.skills == []
+    assert options.agents == {}
+
+
+def test_batches_run_with_bounded_concurrency_and_merge_in_source_order(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inventory = build_student_inventory(_inspection())
+    registry = _registry(tmp_path)
+    (tmp_path / "work").mkdir()
+    monkeypatch.setattr("docfit.app.student_content_fill.STUDENT_EXTRACTION_BATCH_SIZE", 1)
+    monkeypatch.setattr(
+        "docfit.app.student_content_fill.STUDENT_EXTRACTION_BATCH_TEXT_BYTES",
+        1_000,
+    )
+    monkeypatch.setattr("docfit.app.student_content_fill.STUDENT_EXTRACTION_CONCURRENCY", 3)
+    prepared = PreparedStudentContentExtraction(
+        task_root=tmp_path,
+        source_docx=tmp_path / "student.docx",
+        field_registry=registry.path,
+        inventory_path=tmp_path / "student-inventory.json",
+        source_sha256=str(inventory["source_sha256"]),
+        registry_sha256=registry.sha256,
+        inventory=inventory,
+    )
+    active = 0
+    maximum_active = 0
+
+    async def runner(prompt, batch, schema, transcripts):
+        nonlocal active, maximum_active
+        del prompt, schema, transcripts
+        assert batch.batch is not None
+        active += 1
+        maximum_active = max(maximum_active, active)
+        await asyncio.sleep((6 - int(batch.batch["index"])) * 0.005)
+        active -= 1
+        source_content_id = batch.batch["primary_content_ids"][0]
+        source_item = next(
+            item
+            for item in inventory["content_items"]
+            if item["source_content_id"] == source_content_id
+        )
+        field_id = {
+            "obj-title": "thesis.title.en",
+            "obj-picture": "body.figure",
+            "obj-body-1": "body.heading.level1",
+            "obj-body-2": "body.paragraph",
+            "obj-ref": "references.entries",
+        }[source_item["source_object_ids"][0]]
+        return StudentExtractionExecution(
+            structured_output={
+                "schema_version": 3,
+                "annotations": [_annotation(source_content_id, field_id)],
+                "relations": [],
+            },
+            backend="synthetic",
+            session_id=f"session-{batch.batch['index']}",
+            tool_uses=("StructuredOutput",),
+            skills_loaded=(),
+            duration_ms=10,
+            duration_api_ms=8,
+        )
+
+    execution = asyncio.run(
+        _run_batched_student_extraction(
+            prepared=prepared,
+            runner=runner,
+            transcripts=object(),  # type: ignore[arg-type]
+        )
+    )
+
+    assert maximum_active == 3
+    assert [item["batch_index"] for item in execution.batch_evidence] == [1, 2, 3, 4, 5]
+    expected_ids = [item["source_content_id"] for item in inventory["content_items"]]
+    assert [
+        item["source_content_id"]
+        for item in execution.structured_output["annotations"]
+    ] == expected_ids
+
+
+def test_successful_batch_checkpoints_are_reused_after_a_later_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inventory = build_student_inventory(_inspection())
+    registry = _registry(tmp_path)
+    (tmp_path / "work").mkdir()
+    monkeypatch.setattr("docfit.app.student_content_fill.STUDENT_EXTRACTION_BATCH_SIZE", 1)
+    monkeypatch.setattr(
+        "docfit.app.student_content_fill.STUDENT_EXTRACTION_BATCH_TEXT_BYTES",
+        1_000,
+    )
+    monkeypatch.setattr("docfit.app.student_content_fill.STUDENT_EXTRACTION_CONCURRENCY", 2)
+    prepared = PreparedStudentContentExtraction(
+        task_root=tmp_path,
+        source_docx=tmp_path / "student.docx",
+        field_registry=registry.path,
+        inventory_path=tmp_path / "student-inventory.json",
+        source_sha256=str(inventory["source_sha256"]),
+        registry_sha256=registry.sha256,
+        inventory=inventory,
+    )
+    failed_once = False
+    calls: list[int] = []
+
+    async def runner(prompt, batch, schema, transcripts):
+        nonlocal failed_once
+        del prompt, schema, transcripts
+        assert batch.batch is not None
+        index = int(batch.batch["index"])
+        calls.append(index)
+        if index == 3 and not failed_once:
+            failed_once = True
+            raise ToolFailure(
+                status="error",
+                origin="engine",
+                code="synthetic_failure",
+                message="fail once",
+            )
+        source_content_id = batch.batch["primary_content_ids"][0]
+        source_item = next(
+            item
+            for item in inventory["content_items"]
+            if item["source_content_id"] == source_content_id
+        )
+        field_id = {
+            "obj-title": "thesis.title.en",
+            "obj-picture": "body.figure",
+            "obj-body-1": "body.heading.level1",
+            "obj-body-2": "body.paragraph",
+            "obj-ref": "references.entries",
+        }[source_item["source_object_ids"][0]]
+        return StudentExtractionExecution(
+            structured_output={
+                "schema_version": 3,
+                "annotations": [_annotation(source_content_id, field_id)],
+                "relations": [],
+            },
+            backend="synthetic",
+            session_id=f"session-{index}",
+            tool_uses=("StructuredOutput",),
+            skills_loaded=(),
+        )
+
+    with pytest.raises(ToolFailure):
+        asyncio.run(
+            _run_batched_student_extraction(
+                prepared=prepared,
+                runner=runner,
+                transcripts=object(),  # type: ignore[arg-type]
+            )
+        )
+    first_calls = list(calls)
+    assert sorted(first_calls) == [1, 2, 3, 4, 5]
+    checkpoint_files = sorted((tmp_path / "work/extraction-batches").glob("*.json"))
+    assert len(checkpoint_files) == 4
+
+    calls.clear()
+    execution = asyncio.run(
+        _run_batched_student_extraction(
+            prepared=prepared,
+            runner=runner,
+            transcripts=object(),  # type: ignore[arg-type]
+        )
+    )
+
+    assert calls == [3]
+    assert all(
+        json.loads(path.read_text())["source_sha256"] == inventory["source_sha256"]
+        for path in (tmp_path / "work/extraction-batches").glob("*.json")
+    )
+    assert len(execution.structured_output["annotations"]) == 5
 
 
 def _backend(name: BackendName, candidate: str = "primary") -> AgentBackend:
