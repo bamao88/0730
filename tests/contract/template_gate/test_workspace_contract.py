@@ -968,6 +968,68 @@ def test_checkpoint_toc_feedback_detects_wrong_body_heading_level() -> None:
     assert summary["toc"]["refresh_needed"] is True
 
 
+def test_checkpoint_locations_bind_fixed_chapter_body_to_nearest_heading() -> None:
+    objects = (
+        InspectedObject(
+            locator="/body/p[1]",
+            kind="paragraph",
+            text="第一章 文献综述",
+            style="heading 1",
+            format={},
+            object_ref={"object_id": "obj-first-heading"},
+        ),
+        InspectedObject(
+            locator="/body/p[2]",
+            kind="paragraph",
+            text="",
+            style="Normal",
+            format={},
+            object_ref={"object_id": "obj-first-body"},
+        ),
+        InspectedObject(
+            locator="/body/p[2]/sdt[@sdtId=1]",
+            kind="sdt",
+            text="【正文段落】",
+            style=None,
+            format={"alias": "body.paragraph", "tag": "body.paragraph.1"},
+            object_ref={"object_id": "obj-first-slot"},
+        ),
+        InspectedObject(
+            locator="/body/p[3]",
+            kind="paragraph",
+            text="第X章 结论与展望",
+            style="heading 1",
+            format={},
+            object_ref={"object_id": "obj-final-heading"},
+        ),
+    )
+    inspection = Inspection(
+        document_sha256="c" * 64,
+        objects=objects,
+        summary={},
+        risks=(),
+        warnings=(),
+        provider={},
+    )
+
+    summary = TemplateWorkspaceService._checkpoint_summary(inspection)
+
+    locations = summary["materialized_field_locations"]["body.paragraph"]
+    assert locations == [
+        {
+            "tag": "body.paragraph.1",
+            "container_type": "paragraph",
+            "container_style": "Normal",
+            "container_text": "",
+            "nearest_preceding_heading": {
+                "text": "第一章 文献综述",
+                "style": "heading 1",
+            },
+        }
+    ]
+    assert locations[0]["nearest_preceding_heading"]["text"] != "第X章 结论与展望"
+
+
 def test_navigation_regions_never_mix_objects_from_different_visual_pages(
     tmp_path: Path,
 ) -> None:
@@ -1003,22 +1065,48 @@ def test_navigation_splits_large_vertical_gaps_on_the_same_page() -> None:
     ]
 
 
-def test_navigation_keeps_eight_object_logical_page_responsibility_atomic() -> None:
+def test_navigation_keeps_nine_object_logical_page_responsibility_atomic() -> None:
     anchors: list[JsonObject] = [
         {
             "page": 1,
             "bbox_pdf": [72.0, float(20 + index * 30), 500.0, float(40 + index * 30)],
             "text": f"摘要对象{index}",
         }
-        for index in range(9)
+        for index in range(10)
     ]
 
     regions = TemplateWorkspaceService._cluster_physical_regions(anchors)
 
-    assert [len(region) for region in regions] == [8, 1]
+    assert [len(region) for region in regions] == [9, 1]
     assert [item["text"] for item in regions[0]] == [
-        f"摘要对象{index}" for index in range(8)
+        f"摘要对象{index}" for index in range(9)
     ]
+
+
+def test_navigation_keeps_generic_chapter_evidence_in_one_bounded_region() -> None:
+    texts = [
+        "第X章（正文标题）",
+        "实验部分说明",
+        "标题格式说明",
+        "正文格式说明",
+        "图表格式说明",
+        "正文样例",
+        "1 材料与方法",
+        "节正文样例",
+        "1.1 材料",
+    ]
+    anchors: list[JsonObject] = [
+        {
+            "page": 8,
+            "bbox_pdf": [72.0, float(70 + index * 40), 500.0, float(90 + index * 40)],
+            "text": text,
+        }
+        for index, text in enumerate(texts)
+    ]
+
+    regions = TemplateWorkspaceService._cluster_physical_regions(anchors)
+
+    assert [[item["text"] for item in region] for region in regions] == [texts]
 
 
 def test_unmappable_paragraph_never_falls_back_to_an_unrelated_region(
@@ -1171,6 +1259,60 @@ def test_local_context_returns_bounded_preceding_landmark_facts(tmp_path: Path) 
     assert [item["text"] for item in context["preceding_landmarks"]] == texts[:-1]
     assert [item["distance"] for item in context["preceding_landmarks"]] == [3, 2, 1]
     assert all("object_ref" not in item for item in context["preceding_landmarks"])
+
+
+def test_region_context_prioritizes_every_top_level_peer_over_verbose_runs(
+    tmp_path: Path,
+) -> None:
+    service, _, _ = _service(tmp_path)
+    target = InspectedObject(
+        locator="/body/p[1]",
+        kind="paragraph",
+        text="正文说明",
+        style="Normal",
+        format={},
+        object_ref={"object_id": "obj-target"},
+    )
+    runs = tuple(
+        InspectedObject(
+            locator=f"/body/p[1]/r[{index}]",
+            kind="run",
+            text=f"run-{index}",
+            style=None,
+            format={},
+            object_ref={"object_id": f"obj-run-{index}"},
+        )
+        for index in range(40)
+    )
+    peers = tuple(
+        InspectedObject(
+            locator=f"/body/p[{index + 2}]",
+            kind="paragraph",
+            text=f"必须可见的兄弟{index}",
+            style="Normal",
+            format={},
+            object_ref={"object_id": f"obj-peer-{index}"},
+        )
+        for index in range(6)
+    )
+    inspection = Inspection(
+        document_sha256="a" * 64,
+        objects=(target, *runs, *peers),
+        summary={},
+        risks=(),
+        warnings=(),
+        provider={},
+    )
+
+    context = service._local_context(
+        inspection,
+        target,
+        region_objects=[target, *peers],
+    )
+
+    visible_text = {item["text"] for item in context["adjacent_objects"]}
+    assert {peer.text for peer in peers} <= visible_text
+    assert len(context["adjacent_objects"]) == 32
 
 
 def test_page_object_exposes_bounded_style_facts_needed_for_agent_judgment() -> None:
@@ -2926,51 +3068,24 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
     )
     _, initial_path = service._resolve_document(initial["document_ref"])
     initial_inspection = service._inspection(initial_path)
-    member_controls = {
-        str(item.format["alias"]): item
-        for item in initial_inspection.objects
-        if item.kind == "sdt"
-        and item.format.get("alias")
-        in {"body.heading.level1", "body.paragraph", "body.heading.level2"}
-    }
-
-    def containing_paragraph(control: InspectedObject) -> InspectedObject:
-        return max(
-            (
-                item
-                for item in initial_inspection.objects
-                if item.kind == "paragraph"
-                and control.locator.startswith(f"{item.locator}/")
-            ),
-            key=lambda item: len(item.locator),
-        )
-
-    reused = {
-        field_id: containing_paragraph(control)
-        for field_id, control in member_controls.items()
-    }
     discovered = next(
         item
         for item in initial_inspection.objects
         if item.kind == "paragraph" and item.text == samples[-1][0]
     )
-    ordered_members = [
-        (reused["body.heading.level1"], "body.heading.level1"),
-        (reused["body.paragraph"], "body.paragraph"),
-        (reused["body.heading.level2"], "body.heading.level2"),
-        (discovered, "body.heading.level3"),
-    ]
 
     replaced, _ = service.edit(
         {
             "operations": [
                 {
                     "action": "materialize_structure",
-                    "object_ref": reused["body.heading.level1"].object_ref,
+                    "object_ref": discovered.object_ref,
                     "field_id": "body.chapters",
                     "members": [
-                        {"object_ref": item.object_ref, "field_id": field_id}
-                        for item, field_id in ordered_members
+                        {
+                            "object_ref": discovered.object_ref,
+                            "field_id": "body.heading.level3",
+                        }
                     ],
                 }
             ]
@@ -2980,8 +3095,15 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
     assert replaced["committed"] is True
     assert replaced["effects"]["actions"] == {"materialize_structure": 1}
     assert replaced["materialized_members"] == sorted(
-        field_id for _, field_id in ordered_members
+        field_id for _, _, field_id in samples
     )
+    assert replaced["structures"] == [
+        {
+            "field_id": "body.chapters",
+            "slot_id": "body.chapters.1",
+            "member_count": 4,
+        }
+    ]
     _, replaced_path = service._resolve_document(replaced["document_ref"])
     replaced_inspection = service._inspection(replaced_path)
     structures = [
@@ -3496,7 +3618,7 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
     )
 
 
-def test_toc_row_effective_normalization_stabilizes_hyperlink_style(
+def test_refresh_toc_defaults_to_effective_black_and_stabilizes_hyperlink_style(
     tmp_path: Path,
 ) -> None:
     service, _, source = _service(tmp_path)
@@ -3529,8 +3651,28 @@ def test_toc_row_effective_normalization_stabilizes_hyperlink_style(
         }
     )
 
-    assert refreshed["effects"]["style_scope_changes"] == []
+    assert refreshed["effects"]["effective_format_changes"][0]["requested"] == {
+        "color": "black",
+        "underline": "none",
+    }
+    assert refreshed["effects"]["style_scope_changes"] == [
+        {
+            "style_id": "Hyperlink",
+            "scope": "document_character_style",
+            "reason": "preserve_toc_effective_format_after_field_update",
+        }
+    ]
     _, refreshed_path = service._resolve_document(refreshed["document_ref"])
+    with zipfile.ZipFile(refreshed_path) as archive:
+        refreshed_styles = ET.fromstring(archive.read("word/styles.xml"))
+    refreshed_style_map = {
+        style.get(f"{W}styleId"): style
+        for style in refreshed_styles.findall(f"{W}style")
+    }
+    for style_id in ("TOC1", "TOC2", "TOC3", "Hyperlink"):
+        style = refreshed_style_map[style_id]
+        assert style.find(f"{W}rPr/{W}color").get(f"{W}val") == "000000"
+        assert style.find(f"{W}rPr/{W}u").get(f"{W}val") == "none"
     refreshed_inspection = service._inspection(refreshed_path)
     refreshed_row = next(
         item

@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+from docfit.tools.template_tools import SemanticWorkItemState
+
 sys.path.insert(0, str(Path(__file__).parent))
 _workspace_contract = importlib.import_module("test_workspace_contract")
 _append_styled_paragraphs = _workspace_contract._append_styled_paragraphs
@@ -86,6 +88,76 @@ def test_independent_body_slots_are_promoted_into_one_structure(tmp_path: Path) 
         if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
     )
     assert structure.text == "【一级章标题】【二级标题】【正文段落】"
+
+
+@pytest.mark.parametrize(
+    "action",
+    ["clear_content", "remove_object", "normalize_effective_format"],
+)
+def test_materialized_slot_is_read_only_to_later_semantic_edits(
+    tmp_path: Path,
+    action: str,
+) -> None:
+    del tmp_path
+    object_id = "obj-" + "a" * 24
+    state = SemanticWorkItemState(
+        service=object(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {
+                    "object_id": object_id,
+                    "text": "【正文段落】",
+                    "type": "sdt",
+                    "slot": {"alias": "body.paragraph", "tag": "body.paragraph.1"},
+                }
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    operation = {"action": action, "object_id": object_id}
+
+    with pytest.raises(_workspace_contract.ToolFailure) as caught:
+        state.validate_agent_mutation_targets([operation])
+
+    assert caught.value.code == "materialized_slot_read_only"
+
+
+def test_toc_can_use_materialized_heading_slots_as_read_only_sources() -> None:
+    heading_id = "obj-" + "b" * 24
+    state = SemanticWorkItemState(
+        service=object(),  # type: ignore[arg-type]
+        work_item={
+            "field_id": "generated.toc",
+            "title_candidates": [
+                {
+                    "object_id": heading_id,
+                    "text": "【一级章标题】",
+                    "type": "sdt",
+                    "slot": {
+                        "alias": "body.heading.level1",
+                        "tag": "body.heading.level1.1",
+                    },
+                }
+            ],
+        },
+        images=[],
+        internal_region_ref=None,
+        allow_preserve=False,
+        start_progress={},
+    )
+
+    state.validate_agent_mutation_targets(
+        [
+            {
+                "action": "refresh_toc",
+                "object_id": "obj-" + "c" * 24,
+                "entries": [{"object_id": heading_id, "level": 1}],
+            }
+        ]
+    )
 
 
 @pytest.mark.parametrize("cursor", ["start", "0"])

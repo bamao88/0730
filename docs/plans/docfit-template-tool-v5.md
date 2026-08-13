@@ -2,33 +2,32 @@
 
 ## Plan Ledger
 
-- Status: `ACTIVE`
+- Status: `COMPLETE`
 - Session scope: clean-break replacement of the school-template preparation Tool surface and its Word mutation semantics
 - Source decision: user-approved 2026-08-09; no compatibility layer for the v4 template workspace contract
-- Current slice: public Tool contract, operation planning, OOXML safety, focused knowledge cards, and real NJAU regression
-- Next gate: focused contract tests, full relevant suite, original-template CLI run, then Microsoft Word update/save/reopen verification
-- Blocker: none at implementation start
+- Delivered slice: public Tool contract, application orchestration, operation planning, OOXML safety, focused knowledge cards, and real NJAU regression
+- Final gate: passed focused/full relevant tests, original-template CLI extraction, approximate LibreOffice review, and Microsoft Word update/save/reopen verification
+- Blocker: none
 
 ## Objective
 
 Make the school-template Agent responsible for semantic decisions while the Tool reliably executes narrow, outcome-oriented Word operations and reports materialized facts. Eliminate the v4 failure modes proven by the NJAU r29 run: inherited TOC hyperlink color, parent/child batch-delete rejection, incomplete boundary preservation, wide navigation schema misuse, and Tool-enforced body semantics.
 
-## Approved Contract
+## Delivered Contract
 
-The public preparation surface becomes:
+Implementation evidence showed that even seven navigation/edit Tools left deterministic traversal and retry responsibility with the model. The final clean-break surface is narrower:
 
 ```text
-template_open()
-template_next(region_ref, outcome, reason?)
-template_search(query)
-template_focus(object_ref, scope?)
-template_registry(lookups?, searches?)
-template_edit(operations)
-template_publish(document_ref)
+template_get_current_work_item()
+template_request_current_context(request)
+template_submit_current_decision(decision)
+template_report_ambiguity(report)
+template_get_review_batch()
 ```
 
-- Navigation reads the latest checkpoint implicitly. Only publish confirms an exact `document_ref`.
-- `template_edit` exposes one atomic `operations` array. Each item directly declares an action and the small superset of action parameters; action-specific requirements are validated by the Tool without `oneOf`/`anyOf` schema branches.
+- The application owns checkpoint traversal, bounded retry, repair, final-page batching, exact-version receipts, publication, and terminal status. The semantic Agent sees only the current work item; the visual Agent sees only the current review batch.
+- Agent schemas expose no cursor, `document_ref`, `region_ref`, publish command, or built/blocked terminal control.
+- A semantic decision carries one atomic `operations` array. Each item directly declares an action and the small superset of action parameters; action-specific requirements are validated by the Tool without `oneOf`/`anyOf` schema branches.
 - Effective formatting is outcome-oriented: `normalize_effective_format` specifies the desired visible result and succeeds only when the effective value verifies after mutation.
 - Parent removal absorbs redundant descendant removal/clear/format operations. Removal that conflicts with descendant materialization remains an error.
 - `ensure_page_start(mode="new_page")` is idempotent and selects a stable Word representation inside the Tool.
@@ -58,6 +57,14 @@ template_publish(document_ref)
 - L1: unit tests for operation normalization, effective formatting, page start, and OOXML boundary preservation.
 - L2: template workspace and prepare-template contract tests; DOCX reopen/OfficeCLI validation; relevant full pytest/ruff/mypy gates.
 - L3: original NJAU template CLI run; LibreOffice approximate risk scan; Microsoft Word open, target TOC update, save, close, reopen, and visual/structural inspection.
+
+## Completion Evidence
+
+- Relevant regression suite: `124 passed` across prepare-template Agent tests, workspace contracts, and Tool v5 regressions.
+- NJAU r66: `status=built`; 25 semantic slots, 94 removals, no manual intervention; 13/13 LibreOffice-rendered pages explicitly reviewed clean.
+- Post-build package audit: 39 package parts, 11 sections, 26 content controls, balanced bookmark ranges, live `TOC \\o "1-3" \\h \\z \\u`, no sample markers.
+- Microsoft Word native gate: opened the exact r66 file URL, updated all fields, saved, closed, reopened, and reported 12 native pages. The refreshed TOC retained levels 1–3, page numbers, dot leaders, indentation `0/420/840`, effective black, and no underline.
+- The Word-rewritten DOCX passed the same package/Registry/TOC audit; Word intentionally removed `updateFieldsOnOpen` after fulfilling it.
 
 ## Acceptance
 
@@ -97,3 +104,4 @@ The architecture keeps the Agent loop, in-process MCP Tool hosting, structured o
 - Generalizing effective-format normalization beyond the approved color/underline outcomes.
 - Turning boundary facts into a reusable cross-product Word editing framework.
 - M3 Gold acceptance and multi-school quality scoring.
+- Provider latency/quota work: the application now bounds idle sessions, retries, and malformed decisions, but cannot remove upstream Kimi quota failures or MiniMax response latency.

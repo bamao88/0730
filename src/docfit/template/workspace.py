@@ -57,9 +57,9 @@ _EDITABLE_KINDS = {"paragraph", "run", "table", "picture", "sdt", "shape"}
 _MAX_SEARCH_RESULTS = 5
 _MAX_BATCH_OPERATIONS = 32
 _MAX_TOC_TITLE_CANDIDATES = 24
-_REGION_SOURCE_OBJECTS = 8
+_REGION_SOURCE_OBJECTS = 9
 _REGION_LAYOUT_STRATEGY = "page-proximity-v1"
-_REGION_MAX_HEIGHT_POINTS = 300.0
+_REGION_MAX_HEIGHT_POINTS = 500.0
 _REGION_MAX_VERTICAL_GAP_POINTS = 120.0
 _REGION_ADJACENT_OBJECTS = 32
 _REGION_PADDING = 160
@@ -1136,12 +1136,115 @@ class TemplateWorkspaceService:
             for item in inspection.objects
             if item.kind == "sdt" and item.format.get("alias")
         )
+        top_level_paragraphs = [
+            (int(match.group(1)), item)
+            for item in inspection.objects
+            if item.kind == "paragraph"
+            and (match := re.fullmatch(r"/body/p\[(\d+)\]", item.locator)) is not None
+        ]
+        structure_controls = [
+            item
+            for item in inspection.objects
+            if item.kind == "sdt"
+            and isinstance((alias := item.format.get("alias")), str)
+            and (semantic := semantic_object_type(alias)) is not None
+            and semantic.parent_type is None
+        ]
+        materialized_field_locations: dict[str, list[JsonObject]] = {}
+        for item in inspection.objects:
+            alias = item.format.get("alias")
+            if item.kind != "sdt" or not isinstance(alias, str):
+                continue
+            location: JsonObject = {
+                "tag": str(item.format.get("tag", "")),
+                "container_type": "unknown",
+            }
+            containing_structure = max(
+                (
+                    candidate
+                    for candidate in structure_controls
+                    if candidate is not item
+                    and item.locator.startswith(f"{candidate.locator}/")
+                ),
+                key=lambda candidate: len(candidate.locator),
+                default=None,
+            )
+            if containing_structure is not None:
+                location.update(
+                    {
+                        "container_type": "structure",
+                        "structure_field_id": str(
+                            containing_structure.format.get("alias", "")
+                        ),
+                    }
+                )
+            else:
+                containing_paragraph = max(
+                    (
+                        candidate
+                        for candidate in inspection.objects
+                        if candidate.kind == "paragraph"
+                        and item.locator.startswith(f"{candidate.locator}/")
+                    ),
+                    key=lambda candidate: len(candidate.locator),
+                    default=None,
+                )
+                if containing_paragraph is not None:
+                    location.update(
+                        {
+                            "container_type": "paragraph",
+                            "container_style": containing_paragraph.style or "",
+                            "container_text": containing_paragraph.text[:160],
+                        }
+                    )
+                    top_level_match = re.fullmatch(
+                        r"/body/p\[(\d+)\]",
+                        containing_paragraph.locator,
+                    )
+                    if top_level_match is not None:
+                        paragraph_index = int(top_level_match.group(1))
+                        preceding_heading = max(
+                            (
+                                candidate
+                                for index, candidate in top_level_paragraphs
+                                if index < paragraph_index
+                                and candidate.style
+                                and candidate.style.casefold().replace(" ", "")
+                                in {"heading1", "标题1"}
+                                and candidate.text.strip()
+                            ),
+                            key=lambda candidate: next(
+                                index
+                                for index, value in top_level_paragraphs
+                                if value is candidate
+                            ),
+                            default=None,
+                        )
+                        if preceding_heading is not None:
+                            location["nearest_preceding_heading"] = {
+                                "text": preceding_heading.text[:160],
+                                "style": preceding_heading.style or "",
+                            }
+            materialized_field_locations.setdefault(alias, []).append(location)
         structures = sorted(
             alias
             for alias in aliases
             if (semantic := semantic_object_type(alias)) is not None
             and semantic.parent_type is None
         )
+        materialized_structure_members = {
+            str(structure.format["alias"]): sorted(
+                {
+                    str(item.format["alias"])
+                    for item in inspection.objects
+                    if item.kind == "sdt"
+                    and item is not structure
+                    and item.locator.startswith(f"{structure.locator}/")
+                    and isinstance(item.format.get("alias"), str)
+                }
+            )
+            for structure in structure_controls
+        }
         toc_objects = [
             item
             for item in inspection.objects
@@ -1173,7 +1276,13 @@ class TemplateWorkspaceService:
         return {
             "slot_count": sum(aliases.values()),
             "materialized_fields": dict(sorted(aliases.items())),
+            "materialized_field_locations": dict(
+                sorted(materialized_field_locations.items())
+            ),
             "materialized_structures": structures,
+            "materialized_structure_members": dict(
+                sorted(materialized_structure_members.items())
+            ),
             "toc": {
                 "entry_count": len(toc_entries),
                 "sample_marker_count": len(toc_sample_entries),
@@ -1264,18 +1373,21 @@ class TemplateWorkspaceService:
                 None,
             )
         )
-        if context_paragraph is not None:
-            adjacent.extend(
-                _agent_context_object(inspection, item)
-                for item in inspection.objects
-                if item.kind in {"run", "sdt", "picture", "shape"}
-                and item.locator.startswith(f"{context_paragraph.locator}/")
-                and item.object_ref != selected.object_ref
-            )
         if region_objects is not None:
+            # Region-level semantic decisions must see every top-level peer before
+            # verbose run children consume the bounded context budget.
             for item in region_objects:
                 if item.object_ref != selected.object_ref:
                     adjacent.append(_agent_context_object(inspection, item))
+            if context_paragraph is not None:
+                adjacent.extend(
+                    _agent_context_object(inspection, item)
+                    for item in inspection.objects
+                    if item.kind in {"run", "sdt", "picture", "shape"}
+                    and item.locator.startswith(f"{context_paragraph.locator}/")
+                    and item.object_ref != selected.object_ref
+                )
+            for item in region_objects:
                 if item.kind != "paragraph" or item.object_ref == selected.object_ref:
                     continue
                 adjacent.extend(
@@ -1284,7 +1396,16 @@ class TemplateWorkspaceService:
                     if child.kind in {"run", "sdt", "picture", "shape"}
                     and child.locator.startswith(f"{item.locator}/")
                 )
-        elif selected_index is not None:
+        else:
+            if context_paragraph is not None:
+                adjacent.extend(
+                    _agent_context_object(inspection, item)
+                    for item in inspection.objects
+                    if item.kind in {"run", "sdt", "picture", "shape"}
+                    and item.locator.startswith(f"{context_paragraph.locator}/")
+                    and item.object_ref != selected.object_ref
+                )
+        if region_objects is None and selected_index is not None:
             start = max(0, selected_index - adjacent_radius)
             stop = min(len(candidates), selected_index + adjacent_radius + 1)
             adjacent.extend(
@@ -1768,7 +1889,7 @@ class TemplateWorkspaceService:
                     "candidates preserve the Agent's prior semantic classifications; all "
                     "other candidates remain non-semantic suggestions. Choose the entries, "
                     "assign levels 1-3, decide whether sample-only direct color should be "
-                    "cleared, and call template_edit refresh_toc once."
+                    "cleared, and submit one refresh_toc operation in the current decision."
                 ),
             },
             images,
@@ -1842,9 +1963,9 @@ class TemplateWorkspaceService:
                         if pending_edit_intents
                         else (
                             "Judge only this target, its parent, and necessary adjacent objects. "
-                            "Batch decisions visible in this crop, then call template_next with "
-                            "its region_ref. The Tool navigates physical regions but never "
-                            "assigns their semantic meaning."
+                            "Batch decisions visible in this crop. The application advances "
+                            "physical regions after the decision, while the Tool never assigns "
+                            "their semantic meaning."
                         )
                     ),
                 },
@@ -2262,6 +2383,16 @@ class TemplateWorkspaceService:
                 raw.get("effective_format"),
                 required=action == "normalize_effective_format",
             )
+            if action == "refresh_toc":
+                # A live TOC is a generated navigation surface, never an explanation-color
+                # sample. Field updates may recreate both TOC style color and Hyperlink
+                # character styling, so black/no-underline are invariant postconditions of
+                # refresh itself rather than optional Agent-authored formatting preferences.
+                effective_format = {
+                    "color": "black",
+                    "underline": "none",
+                    **effective_format,
+                }
             structure_members: list[StructureMember] = []
             replaced_structure: InspectedObject | None = None
             prepared_members: list[JsonObject] = []
@@ -2341,6 +2472,11 @@ class TemplateWorkspaceService:
                         code="body_structure_members_invalid",
                         message="materialize_structure requires ordered representative members.",
                     )
+                requested_member_fields = {
+                    str(item.get("field_id"))
+                    for item in raw_members
+                    if isinstance(item.get("field_id"), str)
+                }
                 member_object_ids = {
                     reference.get("object_id")
                     for item in raw_members
@@ -2353,7 +2489,34 @@ class TemplateWorkspaceService:
                         code="body_structure_anchor_missing",
                         message="The structure object_ref must be one of its member objects.",
                     )
-                for raw_member in raw_members:
+                merged_members: list[JsonObject] = []
+                if replaced_structure is not None:
+                    carried_fields: set[str] = set()
+                    for existing_member in candidate_before.objects:
+                        existing_field_id = existing_member.format.get("alias")
+                        if (
+                            existing_member.kind != "sdt"
+                            or not isinstance(existing_field_id, str)
+                            or existing_field_id in requested_member_fields
+                            or existing_field_id in carried_fields
+                            or not existing_member.locator.startswith(
+                                f"{replaced_structure.locator}/"
+                            )
+                        ):
+                            continue
+                        semantic = semantic_object_type(existing_field_id)
+                        if semantic is None or semantic.parent_type != raw_field_id:
+                            continue
+                        merged_members.append(
+                            {
+                                "object_ref": existing_member.object_ref,
+                                "field_id": existing_field_id,
+                                "carried_forward": True,
+                            }
+                        )
+                        carried_fields.add(existing_field_id)
+                merged_members.extend(raw_members)
+                for raw_member in merged_members:
                     _, member_inspection, member_object = self._resolve_object(
                         raw_member.get("object_ref")
                     )
@@ -2430,6 +2593,7 @@ class TemplateWorkspaceService:
                                     for outcome in member_format
                                 )
                             },
+                            "carried_forward": bool(raw_member.get("carried_forward")),
                         }
                     )
                 member_orders = [
@@ -2440,6 +2604,19 @@ class TemplateWorkspaceService:
                     )
                     for member in structure_members
                 ]
+                if replaced_structure is not None:
+                    ordered = sorted(
+                        zip(
+                            member_orders,
+                            structure_members,
+                            prepared_members,
+                            strict=True,
+                        ),
+                        key=lambda value: value[0],
+                    )
+                    member_orders = [value[0] for value in ordered]
+                    structure_members = [value[1] for value in ordered]
+                    prepared_members = [value[2] for value in ordered]
                 if member_orders != sorted(member_orders):
                     order_facts = ", ".join(
                         f"{member.field_id}@{document_order}"
@@ -2694,8 +2871,8 @@ class TemplateWorkspaceService:
                         ],
                         "guidance": (
                             "The requested outcome was already true; no duplicate Word boundary "
-                            "or formatting override was added. Judge the returned region and "
-                            "continue with template_next."
+                            "or formatting override was added. Judge the returned region; the "
+                            "application will advance after this decision completes."
                         ),
                     },
                     images,
@@ -2771,8 +2948,8 @@ class TemplateWorkspaceService:
                 item["field"] is not None and item["slot_id"] is not None for item in prepared
             ) + sum(len(item["members"]) for item in prepared)
             guidance = (
-                "Judge the returned changed region now. If it is correct, call "
-                "template_next with its region_ref; no separate review is needed."
+                "Judge the returned changed region now. The application advances after this "
+                "decision completes; no separate navigation or review call is needed."
             )
             if removed_count >= 5 and materialized_count == 0:
                 guidance = (
@@ -3345,8 +3522,7 @@ class TemplateWorkspaceService:
                 origin="request",
                 code="final_generated_content_pending",
                 message=(
-                    "Finalize the generated TOC from template_open before starting full-page "
-                    "visual QA."
+                    "Finalize the generated TOC work item before starting full-page visual QA."
                 ),
                 suggested_actions=("finalize_generated_content",),
             )

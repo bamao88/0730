@@ -1,6 +1,6 @@
 # DocFit 学校模板提取 v2 执行胶囊
 
-- Capsule status: `IN PROGRESS / CLEAN-BREAK IMPLEMENTED, REAL E2E PENDING`
+- Capsule status: `COMPLETE / CLEAN-BREAK AND REAL E2E VERIFIED`
 - Latest user decision: 先提交当前代码，再按 clean break 完整重构；确定性流程控制归应用代码，
   Agent 只提出当前语义判断或页面视觉结论；不保留旧协议兼容。
 - Baseline commit: `5b9e491 feat(content): checkpoint extraction and field contracts` 保存本轮开始前
@@ -46,13 +46,15 @@
   [Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs),
   [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions).
 
-## 当前门禁
+## 最终门禁
 
-- Code/static: role-scoped schemas、应用 orchestrator、typed visual receipt、Skill 和基线文档已改；
-  Ruff/Mypy 已对核心变更通过。
-- Automated: 模板专项 87 tests、全仓 487 tests、Ruff 和 strict Mypy 全部通过；新增测试直接证明
-  应用推进 region、内部续传 cursor 但不向视觉 Agent 暴露、`max_turns` 有硬上限、PNG 返回不
-  自动计审查、defect 阻止发布和 exact-version receipt 失效。
-- Real E2E: 必须重新用学校原始模板运行 CLI，确认不再出现无界 session/cursor 错误，生成唯一
-  Word，并完成结构、全页视觉和离线 Template Truth 对比。
-- Stop condition: 在真实 E2E 生成并复核最终 Word 前，不宣称质量提高或模板提取 v2 完成。
+- Code/static: role-scoped schemas、应用 orchestrator、typed visual receipt、Skill 和 Tool v5 已落地；
+  Ruff 与 strict Mypy 对本次源文件通过。
+- Automated: 最终相关门禁 124 tests 全部通过；覆盖应用推进、内部 cursor、idle/max-turn 硬上限、
+  精确版本视觉 receipt、有效格式、父子删除归一化、边界保护、幂等分页和增量正文结构。
+- Real E2E: 南农 r66 从原始模板生成 `final-template.docx`，最终 13/13 LibreOffice 页面显式 clean；
+  机械审计确认 26 个内容控件、11 个节、书签平衡、实时目录、固定标题和零示例标记。
+- Word native: 对精确 r66 副本执行打开、全域更新、保存、关闭、重开；Word 原生为 12 页，目录
+  保持黑色、无下划线、1–3 级缩进、点引导线和更新后的页码。Word 重写后的 DOCX 再审计通过。
+- Product boundary: 应用拥有确定性流程；Tool 负责可执行性和事实反馈；Agent 根据当前学校证据决定
+  语义完整性。旧 v4 Tool 合同不保留兼容层。

@@ -18,6 +18,7 @@ from docfit.app.prepare_template import (
     PrepareTemplateRequest,
     TemplateAgentExecution,
     _append_agent_live_event,
+    _complete_semantic_work,
     _ExecutionMetrics,
     _review_final_document,
     _run_sdk_session,
@@ -37,6 +38,7 @@ from docfit.tools.template_tools import (
     _agent_payload,
     _bounded_work_item_payload,
     _mechanical_blank_segments,
+    _operation_field_assignments,
     _translate_operation,
     _validated_decision_operations,
     _validated_work_item_operations,
@@ -184,16 +186,50 @@ def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> N
     assert "An unqueried sibling never counts as having no candidate" in semantic
     assert "mechanical_blank_segments" in semantic
     assert "separate advisor-name and title blanks" in semantic
+    assert "absence of a whitespace-only segment never proves" in semantic
+    assert "20 年 月 日" in semantic
+    assert "materialize that whole date paragraph" in semantic
     assert "verify the candidate's meaning" in semantic
+    assert "returned for that exact target object" in semantic
+    assert "can never be reused on another sibling" in semantic
+    assert "never materialize the parent paragraph" in semantic
+    assert "collapse them into one interface" in semantic
     assert "must never be reused" in semantic
     assert "preceding_landmarks" in semantic
+    assert "resubmitting every field responsibility" in semantic
+    assert "never probe with a smaller test edit" in semantic
     assert "materialize one representative content interface" in semantic
     assert "One content responsibility on one logical page gets exactly one interface" in semantic
     assert "materialize the actual sample object, never both" in semantic
+    assert "cardinality=many describes multiple data items" in semantic
+    assert "one representative collection slot per logical collection" in semantic
+    assert "checkpoint references.entries>=1 or achievements.entries>=1" in semantic
+    assert "never materialize another slot" in semantic
     assert "第一章 文献综述" in semantic
     assert "Never turn that fixed heading into a standalone" in semantic
+    assert "materialized_field_locations.body.paragraph" in semantic
+    assert "global materialized_fields count can never establish chapter ownership" in semantic
+    assert "Only a visible body.paragraph slot under this exact" in semantic
+    assert "unsupported claim about an earlier crop can never justify deleting it" in semantic
+    assert "materialize exactly one appendix.title" in semantic
+    assert "Never leave the appendix heading without both interfaces" in semantic
     assert "Reserve the repeatable body.chapters structure" in semantic
+    assert "immediately ends the fixed-chapter continuation exception" in semantic
+    assert "earlier fixed-chapter body.paragraph never satisfies" in semantic
+    assert "only through materialize_structure" in semantic
+    assert "partial structure" in semantic
+    assert "does not impose a fixed H1/H2/H3 checklist" in semantic
+    assert "materialized_structure_members.body.chapters" in semantic
+    assert "Tool automatically carries forward every existing member" in semantic
     assert "materialize a real sample body paragraph as body.paragraph" in semantic
+    assert "request that heading's exact object_id for run-level context" in semantic
+    assert "That fixed-chapter scope continues across later isolated crops" in semantic
+    assert "never call them generic from placeholder text or style alone" in semantic
+    assert "nearest_preceding_heading names this exact fixed chapter" in semantic
+    assert "never use the global count or create a second body.paragraph there" in semantic
+    assert "carrying slot metadata is an already materialized interface" in semantic
+    assert "the target anchor alone is never a valid refresh" in semantic
+    assert "include every object listed in required_body_heading_candidates" in semantic
     assert "prior locations only" in semantic
     assert "abstract page still needs its own slot" in semantic
     assert "formatting annotation is not thereby a fixed label" in semantic
@@ -238,6 +274,42 @@ def test_decision_contract_accepts_zero_operations_only_for_preserve() -> None:
     with pytest.raises(ToolFailure) as apply_error:
         _validated_decision_operations("apply", [])
     assert apply_error.value.code == "apply_operations_missing"
+
+
+def test_body_heading_requires_parent_structure_without_fixed_depth_gate() -> None:
+    heading = "obj-" + "a" * 24
+    with pytest.raises(ToolFailure) as caught:
+        _validated_work_item_operations(
+            {"kind": "local_region", "region": {"knowledge_signals": []}},
+            "apply",
+            [
+                {
+                    "action": "materialize_slot",
+                    "object_id": heading,
+                    "field_id": "body.heading.level2",
+                }
+            ],
+        )
+
+    assert caught.value.code == "body_heading_requires_structure"
+    assert caught.value.suggested_actions == ("materialize_body_structure",)
+
+    partial_structure = {
+        "action": "materialize_structure",
+        "object_id": heading,
+        "field_id": "body.chapters",
+        "members": [
+            {
+                "object_id": heading,
+                "field_id": "body.heading.level2",
+            }
+        ],
+    }
+    assert _validated_work_item_operations(
+        {"kind": "local_region", "region": {"knowledge_signals": []}},
+        "apply",
+        [partial_structure],
+    ) == [partial_structure]
 
 
 def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
@@ -351,6 +423,312 @@ def test_initial_registry_candidates_are_limited_to_current_target() -> None:
     ]
     assert calls == ["20 年 月 日 20年月日"]
     assert state.offered_field_ids == {"submission.date"}
+    assert state.offered_fields_by_object == {
+        "obj-" + "a" * 24: {"submission.date"}
+    }
+
+
+def test_registry_candidate_is_bound_to_queried_object_and_descendants() -> None:
+    target = "obj-" + "a" * 24
+    child = "obj-" + "b" * 24
+    sibling = "obj-" + "c" * 24
+
+    class FakeRegistry:
+        def search(self, _text: str, *, limit: int) -> list[JsonObject]:
+            assert limit == 5
+            return [{"field_id": "appendix.title"}]
+
+    class FakeService:
+        registry = FakeRegistry()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {"object_id": target, "text": "附录名称"},
+                "adjacent_objects": [
+                    {
+                        "object_id": child,
+                        "type": "run",
+                        "parent_context": {"object_id": target},
+                    },
+                    {"object_id": sibling, "type": "paragraph", "text": "附录说明"},
+                ],
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    state.initial_candidates()
+    state.offer_fields(
+        target,
+        {"appendix.title"},
+        descendants=state.agent_work_item,
+    )
+
+    state.validate_field_assignments(
+        [{"action": "materialize_slot", "object_id": target, "field_id": "appendix.title"}]
+    )
+    state.validate_field_assignments(
+        [{"action": "materialize_slot", "object_id": child, "field_id": "appendix.title"}]
+    )
+    with pytest.raises(ToolFailure) as caught:
+        state.validate_field_assignments(
+            [
+                {
+                    "action": "materialize_slot",
+                    "object_id": sibling,
+                    "field_id": "appendix.title",
+                }
+            ]
+        )
+
+    assert caught.value.code == "field_not_offered_for_object"
+
+
+def test_corrected_retry_cannot_drop_declared_field_responsibilities() -> None:
+    target = "obj-" + "a" * 24
+    second = "obj-" + "b" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={"region": {"target": {"object_id": target, "text": "姓名"}}},
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    complete = [
+        {"action": "materialize_slot", "object_id": target, "field_id": "author.name.zh"},
+        {"action": "materialize_slot", "object_id": second, "field_id": "advisor.title"},
+    ]
+    state.validate_retry_field_contract(complete)
+    state.validate_retry_field_contract(list(reversed(complete)))
+
+    with pytest.raises(ToolFailure) as caught:
+        state.validate_retry_field_contract(complete[:1])
+
+    assert caught.value.code == "retry_dropped_declared_fields"
+
+
+def test_structure_parent_is_not_a_separate_object_field_responsibility() -> None:
+    anchor = "obj-" + "7" * 24
+    heading = "obj-" + "8" * 24
+
+    assignments = _operation_field_assignments(
+        {
+            "action": "materialize_structure",
+            "field_id": "body.chapters",
+            "object_id": anchor,
+            "members": [
+                {
+                    "field_id": "body.heading.level1",
+                    "object_id": heading,
+                }
+            ],
+        }
+    )
+
+    assert assignments == {(heading, "body.heading.level1")}
+
+
+def test_corrected_retry_may_split_one_field_across_sibling_runs() -> None:
+    parent = "obj-" + "2" * 24
+    first = "obj-" + "3" * 24
+    second = "obj-" + "4" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {"object_id": parent, "type": "paragraph", "text": "职称"},
+                "adjacent_objects": [
+                    {
+                        "object_id": first,
+                        "type": "run",
+                        "parent_context": {"object_id": parent},
+                    },
+                    {
+                        "object_id": second,
+                        "type": "run",
+                        "parent_context": {"object_id": parent},
+                    },
+                ],
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+
+    state.validate_retry_field_contract(
+        [{"action": "materialize_slot", "object_id": parent, "field_id": "advisor.title"}]
+    )
+    state.validate_retry_field_contract(
+        [
+            {"action": "materialize_slot", "object_id": first, "field_id": "advisor.title"},
+            {"action": "materialize_slot", "object_id": second, "field_id": "advisor.title"},
+        ]
+    )
+
+
+def test_corrected_retry_may_add_required_responsibility() -> None:
+    first = "obj-" + "5" * 24
+    second = "obj-" + "6" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={"region": {"target": {"object_id": first, "text": "正文"}}},
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    state.visible_object_structure[second] = (None, "paragraph")
+
+    state.validate_retry_field_contract(
+        [{"action": "materialize_slot", "object_id": first, "field_id": "body.paragraph"}]
+    )
+    state.validate_retry_field_contract(
+        [
+            {"action": "materialize_slot", "object_id": first, "field_id": "body.paragraph"},
+            {
+                "action": "materialize_slot",
+                "object_id": second,
+                "field_id": "body.heading.level1",
+            },
+        ]
+    )
+
+
+def test_split_run_field_materializations_become_one_interface() -> None:
+    parent = "obj-" + "a" * 24
+    first = "obj-" + "b" * 24
+    second = "obj-" + "c" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={"region": {"target": {"object_id": parent, "text": "附录名称"}}},
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    state.register_object_payload(
+        {
+            "local_context": {
+                "target": {"object_id": parent, "type": "paragraph", "text": "附录名称"},
+                "adjacent_objects": [
+                    {
+                        "object_id": first,
+                        "type": "run",
+                        "text": "附录",
+                        "parent_context": {"object_id": parent},
+                    },
+                    {
+                        "object_id": second,
+                        "type": "run",
+                        "text": "名称",
+                        "parent_context": {"object_id": parent},
+                    },
+                ],
+            }
+        }
+    )
+
+    normalized, absorbed = state.normalize_split_run_slots(
+        [
+            {"action": "materialize_slot", "object_id": first, "field_id": "appendix.title"},
+            {"action": "materialize_slot", "object_id": second, "field_id": "appendix.title"},
+        ]
+    )
+
+    assert normalized == [
+        {"action": "materialize_slot", "object_id": first, "field_id": "appendix.title"},
+        {"action": "remove_object", "object_id": second},
+    ]
+    assert absorbed == [
+        {
+            "action": "materialize_slot",
+            "field_id": "appendix.title",
+            "object_id": second,
+            "absorbed_into_object_id": first,
+            "reason": "same_field_split_across_sibling_runs",
+        }
+    ]
+
+
+def test_parent_slot_cannot_erase_unlisted_fixed_child_runs() -> None:
+    parent = "obj-" + "d" * 24
+    fixed = "obj-" + "e" * 24
+    variable = "obj-" + "f" * 24
+    annotation = "obj-" + "1" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {"object_id": parent, "type": "paragraph", "text": "附录名称"},
+                "adjacent_objects": [
+                    {
+                        "object_id": fixed,
+                        "type": "run",
+                        "text": "附 录",
+                        "parent_context": {"object_id": parent},
+                    },
+                    {
+                        "object_id": variable,
+                        "type": "run",
+                        "text": "附录名称",
+                        "parent_context": {"object_id": parent},
+                    },
+                    {
+                        "object_id": annotation,
+                        "type": "run",
+                        "text": "（三号黑体）",
+                        "parent_context": {"object_id": parent},
+                    },
+                ],
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+
+    with pytest.raises(ToolFailure) as caught:
+        state.validate_parent_materialization_contract(
+            [
+                {"action": "remove_object", "object_id": variable},
+                {"action": "remove_object", "object_id": annotation},
+                {
+                    "action": "materialize_slot",
+                    "field_id": "appendix.title",
+                    "object_id": parent,
+                },
+            ]
+        )
+
+    assert caught.value.code == "parent_materialization_discards_unlisted_children"
 
 
 def test_agent_work_item_caps_adjacent_context_and_hides_unseen_objects() -> None:
@@ -650,6 +1028,67 @@ def test_application_advances_region_after_agent_accepts_one_decision(
             "region_ref": "internal-region-ref",
             "region_outcome": "preserve",
             "reason": "fixed school label",
+        }
+    ]
+
+
+def test_application_skips_local_generated_cache_without_agent_session(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+
+    class FakeService:
+        def __init__(self) -> None:
+            self.next_calls: list[JsonObject] = []
+            self.open_calls = 0
+
+        def view(self, args: JsonObject) -> tuple[JsonObject, list[Path]]:
+            if args["action"] == "next":
+                self.next_calls.append(args)
+                return {"status": "ok"}, []
+            self.open_calls += 1
+            if self.open_calls == 1:
+                return (
+                    {
+                        "current_region": {
+                            "region_ref": "internal-generated-cache",
+                            "count": 1,
+                            "knowledge_signals": ["generated-content"],
+                        },
+                        "checkpoint_summary": {},
+                    },
+                    [],
+                )
+            return {"status": "ok"}, []
+
+    async def forbidden_agent(*_args: Any, **_kwargs: Any) -> None:
+        raise AssertionError("local generated cache must not start an Agent session")
+
+    monkeypatch.setattr(
+        "docfit.app.prepare_template._run_semantic_work_item",
+        forbidden_agent,
+    )
+    service = FakeService()
+    asyncio.run(
+        _complete_semantic_work(
+            prepared,
+            _backend(),
+            tmp_path,
+            _ExecutionMetrics(),
+            service,  # type: ignore[arg-type]
+        )
+    )
+
+    assert service.next_calls == [
+        {
+            "action": "next",
+            "region_ref": "internal-generated-cache",
+            "region_outcome": "preserve",
+            "reason": (
+                "Application-preserved local generated-content cache; final live refresh "
+                "occurs only after title sources are complete."
+            ),
         }
     ]
 

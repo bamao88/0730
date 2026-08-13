@@ -220,6 +220,88 @@ def _operation_field_ids(operation: JsonObject) -> set[str]:
     return {value for value in values if isinstance(value, str)}
 
 
+def _operation_field_assignments(operation: JsonObject) -> set[tuple[str, str]]:
+    """Return concrete object/field pairs chosen by one semantic operation."""
+
+    assignments: set[tuple[str, str]] = set()
+    object_id = operation.get("object_id")
+    field_id = operation.get("field_id")
+    if (
+        operation.get("action") not in {"materialize_structure", "refresh_toc"}
+        and isinstance(object_id, str)
+        and isinstance(field_id, str)
+    ):
+        assignments.add((object_id, field_id))
+    for member in operation.get("members", []):
+        if not isinstance(member, dict):
+            continue
+        member_object = member.get("object_id")
+        member_field = member.get("field_id")
+        if isinstance(member_object, str) and isinstance(member_field, str):
+            assignments.add((member_object, member_field))
+    return assignments
+
+
+def _target_and_descendant_ids(value: Any, target_id: str) -> set[str]:
+    """Select one queried object and descendants, excluding visible peer objects."""
+
+    relationships: list[tuple[str, str | None]] = []
+
+    def visit(item: Any) -> None:
+        if isinstance(item, list):
+            for child in item:
+                visit(child)
+            return
+        if not isinstance(item, dict):
+            return
+        object_id = item.get("object_id")
+        parent = item.get("parent_context")
+        parent_id = parent.get("object_id") if isinstance(parent, dict) else None
+        if isinstance(object_id, str):
+            relationships.append((object_id, parent_id if isinstance(parent_id, str) else None))
+        for child in item.values():
+            visit(child)
+
+    visit(value)
+    selected = {target_id}
+    changed = True
+    while changed:
+        changed = False
+        for object_id, parent_id in relationships:
+            if parent_id in selected and object_id not in selected:
+                selected.add(object_id)
+                changed = True
+    return selected
+
+
+def _object_structure(value: Any) -> dict[str, tuple[str | None, str | None]]:
+    """Return each visible object's structural parent and physical object type."""
+
+    found: dict[str, tuple[str | None, str | None]] = {}
+
+    def visit(item: Any) -> None:
+        if isinstance(item, list):
+            for child in item:
+                visit(child)
+            return
+        if not isinstance(item, dict):
+            return
+        object_id = item.get("object_id")
+        parent = item.get("parent_context")
+        parent_id = parent.get("object_id") if isinstance(parent, dict) else None
+        object_type = item.get("type")
+        if isinstance(object_id, str):
+            found[object_id] = (
+                parent_id if isinstance(parent_id, str) else None,
+                object_type if isinstance(object_type, str) else None,
+            )
+        for child in item.values():
+            visit(child)
+
+    visit(value)
+    return found
+
+
 def _translate_operation(operation: JsonObject) -> JsonObject:
     translated = {
         key: value
@@ -308,6 +390,25 @@ def _validated_work_item_operations(
             code="refresh_toc_wrong_work_item",
             message="Refresh the live TOC only from the generated-content work item.",
         )
+    standalone_body_headings = [
+        item
+        for item in direct
+        if item.get("action") == "materialize_slot"
+        and str(item.get("field_id", "")).startswith("body.heading.")
+    ]
+    if standalone_body_headings:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_heading_requires_structure",
+            message=(
+                "A body.heading.* type declares body.chapters as its parent and cannot be "
+                "materialized as a standalone slot. Use materialize_structure with the "
+                "currently demonstrated members; a partial member set is valid and may be "
+                "expanded later. The Tool does not require any fixed heading-depth checklist."
+            ),
+            suggested_actions=("materialize_body_structure",),
+        )
     if kind == "generated_content" and actions != {"refresh_toc"}:
         raise ToolFailure(
             status="needs_input",
@@ -329,7 +430,13 @@ class SemanticWorkItemState:
     allow_preserve: bool
     start_progress: JsonObject
     offered_field_ids: set[str] = field(default_factory=set)
+    offered_fields_by_object: dict[str, set[str]] = field(default_factory=dict)
     allowed_object_ids: set[str] = field(default_factory=set)
+    visible_object_structure: dict[str, tuple[str | None, str | None]] = field(
+        default_factory=dict
+    )
+    protected_slot_object_ids: set[str] = field(default_factory=set)
+    declared_apply_fields: set[tuple[str, str]] | None = None
     submission: JsonObject | None = None
     ambiguity: JsonObject | None = None
     post_region_ref: str | None = None
@@ -339,11 +446,212 @@ class SemanticWorkItemState:
 
     def __post_init__(self) -> None:
         self.agent_work_item = _bounded_work_item_payload(self.work_item)
+        self.register_object_payload(self.agent_work_item)
         for object_id, _ in _objects(self.agent_work_item):
             self.allowed_object_ids.add(object_id)
         generated_field = self.work_item.get("field_id")
         if isinstance(generated_field, str):
             self.offered_field_ids.add(generated_field)
+
+    def offer_fields(
+        self,
+        object_id: str,
+        field_ids: set[str],
+        *,
+        descendants: Any = None,
+    ) -> None:
+        """Bind Registry candidates to their queried object and visible descendants only."""
+
+        if not field_ids:
+            return
+        self.offered_field_ids.update(field_ids)
+        eligible = _target_and_descendant_ids(descendants, object_id)
+        for candidate_id in eligible:
+            self.offered_fields_by_object.setdefault(candidate_id, set()).update(field_ids)
+
+    def register_object_payload(self, value: Any) -> None:
+        """Remember visible interfaces that a semantic Agent may inspect but not mutate."""
+
+        self.visible_object_structure.update(_object_structure(value))
+
+        def visit(item: Any) -> None:
+            if isinstance(item, list):
+                for child in item:
+                    visit(child)
+                return
+            if not isinstance(item, dict):
+                return
+            object_id = item.get("object_id")
+            if not isinstance(object_id, str):
+                reference = item.get("object_ref")
+                object_id = reference.get("object_id") if isinstance(reference, dict) else None
+            parent = item.get("parent_context")
+            if isinstance(object_id, str) and (
+                isinstance(item.get("slot"), dict)
+                or (isinstance(parent, dict) and isinstance(parent.get("slot"), dict))
+            ):
+                self.protected_slot_object_ids.add(object_id)
+            for child in item.values():
+                visit(child)
+
+        visit(value)
+
+    def validate_agent_mutation_targets(self, operations: list[JsonObject]) -> None:
+        for operation in operations:
+            if operation.get("action") in {"materialize_structure", "refresh_toc"}:
+                continue
+            object_id = operation.get("object_id")
+            if isinstance(object_id, str) and object_id in self.protected_slot_object_ids:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="materialized_slot_read_only",
+                    message=(
+                        "An already materialized fill interface and its descendants are "
+                        "read-only to later Agent decisions. Preserve its visible placeholder; "
+                        "only application-owned cleanup or structure promotion may replace it."
+                    ),
+                )
+
+    def validate_parent_materialization_contract(
+        self,
+        operations: list[JsonObject],
+    ) -> None:
+        """Reject a parent slot that would erase unlisted fixed child content."""
+
+        removed_ids = {
+            operation.get("object_id")
+            for operation in operations
+            if operation.get("action") == "remove_object"
+            and isinstance(operation.get("object_id"), str)
+        }
+        for operation in operations:
+            parent_id = operation.get("object_id")
+            if operation.get("action") != "materialize_slot" or not isinstance(
+                parent_id, str
+            ):
+                continue
+            _, object_type = self.visible_object_structure.get(parent_id, (None, None))
+            if object_type in {"run", "sdt"}:
+                continue
+            child_ids = {
+                object_id
+                for object_id, (candidate_parent, _candidate_type) in (
+                    self.visible_object_structure.items()
+                )
+                if candidate_parent == parent_id
+            }
+            explicitly_removed_children = child_ids & removed_ids
+            if explicitly_removed_children and explicitly_removed_children != child_ids:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="parent_materialization_discards_unlisted_children",
+                    message=(
+                        "Materializing a parent replaces all of its child content. This batch "
+                        "removes only some visible children, so executing it would also erase "
+                        "unlisted fixed content. Materialize the exact variable child run(s); "
+                        "when one field is split across sibling runs, submit that field on the "
+                        "variable runs and the Tool will collapse them into one interface."
+                    ),
+                    suggested_actions=("materialize_exact_variable_child_runs",),
+                )
+
+    def validate_field_assignments(self, operations: list[JsonObject]) -> None:
+        requested_assignments = {
+            assignment
+            for item in operations
+            for assignment in _operation_field_assignments(item)
+        }
+        mismatched_assignments = {
+            (object_id, field_id)
+            for object_id, field_id in requested_assignments
+            if field_id not in self.offered_fields_by_object.get(object_id, set())
+        }
+        if mismatched_assignments:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="field_not_offered_for_object",
+                message=(
+                    "Each field candidate is bound to the object queried for it and that "
+                    "object's visible descendants. Request candidates for the exact target "
+                    "object; a candidate returned for a sibling cannot be reused here."
+                ),
+                suggested_actions=("request_exact_object_field_candidates",),
+            )
+
+    def validate_retry_field_contract(self, operations: list[JsonObject]) -> None:
+        declared: set[tuple[str, str]] = set()
+        for operation in operations:
+            for object_id, field_id in _operation_field_assignments(operation):
+                parent_id, object_type = self.visible_object_structure.get(
+                    object_id,
+                    (None, None),
+                )
+                anchor_id = parent_id if object_type == "run" and parent_id else object_id
+                declared.add((field_id, anchor_id))
+        if self.declared_apply_fields is None:
+            self.declared_apply_fields = declared
+            return
+        if not self.declared_apply_fields.issubset(declared):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="retry_dropped_declared_fields",
+                message=(
+                    "A corrected retry must preserve every logical field responsibility "
+                    "declared in earlier field-valid apply attempts. Multiple sibling runs "
+                    "carrying one field count as one responsibility. Correct object targets "
+                    "or operation shape, and add newly required responsibilities, without "
+                    "dropping any responsibility already declared."
+                ),
+                suggested_actions=("resubmit_all_declared_field_responsibilities",),
+            )
+        self.declared_apply_fields = declared
+
+    def normalize_split_run_slots(
+        self,
+        operations: list[JsonObject],
+    ) -> tuple[list[JsonObject], list[JsonObject]]:
+        """Collapse one field split across sibling runs into one fill interface."""
+
+        retained_by_group: dict[tuple[str, str], str] = {}
+        normalized: list[JsonObject] = []
+        absorbed: list[JsonObject] = []
+        for operation in operations:
+            object_id = operation.get("object_id")
+            field_id = operation.get("field_id")
+            parent_id, object_type = self.visible_object_structure.get(
+                object_id if isinstance(object_id, str) else "",
+                (None, None),
+            )
+            if not (
+                operation.get("action") == "materialize_slot"
+                and isinstance(object_id, str)
+                and isinstance(field_id, str)
+                and isinstance(parent_id, str)
+                and object_type == "run"
+            ):
+                normalized.append(operation)
+                continue
+            group = (parent_id, field_id)
+            retained_object_id = retained_by_group.get(group)
+            if retained_object_id is None:
+                retained_by_group[group] = object_id
+                normalized.append(operation)
+                continue
+            normalized.append({"action": "remove_object", "object_id": object_id})
+            absorbed.append(
+                {
+                    "action": "materialize_slot",
+                    "field_id": field_id,
+                    "object_id": object_id,
+                    "absorbed_into_object_id": retained_object_id,
+                    "reason": "same_field_split_across_sibling_runs",
+                }
+            )
+        return normalized, absorbed
 
     def rollback(self) -> None:
         if self.mutated:
@@ -368,11 +676,12 @@ class SemanticWorkItemState:
             )
         except ToolFailure:
             return []
-        self.offered_field_ids.update(
+        field_ids = {
             str(item["field_id"])
             for item in matches
             if isinstance(item.get("field_id"), str)
-        )
+        }
+        self.offer_fields(object_id, field_ids)
         if not matches:
             return []
         return [
@@ -428,7 +737,11 @@ async def template_request_current_context(args: dict[str, Any]) -> dict[str, An
     (
         "Submit one semantic decision for the current work item. For preserve, omit operations "
         "or pass an empty array. For apply, pass at least one operation; field IDs must come "
-        "from candidates returned in this work item. The application performs and verifies edits."
+        "from candidates returned for the exact edited object or its focused child run; sibling "
+        "candidates cannot be reused. For generated_content, submit exactly one "
+        "refresh_toc operation and include entries selected from title_candidates with levels "
+        "1-3, including all required_body_heading_candidates; object_id alone is invalid. The "
+        "application performs and verifies edits."
     ),
     TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA,
     annotations=_WRITE,
@@ -530,6 +843,7 @@ def build_template_semantic_tool_server(
                 searched, _ = state.service.view({"action": "search", "query": text_query})
                 public_search = _agent_payload(searched)
                 result["text_search"] = public_search
+                state.register_object_payload(public_search)
                 for candidate_id, _ in _objects(public_search):
                     state.allowed_object_ids.add(candidate_id)
             if isinstance(object_id, str):
@@ -551,6 +865,7 @@ def build_template_semantic_tool_server(
                     )
                     public_focus = _agent_payload(focused)
                     result["visual_context"] = public_focus
+                    state.register_object_payload(public_focus)
                     local_context = public_focus.get("local_context")
                     adjacent = (
                         local_context.get("adjacent_objects")
@@ -577,11 +892,20 @@ def build_template_semantic_tool_server(
                     for item in registry.get("results", []):
                         if not isinstance(item, dict):
                             continue
-                        state.offered_field_ids.update(
+                        field_ids = {
                             str(match["field_id"])
                             for match in item.get("matches", [])
                             if isinstance(match, dict)
                             and isinstance(match.get("field_id"), str)
+                        }
+                        state.offer_fields(
+                            object_id,
+                            field_ids,
+                            descendants=(
+                                result.get("visual_context")
+                                if isinstance(result.get("visual_context"), dict)
+                                else None
+                            ),
                         )
             return tool_result(result, image_paths=images)
         except ToolFailure as error:
@@ -625,6 +949,8 @@ def build_template_semantic_tool_server(
                 outcome,
                 operations,
             )
+            state.validate_agent_mutation_targets(direct_operations)
+            state.validate_parent_materialization_contract(direct_operations)
             operation_objects = {
                 object_id
                 for item in direct_operations
@@ -650,10 +976,32 @@ def build_template_semantic_tool_server(
                     message="Every field ID must come from candidates returned in this work item.",
                     suggested_actions=("request_current_field_candidates",),
                 )
+            prior_declared_fields = (
+                set(state.declared_apply_fields)
+                if state.declared_apply_fields is not None
+                else None
+            )
+            state.validate_retry_field_contract(direct_operations)
+            state.validate_field_assignments(direct_operations)
+            direct_operations, split_run_absorptions = state.normalize_split_run_slots(
+                direct_operations
+            )
             translated = {
                 "operations": [_translate_operation(item) for item in direct_operations]
             }
-            structured, images = state.service.edit(translated)
+            try:
+                structured, images = state.service.edit(translated)
+            except ToolFailure:
+                state.declared_apply_fields = prior_declared_fields
+                raise
+            if split_run_absorptions:
+                effects = structured.get("effects")
+                if isinstance(effects, dict):
+                    existing = effects.get("absorbed_operations")
+                    effects["absorbed_operations"] = [
+                        *(existing if isinstance(existing, list) else []),
+                        *split_run_absorptions,
+                    ]
             state.submission = {
                 "outcome": "handled",
                 "reason": reason,
