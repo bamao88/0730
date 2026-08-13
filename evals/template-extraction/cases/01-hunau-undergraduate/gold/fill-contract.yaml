@@ -3,17 +3,17 @@ contract_id: hunau-undergraduate.fill-contract
 artifact_role: template_fill_contract
 status: candidate_pending_human_acceptance
 template_id: hunau-undergraduate.clean-template
-revision: 2026-08-07.2
-contract_version: docfit-template-truth-pack-draft-3
+revision: 2026-08-13.1
+contract_version: docfit-template-truth-pack-v0.5-candidate-1
 school_id: hunau-undergraduate
 school_name: 湖南农业大学本科
 template_path: template.docx
-template_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
+template_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
 field_registry_ref:
-  path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
+  path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   registry_id: docfit.thesis.content_fields
-  registry_version: 0.1.0
-  sha256: 9779d0272fc395245002184d43e8356b0722a6821e8ca0a36ced0db6d26d522d
+  registry_version: 0.5.0
+  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
 marker_protocol:
   version: docfit-content-control-marker/v1
   field_identity_property: w:alias
@@ -42,6 +42,7 @@ provenance:
     changed_part: word/document.xml
     changed_property: replace_docfit.body.main_with_granular_body_and_conclusion_controls
     source_docx_mutated: false
+  registry_migration: v0.5_clean_break_field_ids
 locator_contract:
   snapshot_binding: template_sha256
   preferred_locator_order:
@@ -96,7 +97,7 @@ slots:
   style_id: style.cover.title_cn
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.title_cn
@@ -136,7 +137,7 @@ slots:
   style_id: style.cover.title_en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.title_en
@@ -176,7 +177,7 @@ slots:
   style_id: style.cover.student_name
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.student_name
@@ -216,7 +217,7 @@ slots:
   style_id: style.cover.student_id
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.student_id
@@ -256,7 +257,7 @@ slots:
   style_id: style.cover.major_class
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: unresolved_compound_field_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.major_class
@@ -297,7 +298,7 @@ slots:
   style_id: style.cover.advisor
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: unresolved_compound_field_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.advisor
@@ -322,6 +323,13 @@ slots:
       space_after_pt: 0.0
     container: {}
     page: {}
+  value_contract:
+    components:
+    - advisor.name.zh
+    - advisor.title
+    separator: 　
+    separator_policy: exactly_one_cjk_space
+    missing_policy: blocking_review
 - slot_id: slot.cover.college
   field_id: author.department
   label: 学院
@@ -338,7 +346,7 @@ slots:
   style_id: style.cover.college
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.college
@@ -378,7 +386,7 @@ slots:
   style_id: style.cover.submission_date
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.cover.submission_date
@@ -418,7 +426,7 @@ slots:
   style_id: style.body.title_cn
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.title_cn
@@ -432,6 +440,7 @@ slots:
       size_pt: 18.0
       bold: true
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -459,7 +468,7 @@ slots:
   style_id: style.body.student_name
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.student_name
@@ -473,6 +482,7 @@ slots:
       size_pt: 14.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -500,7 +510,7 @@ slots:
   style_id: style.body.advisor
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: unresolved_compound_field_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.advisor
@@ -515,6 +525,7 @@ slots:
       size_pt: 14.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -526,6 +537,10 @@ slots:
       space_after_pt: 0.0
     container: {}
     page: {}
+  value_contract:
+    components:
+    - advisor.name.zh
+    include_advisor_title: false
 - slot_id: slot.body.college
   field_id: author.department
   label: 正文学院
@@ -542,7 +557,7 @@ slots:
   style_id: style.body.college
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.college
@@ -556,6 +571,7 @@ slots:
       size_pt: 9.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -583,7 +599,7 @@ slots:
   style_id: style.abstract.cn
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.abstract.cn
@@ -597,6 +613,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 0.0
@@ -624,7 +641,7 @@ slots:
   style_id: style.keywords.cn
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.keywords.cn
@@ -638,6 +655,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -665,7 +683,7 @@ slots:
   style_id: style.body.title_en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_pending_human_confirmation
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.title_en
@@ -679,6 +697,7 @@ slots:
       size_pt: 14.0
       bold: true
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -706,7 +725,7 @@ slots:
   style_id: style.abstract.student_en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.abstract.student_en
@@ -720,6 +739,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -747,7 +767,7 @@ slots:
   style_id: style.abstract.tutor_en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.abstract.tutor_en
@@ -761,6 +781,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -788,7 +809,7 @@ slots:
   style_id: style.abstract.college_en
   placeholder_policy: remove_after_fill
   empty_policy: placeholder_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.abstract.college_en
@@ -802,6 +823,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: center
       first_line_indent_pt: 0.0
@@ -829,7 +851,7 @@ slots:
   style_id: style.abstract.en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.abstract.en
@@ -843,6 +865,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 0.0
@@ -870,7 +893,7 @@ slots:
   style_id: style.keywords.en
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.keywords.en
@@ -884,6 +907,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -896,7 +920,7 @@ slots:
     container: {}
     page: {}
 - slot_id: slot.body.chapter_title
-  field_id: body.heading.level1
+  field_id: body.heading.outline1
   label: 正文一级标题
   content_type: text
   locator:
@@ -911,11 +935,11 @@ slots:
   style_id: style.body.chapter_title
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.chapter_title
-    alias: body.heading.level1
+    alias: body.heading.outline1
     placeholder_text: 1 章节标题
   owner: slot
   expected_value_style:
@@ -925,6 +949,7 @@ slots:
       size_pt: 15.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -952,7 +977,7 @@ slots:
   style_id: style.body.chapter_body
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.chapter_body
@@ -966,6 +991,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 24.0
@@ -978,7 +1004,7 @@ slots:
     container: {}
     page: {}
 - slot_id: slot.body.section_title
-  field_id: body.heading.level2
+  field_id: body.heading.outline2
   label: 正文二级标题
   content_type: text
   locator:
@@ -987,17 +1013,17 @@ slots:
     part: word/document.xml
     expected_match_count: 1
     story: document
-  required: true
+  required: false
   cardinality: many
   fill_mode: replace_content_control_content
   style_id: style.body.section_title
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.section_title
-    alias: body.heading.level2
+    alias: body.heading.outline2
     placeholder_text: 1.1 节标题
   owner: slot
   expected_value_style:
@@ -1007,6 +1033,7 @@ slots:
       size_pt: 14.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -1034,7 +1061,7 @@ slots:
   style_id: style.body.section_body
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.section_body
@@ -1048,6 +1075,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 24.0
@@ -1060,7 +1088,7 @@ slots:
     container: {}
     page: {}
 - slot_id: slot.body.subsection_title
-  field_id: body.heading.level3
+  field_id: body.heading.outline3
   label: 正文三级标题
   content_type: text
   locator:
@@ -1069,17 +1097,17 @@ slots:
     part: word/document.xml
     expected_match_count: 1
     story: document
-  required: true
+  required: false
   cardinality: many
   fill_mode: replace_content_control_content
   style_id: style.body.subsection_title
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.subsection_title
-    alias: body.heading.level3
+    alias: body.heading.outline3
     placeholder_text: 1.1.1 小节标题
   owner: slot
   expected_value_style:
@@ -1089,6 +1117,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -1116,7 +1145,7 @@ slots:
   style_id: style.body.subsection_body
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.body.subsection_body
@@ -1130,6 +1159,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 24.0
@@ -1142,7 +1172,7 @@ slots:
     container: {}
     page: {}
 - slot_id: slot.conclusion.title
-  field_id: body.heading.level1
+  field_id: body.heading.outline1
   label: 结论标题
   content_type: text
   locator:
@@ -1157,11 +1187,11 @@ slots:
   style_id: style.conclusion.title
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.conclusion.title
-    alias: body.heading.level1
+    alias: body.heading.outline1
     placeholder_text: 5 结论
   owner: slot
   expected_value_style:
@@ -1171,6 +1201,7 @@ slots:
       size_pt: 15.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -1198,7 +1229,7 @@ slots:
   style_id: style.conclusion.body
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.conclusion.body
@@ -1212,6 +1243,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 24.0
@@ -1239,7 +1271,7 @@ slots:
   style_id: style.references
   placeholder_policy: remove_after_fill
   empty_policy: blocking_review
-  mapping_status: generated_high_confidence_candidate
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.references
@@ -1253,6 +1285,7 @@ slots:
       size_pt: 10.5
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: left
       first_line_indent_pt: 0.0
@@ -1274,13 +1307,13 @@ slots:
     part: word/document.xml
     expected_match_count: 1
     story: document
-  required: false
+  required: true
   cardinality: optional
   fill_mode: replace_content_control_content
   style_id: style.acknowledgement
   placeholder_policy: remove_after_fill
-  empty_policy: placeholder_review
-  mapping_status: generated_high_confidence_candidate
+  empty_policy: blocking_review
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.acknowledgement
@@ -1294,6 +1327,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 24.0
@@ -1320,8 +1354,8 @@ slots:
   fill_mode: replace_content_control_content
   style_id: style.appendix
   placeholder_policy: remove_after_fill
-  empty_policy: placeholder_review
-  mapping_status: generated_high_confidence_candidate
+  empty_policy: placeholder_review_then_remove_if_not_applicable
+  mapping_status: human_confirmed_product_rule_pending_exact_file_review
   evidence_refs:
   - type: template_content_control
     value: docfit.appendix
@@ -1335,6 +1369,7 @@ slots:
       size_pt: 12.0
       bold: false
       italic: false
+      color: '000000'
     paragraph:
       alignment: both
       first_line_indent_pt: 0.0
@@ -1761,7 +1796,7 @@ styles:
 - style_id: style.body.chapter_title
   label: 正文一级标题有效样式
   applies_to:
-  - body.heading.level1
+  - body.heading.outline1
   word_style_id: DocFitHeading1
   word_style_name: DocFit 一级标题
   effective_properties:
@@ -1804,7 +1839,7 @@ styles:
 - style_id: style.body.section_title
   label: 正文二级标题有效样式
   applies_to:
-  - body.heading.level2
+  - body.heading.outline2
   word_style_id: DocFitHeading2
   word_style_name: DocFit 二级标题
   effective_properties:
@@ -1847,7 +1882,7 @@ styles:
 - style_id: style.body.subsection_title
   label: 正文三级标题有效样式
   applies_to:
-  - body.heading.level3
+  - body.heading.outline3
   word_style_id: DocFitHeading3
   word_style_name: DocFit 三级标题
   effective_properties:
@@ -1890,7 +1925,7 @@ styles:
 - style_id: style.conclusion.title
   label: 结论标题有效样式
   applies_to:
-  - body.heading.level1
+  - body.heading.outline1
   word_style_id: DocFitHeading1
   word_style_name: DocFit 一级标题
   effective_properties:
@@ -2042,6 +2077,10 @@ logical_pages:
   first_anchor: 正文基本格式
   boundary_evidence: 原第4–5页内部没有真实分页/分节单元信号；题名、摘要、正文及后置示例不再过度拆分。
   evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/01-hunau-undergraduate/logical-pages/unit-manifest.json
+  section_policies:
+    conclusion: required
+    acknowledgement: required
+    appendix: optional
 - order: 5
   page_id: design_task
   title: 毕业设计任务书
@@ -2108,10 +2147,7 @@ review:
   reviewed_at: null
   conclusion: pending
   blockers:
-  - Human 尚未逐槽位签署字段语义、必填性和样式有效值。
-  - 尚未对全部槽位完成填充、更新域、保存、重开和空值/长值往返验证。
-  - CI 使用授权尚未确认；静态 Eval 不调用 Adobe 外部处理。
-  - 当前包未附绑定该模板 hash 的 Microsoft Word 全页视觉复核。
+  - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
   prepared_by: Codex
 validation:
   template_hash_bound: true
@@ -2130,3 +2166,10 @@ validation:
   libreoffice_render_page_count: 24
   word_round_trip_required_before_acceptance: true
   all_final_pages_human_review_required_before_acceptance: true
+  gold_preparation:
+    registry_version: 0.5.0
+    officecli:
+      passed: true
+      detail: 'Validation passed: no errors found.'
+    template_contract_hash_binding: passed
+    human_acceptance: pending_exact_file_pair_review

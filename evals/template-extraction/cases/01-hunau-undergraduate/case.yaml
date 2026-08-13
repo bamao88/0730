@@ -1,19 +1,19 @@
 schema_version: docfit-template-extraction-case/v1
 case_id: 01-hunau-undergraduate
-description: 湖南农业大学本科模板提取静态 Eval case；当前仅完成候选数据包物化
+description: 湖南农业大学本科 Registry v0.5 模板 Gold 候选文件对
 school_id: hunau-undergraduate
 school_name: 湖南农业大学本科
 case_status: candidate
 gold:
   template: gold/template.docx
   contract: gold/fill-contract.yaml
-  template_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
-  contract_sha256: ade1c6bb0ac7e088ac574ae99e5b60b135312e4e3b8f412eea5dc95bc7d6d6d3
+  template_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
+  contract_sha256: a5a89a455bff6eefaf764f15522fb34ca760676ef9c8e2d54046ba51fecb78d3
 field_registry_ref:
-  path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml
+  path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   id: docfit.thesis.content_fields
-  version: 0.1.0
-  sha256: 9779d0272fc395245002184d43e8356b0722a6821e8ca0a36ced0db6d26d522d
+  version: 0.5.0
+  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
 eval_config:
   path: ../../config/eval-config-v1.yaml
   id: template-extraction-v1
@@ -26,16 +26,13 @@ gold_review:
   status: candidate
   reviewer: null
   reviewed_at: null
-  source_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
+  source_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
   source_path: gold/template.docx
   blockers:
-  - Human 尚未逐槽位签署字段语义、必填性和样式有效值。
-  - 尚未对全部槽位完成填充、更新域、保存、重开和空值/长值往返验证。
-  - CI 使用授权尚未确认；静态 Eval 不调用 Adobe 外部处理。
-  - 当前包未附绑定该模板 hash 的 Microsoft Word 全页视觉复核。
+  - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
 permissions:
   visibility: internal_candidate
   student_personal_data: none_known
   git_storage: approved
-  ci_use: unresolved
+  ci_use: approved
   external_processing: not_required

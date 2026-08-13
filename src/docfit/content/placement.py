@@ -12,9 +12,9 @@ from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 
 _BODY_ROLE_FIELDS = frozenset(
     {
-        "body.heading.level1",
-        "body.heading.level2",
-        "body.heading.level3",
+        "body.heading.outline1",
+        "body.heading.outline2",
+        "body.heading.outline3",
         "body.paragraph",
         "body.figure",
         "body.figure.caption",

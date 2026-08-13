@@ -109,8 +109,11 @@ uv run docfit prepare-template \
 ```
 
 `--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
-的开发期 Registry，也可显式替换。应用逐个绑定局部工作项；语义 Agent 只取得当前图片、
-必要上下文和 Registry 候选并提交一次判断，应用负责执行、回读、推进、有界重试和失败状态。
+的开发期 Registry，也可显式替换。应用逐个绑定局部工作项；语义 Agent 一次取得当前图片中
+全部可见顶层对象、必要子 run 和逐对象 Registry 候选并提交判断，只有证据不足时才追加有界
+context。相邻同页工作项复用一个小而有界的 SDK 原生 session，应用负责在工作项之间重绑
+Tool state，并负责执行、回读、推进、有界重试和失败状态。运行 turn、SDK/API/墙钟耗时以及
+原生 client 数量会跨进程持续计入任务证据。
 局部工作完成后，应用把精确最终版本的全部原生全页 PNG 分批交给独立视觉审查角色；每页必须
 有明确 `clean/defect` 结论，任何修改都会使旧版本页面结论失效并从第一页重查。全部页面
 `clean` 后由应用自动发布。Agent 不接触 cursor、文档/区域版本引用或发布动作，也不生成

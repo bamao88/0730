@@ -16,8 +16,8 @@ CASES = PROJECT_ROOT / "cases"
     ("case_id", "expected_tags"),
     [
         ("01-hunau-undergraduate", 31),
-        ("02-njau-undergraduate", 34),
-        ("03-pku-graduate", 33),
+        ("02-njau-undergraduate", 26),
+        ("03-pku-graduate", 0),
     ],
 )
 def test_marker_01_through_03_school_marker_protocol_is_closed(
@@ -37,25 +37,19 @@ def test_marker_01_through_03_school_marker_protocol_is_closed(
     )
 
 
-@pytest.mark.parametrize(
-    ("case_id", "component_tags"),
-    [
-        (
-            "02-njau-undergraduate",
-            {"docfit.slot.cover.month", "docfit.slot.cover.day"},
-        ),
-        (
-            "03-pku-graduate",
-            {"docfit.slot.cover.title_line_2", "docfit.slot.cover.title_line_3"},
-        ),
-    ],
-)
-def test_marker_04_and_05_component_locators_are_managed_markers(
-    case_id: str,
-    component_tags: set[str],
-) -> None:
-    contract = load_fill_contract(CASES / case_id / "gold" / "fill-contract.yaml")
-    assert component_tags <= marker_expectations(contract).keys()
+def test_marker_04_njau_body_region_anchor_is_a_managed_marker() -> None:
+    contract = load_fill_contract(
+        CASES / "02-njau-undergraduate" / "gold" / "fill-contract.yaml"
+    )
+    assert "body.chapters.1" in marker_expectations(contract)
+
+
+def test_marker_05_pku_placeholder_contract_does_not_invent_word_markers() -> None:
+    contract = load_fill_contract(
+        CASES / "03-pku-graduate" / "gold" / "fill-contract.yaml"
+    )
+    assert {slot.locator.type for slot in contract.slots} == {"placeholder_anchor"}
+    assert marker_expectations(contract) == {}
 
 
 def test_marker_06_untagged_word_controls_are_not_product_markers() -> None:

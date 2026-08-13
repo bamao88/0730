@@ -6,7 +6,9 @@
 - **Object ref**: snapshot-bound structural identity (`document_sha256`, object ID, fingerprint) shared by structure, visual location, and mutation. A prior ref remains valid only for its immutable prior version and never addresses objects in a newer version.
 - **Document ref**: immutable task-local Word version addressed by its SHA-256. Internal versions support feedback and recovery; they are not user deliverables.
 - **Field Registry**: cross-stage field semantics queried lazily for one current object. It is never a template-wide slot checklist.
-- **Final template**: the only user-visible Word, published once at `output/final-template.docx` after the Agent reviews the exact final version.
+- **Final template**: the fillable Word published at `output/final-template.docx` after the Agent reviews the exact final version.
+- **Fill contract**: the human-reviewable, machine-readable filling guide published at `output/fill-contract.yaml`; it is bound to the exact final-template hash and explains fields, locations, conditions, styles, and manual actions.
+- **School extraction delivery**: one atomic two-file product unit: `final-template.docx` plus `fill-contract.yaml`. Reports, receipts, renders, and manifests are internal evidence rather than additional primary deliverables.
 
 ## Architecture boundary
 

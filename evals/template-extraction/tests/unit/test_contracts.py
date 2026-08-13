@@ -66,8 +66,8 @@ def test_con_03_registry_hash_or_unknown_field_is_rejected(tmp_path: Path) -> No
     ("case_id", "region_count", "component_count"),
     [
         ("01-hunau-undergraduate", 1, 0),
-        ("02-njau-undergraduate", 1, 3),
-        ("03-pku-graduate", 3, 3),
+        ("02-njau-undergraduate", 2, 0),
+        ("03-pku-graduate", 5, 0),
     ],
 )
 def test_con_04_through_06_school_contracts_close_over_runtime_model(

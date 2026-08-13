@@ -57,8 +57,8 @@ def test_cont_03_non_text_objects_are_tokens_not_empty_text() -> None:
     ("case_id", "expected_controls", "expected_managed"),
     [
         ("01-hunau-undergraduate", 31, 31),
-        ("02-njau-undergraduate", 35, 34),
-        ("03-pku-graduate", 38, 33),
+        ("02-njau-undergraduate", 27, 26),
+        ("03-pku-graduate", 6, 0),
     ],
 )
 def test_cont_04_through_06_inline_and_block_controls_are_all_visible(

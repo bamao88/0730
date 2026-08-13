@@ -149,6 +149,15 @@ uv run pytest -q
 
 `cases/01-hunau-undergraduate`、`02-njau-undergraduate` 和 `03-pku-graduate` 已按最终
 case 目录物化，但三者仍是 `candidate / candidate_pending_human_acceptance`。运行时会以
-`GOLD_NOT_ACCEPTED` 拒绝评分，不计入 Gold 通过率。只有字段语义、必填性、槽样式、
-protected/remove Truth、validation finding、数据权限和 reviewer 记录全部完成人工确认后，
-才能原地改为 accepted 并启用每校三条正式评分回归。
+`GOLD_NOT_ACCEPTED` 拒绝评分，不计入 Gold 通过率。当前三包仍绑定历史 Registry v0.1
+和旧槽形态，不得原地只改状态晋升。
+
+2026-08-13 跨校产品规则已获 Human 确认；W6 仍须按 accepted Registry v0.5 clean break
+重建三校 candidate，完成绑定新 hash 的规则组/例外审查、槽样式、protected/remove Truth、
+validation finding、数据权限和 reviewer 记录后，才能改为 accepted 并启用每校三条
+正式评分回归。
+
+当前测试阶段以准确度为 Gold 核心：来源是否官方只记录，不参与资格或评分。每校产品结果是
+`final-template.docx + fill-contract.yaml` 两份原子绑定的主文件；在 Eval 内分别物化为
+`gold/template.docx + gold/fill-contract.yaml`。`case.yaml`、Registry、reviewer 与报告属于数据集
+元数据/验收证据，不是第三份产品交付物。

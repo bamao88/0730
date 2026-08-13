@@ -1,78 +1,108 @@
 ---
 name: docfit-school-extract
-description: 当用户需要解释当前任务的学校论文模板、书面格式要求或官方示例，并把规则、槽位、冲突和未知项整理成可追溯证据时使用。
+description: 将学校论文 Word 模板、要求文件和字段 Registry 整理为干净、可填写、可复用且经过逐页视觉复核的最终模板。只要任务涉及学校模板提取、样例/说明清理、填写接口、正文代表结构、目录刷新或最终模板质检，都应使用本 Skill。
 ---
 
-# 学校材料证据提取
+# 学校模板整理
 
-读取当前任务提供的学校材料，识别其中能够直接支持格式判断的事实，并输出带来源定位的任务证据。
+你是整项模板整理任务的结果负责人，不是局部对象分类器。先理解学校材料和全局目标，再自行决定
+查看什么、如何分解、何时修改、是否委派、怎样重试以及何时完成。
 
-## 触发范围
+“完整上下文”指完整的认知与访问边界，不是把整份 DOCX/XML/图片一次塞进上下文：你必须知道
+所有输入及其角色，能取得整份文档 inventory，能随时回到全局结构，并由你选择渐进披露路径。
 
-在以下情况使用：
+## 结果定义
 
-- 解释学校论文模板或书面格式要求；
-- 识别模板中的固定文字、条件文字、待填槽位和操作说明；
-- 比较模板、书面要求和官方示例之间的差异；
-- 整理格式规则、适用条件、冲突和未知项。
+得到一份同时满足以下条件的 Word 候选：
 
-## 输入与产物
+- 学校固定身份、制度文字、结构、节、页眉页脚和有效版式得到保留；
+- 操作说明、格式讲解、学生实例和多余样例被清理；
+- 每个保留的学生内容责任都有 Registry-bound 可填写接口；
+- 正文、目录、集合和可选区按当前学校材料形成可复用结构；
+- 精确最终候选已重新读取、渲染、逐页目视复核并通过独立验证。
 
-输入仅限当前任务提供的学校模板、书面要求、官方示例、适用性说明和用户确认。
+应用只负责不可变输入、权限/预算/观测和客观发布后置条件。不要等待应用分配 work item、crop、
+region 或下一步；这些概念不属于本 Skill。
 
-产物是 `scope: current_task_only` 的证据集合，包括：
+## 开始任务
 
-- 实际使用的来源及其哈希、对象引用或页码定位；
-- 可直接观察的事实和有证据支持的格式规则；
-- 模板文字分类、适用条件和候选 Tool 参数；
-- 未解决冲突、未知项和最小证据请求。
+1. 盘点学校模板、要求文件、Registry、目标和输出边界，记录各自 hash/路径/角色。
+2. 用 `docx_inspect` 获取整份模板的可查询 inventory；不要把首次 focus 当成语义边界。
+3. 建立基线渲染和页面总览，形成对封面、声明、摘要、目录、正文、参考文献、附录等区域的
+   全局认识。结构事实与视觉事实互补，不能互相替代。
+4. 识别需要跨区域比较、需要页面证据或适合只读委派的部分，然后自主安排处理顺序。
+5. 只在当前判断需要时读取下面对应 reference；案例是判断方法，不是所有学校的固定清单。
 
-字段说明见 `.claude/skills/docfit-school-extract/references/output-schema.md`。
+## Reference 路由
 
-## 不可违反的核心边界
-
-1. 只分析当前任务提供的学校材料，不引入其他任务或历史学校结论。
-2. 每项规则都必须引用具体来源；证据不足时保留未知，不凭经验补全。
-3. 所有输入材料保持只读；此 Skill 不修改任何文档。
-4. Knowledge 只提供通用识别方法，不能提供或覆盖学校的具体要求。
-5. 来源冲突必须保留，除非当前材料或用户确认给出了明确的裁决依据。
-
-输入只读是本 Skill 的行为合同，不是主 Agent 的文件系统 sandbox。Bash/Write 虽然对主
-Agent 完全开放，本 Skill 仍不得用它们修改输入文档。
-
-## 根据证据选择下一步
-
-| 当前情况 | 下一步 | 读取参考 |
-| --- | --- | --- |
-| 来源身份、版本或适用范围不清楚 | 先建立来源清单 | `.claude/skills/docfit-school-extract/references/evidence-and-conflicts.md` |
-| 需要判断一段模板文字的作用 | 执行模板文字分类 | `.claude/skills/docfit-school-extract/references/template-text-classification.md` |
-| 两个来源给出不同要求 | 保留两条证据并判断能否裁决 | `.claude/skills/docfit-school-extract/references/evidence-and-conflicts.md` |
-| 结构结果不能说明页面位置或视觉分组 | 建立基线渲染并查看相关页面 | `.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md` |
-| 材料很大且存在互不重叠的分析范围 | 可选委派只读分析 | `.claude/skills/docfit-school-extract/references/delegation-task-packet.md` |
-| 证据已经足够 | 按输出合同整理结果 | `.claude/skills/docfit-school-extract/references/output-schema.md` |
-| 情形不在常规路径中 | 对照典型场景和反例 | `.claude/skills/docfit-school-extract/references/scenarios-and-edge-cases.md` |
-
-## Tool 与 references 路由
-
-| 目的 | Tool |
+| 当前问题 | 读取 |
 | --- | --- |
-| 读取结构、样式、对象和来源哈希 | `mcp__docfit__docx_inspect` |
-| 为视觉判断建立学校材料的基线渲染 | `mcp__docfit__docx_render`，使用 `baseline` intent |
-| 查看已有渲染中的页面或局部图像 | `mcp__docfit__docx_visual_review` |
+| 固定文字、说明、示例值、填写位置难以区分 | [模板文字分类](references/template-text-classification.md) |
+| 正文代表块、标题层级、图表/公式/列表样式 | [正文代表结构](references/body-structure.md) |
+| 目录、题注、字段缓存、标题来源与层级 | [生成内容与目录](references/generated-content-and-toc.md) |
+| 参考文献、成果、致谢、附录、条件区域 | [集合与可选区](references/collections-and-optional-sections.md) |
+| 文档很大或可拆成互不冲突的分析范围 | [委派策略](references/delegation-strategy.md) |
+| 材料冲突、证据不足、对象边界或有效样式不确定 | [证据与冲突](references/evidence-and-conflicts.md) |
+| 修改后复核、最终逐页检查、完成证据 | [完成与视觉复核](references/completion-and-visual-review.md) |
 
-Tool 的选择和失败恢复见 `.claude/skills/docfit-school-extract/references/tool-usage-and-error-recovery.md`。
+## Tool 模型
 
-## 完成检查清单
+五个 Tool 是可组合的领域能力，不拥有流程状态：
 
-- [ ] 所有使用过的来源都有哈希和具体定位。
-- [ ] 可观察事实、解释后的规则和用户确认彼此分开。
-- [ ] 每项规则都写明适用对象和适用条件。
-- [ ] 必要的模板文字已经分类。
-- [ ] 冲突和未知项没有被静默消解。
-- [ ] Knowledge 没有被当作学校事实。
-- [ ] 任何输入文档都没有被修改。
-- [ ] 输出符合 `scope: current_task_only`。
+| Tool | 用途 |
+| --- | --- |
+| `docx_inspect` | 读取整份结构、样式、对象、风险和 snapshot-bound object refs |
+| `docx_render` | 为某个精确 DOCX 建立视觉快照 |
+| `docx_visual_review` | 按你选择的页面、区域或对比范围返回图像证据 |
+| `docx_edit` | 对你明确选择的对象执行原子修改，产生新 DOCX snapshot |
+| `docx_validate` | 独立检查最终 package、hash、填写痕迹和视觉证据绑定 |
 
-## 最终回复要求
+每次修改后旧 object ref 都失效；重新 inspect 新版本再继续。把可共同判断且不冲突的修改批量提交，
+但不要为了减少调用把语义无关或父子冲突的操作塞进一批。Tool 拒绝只说明机械前提没有满足，
+根据反馈重新取证或调整操作；不要把 Tool 错误当成学校语义结论。
 
-说明证据是否完整，并列出已确认规则、模板文字分类、冲突、未知项和来源定位。若证据不足，只提出能够改变结论的最小补充请求。
+所有 DOCX 修改只通过 `mcp__docfit__docx_edit` 完成。输入保持只读；中间版本写入任务 `work/`，
+不得直接写入发布目录。
+
+## 语义与确定性边界
+
+你负责判断：
+
+- 哪些文字是固定内容、说明、示例、学生值或生成缓存；
+- 哪个对象才是实际填写位置；
+- 哪一块最能代表本校正文结构；
+- 哪些最终标题进入目录以及层级；
+- 集合是否为同一个逻辑责任；
+- 哪些区域可选、冲突如何合并、何时需要用户确认。
+
+Tool/应用只守客观不变量：对象存在且 ref 绑定当前 hash、Registry field ID 存在、编辑原子提交、
+输入不被覆盖、DOCX 可重开、字段/边界未机械损坏、视觉证据绑定最终 Word、输出和 Fill Contract
+hash 一致。不要要求代码替你通过标题词、编号位置或页面前后关系决定学校语义。
+
+## 执行循环
+
+围绕结果循环，而不是围绕预设区域状态机循环：
+
+1. 从全局 inventory/页面认识中选择当前最有信息价值的对象或区域；
+2. 补足完成该判断所需的结构、Registry、相邻区域或视觉证据；
+3. 必要时委派只读分析，由你保留跨区事实、冲突合并和最终修改权；
+4. 使用新鲜 refs 原子修改，读取机械回执并复核变化；
+5. 返回全局结构确认职责没有丢失、重复或跨区冲突；
+6. 继续、重试、换证据路径或提出最小用户问题。
+
+不要机械地逐段、逐页或逐字段遍历；简单模板可以直接处理，大模板可以按区域或“结构分析/视觉
+检查”分解。分解是你的选择，不是固定流水线。
+
+## 完成
+
+完成前必须读取 [完成与视觉复核](references/completion-and-visual-review.md)，并确保：
+
+- 最终候选来自最后一次成功原子编辑，且所有判断回到过全局视野；
+- 每个保留区域的固定责任与填写责任闭合，没有孤立标题、重复接口或遗留样例；
+- `docx_render` 针对精确最终 hash，所有最终页都被实际查看；
+- blocking 视觉问题已修复，修复后的新版本重新全页检查；
+- `docx_validate` 针对同一最终 Word、render 和逐页结论通过；
+- 最终返回精确候选路径、render ref、完整页码集合、findings 和简洁总结。
+
+证据不足时不要猜测完成；先尝试其他可访问证据。只有缺失信息确实会改变结果且无法从当前材料
+取得时，才提出最小问题。

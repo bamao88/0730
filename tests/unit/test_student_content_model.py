@@ -74,19 +74,19 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
                         "content_type": "text",
                     },
                     {
-                        "field_id": "body.heading.level1",
+                        "field_id": "body.heading.outline1",
                         "label": "Chapter heading",
                         "meaning": "A first-level body heading.",
                         "content_type": "text",
                     },
                     {
-                        "field_id": "body.heading.level2",
+                        "field_id": "body.heading.outline2",
                         "label": "Section heading",
                         "meaning": "A second-level body heading.",
                         "content_type": "text",
                     },
                     {
-                        "field_id": "body.heading.level3",
+                        "field_id": "body.heading.outline3",
                         "label": "Subsection heading",
                         "meaning": "A third-level body heading.",
                         "content_type": "text",
@@ -273,7 +273,7 @@ def test_postprocessing_ignores_field_id_on_an_unclassified_annotation(
         "annotations": [
             annotation,
             _annotation(ids[1], "body.figure"),
-            _annotation(ids[2], "body.heading.level1"),
+            _annotation(ids[2], "body.heading.outline1"),
             _annotation(ids[3], "body.paragraph"),
             _annotation(ids[4], "references.entries"),
         ],
@@ -303,7 +303,7 @@ def test_postprocessing_preserves_source_order_and_derives_field_results(
         "annotations": [
             _annotation(ids[0], "thesis.title.en"),
             _annotation(ids[1], "body.figure"),
-            _annotation(ids[2], "body.heading.level1"),
+            _annotation(ids[2], "body.heading.outline1"),
             _annotation(ids[3], "body.paragraph"),
             _annotation(ids[4], "references.entries"),
         ],
@@ -326,7 +326,7 @@ def test_postprocessing_preserves_source_order_and_derives_field_results(
     assert [item["field_id"] for item in model["items"]] == [
         "thesis.title.en",
         "body.figure",
-        "body.heading.level1",
+        "body.heading.outline1",
         "body.paragraph",
         "references.entries",
     ]
@@ -334,7 +334,7 @@ def test_postprocessing_preserves_source_order_and_derives_field_results(
     assert results["body.figure"]["item_count"] == 1
     assert set(results) == {
         "thesis.title.en",
-        "body.heading.level1",
+        "body.heading.outline1",
         "body.figure",
         "body.paragraph",
         "references.entries",
@@ -365,12 +365,12 @@ def test_postprocessing_normalizes_only_isolated_numbered_heading_outlier(
     payload = {
         "schema_version": 3,
         "annotations": [
-            _annotation(ids[0], "body.heading.level2"),
-            _annotation(ids[1], "body.heading.level3"),
-            _annotation(ids[2], "body.heading.level2"),
-            _annotation(ids[3], "body.heading.level3"),
-            _annotation(ids[4], "body.heading.level3"),
-            _annotation(ids[5], "body.heading.level3"),
+            _annotation(ids[0], "body.heading.outline2"),
+            _annotation(ids[1], "body.heading.outline3"),
+            _annotation(ids[2], "body.heading.outline2"),
+            _annotation(ids[3], "body.heading.outline3"),
+            _annotation(ids[4], "body.heading.outline3"),
+            _annotation(ids[5], "body.heading.outline3"),
         ],
         "relations": [],
         "summary": "Synthetic semantic annotations.",
@@ -384,12 +384,12 @@ def test_postprocessing_normalizes_only_isolated_numbered_heading_outlier(
     )
 
     assert [item["field_id"] for item in model["items"]] == [
-        "body.heading.level2",
-        "body.heading.level3",
-        "body.heading.level3",
-        "body.heading.level3",
-        "body.heading.level3",
-        "body.heading.level3",
+        "body.heading.outline2",
+        "body.heading.outline3",
+        "body.heading.outline3",
+        "body.heading.outline3",
+        "body.heading.outline3",
+        "body.heading.outline3",
     ]
     section_id = model["items"][0]["content_id"]
     assert all(
@@ -588,7 +588,7 @@ def test_batching_is_execution_only_and_merges_every_source_item_once(
             item = by_id[source_content_id]
             field_id = {
                 "obj-title": "thesis.title.en",
-                "obj-body-1": "body.heading.level1",
+                "obj-body-1": "body.heading.outline1",
                 "obj-picture": "body.figure",
                 "obj-body-2": "body.paragraph",
                 "obj-ref": "references.entries",
@@ -742,7 +742,7 @@ def test_batches_run_with_bounded_concurrency_and_merge_in_source_order(
         field_id = {
             "obj-title": "thesis.title.en",
             "obj-picture": "body.figure",
-            "obj-body-1": "body.heading.level1",
+            "obj-body-1": "body.heading.outline1",
             "obj-body-2": "body.paragraph",
             "obj-ref": "references.entries",
         }[source_item["source_object_ids"][0]]
@@ -825,7 +825,7 @@ def test_successful_batch_checkpoints_are_reused_after_a_later_failure(
         field_id = {
             "obj-title": "thesis.title.en",
             "obj-picture": "body.figure",
-            "obj-body-1": "body.heading.level1",
+            "obj-body-1": "body.heading.outline1",
             "obj-body-2": "body.paragraph",
             "obj-ref": "references.entries",
         }[source_item["source_object_ids"][0]]

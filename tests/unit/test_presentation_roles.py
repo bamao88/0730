@@ -15,7 +15,7 @@ def _student_content() -> dict[str, Any]:
         "source_sha256": "a" * 64,
         "items": [
             _item("c0", "s0", "p0", "thesis.title.zh", "text", 1),
-            _item("c1", "s1", "p1", "body.heading.level1", "text", 2),
+            _item("c1", "s1", "p1", "body.heading.outline1", "text", 2),
             _item("c2", "s2", "p2", "body.table.caption", "text", 3),
             _item("c3", "s3", "p3", "body.equation", "equation", 4),
             _item("c4", "s4", "t1", "body.table", "table", 5),
@@ -88,7 +88,7 @@ def _preset() -> GeneralStylePreset:
                 "components": {"content": "style.front.title.zh"},
             },
             "body.chapters": {"handling": "structured_content_container", "components": {}},
-            "body.heading.level1": {
+            "body.heading.outline1": {
                 "handling": "styled_content",
                 "components": {"content": "style.body.heading.1"},
             },
@@ -125,7 +125,7 @@ def test_prewrite_inventory_consumes_model_roles_without_reclassification() -> N
 
     assert inventory.field_ids == (
         "body.equation",
-        "body.heading.level1",
+        "body.heading.outline1",
         "body.table",
         "body.table.caption",
     )

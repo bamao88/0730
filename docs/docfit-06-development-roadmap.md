@@ -644,8 +644,9 @@ OfficeCLI/LibreOffice，不启动视觉容器。
 - 产品 resolver 解析 `docDefaults`、默认段落/字符样式、`basedOn`、toggle、段落/字符样式
   和直接格式，并输出属性级 provenance、coverage 与 unresolved；
 - 模板 publish 从最终 DOCX 快照捕获每个 slot 的有效属性，生成 template-bound Style
-  Contract Set，并在发布前重新打开代表 occurrence 验证；用户可见输出仍只有一个
-  `final-template.docx`，正式合同与审计留在任务内部；
+  Contract Set，并在发布前重新打开代表 occurrence 验证；目标用户可见主交付物为原子绑定的
+  `final-template.docx + fill-contract.yaml`，报告、回执和审计仍留在任务内部；当前代码只公开
+  Word、把 JSON 契约留在内部，因此发布层尚有一个明确的两文件交付缺口；
 - Placement、Fill 与 Projection 共用 digest-bound 引用。正文、参考文献、题注、公式和
   drawing 的最终段落都生成稳定 paraId occurrence；写入层不修改共享学校命名样式，而是
   只对每个 occurrence 显式写入合同拥有的属性；

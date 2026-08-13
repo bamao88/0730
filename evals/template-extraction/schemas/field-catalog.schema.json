@@ -1,14 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://docfit.local/schemas/content-field-catalog-v0.1.json",
+  "$id": "https://docfit.local/schemas/content-field-catalog.json",
   "title": "DocFit content field registry consumer schema",
   "type": "object",
   "required": ["schema_version", "registry_id", "registry_version", "status", "open_world", "fields"],
   "properties": {
-    "schema_version": {"const": "docfit-content-field-registry/v0.1"},
+    "schema_version": {
+      "enum": [
+        "docfit-content-field-registry/v0.1",
+        "docfit-content-field-registry/v0.2"
+      ]
+    },
     "registry_id": {"const": "docfit.thesis.content_fields"},
     "registry_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
-    "status": {"enum": ["development_baseline", "human_accepted"]},
+    "status": {"enum": ["development_baseline", "human_accepted", "accepted"]},
     "open_world": {"const": true},
     "fields": {
       "type": "array",

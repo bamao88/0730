@@ -20,10 +20,15 @@ from docfit.app.prepare_template import (
     _append_agent_live_event,
     _complete_semantic_work,
     _ExecutionMetrics,
+    _load_persistent_agent_metrics,
+    _persist_agent_metrics,
     _review_final_document,
     _run_sdk_session,
     _run_semantic_work_item,
+    _semantic_session_key,
+    _SemanticSessionCoordinator,
     _validated_visual_pages,
+    _with_persistent_agent_evidence,
     build_prepare_template_options,
     build_prepare_template_prompt,
     prepare_template_task,
@@ -31,7 +36,7 @@ from docfit.app.prepare_template import (
     run_template_agent,
 )
 from docfit.app.settings import AgentBackend
-from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+from docfit.tools.runtime import JsonObject, ToolFailure, atomic_write_json, sha256_file
 from docfit.tools.template_tools import (
     ReviewBatchState,
     SemanticWorkItemState,
@@ -40,6 +45,7 @@ from docfit.tools.template_tools import (
     _mechanical_blank_segments,
     _operation_field_assignments,
     _translate_operation,
+    _translate_operations,
     _validated_decision_operations,
     _validated_work_item_operations,
     build_template_review_tool_server,
@@ -47,7 +53,7 @@ from docfit.tools.template_tools import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TEMPLATE = PROJECT_ROOT / "evals/template-extraction/fixtures/S00-minimal-pass/actual-template.docx"
-REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
+REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml"
 COUNTS = {"slot": 0, "remove": 0, "manual": 0, "gap": 0, "unresolved": 0}
 
 
@@ -56,6 +62,15 @@ def _request(tmp_path: Path) -> PrepareTemplateRequest:
         school_template=TEMPLATE,
         output_directory=tmp_path / "prepared-task",
     )
+
+
+def _write_fill_contract(prepared: Any, template: Path) -> Path:
+    path = (
+        prepared.task_root
+        / "work/.docfit/template-workspace-v1/publication/fill-contract.json"
+    )
+    atomic_write_json(path, {"template_sha256": sha256_file(template)})
+    return path
 
 
 def _backend() -> AgentBackend:
@@ -173,6 +188,12 @@ def test_options_are_role_scoped_and_application_owned(
     output_schema = str(options.output_format)
     assert ("accepted" in output_schema) == (role == "semantic")
     assert ("defect" in output_schema) == (role == "visual")
+    if role == "semantic":
+        system_prompt = str(options.system_prompt)
+        assert "submit register_body_member" in system_prompt
+        assert "never search for a structure container" in system_prompt
+        assert "never submit materialize_structure or a members array" in system_prompt
+        assert "already_registered_body_roles" in system_prompt
 
 
 def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> None:
@@ -182,54 +203,42 @@ def test_prompts_keep_semantic_and_full_page_roles_separate(tmp_path: Path) -> N
 
     assert "not only its target anchor" in semantic
     assert "batch all clear operations" in semantic
-    assert "Initial Registry candidates are intentionally target-only" in semantic
-    assert "An unqueried sibling never counts as having no candidate" in semantic
+    assert "candidates are supplied for every visible top-level object" in semantic
+    assert "explicit empty matches" in semantic
     assert "mechanical_blank_segments" in semantic
     assert "separate advisor-name and title blanks" in semantic
     assert "absence of a whitespace-only segment never proves" in semantic
     assert "20 年 月 日" in semantic
     assert "materialize that whole date paragraph" in semantic
     assert "verify the candidate's meaning" in semantic
-    assert "returned for that exact target object" in semantic
-    assert "can never be reused on another sibling" in semantic
+    assert "returned for that exact object" in semantic
     assert "never materialize the parent paragraph" in semantic
     assert "collapse them into one interface" in semantic
     assert "must never be reused" in semantic
     assert "preceding_landmarks" in semantic
     assert "resubmitting every field responsibility" in semantic
     assert "never probe with a smaller test edit" in semantic
-    assert "materialize one representative content interface" in semantic
     assert "One content responsibility on one logical page gets exactly one interface" in semantic
     assert "materialize the actual sample object, never both" in semantic
     assert "cardinality=many describes multiple data items" in semantic
     assert "one representative collection slot per logical collection" in semantic
     assert "checkpoint references.entries>=1 or achievements.entries>=1" in semantic
     assert "never materialize another slot" in semantic
-    assert "第一章 文献综述" in semantic
-    assert "Never turn that fixed heading into a standalone" in semantic
-    assert "materialized_field_locations.body.paragraph" in semantic
-    assert "global materialized_fields count can never establish chapter ownership" in semantic
-    assert "Only a visible body.paragraph slot under this exact" in semantic
-    assert "unsupported claim about an earlier crop can never justify deleting it" in semantic
     assert "materialize exactly one appendix.title" in semantic
     assert "Never leave the appendix heading without both interfaces" in semantic
-    assert "Reserve the repeatable body.chapters structure" in semantic
-    assert "immediately ends the fixed-chapter continuation exception" in semantic
-    assert "earlier fixed-chapter body.paragraph never satisfies" in semantic
-    assert "only through materialize_structure" in semantic
-    assert "partial structure" in semantic
-    assert "does not impose a fixed H1/H2/H3 checklist" in semantic
-    assert "materialized_structure_members.body.chapters" in semantic
-    assert "Tool automatically carries forward every existing member" in semantic
-    assert "materialize a real sample body paragraph as body.paragraph" in semantic
-    assert "request that heading's exact object_id for run-level context" in semantic
-    assert "That fixed-chapter scope continues across later isolated crops" in semantic
-    assert "never call them generic from placeholder text or style alone" in semantic
-    assert "nearest_preceding_heading names this exact fixed chapter" in semantic
-    assert "never use the global count or create a second body.paragraph there" in semantic
+    assert "exactly one reusable body.chapters demonstration" in semantic
+    assert "body.heading.outline1" in semantic
+    assert "body.heading.outline2" in semantic
+    assert "body.heading.outline3" in semantic
+    assert "Named examples such as 文献综述 or 结论与展望" in semantic
+    assert "do not get their own heading or body interfaces" in semantic
+    assert "use register_body_member with one object_id and one field_id" in semantic
+    assert "never search for a structure container" in semantic
+    assert "never submit materialize_structure or members" in semantic
+    assert "already_registered_body_roles" in semantic
     assert "carrying slot metadata is an already materialized interface" in semantic
-    assert "the target anchor alone is never a valid refresh" in semantic
-    assert "include every object listed in required_body_heading_candidates" in semantic
+    assert "Select entries only from title_candidates" in semantic
+    assert "does not infer which fixed titles belong in the TOC" in semantic
     assert "prior locations only" in semantic
     assert "abstract page still needs its own slot" in semantic
     assert "formatting annotation is not thereby a fixed label" in semantic
@@ -276,7 +285,7 @@ def test_decision_contract_accepts_zero_operations_only_for_preserve() -> None:
     assert apply_error.value.code == "apply_operations_missing"
 
 
-def test_body_heading_requires_parent_structure_without_fixed_depth_gate() -> None:
+def test_body_heading_registration_hides_structure_protocol_from_agent() -> None:
     heading = "obj-" + "a" * 24
     with pytest.raises(ToolFailure) as caught:
         _validated_work_item_operations(
@@ -286,42 +295,107 @@ def test_body_heading_requires_parent_structure_without_fixed_depth_gate() -> No
                 {
                     "action": "materialize_slot",
                     "object_id": heading,
-                    "field_id": "body.heading.level2",
+                    "field_id": "body.heading.outline2",
                 }
             ],
         )
 
     assert caught.value.code == "body_heading_requires_structure"
-    assert caught.value.suggested_actions == ("materialize_body_structure",)
+    assert caught.value.suggested_actions == ("register_body_member",)
 
-    partial_structure = {
-        "action": "materialize_structure",
+    registration = {
+        "action": "register_body_member",
         "object_id": heading,
-        "field_id": "body.chapters",
-        "members": [
-            {
-                "object_id": heading,
-                "field_id": "body.heading.level2",
-            }
-        ],
+        "field_id": "body.heading.outline2",
     }
     assert _validated_work_item_operations(
         {"kind": "local_region", "region": {"knowledge_signals": []}},
         "apply",
-        [partial_structure],
-    ) == [partial_structure]
+        [registration],
+    ) == [registration]
+    assert _translate_operation(registration) == {
+        "action": "materialize_structure",
+        "object_ref": {"object_id": heading},
+        "field_id": "body.chapters",
+        "members": [
+            {
+                "object_ref": {"object_id": heading},
+                "field_id": "body.heading.outline2",
+            }
+        ],
+    }
+
+
+def test_existing_body_role_rejects_registration_without_exposing_container() -> None:
+    heading = "obj-" + "a" * 24
+    with pytest.raises(ToolFailure) as caught:
+        _validated_work_item_operations(
+            {
+                "kind": "local_region",
+                "region": {"knowledge_signals": ["body-structure"]},
+                "checkpoint_summary": {
+                    "body_structure_gate": {
+                        "member_field_counts": {"body.heading.outline2": 1}
+                    }
+                },
+            },
+            "apply",
+            [
+                {
+                    "action": "register_body_member",
+                    "object_id": heading,
+                    "field_id": "body.heading.outline2",
+                }
+            ],
+        )
+
+    assert caught.value.code == "body_member_already_registered"
+    assert "structure" in caught.value.message
+
+
+def test_multiple_body_role_registrations_become_one_ordered_structure_edit() -> None:
+    later = "obj-" + "b" * 24
+    earlier = "obj-" + "a" * 24
+    translated = _translate_operations(
+        [
+            {
+                "action": "register_body_member",
+                "object_id": later,
+                "field_id": "body.heading.outline2",
+            },
+            {"action": "remove_object", "object_id": "obj-" + "c" * 24},
+            {
+                "action": "register_body_member",
+                "object_id": earlier,
+                "field_id": "body.paragraph",
+            },
+        ],
+        {
+            "region": {
+                "target": {"object_id": later, "document_order": 20},
+                "adjacent_objects": [
+                    {"object_id": earlier, "document_order": 10}
+                ],
+            }
+        },
+    )
+
+    structures = [
+        item for item in translated if item["action"] == "materialize_structure"
+    ]
+    assert len(structures) == 1
+    assert structures[0]["object_ref"] == {"object_id": earlier}
+    assert [
+        member["field_id"] for member in structures[0]["members"]
+    ] == ["body.paragraph", "body.heading.outline2"]
 
 
 def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
+    entry_id = "obj-" + "b" * 24
     operation = {
         "action": "refresh_toc",
         "object_id": "obj-" + "a" * 24,
-        "entries": [
-            {
-                "object_id": "obj-" + "b" * 24,
-                "level": 1,
-            }
-        ],
+        "entries": [{"object_id": entry_id, "level": 1}],
     }
 
     with pytest.raises(ToolFailure) as local_error:
@@ -340,6 +414,22 @@ def test_toc_refresh_is_reserved_for_generated_content_work_item() -> None:
         "apply",
         [operation],
     ) == [operation]
+
+    with pytest.raises(ToolFailure) as parameters_error:
+        _validated_work_item_operations(
+            {"kind": "generated_content"},
+            "apply",
+            [{**operation, "field_id": "generated.toc"}],
+        )
+    assert parameters_error.value.code == "generated_content_parameters_application_owned"
+
+    with pytest.raises(ToolFailure) as entries_error:
+        _validated_work_item_operations(
+            {"kind": "generated_content"},
+            "apply",
+            [{**operation, "entries": []}],
+        )
+    assert entries_error.value.code == "generated_content_entries_missing"
 
     with pytest.raises(ToolFailure) as mixed_error:
         _validated_work_item_operations(
@@ -381,14 +471,18 @@ def test_local_generated_content_rejects_every_mutation(operation: JsonObject) -
     assert caught.value.code == "local_generated_content_read_only"
 
 
-def test_initial_registry_candidates_are_limited_to_current_target() -> None:
+def test_initial_registry_candidates_cover_every_visible_top_level_object() -> None:
     calls: list[str] = []
 
     class FakeRegistry:
         def search(self, text: str, *, limit: int) -> list[JsonObject]:
             calls.append(text)
             assert limit == 5
-            return [{"field_id": "submission.date"}]
+            return (
+                [{"field_id": "submission.date"}]
+                if text.startswith("20 年 月 日")
+                else []
+            )
 
     class FakeService:
         registry = FakeRegistry()
@@ -405,7 +499,8 @@ def test_initial_registry_candidates_are_limited_to_current_target() -> None:
                     {
                         "object_id": "obj-" + "b" * 24,
                         "text": "无关的相邻对象",
-                    }
+                    },
+                    {"object_id": "obj-" + "c" * 24, "text": "   "},
                 ],
             }
         },
@@ -419,19 +514,79 @@ def test_initial_registry_candidates_are_limited_to_current_target() -> None:
         {
             "object_id": "obj-" + "a" * 24,
             "matches": [{"field_id": "submission.date"}],
-        }
+        },
+        {"object_id": "obj-" + "b" * 24, "matches": []},
+        {"object_id": "obj-" + "c" * 24, "matches": []},
     ]
-    assert calls == ["20 年 月 日 20年月日"]
+    assert calls == ["20 年 月 日 20年月日", "无关的相邻对象 无关的相邻对象"]
     assert state.offered_field_ids == {"submission.date"}
     assert state.offered_fields_by_object == {
         "obj-" + "a" * 24: {"submission.date"}
     }
 
 
-def test_registry_candidate_is_bound_to_queried_object_and_descendants() -> None:
+def test_application_does_not_prune_body_candidates_by_inferred_position() -> None:
+    early_paragraph = "obj-" + "a" * 24
+    outline3 = "obj-" + "b" * 24
+    later_paragraph = "obj-" + "c" * 24
+
+    class FakeService:
+        pass
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {
+                    "object_id": early_paragraph,
+                    "text": "章前正文样例",
+                    "document_order": 10,
+                },
+                "adjacent_objects": [
+                    {
+                        "object_id": outline3,
+                        "text": "1.1 二级节标题",
+                        "document_order": 20,
+                    },
+                    {
+                        "object_id": later_paragraph,
+                        "text": "节后正文样例",
+                        "document_order": 30,
+                    },
+                ],
+            },
+            "checkpoint_summary": {
+                "body_structure_gate": {"member_field_counts": {}}
+            },
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    candidates = [
+        {"field_id": "body.chapters"},
+        {"field_id": "body.paragraph"},
+    ]
+
+    early, _ = state._filter_registered_body_candidates(
+        candidates,
+        object_id=early_paragraph,
+    )
+    later, _ = state._filter_registered_body_candidates(
+        candidates,
+        object_id=later_paragraph,
+    )
+
+    assert early == [{"field_id": "body.paragraph"}]
+    assert later == [{"field_id": "body.paragraph"}]
+
+
+def test_prefetched_registry_candidate_is_bound_to_each_object_and_descendants() -> None:
     target = "obj-" + "a" * 24
     child = "obj-" + "b" * 24
     sibling = "obj-" + "c" * 24
+    unseen = "obj-" + "d" * 24
 
     class FakeRegistry:
         def search(self, _text: str, *, limit: int) -> list[JsonObject]:
@@ -474,18 +629,66 @@ def test_registry_candidate_is_bound_to_queried_object_and_descendants() -> None
     state.validate_field_assignments(
         [{"action": "materialize_slot", "object_id": child, "field_id": "appendix.title"}]
     )
+    state.validate_field_assignments(
+        [
+            {
+                "action": "materialize_slot",
+                "object_id": sibling,
+                "field_id": "appendix.title",
+            }
+        ]
+    )
     with pytest.raises(ToolFailure) as caught:
         state.validate_field_assignments(
-            [
-                {
-                    "action": "materialize_slot",
-                    "object_id": sibling,
-                    "field_id": "appendix.title",
-                }
-            ]
+            [{"action": "materialize_slot", "object_id": unseen, "field_id": "appendix.title"}]
         )
 
     assert caught.value.code == "field_not_offered_for_object"
+
+
+def test_initial_candidates_mark_existing_body_role_without_reoffering_it() -> None:
+    target = "obj-" + "d" * 24
+
+    class FakeRegistry:
+        def search(self, _text: str, *, limit: int) -> list[JsonObject]:
+            assert limit == 5
+            return [{"field_id": "body.heading.outline3"}]
+
+    class FakeService:
+        registry = FakeRegistry()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "checkpoint_summary": {
+                "body_structure_gate": {
+                    "member_field_counts": {"body.heading.outline3": 1}
+                }
+            },
+            "region": {
+                "target": {"object_id": target, "text": "1.2 重复二级节标题"},
+                "adjacent_objects": [],
+            },
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+
+    assert state.initial_candidates() == [
+        {
+            "object_id": target,
+            "matches": [],
+            "already_registered_body_roles": ["body.heading.outline3"],
+            "guidance": (
+                "These body roles already have their single representative. Remove this "
+                "object only if it is a redundant sample; otherwise preserve it. Do not "
+                "search for or edit the structure container."
+            ),
+        }
+    ]
+    assert state.offered_field_ids == set()
 
 
 def test_corrected_retry_cannot_drop_declared_field_responsibilities() -> None:
@@ -516,6 +719,57 @@ def test_corrected_retry_cannot_drop_declared_field_responsibilities() -> None:
     assert caught.value.code == "retry_dropped_declared_fields"
 
 
+def test_failed_object_field_binding_does_not_poison_corrected_retry() -> None:
+    target = "obj-" + "c" * 24
+    sibling = "obj-" + "d" * 24
+
+    class FakeService:
+        registry = object()
+
+    state = SemanticWorkItemState(
+        service=FakeService(),  # type: ignore[arg-type]
+        work_item={
+            "region": {
+                "target": {"object_id": target, "text": "姓名"},
+                "adjacent_objects": [
+                    {"object_id": sibling, "type": "paragraph", "text": "职称"}
+                ],
+            }
+        },
+        images=[],
+        internal_region_ref="internal",
+        allow_preserve=True,
+        start_progress={},
+    )
+    state.offer_fields(target, {"author.name.zh"}, descendants=state.agent_work_item)
+
+    with pytest.raises(ToolFailure) as caught:
+        state.prepare_apply_operations(
+            [
+                {
+                    "action": "materialize_slot",
+                    "object_id": sibling,
+                    "field_id": "author.name.zh",
+                }
+            ]
+        )
+
+    assert caught.value.code == "field_not_offered_for_object"
+    assert state.declared_apply_fields is None
+    normalized, absorbed, prior = state.prepare_apply_operations(
+        [
+            {
+                "action": "materialize_slot",
+                "object_id": target,
+                "field_id": "author.name.zh",
+            }
+        ]
+    )
+    assert normalized[0]["object_id"] == target
+    assert absorbed == []
+    assert prior is None
+
+
 def test_structure_parent_is_not_a_separate_object_field_responsibility() -> None:
     anchor = "obj-" + "7" * 24
     heading = "obj-" + "8" * 24
@@ -527,14 +781,14 @@ def test_structure_parent_is_not_a_separate_object_field_responsibility() -> Non
             "object_id": anchor,
             "members": [
                 {
-                    "field_id": "body.heading.level1",
+                    "field_id": "body.heading.outline1",
                     "object_id": heading,
                 }
             ],
         }
     )
 
-    assert assignments == {(heading, "body.heading.level1")}
+    assert assignments == {(heading, "body.heading.outline1")}
 
 
 def test_corrected_retry_may_split_one_field_across_sibling_runs() -> None:
@@ -607,7 +861,7 @@ def test_corrected_retry_may_add_required_responsibility() -> None:
             {
                 "action": "materialize_slot",
                 "object_id": second,
-                "field_id": "body.heading.level1",
+                "field_id": "body.heading.outline1",
             },
         ]
     )
@@ -1164,6 +1418,157 @@ def test_application_does_not_advance_again_when_edit_completed_navigation(
     )
 
 
+def test_persistent_agent_metrics_accumulate_across_process_boundaries(
+    tmp_path: Path,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    first = _ExecutionMetrics()
+    first.add_client(startup_wall_duration_ms=30)
+    first.add_result(
+        ResultMessage(
+            subtype="success",
+            duration_ms=120,
+            duration_api_ms=90,
+            is_error=False,
+            num_turns=3,
+            session_id="first-session",
+            terminal_reason="end_turn",
+            structured_output={"status": "accepted", "reason": "first"},
+        ),
+        wall_duration_ms=150,
+    )
+    _persist_agent_metrics(prepared, first)
+
+    resumed = _load_persistent_agent_metrics(prepared)
+    resumed.add_client(startup_wall_duration_ms=30)
+    resumed.add_result(
+        ResultMessage(
+            subtype="success",
+            duration_ms=80,
+            duration_api_ms=60,
+            is_error=False,
+            num_turns=2,
+            session_id="second-session",
+            terminal_reason="end_turn",
+            structured_output={"status": "accepted", "reason": "second"},
+        ),
+        wall_duration_ms=110,
+    )
+    _persist_agent_metrics(prepared, resumed)
+
+    merged = _with_persistent_agent_evidence(
+        prepared,
+        TemplateAgentExecution(
+            structured_output={},
+            tool_uses=(),
+            skills_loaded=(),
+            session_id="current-only",
+            backend="minimax",
+            num_turns=2,
+            duration_ms=80,
+            duration_api_ms=60,
+        ),
+    )
+
+    assert merged.session_id == "second-session"
+    assert merged.session_count == 2
+    assert merged.client_count == 2
+    assert merged.num_turns == 5
+    assert merged.duration_ms == 200
+    assert merged.duration_api_ms == 150
+    assert merged.wall_duration_ms == 320
+
+
+def test_semantic_sdk_session_is_reused_only_inside_bounded_page_group(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    prepared = prepare_template_task(_request(tmp_path))
+    clients: list[Any] = []
+    prompts: list[str] = []
+
+    class FakeClient:
+        def __init__(self, *, options: Any) -> None:
+            self.options = options
+            self.connected = False
+            self.disconnected = False
+            clients.append(self)
+
+        async def connect(self) -> None:
+            self.connected = True
+
+        async def disconnect(self) -> None:
+            self.disconnected = True
+
+    async def fake_query(
+        _prepared: Any,
+        _backend_value: Any,
+        _client: Any,
+        *,
+        role: str,
+        prompt: str,
+        metrics: Any,
+    ) -> ResultMessage:
+        del metrics
+        assert role == "semantic"
+        prompts.append(prompt)
+        return ResultMessage(
+            subtype="success",
+            duration_ms=1,
+            duration_api_ms=1,
+            is_error=False,
+            num_turns=1,
+            session_id=f"session-{len(prompts)}",
+            terminal_reason="end_turn",
+            structured_output={"status": "accepted", "reason": "done"},
+        )
+
+    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", FakeClient)
+    monkeypatch.setattr("docfit.app.prepare_template._run_sdk_query", fake_query)
+    metrics = _ExecutionMetrics()
+    coordinator = _SemanticSessionCoordinator(
+        prepared=prepared,
+        backend=_backend(),
+        config_directory=tmp_path,
+        metrics=metrics,
+    )
+
+    def state(page: int, suffix: str) -> SemanticWorkItemState:
+        return SemanticWorkItemState(
+            service=object(),  # type: ignore[arg-type]
+            work_item={
+                "kind": "local_region",
+                "region": {
+                    "target": {
+                        "object_id": f"obj-{suffix * 24}",
+                        "text": suffix,
+                    },
+                    "evidence": [{"page": page}],
+                },
+            },
+            images=[],
+            internal_region_ref="internal",
+            allow_preserve=True,
+            start_progress={},
+        )
+
+    first = state(1, "a")
+    second = state(1, "b")
+    third = state(2, "c")
+    asyncio.run(coordinator.run(first, group_key=_semantic_session_key(first.work_item)))
+    asyncio.run(coordinator.run(second, group_key=_semantic_session_key(second.work_item)))
+    asyncio.run(coordinator.run(third, group_key=_semantic_session_key(third.work_item)))
+    asyncio.run(coordinator.close())
+
+    assert len(clients) == 2
+    assert metrics.client_count == 2
+    assert metrics.session_count == 0  # fake_query bypasses terminal result collection
+    assert all(client.connected and client.disconnected for client in clients)
+    assert "Load the docfit-school-extract Skill" in prompts[0]
+    assert "previous work item is closed" in prompts[1]
+    assert "Load the docfit-school-extract Skill" in prompts[2]
+
+
 def test_application_owns_visual_cursor_and_agent_sees_only_bound_pages(
     tmp_path: Path,
     monkeypatch: Any,
@@ -1348,6 +1753,7 @@ def test_run_prepare_template_accepts_application_publication_only(tmp_path: Pat
     async def fake_agent(prepared: Any) -> TemplateAgentExecution:
         output = prepared.task_root / "output/final-template.docx"
         shutil.copyfile(prepared.template_path, output)
+        _write_fill_contract(prepared, output)
         return TemplateAgentExecution(
             structured_output={
                 "status": "ok",
@@ -1374,6 +1780,9 @@ def test_run_prepare_template_accepts_application_publication_only(tmp_path: Pat
 
     assert report.status == "built"
     assert Path(report.artifact_path).name == "final-template.docx"
+    assert Path(report.fill_contract_path).name == "fill-contract.json"
+    assert Path(report.fill_contract_path).is_file()
+    assert Path(report.fill_contract_path).is_relative_to(Path(report.task_root))
     trace = Path(report.task_root) / "work/.docfit/template-agent-execution.json"
     assert trace.is_file()
     assert '"orchestrator": "application_owned"' in trace.read_text(encoding="utf-8")
@@ -1389,6 +1798,7 @@ def test_completed_resume_uses_cross_process_agent_evidence_without_rerunning(
         calls += 1
         output = prepared.task_root / "output/final-template.docx"
         shutil.copyfile(prepared.template_path, output)
+        _write_fill_contract(prepared, output)
         for role, tool in (
             ("semantic", "mcp__docfit__template_get_current_work_item"),
             ("semantic", "mcp__docfit__template_submit_current_decision"),
@@ -1431,6 +1841,7 @@ def test_completed_resume_uses_cross_process_agent_evidence_without_rerunning(
 
     assert calls == 1
     assert resumed.template_sha256 == first.template_sha256
+    assert resumed.fill_contract_path == first.fill_contract_path
     assert set(resumed.tool_uses) >= {
         "Skill",
         "mcp__docfit__template_get_current_work_item",

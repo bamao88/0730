@@ -92,9 +92,10 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 ### 1.5 当前任务证据
 
 - 学校模板、要求文件、官方示例和用户确认只放在授权任务目录；
-- `prepare-template` 的 Registry 源由 task-bound service 私下持有；应用先为当前工作项绑定至多
-  五条对象相关候选，Agent 只在证据不足时为一个已返回对象追加有界查询，不能读取或枚举全
-  Registry；提交的字段 ID 必须属于当前工作项已经提供的候选集合；
+- `prepare-template` 的 Registry 源由 task-bound service 私下持有；应用为当前裁图的所有可见
+  顶层对象预取并绑定对象相关候选，同时提供必要子 run。Agent 只在普通证据仍不足时为一个
+  已返回对象追加有界查询，不能读取或枚举全 Registry；提交的字段 ID 必须属于该对象已经提供
+  的候选集合；
 - 每个学校专属结论必须能引用当前任务材料 hash 或当前用户确认；
 - 精确格式值可以被规范化为本次 Tool 调用参数，但不写入长期 profile；
 - 来源冲突或适用范围不明时，Agent 保留证据并询问，不用 Knowledge 补齐；
@@ -111,13 +112,23 @@ evidence、对象修改和包验证能力，但不把其 document/region ref、v
 入口暴露给 Agent。
 
 语义提交最多包含 32 个直接 action operation；应用把短对象 ID 编译为当前 checkpoint 的内部
-引用，校验字段候选集合，原子执行、保护 Word 边界、回读有效结果并返回修改后局部图片。每个
-语义 SDK session 只处理一个工作项，失败最多有界重试，`max_turns` 不会触发无上限新会话。
+引用，校验字段候选集合，原子执行、保护 Word 边界、回读有效结果并返回修改后局部图片。生成
+目录时，Tool 提供可选标题对象以及已经由 Agent 确认的必要正文标题；Agent 显式提交目录条目和
+层级，应用只验证对象身份、层级范围、顺序与必要覆盖后执行，不从标题文案、编号或固定标题表
+反推语义。
+
+相邻同页语义工作项复用一个有界的 Claude Agent SDK 原生 client/session；每项结束后重绑当前
+Tool state，并用 continuation prompt 关闭上一工作项语境。跨页、达到上限或异常时轮换 session，
+失败仍只做有界重试，`max_turns` 不会触发无上限新会话。每次 terminal result 以及原生 client
+启动数量、SDK/API/墙钟耗时和 turn 数都持续 checkpoint 到任务目录，因此进程重启不会让运行
+报告低估已经付出的时间与调用成本。
 
 最终视觉检查由应用按内部 cursor 取齐精确版本的所有原生全页 PNG；视觉 Agent 为当前批次每页
 返回 typed clean/defect。只有显式 verdict 才写入视觉 receipt，图片返回本身不计覆盖。缺陷生成
 单页修复工作项；任何编辑按新 document hash 自动失效旧 receipt，并从第一页重查。全页 clean
-后应用调用内部 publication service，只发布 `output/final-template.docx`。该实现沿用 Claude Agent
+后应用调用内部 publication service，原子发布 `output/final-template.docx` 与
+`output/fill-contract.yaml`。契约由应用根据最终精确 Word 快照、Registry、Agent 已接受的语义决定
+和 Tool 回读生成，Agent 不手写契约；任一文件缺失或 hash 绑定不一致都回滚本次发布。该实现沿用 Claude Agent
 SDK 原生 query/Tool loop、custom in-process MCP Tool 和 structured output，不建立通用 Agent
 runtime；Agent 不提交 plan path、compiler 输出或 Word output path。
 
@@ -177,8 +188,8 @@ Truth。图表注、复合封面值等不是简单单父树时，合同必须显
 Registry ID/version/hash 作用域内稳定；改义、拆分、合并或别名变化必须升级版本并提供迁移
 说明，不能在同一 ID 下静默改变含义。当前研发权威为
 `docs/plans/docfit-content-field-registry/DESIGN.md` 与固定的
-`content-fields-v0.1.yaml`。v0.1 保留 54 个字段作为可复现开发基线，但尚未补齐所有值来源、
-Human signoff 和复合关系，不构成公共运行协议、完整 Registry 或 Accepted Gold。
+`content-fields-v0.5.yaml`。v0.5 是新模板与后续内容运行时的 clean-break 合同；v0.1–v0.4
+继续作为已绑定 hash 的不可变历史快照，不构成新运行的兼容 alias。
 
 Registry 的一个字段不等于一个 Word 样式。字段只定义内容语义；独立的模板/兜底绑定
 根据实际展示结构为它声明零个、一个或多个组件角色。配置字段可以不绑定展示角色，

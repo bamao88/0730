@@ -461,7 +461,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
                         "content_type": "text",
                     },
                     {
-                        "field_id": "body.heading.level1",
+                        "field_id": "body.heading.outline1",
                         "label": "Level-one body heading",
                         "meaning": "A first-level heading in the thesis body.",
                         "content_type": "text",
@@ -526,7 +526,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
                     },
                     {
                         "slot_id": "slot.body",
-                        "field_id": "body.heading.level1",
+                        "field_id": "body.heading.outline1",
                         "required": True,
                         "style_contract_ref": _style_ref(chapter_title_style),
                         "locator": {

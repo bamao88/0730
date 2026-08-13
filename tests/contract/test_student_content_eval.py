@@ -30,7 +30,7 @@ def _actual() -> dict[str, Any]:
             {
                 "content_id": "actual-heading",
                 "source_content_id": "source-heading",
-                "field_id": "body.heading.level1",
+                "field_id": "body.heading.outline1",
                 "classification_status": "classified",
                 "value": "SENSITIVE HEADING",
                 "source_order": {"block": 1, "inline": 0},
@@ -142,7 +142,7 @@ def _gold() -> dict[str, Any]:
             ),
             _gold_item(
                 content_id="gold-heading",
-                field_id="body.heading.level1",
+                field_id="body.heading.outline1",
                 source_id="obj-heading",
                 order=(1, 0),
                 value="SENSITIVE HEADING",
@@ -159,7 +159,7 @@ def _gold() -> dict[str, Any]:
         ],
         "field_results": [
             {"field_id": "body.chapters", "status": "present"},
-            {"field_id": "body.heading.level1", "status": "present"},
+            {"field_id": "body.heading.outline1", "status": "present"},
             {"field_id": "body.paragraph", "status": "present"},
         ],
         "coverage": {
@@ -234,7 +234,7 @@ def test_order_is_an_independent_failing_dimension() -> None:
         "index": 0,
         "gold_binding": {
             "source_object_ids": ["obj-heading"],
-            "field_id": "body.heading.level1",
+            "field_id": "body.heading.outline1",
         },
         "actual_binding": {
             "source_object_ids": ["obj-body"],

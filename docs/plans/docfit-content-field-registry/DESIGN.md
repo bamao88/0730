@@ -4,7 +4,8 @@
 > 稳定历史快照：`content-fields-v0.1.yaml`
 > Student 002 当前唯一语义快照：`content-fields-v0.3.yaml`
 > Student 001/003 当前 accepted 语义快照：`content-fields-v0.4.yaml`
-> 日期：2026-08-12
+> 新模板与后续内容运行时 clean-break 快照：`content-fields-v0.5.yaml`
+> 日期：2026-08-13
 
 ## Plan Ledger
 
@@ -39,6 +40,11 @@ canonical ID 上补齐 `value_sources` 与 `student_extraction_policy`，未新�
 语义基准；该签署不代表字段已穷尽、模板/Filling Gold 已验收或 M3 已通过。
 `v0.4` 从 accepted v0.3 派生，仍保留相同 54 个 canonical ID；它由 Student 001/003
 扩样触发并于 2026-08-12 通过产品验收，不能反向改写仍绑定 v0.3 的 Student 002。
+
+`v0.5` 从不可变 v0.4 派生，字段职责与数量不变，但以 clean break 将含混的
+`body.heading.level1` … `level5` 政名为 `body.heading.outline1` … `outline5`；其产品标签统一为
+“章标题、一级节标题、二级节标题、三级节标题、四级节标题”。新模板提取和后续内容运行时只
+绑定 v0.5，不提供旧 ID alias。v0.1–v0.4 继续原样保留，仅供已绑定 hash 的 Gold 与审计证据重放。
 
 ## 2. 目标与非目标
 
@@ -132,7 +138,7 @@ Student Content Projection 必须以当前固定 Registry 快照为主语义目�
 
 结构分类还必须优先保留用户原文中显式可见的表达特征。以 Student 002 为基准，带
 `（n）`/`(n)` 标记的内容默认投影为 Registry 已有的 `body.numbered_list_item`；文本较短
-或语义上像“方法名称”都不足以单独升级为 `body.heading.level4`。只有层级、排版或完整
+或语义上像“方法名称”都不足以单独升级为 `body.heading.outline4`。只有层级、排版或完整
 上下文提供更强证据时，才能提出例外并接受 Human 裁决。供 Human 判断这类结构歧义的
 产品文档必须同时展示所属上级、前一条和后一条可见内容，不能只给孤立原文片段。
 

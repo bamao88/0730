@@ -238,6 +238,17 @@ def _unwrap_replaced_structure(
             for target in targets
         )
     ]
+    if not member_controls:
+        parent = _element_parent(document_root, replaced_target)
+        if parent is None:
+            raise ToolFailure(
+                status="error",
+                origin="document",
+                code="structure_replacement_invalid",
+                message="An existing body structure cannot be removed for replacement.",
+            )
+        parent.remove(replaced_target)
+        return
     _unwrap_content_control(document_root, replaced_target)
     for control in member_controls:
         _unwrap_content_control(document_root, control)
@@ -252,15 +263,7 @@ def _unwrap_reused_member_controls(
     document_root: ET.Element,
     members: list[tuple[ET.Element, ET.Element, StructureMember]],
 ) -> bool:
-    """Promote existing independent member slots before composing a structure.
-
-    The Agent may first materialize a body member as an independent slot and only
-    later decide that it belongs to a reusable body structure.  Re-materializing
-    the containing paragraph without this normalization would retain the old
-    member control inside the new one, producing duplicate aliases and an empty
-    TOC candidate.  Matching the requested member field keeps this mechanical:
-    the Agent still owns which members belong in the structure.
-    """
+    """Unwrap carried member controls before rebuilding the single structure."""
 
     controls: list[ET.Element] = []
     seen: set[int] = set()
@@ -664,11 +667,6 @@ def _ensure_page_start(parent: ET.Element, target: ET.Element) -> tuple[bool, st
     return True, "page_break_before"
 
 
-def _paragraph_style_id(target: ET.Element) -> str | None:
-    style = target.find(f"{_W}pPr/{_W}pStyle")
-    return style.get(f"{_W}val") if style is not None else None
-
-
 def _materialize_structure(
     document_root: ET.Element,
     members: list[tuple[ET.Element, ET.Element, StructureMember]],
@@ -823,16 +821,101 @@ def _toc_style_ids(parts: dict[str, bytes]) -> dict[int, str]:
     return result
 
 
+def _paragraph_style_id(paragraph: ET.Element) -> str | None:
+    style = paragraph.find(f"{_W}pPr/{_W}pStyle")
+    value = style.get(f"{_W}val", "") if style is not None else ""
+    return value or None
+
+
+def _ensure_toc_level_styles(
+    parts: dict[str, bytes],
+    templates: dict[int, ET.Element],
+    style_ids: dict[int, str],
+) -> list[JsonObject]:
+    """Create only missing durable TOC styles from observed school layout profiles."""
+
+    if 3 in style_ids or 3 not in templates:
+        return []
+    raw = parts.get("word/styles.xml")
+    if raw is None:
+        return []
+    try:
+        styles = ET.fromstring(raw)
+    except ET.ParseError as error:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="styles_xml_invalid",
+            message="The Word styles part cannot be parsed.",
+        ) from error
+    by_id = {style.get(f"{_W}styleId", ""): style for style in styles.findall(f"{_W}style")}
+    template = templates[3]
+    base_id = _paragraph_style_id(template) or style_ids.get(2)
+    base = by_id.get(base_id or "")
+    if base is None:
+        return []
+    new_id = "DocFitTOC3"
+    ordinal = 2
+    while new_id in by_id:
+        new_id = f"DocFitTOC3{ordinal}"
+        ordinal += 1
+    cloned = deepcopy(base)
+    cloned.set(f"{_W}styleId", new_id)
+    cloned.set(f"{_W}customStyle", "1")
+    name = cloned.find(f"{_W}name")
+    if name is None:
+        name = ET.Element(f"{_W}name")
+        cloned.insert(0, name)
+    name.set(f"{_W}val", "toc 3")
+    template_properties = template.find(f"{_W}pPr")
+    if template_properties is not None:
+        cloned_properties = cloned.find(f"{_W}pPr")
+        if cloned_properties is None:
+            cloned_properties = ET.SubElement(cloned, f"{_W}pPr")
+        for property_name in ("tabs", "spacing", "ind"):
+            observed = template_properties.find(f"{_W}{property_name}")
+            if observed is None:
+                continue
+            existing = cloned_properties.find(f"{_W}{property_name}")
+            if existing is not None:
+                cloned_properties.remove(existing)
+            cloned_properties.append(deepcopy(observed))
+        cloned_properties[:] = _ordered_children(list(cloned_properties), _PPR_ORDER)
+    styles.append(cloned)
+    parts["word/styles.xml"] = _serialize(styles)
+    style_ids[3] = new_id
+    return [
+        {
+            "style_id": new_id,
+            "scope": "document_paragraph_style",
+            "reason": "preserve_observed_third_level_toc_indent_after_field_update",
+        }
+    ]
+
+
 def _toc_level(
     paragraph: ET.Element,
     style_levels: dict[str, int],
 ) -> int | None:
-    style = paragraph.find(f"{_W}pPr/{_W}pStyle")
-    value = style.get(f"{_W}val", "") if style is not None else ""
+    value = _paragraph_style_id(paragraph) or ""
     if value in style_levels:
         return style_levels[value]
     match = re.search(r"([1-9])$", value)
     return int(match.group(1)) if match else None
+
+
+def _toc_layout_signature(paragraph: ET.Element) -> bytes:
+    """Describe observed paragraph layout without interpreting its visible title text."""
+
+    properties = paragraph.find(f"{_W}pPr")
+    if properties is None:
+        return b""
+    selected = ET.Element(f"{_W}pPr")
+    for name in ("ind", "tabs", "spacing"):
+        value = properties.find(f"{_W}{name}")
+        if value is not None:
+            selected.append(deepcopy(value))
+    return ET.tostring(selected, encoding="utf-8")
 
 
 def _containing_paragraph(document_root: ET.Element, target: ET.Element) -> ET.Element:
@@ -1467,11 +1550,31 @@ def _refresh_toc(
     siblings = list(parent)
     start, end = _field_interval(siblings, siblings.index(target))
     templates: dict[int, ET.Element] = {}
+    duplicate_templates: list[tuple[int, ET.Element]] = []
     style_levels = {style_id: level for level, style_id in style_ids.items()}
     for paragraph in siblings[start : end + 1]:
         level = _toc_level(paragraph, style_levels)
         if level is not None:
-            templates.setdefault(level, paragraph)
+            if level in templates:
+                duplicate_templates.append((level, paragraph))
+            else:
+                templates[level] = paragraph
+    missing_levels = sorted({entry.level for entry in entries} - set(templates))
+    for base_level, paragraph in duplicate_templates:
+        if not missing_levels:
+            break
+        if _toc_layout_signature(paragraph) == _toc_layout_signature(
+            templates[base_level]
+        ):
+            continue
+        candidate_level = next(
+            (level for level in missing_levels if level > base_level),
+            None,
+        )
+        if candidate_level is None:
+            continue
+        templates[candidate_level] = paragraph
+        missing_levels.remove(candidate_level)
     fallback = siblings[start]
     instruction_text = "".join(
         node.text or ""
@@ -1480,18 +1583,25 @@ def _refresh_toc(
     )
     if "TOC" not in instruction_text.upper():
         instruction_text = ' TOC \\o "1-3" \\h \\z \\u '
-    style_scope_changes = _stabilize_toc_styles(
-        parts,
-        templates,
-        style_ids,
-        effective_format,
+    style_scope_changes = _ensure_toc_level_styles(parts, templates, style_ids)
+    style_scope_changes.extend(
+        _stabilize_toc_styles(
+            parts,
+            templates,
+            style_ids,
+            effective_format,
+        )
     )
     replacements = [
         _toc_paragraph(
             templates.get(entry.level, fallback),
             entry.selected.text,
             level=entry.level,
-            style_id=style_ids.get(entry.level, f"TOC{entry.level}"),
+            style_id=(
+                style_ids.get(entry.level)
+                or _paragraph_style_id(templates.get(entry.level, fallback))
+                or f"TOC{entry.level}"
+            ),
             instruction_text=instruction_text,
             effective_format=effective_format,
             first=index == 0,

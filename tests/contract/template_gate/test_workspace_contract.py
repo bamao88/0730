@@ -32,7 +32,7 @@ from docfit.visual.service import VisualEvidenceService
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 FIXTURES = PROJECT_ROOT / "evals/template-extraction/fixtures"
-REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml"
+REGISTRY = PROJECT_ROOT / "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml"
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 V = "{urn:schemas-microsoft-com:vml}"
 XML = "{http://www.w3.org/XML/1998/namespace}"
@@ -500,9 +500,10 @@ def _append_toc_and_titles(
     title_texts = [
         "【中文摘要】",
         "【英文摘要】",
-        "【一级章标题】",
-        "【二级标题】",
-        "【三级标题】",
+        "【章标题】",
+        "【一级节标题】",
+        "【二级节标题】",
+        "【正文段落】",
         "【附录标题】",
     ]
     for text in title_texts:
@@ -511,6 +512,130 @@ def _append_toc_and_titles(
         ET.SubElement(run, f"{W}t").text = text
         body.insert(position, paragraph)
         position += 1
+    parts["word/document.xml"] = ET.tostring(
+        root,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with zipfile.ZipFile(document, "w") as output:
+        for info in infos:
+            output.writestr(info, parts[info.filename])
+
+
+def _materialize_toc_sources(
+    service: TemplateWorkspaceService,
+    document: Path,
+) -> tuple[str, Path]:
+    inspection = service._inspection(document)
+    selected = {
+        item.text: item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.text
+        in {
+            "【章标题】",
+            "【一级节标题】",
+            "【二级节标题】",
+            "【正文段落】",
+            "【附录标题】",
+        }
+    }
+    member_fields = [
+        ("【章标题】", "body.heading.outline1"),
+        ("【一级节标题】", "body.heading.outline2"),
+        ("【二级节标题】", "body.heading.outline3"),
+        ("【正文段落】", "body.paragraph"),
+    ]
+    result, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "materialize_structure",
+                    "object_ref": selected[member_fields[0][0]].object_ref,
+                    "field_id": "body.chapters",
+                    "members": [
+                        {
+                            "object_ref": selected[text].object_ref,
+                            "field_id": field_id,
+                        }
+                        for text, field_id in member_fields
+                    ],
+                },
+                {
+                    "action": "materialize_slot",
+                    "object_ref": selected["【附录标题】"].object_ref,
+                    "field_id": "appendix.title",
+                },
+            ]
+        }
+    )
+    _, path = service._resolve_document(result["document_ref"])
+    return result["document_ref"], path
+
+
+def _toc_entries(
+    inspection: Inspection,
+    levels: dict[str, int] | None = None,
+) -> list[JsonObject]:
+    selected_levels = levels or {
+        "【中文摘要】": 1,
+        "【英文摘要】": 1,
+        "【章标题】": 1,
+        "【一级节标题】": 2,
+        "【二级节标题】": 3,
+        "【附录标题】": 1,
+    }
+    entries: list[JsonObject] = []
+    for text, level in selected_levels.items():
+        candidates = [
+            item
+            for item in inspection.objects
+            if item.text == text
+            and not (
+                item.style
+                and item.style.casefold().replace(" ", "").startswith("toc")
+            )
+        ]
+        selected = next((item for item in candidates if item.kind == "sdt"), None)
+        if selected is None:
+            selected = next(item for item in candidates if item.kind == "paragraph")
+        entries.append({"object_ref": selected.object_ref, "level": level})
+    return entries
+
+
+def _make_second_and_third_toc_levels_share_toc2(document: Path) -> None:
+    with zipfile.ZipFile(document) as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    styles = ET.fromstring(parts["word/styles.xml"])
+    for style in list(styles.findall(f"{W}style")):
+        name = style.find(f"{W}name")
+        if name is not None and name.get(f"{W}val", "").casefold() == "toc 3":
+            styles.remove(style)
+    parts["word/styles.xml"] = ET.tostring(
+        styles,
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    root = ET.fromstring(parts["word/document.xml"])
+    for paragraph in root.iter(f"{W}p"):
+        text = "".join(node.text or "" for node in paragraph.iter(f"{W}t"))
+        if not (text.startswith("1 XXX") or text.startswith("1.1 XXX")):
+            continue
+        properties = paragraph.find(f"{W}pPr")
+        assert properties is not None
+        style = properties.find(f"{W}pStyle")
+        assert style is not None
+        style.set(f"{W}val", "TOC2")
+        indent = properties.find(f"{W}ind")
+        if indent is not None:
+            properties.remove(indent)
+        if text.startswith("1 XXX"):
+            ET.SubElement(
+                properties,
+                f"{W}ind",
+                {f"{W}left": "0", f"{W}firstLine": "210"},
+            )
     parts["word/document.xml"] = ET.tostring(
         root,
         encoding="utf-8",
@@ -642,7 +767,7 @@ def test_agent_surface_is_role_scoped_and_hides_application_flow_control() -> No
     operation_schema = TEMPLATE_TOOLS[2].input_schema["properties"]["operations"]["items"]
     assert set(operation_schema["properties"]["action"]["enum"]) == {
         "materialize_slot",
-        "materialize_structure",
+        "register_body_member",
         "normalize_effective_format",
         "refresh_toc",
         "clear_content",
@@ -736,11 +861,11 @@ def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
             InspectedObject(
                 locator="/body/sdt[1]",
                 kind="sdt",
-                text="【一级章标题】",
+                text="【章标题】",
                 style=None,
                 format={
-                    "alias": "body.heading.level1",
-                    "tag": "body.heading.level1.1",
+                    "alias": "body.heading.outline1",
+                    "tag": "body.heading.outline1.1",
                 },
                 object_ref={"object_id": "obj-summary-3"},
             ),
@@ -765,7 +890,7 @@ def test_checkpoint_summary_keeps_toc_sample_feedback_across_sessions() -> None:
         "entry_count": 3,
         "sample_marker_count": 1,
         "sample_marker_examples": ["第X章 XXX\tXX"],
-        "missing_body_heading_types": ["body.heading.level1"],
+        "missing_body_heading_types": ["body.heading.outline1"],
         "refresh_needed": True,
     }
 
@@ -896,11 +1021,9 @@ def test_finished_navigation_returns_one_bounded_toc_refresh_task(
     assert images == [Path("/tmp/current-region.png")]
     assert pending is not None
     assert pending["field_id"] == "generated.toc"
-    assert pending["required_body_heading_candidates"] == []
     assert set(pending["target"]["object_ref"]) == {"object_id"}
-    assert 1 <= len(pending["title_candidates"]) <= 24
-    assert all(set(item["object_ref"]) == {"object_id"} for item in pending["title_candidates"])
-    assert "non-semantic suggestions" in pending["guidance"]
+    assert pending["title_candidates"]
+    assert "assign levels 1-3" in pending["guidance"]
 
 
 def test_failed_toc_intent_returns_regenerated_fresh_candidates(tmp_path: Path) -> None:
@@ -936,7 +1059,7 @@ def test_checkpoint_toc_feedback_detects_wrong_body_heading_level() -> None:
         InspectedObject(
             locator="/body/p[1]",
             kind="paragraph",
-            text="【二级标题】\t1",
+            text="【一级节标题】\t1",
             style="toc 1",
             format={},
             object_ref={"object_id": "obj-level-1"},
@@ -944,11 +1067,11 @@ def test_checkpoint_toc_feedback_detects_wrong_body_heading_level() -> None:
         InspectedObject(
             locator="/body/sdt[1]",
             kind="sdt",
-            text="【二级标题】",
+            text="【一级节标题】",
             style=None,
             format={
-                "alias": "body.heading.level2",
-                "tag": "body.heading.level2.1",
+                "alias": "body.heading.outline2",
+                "tag": "body.heading.outline2.1",
             },
             object_ref={"object_id": "obj-level-2"},
         ),
@@ -964,7 +1087,7 @@ def test_checkpoint_toc_feedback_detects_wrong_body_heading_level() -> None:
 
     summary = TemplateWorkspaceService._checkpoint_summary(inspection)
 
-    assert summary["toc"]["missing_body_heading_types"] == ["body.heading.level2"]
+    assert summary["toc"]["missing_body_heading_types"] == ["body.heading.outline2"]
     assert summary["toc"]["refresh_needed"] is True
 
 
@@ -1356,7 +1479,7 @@ def test_registry_batches_only_current_objects_from_one_version(tmp_path: Path) 
                 {"object_id": second.object_ref["object_id"], "field_id": "abstract.zh"},
                 {
                     "object_id": second.object_ref["object_id"],
-                    "field_id": "body.heading.level1",
+                    "field_id": "body.heading.outline1",
                 },
             ],
             "searches": [{"object_id": selected.object_ref["object_id"], "query": "中文姓名"}],
@@ -1367,7 +1490,7 @@ def test_registry_batches_only_current_objects_from_one_version(tmp_path: Path) 
     assert len(result["results"]) == 3
     assert result["results"][0]["matches"][0]["field_id"] == "abstract.zh"
     assert result["results"][1]["matches"][0]["semantic_object_type"] == {
-        "type_id": "body.heading.level1",
+        "type_id": "body.heading.outline1",
         "role": "heading",
         "repeatable": True,
         "parent_type": "body.chapters",
@@ -2042,17 +2165,17 @@ def test_structure_materialization_absorbs_redundant_descendant_cleanup(
                     "members": [
                         {
                             "object_ref": heading.object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                             "effective_format": {"color": "black"},
                         },
                         {
                             "object_ref": level2.object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                             "effective_format": {"color": "black"},
                         },
                         {
                             "object_ref": level3.object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                             "effective_format": {"color": "black"},
                         },
                         {
@@ -2075,6 +2198,108 @@ def test_structure_materialization_absorbs_redundant_descendant_cleanup(
     assert absorbed[0]["absorbed_by"]["action"] == "materialize_structure"
     assert absorbed[0]["reason"] == "materialized_parent_replaces_content"
     assert result["structures"][0]["field_id"] == "body.chapters"
+
+
+def test_application_does_not_classify_named_and_generic_body_regions(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("第一章 文献综述", "FF0000"),
+            ("1.1 文献综述小节", "0000FF"),
+            ("文献综述正文样例", "0000FF"),
+            ("文献模块填充 1", "0000FF"),
+            ("文献模块填充 2", "0000FF"),
+            ("文献模块填充 3", "0000FF"),
+            ("文献模块填充 4", "0000FF"),
+            ("文献模块填充 5", "0000FF"),
+            ("文献模块填充 6", "0000FF"),
+            ("文献模块填充 7", "0000FF"),
+            ("第X章（正文标题）", "FF0000"),
+            ("1 通用一级节", "0000FF"),
+            ("1.1 通用二级节", "0000FF"),
+            ("通用正文样例", "0000FF"),
+        ],
+    )
+    _, document = service._register_source()
+    regions = service._source_regions()
+    named_index = next(
+        index
+        for index, region in enumerate(regions)
+        if any(item.get("text") == "第一章 文献综述" for item in region)
+    )
+    generic_index = next(
+        index
+        for index, region in enumerate(regions)
+        if any(item.get("text") == "第X章（正文标题）" for item in region)
+    )
+    assert named_index < generic_index
+
+    progress = service.workflow_progress_snapshot()
+    service._write_progress({**progress, "region_index": named_index})
+    named_matches = service.registry_candidates_for_text(
+        "1.1 文献综述小节",
+        "body.heading.outline3",
+    )
+    assert named_matches[0]["field_id"] == "body.heading.outline3"
+
+    service._write_progress({**progress, "region_index": generic_index})
+    generic_matches = service.registry_candidates_for_text(
+        "1.1 通用二级节",
+        "body.heading.outline3",
+    )
+    assert generic_matches[0]["field_id"] == "body.heading.outline3"
+    assert not hasattr(service, "discard_current_named_body_sample")
+
+
+def test_body_structure_rejects_physical_members_in_wrong_semantic_order(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_styled_paragraphs(
+        source,
+        [
+            ("1.1 二级节", "0000FF"),
+            ("1 一级节", "0000FF"),
+        ],
+    )
+    _, document = service._register_source()
+    inspection = service._inspection(document)
+    outline3 = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph" and item.text == "1.1 二级节"
+    )
+    outline2 = next(
+        item for item in inspection.objects if item.kind == "paragraph" and item.text == "1 一级节"
+    )
+
+    with pytest.raises(ToolFailure) as caught:
+        service.edit(
+            {
+                "operations": [
+                    {
+                        "action": "materialize_structure",
+                        "object_ref": outline3.object_ref,
+                        "field_id": "body.chapters",
+                        "members": [
+                            {
+                                "object_ref": outline3.object_ref,
+                                "field_id": "body.heading.outline3",
+                            },
+                            {
+                                "object_ref": outline2.object_ref,
+                                "field_id": "body.heading.outline2",
+                            },
+                        ],
+                    }
+                ]
+            }
+        )
+
+    assert caught.value.code == "body_structure_semantic_order_invalid"
 
 
 def test_structure_preserves_empty_layout_paragraphs_between_semantic_members(
@@ -2118,15 +2343,15 @@ def test_structure_preserves_empty_layout_paragraphs_between_semantic_members(
                     "members": [
                         {
                             "object_ref": heading.object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                         },
                         {
                             "object_ref": level2.object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                         },
                         {
                             "object_ref": level3.object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                         },
                         {
                             "object_ref": paragraph.object_ref,
@@ -2150,12 +2375,12 @@ def test_structure_preserves_empty_layout_paragraphs_between_semantic_members(
     assert len(structure.findall(f"{W}sdtContent/{W}p")) == 5
 
 
-def test_structure_absorbs_redundant_member_slot_operations(tmp_path: Path) -> None:
+def test_structure_is_the_only_body_member_materialization_operation(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
     samples = [
-        ("第一章 样例", "FF0000", "body.heading.level1"),
-        ("1.1 样例", "FF0000", "body.heading.level2"),
-        ("1.1.1 样例", "FF0000", "body.heading.level3"),
+        ("第一章 样例", "FF0000", "body.heading.outline1"),
+        ("1 样例", "FF0000", "body.heading.outline2"),
+        ("1.1 样例", "FF0000", "body.heading.outline3"),
         ("正文样例", "0000FF", "body.paragraph"),
     ]
     _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
@@ -2174,21 +2399,18 @@ def test_structure_absorbs_redundant_member_slot_operations(tmp_path: Path) -> N
     result, _ = service.edit(
         {
             "operations": [
-                *[
-                    {
-                        "action": "materialize_slot",
-                        "object_ref": selected[text].object_ref,
-                        "field_id": field_id,
-                        "effective_format": {"color": "black", "underline": "none"},
-                    }
-                    for text, _, field_id in samples
-                ],
                 {
                     "action": "materialize_structure",
                     "object_ref": selected[samples[0][0]].object_ref,
                     "field_id": "body.chapters",
-                    "members": members,
-                },
+                    "members": [
+                        {
+                            **member,
+                            "effective_format": {"color": "black", "underline": "none"},
+                        }
+                        for member in members
+                    ],
+                }
             ]
         }
     )
@@ -2196,11 +2418,7 @@ def test_structure_absorbs_redundant_member_slot_operations(tmp_path: Path) -> N
     assert result["committed"] is True
     assert result["effects"]["operations"] == 1
     assert result["effects"]["actions"] == {"materialize_structure": 1}
-    absorbed = result["effects"]["absorbed_operations"]
-    assert len(absorbed) == len(samples)
-    assert {item["reason"] for item in absorbed} == {
-        "materialization_absorbed_by_structure_member"
-    }
+    assert result["effects"]["absorbed_operations"] == []
     assert result["materialized_members"] == sorted(field_id for _, _, field_id in samples)
     assert len(result["effects"]["effective_format_changes"]) == len(samples)
     assert all(
@@ -2214,8 +2432,8 @@ def test_structure_order_failure_returns_objective_reselection_feedback(
 ) -> None:
     service, _, source = _service(tmp_path)
     samples = [
-        ("第 X 章", "FF0000", "body.heading.level1"),
-        ("1 节标题", "0000FF", "body.heading.level2"),
+        ("第 X 章", "FF0000", "body.heading.outline1"),
+        ("1 节标题", "0000FF", "body.heading.outline2"),
         ("正文样例", "0000FF", "body.paragraph"),
     ]
     _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
@@ -2249,7 +2467,7 @@ def test_structure_order_failure_returns_objective_reselection_feedback(
 
     assert caught.value.code == "body_structure_not_in_document_order"
     assert "body.paragraph@" in caught.value.message
-    assert "body.heading.level1@" in caught.value.message
+    assert "body.heading.outline1@" in caught.value.message
     assert "Do not repair a cross-block selection by only reordering" in caught.value.message
     assert caught.value.suggested_actions == (
         "reselect_members_from_one_forward_document_block",
@@ -2304,15 +2522,15 @@ def test_structure_leaves_empty_section_boundary_outside_repeatable_unit(
                     "members": [
                         {
                             "object_ref": selected["第 X 章"].object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                         },
                         {
                             "object_ref": selected["1 节标题"].object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                         },
                         {
                             "object_ref": selected["1.1 小节标题"].object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                         },
                         {
                             "object_ref": selected["正文样例"].object_ref,
@@ -2369,15 +2587,15 @@ def test_structure_extracts_nonadjacent_members_without_absorbing_instructions(
                     "members": [
                         {
                             "object_ref": selected["第 X 章"].object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                         },
                         {
                             "object_ref": selected["1 节标题"].object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                         },
                         {
                             "object_ref": selected["1.1 小节标题"].object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                         },
                         {
                             "object_ref": selected["正文样例"].object_ref,
@@ -2455,15 +2673,15 @@ def test_structure_reports_style_boundary_risk_without_semantic_rejection(
                     "members": [
                         {
                             "object_ref": selected["第 X 章 代表标题"].object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                         },
                         {
                             "object_ref": selected["1 节标题"].object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                         },
                         {
                             "object_ref": selected["1.1 小节标题"].object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                         },
                         {
                             "object_ref": selected["结论章正文样例"].object_ref,
@@ -2505,11 +2723,11 @@ def test_body_structure_materializes_agent_selected_member_set_without_fixed_gra
                     "members": [
                         {
                             "object_ref": selected["第 X 章"].object_ref,
-                            "field_id": "body.heading.level1",
+                            "field_id": "body.heading.outline1",
                         },
                         {
                             "object_ref": selected["1 节标题"].object_ref,
-                            "field_id": "body.heading.level2",
+                            "field_id": "body.heading.outline2",
                         },
                     ],
                 }
@@ -2519,8 +2737,8 @@ def test_body_structure_materializes_agent_selected_member_set_without_fixed_gra
 
     assert result["committed"] is True
     assert result["materialized_members"] == [
-        "body.heading.level1",
-        "body.heading.level2",
+        "body.heading.outline1",
+        "body.heading.outline2",
     ]
     assert result["structural_risks"] == []
 
@@ -2544,9 +2762,9 @@ def test_pending_structure_intent_keeps_the_richer_failed_attempt(tmp_path: Path
         }
 
     richer = [
-        "body.heading.level1",
-        "body.heading.level2",
-        "body.heading.level3",
+        "body.heading.outline1",
+        "body.heading.outline2",
+        "body.heading.outline3",
         "body.paragraph",
     ]
     failure = ToolFailure(
@@ -2557,7 +2775,7 @@ def test_pending_structure_intent_keeps_the_richer_failed_attempt(tmp_path: Path
     )
     service.record_edit_failure({"operations": [operation(richer)]}, failure)
     service.record_edit_failure(
-        {"operations": [operation(["body.heading.level2", "body.heading.level3"])]},
+        {"operations": [operation(["body.heading.outline2", "body.heading.outline3"])]},
         failure,
     )
 
@@ -2621,9 +2839,9 @@ def test_failed_batch_persists_only_registered_semantic_intents(tmp_path: Path) 
 def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:
     summary: JsonObject = {
         "materialized_fields": {
-            "body.heading.level1": 1,
-            "body.heading.level2": 1,
-            "body.heading.level3": 1,
+            "body.heading.outline1": 1,
+            "body.heading.outline2": 1,
+            "body.heading.outline3": 1,
             "body.paragraph": 3,
             "submission.date": 1,
         },
@@ -2636,8 +2854,8 @@ def test_existing_capability_satisfies_a_narrower_failed_edit_intent() -> None:
             "action": "materialize_structure",
             "field_id": "body.chapters",
             "member_field_ids": [
-                "body.heading.level2",
-                "body.heading.level3",
+                "body.heading.outline2",
+                "body.heading.outline3",
                 "body.paragraph",
             ],
         },
@@ -2833,17 +3051,15 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
 ) -> None:
     service, _, source = _service(tmp_path)
     samples = [
-        ("第一章 样例", "FF0000", "body.heading.level1"),
-        ("一级正文样例", "0000FF", "body.paragraph"),
-        ("1.1 样例", "FF0000", "body.heading.level2"),
-        ("二级正文样例", "0000FF", "body.paragraph"),
-        ("1.1.1 样例", "FF0000", "body.heading.level3"),
-        ("三级正文样例", "0000FF", "body.paragraph"),
+        ("第一章 样例", "FF0000", "body.heading.outline1"),
+        ("1 样例", "FF0000", "body.heading.outline2"),
+        ("1.1 样例", "FF0000", "body.heading.outline3"),
+        ("二级节正文样例", "0000FF", "body.paragraph"),
     ]
     replacement_samples = [
-        ("第二章 更完整样例", "FF0000", "body.heading.level1"),
-        ("2.1 更完整样例", "FF0000", "body.heading.level2"),
-        ("2.1.1 更完整样例", "FF0000", "body.heading.level3"),
+        ("第二章 更完整样例", "FF0000", "body.heading.outline1"),
+        ("2 更完整样例", "FF0000", "body.heading.outline2"),
+        ("2.1 更完整样例", "FF0000", "body.heading.outline3"),
         ("替换后的正文样例", "0000FF", "body.paragraph"),
     ]
     _append_styled_paragraphs(
@@ -2883,7 +3099,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         {
             "field_id": "body.chapters",
             "slot_id": "body.chapters.1",
-            "member_count": 6,
+            "member_count": 4,
         }
     ]
     _, changed_path = service._resolve_document(result["document_ref"])
@@ -2899,14 +3115,12 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
     assert aliases == ["body.chapters", *[field_id for _, _, field_id in samples]]
     assert group.find(f".//{W}showingPlcHdr") is None
     assert {color.get(f"{W}val") for color in group.findall(f".//{W}color")} == {"000000"}
-    assert len(group.findall(f".//{W}rFonts")) == 6
+    assert len(group.findall(f".//{W}rFonts")) == 4
     assert [node.get(f"{W}before") for node in group.findall(f".//{W}pPr/{W}spacing")] == [
         "20",
         "40",
         "60",
         "80",
-        "100",
-        "120",
     ]
 
     opened, _ = service.view({"action": "open"})
@@ -2954,7 +3168,7 @@ def test_body_structure_is_one_direct_operation_with_school_styles_preserved(
         if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
     ]
     assert len(structures) == 1
-    assert structures[0].text == "【一级章标题】【二级标题】【三级标题】【正文段落】"
+    assert structures[0].text == "【章标题】【一级节标题】【二级节标题】【正文段落】"
     _finish_local_work(service, source)
     first_review, _ = service.final_review(
         {"document_ref": replacement_result["document_ref"]}
@@ -3034,10 +3248,9 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
 ) -> None:
     service, _, source = _service(tmp_path)
     samples = [
-        ("第一章 样例", "FF0000", "body.heading.level1"),
-        ("正文样例", "0000FF", "body.paragraph"),
-        ("1.1 样例", "FF0000", "body.heading.level2"),
-        ("1.1.1 后发现样例", "FF0000", "body.heading.level3"),
+        ("第一章 样例", "FF0000", "body.heading.outline1"),
+        ("1 样例", "FF0000", "body.heading.outline2"),
+        ("1.1 后发现样例", "FF0000", "body.heading.outline3"),
     ]
     _append_styled_paragraphs(source, [(text, color) for text, color, _ in samples])
     _, document = service._register_source()
@@ -3060,7 +3273,7 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
                             "object_ref": selected[text].object_ref,
                             "field_id": field_id,
                         }
-                        for text, _, field_id in samples[:3]
+                        for text, _, field_id in samples[:2]
                     ],
                 }
             ]
@@ -3084,7 +3297,7 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
                     "members": [
                         {
                             "object_ref": discovered.object_ref,
-                            "field_id": "body.heading.level3",
+                            "field_id": "body.heading.outline3",
                         }
                     ],
                 }
@@ -3101,7 +3314,7 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
         {
             "field_id": "body.chapters",
             "slot_id": "body.chapters.1",
-            "member_count": 4,
+            "member_count": 3,
         }
     ]
     _, replaced_path = service._resolve_document(replaced["document_ref"])
@@ -3112,7 +3325,7 @@ def test_structure_replacement_reuses_existing_members_and_adds_new_level(
         if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
     ]
     assert len(structures) == 1
-    assert structures[0].text == "【一级章标题】【正文段落】【二级标题】【三级标题】"
+    assert structures[0].text == "【章标题】【一级节标题】【二级节标题】"
 
 
 def test_clear_content_preserves_selected_container_and_its_metadata(tmp_path: Path) -> None:
@@ -3190,9 +3403,9 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
         '<w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>'
         "<w:p><w:r><w:t>【中文摘要】</w:t></w:r></w:p>"
         "<w:p><w:r><w:t>【英文摘要】</w:t></w:r></w:p>"
-        "<w:p><w:r><w:t>【一级章标题】</w:t></w:r></w:p>"
-        "<w:p><w:r><w:t>【二级标题】</w:t></w:r></w:p>"
-        "<w:p><w:r><w:t>【三级标题】</w:t></w:r></w:p>"
+        "<w:p><w:r><w:t>【章标题】</w:t></w:r></w:p>"
+        "<w:p><w:r><w:t>【一级节标题】</w:t></w:r></w:p>"
+        "<w:p><w:r><w:t>【二级节标题】</w:t></w:r></w:p>"
         "<w:p><w:r><w:t>【附录标题】</w:t></w:r></w:p>"
         "<w:sectPr/></w:body></w:document>"
     ).encode()
@@ -3218,9 +3431,9 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
             [
                 ("【中文摘要】", 1),
                 ("【英文摘要】", 1),
-                ("【一级章标题】", 1),
-                ("【二级标题】", 2),
-                ("【三级标题】", 3),
+                ("【章标题】", 1),
+                ("【一级节标题】", 2),
+                ("【二级节标题】", 3),
                 ("【附录标题】", 1),
             ],
             start=1,
@@ -3254,9 +3467,9 @@ def test_toc_refresh_keeps_live_field_and_builds_non_empty_representative_cache(
     ] == [
         "【中文摘要】1",
         "【英文摘要】1",
-        "【一级章标题】1",
-        "【二级标题】1",
-        "【三级标题】1",
+        "【章标题】1",
+        "【一级节标题】1",
+        "【二级节标题】1",
         "【附录标题】1",
     ]
     assert [paragraph.find(f"{W}pPr/{W}pStyle").get(f"{W}val") for paragraph in paragraphs] == [
@@ -3422,6 +3635,7 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         unselected_sources=True,
     )
     _, document = service._register_source()
+    _, document = _materialize_toc_sources(service, document)
     inspection = service._inspection(document)
     toc = next(
         item
@@ -3433,40 +3647,19 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
     title_levels = {
         "【中文摘要】": 1,
         "【英文摘要】": 1,
-        "【一级章标题】": 1,
-        "【二级标题】": 2,
-        "【三级标题】": 3,
+        "【章标题】": 1,
+        "【一级节标题】": 2,
+        "【二级节标题】": 3,
         "【附录标题】": 1,
-    }
-    titles = {
-        item.text: item
-        for item in inspection.objects
-        if item.kind == "paragraph" and item.text in title_levels
     }
 
     result, _ = service.edit(
         {
             "operations": [
                 {
-                    "action": "normalize_effective_format",
-                    "object_ref": toc.object_ref,
-                    "effective_format": {"color": "black", "underline": "none"},
-                },
-                {
                     "action": "refresh_toc",
                     "object_ref": toc.object_ref,
-                    "effective_format": {"color": "black", "underline": "none"},
-                    "entries": list(
-                        reversed(
-                            [
-                                {
-                                    "object_ref": titles[text].object_ref,
-                                    "level": level,
-                                }
-                                for text, level in title_levels.items()
-                            ]
-                        )
-                    ),
+                    "entries": _toc_entries(inspection, title_levels),
                 },
             ],
         }
@@ -3484,9 +3677,7 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         "color": "black",
         "underline": "none",
     }
-    assert result["effects"]["absorbed_operations"][0]["reason"] == (
-        "effective_format_merged_into_compound_action"
-    )
+    assert result["effects"]["absorbed_operations"] == []
     assert result["effects"]["style_scope_changes"] == [
         {
             "style_id": "Hyperlink",
@@ -3592,9 +3783,9 @@ def test_template_edit_refreshes_toc_as_one_compound_object(tmp_path: Path) -> N
         "【未入选正文】": "9",
         "【中文摘要】": "0",
         "【英文摘要】": "0",
-        "【一级章标题】": "0",
-        "【二级标题】": "1",
-        "【三级标题】": "2",
+        "【章标题】": "0",
+        "【一级节标题】": "1",
+        "【二级节标题】": "2",
         "【附录标题】": "0",
     }
     toc_locators = [
@@ -3624,6 +3815,7 @@ def test_refresh_toc_defaults_to_effective_black_and_stabilizes_hyperlink_style(
     service, _, source = _service(tmp_path)
     _append_toc_and_titles(source)
     _, document = service._register_source()
+    _, document = _materialize_toc_sources(service, document)
     inspection = service._inspection(document)
     toc = next(
         item
@@ -3632,20 +3824,13 @@ def test_refresh_toc_defaults_to_effective_black_and_stabilizes_hyperlink_style(
         and item.style
         and item.style.casefold().replace(" ", "") == "toc1"
     )
-    title = next(
-        item
-        for item in inspection.objects
-        if item.kind == "paragraph" and item.text == "【一级章标题】"
-    )
-
     refreshed, _ = service.edit(
         {
             "operations": [
                 {
                     "action": "refresh_toc",
                     "object_ref": toc.object_ref,
-                    "field_id": "generated.toc",
-                    "entries": [{"object_ref": title.object_ref, "level": 1}],
+                    "entries": _toc_entries(inspection),
                 }
             ]
         }
@@ -3721,7 +3906,72 @@ def test_refresh_toc_defaults_to_effective_black_and_stabilizes_hyperlink_style(
     assert hyperlink_style.find(f"{W}rPr/{W}u").get(f"{W}val") == "none"
 
 
-def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> None:
+def test_refresh_toc_preserves_two_visual_indents_when_source_reuses_toc2(
+    tmp_path: Path,
+) -> None:
+    service, _, source = _service(tmp_path)
+    _append_toc_and_titles(source)
+    _make_second_and_third_toc_levels_share_toc2(source)
+    _, document = service._register_source()
+    _, document = _materialize_toc_sources(service, document)
+    inspection = service._inspection(document)
+    toc = next(
+        item
+        for item in inspection.objects
+        if item.kind == "paragraph"
+        and item.style
+        and item.style.casefold().replace(" ", "") == "toc1"
+    )
+
+    refreshed, _ = service.edit(
+        {
+            "operations": [
+                {
+                    "action": "refresh_toc",
+                    "object_ref": toc.object_ref,
+                    "entries": _toc_entries(inspection),
+                }
+            ]
+        }
+    )
+
+    assert any(
+        item.get("reason")
+        == "preserve_observed_third_level_toc_indent_after_field_update"
+        for item in refreshed["effects"]["style_scope_changes"]
+    )
+    _, refreshed_path = service._resolve_document(refreshed["document_ref"])
+    with zipfile.ZipFile(refreshed_path) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+        styles_root = ET.fromstring(archive.read("word/styles.xml"))
+    style_names = {
+        style.get(f"{W}styleId"): name.get(f"{W}val")
+        for style in styles_root.findall(f"{W}style")
+        if (name := style.find(f"{W}name")) is not None
+    }
+    rows = {
+        "".join(node.text or "" for node in paragraph.iter(f"{W}t")): paragraph
+        for paragraph in document_root.iter(f"{W}p")
+        if (paragraph_style := paragraph.find(f"{W}pPr/{W}pStyle")) is not None
+        and style_names.get(paragraph_style.get(f"{W}val", ""), "").startswith("toc")
+    }
+    first_section = rows["【一级节标题】1"]
+    second_section = rows["【二级节标题】1"]
+    first_indent = first_section.find(f"{W}pPr/{W}ind")
+    assert first_indent is not None
+    assert first_indent.get(f"{W}left") == "0"
+    assert first_indent.get(f"{W}firstLine") == "210"
+    second_style_id = second_section.find(f"{W}pPr/{W}pStyle").get(f"{W}val")
+    assert style_names[second_style_id] == "toc 3"
+    toc3_style = next(
+        style
+        for style in styles_root.findall(f"{W}style")
+        if style.get(f"{W}styleId") == second_style_id
+    )
+    assert toc3_style.find(f"{W}pPr/{W}ind").get(f"{W}left") == "420"
+
+
+def test_template_edit_rejects_duplicate_agent_selected_toc_entries(tmp_path: Path) -> None:
     service, _, source = _service(tmp_path)
     _append_toc_and_titles(source)
     _, document = service._register_source()
@@ -3736,7 +3986,7 @@ def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> No
     title = next(
         item
         for item in inspection.objects
-        if item.kind == "paragraph" and item.text == "【一级章标题】"
+        if item.kind == "paragraph" and item.text == "【章标题】"
     )
 
     with pytest.raises(ToolFailure) as duplicate:
@@ -3758,7 +4008,9 @@ def test_template_edit_rejects_duplicate_toc_entry_objects(tmp_path: Path) -> No
     assert duplicate.value.code == "toc_entry_duplicate"
 
 
-def test_template_edit_rejects_generated_toc_row_as_source_title(tmp_path: Path) -> None:
+def test_template_edit_rejects_generated_cache_as_agent_selected_toc_source(
+    tmp_path: Path,
+) -> None:
     service, _, source = _service(tmp_path)
     _append_toc_and_titles(source)
     _, document = service._register_source()

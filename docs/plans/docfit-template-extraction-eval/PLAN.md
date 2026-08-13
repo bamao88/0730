@@ -1,7 +1,8 @@
 # 模板提取静态 E2E Eval 实施计划
 
 > 状态：W0–W5/G1–G3 已实现；独立模块 99 个测试通过。三校 candidate case 已物化并被
-> 评分入口显式拒绝；W6 的 Human Gold 验收和每校三条正式评分回归仍待完成
+> 评分入口显式拒绝；现有 case 为 v0.1 历史 candidate，W6 须按 accepted Registry v0.5
+> clean break 重建后再做 Human Gold 验收和每校三条正式评分回归
 > 上层合同：[DESIGN.md](DESIGN.md)
 > 本计划负责：实施顺序、文件责任、逐代码测试、停止门和完成证据
 > 本计划不负责：重新设计模板提取流程、执行正式填写、自动批准 Gold 或宣称 M3 完成
@@ -18,7 +19,7 @@
 | W3 对齐与三类断言 | `PASS` | S01–S10 归因和 UNKNOWN 路径通过 |
 | W4 评分与报告 | `PASS` | 双 50 分视角、八分项、F1、coverage、JSON/Markdown 同源通过 |
 | W5 独立 runner/CLI | `PASS` | PASS/FAIL/UNKNOWN/INPUT_ERROR 四路径和确定性通过 |
-| W6 三校 case | `BLOCKED_BY_HUMAN_GATE` | 目录已物化；candidate gate 3/3 通过，accepted Gold 0/3 |
+| W6 三校 case | `PRODUCT_RULES_ACCEPTED / REBUILD_PENDING` | v0.1 目录已物化且 candidate gate 3/3 通过；跨校产品规则已确认；待按 v0.5 重建、精确产物审查和 Gold 签署，accepted Gold 0/3 |
 | W7 收尾 | `PARTIAL_PASS` | build/mypy/323 tests/doctor/core/scoped ruff 与 00–06 漂移检查已通过；全根 ruff 仅被两个无关用户文件阻断，且 W6 仍受 Human gate 约束 |
 
 本模块按一条离线、确定性的纵向链路实施：
@@ -333,23 +334,28 @@ evals/template-extraction/cases/
 
 工作内容：
 
-1. 从 Temp 候选包读取 `fillable-template.docx`、`template-spec.yaml`、validation report、
-   manifest 和 hash；按用户批准的最终目录先物化 case，但保持 candidate 状态。
+1. 保留当前 v0.1 candidate 作为历史证据；Gold 准备侧按 Registry v0.5、已确认的复合字段/
+   章节角色/逻辑页策略重建两份主文件 `final-template.docx + fill-contract.yaml`，原子绑定 Word
+   hash；validation report、manifest、hash 和 reviewer 记录只作内部验收证据，再物化新 candidate case。
 2. 未通过 Human readiness 时，`case_status/gold_review/fill-contract.status` 必须分别为
    `candidate/candidate/candidate_pending_human_acceptance`，`expected_verdict` 固定为
    `INPUT_ERROR`；路径位于 `gold/` 不构成 Gold 晋升。
-3. Human 确认后，原地把模板和契约作为 accepted Gold 冻结，并记录 reviewer、日期、
-   来源 hash、Registry 绑定和已清零的 blockers；物化脚本不得覆盖 accepted case。
-4. 每个 case 固定引用同一 Registry ID/version/hash 和 scoring-v1。
+3. 重建后的产品可读核对面按规则组 + 例外表签署，机器附件逐槽/区域证明覆盖；
+   随后把精确模板和契约作为 accepted Gold 冻结，并记录 reviewer、日期、来源 hash、
+   Registry 绑定和已清零的 blockers；物化脚本不得覆盖 accepted case。
+4. 每个新 case 固定引用 Registry v0.5 的同一 ID/version/hash 和 scoring-v1。
 5. 为每校准备三个最小回归：自比较通过、单个 protected 文字变更失败、单个字段映射
    变更失败。反例使用测试副本，不修改 Gold。
 
 进入 accepted Gold 与学校评分回归的门：
 
-- `human_acceptance` 已确认；
+- 跨校产品规则已确认，且重建后绑定精确 hash 的规则组/例外核对已签署；
+- 当前准确度测试不以来源是否官方作为资格门；必须记录来源分类、选定目标及 hash，来源冲突须有
+  用户裁决。未来的“符合学校当前官方要求”声明使用独立门禁；
 - Git/CI 存储权限已明确；
 - 模板无真实学生内容；
-- 当前 validation report 中的失败已经修复或有明确人工裁决；
+- 当前 validation report 中的真实失败已修复；仅经严格证据证明为 validator false positive
+  的 finding 可有书面 exception；
 - Gold hash 与 fill contract 中的 snapshot binding 一致。
 
 如果任一学校尚未满足进入门，最终目录可以作为 candidate 数据包存在，W0–W5 仍可用
@@ -561,8 +567,8 @@ uv run docfit doctor
 | 风险 | 当前事实 | 处理 | 停止条件 |
 |---|---|---|---|
 | 候选不等于 Gold | 三校 manifest 的 `human_acceptance` 仍 pending | 可按最终目录物化，但三层状态固定 candidate 且预期 `INPUT_ERROR`；W6 accepted 门仍等 Human 确认 | 未确认时禁止改为 accepted、进入评分或覆盖已验收 Gold |
-| 两校 OfficeCLI schema FAIL | 湖南农大、南京农大 validation report 当前失败 | 分析具体错误并修复或记录人工裁决 | 不得删掉失败断言强行通过 |
-| Registry 尚是研发快照 | v0.1 有已知字段缺口 | case 固定 ID/version/hash；不跟随 latest | hash 不一致时 case 输入失败 |
+| 两校 OfficeCLI schema FAIL | 湖南农大、南京农大 validation report 当前失败 | 修复真实错误；只有标准/独立工具 + 精确 hash Word 往返证明的 validator false positive 才形成书面 exception | 不得以“Word 能打开”或删除失败断言强行通过 |
+| Registry 快照过时 | 当前 case 仍绑定 v0.1，新模板产品合同为 accepted v0.5 | 保留 v0.1 供历史重放；按 v0.5 重建新 case 并固定 ID/version/hash，不跟随 latest | 禁止把 v0.1 case 直接改名、改 hash 或改状态晋升 |
 | 有效样式复杂 | Word 继承、容器和默认值容易出现两套口径 | 统一 analyzer，先用三个小样本锁定 | 不能解释继承来源时返回 UNKNOWN |
 | OOXML 对象覆盖不全 | 文本框、域、公式等可能存在不支持分支 | 显式 unsupported fact 与 coverage | 可见对象被静默忽略即停止合入 |
 | 独立分析器带来重复代码 | Eval 不复用产品 OOXML 实现 | 只复制必要的只读事实能力，以 schema/fixture 对齐数据合同 | 发现需要 import `docfit` 时停止并回到设计层 |

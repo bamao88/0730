@@ -589,9 +589,9 @@ def _elements_between_imported_boundaries(
 
 def _body_role(field_ids: set[str]) -> str:
     for field_id, role in (
-        ("body.heading.level1", "heading_1"),
-        ("body.heading.level2", "heading_2"),
-        ("body.heading.level3", "heading_3"),
+        ("body.heading.outline1", "heading_1"),
+        ("body.heading.outline2", "heading_2"),
+        ("body.heading.outline3", "heading_3"),
     ):
         if field_id in field_ids:
             return role

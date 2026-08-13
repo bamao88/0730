@@ -22,7 +22,7 @@ CLASSIFICATION_STATUSES = frozenset(
 RELATION_TYPES = frozenset(
     {"caption_of", "note_of", "parallel_of", "same_fact_as"}
 )
-_HEADING_FIELD = re.compile(r"body\.heading\.level([1-5])\Z")
+_HEADING_FIELD = re.compile(r"body\.heading\.outline([1-5])\Z")
 _PHYSICAL_TO_REGISTRY_TYPES = {
     "text": frozenset({"text", "rich_text", "section"}),
     "image": frozenset({"image", "section"}),

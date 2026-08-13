@@ -56,7 +56,6 @@ _TEMPLATE_SELECTOR = "paragraph, table, picture, run, sdt, shape"
 _EDITABLE_KINDS = {"paragraph", "run", "table", "picture", "sdt", "shape"}
 _MAX_SEARCH_RESULTS = 5
 _MAX_BATCH_OPERATIONS = 32
-_MAX_TOC_TITLE_CANDIDATES = 24
 _REGION_SOURCE_OBJECTS = 9
 _REGION_LAYOUT_STRATEGY = "page-proximity-v1"
 _REGION_MAX_HEIGHT_POINTS = 500.0
@@ -72,11 +71,11 @@ _DURABLE_EDIT_INTENT_ACTIONS = {
 _MAX_PENDING_EDIT_INTENTS = 8
 
 _FIELD_STYLE_ROLES: dict[str, tuple[str, str]] = {
-    "body.heading.level1": ("style.body.heading.1", "heading"),
-    "body.heading.level2": ("style.body.heading.2", "heading"),
-    "body.heading.level3": ("style.body.heading.3", "heading"),
-    "body.heading.level4": ("style.body.heading.4", "heading"),
-    "body.heading.level5": ("style.body.heading.5", "heading"),
+    "body.heading.outline1": ("style.body.heading.1", "heading"),
+    "body.heading.outline2": ("style.body.heading.2", "heading"),
+    "body.heading.outline3": ("style.body.heading.3", "heading"),
+    "body.heading.outline4": ("style.body.heading.4", "heading"),
+    "body.heading.outline5": ("style.body.heading.5", "heading"),
     "body.paragraph": ("style.body.paragraph", "paragraph"),
     "body.numbered_list_item": ("style.body.numbered_list_item", "paragraph"),
     "body.inline_emphasis": ("style.inline.emphasis", "character"),
@@ -91,6 +90,16 @@ _BODY_COMPONENT_STYLE_ROLES: tuple[tuple[str, str, str], ...] = (
     ("body.table", "style.table.header", "table_cell"),
     ("body.table", "style.table.body", "table_cell"),
 )
+
+_REQUIRED_BODY_STRUCTURE_MEMBERS = frozenset(
+    {
+        "body.heading.outline1",
+        "body.heading.outline2",
+        "body.heading.outline3",
+        "body.paragraph",
+    }
+)
+_MAX_TOC_TITLE_CANDIDATES = 64
 
 
 def _normalize(value: str) -> str:
@@ -734,9 +743,7 @@ def _semantic_intent_richness(intent: JsonObject) -> tuple[int, int]:
     member_types = [
         str(value) for value in intent.get("member_field_ids", []) if isinstance(value, str)
     ]
-    retry = intent.get("retry_operation")
-    entries = retry.get("entries", []) if isinstance(retry, dict) else []
-    return len(set(member_types)), max(len(member_types), len(entries))
+    return len(set(member_types)), len(member_types)
 
 
 def _can_regenerate_pending_content(intents: list[JsonObject]) -> bool:
@@ -1061,11 +1068,6 @@ class TemplateWorkspaceService:
                         for member in raw.get("members", [])
                         if isinstance(member, dict)
                     ]
-                    + [
-                        entry.get("object_ref")
-                        for entry in raw.get("entries", [])
-                        if isinstance(entry, dict)
-                    ]
                 )
                 for reference in references:
                     self._resolve_object(reference)
@@ -1128,6 +1130,134 @@ class TemplateWorkspaceService:
                     "pending_edit_intents": pending[-_MAX_PENDING_EDIT_INTENTS:],
                 }
             )
+
+    @staticmethod
+    def _body_structure_gate(inspection: Inspection) -> JsonObject:
+        structures = [
+            item
+            for item in inspection.objects
+            if item.kind == "sdt" and item.format.get("alias") == "body.chapters"
+        ]
+        violations: list[JsonObject] = []
+        if len(structures) != 1:
+            violations.append(
+                {
+                    "code": "body_structure_count_invalid",
+                    "expected": 1,
+                    "actual": len(structures),
+                }
+            )
+        structure = structures[0] if len(structures) == 1 else None
+        member_counts: Counter[str] = Counter()
+        member_sequence: list[str] = []
+        standalone_body_controls: list[str] = []
+        for item in inspection.objects:
+            alias = item.format.get("alias")
+            if (
+                item.kind != "sdt"
+                or not isinstance(alias, str)
+                or (semantic := semantic_object_type(alias)) is None
+                or semantic.parent_type != "body.chapters"
+            ):
+                continue
+            if structure is not None and item.locator.startswith(f"{structure.locator}/"):
+                member_counts[alias] += 1
+                if alias in _REQUIRED_BODY_STRUCTURE_MEMBERS:
+                    member_sequence.append(alias)
+            else:
+                standalone_body_controls.append(alias)
+        missing = sorted(_REQUIRED_BODY_STRUCTURE_MEMBERS - set(member_counts))
+        if missing:
+            violations.append(
+                {
+                    "code": "body_structure_members_missing",
+                    "field_ids": missing,
+                }
+            )
+        duplicate_members = {
+            field_id: count for field_id, count in sorted(member_counts.items()) if count != 1
+        }
+        if duplicate_members:
+            violations.append(
+                {
+                    "code": "body_structure_member_count_invalid",
+                    "field_counts": duplicate_members,
+                }
+            )
+        semantic_order = {
+            "body.heading.outline1": 0,
+            "body.heading.outline2": 1,
+            "body.heading.outline3": 2,
+            "body.paragraph": 3,
+        }
+        if member_sequence != sorted(member_sequence, key=semantic_order.__getitem__):
+            violations.append(
+                {
+                    "code": "body_structure_member_order_invalid",
+                    "actual": member_sequence,
+                    "expected": sorted(member_sequence, key=semantic_order.__getitem__),
+                }
+            )
+        if standalone_body_controls:
+            violations.append(
+                {
+                    "code": "standalone_body_interfaces_forbidden",
+                    "field_ids": sorted(standalone_body_controls),
+                }
+            )
+        return {
+            "status": "ok" if not violations else "blocked",
+            "structure_count": len(structures),
+            "required_member_field_ids": sorted(_REQUIRED_BODY_STRUCTURE_MEMBERS),
+            "member_field_counts": dict(sorted(member_counts.items())),
+            "member_sequence": member_sequence,
+            "violations": violations,
+        }
+
+    def _source_requires_body_structure(self) -> bool:
+        """Return whether the immutable school source demonstrates the body contract."""
+
+        source = self._inspection(self.source)
+        toc_roots = [
+            item.locator
+            for item in source.objects
+            if item.kind == "paragraph"
+            and item.style
+            and item.style.casefold().replace(" ", "").startswith("toc")
+        ]
+        texts = [
+            _normalize(item.text).strip("【】")
+            for item in source.objects
+            if item.text
+            and not any(
+                item.locator == root or item.locator.startswith(f"{root}/")
+                for root in toc_roots
+            )
+        ]
+        has_generic_chapter = any(
+            re.search(r"第[x×]\s*章", text, re.IGNORECASE)
+            and any(marker in text for marker in ("正文标题", "正文", "xxx"))
+            for text in texts
+        )
+        has_first_section = any(re.match(r"^\d+[^.\d]", text) for text in texts)
+        has_second_section = any(re.match(r"^\d+\.\d+", text) for text in texts)
+        return has_generic_chapter and has_first_section and has_second_section
+
+    def _effective_body_structure_gate(self, inspection: Inspection) -> JsonObject:
+        gate = self._body_structure_gate(inspection)
+        if gate["status"] == "ok" or self._source_requires_body_structure():
+            return gate
+        if gate["structure_count"] == 0 and not any(
+            violation.get("code") == "standalone_body_interfaces_forbidden"
+            for violation in gate["violations"]
+            if isinstance(violation, dict)
+        ):
+            return {
+                **gate,
+                "status": "not_applicable",
+                "violations": [],
+            }
+        return gate
 
     @staticmethod
     def _checkpoint_summary(inspection: Inspection) -> JsonObject:
@@ -1266,10 +1396,11 @@ class TemplateWorkspaceService:
         missing_body_heading_types = sorted(
             alias
             for alias, text in body_heading_values.items()
+            if (semantic := semantic_object_type(alias)) is not None
             if not any(
                 text in item.text
                 and (match := re.search(r"([1-3])$", item.style or "")) is not None
-                and int(match.group(1)) == int(alias.rsplit("level", 1)[-1])
+                and int(match.group(1)) == int(semantic.toc_level or 0)
                 for item in toc_objects
             )
         )
@@ -1282,6 +1413,9 @@ class TemplateWorkspaceService:
             "materialized_structures": structures,
             "materialized_structure_members": dict(
                 sorted(materialized_structure_members.items())
+            ),
+            "body_structure_gate": TemplateWorkspaceService._body_structure_gate(
+                inspection
             ),
             "toc": {
                 "entry_count": len(toc_entries),
@@ -1783,6 +1917,9 @@ class TemplateWorkspaceService:
         inspection: Inspection,
     ) -> tuple[JsonObject | None, list[Path]]:
         summary = self._checkpoint_summary(inspection)
+        body_gate = self._effective_body_structure_gate(inspection)
+        if body_gate.get("status") not in {"ok", "not_applicable"}:
+            return None, []
         toc = summary.get("toc")
         if not isinstance(toc, dict) or not toc.get("refresh_needed"):
             return None, []
@@ -1798,73 +1935,45 @@ class TemplateWorkspaceService:
         )
         if toc_root is None:
             return None, []
-        fixed_titles = {
-            "摘要",
-            "中文摘要",
-            "英文摘要",
-            "abstract",
-            "一级章标题",
-            "二级标题",
-            "三级标题",
-            "参考文献",
-            "附录",
-            "附录标题",
-            "相关的学术成果目录",
-            "致谢",
-        }
         required_body_headings = [
             item
             for item in inspection.objects
             if item.kind == "sdt"
-            and isinstance(item.format.get("alias"), str)
-            and item.format["alias"] in toc.get("missing_body_heading_types", [])
+            and isinstance((alias := item.format.get("alias")), str)
+            and alias.startswith("body.heading.")
+            and (semantic := semantic_object_type(alias)) is not None
+            and isinstance(semantic.toc_level, int)
+            and 1 <= semantic.toc_level <= 3
+            and item.text.strip()
         ]
-        candidates: list[InspectedObject] = list(required_body_headings)
-        seen: set[str] = set()
-        seen_titles: set[str] = set()
-        for item in candidates:
-            object_id = str(item.object_ref.get("object_id", ""))
-            if object_id:
-                seen.add(object_id)
-            seen_titles.add(_normalize(item.text))
-        eligible: list[tuple[InspectedObject, bool]] = []
-        for item in inspection.objects:
-            if not item.text.strip() or (item.style and item.style.casefold().startswith("toc")):
-                continue
-            alias = item.format.get("alias") if item.kind == "sdt" else None
-            style = item.style.casefold() if item.style else ""
-            normalized = _normalize(item.text)
-            normalized_label = normalized.strip("【】")
-            named_chapter_landmark = normalized_label.startswith("第") and (
-                "文献综述" in normalized_label or "结论与展望" in normalized_label
-            )
-            is_candidate = (
-                (isinstance(alias, str) and alias.startswith("body.heading."))
-                or style.startswith("heading")
-                or style.startswith("标题")
-                or normalized_label in fixed_titles
-                or named_chapter_landmark
-            )
-            if is_candidate:
-                eligible.append(
-                    (
-                        item,
-                        normalized_label in fixed_titles or named_chapter_landmark,
-                    )
-                )
-        prioritized = [pair for pair in eligible if pair[1]] + [
-            pair for pair in eligible if not pair[1]
-        ]
-        for item, _ in prioritized:
-            object_id = str(item.object_ref.get("object_id", ""))
-            title_key = _normalize(item.text)
-            if not object_id or object_id in seen or title_key in seen_titles:
-                continue
-            seen.add(object_id)
-            seen_titles.add(title_key)
+        candidates: list[InspectedObject] = []
+        seen_objects: set[str] = set()
+        seen_paragraphs: set[str] = set()
+
+        def add_candidate(item: InspectedObject) -> None:
+            object_id = item.object_ref.get("object_id")
+            paragraph = _parent_paragraph_locator(item.locator) or item.locator
+            if (
+                not isinstance(object_id, str)
+                or object_id in seen_objects
+                or paragraph in seen_paragraphs
+                or len(candidates) >= _MAX_TOC_TITLE_CANDIDATES
+            ):
+                return
+            seen_objects.add(object_id)
+            seen_paragraphs.add(paragraph)
             candidates.append(item)
+
+        for item in required_body_headings:
+            add_candidate(item)
+        for item in inspection.objects:
             if len(candidates) >= _MAX_TOC_TITLE_CANDIDATES:
                 break
+            if item.kind != "paragraph" or not item.text.strip():
+                continue
+            if item.style and item.style.casefold().replace(" ", "").startswith("toc"):
+                continue
+            add_candidate(item)
         reviewed, images = self._review(
             {
                 "document_ref": _document_ref(document_hash),
@@ -1881,15 +1990,15 @@ class TemplateWorkspaceService:
                 "required_body_heading_candidates": [
                     _agent_object(inspection, item) for item in required_body_headings
                 ],
-                "title_candidates": [_agent_object(inspection, item) for item in candidates],
+                "title_candidates": [
+                    _agent_object(inspection, item) for item in candidates
+                ],
                 "evidence": reviewed["visual_review"].get("evidence", []),
                 "guidance": (
-                    "The live TOC needs refresh because its cache contains sample markers "
-                    "or omits already materialized body heading types. Required body heading "
-                    "candidates preserve the Agent's prior semantic classifications; all "
-                    "other candidates remain non-semantic suggestions. Choose the entries, "
-                    "assign levels 1-3, decide whether sample-only direct color should be "
-                    "cleared, and submit one refresh_toc operation in the current decision."
+                    "The live TOC needs refresh. Select final source titles only from "
+                    "title_candidates, assign levels 1-3, include every required body-heading "
+                    "candidate, and submit one refresh_toc request. Candidate presence is "
+                    "structural evidence, not a semantic instruction to include an item."
                 ),
             },
             images,
@@ -2221,13 +2330,13 @@ class TemplateWorkspaceService:
                     ]
                     operation = "suggest"
             elif request_type == "search" and isinstance(query, str) and query.strip():
-                matches = [
-                    _with_semantic_type(item)
-                    for item in self.registry.search(
+                matches = list(
+                    self.registry_candidates_for_text(
+                        selected.text,
                         f"{query} {_normalize(selected.text)}",
                         limit=_MAX_SEARCH_RESULTS,
                     )
-                ]
+                )
                 operation = "search"
             else:
                 raise ToolFailure(
@@ -2260,6 +2369,22 @@ class TemplateWorkspaceService:
             "results": results,
             "registry": self.registry.identity(),
         }
+
+    def registry_candidates_for_text(
+        self,
+        text: str,
+        query: str,
+        *,
+        limit: int = _MAX_SEARCH_RESULTS,
+    ) -> tuple[JsonObject, ...]:
+        """Return lexical Registry candidates without application-owned semantic pruning."""
+
+        matches = [
+            item
+            for item in self.registry.search(query, limit=limit)
+            if item.get("field_id") != "body.chapters"
+        ]
+        return tuple(_with_semantic_type(item) for item in matches[:limit])
 
     def _feedback_object(
         self,
@@ -2435,6 +2560,18 @@ class TemplateWorkspaceService:
                         message="materialize_slot requires one Registry field_id.",
                     )
                 field = self.registry.lookup(raw_field_id)
+                semantic = semantic_object_type(raw_field_id)
+                if semantic is not None and semantic.parent_type == "body.chapters":
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_member_requires_structure",
+                        message=(
+                            "Reusable body members must be materialized inside the single "
+                            "body.chapters structure, never as independent slots."
+                        ),
+                        suggested_actions=("materialize_body_structure",),
+                    )
                 slot_id = allocate_slot(raw_field_id)
                 placeholder = _placeholder_text(field)
             elif action == "materialize_structure":
@@ -2639,20 +2776,66 @@ class TemplateWorkspaceService:
                             "do_not_only_reorder_cross_block_members",
                         ),
                     )
-            elif action == "refresh_toc":
-                raw_field_id = raw.get("field_id", "generated.toc")
-                if raw_field_id != "generated.toc":
+                semantic_order = {
+                    "body.heading.outline1": 0,
+                    "body.heading.outline2": 1,
+                    "body.heading.outline3": 2,
+                    "body.paragraph": 3,
+                }
+                representative_sequence = [
+                    member.field_id
+                    for member in structure_members
+                    if member.field_id in semantic_order
+                ]
+                if representative_sequence != sorted(
+                    representative_sequence,
+                    key=semantic_order.__getitem__,
+                ):
                     raise ToolFailure(
                         status="needs_input",
                         origin="request",
-                        code="toc_field_id_invalid",
-                        message="refresh_toc operates on the generated.toc field.",
+                        code="body_structure_semantic_order_invalid",
+                        message=(
+                            "The reusable body representatives must occur as chapter title, "
+                            "first-level section title, second-level section title, then body "
+                            "paragraph. Select the later paragraph after the demonstrated "
+                            "second-level heading; do not use an introductory sample paragraph."
+                        ),
+                        suggested_actions=("select_one_coherent_generic_body_sequence",),
+                    )
+            elif action == "refresh_toc":
+                unsupported_toc_parameters = set(raw) - {
+                    "action",
+                    "object_ref",
+                    "entries",
+                }
+                if unsupported_toc_parameters:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="toc_parameters_invalid",
+                        message=(
+                            "refresh_toc accepts the target object and Agent-selected title "
+                            "entries with levels; field IDs and formatting are application-owned."
+                        ),
                     )
                 field = self.registry.lookup("generated.toc")
+                body_gate = self._effective_body_structure_gate(candidate_before)
+                if body_gate["status"] not in {"ok", "not_applicable"}:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_gate_failed",
+                        message=(
+                            "The reusable body structure must pass the deterministic semantic "
+                            "gate before generated content can be refreshed: "
+                            f"{body_gate['violations']}"
+                        ),
+                    )
                 raw_entries = raw.get("entries")
                 if (
                     not isinstance(raw_entries, list)
-                    or not 1 <= len(raw_entries) <= 64
+                    or not 1 <= len(raw_entries) <= _MAX_TOC_TITLE_CANDIDATES
                     or not all(isinstance(item, dict) for item in raw_entries)
                 ):
                     raise ToolFailure(
@@ -2673,13 +2856,15 @@ class TemplateWorkspaceService:
                             status="needs_input",
                             origin="request",
                             code="toc_entry_duplicate",
-                            message=(
-                                "Each representative TOC entry must select a distinct title object."
-                            ),
+                            message="Each TOC entry must select a distinct title object.",
                         )
                     entry_object_ids.add(entry_object_id)
                     level = raw_entry.get("level")
-                    if not isinstance(level, int) or not 1 <= level <= 3:
+                    if (
+                        not isinstance(level, int)
+                        or isinstance(level, bool)
+                        or not 1 <= level <= 3
+                    ):
                         raise ToolFailure(
                             status="needs_input",
                             origin="request",
@@ -2691,7 +2876,7 @@ class TemplateWorkspaceService:
                             status="needs_input",
                             origin="request",
                             code="toc_entry_text_empty",
-                            message="A representative TOC entry must point to a visible title.",
+                            message="A TOC entry must point to a visible title.",
                         )
                     if entry_object.style and entry_object.style.casefold().replace(
                         " ", ""
@@ -2700,10 +2885,7 @@ class TemplateWorkspaceService:
                             status="needs_input",
                             origin="request",
                             code="toc_entry_is_generated_cache",
-                            message=(
-                                "A live TOC cache row cannot be its own source title. Select a "
-                                "title object outside the generated TOC field."
-                            ),
+                            message="A live TOC cache row cannot be its own source title.",
                         )
                     toc_entries.append(TocEntry(selected=entry_object, level=level))
                     prepared_entries.append(
@@ -3509,6 +3691,19 @@ class TemplateWorkspaceService:
                 suggested_actions=("resolve_pending_edit_intents",),
             )
         summary = self._checkpoint_summary(inspection)
+        body_gate = self._effective_body_structure_gate(inspection)
+        if body_gate.get("status") not in {"ok", "not_applicable"}:
+            raise ToolFailure(
+                status="needs_input",
+                origin="postcondition",
+                code="final_body_structure_gate_failed",
+                message=(
+                    "Final visual QA cannot start until the document contains exactly one "
+                    "complete reusable body structure and no independent body interfaces: "
+                    f"{body_gate.get('violations', []) if isinstance(body_gate, dict) else []}"
+                ),
+                suggested_actions=("repair_reusable_body_structure",),
+            )
         toc = summary.get("toc")
         has_toc_target = any(
             item.kind == "paragraph"
@@ -3732,8 +3927,21 @@ class TemplateWorkspaceService:
                 code="source_document_changed",
                 message="The source template changed during preparation.",
             )
+        inspection = self._inspection(document)
+        body_gate = self._effective_body_structure_gate(inspection)
+        if body_gate["status"] not in {"ok", "not_applicable"}:
+            raise ToolFailure(
+                status="needs_input",
+                origin="postcondition",
+                code="publish_body_structure_gate_failed",
+                message=(
+                    "Publication requires exactly one complete reusable body structure and no "
+                    f"independent body interfaces: {body_gate['violations']}"
+                ),
+                suggested_actions=("repair_reusable_body_structure",),
+            )
         progress = self._read_progress(source_hash)
-        progress = self._reconcile_satisfied_intents(progress, self._inspection(document))
+        progress = self._reconcile_satisfied_intents(progress, inspection)
         pending_edit_intents = progress.get("pending_edit_intents", [])
         if pending_edit_intents:
             raise ToolFailure(

@@ -38,7 +38,7 @@
 3. **代表单元选择**：从学校样例中选择一个覆盖实际独特样式的连续正文单元；
 4. **直接物化**：Tool 一次建立可重复正文结构和内部槽，保留学校对象的实际样式；
 5. **样例清理**：删除其他重复章节、说明和示例，并返回修改区域的即时反馈；
-6. **发布与独立验收**：发布一份最终 Word；Eval 与人工审查在产品运行时之外独立验证质量。
+6. **发布与独立验收**：原子发布一份可填写 Word 和一份填写契约；Eval 与人工审查在产品运行时之外独立验证质量。
 
 本阶段不负责：
 
@@ -52,13 +52,16 @@
 
 | 产物 | 内容 | 消费者 | 是否可直接作为 Gold |
 |---|---|---|---|
-| `clean-template.docx` | 保留固定模板内容并物化填写槽的 Word 文档 | 产品填写链路、人工审查、Eval | 否，先是 candidate |
-| `fill-contract.yaml` | 槽位、字段、定位、重复性和槽值样式契约 | 产品填写链路、Eval | 否，必须与模板一起验收 |
-| Tool receipt / fill contract | 每次直接编辑、槽结构、字段映射和机械回读 | 产品内部、人工 reviewer | 否，仅是内部证据 |
+| `final-template.docx` | 保留固定模板内容并物化填写槽的可填写 Word | 产品填写链路、人工审查、Eval | 否，先是 candidate |
+| `fill-contract.yaml` | 指导填写的契约：槽/区域到字段的映射、定位、必填性、基数、条件、空值/占位策略、样式、逻辑页与手工动作 | 产品填写链路、人工审查、Eval | 否，必须与模板一起验收 |
+| Tool receipt / manifest / render | 每次直接编辑、机械回读、hash 和视觉证据 | 产品内部、人工 reviewer | 否，仅是内部证据 |
 | reviewer 记录 | 审查人、结论、时间、模板与契约 hash | Gold 资格门禁 | 是 Gold 接受条件之一 |
 
-Tool receipt 和 fill contract 是内部证据，不是第二个 Agent 协议，也不要求 Agent 先写 YAML。
-用户可见产物只有最终 Word；真正跨模块的稳定接口仍是 Clean Template 与填写契约。
+每个学校的模板提取结果固定为两份用户可见主交付物：`final-template.docx` 和
+`fill-contract.yaml`。二者原子发布，契约绑定最终 Word hash；缺少任一文件或绑定不一致都不算
+成功。Tool receipt、manifest、hash、reviewer 记录、PNG/PDF 和其他报告是内部证据，不构成第三份
+主交付物。填写契约由应用根据最终快照、Registry、Agent 已接受决定与 Tool 回读生成，不要求
+Agent 手写 YAML。
 
 候选产物只有在字段语义、槽边界、预期样式、protected/remove Truth 和完整性检查均完成人工
 确认后，才能进入 accepted Gold。生成成功不等于 Gold 合格。
@@ -75,7 +78,7 @@ docfit_agent_SDK/
 │       ├── docfit-body-template-extraction-spec.md       # 本规范：正文提取和 Gold 准备规则
 │       ├── docfit-content-field-registry/
 │       │   ├── DESIGN.md                                 # 字段注册表边界与治理规则
-│       │   └── content-fields-v0.1.yaml                  # 当前正文规范字段快照
+│       │   └── content-fields-v0.5.yaml                  # 当前正文规范字段快照
 │       ├── docfit-school-extract-v2-candidate-skill/
 │       │   ├── SKILL.md                                  # 当前学校模板准备 Agent 操作规则
 │       │   └── references/                               # 清理、填写和对象安全参考
@@ -147,11 +150,8 @@ body.chapters
 │   │   ├── equation + equation-number relation
 │   │   └── table + caption + note
 │   └── paragraph
-├── body.section(level=1)
-│   └── ...
-└── conclusion
-    ├── heading
-    └── paragraph
+└── body.section(level=1)
+    └── ...
 ```
 
 内容树负责表达顺序、嵌套和复合对象关系。Content Field Registry 负责跨阶段共享语义 ID。
@@ -162,7 +162,7 @@ body.chapters
 | 内容类型 | 当前规范字段 | 说明 |
 |---|---|---|
 | 正文聚合容器 | `body.chapters` | 可承载完整递归正文；不能成为静态格式验证的唯一不透明槽 |
-| 一级至五级标题 | `body.heading.level1` … `level5` | 每级独立识别，有各自槽值样式 |
+| 章标题至四级节标题 | `body.heading.outline1` … `outline5` | 每级独立识别，有各自槽值样式 |
 | 普通正文段落 | `body.paragraph` | 保留正文内超链接、书签、批注、脚注、域、控件等对象语义 |
 | 编号列表项 | `body.numbered_list_item` | 同时保留编号定义与段落格式 |
 | 行内强调、行内引文 | `body.inline_emphasis`、`body.inline_quote` | 通常是段落内部范围，不应粗暴槽化整段 |
@@ -175,9 +175,10 @@ body.chapters
 | 致谢 | `acknowledgement.body` | 同上 |
 | 附录 | `appendix.title`、`appendix.body` | 标题和内容分别建模 |
 
-当前 Registry 没有独立的 `conclusion.title` / `conclusion.body` 字段。现阶段可分别映射到
-`body.heading.level1` 和 `body.paragraph`，并用稳定 `slot_id` 或契约中的逻辑角色区分结论；
-不能为方便而伪造未注册字段。若后续确认结论需要跨阶段独立语义，再通过 Registry 治理新增。
+当前 Registry 没有独立的 `conclusion.title` / `conclusion.body` 字段。结论与展望等具名章节复用
+`body.heading.outline1` 和 `body.paragraph` 的同一套正文能力，不为它建立独立物理槽。若学校要求
+必须包含该章节，应在 requirements/验证规则中表达；若未来确需跨阶段独立内容语义，再通过
+Registry 治理新增字段。
 
 ### 5.3 聚合容器与物理槽的关系
 
@@ -185,8 +186,9 @@ body.chapters
 位置、字段和槽值样式，因此正文 Gold 至少需要为模板明确规定的不同内容类型提供可验证的
 代表性物理槽，或未来扩展一种可表达子类型样式映射的结构化区域契约。
 
-当前 v1 选择是：**使用细粒度、可重复的代表性正文槽**。在 Eval 支持结构化区域和子类型
-样式图之前，不能退回单一不透明正文槽。
+当前选择是：**一个 `body.chapters` 结构内使用细粒度代表成员**。最小完整集为章标题、一级节
+标题、二级节标题和正文段落各一个；结构化区域保留成员类型与样式映射，不能退回单一不透明
+正文槽，也不能为每个具名样例章复制一套槽。
 
 ## 6. 区域责任划分规则
 
@@ -243,13 +245,13 @@ body.chapters
 
 若任一项不同，就应拆成不同槽或不同结构化子类型。典型必须拆分的情况包括：
 
-- 一级标题与二级标题；
+- 章标题与一级节标题；
 - 标题与标题后的正文；
 - 普通正文与块引用；
 - 图片、图片题注和图片说明；
 - 表格、表题和表注；
 - 公式与公式编号；
-- 结论标题与结论正文；
+- 标题与正文；
 - 同一字段在封面、声明页和正文中的不同物理实例。
 
 ### 7.2 一个代表格式，多次填充
@@ -266,10 +268,15 @@ body.chapters
 
 ### 7.3 模板没有示例时
 
-- 学校官方规则明确要求、但 DOCX 没有示例时，可以基于有来源的学校要求补充候选槽，并记录来源；
+- 用户选定的规则材料明确要求、但 DOCX 没有示例时，可以基于有来源的要求补充候选槽，并记录来源；
 - 只有常识推断、没有模板或学校规则证据时，不应悄悄创造 Gold Truth；
 - 当前模板未出现的图、表、公式等类型，要在准备报告中明确写成“模板未提供”，不能把“没发现”
   当成“确认不需要”。
+
+当前测试阶段以准确度为第一目标：来源是否官方只作为 provenance 和冲突判断信息，不作为
+candidate/Gold 资格门或评分项。官方材料、历史模板、社区样本、用户指定文件和受控合成材料，
+只要本次目标与适用范围明确并以 hash 冻结，都可以进入 Human 验收。未来若需要对外宣称符合
+学校当前官方要求，应另设时效性和官方来源门，不能把该声明混入当前准确度结论。
 
 ## 8. 识别证据与稳定定位
 
@@ -327,7 +334,7 @@ marker:
   tag: docfit.body.section_body
 locator:
   story: document
-  left_anchor: "1.1 二级标题"
+  left_anchor: "1.1 二级节标题"
 expected_value_style:
   font:
     east_asia: 宋体
@@ -418,7 +425,10 @@ expected_value_style:
 
 - 当前目标、父对象和必要邻接对象必须暴露判断需要的有效样式和直接颜色事实；
 - 代码内置正文语义对象类型，Registry 查询当前对象时返回类型说明；
-- `materialize_structure` 一次接收连续代表单元及其成员映射，直接建立 `body.chapters`；
+- Agent 只用 `register_body_member` 登记当前对象的正文角色；应用按文档顺序合并同一次决定中的
+  多个登记，并在内部建立或扩展唯一 `body.chapters`，结构容器和成员数组不进入 Agent 合同；
+- 应用从不可变原始视觉区域蓝图建立正文模块范围：具名样例区域由代码批量清理，只有通用
+  `第 X 章（正文标题）` 区域可提供正文角色候选；
 - Tool 保留每个学校对象实际样式，并按 Agent 的显式决定只清理直接颜色；
 - 修改后立即回读结构和修改区域，让 Agent 判断是否继续，而不是依赖独立语义 checker。
 - 文档版本、视觉游标和待复核区域作为应用 checkpoint 持久化；上下文分段或 backend 切换时启动
@@ -456,7 +466,9 @@ expected_value_style:
 输出
 ├── 一个新的不可变 Word 版本
 ├── 结构化 Tool receipt 与修改区域反馈
-└── 最终一次发布的 final-template.docx
+└── 最终原子发布
+    ├── final-template.docx
+    └── fill-contract.yaml（绑定 final-template.docx hash）
 ```
 
 失败策略：
@@ -501,10 +513,10 @@ expected_value_style:
 
 | 能力 | Case 1：正常 | Case 2：缺失/歧义 | Case 3：局部变异 |
 |---|---|---|---|
-| 正文事实分析 | 一级标题 + 正文段落 + 图片 | 空正文区域 | 删除图片 relationship |
+| 正文事实分析 | 章标题 + 正文段落 + 图片 | 空正文区域 | 删除图片 relationship |
 | 责任分类 | 标签 + 示例值 + 括号说明 | 无法确认的彩色提示 | 槽边界多吞一个冒号 |
 | 代表槽分组 | 两个完全等价段落合为 `many` | 无代表样式 | 同字段但字号不同，必须拆分 |
-| 标题层级 | 一级/二级/三级各一例 | 缺二级标题证据 | 把三级标题误映射为二级 |
+| 标题层级 | 章/一级节/二级节各一例 | 缺一级节标题证据 | 把二级节标题误映射为一级节 |
 | 槽物化 | 一个块级段落槽 | object_ref 不存在 | 重复 `w:tag` |
 | 契约闭包 | 模板槽与契约一一对应 | 契约缺一个槽 | `w:alias` 与 `field_id` 不同 |
 | 样式契约 | 括号占位 + 学校实际槽样式 | 缺 expected style | 行距只改变 1 个属性 |
@@ -521,36 +533,80 @@ expected_value_style:
 原始模板哨兵不是质量分数基准，而是验证 Eval 方向是否正确：保留层失败通常暴露 Gold 准备、
 合法清理声明或 protected 对齐问题；槽层全失败证明 Eval 没有把“未提取的原始内容”误当成槽。
 
-## 14. 湖南农业大学的落地示例
+### 13.5 Human 产品核对面
 
-当前湖南农业大学 candidate Gold 共 31 个内容控件，其中正文/结论使用 8 个代表槽：
+Human 以产品可读核对表签署，不直接审核 YAML、OOXML 或重复的字体属性。核对面可按
+相同字段语义、required/cardinality、fill/empty behavior 和样式来源归并规则组；机器附件
+仍须逐槽/区域枚举覆盖，并将不同物理样式、复合字段、条件页、证据冲突和 unresolved
+单独列为例外。
 
-| 物理槽 | 规范字段 | 重复性 |
+同一语义事实在封面、摘要或正文的多个物理实例可共享字段决定，但每个实例的物理定位、
+学校样式和页面责任仍独立验证。规则组签署只降低 Human 重复工作，不降低 Gold 覆盖率。
+
+## 14. 三校已确认的产品规则
+
+> 产品确认：2026-08-13，产品负责人（当前用户）接受本节复合字段、学校章节角色、
+> 逻辑页缺失策略和 schema 例外门。该签署是 candidate 重建的产品输入，不等于对尚未生成的
+> v0.5 精确模板 hash、样式事实或全页 Word 证据已验收。
+
+### 14.1 湖南农业大学
+
+当前湖南农业大学 candidate Gold 的正文应收敛为一个 `body.chapters`，其中最小代表成员为：
+
+| 结构成员 | 规范字段 | 结构内数量 |
 |---|---|---|
-| `slot.body.chapter_title` | `body.heading.level1` | many |
-| `slot.body.chapter_body` | `body.paragraph` | many |
-| `slot.body.section_title` | `body.heading.level2` | many |
-| `slot.body.section_body` | `body.paragraph` | many |
-| `slot.body.subsection_title` | `body.heading.level3` | many |
-| `slot.body.subsection_body` | `body.paragraph` | many |
-| `slot.conclusion.title` | `body.heading.level1` | one |
-| `slot.conclusion.body` | `body.paragraph` | one |
+| `member.body.chapter_title` | `body.heading.outline1` | 1 |
+| `member.body.section_title` | `body.heading.outline2` | 1 |
+| `member.body.subsection_title` | `body.heading.outline3` | 1 |
+| `member.body.paragraph` | `body.paragraph` | 1 |
 
-这 8 个槽表达当前模板已确认的一级、二级、三级标题、对应正文和结论样式，是**最低覆盖骨架**，
-不是正文最多只能有 8 个槽，也不代表图、表、公式、引用、参考文献或附录已经自动完成覆盖。
-在 Gold 被接受前，仍需对原始模板做全量盘点：原模板出现或学校规则明确要求的每一种不同
-内容类型，都必须有代表槽、结构化区域或明确的“模板未提供/不适用”结论。
+这 4 个成员表达章标题、一级节标题、二级节标题和正文样式，是**最低完整骨架**。它不代表图、
+表、公式、引用、参考文献或附录已经自动完成覆盖。在 Gold 被接受前，仍需对原始模板做全量
+盘点：原模板出现或学校规则明确要求的每一种不同内容类型，都必须有结构内代表成员、独立
+结构化区域或明确的“模板未提供/不适用”结论。
+
+显式编号深度由应用代码统一映射：`第X章` → `outline1`、`1 …` → `outline2`、
+`1.1 …` → `outline3`。该映射同时约束 Registry 候选、结构门禁和目录层级，不依赖学校是否
+复用同一个 Word 样式，也不交给 Agent 做三次独立语义猜测。
 
 当前处理经验应固化为以下规则：
 
-- 正文标题和标题后的正文必须拆槽；
-- 不同标题层级必须拆槽；
-- 结论即使复用标题/段落字段，也要保持独立物理身份和逻辑边界；
+- 正文标题和标题后的正文必须拆为不同结构成员；
+- 不同标题层级必须拆为不同结构成员；
+- 结论等具名样例复用正文成员样式，不保留独立物理接口；其强制性由 requirements/验证规则表达；
 - 中文摘要和中文关键词的内容槽不能吞入后面的隐藏 `TC` 域；
 - 所有占位文字只用 `【】` 标识；槽继续保存学校要求的真实字体、字号和段落样式，颜色由 Agent
   根据当前对象语义显式保留或移除；
 - 页面上下边距按原模板 56.7pt 保留，不能因清理正文示例而改变页面级样式；
 - 当前 case 仍是 candidate，不能因控件数量和哨兵流程正确就自动视为 accepted Gold。
+
+封面“年级、专业及班级”使用 `author.cohort_class` 复合显示值，不在来源不足时强拆。封面
+“指导老师及职称”是一个复合物理区域，内部成员为 `advisor.name.zh` 和 `advisor.title`，
+显示时保留模板规定的一个汉字宽空格；任一缺失都阻止最终交付。正文“指导老师”只
+消费 `advisor.name.zh`，复用同一导师事实，不附加职称。
+
+结论和致谢为必填；附录为选填。任务书、开题报告、开题论证记录、答辩记录、题目变更审批和
+成绩表均为 `manual_only`：Template Gold 验收表单壳和顺序，不要求已完成手工填写；实际论文交付
+仍必须提示未完成的手工动作。
+
+### 14.2 南京农业大学
+
+“第一章 文献综述”是必需的首章角色，“结论与展望”是必需的末章角色。两者都使用通用
+`body.chapters` 及 `body.heading.outline*` / `body.paragraph` 成员；学校 `requirements`
+验证首章/末章角色和内容存在性，不保留 `literature_review.*` 或 `conclusion.*` 专用字段、
+槽或平行公共合同。
+
+文献综述、结论与展望和致谢为必填；附录和相关学术成果为选填。选填页在 review draft 中保留
+可见待确认提示，用户确认不适用后从 final 删除；必填页缺失阻止最终交付。
+
+### 14.3 北京大学
+
+实名评审专家名单是受 `review.mode` 控制的条件页。带二维码的版权声明和原创性/授权页是
+正式提交阶段的外部必需资产；缺少时返回 `NEEDS_INPUT`，不得伪造或从普通文字生成。图目录和
+表目录仅在存在对应图表时生成；无对应对象时 final 不保留空目录页。
+
+附录/成果为选填，缺失时经用户确认从 final 删除；致谢为必填，缺失阻止最终交付。当前三校 Eval
+snapshot 不自动继承历史 PKU 模板的 Human signoff，仍需对重建后的精确 hash 独立验收。
 
 ## 15. 完成定义（Definition of Done）
 
@@ -565,7 +621,8 @@ expected_value_style:
 7. 所有 remove 项都已完成内容、样式或规则责任迁移；
 8. 模板与契约 hash、marker 和 locator 双向闭合；
 9. 每个新增代码能力至少有三个简单测试，并通过真实学校端到端回归；
-10. candidate 通过人工字段、样式、边界和对象审查，reviewer 明确签署为 accepted Gold。
+10. candidate 的产品可读核对面按规则组和例外完成字段、样式来源、边界和对象审查，机器附件证明逐槽/区域覆盖，reviewer 明确签署为 accepted Gold。
+11. 已知 schema finding 已修复，或按《DocFit Eval 数据与 Gold》的证据要求证明为 validator false positive 并形成书面 exception。
 
 ## 16. 后续实施顺序
 
@@ -573,7 +630,8 @@ expected_value_style:
 
 1. 在 `semantic_types.py` 固化最小正文语义对象类型体系；
 2. 让当前页对象暴露 Agent 判断所需的紧凑样式事实；
-3. 在现有 `template_edit` / `object_mutation` 增加一次性 `materialize_structure`，不增加新公共 Tool；
+3. 在 Agent Tool 合同增加单对象 `register_body_member`，由现有 `template_edit` /
+   `object_mutation` 在应用内部一次性执行 `materialize_structure`，不公开结构流程控制参数；
 4. 让发布 fill contract 记录外层结构、成员槽和学校实际样式；
 5. 用合成样本完成每项至少三个测试；
 6. 用湖南农业大学原始模板重新跑 candidate 准备和 raw-source sentinel；
@@ -583,7 +641,7 @@ expected_value_style:
 ## 17. 关联文档
 
 - `docs/plans/docfit-content-field-registry/DESIGN.md`：正文规范字段与跨阶段语义合同；
-- `docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml`：当前固定 Registry 快照；
+- `docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml`：当前 clean-break Registry 快照；v0.1–v0.4 仅用于历史证据重放；
 - `docs/plans/docfit-school-extract-v2-candidate-skill/SKILL.md`：当前模板准备 Agent 行为；
 - `docs/plans/docfit-school-extract-v2-candidate-skill/references/cleaning-and-fill-interfaces.md`：
   protected / slot / remove 和填写接口规则；

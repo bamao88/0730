@@ -14,9 +14,9 @@ from docfit.styles.materialization import materialize_style_contracts
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
 
 _PRESENTATION_ROLE_FIELDS = {
-    "chapter_title": "body.heading.level1",
-    "section_title": "body.heading.level2",
-    "subsection_title": "body.heading.level3",
+    "chapter_title": "body.heading.outline1",
+    "section_title": "body.heading.outline2",
+    "subsection_title": "body.heading.outline3",
     "body": "body.paragraph",
     "reference": "references.entries",
     "figure_caption": "body.figure.caption",

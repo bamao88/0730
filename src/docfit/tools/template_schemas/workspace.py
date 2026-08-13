@@ -18,17 +18,6 @@ EFFECTIVE_FORMAT_SCHEMA: JsonObject = {
     "additionalProperties": False,
 }
 
-_STRUCTURE_MEMBER_SCHEMA: JsonObject = {
-    "type": "object",
-    "properties": {
-        "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
-        "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
-        "effective_format": EFFECTIVE_FORMAT_SCHEMA,
-    },
-    "required": ["object_id", "field_id"],
-    "additionalProperties": False,
-}
-
 _TOC_ENTRY_SCHEMA: JsonObject = {
     "type": "object",
     "properties": {
@@ -46,7 +35,7 @@ _DECISION_OPERATION_SCHEMA: JsonObject = {
             "type": "string",
             "enum": [
                 "materialize_slot",
-                "materialize_structure",
+                "register_body_member",
                 "normalize_effective_format",
                 "refresh_toc",
                 "clear_content",
@@ -57,12 +46,6 @@ _DECISION_OPERATION_SCHEMA: JsonObject = {
         "object_id": TEMPLATE_OBJECT_ID_SCHEMA,
         "field_id": {"type": "string", "minLength": 1, "maxLength": 128},
         "effective_format": EFFECTIVE_FORMAT_SCHEMA,
-        "members": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 32,
-            "items": _STRUCTURE_MEMBER_SCHEMA,
-        },
         "entries": {
             "type": "array",
             "minItems": 1,

@@ -120,9 +120,9 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
                         }
                         for index, (field_id, physical_type) in enumerate(
                             (
-                                ("body.heading.level1", "text"),
-                                ("body.heading.level2", "text"),
-                                ("body.heading.level3", "text"),
+                                ("body.heading.outline1", "text"),
+                                ("body.heading.outline2", "text"),
+                                ("body.heading.outline3", "text"),
                                 ("body.paragraph", "text"),
                                 ("body.figure.caption", "text"),
                                 ("body.table.caption", "text"),

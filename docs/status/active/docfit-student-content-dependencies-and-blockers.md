@@ -48,7 +48,7 @@ Placement、样式选择、目录更新、内容审计、渲染和 Eval 都是�
 | 模块 | 当前状态 | 已有事实 | 当前关闭条件 |
 |---|---|---|---|
 | 模板生成 | `FAIL` | 已有模板检查、对象编辑和后续行为修订 | 在真实学校模板上有界完成，忠实保留全部结构，并输出可直接消费的学校规则、槽位和样式事实 |
-| 用户内容提取 | `STUDENT_002_QUALITY_AND_PERFORMANCE_PASSED` | Student Content Model v2 在真实 API 下保持 Gold r5 的 188/188 语义一致和 8/8 维度通过；编排优化后墙钟从 29 分 17 秒降至 2 分 05.82 秒 | 扩展 Student 001/003 Gold 验证跨文档泛化；全仓唯一模板合同测试滞后需在模板工作包关闭，不回退本模块 |
+| 用户内容提取 | `STUDENT_002_QUALITY_AND_PERFORMANCE_PASSED` | Student Content Model v2 在真实 API 下保持 Gold r5 的 188/188 语义一致和 8/8 维度通过；编排优化后墙钟从 29 分 17 秒降至 2 分 05.82 秒 | 扩展 Student 001/003 Gold 验证跨文档泛化；此前 Template Workspace 合同测试与 `preceding_landmarks` 实现不同步的问题已经关闭，不再作为本模块或当前工作区的 blocker |
 | 最终内容填写 | `FAIL`，底层能力部分可用 | 已证明模板主干写入和图片、表格、公式运输能力 | 消费新 `items` 合同，完成实际角色样式选择/物化、必填补值、非填写标注、目录分页和最终逐页验收 |
 
 最新完整真实产品运行仍是
@@ -179,7 +179,8 @@ Claude Agent SDK 继续拥有单一 Agent loop，应用通过 SDK 原生 JSON Sc
 偏差校正，以及按不可变源顺序绑定相邻的图/表题注。它不读取模板、不使用 Gold 规则、不重排正文。
 
 旧质量基线工程回归：`ruff check src tests` 通过；Mypy `83 source files` 通过；全仓测试 `486 passed`
-（1 条既有 Starlette/httpx 弃用警告）。优化后回归与已知模板工作区测试滞后见 4.4.4。
+（1 条既有 Starlette/httpx 弃用警告）。优化后回归，以及历史 Template Workspace 返回合同同步问题的
+当前结论见 4.4.4。
 
 证据目录：
 `temp/student-content-extraction-eval-20260812/student-002-actual-live-v3/`；正式报告：
@@ -269,7 +270,8 @@ CLI 固定成本仍是主要瓶颈时，才把 warm client 作为可逆实验，
 | checkpoint 不错误复用 | `PASS`；source、Registry、inventory、batch、prompt/schema/system prompt 均参与身份 hash |
 | 真实 API 性能证据完整 | `PASS`；6/6 批、6 个真实 session、每批 1 次成功 attempt，无超时、无路由切换 |
 | 静态与模块回归 | `PASS`；Ruff、Mypy 84 个源文件、提取单元/集成/权限/Eval 合同测试均通过 |
-| 全仓无其他失败 | `OPEN（非提取回归）`；全仓 509 项中 508 通过，唯一失败是模板工作区已新增 `preceding_landmarks`，模板合同测试仍断言旧返回字段集合 |
+| 历史全仓运行中的 Template Workspace 合同失败 | `CLOSED（合同测试已同步）`；此前 509 项中 508 通过的唯一失败，只是实现新增 `preceding_landmarks` 后严格字段集合断言尚未同步。当前测试已把该字段纳入返回合同，并专项验证它只返回目标前面的对象、`distance` 正确且不暴露 `object_ref`。该历史失败不表示 Word 提取、用户内容提取、正文顺序或 `preceding_landmarks` 计算存在回归，也不再是当前工作区 blocker |
+| 当前全仓回归 | `OPEN（与本模块和上述合同同步无关）`；2026-08-13 当前工作区为 540 passed、1 failed，唯一失败是 `test_maximum_legal_tool_event_meets_projector_latency_and_drop_contract` 的 observability projector p95 延迟超过 2 ms；单独复跑仍为 2.603 ms。该性能合同应由 observability 工作包处理，不能重新解释为 Template Workspace 或用户内容提取回归 |
 
 #### 4.4.5 Student 002 优化后真实数据
 

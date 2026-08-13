@@ -1,8 +1,8 @@
 # DocFit 学校模板提取 v2 执行胶囊
 
-- Capsule status: `COMPLETE / CLEAN-BREAK AND REAL E2E VERIFIED`
-- Latest user decision: 先提交当前代码，再按 clean break 完整重构；确定性流程控制归应用代码，
-  Agent 只提出当前语义判断或页面视觉结论；不保留旧协议兼容。
+- Capsule status: `E2E VERIFIED / TWO-FILE PUBLICATION GAP`
+- Latest user decision: 当前处于准确度测试阶段，来源是否官方只记录、不作为 Gold 门；每个学校
+  模板提取必须原子交付两份文件：可填写 Word 与指导填写的契约文件。
 - Baseline commit: `5b9e491 feat(content): checkpoint extraction and field contracts` 保存本轮开始前
   已有的 Student Content / Registry / style 工作，聚焦 51 tests、Ruff、Mypy 通过。
 
@@ -29,8 +29,9 @@
   绑定，但不把它们暴露给模型。
 - 任一页面 defect 生成有界单页修复工作项；修改产生新 hash，旧视觉 receipt 自动失效，并从
   第一页重查。最多三轮修复；无新版本或超限返回稳定错误，不继续猜测。
-- 全部页面显式 clean 后，应用内部执行 package/OfficeCLI/style/Registry 检查并原子发布；用户
-  output 仍只允许 `final-template.docx`，PNG/PDF/evidence 只作内部质检。
+- 全部页面显式 clean 后，应用内部执行 package/OfficeCLI/style/Registry 检查并原子发布。目标
+  output 必须同时包含 `final-template.docx` 与绑定其 hash 的 `fill-contract.yaml`；PNG/PDF/evidence
+  只作内部质检，不构成第三份主交付物。
 - Skill 已减为领域手册：局部对象责任、填写接口、正文结构、按需 references 和最终视觉不变量。
   遍历、cursor/ref、重试、终态、发布 API 和 structured output 示例均已移除；新增独立
   `references/final-visual-review.md`，只在视觉角色使用。
@@ -58,3 +59,16 @@
   保持黑色、无下划线、1–3 级缩进、点引导线和更新后的页码。Word 重写后的 DOCX 再审计通过。
 - Product boundary: 应用拥有确定性流程；Tool 负责可执行性和事实反馈；Agent 根据当前学校证据决定
   语义完整性。旧 v4 Tool 合同不保留兼容层。
+
+## 当前产品合同差距
+
+- 当前代码已在 `work/.docfit/template-workspace-v1/publication/fill-contract.json` 生成并校验与最终
+  Word hash 绑定的 v2 契约，`PrepareTemplateReport` 也返回该内部路径；槽、字段、定位和样式合同
+  能力不是从零缺失。
+- 当前 `output/` 的恢复检查与 built postcondition 仍硬编码“只能有一个
+  `final-template.docx`”，因此第二份契约尚未成为用户可见的原子交付物。
+- 当前运行时契约还没有完整写入本轮已确认的逻辑页顺序、条件页、optional/required 和
+  `manual_only` 动作；因此不能只把内部 JSON 复制到 output 就宣称两文件合同完成。
+- 后续实现只需在不改变 Agent 判断边界的前提下调整 publication service、恢复/幂等检查、报告路径
+  和相应测试，并把已确认的填写政策纳入正式契约；发布前仍由应用从最终快照生成契约，不让
+  Agent 手写。

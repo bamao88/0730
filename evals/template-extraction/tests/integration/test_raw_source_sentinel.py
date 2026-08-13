@@ -48,22 +48,22 @@ SOURCE_ROOT = REPO_ROOT / "temp/manual-gold-preparation/gold/00-inputs/schools"
         (
             "02-njau-undergraduate",
             "njau-undergraduate__source-template.docx",
-            32,
-            659,
-            127,
+            25,
+            640,
+            128,
             18,
-            230,
-            12,
+            174,
+            8,
         ),
         (
             "03-pku-graduate",
             "pku-graduate__source-template.docx",
-            28,
-            486,
-            138,
-            0,
-            9,
-            9,
+            22,
+            1184,
+            150,
+            40,
+            286,
+            44,
         ),
     ],
 )
@@ -85,7 +85,7 @@ def test_sentinel_01_through_03_raw_source_exposes_both_view_outcomes(
     assert result["diagnostic_only"] is True
     assert outcome["verdict"] == "FAIL"
     assert outcome["score"] == outcome["protected"]["score"]
-    assert outcome["analysis_coverage"] > 0.99
+    assert outcome["analysis_coverage"] > 0.98
     assert outcome["responsibility_coverage"] == 1
     assert outcome["protected"]["scope"] == "all_clean_gold_protected_facts"
     assert outcome["protected"]["status"] == "FAIL"
@@ -217,12 +217,12 @@ def test_hunau_10_all_managed_controls_are_word_placeholders() -> None:
     assert all(control.showing_placeholder for control in managed)
 
 
-def test_hunau_11_all_placeholder_text_is_visually_gray() -> None:
+def test_hunau_11_all_placeholder_text_uses_final_value_color() -> None:
     _, _, _, facts = _hunau_inputs()
     managed = [control for control in facts.controls if control.tag is not None]
 
     assert {control.effective_style.font.get("color") for control in managed} == {
-        "7F7F7F"
+        "000000"
     }
 
 

@@ -42,19 +42,20 @@ source locator 表达来源内容；当前任务 `placement` 再把一个或多�
 
 当前 Registry 研发权威是
 `docs/plans/docfit-content-field-registry/DESIGN.md` 和固定的
-accepted `content-fields-v0.4.yaml`；Student 002 的不可变历史 Gold 继续绑定 accepted
-v0.3。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
+clean-break `content-fields-v0.5.yaml`；Student 002 与 Student 001/003 的不可变历史 Gold
+继续分别绑定 accepted v0.3 / v0.4。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
 Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval/Gold
 数据。二者都不是产品 Knowledge、全局学校 profile、运行时 Content Ledger 或新的第六类
-产品资产。v0.4 保留同一组 54 个 canonical 字段并已完成 Extraction Gold 所需的字段政策
-签署；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
+产品资产。v0.5 保留 54 个字段职责，但以 clean break 采用无歧义的正文 outline 命名，且不提供
+旧 ID alias；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
 系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
 学校模板在线准备采用应用编排、角色隔离的按需对象路线。应用选择当前局部工作项、绑定短对象
 ID 和 Registry 候选、执行 Agent 提交的语义决定、回读修改结果并推进 checkpoint；语义 Agent
 不管理区域遍历、重试、文档版本或终态。局部工作完成后，应用把精确最终版本的全部原生全页
-PNG 分批交给独立视觉审查角色，只有每页都有显式 clean 判定且没有缺陷时才自动发布一份
-`final-template.docx`。修改会生成新版本并使旧版本视觉结论失效。Agent 不接触 cursor、
+PNG 分批交给独立视觉审查角色，只有每页都有显式 clean 判定且没有缺陷时才原子发布
+`final-template.docx + fill-contract.yaml` 两份主交付物。填写契约必须绑定精确 Word hash；缺少
+任一文件或二者绑定不一致都视为发布失败。修改会生成新版本并使旧版本视觉结论失效。Agent 不接触 cursor、
 document/region ref 或发布动作。旧 snapshot/decision YAML/compiler/mutate/compare/four-file
 build 协议和旧八 Tool 会话协议均不保留兼容层；静态 Eval 的 Template Truth 继续位于运行时之外，
 只用于生成后评分。

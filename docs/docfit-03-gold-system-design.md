@@ -415,7 +415,16 @@ Human Prepared Truth 和 Gold 都只能来自可核对的材料与 Human 确认�
 新输出不能自己成为真值。Registry 快照只能经 Human 字段审查后晋升；Template、
 Student Content 和 Placement Truth 可以由 Human 直接对受控输入和格式书评审后冻结；
 参考 `final.docx`、页面图片与运行结果 Gold
-则必须来自实际运行并经 Human 确认：
+则必须来自实际运行并经 Human 确认。
+
+当前测试阶段，来源是否“学校官方”只作为 provenance 记录，不是 Template Gold 的资格门或
+评分维度。官方材料、历史模板、社区样本、用户指定文件和受控合成材料，只要目标文件及适用
+范围被明确选择并以 hash 冻结，都可以用于准确度测试；Human 验收的核心是产物是否准确、完整、
+可复现地对应这个选定目标。若多个材料冲突，仍记录来源权威性并由用户明确目标，不允许模型
+自行拼接。未来若产品需要对外声称“符合学校当前官方要求”，再增加独立的时效性与官方来源门，
+不反向污染当前准确度 Gold。
+
+具体步骤：
 
 1. 选定并固定 Content Field Registry ID/version/hash，对本 case 所用字段确认
    含义、类型、语义基数、父子关系和值来源/学生提取策略；
@@ -435,6 +444,17 @@ Student Content 和 Placement Truth 可以由 Human 直接对受控输入和格�
    三类 Truth 的 schema/hash、当前任务学校材料
    hash、render intent、fidelity、Provider、字体环境、parent render ref、页面锚点和原因；
    若使用确定性样式补全，还记录每个属性的标准标识、版本、条款、适用性与规则集 digest。
+
+Human 签署使用产品可读核对面，不要求审核人直接签署 YAML、OOXML 或重复的
+字体属性。Template Truth 允许按“相同字段语义 + required/cardinality + fill/empty
+behavior + 样式来源”归并为规则组签署，但机器核对表仍必须逐槽/区域枚举覆盖。
+不同物理样式、复合字段、条件页、证据冲突和未决项必须单独列为例外；规则组签署
+不允许隐藏未覆盖的物理槽。
+
+已知 DOCX schema finding 默认必须修复。只有在能证明为 validator false positive 时才允许
+人工例外：证据至少包含精确节点和规则解释、标准或独立工具依据、绑定当前 hash 的
+Microsoft Word 打开—更新—保存—重开证据及书面 exception。“Word 能打开”本身不足以
+豁免真实 schema 错误。
 
 禁止模型仅凭自己的新输出自动更新 Gold。
 国家级标准的样式值补全表不作为 Agent Knowledge 或 Gold 正文复制；Gold 只保存必要的

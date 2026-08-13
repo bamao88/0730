@@ -119,7 +119,8 @@ docfit_agent_SDK/
 │
 ├── docs/plans/docfit-content-field-registry/
 │   ├── DESIGN.md                                        # [现有] 跨阶段字段语义、版本和未知字段权威
-│   └── content-fields-v0.1.yaml                         # [现有] 研发期固定 Registry 快照
+│   ├── content-fields-v0.1.yaml                         # [历史] 当前 candidate 重放快照
+│   └── content-fields-v0.5.yaml                         # [现行] 新模板 clean-break 快照
 │
 └── docs/plans/docfit-template-extraction-eval/
     ├── DESIGN.md                                        # [现有] 顶层目标、比较和评分合同
@@ -139,6 +140,17 @@ Registry 负责；Eval 只固定引用，不拥有或重写字段目录。Temp �
 仍为 candidate，比较器就必须把该 case 作为输入失败，不得计入 Gold 通过率。路径名本身
 不是 Human acceptance 证据；从 candidate 改为 accepted 仍必须满足 PLAN 的 Human
 readiness、hash 和验证门。Temp 只作为显式、hash 绑定的准备来源，不进入 Eval 运行路径。
+
+2026-08-13 的产品确认进一步固定 W6 目标：当前三校 case 绑定的 v0.1 及旧槽形态只是
+历史 candidate 证据，不得原地只改状态晋升。Gold 准备侧须按 accepted Registry v0.5 clean break
+重建模板和填写契约，再以规则组 + 例外表完成 Human 核对；Eval 仍只消费重建后的
+版本化产物，不参与重建。
+
+同日进一步确认：当前是准确度测试阶段，来源是否官方只作为 provenance 和冲突裁决信息，不是
+Gold 资格门或评分维度。每个学校的产品提取结果只有两份主文件——可填写 Word 与指导填写的
+契约——并按同一 Word hash 原子绑定。Eval case 可额外保存 `case.yaml`、Registry 引用和 reviewer
+记录作为数据集元数据；这些不是第三份产品交付物，也不改变 `gold/template.docx +
+gold/fill-contract.yaml` 这对核心 Truth。
 
 这项隔离有意允许 Eval 拥有自己的只读 OOXML 事实分析实现。它会增加少量重复代码，
 但避免产品解析器和质量裁判共享同一实现缺陷，从而使 Actual—Gold 结论具备独立性。
@@ -208,6 +220,9 @@ Agent 或不安装产品 wheel，都不应改变同一组输入的评分结果�
 | Gold 模板 | 人工确认正确的目标模板 | Expected |
 | Gold 填写契约 | 人工确认正确的槽、字段、定位、区域责任和槽值样式声明 | Expected |
 
+这里的“四个核心输入”是 Actual 两文件与 Gold 两文件的比较关系；单次学校提取本身始终只产出
+一对文件，不是四份交付物。
+
 以下输入按 case 或数据集配置提供：
 
 | 输入 | 是否必需 | 用途 |
@@ -216,12 +231,11 @@ Agent 或不安装产品 wheel，都不应改变同一组输入的评分结果�
 | 槽标记协议 | 必需 | 声明槽在 DOCX 中使用的特殊标记类型及其标识规则 |
 | Eval 配置 | 必需 | 声明 schema 版本、容差、忽略项和评分版本 |
 
-v1 固定引用
-`docs/plans/docfit-content-field-registry/content-fields-v0.1.yaml`
-（`docfit.thesis.content_fields@0.1.0`）作为研发期字段对齐基线。case 与报告必须记录
-Registry ID、版本和文件 hash；以后升级 Registry 时要显式更新 case，不能在同一 case
-或评分版本下静默改名或改变字段语义。Registry 是跨阶段语义合同，Eval 只是消费者；
-它不会因此成为产品 Knowledge 或 Eval Gold。
+评分 v1 不绑定可变的 `latest` Registry；每个 case 必须显式记录 Registry ID、版本和文件
+hash。当前已物化 candidate 仍绑定 `content-fields-v0.1.yaml`，只供历史证据重放；W6 目标
+case 须按 `content-fields-v0.5.yaml`（`docfit.thesis.content_fields@0.5.0`）重建并获得新 hash。
+任何 Registry 升级都必须显式重建 case，不能在同一 case 内静默改名或改变字段语义。
+Registry 是跨阶段语义合同，Eval 只是消费者；它不会因此成为产品 Knowledge 或 Eval Gold。
 
 #### 3.1.1 DOCX 内容控件槽标记协议
 
@@ -829,7 +843,7 @@ case 数据包的第一批合同资产，但尚没有符合本文完整定义的
 | `evals/template-extraction/materialize_candidate_cases.py` | 已实现 | 把三校 Temp 候选显式投影到最终 case 目录，绑定 Registry/template/contract hash 并校验 `alias/tag/field_id` 闭包 | 只生成 `candidate_pending_human_acceptance`，拒绝覆盖 accepted case，不执行 Gold 晋升 |
 | `evals/template-extraction/cases/01-*`、`02-*`、`03-*` | candidate 数据包已物化 | 提供 `case.yaml + gold/template.docx + gold/fill-contract.yaml` 的稳定目录和字段槽合同 | `expected_verdict: INPUT_ERROR`；尚缺 Human signoff、完整 protected/remove Truth 和两校 validation 裁决 |
 | `temp/manual-gold-preparation/eval-template-truth-candidates/build_candidates.py` | 候选资产生成器 | 构建候选模板、填写契约，并包含局部 `effective_style` 读取逻辑 | 它生成产物，不对 Actual—Gold 做完整比较或评分；局部逻辑尚不是共享评测能力 |
-| Content Field Registry v0.1、候选 `template-spec.yaml` 和三校模板资产 | 已有研发基线/样本 | Registry 提供固定字段语义；候选模板资产支持 Gold 契约和 case 设计 | Registry 不等于 Gold；候选资产不能代替经确认的 Gold schema 和 Eval case manifest |
+| Content Field Registry v0.1/v0.5、候选 `template-spec.yaml` 和三校模板资产 | v0.1 历史 candidate + v0.5 现行产品合同 | v0.1 供已物化 case 重放；v0.5 定义 W6 重建目标 | 必须生成新 candidate/hash 并独立 Human 验收；不得把 v0.1 case 直接改名或改状态 |
 | StructuralLocator | 缺失 | — | 需要新增统一稳定定位能力 |
 | 完整 EffectiveStyleAnalyzer | 缺失 | — | 现有局部逻辑需评估后再决定复用或重构 |
 | StructuredObjectAnalyzer | 缺失 | — | 需要覆盖图片、公式、域、书签和合并关系 |

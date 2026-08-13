@@ -46,19 +46,19 @@ _BODY_TYPES = {
             frozenset({"paragraph", "table"}),
         ),
         SemanticObjectType(
-            "body.heading.level1", "heading", "body.chapters", _TEXT_BLOCK, toc_level=1
+            "body.heading.outline1", "heading", "body.chapters", _TEXT_BLOCK, toc_level=1
         ),
         SemanticObjectType(
-            "body.heading.level2", "heading", "body.chapters", _TEXT_BLOCK, toc_level=2
+            "body.heading.outline2", "heading", "body.chapters", _TEXT_BLOCK, toc_level=2
         ),
         SemanticObjectType(
-            "body.heading.level3", "heading", "body.chapters", _TEXT_BLOCK, toc_level=3
+            "body.heading.outline3", "heading", "body.chapters", _TEXT_BLOCK, toc_level=3
         ),
         SemanticObjectType(
-            "body.heading.level4", "heading", "body.chapters", _TEXT_BLOCK, toc_level=4
+            "body.heading.outline4", "heading", "body.chapters", _TEXT_BLOCK, toc_level=4
         ),
         SemanticObjectType(
-            "body.heading.level5", "heading", "body.chapters", _TEXT_BLOCK, toc_level=5
+            "body.heading.outline5", "heading", "body.chapters", _TEXT_BLOCK, toc_level=5
         ),
         SemanticObjectType("body.paragraph", "text_block", "body.chapters", _TEXT_BLOCK),
         SemanticObjectType("body.numbered_list_item", "list_item", "body.chapters", _TEXT_BLOCK),

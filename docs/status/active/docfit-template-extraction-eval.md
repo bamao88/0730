@@ -2,15 +2,24 @@
 
 - Capsule status: `IMPLEMENTATION_PASS / HUMAN_GOLD_GATE_PENDING`
 - Source design: `docs/plans/docfit-template-extraction-eval/DESIGN.md`
-  (`ff57efcf78144a7528a5149ecae9901fdeda5656bb5dc12a37f78df14a7021b0`，文档收尾 hash)
+  (`0dc6e80eea0c79f236cbfde64ffc64353c52f27363d95fd6796c1c791feb29b1`，文档收尾 hash)
 - Source plan: `docs/plans/docfit-template-extraction-eval/PLAN.md`
-  (`8212c1305916eae5c533f615e71c11dfeebb95b6f90f3a7341179db013191f99`，文档收尾 hash)
+  (`7524b7f9461cd6f9571d09192c768511c8524097bc008feb9a9a71597c71b269`，文档收尾 hash)
 - Approval source: 用户批准顶层设计、逐代码至少 3 个简单测试、Eval 与产品代码解耦，随后
   明确要求“开始实施”
+- Latest product decision: 2026-08-13 用户接受规则组签署、湖南农大复合字段、
+  南京农大章节角色、三校逻辑页缺失策略和严格 schema 例外门；并明确当前测试阶段以准确度
+  为 Gold 核心、来源是否官方只记录，以及每校必须原子交付“可填写 Word + 填写契约”两份
+  主文件。这些是重建 v0.5 candidate 的产品输入，不是对当前 v0.1 case 或未生成 hash 的 Gold 签署。
 - Current development gate: G3 minimal vertical slice `PASS`；W0/G1 和 W1–W4/G2 证据已通过；
   三校 Human Gold 与正式质量资格仍属于后续 G5，不作 M3 PASS 声明
 - Completed slice: W0–W5；三校 candidate 目录与拒绝评分门已完成
-- Pending slice: W6 Human acceptance、每校自比较/文字反例/字段反例共 9 条正式回归
+- Pending slice: 按 Registry v0.5 重建三校 candidate，完成绑定精确 hash 的样式/
+  protected/remove/全页 Word 审查和 W6 Human acceptance，再运行每校自比较/文字反例/
+  字段反例共 9 条正式回归
+- Packaging hygiene: 三校 `gold/` 均已有 `template.docx + fill-contract.yaml` 核心文件，但 HUNAU
+  目录另有未跟踪 Word 锁文件，NJAU 目录另有未跟踪 PDF 与原始参考 DOCX；在不删除用户材料的
+  前提下，正式冻结前须将非核心材料移出 `gold/`，保证每校 Gold 目录恰好两份 Truth 文件。
 - Isolation contract: 所有新增运行代码、依赖、测试和输出位于
   `evals/template-extraction/**`；没有修改或 import `src/docfit/**`
 
@@ -66,8 +75,16 @@
 
 ## 剩余 Human Gold 门
 
-- 三校逐槽 field semantics、required/cardinality、value style、protected/remove Truth 未签字；
-- HUNAU/NJAU validation findings 未修复或人工裁决；
+- 跨校产品规则已完成 Human 确认；当前三校 case 仍绑定历史 Registry v0.1 和旧槽形态，
+  必须按 accepted v0.5 clean break 重建，不得原地只改状态晋升；
+- 重建时每校只形成 `final-template.docx + fill-contract.yaml` 两份原子绑定的产品主文件；Eval
+  内部的 `case.yaml`、Registry 引用、reviewer 和报告只作元数据/证据；
+- 将当前 HUNAU/NJAU `gold/` 中的未跟踪锁文件、PDF 和原始参考 DOCX 安全迁出核心 Truth 目录；
+- 当前准确度测试不以来源是否官方作为门；记录来源分类、目标 hash 和冲突裁决即可；
+- 重建后的精确槽/区域清单、value style、protected/remove Truth 和物理边界仍需以
+  产品可读规则组 + 例外表签署，机器附件须证明逐槽/区域覆盖；
+- HUNAU/NJAU validation findings 必须修复；只有证明为 validator false positive 时才可按
+  严格证据门形成书面 exception；
 - PKU 当前 snapshot 不自动继承历史 r02 Human signoff；
 - Git/CI/data permission 需形成明确 accepted 记录；
 - 通过后才可把 case/contract/review 三层状态原地改为 accepted，并运行每校 3 条正式回归；

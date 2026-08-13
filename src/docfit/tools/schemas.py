@@ -62,6 +62,13 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
                 "set_properties",
                 "import_content_objects",
                 "import_template_sections",
+                "clear_content",
+                "remove_object",
+                "materialize_slot",
+                "materialize_structure",
+                "normalize_effective_format",
+                "refresh_toc",
+                "ensure_page_start",
             ],
         },
         "target_ref": OBJECT_REF_SCHEMA,
@@ -87,6 +94,56 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
         "position": {"type": "string", "enum": ["before", "after", "end"]},
         "include_final_section_properties": {"type": "boolean"},
         "include_source_final_section_properties": {"type": "boolean"},
+        "field_id": {"type": "string", "minLength": 1},
+        "slot_id": {"type": "string", "minLength": 1},
+        "placeholder_text": {"type": "string", "minLength": 1},
+        "effective_format": {
+            "type": "object",
+            "properties": {
+                "color": {"const": "black"},
+                "underline": {"const": "none"},
+            },
+            "additionalProperties": False,
+        },
+        "members": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "target_ref": OBJECT_REF_SCHEMA,
+                    "field_id": {"type": "string", "minLength": 1},
+                    "slot_id": {"type": "string", "minLength": 1},
+                    "placeholder_text": {"type": "string", "minLength": 1},
+                    "effective_format": {
+                        "type": "object",
+                        "properties": {
+                            "color": {"const": "black"},
+                            "underline": {"const": "none"},
+                        },
+                        "additionalProperties": False,
+                    },
+                },
+                "required": ["target_ref", "field_id"],
+                "additionalProperties": False,
+            },
+            "minItems": 1,
+        },
+        "replaced_structure_ref": OBJECT_REF_SCHEMA,
+        "toc_entries": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "target_ref": OBJECT_REF_SCHEMA,
+                    "level": {"type": "integer", "minimum": 1, "maximum": 3},
+                },
+                "required": ["target_ref", "level"],
+                "additionalProperties": False,
+            },
+            "minItems": 1,
+            "maxItems": 64,
+        },
+        "mode": {"type": "string", "enum": ["new_page"]},
     },
     # The runtime validates the action-specific required fields. Keeping one
     # flat schema avoids composition keywords that the supported compatible
@@ -101,6 +158,7 @@ EDIT_SCHEMA: JsonSchema = {
         "task_root": _TASK_ROOT,
         "input_docx": {"type": "string"},
         "output_docx": {"type": "string"},
+        "field_registry": {"type": "string"},
         "operations": {
             "type": "array",
             "items": _EDIT_OPERATION_SCHEMA,
@@ -190,7 +248,12 @@ VALIDATE_SCHEMA: JsonSchema = {
         "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "knowledge_version": {"type": "string"},
         "task_rule_evidence": {"type": "array", "items": {"type": "object"}},
-        "visual_review": {"type": "string"},
+        "visual_review": {
+            "type": ["string", "object"],
+            "description": (
+                "A task-local JSON path or the Agent's structured final visual-review evidence."
+            ),
+        },
         "candidate_render_ref": {"type": "string"},
         "required_visual_coverage": {"const": "all_final_pages"},
     },

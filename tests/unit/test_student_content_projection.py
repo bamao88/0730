@@ -23,9 +23,9 @@ def _q(local: str) -> str:
 
 
 def test_body_role_uses_extracted_field_ids_without_reading_text() -> None:
-    assert _body_role({"body.heading.level1"}) == "heading_1"
-    assert _body_role({"body.heading.level2"}) == "heading_2"
-    assert _body_role({"body.heading.level3"}) == "heading_3"
+    assert _body_role({"body.heading.outline1"}) == "heading_1"
+    assert _body_role({"body.heading.outline2"}) == "heading_2"
+    assert _body_role({"body.heading.outline3"}) == "heading_3"
     assert _body_role({"body.paragraph"}) == "body"
 
 

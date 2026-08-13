@@ -11,6 +11,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from docfit.fields import FieldRegistrySnapshot
+from docfit.template.object_mutation import (
+    ObjectMutation,
+    StructureMember,
+    TocEntry,
+    mutate_objects,
+)
+from docfit.template.semantic_types import (
+    require_body_member_type,
+    require_body_structure_type,
+    semantic_object_type,
+)
 from docfit.tools.images import verify_png
 from docfit.tools.inspection import (
     Inspection,
@@ -51,6 +63,64 @@ _SET_PROPERTY_ALLOWLIST = {
     "widowControl",
 }
 
+_DOMAIN_EDIT_ACTIONS = frozenset(
+    {
+        "clear_content",
+        "remove_object",
+        "materialize_slot",
+        "materialize_structure",
+        "normalize_effective_format",
+        "refresh_toc",
+        "ensure_page_start",
+    }
+)
+_MAX_DOMAIN_EDIT_OPERATIONS = 32
+
+
+def _required_string(value: Any, *, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="domain_edit_argument_invalid",
+            message=f"{field} must be a non-empty string.",
+        )
+    return value
+
+
+def _effective_format(value: Any) -> tuple[tuple[str, str], ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, dict) or set(value) - {"color", "underline"}:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="effective_format_invalid",
+            message="effective_format supports only color=black and underline=none.",
+        )
+    if value.get("color", "black") != "black" or value.get("underline", "none") != "none":
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="effective_format_invalid",
+            message="effective_format supports only color=black and underline=none.",
+        )
+    return tuple(
+        (key, str(value[key])) for key in ("color", "underline") if key in value
+    )
+
+
+def _slot_id(field_id: str, object_id: str, supplied: Any) -> str:
+    if supplied is not None:
+        return _required_string(supplied, field="slot_id")
+    return f"slot.{field_id}.{object_id.removeprefix('obj-')[:10]}"
+
+
+def _placeholder(field: JsonObject, supplied: Any) -> str:
+    if supplied is not None:
+        return _required_string(supplied, field="placeholder_text")
+    return f"【{field.get('label', field['field_id'])}】"
+
 
 def _normalized_property_value(key: str, value: Any) -> str:
     normalized = str(value).strip().casefold()
@@ -85,6 +155,10 @@ def _property_applied(item: Any, key: str, expected: str) -> bool:
         == _normalized_property_value(key, expected)
         for candidate in candidate_keys
     )
+
+
+def _locator_related(first: str, second: str) -> bool:
+    return first == second or first.startswith(f"{second}/") or second.startswith(f"{first}/")
 
 
 def _output_directory(value: Any, *, task_root: Path, field: str) -> Path:
@@ -228,7 +302,14 @@ class DocFitToolService:
     def inspect(self, args: dict[str, Any]) -> JsonObject:
         root = self._session_root(args)
         document = _document_path(args, "input_docx", root)
-        inspection = inspect_document(document, self.office)
+        # The stable inspection surface is the complete queryable inventory.
+        # The Agent may progressively focus its own attention; the application
+        # does not choose a semantic crop on its behalf.
+        inspection = inspect_document(
+            document,
+            self.office,
+            selector="paragraph, table, picture, run, sdt, shape",
+        )
         result = _public_inspection(inspection)
         focus = args.get("focus", [])
         if focus and (
@@ -252,6 +333,273 @@ class DocFitToolService:
             atomic_write_json(output, result)
             result["analysis_path"] = str(output)
         return result
+
+    def _domain_mutations(
+        self,
+        *,
+        args: dict[str, Any],
+        root: Path,
+        inspection: Inspection,
+        operations: list[JsonObject],
+    ) -> tuple[list[ObjectMutation], list[JsonObject]]:
+        if len(operations) > _MAX_DOMAIN_EDIT_OPERATIONS:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="too_many_domain_edit_operations",
+                message="One atomic docx_edit batch supports at most 32 domain operations.",
+            )
+        registry: FieldRegistrySnapshot | None = None
+        if any(
+            item.get("action") in {"materialize_slot", "materialize_structure"}
+            for item in operations
+        ):
+            registry_path = authorized_path(
+                args.get("field_registry"),
+                task_root=root,
+                field="field_registry",
+            )
+            registry = FieldRegistrySnapshot.load(registry_path)
+
+        mutations: list[ObjectMutation] = []
+        public_operations: list[JsonObject] = []
+        for operation in operations:
+            action = str(operation.get("action"))
+            selected = resolve_object_ref(operation.get("target_ref"), inspection)
+            field: JsonObject | None = None
+            field_id: str | None = None
+            slot_id: str | None = None
+            placeholder_text: str | None = None
+            members: list[StructureMember] = []
+            public_members: list[JsonObject] = []
+            replaced_structure = None
+            toc_entries: list[TocEntry] = []
+            public_entries: list[JsonObject] = []
+            effective_format = _effective_format(operation.get("effective_format"))
+
+            if action == "materialize_slot":
+                assert registry is not None
+                field_id = _required_string(operation.get("field_id"), field="field_id")
+                semantic = semantic_object_type(field_id)
+                if semantic is not None:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="structured_field_requires_structure",
+                        message=(
+                            "Body semantic fields are members of a reusable structure; use "
+                            "materialize_structure with Agent-selected representatives."
+                        ),
+                    )
+                field = registry.lookup(field_id)
+                slot_id = _slot_id(
+                    field_id,
+                    str(selected.object_ref["object_id"]),
+                    operation.get("slot_id"),
+                )
+                placeholder_text = _placeholder(field, operation.get("placeholder_text"))
+            elif action == "materialize_structure":
+                assert registry is not None
+                field_id = _required_string(
+                    operation.get("field_id", "body.chapters"), field="field_id"
+                )
+                require_body_structure_type(field_id)
+                field = registry.lookup(field_id)
+                slot_id = _slot_id(
+                    field_id,
+                    str(selected.object_ref["object_id"]),
+                    operation.get("slot_id"),
+                )
+                raw_members = operation.get("members")
+                if not isinstance(raw_members, list) or not raw_members:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_members_invalid",
+                        message="materialize_structure requires Agent-selected ordered members.",
+                    )
+                for raw_member in raw_members:
+                    if not isinstance(raw_member, dict):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="body_structure_members_invalid",
+                            message="Every structure member must be an object.",
+                        )
+                    member_selected = resolve_object_ref(
+                        raw_member.get("target_ref"), inspection
+                    )
+                    member_field_id = _required_string(
+                        raw_member.get("field_id"), field="members[].field_id"
+                    )
+                    require_body_member_type(member_field_id, member_selected.kind)
+                    member_field = registry.lookup(member_field_id)
+                    member_slot_id = _slot_id(
+                        member_field_id,
+                        str(member_selected.object_ref["object_id"]),
+                        raw_member.get("slot_id"),
+                    )
+                    member_placeholder = _placeholder(
+                        member_field, raw_member.get("placeholder_text")
+                    )
+                    members.append(
+                        StructureMember(
+                            selected=member_selected,
+                            field_id=member_field_id,
+                            slot_id=member_slot_id,
+                            content_type=str(member_field.get("content_type", "text")),
+                            placeholder_text=member_placeholder,
+                            effective_format=_effective_format(
+                                raw_member.get("effective_format")
+                            ),
+                        )
+                    )
+                    public_members.append(
+                        {
+                            "field_id": member_field_id,
+                            "slot_id": member_slot_id,
+                            "target_ref": member_selected.object_ref,
+                        }
+                    )
+                raw_replaced = operation.get("replaced_structure_ref")
+                if raw_replaced is not None:
+                    replaced_structure = resolve_object_ref(raw_replaced, inspection)
+            elif action == "refresh_toc":
+                raw_entries = operation.get("toc_entries")
+                if not isinstance(raw_entries, list) or not raw_entries:
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="toc_entries_invalid",
+                        message="refresh_toc requires Agent-selected source titles and levels.",
+                    )
+                for raw_entry in raw_entries:
+                    if not isinstance(raw_entry, dict):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entries_invalid",
+                            message="Every TOC entry must be an object.",
+                        )
+                    entry_selected = resolve_object_ref(
+                        raw_entry.get("target_ref"), inspection
+                    )
+                    level = raw_entry.get("level")
+                    if (
+                        not isinstance(level, int)
+                        or isinstance(level, bool)
+                        or level not in {1, 2, 3}
+                    ):
+                        raise ToolFailure(
+                            status="needs_input",
+                            origin="request",
+                            code="toc_entry_level_invalid",
+                            message="Each TOC source title needs level 1, 2, or 3.",
+                        )
+                    toc_entries.append(TocEntry(entry_selected, level))
+                    public_entries.append(
+                        {"target_ref": entry_selected.object_ref, "level": level}
+                    )
+            elif action == "ensure_page_start" and operation.get("mode") != "new_page":
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="page_start_mode_invalid",
+                    message="ensure_page_start requires mode=new_page.",
+                )
+
+            mutation = ObjectMutation(
+                selected=selected,
+                action=action,
+                field_id=field_id,
+                slot_id=slot_id,
+                content_type=str(field.get("content_type", "text")) if field else "text",
+                placeholder_text=placeholder_text,
+                effective_format=effective_format,
+                structure_members=tuple(members),
+                replaced_structure=replaced_structure,
+                toc_entries=tuple(toc_entries),
+            )
+            mutations.append(mutation)
+            public_operations.append(
+                {
+                    "action": action,
+                    "target_ref": selected.object_ref,
+                    **({"field_id": field_id} if field_id else {}),
+                    **({"slot_id": slot_id} if slot_id else {}),
+                    **({"members": public_members} if public_members else {}),
+                    **({"toc_entries": public_entries} if public_entries else {}),
+                }
+            )
+        return mutations, public_operations
+
+    def _edit_domain(
+        self,
+        *,
+        args: dict[str, Any],
+        root: Path,
+        input_docx: Path,
+        output_docx: Path,
+        inspection: Inspection,
+        operations: list[JsonObject],
+    ) -> JsonObject:
+        mutations, public_operations = self._domain_mutations(
+            args=args,
+            root=root,
+            inspection=inspection,
+            operations=operations,
+        )
+        source_hash = inspection.document_sha256
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".docfit-domain-edit-",
+            suffix=".docx",
+            dir=output_docx.parent,
+        )
+        os.close(descriptor)
+        temporary = Path(temporary_name)
+        try:
+            effects = mutate_objects(input_docx, temporary, mutations=mutations)
+            validate_docx_package(temporary)
+            office_validation = self.office.validate(temporary)
+            after = inspect_document(
+                temporary,
+                self.office,
+                selector="paragraph, table, picture, run, sdt, shape",
+            )
+            if sha256_file(input_docx) != source_hash:
+                raise ToolFailure(
+                    status="error",
+                    origin="postcondition",
+                    code="source_document_changed",
+                    message="The immutable input changed; the edit was not published.",
+                )
+            output_hash = after.document_sha256
+            os.replace(temporary, output_docx)
+            return {
+                "schema_version": 1,
+                "status": "ok",
+                "committed": True,
+                "checks": [
+                    {"name": "object_refs_bound", "result": "ok"},
+                    {"name": "source_unchanged", "result": "ok", "sha256": source_hash},
+                    {"name": "package_reopens", "result": "ok"},
+                    {"name": "officecli_validate", "result": "ok", **office_validation},
+                    {"name": "effects_re_read", "result": "ok"},
+                ],
+                "warnings": [],
+                "failure": None,
+                "input_sha256": source_hash,
+                "output_sha256": output_hash,
+                "output_docx": str(output_docx),
+                "operations": [
+                    {"index": index, **operation, "result": "applied"}
+                    for index, operation in enumerate(public_operations)
+                ],
+                "effects": effects,
+                "provider": self.office.evidence(),
+            }
+        finally:
+            temporary.unlink(missing_ok=True)
 
     def edit(self, args: dict[str, Any]) -> JsonObject:
         root = self._session_root(args)
@@ -289,7 +637,33 @@ class DocFitToolService:
             )
         operations = _require_operations(args.get("operations"))
         source_hash = sha256_file(input_docx)
-        inspection = inspect_document(input_docx, self.office)
+        inspection = inspect_document(
+            input_docx,
+            self.office,
+            selector="paragraph, table, picture, run, sdt, shape",
+        )
+        domain_actions = [
+            str(operation.get("action")) in _DOMAIN_EDIT_ACTIONS for operation in operations
+        ]
+        if any(domain_actions):
+            if not all(domain_actions):
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="mixed_edit_families",
+                    message=(
+                        "Keep direct template mutations and OfficeCLI/import edits in separate "
+                        "atomic docx_edit calls so every snapshot has unambiguous refs."
+                    ),
+                )
+            return self._edit_domain(
+                args=args,
+                root=root,
+                input_docx=input_docx,
+                output_docx=output_docx,
+                inspection=inspection,
+                operations=operations,
+            )
         office_commands: list[JsonObject] = []
         import_plans: list[dict[str, Any]] = []
         effect_expectations: list[dict[str, Any]] = []
@@ -388,7 +762,11 @@ class DocFitToolService:
                     message=f"The source snapshot hash does not match {hash_field}.",
                     suggested_actions=("inspect_source_again",),
                 )
-            source_inspection = inspect_document(source_docx, self.office)
+            source_inspection = inspect_document(
+                source_docx,
+                self.office,
+                selector="paragraph, table, picture, run, sdt, shape",
+            )
             source_refs = operation.get("source_refs")
             if not isinstance(source_refs, list) or not source_refs:
                 raise ToolFailure(
@@ -470,7 +848,11 @@ class DocFitToolService:
                 )
             validate_docx_package(temporary)
             office_validation = self.office.validate(temporary)
-            after = inspect_document(temporary, self.office)
+            after = inspect_document(
+                temporary,
+                self.office,
+                selector="paragraph, table, picture, run, sdt, shape",
+            )
             after_by_locator = {item.locator: item for item in after.objects}
             for expectation in effect_expectations:
                 actual = after_by_locator.get(expectation["locator"])
@@ -517,7 +899,10 @@ class DocFitToolService:
             protected_text = Counter(
                 item.text
                 for item in inspection.objects
-                if item.text and item.locator not in changed_locators
+                if item.text
+                and not any(
+                    _locator_related(item.locator, changed) for changed in changed_locators
+                )
             )
             resulting_text = Counter(item.text for item in after.objects if item.text)
             lost = protected_text - resulting_text
@@ -694,12 +1079,22 @@ class DocFitToolService:
         reviewed_pages: set[int] = set()
         blocking_findings = 0
         if visual_value is not None:
-            visual_path = authorized_path(
-                visual_value,
-                task_root=root,
-                field="visual_review",
-            )
-            visual = read_json(visual_path)
+            if isinstance(visual_value, str):
+                visual_path = authorized_path(
+                    visual_value,
+                    task_root=root,
+                    field="visual_review",
+                )
+                visual = read_json(visual_path)
+            elif isinstance(visual_value, dict):
+                visual = dict(visual_value)
+            else:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="visual_review_invalid",
+                    message="visual_review must be a task-local JSON path or an evidence object.",
+                )
             if visual.get("document_sha256") != final_hash:
                 raise ToolFailure(
                     status="needs_input",
@@ -738,12 +1133,19 @@ class DocFitToolService:
             and candidate["renderer"].get("name") == "libreoffice"
         )
         visual_ok = current_visual_snapshot and all_pages_covered and blocking_findings == 0
+        visual_required = args.get("required_visual_coverage") == "all_final_pages"
         checks.append(
             {
                 "name": "visual_review_coverage",
-                "result": "ok" if visual_ok else "warning",
-                "severity": "warning" if not visual_ok else "info",
-                "blocking": False,
+                "result": "ok" if visual_ok else ("issue" if visual_required else "warning"),
+                "severity": (
+                    "error"
+                    if visual_required and not visual_ok
+                    else "warning"
+                    if not visual_ok
+                    else "info"
+                ),
+                "blocking": visual_required and not visual_ok,
                 "evidence": {
                     "current_visual_snapshot": current_visual_snapshot,
                     "all_final_pages_reviewed": all_pages_covered,

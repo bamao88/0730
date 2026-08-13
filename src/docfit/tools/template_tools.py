@@ -8,6 +8,7 @@ batch.  Internal checkpoint references never cross this boundary.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ from claude_agent_sdk import SdkMcpTool, create_sdk_mcp_server, tool
 from claude_agent_sdk.types import McpSdkServerConfig
 from mcp.types import ToolAnnotations
 
+from docfit.template.semantic_types import semantic_object_type
 from docfit.template.workspace import TemplateWorkspaceService
 from docfit.tools.runtime import JsonObject, ToolFailure
 from docfit.tools.service import failure_result, tool_result, unexpected_failure_result
@@ -74,6 +76,7 @@ _HIDDEN_KEYS = {
 }
 _MAX_TARGET_CHILD_OBJECTS = 8
 _MAX_SIBLING_OBJECTS = 12
+_MAX_SIBLING_CHILD_OBJECTS = 24
 _MIN_MEANINGFUL_BLANK_CHARACTERS = 4
 
 
@@ -98,7 +101,7 @@ def _agent_payload(value: Any) -> Any:
 
 
 def _bounded_work_item_payload(work_item: JsonObject) -> JsonObject:
-    """Expose only the local context needed for the bound semantic decision."""
+    """Expose one bounded crop with children for every visible top-level object."""
 
     public = _agent_payload(work_item)
     if not isinstance(public, dict):
@@ -121,9 +124,33 @@ def _bounded_work_item_payload(work_item: JsonObject) -> JsonObject:
                 target_children.append(raw)
             elif raw.get("type") != "run":
                 siblings.append(raw)
+        selected_siblings = siblings[:_MAX_SIBLING_OBJECTS]
+        sibling_ids = {
+            item.get("object_id")
+            for item in selected_siblings
+            if isinstance(item.get("object_id"), str)
+        }
+        sibling_children = [
+            raw
+            for raw in adjacent
+            if isinstance(raw, dict)
+            and raw.get("type") == "run"
+            and isinstance((parent := raw.get("parent_context")), dict)
+            and parent.get("object_id") in sibling_ids
+        ][:_MAX_SIBLING_CHILD_OBJECTS]
+        selected_ids = {
+            item.get("object_id")
+            for item in [
+                *target_children[:_MAX_TARGET_CHILD_OBJECTS],
+                *selected_siblings,
+                *sibling_children,
+            ]
+            if isinstance(item.get("object_id"), str)
+        }
         selected = [
-            *target_children[:_MAX_TARGET_CHILD_OBJECTS],
-            *siblings[:_MAX_SIBLING_OBJECTS],
+            raw
+            for raw in adjacent
+            if isinstance(raw, dict) and raw.get("object_id") in selected_ids
         ]
         region["adjacent_objects"] = selected
         region["visible_adjacent_count"] = len(selected)
@@ -303,6 +330,23 @@ def _object_structure(value: Any) -> dict[str, tuple[str | None, str | None]]:
 
 
 def _translate_operation(operation: JsonObject) -> JsonObject:
+    if operation.get("action") == "register_body_member":
+        return {
+            "action": "materialize_structure",
+            "object_ref": {"object_id": operation.get("object_id")},
+            "field_id": "body.chapters",
+            "members": [
+                {
+                    "object_ref": {"object_id": operation.get("object_id")},
+                    "field_id": operation.get("field_id"),
+                    **(
+                        {"effective_format": operation["effective_format"]}
+                        if isinstance(operation.get("effective_format"), dict)
+                        else {}
+                    ),
+                }
+            ],
+        }
     translated = {
         key: value
         for key, value in operation.items()
@@ -321,12 +365,77 @@ def _translate_operation(operation: JsonObject) -> JsonObject:
     if "entries" in operation:
         translated["entries"] = [
             {
-                **{key: value for key, value in entry.items() if key != "object_id"},
                 "object_ref": {"object_id": entry.get("object_id")},
+                "level": entry.get("level"),
             }
             for entry in operation.get("entries", [])
             if isinstance(entry, dict)
         ]
+    return translated
+
+
+def _translate_operations(
+    operations: list[JsonObject],
+    visible_context: JsonObject,
+) -> list[JsonObject]:
+    """Collapse body-role declarations into one application-owned structure edit."""
+
+    document_order: dict[str, int] = {}
+
+    def visit(value: Any) -> None:
+        if isinstance(value, list):
+            for child in value:
+                visit(child)
+            return
+        if not isinstance(value, dict):
+            return
+        object_id = value.get("object_id")
+        order = value.get("document_order")
+        if isinstance(object_id, str) and isinstance(order, int):
+            document_order.setdefault(object_id, order)
+        for child in value.values():
+            visit(child)
+
+    visit(visible_context)
+    registrations = [
+        (index, item)
+        for index, item in enumerate(operations)
+        if item.get("action") == "register_body_member"
+    ]
+    if not registrations:
+        return [_translate_operation(item) for item in operations]
+    registrations.sort(
+        key=lambda pair: (
+            document_order.get(str(pair[1].get("object_id", "")), 10**9),
+            pair[0],
+        )
+    )
+    members = [
+        {
+            "object_ref": {"object_id": item.get("object_id")},
+            "field_id": item.get("field_id"),
+            **(
+                {"effective_format": item["effective_format"]}
+                if isinstance(item.get("effective_format"), dict)
+                else {}
+            ),
+        }
+        for _, item in registrations
+    ]
+    first_registration_index = min(index for index, _ in registrations)
+    translated: list[JsonObject] = []
+    for index, item in enumerate(operations):
+        if index == first_registration_index:
+            translated.append(
+                {
+                    "action": "materialize_structure",
+                    "object_ref": members[0]["object_ref"],
+                    "field_id": "body.chapters",
+                    "members": members,
+                }
+            )
+        if item.get("action") != "register_body_member":
+            translated.append(_translate_operation(item))
     return translated
 
 
@@ -390,25 +499,63 @@ def _validated_work_item_operations(
             code="refresh_toc_wrong_work_item",
             message="Refresh the live TOC only from the generated-content work item.",
         )
-    standalone_body_headings = [
+    if "materialize_structure" in actions:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="body_structure_operation_application_owned",
+            message=(
+                "The application owns body.chapters creation, lookup, merge, ordering, and "
+                "expansion. Submit register_body_member for one visible semantic role."
+            ),
+            suggested_actions=("register_body_member",),
+        )
+    standalone_body_members = [
         item
         for item in direct
         if item.get("action") == "materialize_slot"
-        and str(item.get("field_id", "")).startswith("body.heading.")
+        and (semantic := semantic_object_type(str(item.get("field_id", "")))) is not None
+        and semantic.parent_type == "body.chapters"
     ]
-    if standalone_body_headings:
+    if standalone_body_members:
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="body_heading_requires_structure",
             message=(
-                "A body.heading.* type declares body.chapters as its parent and cannot be "
-                "materialized as a standalone slot. Use materialize_structure with the "
-                "currently demonstrated members; a partial member set is valid and may be "
-                "expanded later. The Tool does not require any fixed heading-depth checklist."
+                "A reusable body member declares body.chapters as its parent and cannot be "
+                "materialized as a standalone slot. Register the visible semantic role with "
+                "register_body_member; the application creates or expands the one structure."
             ),
-            suggested_actions=("materialize_body_structure",),
+            suggested_actions=("register_body_member",),
         )
+    registrations = [
+        item for item in direct if item.get("action") == "register_body_member"
+    ]
+    for item in registrations:
+        field_id = item.get("field_id")
+        semantic = semantic_object_type(str(field_id or ""))
+        if semantic is None or semantic.parent_type != "body.chapters":
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="body_member_registration_invalid",
+                message="register_body_member requires one offered body member field ID.",
+            )
+        checkpoint = work_item.get("checkpoint_summary")
+        gate = checkpoint.get("body_structure_gate") if isinstance(checkpoint, dict) else None
+        counts = gate.get("member_field_counts") if isinstance(gate, dict) else None
+        if isinstance(counts, dict) and int(counts.get(str(field_id), 0) or 0) > 0:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="body_member_already_registered",
+                message=(
+                    f"{field_id} already has its one reusable representative. Preserve fixed "
+                    "content or remove this redundant sample; do not locate or edit a structure."
+                ),
+                suggested_actions=("remove_redundant_sample_or_preserve_fixed_content",),
+            )
     if kind == "generated_content" and actions != {"refresh_toc"}:
         raise ToolFailure(
             status="needs_input",
@@ -416,6 +563,49 @@ def _validated_work_item_operations(
             code="generated_content_action_invalid",
             message="The generated-content work item accepts exactly one refresh_toc action.",
         )
+    if kind == "generated_content" and any(
+        not set(item).issubset({"action", "object_id", "entries"}) for item in direct
+    ):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="generated_content_parameters_application_owned",
+            message=(
+                "refresh_toc accepts action, the supplied target object_id, and Agent-selected "
+                "entries with levels. Field IDs and formatting remain application-owned."
+            ),
+        )
+    if kind == "generated_content":
+        operation = direct[0]
+        entries = operation.get("entries")
+        if not isinstance(entries, list) or not entries:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="generated_content_entries_missing",
+                message="refresh_toc requires Agent-selected title entries and levels.",
+            )
+        selected_ids = {
+            entry.get("object_id")
+            for entry in entries
+            if isinstance(entry, dict) and isinstance(entry.get("object_id"), str)
+        }
+        required_ids = {
+            candidate.get("object_id")
+            for candidate in work_item.get("required_body_heading_candidates", [])
+            if isinstance(candidate, dict)
+            and isinstance(candidate.get("object_id"), str)
+        }
+        if not required_ids.issubset(selected_ids):
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="generated_content_required_entries_missing",
+                message=(
+                    "Every required body-heading candidate reflects an earlier Agent semantic "
+                    "decision and must remain in the refreshed TOC."
+                ),
+            )
     return direct
 
 
@@ -610,6 +800,26 @@ class SemanticWorkItemState:
             )
         self.declared_apply_fields = declared
 
+    def prepare_apply_operations(
+        self,
+        operations: list[JsonObject],
+    ) -> tuple[list[JsonObject], list[JsonObject], set[tuple[str, str]] | None]:
+        """Validate one retry transaction without retaining failed declarations."""
+
+        prior_declared_fields = (
+            set(self.declared_apply_fields)
+            if self.declared_apply_fields is not None
+            else None
+        )
+        try:
+            self.validate_retry_field_contract(operations)
+            self.validate_field_assignments(operations)
+            normalized, absorptions = self.normalize_split_run_slots(operations)
+        except ToolFailure:
+            self.declared_apply_fields = prior_declared_fields
+            raise
+        return normalized, absorptions, prior_declared_fields
+
     def normalize_split_run_slots(
         self,
         operations: list[JsonObject],
@@ -659,37 +869,122 @@ class SemanticWorkItemState:
             self.mutated = False
 
     def initial_candidates(self) -> list[JsonObject]:
+        """Prefetch Registry candidates for every visible top-level object."""
+
         region = self.agent_work_item.get("region")
         target = region.get("target") if isinstance(region, dict) else None
         if not isinstance(target, dict):
             return []
-        object_id = target.get("object_ref", target.get("object_id"))
-        if isinstance(object_id, dict):
-            object_id = object_id.get("object_id")
-        text = target.get("text")
-        if not isinstance(object_id, str) or not isinstance(text, str) or not text.strip():
-            return []
-        try:
-            matches = self.service.registry.search(
-                f"{text} {''.join(text.split())}",
-                limit=5,
+        adjacent = region.get("adjacent_objects")
+        visible = [target]
+        if isinstance(adjacent, list):
+            visible.extend(
+                item
+                for item in adjacent
+                if isinstance(item, dict) and item.get("type") != "run"
             )
-        except ToolFailure:
-            return []
-        field_ids = {
-            str(item["field_id"])
-            for item in matches
-            if isinstance(item.get("field_id"), str)
-        }
-        self.offer_fields(object_id, field_ids)
-        if not matches:
-            return []
-        return [
-            {
-                "object_id": object_id,
-                "matches": [_agent_payload(item) for item in matches],
+        candidates: list[JsonObject] = []
+        seen: set[str] = set()
+        candidate_provider = getattr(
+            self.service,
+            "registry_candidates_for_text",
+            None,
+        )
+        for item in visible:
+            object_id = item.get("object_ref", item.get("object_id"))
+            if isinstance(object_id, dict):
+                object_id = object_id.get("object_id")
+            text = item.get("text")
+            if (
+                not isinstance(object_id, str)
+                or object_id in seen
+            ):
+                continue
+            seen.add(object_id)
+            if not isinstance(text, str) or not text.strip():
+                candidates.append({"object_id": object_id, "matches": []})
+                continue
+            try:
+                if callable(candidate_provider):
+                    matches = candidate_provider(
+                        text,
+                        f"{text} {''.join(text.split())}",
+                        limit=5,
+                    )
+                else:
+                    matches = self.service.registry.search(
+                        f"{text} {''.join(text.split())}",
+                        limit=5,
+                    )
+            except ToolFailure:
+                matches = []
+            matches, already_registered = self._filter_registered_body_candidates(
+                matches,
+                object_id=object_id,
+            )
+            field_ids = {
+                str(match["field_id"])
+                for match in matches
+                if isinstance(match.get("field_id"), str)
             }
+            self.offer_fields(
+                object_id,
+                field_ids,
+                descendants=self.agent_work_item,
+            )
+            candidates.append(
+                {
+                    "object_id": object_id,
+                    "matches": [_agent_payload(match) for match in matches],
+                    **(
+                        {
+                            "already_registered_body_roles": already_registered,
+                            "guidance": (
+                                "These body roles already have their single representative. "
+                                "Remove this object only if it is a redundant sample; otherwise "
+                                "preserve it. Do not search for or edit the structure container."
+                            ),
+                        }
+                        if already_registered
+                        else {}
+                    ),
+                }
+            )
+        return candidates
+
+    def _filter_registered_body_candidates(
+        self,
+        matches: Any,
+        *,
+        object_id: str | None = None,
+    ) -> tuple[list[JsonObject], list[str]]:
+        checkpoint = self.work_item.get("checkpoint_summary")
+        gate = checkpoint.get("body_structure_gate") if isinstance(checkpoint, dict) else None
+        counts = gate.get("member_field_counts") if isinstance(gate, dict) else None
+        registered = {
+            str(field_id)
+            for field_id, count in (counts.items() if isinstance(counts, dict) else [])
+            if isinstance(count, int) and count > 0
+        }
+        values = [
+            dict(item)
+            for item in matches
+            if isinstance(item, dict) and item.get("field_id") != "body.chapters"
         ]
+        duplicates = sorted(
+            {
+                str(item["field_id"])
+                for item in values
+                if isinstance(item.get("field_id"), str)
+                and item["field_id"] in registered
+                and (semantic := semantic_object_type(str(item["field_id"]))) is not None
+                and semantic.parent_type == "body.chapters"
+            }
+        )
+        return (
+            [item for item in values if item.get("field_id") not in set(duplicates)],
+            duplicates,
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -711,7 +1006,10 @@ async def _unbound(_args: dict[str, Any]) -> dict[str, Any]:
 
 @tool(
     "template_get_current_work_item",
-    "Return the one local semantic work item selected by the application, plus its image.",
+    (
+        "Return the local semantic crop selected by the application, its image, child runs, "
+        "and Registry candidates for every visible top-level object."
+    ),
     TEMPLATE_GET_CURRENT_WORK_ITEM_SCHEMA,
     annotations=_READ_ONLY,
 )
@@ -737,10 +1035,12 @@ async def template_request_current_context(args: dict[str, Any]) -> dict[str, An
     (
         "Submit one semantic decision for the current work item. For preserve, omit operations "
         "or pass an empty array. For apply, pass at least one operation; field IDs must come "
-        "from candidates returned for the exact edited object or its focused child run; sibling "
-        "candidates cannot be reused. For generated_content, submit exactly one "
-        "refresh_toc operation and include entries selected from title_candidates with levels "
-        "1-3, including all required_body_heading_candidates; object_id alone is invalid. The "
+        "from candidates returned for the exact edited object or its supplied child run. For a "
+        "body role, use register_body_member with only that "
+        "object and field; the application owns the unique body.chapters structure. For "
+        "generated_content, submit exactly one "
+        "refresh_toc operation with the supplied target object_id and Agent-selected entries "
+        "at levels 1-3; include every required body-heading candidate. The "
         "application performs and verifies edits."
     ),
     TEMPLATE_SUBMIT_CURRENT_DECISION_SCHEMA,
@@ -793,21 +1093,34 @@ def _bind(registered: SdkMcpTool[Any], runner: Any) -> SdkMcpTool[Any]:
 
 
 def build_template_semantic_tool_server(
-    state: SemanticWorkItemState,
+    state_or_provider: SemanticWorkItemState | Callable[[], SemanticWorkItemState],
 ) -> McpSdkServerConfig:
-    """Build a server bound to exactly one semantic work item."""
+    """Build a server whose application-owned binding may advance between SDK queries."""
+
+    def current_state() -> SemanticWorkItemState:
+        state = state_or_provider() if callable(state_or_provider) else state_or_provider
+        if not isinstance(state, SemanticWorkItemState):
+            raise ToolFailure(
+                status="error",
+                origin="environment",
+                code="template_task_not_bound",
+                message="Template tools require a current application-bound work item.",
+            )
+        return state
 
     async def get_current(_args: dict[str, Any]) -> dict[str, Any]:
+        state = current_state()
         payload = {
             "schema_version": 1,
             "status": "ok",
             "work_item": state.agent_work_item,
             "field_candidates": state.initial_candidates(),
             "candidate_protocol": {
-                "initial_scope": "target_only",
+                "initial_scope": "all_visible_top_level_objects",
                 "sibling_rule": (
-                    "For every adjacent object you judge fillable, request that exact "
-                    "object_id with field_query before deciding it has no Registry candidate."
+                    "Every visible top-level object has an explicit candidate result, including "
+                    "an empty matches list. Use request_current_context only for evidence beyond "
+                    "the supplied crop, not as a required candidate-discovery ceremony."
                 ),
             },
         }
@@ -815,6 +1128,7 @@ def build_template_semantic_tool_server(
 
     async def request_context(args: dict[str, Any]) -> dict[str, Any]:
         try:
+            state = current_state()
             if not any(
                 isinstance(args.get(key), str)
                 for key in ("visual_scope", "field_query", "text_query")
@@ -888,8 +1202,23 @@ def build_template_semantic_tool_server(
                         }
                     )
                     public_registry = _agent_payload(registry)
+                    for item in public_registry.get("results", []):
+                        if not isinstance(item, dict):
+                            continue
+                        filtered, duplicates = state._filter_registered_body_candidates(
+                            item.get("matches", []),
+                            object_id=object_id,
+                        )
+                        item["matches"] = filtered
+                        if duplicates:
+                            item["already_registered_body_roles"] = duplicates
+                            item["guidance"] = (
+                                "Each listed role already has its one representative. Remove "
+                                "this object only when it is a redundant sample; otherwise "
+                                "preserve it. Do not search for a structure container."
+                            )
                     result["field_candidates"] = public_registry
-                    for item in registry.get("results", []):
+                    for item in public_registry.get("results", []):
                         if not isinstance(item, dict):
                             continue
                         field_ids = {
@@ -915,6 +1244,7 @@ def build_template_semantic_tool_server(
 
     async def submit(args: dict[str, Any]) -> dict[str, Any]:
         try:
+            state = current_state()
             if state.submission is not None:
                 raise ToolFailure(
                     status="needs_input",
@@ -976,18 +1306,16 @@ def build_template_semantic_tool_server(
                     message="Every field ID must come from candidates returned in this work item.",
                     suggested_actions=("request_current_field_candidates",),
                 )
-            prior_declared_fields = (
-                set(state.declared_apply_fields)
-                if state.declared_apply_fields is not None
-                else None
-            )
-            state.validate_retry_field_contract(direct_operations)
-            state.validate_field_assignments(direct_operations)
-            direct_operations, split_run_absorptions = state.normalize_split_run_slots(
+            direct_operations, split_run_absorptions, prior_declared_fields = (
+                state.prepare_apply_operations(
                 direct_operations
+                )
             )
             translated = {
-                "operations": [_translate_operation(item) for item in direct_operations]
+                "operations": _translate_operations(
+                    direct_operations,
+                    state.agent_work_item,
+                )
             }
             try:
                 structured, images = state.service.edit(translated)
@@ -1026,6 +1354,7 @@ def build_template_semantic_tool_server(
             return unexpected_failure_result(committed=False)
 
     async def ambiguity(args: dict[str, Any]) -> dict[str, Any]:
+        state = current_state()
         state.ambiguity = dict(args)
         return tool_result(
             {

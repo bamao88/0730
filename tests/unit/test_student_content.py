@@ -61,7 +61,7 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
                 "registry_version": "0.1.0",
                 "fields": [
                     _field("thesis.title.en", "text"),
-                    _field("body.heading.level1", "text"),
+                    _field("body.heading.outline1", "text"),
                     _field("body.paragraph", "rich_text"),
                     _field("body.figure", "image"),
                     _field("body.table", "table"),
@@ -91,7 +91,7 @@ def _student_content(tmp_path: Path) -> tuple[dict[str, object], FieldRegistrySn
     fields = (
         "thesis.title.en",
         "body.figure",
-        "body.heading.level1",
+        "body.heading.outline1",
         "body.paragraph",
         "references.entries",
     )
@@ -229,7 +229,7 @@ def test_postprocessing_owns_source_value_and_ignores_legacy_agent_value(
         "annotations": [
             first,
             _annotation(ids[1], "body.figure"),
-            _annotation(ids[2], "body.heading.level1"),
+            _annotation(ids[2], "body.heading.outline1"),
             _annotation(ids[3], "body.paragraph"),
             _annotation(ids[4], "references.entries"),
         ],
@@ -283,7 +283,7 @@ def test_placement_copies_body_transport_once_in_student_source_order(
             _slot("slot.title", "thesis.title.en", "docfit.title", True, styles[0]),
             _slot(
                 "slot.body.h1",
-                "body.heading.level1",
+                "body.heading.outline1",
                 "docfit.body.h1",
                 True,
                 styles[1],
@@ -321,7 +321,7 @@ def test_placement_copies_body_transport_once_in_student_source_order(
     assert body["source_object_ids"] == ["obj-body-1", "obj-body-2"]
     assert [item["field_id"] for item in body["source_content_items"]] == [
         "body.figure",
-        "body.heading.level1",
+        "body.heading.outline1",
         "body.paragraph",
     ]
     assert placement["status"] == "COMPLETE"
