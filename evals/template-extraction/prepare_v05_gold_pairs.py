@@ -25,7 +25,6 @@ from zipfile import ZipFile
 import yaml
 from jsonschema import Draft202012Validator
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EVAL_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_ROOT = EVAL_ROOT / "cases"
@@ -694,7 +693,9 @@ def prepare_pku_contract(source: Path, template_hash: str) -> dict[str, Any]:
             "field_identity_property": "w:alias",
             "field_identity_rule": "content controls use canonical field_id when present",
             "slot_identity_property": "w:tag",
-            "slot_identity_rule": "placeholder anchors are allowed for this accepted legacy surface",
+            "slot_identity_rule": (
+                "placeholder anchors are allowed for this accepted legacy surface"
+            ),
             "word_internal_id_property": "w:id",
             "word_internal_id_semantics": "non_business_identity",
         },

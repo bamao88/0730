@@ -6,7 +6,6 @@ import json
 import sys
 from pathlib import Path
 
-
 TASK_ROOT = Path(__file__).resolve().parent
 INSPECTION = TASK_ROOT / "evidence" / "source-inspect.json"
 PLAN = TASK_ROOT / "work" / "clean-plan.json"

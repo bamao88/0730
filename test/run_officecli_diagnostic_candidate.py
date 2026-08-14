@@ -11,7 +11,6 @@ from docfit.tools.inspection import inspect_document, resolve_object_ref
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.package import validate_docx_package
 
-
 TASK_ROOT = Path(__file__).resolve().parent
 SOURCE = TASK_ROOT / "input" / "school-template-nannong-undergraduate.docx"
 PLAN = TASK_ROOT / "work" / "clean-plan.json"
