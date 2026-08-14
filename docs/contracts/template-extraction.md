@@ -1,7 +1,7 @@
 # Template Extraction Module Contract
 
-Status: draft scaffold  
-Branch: `codex/template-extraction`  
+Status: draft scaffold
+Branch: `codex/template-extraction`
 Base: `origin/main`
 
 ## Goal
