@@ -1,7 +1,7 @@
 # Final Generation Module Contract
 
-Status: draft scaffold  
-Branch: `codex/final-generation`  
+Status: draft scaffold
+Branch: `codex/final-generation`
 Base: `origin/main`
 
 ## Goal
