@@ -1,7 +1,7 @@
 # User Content Extraction Module Contract
 
-Status: draft scaffold  
-Branch: `codex/user-content-extraction`  
+Status: draft scaffold
+Branch: `codex/user-content-extraction`
 Base: `origin/main`
 
 ## Goal
