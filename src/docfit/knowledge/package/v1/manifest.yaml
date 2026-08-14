@@ -1,0 +1,31 @@
+schema_version: 1
+package_id: docfit-thesis-format
+version: v1
+scope: universal_thesis_formatting
+title: DocFit 通用论文格式领域知识
+content_digest: "sha256:8f363ef298bf808c9f7d7ceb0bd5f0141272c463ca12606a27d20331cd8c96a0"
+documents:
+  - id: concepts
+    kind: concepts
+    path: references/concepts.md
+    description: 通用论文格式概念和语义角色
+    sha256: "0c98691d39dececfff14de703653a2a4b0c8d6c2086fb8ef392cf29a358f6c52"
+  - id: recognition-methods
+    kind: recognition_method
+    path: references/recognition-methods.md
+    description: 从当前任务证据识别具体规则的方法
+    sha256: "8f86dda68372610d1d72e5b46586365c0bd6b3b388ca228d5f2ed22d5a356365"
+  - id: interpretation-principles
+    kind: interpretation_principle
+    path: references/interpretation-principles.md
+    description: 解释证据、冲突和不确定性的通用原则
+    sha256: "5dff8768a9c9e4d1702768eabbadf4b9c8d118045039dd30076b78b34fe27802"
+  - id: processing-patterns
+    kind: processing_pattern
+    path: references/processing-patterns.md
+    description: 检查、修改、渲染和复核的通用处理模式
+    sha256: "b89e1bdad71d70caaf58b9978f97a37715ee236eb9a58d5b89653615d74990e4"
+review:
+  reviewed_by: docfit-maintainers
+  reviewed_at: "2026-08-01"
+notes: null

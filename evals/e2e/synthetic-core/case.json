@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "synthetic-core-conversion",
+  "fixture": "synthetic",
+  "command": "docfit convert",
+  "requires_libreoffice_candidate": true,
+  "requires_all_page_review": true,
+  "assertions": [
+    "all_six_required_sdk_tool_uses_observed",
+    "source_hash_unchanged",
+    "final_docx_exists_and_reopens",
+    "candidate_pdf_page_count_matches_render_ref",
+    "every_final_page_has_visual_evidence",
+    "no_blocking_finding",
+    "independent_validation_saved"
+  ]
+}

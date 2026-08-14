@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "blank-page-long-title",
+  "fixture": "synthetic",
+  "document": "blank-page-long-title.docx",
+  "risk": "A long cover title can overflow or create an unexpected blank page.",
+  "automatic_assertion": "The fixture remains structurally inspectable.",
+  "delivery_assertion": "Review the delivery PDF for cover overflow and every unexpected blank page."
+}

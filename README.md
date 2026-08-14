@@ -1,0 +1,165 @@
+# DocFit Agent SDK
+
+DocFit 是基于 Claude Agent SDK 的论文格式处理应用。当前系统由两个领域 Skill、一个
+只读分析 Subagent、五个 DOCX Tool、通用 Knowledge、Eval、薄应用壳和本地可观测性组成。
+Agent 负责语义判断与执行策略；确定性代码保护输入只读、快照绑定、原子发布和证据完整性。
+
+视觉证据采用 clean-break V2 架构：固定 Docker LibreOffice 是唯一页面视觉来源，
+OfficeCLI 只负责 DOCX 结构、编辑、验证和语义对象定位。DocFit 把对象锚点映射到
+LibreOffice PDF，并按需生成联系表、完整页面、局部图和前后比较图。不存在 Provider
+选择、自动回退、第二视觉路径或旧 `render_ref` 兼容层。视觉结果始终标记为
+`approximate`，不声称与 Microsoft Word 像素一致。
+
+模板发布与学生内容填充现在共享 Fill Contract v2 中不可变的 Style Contract Set。
+每个目标 slot 只引用 `style_contract_id + contract_digest`；最终 DOCX 对每个实际
+occurrence 显式应用受管有效属性并重新打开校验，避免学生源格式、相邻段落或 Word
+样式继承改变同一合同的结果。当前覆盖段落/Run 的核心字体、字号、粗斜体、颜色、
+对齐、间距和分页属性；编号、表格条件样式、Theme 求值及跨 story/section 上下文仍是
+后续扩展边界，不计为已完成能力。
+
+架构基线从 [docs/docfit-00-index.md](docs/docfit-00-index.md) 开始；视觉 V2 的决策和
+验收见
+[docs/plans/docfit-libreoffice-visual-evidence-v2.md](docs/plans/docfit-libreoffice-visual-evidence-v2.md)。
+
+## Requirements
+
+- Python 3.12（由 `.python-version` 固定）
+- [uv](https://docs.astral.sh/uv/)
+- OfficeCLI 1.0.143
+- Docker，以及仓库内固定的 `docfit-libreoffice-visual:25.2.3.2` 镜像
+- Poppler：`pdfinfo`、`pdftotext`、`pdftoppm`
+- 运行真实 Agent 时使用 Kimi Code 或 MiniMax API key
+
+构建视觉镜像：
+
+```bash
+docker build \
+  -t docfit-libreoffice-visual:25.2.3.2 \
+  docker/visual-renderer
+```
+
+如默认 Debian mirror 在本地不可达，可显式传入镜像源；镜像内容版本仍由
+`docker/visual-renderer/packages.lock` 固定。
+
+## Install and verify
+
+```bash
+uv sync --frozen
+uv lock --check
+uv build
+uv run ruff check src tests
+uv run mypy src
+uv run pytest -q
+uv run docfit doctor
+uv run docfit doctor --require visual-renderer
+```
+
+`docfit doctor` 是基础确定性门。`--require visual-renderer` 额外验证锁定的 OfficeCLI、
+LibreOffice 镜像身份、字体环境 digest 和 Poppler 工具；缺失时返回非零，不会换用其他
+渲染器。
+
+开发者 Tool CLI 示例：
+
+```bash
+uv run docfit tools inspect evals/fixtures/smoke/student.docx
+uv run docfit tools render evals/fixtures/smoke/student.docx
+uv run docfit tools visual render:v2:<hash> --mode pages --pages 1
+```
+
+`docx_render` 输入只包含 `input_docx` 和可选 `overview`；应用会话注入 `task_root`。
+`docx_visual_review` 支持 `contact_sheet`、`pages`、`regions` 和 `compare`。PDF 只生成一次，
+页面与局部图片按需栅格化并缓存在任务目录的 `.docfit/evidence/`。Tool 结果返回紧凑 JSON
+文本块及原生 `image` 内容块；长文档通过 cursor 分批查看。
+
+## Agent and product commands
+
+将 Agent 凭据保存在仓库外的 `~/.config/docfit/agent.env`，权限必须为 `0600`。进程环境
+变量可以覆盖文件配置。不要把 key 写入仓库、测试证据或日志。
+
+```dotenv
+DOCFIT_AGENT_BACKEND_ORDER=minimax,kimi
+DOCFIT_KIMI_API_KEY=...
+DOCFIT_KIMI_BASE_URL=https://api.kimi.com/coding/
+DOCFIT_KIMI_MODEL=kimi-for-coding
+DOCFIT_MINIMAX_API_KEY=...
+DOCFIT_MINIMAX_BASE_URL=https://api.minimaxi.com/anthropic
+DOCFIT_MINIMAX_MODEL=MiniMax-M3
+```
+
+```bash
+chmod 600 ~/.config/docfit/agent.env
+uv run docfit agent-smoke --case image
+uv run docfit agent-smoke --case ask-user
+uv run docfit agent-smoke --case denied-tools
+uv run docfit agent-smoke --case path-tools
+uv run docfit agent-smoke --case subagent
+uv run docfit doctor --require agent-smoke
+```
+
+五个 smoke case 验证真实 MCP 图片、同会话用户提问、隐藏工具拒绝、路径权限和只读
+Subagent。MiniMax-M3 是默认模型和首选 backend，Kimi 仅作回退。`.docfit/smoke/` 只保存
+不含凭据与论文正文、但绑定实际 backend/model 的回执元数据。
+
+模板准备：
+
+```bash
+uv run docfit prepare-template \
+  --school-template path/to/school-template.docx \
+  --output .tmp/template-preparation-task
+```
+
+`--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
+的开发期 Registry，也可显式替换。应用把模板、要求、Registry、目标和输出边界作为一个完整
+任务交给主 Agent。主 Agent 自行取得整份 inventory、选择结构/页面证据、批量修改、重试和
+可选只读 Subagent 委派；应用不生成语义 work item、crop、region cursor 或固定区域状态图。
+
+模板能力仍只通过五个稳定 `docx_*` Tool 暴露。`docx_edit` 内的模板 action 只执行 Agent 明确
+选择的对象操作，不拥有工作流状态。主 Agent 对精确最终候选渲染并实际复核全部页面，再调用
+`docx_validate`；应用只复查 hash、输入不变、package/Registry/视觉证据绑定等客观后置条件并
+发布。任何修改都会使旧 object ref 和视觉结论失效。成功目录的 `output/` 包含正式交付对：
+`final-template.docx` 与绑定其 hash 的 `fill-contract.json`；PNG、执行 trace 和其他渲染证据
+保留为任务内审计材料。
+
+用户内容提取与 Gold 对比：
+
+```bash
+uv run docfit extract-student-content \
+  --input path/to/student.docx \
+  --field-registry docs/plans/docfit-content-field-registry/content-fields-v0.4.yaml \
+  --output .tmp/student-extraction
+
+uv run docfit eval-student-content \
+  --actual .tmp/student-extraction \
+  --gold path/to/accepted-extraction-gold-package \
+  --output .tmp/student-extraction/eval \
+  --json
+```
+
+Eval 在提取 Agent 完成后才读取独立的 Gold，不把答案注入 Agent。它自动发现任务目录中的
+Actual、inventory 和 Agent evidence，生成 `student-content-eval-report.json` 与面向人
+阅读的 `student-content-eval-report.md`；报告覆盖字段、值、源覆盖、语义实例拆分/合并、
+内容顺序和父子关系，且不复制学生正文。PASS 返回 0，质量失败或输入错误返回 2。
+
+转换：
+
+```bash
+uv run docfit convert \
+  --input evals/fixtures/smoke/student.docx \
+  --school-template evals/fixtures/smoke/school-template.docx \
+  --school-requirements evals/fixtures/smoke/school-requirements.pdf \
+  --output .tmp/smoke-output
+```
+
+完成报告只引用当前最终 DOCX 的 V2 LibreOffice render、全页 Agent 视觉覆盖和独立验证；
+中间渲染或旧快照不能证明最终结果。
+
+本地观察器通过 `uv run docfit observe` 启动，只绑定 `127.0.0.1`。观察索引不保存论文
+正文；SDK transcript 使用每次运行隔离目录并显式清理。历史本地证据只有在当前会话重新
+授权任务目录并验证 ID/hash 后才可访问。
+
+## Test layout
+
+- `tests/unit`：纯本地逻辑与视觉证据核心
+- `tests/contract`：公开 Tool/schema、权限与 MCP 原生图片合同
+- `tests/integration`：真实 OfficeCLI、Docker LibreOffice、三校视觉链路、转换壳和本地观察器
+- `evals`：离线开发与回归资产，不进入一次用户任务的在线决策环

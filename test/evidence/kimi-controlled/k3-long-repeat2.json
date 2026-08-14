@@ -1,0 +1,51 @@
+{
+  "privacy": "metadata_only_no_prompt_or_provider_error_body",
+  "results": [
+    {
+      "accepted_step_count": 12,
+      "api_error_status": null,
+      "duration_ms": 224400,
+      "effort": "high",
+      "exception_type": null,
+      "is_error": false,
+      "model": "k3-256k",
+      "num_turns": 14,
+      "outcome": "pass",
+      "repeat": 1,
+      "sdk_api_duration_ms": 229785,
+      "sdk_duration_ms": 222433,
+      "stop_reason": "tool_use",
+      "structured_output_ok": true,
+      "subtype": "success",
+      "terminal_reason": "completed",
+      "tool_search": false,
+      "tool_use_count": 13,
+      "variant": "k3-long-high-search-off",
+      "workload": "long"
+    },
+    {
+      "accepted_step_count": 12,
+      "api_error_status": null,
+      "duration_ms": 221376,
+      "effort": "high",
+      "exception_type": null,
+      "is_error": false,
+      "model": "k3-256k",
+      "num_turns": 14,
+      "outcome": "pass",
+      "repeat": 2,
+      "sdk_api_duration_ms": 224286,
+      "sdk_duration_ms": 219520,
+      "stop_reason": "tool_use",
+      "structured_output_ok": true,
+      "subtype": "success",
+      "terminal_reason": "completed",
+      "tool_search": false,
+      "tool_use_count": 13,
+      "variant": "k3-long-high-search-off",
+      "workload": "long"
+    }
+  ],
+  "schema_version": 1,
+  "target_steps": 12
+}

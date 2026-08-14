@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "cross-run-placeholder",
+  "fixture": "synthetic",
+  "document": "cross-run-placeholder.docx",
+  "risk": "A visible placeholder split across OOXML runs can evade replacement.",
+  "automatic_assertion": "The visible placeholder is replaced through its current object ref."
+}

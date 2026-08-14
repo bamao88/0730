@@ -1,0 +1,153 @@
+{
+  "artifacts": {
+    "contact_sheet": {
+      "bytes": 513179,
+      "height": 1740,
+      "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/contact-sheet.png",
+      "sha256": "048ba449d8e5da5dfae0e4f89eee2068064667adfe2ff91da4b4633a6962372e",
+      "width": 1600
+    },
+    "layout_map": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/layout-map.json",
+    "pages": [
+      {
+        "bytes": 109099,
+        "height": 1685,
+        "page": 1,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-01.png",
+        "sha256": "1a289e83608d1feee3c998f949d19772dfec05186753b5d640b86fd173074480",
+        "width": 1191
+      },
+      {
+        "bytes": 209248,
+        "height": 1685,
+        "page": 2,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-02.png",
+        "sha256": "3cd039b36a9a0c247886823b939933ac9adc0f00276f8eccd085e386a8f72393",
+        "width": 1191
+      },
+      {
+        "bytes": 181978,
+        "height": 1685,
+        "page": 3,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-03.png",
+        "sha256": "043c88341a25a77db5d2e36fcb75d59e57e67f9124d3a4722aabfbe7528975e4",
+        "width": 1191
+      },
+      {
+        "bytes": 137336,
+        "height": 1685,
+        "page": 4,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-04.png",
+        "sha256": "b59ca7d749ba7990f28ab4ecfaee96d0c2a19af42ad915eda2d59eaa165b8af9",
+        "width": 1191
+      },
+      {
+        "bytes": 135287,
+        "height": 1685,
+        "page": 5,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-05.png",
+        "sha256": "c47915ca7f2ed2e087400f1c83494c2769282131e148baae84ab8a2ce4ff851e",
+        "width": 1191
+      },
+      {
+        "bytes": 147668,
+        "height": 1685,
+        "page": 6,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-06.png",
+        "sha256": "05e26d789e189f0f63cac5e9f85eeeb79674bc2ef76ccfda9f0f4ac5b783fcae",
+        "width": 1191
+      },
+      {
+        "bytes": 240965,
+        "height": 1685,
+        "page": 7,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-07.png",
+        "sha256": "05a64004c58b768f2e278c77675722953b16b1d73b581682f2ef7b3351ed4efa",
+        "width": 1191
+      },
+      {
+        "bytes": 174059,
+        "height": 1685,
+        "page": 8,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-08.png",
+        "sha256": "5b448ff08c72c74f71a519bb910178976b454ab4e7b5aa798547f9a6c7ab3c87",
+        "width": 1191
+      },
+      {
+        "bytes": 267053,
+        "height": 1685,
+        "page": 9,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-09.png",
+        "sha256": "8acdfff4bcfeee47ebfe82c4d58672ea996fcb34d7c579325dbdb9ad7e575182",
+        "width": 1191
+      },
+      {
+        "bytes": 74797,
+        "height": 1685,
+        "page": 10,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-10.png",
+        "sha256": "644a86959603677afb60f4e177446dcb62ee52afa3bdb5c059a7246a8d36074f",
+        "width": 1191
+      },
+      {
+        "bytes": 54944,
+        "height": 1685,
+        "page": 11,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-11.png",
+        "sha256": "dc50308d7e394f68fa68f50839152c6591f0a378d1420b04ad136b1856dace40",
+        "width": 1191
+      },
+      {
+        "bytes": 93724,
+        "height": 1685,
+        "page": 12,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages/page-12.png",
+        "sha256": "94588f4c4cc5adb34ef631b1e23997463951f2f16ad4409408177bda0fb2a7e0",
+        "width": 1191
+      }
+    ],
+    "pages_directory": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/pages",
+    "pdf": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/document.pdf"
+  },
+  "cache_key": "05c2ea82de1bb7b3787481c723d29f91d121c985683cd160649a4de4188629b9",
+  "conversion_profile": "adobe_pdf_services_default",
+  "document_path": "/Users/fl/WXP/docfit_agent_SDK/test/input/school-template-nannong-undergraduate.docx",
+  "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+  "dpi": 144,
+  "fidelity": "official_service_conversion",
+  "font_environment": {
+    "fingerprint": null,
+    "font_file_count": null,
+    "source": "adobe_managed_service",
+    "substitutions": null,
+    "visibility": "opaque"
+  },
+  "font_substitutions": null,
+  "page_count": 12,
+  "parent_render_ref": null,
+  "provider": {
+    "api_family": "PDF Services API",
+    "connect_timeout_ms": 30000,
+    "conversion_profile": "adobe_pdf_services_default",
+    "credential_type": "service_principal",
+    "execution_environment": "adobe_managed_cloud",
+    "name": "adobe_pdf_services",
+    "operation": "create_pdf_from_docx",
+    "organization_id_configured": true,
+    "read_timeout_ms": 120000,
+    "version": "4.2.0"
+  },
+  "render_intent": "baseline",
+  "render_sha256": "ee12422119d28e6c136fa18788d4df28c66d3607344afead32f2d0373d7d3a48",
+  "revision_display": "document_default",
+  "schema_version": 1,
+  "target_application": null,
+  "target_application_version": null,
+  "warnings": [
+    {
+      "code": "service_managed_render_environment",
+      "kind": "fidelity",
+      "message": "Adobe PDF Services completed the official conversion, but its font inventory and substitution details are not exposed."
+    }
+  ]
+}

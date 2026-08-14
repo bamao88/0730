@@ -1,0 +1,157 @@
+{
+  "artifacts": {
+    "contact_sheet": {
+      "bytes": 220275,
+      "height": 1740,
+      "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/contact-sheet.png",
+      "sha256": "2cd38348d1b1aa1de23cfeb3d8be51653a212e5618525d070f06d761c0dd9d12",
+      "width": 1600
+    },
+    "layout_map": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/layout-map.json",
+    "pages": [
+      {
+        "bytes": 109099,
+        "height": 1685,
+        "page": 1,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-01.png",
+        "sha256": "1a289e83608d1feee3c998f949d19772dfec05186753b5d640b86fd173074480",
+        "width": 1191
+      },
+      {
+        "bytes": 209248,
+        "height": 1685,
+        "page": 2,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-02.png",
+        "sha256": "3cd039b36a9a0c247886823b939933ac9adc0f00276f8eccd085e386a8f72393",
+        "width": 1191
+      },
+      {
+        "bytes": 181978,
+        "height": 1685,
+        "page": 3,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-03.png",
+        "sha256": "043c88341a25a77db5d2e36fcb75d59e57e67f9124d3a4722aabfbe7528975e4",
+        "width": 1191
+      },
+      {
+        "bytes": 33602,
+        "height": 1685,
+        "page": 4,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-04.png",
+        "sha256": "a42bc879290a927fb0eca913c1d062ede602dfdde4d08ade21d2712e6a86407a",
+        "width": 1191
+      },
+      {
+        "bytes": 31542,
+        "height": 1685,
+        "page": 5,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-05.png",
+        "sha256": "1c80cc927db32417f6a64bb9380c16bca283094a964adc40712daf843dd836c6",
+        "width": 1191
+      },
+      {
+        "bytes": 37532,
+        "height": 1685,
+        "page": 6,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-06.png",
+        "sha256": "ab77c105d17f4618a97560e884f0070425e9cf50b3fd387b117294d7ec7fa8a6",
+        "width": 1191
+      },
+      {
+        "bytes": 35592,
+        "height": 1685,
+        "page": 7,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-07.png",
+        "sha256": "157f637bd97adbc5d7da696c58fa737717faae07a14ba9b6edd6560f6dd29ec7",
+        "width": 1191
+      },
+      {
+        "bytes": 26583,
+        "height": 1685,
+        "page": 8,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-08.png",
+        "sha256": "cc61c7a955ca7850c4deef896a18ea0833994b2404b07ff4c82577a07515056d",
+        "width": 1191
+      },
+      {
+        "bytes": 23635,
+        "height": 1685,
+        "page": 9,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-09.png",
+        "sha256": "676a38686a5fbfe077467d403de78081c9fdfd803fc003c785fddc3d2c9f9428",
+        "width": 1191
+      },
+      {
+        "bytes": 28601,
+        "height": 1685,
+        "page": 10,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-10.png",
+        "sha256": "e0db4d38b89a28d5f24ac686e75a8022f4140f54fe411c198eb0bf1d63c8929e",
+        "width": 1191
+      },
+      {
+        "bytes": 31092,
+        "height": 1685,
+        "page": 11,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-11.png",
+        "sha256": "1453d4f1c8c7d7350f839ef16bd15357a08fe1b3f7a3ef49b2d2f066ad675229",
+        "width": 1191
+      },
+      {
+        "bytes": 20487,
+        "height": 1685,
+        "page": 12,
+        "path": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages/page-12.png",
+        "sha256": "6daf27caa3c220a2a030778fc9621b2071d2dd797dd341325e495969449e3996",
+        "width": 1191
+      }
+    ],
+    "pages_directory": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/pages",
+    "pdf": "/Users/fl/WXP/docfit_agent_SDK/test/render/candidate-run/document.pdf"
+  },
+  "cache_key": "5752156dd36ab33326dfc9180db36b8f43d9c4092b32c77e29d90516bea520c1",
+  "conversion_profile": "adobe_pdf_services_default",
+  "document_path": "/Users/fl/WXP/docfit_agent_SDK/test/work/diagnostic-clean-template-candidate.docx",
+  "document_sha256": "c38d417acd7f4ee0dbb58507e47e0f87264b39001f6d700e4171c9a2e19e2b53",
+  "dpi": 144,
+  "fidelity": "official_service_conversion",
+  "font_environment": {
+    "fingerprint": null,
+    "font_file_count": null,
+    "source": "adobe_managed_service",
+    "substitutions": null,
+    "visibility": "opaque"
+  },
+  "font_substitutions": null,
+  "page_count": 12,
+  "parent_render_ref": {
+    "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+    "ref_path": "/Users/fl/WXP/docfit_agent_SDK/test/render/baseline-run/render-ref.json",
+    "render_sha256": "ee12422119d28e6c136fa18788d4df28c66d3607344afead32f2d0373d7d3a48"
+  },
+  "provider": {
+    "api_family": "PDF Services API",
+    "connect_timeout_ms": 30000,
+    "conversion_profile": "adobe_pdf_services_default",
+    "credential_type": "service_principal",
+    "execution_environment": "adobe_managed_cloud",
+    "name": "adobe_pdf_services",
+    "operation": "create_pdf_from_docx",
+    "organization_id_configured": true,
+    "read_timeout_ms": 120000,
+    "version": "4.2.0"
+  },
+  "render_intent": "candidate_verification",
+  "render_sha256": "b133912d57464675dfb317eb2216258c0c561a022ced64fc7f2e4a900508fef6",
+  "revision_display": "document_default",
+  "schema_version": 1,
+  "target_application": null,
+  "target_application_version": null,
+  "warnings": [
+    {
+      "code": "service_managed_render_environment",
+      "kind": "fidelity",
+      "message": "Adobe PDF Services completed the official conversion, but its font inventory and substitution details are not exposed."
+    }
+  ]
+}

@@ -1,7 +1,99 @@
 # DocFit 设计文档索引（00）
 
-> 状态：架构收缩版
-> 日期：2026-07-30
+模板准备运行时的当前单一架构权威是
+[DocFit Agent-first 模板准备架构](docfit-agent-first-template-architecture.md)。旧 Template Tool v5、
+body extraction plan 和历史运行 capsule 仅保留证据价值；与该文档冲突时以该文档和当前代码为准。
+
+> 状态：最终架构索引
+> 日期：2026-08-07
+
+本文描述已经批准的目标架构；当前实现边界与完成判定以 06 为准。当前代码已包含
+M0、通用 Knowledge Package v1、Provider-independent P1、五个真实 DOCX Tool、
+OfficeCLI 结构/编辑适配、固定 Docker LibreOffice V2 视觉证据、`docfit convert` 薄应用
+壳，以及最小 `docfit eval --suite core`。核心链路不依赖本地 Microsoft Word、
+AppleScript、macOS 图形会话或用户电脑，也不上传 DOCX 到远程视觉转换服务。本地调试
+壳可以提供可选的平台适配器，但核心代码不得导入该实现，
+平台适配能力也不构成核心完成门。确定性与 live 完成情况仍分别按 06 判定。当前用户
+批准的产品开发范围已在 M2 结束并完成；此后另行批准的 Content Field Registry、三份
+Student Content Extraction Gold 和独立提取 Eval 已完成。Placement/Filling、完整端到端
+Eval、真实样本资格验证和外部人工复核仍是后续范围，因此不能宣称 M3 已通过。
+
+模板提取静态产物 Eval 已有一份独立的顶层设计：
+`docs/plans/docfit-template-extraction-eval/DESIGN.md`。该切片只读取已经生成的模板与
+填写契约，并与 Gold 模板、Gold 填写契约比较；它不依赖上游提取运行状态，也不规定
+Agent 轨迹。当前已在 `evals/template-extraction/` 独立工程内完成 schema/config、合成
+fixture、共享事实分析、两套断言、评分 runner、同源报告和四类 CLI 结论，并物化三校
+candidate case 的最终目录。三校仍固定为 `INPUT_ERROR`；Human-accepted Gold 与学校
+评分回归尚未完成，因此这项合成静态证据不构成完整 M3 通过或可试用 MVP 声明。
+
+正文模板提取与 Gold 准备的规则、内容模型、建议脚本能力和完整验收标准见
+`docs/plans/docfit-body-template-extraction-spec.md`。该规范属于产品/Gold 准备侧，明确要求
+正文全量盘点、细粒度 protected/slot/remove 责任划分、代表性正文槽和人工 Gold 验收；
+它不进入独立 Eval 运行时。
+
+该静态设计只覆盖连接链的一侧。当前已另行完成 Student Content Extraction 的一侧：
+Student 001/002/003 已有 Human-accepted Extraction Gold v2，`docfit eval-student-content`
+可在每次提取后读取 Actual 任务目录并生成 JSON/Markdown 对比报告。完整 M3 数据合同仍
+必须把三类 Human-confirmed
+任务事实连到同一语义基线：开放且版本化的 Content Field Registry 快照定义
+共享 `field_id`；模板提取结果用
+`slot_id` / `region_id → field_id` 和绑定模板 hash 的目标 locator 表达可填写位置；
+学生内容提取结果用 `content_id → field_id`、内容值/对象引用和绑定学生源 hash 的
+source locator 表达来源内容；当前任务 `placement` 再把一个或多个 `content_id`
+显式连接到具体 `slot_id` / `region_id`，并在需要时记录可追溯的拆分、组合或
+目标显示投影。相同 `field_id` 只能生成候选连接，不能在
+多目标、复合、条件、生成或来源冲突时自动授权写入。
+
+当前 Registry 研发权威是
+`docs/plans/docfit-content-field-registry/DESIGN.md` 和固定的
+clean-break `content-fields-v0.5.yaml`；Student 002 与 Student 001/003 的不可变历史 Gold
+继续分别绑定 accepted v0.3 / v0.4。Registry 是跨阶段语义合同，不是 Eval 所有的 Truth；
+Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval/Gold
+数据。二者都不是产品 Knowledge、全局学校 profile、运行时 Content Ledger 或新的第六类
+产品资产。v0.5 保留 54 个字段职责，但以 clean break 采用无歧义的正文 outline 命名，且不提供
+旧 ID alias；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
+系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
+
+学校模板在线准备采用 Agent-first 单任务路线。应用一次提供模板、要求、Registry、目标与输出边界；
+主 Agent 拥有整项结果，自主选择全局 inventory、页面/局部证据、修改顺序、批量、重试和只读
+Subagent 委派。渐进披露路径由 Agent 选择，应用不生成语义 work item、crop、region cursor 或
+固定区域状态图。
+
+模板处理复用唯一五个稳定 `docx_*` Tool；模板专用能力是 `docx_edit` 内无状态、可组合的原子
+action。Tool 只守 snapshot/object/Registry/Word/package 等机械不变量，不通过标题、编号或位置替
+Agent 做学校语义。主 Agent 对精确最终候选完成全页视觉检查和 `docx_validate` 后声明完成；应用
+再验证输入不变、证据/hash 绑定并原子发布 Word 与 Fill Contract 审计。旧 work-item Tool、
+Template Workspace、候选 Skill 副本和兼容层均已删除。静态 Eval Truth 位于运行时之外，只用于
+生成后评分。
+
+M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
+06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
+再基于同一合成产品链路依次减少重复 Tool 调用、复用单次运行解析/渲染结果、优化
+页面批次与图片载荷、收紧无效重试。该轨道已完成 O0.0–O0.7：平台无关骨架、SDK
+transcript/report v2 隐私合同、入队前字段 allowlist projector，以及直接 ID 关联、覆盖维度
+和安全指标聚合，并已加入有界 queue、后台单 writer、SQLite 历史、保留/删除与非阻断
+降级、免登录 loopback 安全壳、自动短期会话、会话内证据重新挂载，以及运行总览、Transcript/时间线、
+Agent/Subagent 树、Tool/事件详情、调查交接、跨运行比较与 O0 总体验收；O1 尚未开始。
+它不能产生真实交付质量、MVP
+或 M3 已通过的声明。
+
+论文转换的文档方向固定为“模板主干”：干净、可填写的目标模板工作副本是候选与最终
+DOCX 的唯一主干；学生 DOCX 始终只读，只提供内容真值和来源证据。Agent 根据当前任务
+绑定把学生内容放入模板槽位或区域，不得从学生论文副本开始构建候选，再把模板节导入
+其中。跨文档对象能力统一为 `import_content_objects`，不存在旧模板组合兼容 action；它也不能
+替代学生内容到目标模板的位置映射。
+
+该轨道的 O0 已进一步批准为一个薄应用壳内的本地只读观测界面，详细目标见
+`docfit-local-observability-design.md`。它只投影 SDK 实际运行事件、脱敏 Tool 摘要与
+本地证据引用，不控制 Agent、不复制任务文件，也不建立第二套 loop、工作流或 replay。
+当前已完成设计与 O0.0–O0.7 的安全事件投影、直接关联、有界历史索引、免登录 Web 会话安全、
+证据重新挂载、Agent loop 核心页面、跨运行比较与总门。
+
+O0 的 metadata-only 只描述观测索引，不掩盖 SDK 原生 transcript：实现必须使用运行级
+临时 `CLAUDE_CONFIG_DIR` 并管理清理回执。CLI 结束后的历史证据默认 unmounted，只有
+用户显式重新选择任务目录并通过 report ID/hash/ref 验证后才能打开；网站不保存路径
+映射或扫描目录。schema v2 报告、本地 Web 自动短期会话、同源/CSRF 安全与资源硬上限
+都是 O0 完成门。
 
 ## 一句话架构
 
@@ -11,43 +103,134 @@ DocFit 以 **Claude Agent SDK** 为运行时边界，产品只维护五类资产
 Skill + Knowledge + Tools + Eval + 薄应用壳
 ```
 
-DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
+DocFit 不再自建 Agent 工作流运行时。会话、Agent loop、工具调用、上下文延续、用户追问、
+原生 Subagent 与恢复能力均优先使用 Claude Agent SDK；只有论文领域能力留在 DocFit。
+
+核心信任模型是 **Agent owns the outcome**：主 Agent 承担语义理解、任务规划、执行策略、
+反馈解释、自主重试、自我复核和完成判断。DocFit 的重点是给它提供充分上下文、领域知识、
+可组合工具、可逆操作和与当前文档绑定的证据；确定性代码只固化客观产品不变量与显式
+任务合同，不在 Agent 外再实现一套语义决策系统，也不通过代理指标重复否决 Agent 的
+判断。完整边界见 `docfit-01-architecture-core.md` 第 2.7 节。
+
+批准的顶层运行关系是：两个领域 Skill（`docfit-school-extract` 与 `convert-thesis`）负责
+任务判断与可选委派，一个模块化通用 Knowledge Package 提供可选择的知识内容，五个
+DocFit MCP Tool 提供确定性文档能力。薄应用壳只额外配置一个通用只读
+`docfit-unit-analyst`，以 SDK 原生隔离上下文执行局部分析；它不是新的产品资产、
+单元专家目录或固定工作流节点。
+
+主 Agent 的 SDK 内置能力面固定为 `Skill`、受路径权限约束的 `Read/Glob/Grep`、受信任且
+自动批准的 `Bash/Write`、`AskUserQuestion` 与 `Agent`，并继续直接调用五个 DocFit Tool。
+`Read/Glob/Grep` 只直接读取
+项目 `.claude/skills/**`、产品 Knowledge Package 和当前任务 input/work/output；权限
+判断先解析真实绝对路径，再拒绝敏感文件、项目外/其他任务路径与 symlink 逃逸。
+`Bash/Write` 不经过 DocFit 路径 hook，可访问 Agent 进程本来可访问的路径和环境；因此
+前述直接 Read allowlist 不是 sandbox，也不再声称 input、任务外路径或文档产物对主 Agent
+不可写。`Edit` 和网络工具仍不开放。`docfit-unit-analyst` 不继承这组主 Agent 能力，仍只
+拥有 inspect + visual-review；五个 DocFit Tool 仍是证据绑定、可验证的权威文档操作面。
+
+第一版在五个 Tool 内只适配两个职责不重叠的具体能力：OfficeCLI 负责 inspect、edit、
+validate 和语义对象定位；固定 Docker LibreOffice 负责唯一 DOCX→PDF。Agent 不表达
+intent 或后端选择。Poppler 从 PDF 建立页数/文字 bbox，并按需派生联系表、页面、局部图
+和 compare；当前不建设通用 Provider 接口、注册表、动态选择或故障转移。
+
+视觉证据绑定 DOCX hash、LibreOffice、容器 digest、字体 digest、locale、PDF 参数、
+页码和图片变换。所有结果固定标记为 `approximate`；renderer 失败时不回退到 OfficeCLI
+截图或第二渲染器。
+
+Claude Agent SDK 兼容边界也属于薄应用壳与 Tool adapter：公开 Tool schema 使用兼容
+backend 能稳定消费的扁平 JSON Schema 子集；Tool 的完整结构化结果同时以紧凑 JSON
+text 对当前 Agent 可见，图片仍使用原生 image content block。应用壳为真实页面批次
+配置足够的 SDK 消息缓冲，但单次视觉返回仍受图片数量和字节预算限制。这些兼容处理
+不增加第六个 Tool、第二套协议或新的 Agent loop。
+
+`docx_render` 是新渲染证据的生产边界；`docx_visual_review` 只读取有效
+`render_ref` 的已有页面产物并将图片投递给 Agent，不调用任何渲染后端，也不产生新
+的文档 render。Tool 不维护编辑轮次，是否继续由 Agent 判断。
 
 ## 文档清单
 
 | 编号 | 文档 | 回答的问题 |
 |---|---|---|
 | 01 | `docfit-01-architecture-core.md` | 产品边界是什么，五类资产如何协作 |
+| 06 | `docfit-06-development-roadmap.md` | 如何按阶段开发，每个阶段如何验收和停止 |
 | 04 | `docfit-04-skills-design.md` | Skill 如何指导 Agent，而不变成固定工作流 |
 | 05 | `docfit-05-tools-and-data-design.md` | Knowledge 如何组织，Tools 提供哪些确定性能力 |
-| 02 | `docfit-02-testing-and-iteration.md` | 如何用 Eval 驱动 Skill、Knowledge 与 Tools 迭代 |
+| 02 | `docfit-02-testing-and-iteration.md` | 如何区分普通回归、运行指标与 Eval，并据此迭代 Skill、Knowledge 与 Tools |
 | 03 | `docfit-03-gold-system-design.md` | Eval case 与 Gold 数据如何保持简单、可维护 |
 
 `docs/human/` 存放面向人的示例，不定义架构。
 
+`docfit-local-observability-design.md` 是受 00–06 约束的 M2 后专题设计，定义本地运行
+观测页面的职责、数据边界、信息层次与验收要求。它不是第八份顶层架构合同，也不把
+监控事件升级为新的产品资产或公共协议。
+
+00–06 共同构成 DocFit 的长期开发基准：01 负责稳定架构，06 负责开发顺序和
+阶段验收，02–05 负责各类资产的长期设计。它们可以随经过批准的方案、实现证据
+和真实样本演进，但必须作为一个协调一致的文档集合维护。
+
+代码、目录、公开契约、测试分层或里程碑发生变化时，必须在同一批变更中更新
+所有受影响的 00–06 文档；不得让实现长期领先于文档，也不得用临时计划或执行
+状态覆盖这里的长期基准。设计说明中的字段和工具内部数据仍不会自动升级为新的
+架构组件，新增边界必须经过明确审批。
+
 ## 推荐阅读顺序
 
 1. 只想理解产品：读 01。
-2. 实现第一条论文转换链路：读 01 → 04 → 05。
-3. 建立质量闭环：再读 02 → 03。
+2. 准备开发：读 01 → 06。
+3. 实现第一条论文转换链路：按 06 的阶段读取 04 → 05。
+4. 建立质量闭环：再读 02 → 03。
+5. 开始 M2 后运行观测与性能优化：读 06 第 6.6 节 →
+   `docfit-local-observability-design.md` → 02 第 2.4、10 节。
+6. 设计样式观测与缺口补全：读 01 的 Knowledge/Tool 边界 → 05 第 2.4.1 节 →
+   04 的 Skill 边界 → 02 的后续契约门 → 06 第 6.8 节。
+7. 设计字段槽定位、学生内容提取和 placement/Eval：读 01 的双侧连接合同 →
+   05 的当前任务字段与放置数据边界 → 04 的两个 Skill 输出边界 → 02、03 的
+   Eval/Gold 合同 → 06 第 6.9 节。
 
 ## 五类资产的权威边界
 
 | 资产 | 负责 | 不负责 |
 |---|---|---|
-| Skill | 领域目标、判断方法、工具使用、询问与停止条件 | 运行时调度、持久化状态机 |
-| Knowledge | 学校要求、模板、示例、已确认经验 | 执行流程、运行日志 |
-| Tools | DOCX 分析、修改、渲染、确定性检查 | 自主决定论文语义 |
-| Eval | 离线样本、断言、回归与质量比较 | 在线运行编排、交付状态管理 |
-| 薄应用壳 | 收集输入、配置 SDK、暴露工具与 Skill、返回产物 | 领域判断、工作流引擎 |
+| Skill | 领域目标、判断方法、工具使用、为什么/何时委派、如何拆分、选择哪些 Knowledge、传递哪些证据及期待什么返回；通过明确项目相对路径指引按需读取 references | 固定调度图、持久化状态机、真实工具权限实现、依赖关联文件自动加载 |
+| Knowledge | 面向所有学校和任务共享、可按消费范围组合的论文格式概念、识别方法、解释原则和通用处理模式 | 任何学校专属要求、模板、格式参数、任务证据、执行流程、Agent 调度和运行日志 |
+| Tools | DOCX 分析、修改、固定 LibreOffice V2 渲染、按需视觉视图、语义对象映射和确定性检查 | 在 Tool 内启动第二个 Agent、把近似渲染声称为 Word 像素真值，或替当前 Agent 做语义判断 |
+| Eval | 离线样本、断言、回归与质量比较；在未来 M3 中保存相互 hash/版本绑定的字段、模板、学生内容与 placement 真值 | 在线运行编排、交付状态管理，或把 oracle 默认暴露给被测对象 |
+| 薄应用壳 | 收集输入、配置 SDK、暴露领域资产、落实权限和上下文隔离、返回回复与产物；为模板准备等确定性产品合同管理有界工作项、重试、页面批次、证据失效与发布门；按批准的 O0 设计投影隐私安全的本地运行观测 | 领域语义判断、通用 Agent runtime、替代 SDK 的会话/Tool loop、用监控事件控制或精确回放 Agent |
 
-Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、阶段、checkpoint 或恢复协议。
+Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制一套 SDK 会话、事件、
+阶段、checkpoint、Subagent 或恢复协议。`AgentDefinition` 只是 SDK 接线配置，不与
+Skill、Knowledge、Tools、Eval 或薄应用壳并列为第六类产品资产。
+
+Claude Agent SDK 没有一个与 Skill、Tool 并列的 DocFit Knowledge Base runtime。
+稳定通用知识由产品 Knowledge Package 提供；当前 Skill 选择本次委派所需模块，主
+Agent 将选中内容及版本/digest 与当前任务证据一起放入 `Agent` Tool 的 prompt。
+
+Knowledge Package 随产品发布且必须保持通用。学校事实只来自当前任务提供的
+模板、要求、示例和用户确认；Agent 在任务中提取或推导的学校结论不会因此自动
+成为长期 Knowledge。
+
+样式值也遵守同一边界：Agent 可以使用 Knowledge 中的通用概念识别语义角色、
+绑定模板观测与暴露缺口，但不读取或杜撰可直接套用的“样式经验表”。学校 Word
+工作副本是页面、分节、页眉页脚、页码和已有样式的全局容器；Tool 确定性观测并
+验证这些事实。每个字段再绑定零个、一个或多个展示组件角色：学校存在经验证的完整
+角色时原样使用学校角色，缺失时完整使用经产品批准、稳定版本化的通用预设角色，
+不得在同一角色内逐属性拼接学校值与预设值。通用预设的属性必须来自正式标准、
+明确标记的暂定公开稿、获批产品预设或当前任务显式要求，并保留来源和版本；它属于
+现有确定性领域层的产品参考，不是 Agent Knowledge、学校 profile 或第六类产品资产。
+完整属性与产品验收合同见 01，当前实现状态与后续门禁以 06 为准。
+
+页面不是新的架构资产或稳定编辑身份。页码只在某次 `render_ref` 内有意义；
+不同 Provider 的同页码不得被视为同一内容范围。Agent 使用页面图片观察版式，
+但精确修改仍通过绑定当前 DOCX 快照的 opaque `object_ref` 完成。
 
 ## 明确不建设
 
 以下内容不属于当前 DocFit 架构：
 
-- 自定义工作流引擎、阶段 DAG 或任务调度器；
+- 跨领域的通用工作流引擎、可配置阶段 DAG 或任务调度器（不包括为确定性产品不变量编写的
+  有限应用编排）；
+- 六个或更多文档单元专家目录、固定 AgentDefinition 注册表或穷尽式文档类型枚举；
+- “发现某单元就必须委派”的规则、固定复杂度阈值或应用壳领域路由；
 - `StageExecution`、Run Evidence Module、事件 hash chain；
 - 自定义 checkpoint、exact replay、comparative replay；
 - Delivery Preflight 子系统和多层交付状态机；
@@ -55,6 +238,12 @@ Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制�
 - 为未来平台预建的 Adapter、Port、发布事务与 schema 总线；
 - 只有一处消费者的抽象层；
 - 与 Claude Agent SDK 重叠的路由、会话和恢复实现。
+
+只读历史比较不等于 comparative replay：它比较已经落盘的脱敏指标和证据可用性，
+不会重放模型请求、Tool 副作用或文档内容。
+
+OfficeCLI 与 LibreOffice 分担不同职责，不构成“两个实现共同消费一套通用 Provider
+抽象”的证据。当前视觉合同明确只有一个 renderer，不提供动态选择或故障转移。
 
 如果未来真实需求证明必须增加其中某项，应以独立 ADR 说明：当前痛点、最小方案、为什么 SDK 或普通工具不能解决，以及删除成本。
 
@@ -68,3 +257,6 @@ Claude Agent SDK 是运行时行为的权威来源。DocFit 文档不得复制�
 4. 新抽象是否至少有两个明确消费者？
 
 任一问题没有清楚答案时，不新增架构组件。
+
+增加新的通用 Knowledge 模块不等于增加 Agent 类型。未匹配、复合或简单文档范围可以
+由主 Agent 直接分析，或连同所需 Knowledge 交给同一个 `docfit-unit-analyst`。

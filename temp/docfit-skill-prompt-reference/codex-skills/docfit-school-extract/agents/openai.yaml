@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docfit School Extract"
+  short_description: "Extract school templates for docfit."
+  default_prompt: "Use this skill to convert school thesis templates, requirement documents, PDFs, and sample theses into a validated docfit school package with evidence-backed formatting rules and a target-owned logical-page contract for front/post-body pages."

@@ -1,0 +1,36 @@
+schema_version: 1
+package_id: synthetic-universal
+version: v1
+scope: universal_thesis_formatting
+title: Synthetic Universal Knowledge
+content_digest: "sha256:f8e75c7090f5e4ebf41d98fa92256b85dd21950c811fdbb80624a9425b95007a"
+documents:
+  - id: concepts
+    kind: concepts
+    path: references/concepts.md
+    description: Generic concepts fixture
+    sha256: "e070e0e94288ef16e6685e7539f2206f72ca71a5f8176da511d62af47e14e664"
+  - id: recognition-methods
+    kind: recognition_method
+    path: references/recognition-methods.md
+    description: Generic recognition method fixture
+    sha256: "a644522704fa1acb84e71ff0b5287acd91331478a8d3581a2f12498d8ce19e06"
+  - id: interpretation-principles
+    kind: interpretation_principle
+    path: references/interpretation-principles.md
+    description: Generic interpretation principle fixture
+    sha256: "dc81f3ca5b9c3278e7db7afd8bb8781821e1c1731c7922098b983acaed1f4d45"
+  - id: processing-patterns
+    kind: processing_pattern
+    path: references/processing-patterns.md
+    description: Generic processing pattern fixture
+    sha256: "779f89e93aac1fce20d5879d7197857273bad06717958897aed1d530f56b3b9b"
+  - id: evidence-reading
+    kind: example
+    path: examples/evidence-reading.md
+    description: Cross-task synthetic example
+    sha256: "3a4ca8a03dfaf944f2c1744143f08bf99e03905675c4c93d543f7ff7985f415e"
+review:
+  reviewed_by: test-maintainers
+  reviewed_at: "2026-08-01"
+notes: null

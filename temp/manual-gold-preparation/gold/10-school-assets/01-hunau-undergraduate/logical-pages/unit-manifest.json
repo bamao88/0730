@@ -1,0 +1,307 @@
+{
+  "schema": "docfit-gold-logical-page-units/v1",
+  "school_id": "hunau-undergraduate",
+  "school_name": "湖南农业大学本科",
+  "status": "gold",
+  "purpose": "校对后续学校模板提取器的逻辑单元边界、分页控制归属和独立 Word 分页结果",
+  "source_template": "00-inputs/schools/hunau-undergraduate__source-template.docx",
+  "source_template_sha256": "776649b4af9cfef3a50e859490dd75f1061bfcc2ca2aac20181f73e2bb0361a6",
+  "candidate_provenance": "/Users/fl/Documents/Codex/2026-08-03/new-chat/outputs/湖南农业大学本科",
+  "unit_count": 10,
+  "source_content_block_count": 237,
+  "coverage": "all source top-level content blocks assigned exactly once and in source order; final sectPr is package geometry",
+  "canonical_renderer": "Microsoft Word for Mac",
+  "rules": "../../README.md",
+  "validation": {
+    "canonical_renderer": "Microsoft Word for Mac",
+    "source_word_pages": 18,
+    "split_page_region_comparisons": 22,
+    "passed": 22,
+    "exact_pixel_comparisons": 19,
+    "max_mean_absolute_rgb_difference": 1.168405,
+    "max_changed_pixel_fraction_threshold_12": 0.00677075,
+    "shared_page_policy": "compare only the current logical unit's owned region"
+  },
+  "units": [
+    {
+      "sequence": 1,
+      "unit_id": "cover",
+      "title": "封面",
+      "filename": "01-cover.docx",
+      "source_candidate_filename": "01_封面_cover.docx",
+      "source_block_start": 0,
+      "source_block_end": 21,
+      "source_pages_word": "1",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "封面基本格式",
+      "last_anchor": "提交日期：20××年××月",
+      "boundary_decision": "封面独占原第1页；源块21是封面末段，源块22归下一单元页首。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 0
+      },
+      "sha256": "d9cdc819f912ff370c8941b5633881db7271716097db4cd9d4f56fdb1967acb2"
+    },
+    {
+      "sequence": 2,
+      "unit_id": "integrity_statement",
+      "title": "诚信声明",
+      "filename": "02-integrity-statement.docx",
+      "source_candidate_filename": "02_诚信声明_integrity_statement.docx",
+      "source_block_start": 22,
+      "source_block_end": 50,
+      "source_pages_word": "2",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "年    月    日",
+      "boundary_decision": "源块22是18磅页首空段B，负责保持声明首锚点的原始纵坐标。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 0
+      },
+      "sha256": "6135cc0b76bd55f4462d6a16c5acc83a89b17db3b1f71d9cdf4868faba5e9bec"
+    },
+    {
+      "sequence": 3,
+      "unit_id": "toc",
+      "title": "目录",
+      "filename": "03-toc.docx",
+      "source_candidate_filename": "03_目录_toc.docx",
+      "source_block_start": 51,
+      "source_block_end": 79,
+      "source_pages_word": "3",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "目录基本格式",
+      "last_anchor": "致谢",
+      "boundary_decision": "目录独占原第3页；目录的说明和两类目录示例连续保留。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "d981bed191f859cd8e45b06dcdde55444525b036ee253090d3fe1c14e4ff1467"
+    },
+    {
+      "sequence": 4,
+      "unit_id": "paper_body",
+      "title": "论文正文模板（含题名、双语摘要、正文、参考文献、致谢、附录）",
+      "filename": "04-paper-body.docx",
+      "source_candidate_filename": "04_论文正文模板_paper_body.docx",
+      "source_block_start": 80,
+      "source_block_end": 144,
+      "source_pages_word": "4–5",
+      "verified_standalone_word_pages": 2,
+      "first_anchor": "正文基本格式",
+      "last_anchor": "附录内容的字体字号参照正文的格式要求",
+      "boundary_decision": "原第4–5页内部没有真实分页/分节单元信号；题名、摘要、正文及后置示例不再过度拆分。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 2
+      },
+      "sha256": "63c1a290ccf64a754ca147ab11ea046a3848874bc5e2790753ed061efd10ac46"
+    },
+    {
+      "sequence": 5,
+      "unit_id": "design_task",
+      "title": "毕业设计任务书",
+      "filename": "05-design-task.docx",
+      "source_candidate_filename": "05_毕业设计任务书_design_task.docx",
+      "source_block_start": 145,
+      "source_block_end": 199,
+      "source_pages_word": "6–9",
+      "verified_standalone_word_pages": 4,
+      "first_anchor": "湖南农业大学全日制普通本科生",
+      "last_anchor": "学生本人签名",
+      "boundary_decision": "源块145是任务书页首所需的自然空段；源块200–202归开题报告页首。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": 198,
+        "standalone_terminal_wrapper_twips": 1
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 1,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "72f001750a777d38331e95302746aa7c400676248888525def63eecaf62719cc"
+    },
+    {
+      "sequence": 6,
+      "unit_id": "proposal",
+      "title": "开题报告",
+      "filename": "06-proposal.docx",
+      "source_candidate_filename": "06_开题报告_proposal.docx",
+      "source_block_start": 200,
+      "source_block_end": 212,
+      "source_pages_word": "10–13上部",
+      "verified_standalone_word_pages": 4,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文",
+      "last_anchor": "教务处网站下载中心下载填写打印",
+      "boundary_decision": "源块200–202三个自然空段归开题报告，恢复原模板页首留白；末页与下一表单共页。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": null,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 3
+      },
+      "sha256": "b84c623ae07b7ec8a9435602f3b33fc507bffa8e3f337fdc24a90e7ad4b90ba1"
+    },
+    {
+      "sequence": 7,
+      "unit_id": "proposal_record",
+      "title": "开题论证记录表",
+      "filename": "07-proposal-record.docx",
+      "source_candidate_filename": "07_开题论证记录表_proposal_record.docx",
+      "source_block_start": 213,
+      "source_block_end": 217,
+      "source_pages_word": "13下部–14上部",
+      "verified_standalone_word_pages": 2,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "记录、签名栏必须用黑色笔手工填写",
+      "boundary_decision": "独立表单职责明确；原模板与相邻表单共用物理页。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": 151.2,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "d62bf3ae55a268379ebe9a1663be2893adc83509f2ae7576c94fc7fd0e3ec9fe"
+    },
+    {
+      "sequence": 8,
+      "unit_id": "defense_record",
+      "title": "答辩记录表",
+      "filename": "08-defense-record.docx",
+      "source_candidate_filename": "08_答辩记录表_defense_record.docx",
+      "source_block_start": 218,
+      "source_block_end": 223,
+      "source_pages_word": "14下部–15上部",
+      "verified_standalone_word_pages": 2,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "记录、签名栏必须用黑色笔手工填写",
+      "boundary_decision": "独立表单职责明确；原模板与相邻表单共用物理页。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": 350.88,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "f259d52666af9cdceff63b3b4ed095dfa26f731866d0ca623340071411574d56"
+    },
+    {
+      "sequence": 9,
+      "unit_id": "topic_change_approval",
+      "title": "题目变更审批表",
+      "filename": "09-topic-change-approval.docx",
+      "source_candidate_filename": "09_题目变更审批表_topic_change_approval.docx",
+      "source_block_start": 224,
+      "source_block_end": 230,
+      "source_pages_word": "15下部–16上部",
+      "verified_standalone_word_pages": 2,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "教务处网站下载中心下载",
+      "boundary_decision": "独立审批表职责明确；原模板与相邻表单共用物理页。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": 372.72,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "d3bbb9743b46cac0426e6cffb8ab7b25d83273ac477c8c86f5be1dbe59d7f9a6"
+    },
+    {
+      "sequence": 10,
+      "unit_id": "grade_form",
+      "title": "成绩评定表",
+      "filename": "10-grade-form.docx",
+      "source_candidate_filename": "10_成绩评定表_grade_form.docx",
+      "source_block_start": 231,
+      "source_block_end": 236,
+      "source_pages_word": "16下部–18",
+      "verified_standalone_word_pages": 3,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "教务处网站下载中心下载",
+      "boundary_decision": "独立成绩表职责明确；保留源模板最终空段236。",
+      "pagination_transformations": {
+        "source_blocks": "direct OOXML copy; no source block deletion, duplication, or collapse",
+        "page_start_carrier_pt": 486.24,
+        "standalone_internal_page_start": null,
+        "standalone_terminal_wrapper_twips": null
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "9fd85fc7ffdbdff1794b5133d72b54984bf76a7203207fffed81ba73167a66e0"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+*.docx
+*.pdf
+*.png
+edit-plan.json
+
+# Stable synthetic smoke inputs are required by README examples, CLI smoke
+# commands, and CI before the runtime fixture builder is invoked.
+!smoke/student.docx
+!smoke/school-template.docx
+!smoke/school-requirements.pdf
+!smoke/synthetic-marker.png

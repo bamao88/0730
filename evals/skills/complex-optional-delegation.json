@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "complex-optional-delegation",
+  "scope": "complex",
+  "task": "Analyze an evidence-heavy bounded range with pictures and tables.",
+  "delegation": "optional_docfit_unit_analyst_only",
+  "assertions": [
+    "selected_knowledge_is_in_prompt",
+    "subagent_is_read_only",
+    "subagent_can_request_evidence",
+    "main_agent_owns_all_writes"
+  ]
+}

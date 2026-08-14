@@ -1,0 +1,18 @@
+schema_version: docfit-content-field-registry/v0.1
+registry_id: docfit.thesis.content_fields
+registry_version: 0.1.0
+status: development_baseline
+open_world: true
+description: Synthetic Registry fixture; not production Registry or Gold.
+fields:
+- field_id: author.name.zh
+  label: 作者中文姓名
+  meaning: 合成作者姓名字段。
+  content_type: text
+  cardinality: one
+  language: zh
+- field_id: author.student_id
+  label: 学号
+  meaning: 合成学号字段。
+  content_type: text
+  cardinality: one

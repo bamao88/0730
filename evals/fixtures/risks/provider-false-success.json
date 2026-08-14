@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "id": "provider-false-success",
+  "fixture": "test-double",
+  "risk": "A document backend can report success without applying the requested edit.",
+  "automatic_assertion": "Independent re-read reports a postcondition failure and publishes no output."
+}

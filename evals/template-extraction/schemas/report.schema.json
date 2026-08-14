@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docfit.local/schemas/template-extraction-eval-report-v1.json",
+  "title": "DocFit template extraction Eval report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "run_id",
+    "status",
+    "score",
+    "analysis_coverage",
+    "responsibility_coverage",
+    "views",
+    "dimensions",
+    "issues",
+    "inputs",
+    "config"
+  ],
+  "properties": {
+    "schema_version": {"const": "docfit-template-extraction-eval-report/v1"},
+    "case_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "FAIL", "UNKNOWN"]},
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "provisional"],
+      "properties": {
+        "total": {"type": "number", "minimum": 0, "maximum": 100},
+        "provisional": {"type": "boolean"}
+      }
+    },
+    "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+    "responsibility_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+    "views": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["view", "weight", "score"],
+        "properties": {
+          "view": {"enum": ["protected", "slot"]},
+          "weight": {"type": "number", "minimum": 0},
+          "score": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "weight", "score", "passed", "failed", "unknown", "not_applicable"],
+        "properties": {
+          "dimension": {"type": "string", "minLength": 1},
+          "weight": {"type": "number", "minimum": 0},
+          "score": {"type": "number", "minimum": 0},
+          "passed": {"type": "integer", "minimum": 0},
+          "failed": {"type": "integer", "minimum": 0},
+          "unknown": {"type": "integer", "minimum": 0},
+          "not_applicable": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["issue_id", "severity", "view", "dimension", "assertion_id", "status", "message"],
+        "properties": {
+          "issue_id": {"type": "string", "pattern": "^ISS-[0-9]{4,}$"},
+          "severity": {"enum": ["error", "warning", "info"]},
+          "view": {"enum": ["protected", "slot", "shared"]},
+          "dimension": {"type": "string", "minLength": 1},
+          "assertion_id": {"type": "string", "minLength": 1},
+          "region_id": {"type": ["string", "null"]},
+          "slot_id": {"type": ["string", "null"]},
+          "gold_locator": {"type": ["object", "null"]},
+          "actual_locator": {"type": ["object", "null"]},
+          "expected": {},
+          "actual": {},
+          "status": {"enum": ["FAIL", "UNKNOWN"]},
+          "message": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "minProperties": 4,
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scoring_version",
+        "scoring_config_sha256",
+        "eval_config_id",
+        "eval_config_version",
+        "eval_config_sha256",
+        "marker_protocol",
+        "tolerances",
+        "normalization",
+        "registry_id",
+        "registry_version",
+        "registry_sha256",
+        "schemas"
+      ],
+      "properties": {
+        "scoring_version": {"const": "docfit-template-extraction-scoring/v1"},
+        "scoring_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "eval_config_id": {"type": "string", "minLength": 1},
+        "eval_config_version": {"const": "docfit-template-extraction-eval-config/v1"},
+        "eval_config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "marker_protocol": {"const": "docfit-content-control-marker/v1"},
+        "tolerances": {
+          "type": "object",
+          "additionalProperties": {"type": "number", "minimum": 0}
+        },
+        "normalization": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "registry_id": {"type": "string", "minLength": 1},
+        "registry_version": {"type": "string", "minLength": 1},
+        "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "schemas": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["case", "actual_contract", "gold_contract"],
+          "properties": {
+            "case": {"const": "docfit-template-extraction-case/v1"},
+            "actual_contract": {"const": "docfit-template-fill-contract/v1"},
+            "gold_contract": {"const": "docfit-template-fill-contract/v1"}
+          }
+        }
+      }
+    }
+  }
+}

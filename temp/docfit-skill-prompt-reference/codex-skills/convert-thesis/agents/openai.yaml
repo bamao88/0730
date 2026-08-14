@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convert Thesis"
+  short_description: "Convert thesis DOCX with audit evidence"
+  default_prompt: "Use $convert-thesis to convert a student thesis DOCX to an accepted school template and produce complete audit artifacts."

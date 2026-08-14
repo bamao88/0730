@@ -1,0 +1,307 @@
+{
+  "schema": "docfit-gold-logical-page-units/v1",
+  "school_id": "njau-undergraduate",
+  "school_name": "南京农业大学本科",
+  "status": "gold",
+  "purpose": "校对后续学校模板提取器的逻辑单元边界、分页控制归属和独立 Word 分页结果",
+  "source_template": "00-inputs/schools/njau-undergraduate__source-template.docx",
+  "source_template_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+  "candidate_provenance": "/Users/fl/Documents/Codex/2026-08-03/new-chat/outputs/两校模板_按逻辑单元拆分/南京农业大学本科",
+  "unit_count": 10,
+  "source_content_block_count": 153,
+  "coverage": "all source top-level content blocks assigned exactly once and in source order; final sectPr is package geometry",
+  "canonical_renderer": "Microsoft Word for Mac",
+  "rules": "../../README.md",
+  "validation": {
+    "canonical_renderer": "Microsoft Word for Mac",
+    "source_word_pages": 12,
+    "full_page_comparisons": 12,
+    "passed": 12,
+    "exact_pixel_comparisons": 12,
+    "max_mean_absolute_rgb_difference": 0.0
+  },
+  "units": [
+    {
+      "sequence": 1,
+      "unit_id": "cover",
+      "title": "封面",
+      "filename": "01-cover.docx",
+      "source_candidate_filename": "01_封面_cover.docx",
+      "source_block_start": 0,
+      "source_block_end": 1,
+      "source_pages_word": "1",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "本科生毕业论文（设计）",
+      "last_anchor": "20 年 月 日",
+      "boundary_decision": "封面具有独立页面职责；保留源块1的表后空白分节段，并将其独立文件包装行高显式压缩为1磅，避免伪空白末页。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": true,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 0
+      },
+      "sha256": "e9512cb4b0b8bdcd066a53ada6713bceacfabf67bfa4c3165db41ea227ed1bd7"
+    },
+    {
+      "sequence": 2,
+      "unit_id": "declarations",
+      "title": "原创性声明与使用授权声明",
+      "filename": "02-declarations.docx",
+      "source_candidate_filename": "02_声明_declarations.docx",
+      "source_block_start": 2,
+      "source_block_end": 24,
+      "source_pages_word": "2",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "南京农业大学本科生毕业论文（设计）原创性声明",
+      "last_anchor": "日期： 年 月 日",
+      "boundary_decision": "原创性声明与使用授权声明连续排布、共用同一声明页面；保留并显式物化声明节首页的源空白段2。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": [
+          2
+        ]
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 0
+      },
+      "sha256": "b4074ddecfe040381b4d550c8c23f3f18c87761b8221519505533414c3917782"
+    },
+    {
+      "sequence": 3,
+      "unit_id": "toc",
+      "title": "目录",
+      "filename": "03-toc.docx",
+      "source_candidate_filename": "03_目录_toc.docx",
+      "source_block_start": 25,
+      "source_block_end": 53,
+      "source_pages_word": "3",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "目 录",
+      "last_anchor": "本科生毕业论文（设计）规范化要求",
+      "boundary_decision": "独立目录页；同页底部规范化要求与目录共享物理页，一并保留。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71"
+    },
+    {
+      "sequence": 4,
+      "unit_id": "abstract_cn",
+      "title": "中文摘要",
+      "filename": "04-abstract-cn.docx",
+      "source_candidate_filename": "04_中文摘要_abstract_cn.docx",
+      "source_block_start": 54,
+      "source_block_end": 62,
+      "source_pages_word": "4",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "论文题目（小二号黑体）",
+      "last_anchor": "关键词",
+      "boundary_decision": "中文摘要具有独立标题、罗马页码和页面职责。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "13984689e7f91f2b28e3f5e15491eb4f52b1878415bde1b11a246e093232f149"
+    },
+    {
+      "sequence": 5,
+      "unit_id": "abstract_en",
+      "title": "英文摘要",
+      "filename": "05-abstract-en.docx",
+      "source_candidate_filename": "05_英文摘要_abstract_en.docx",
+      "source_block_start": 63,
+      "source_block_end": 72,
+      "source_pages_word": "5",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "TITLE",
+      "last_anchor": "KEY WORDS",
+      "boundary_decision": "英文摘要具有独立标题、罗马页码和页面职责；文件边界替代源段首分页控制，段落与文字完整保留。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 1,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "56f9e5ef0d8cbe7a43fbfbc2b60412bc701d3290deee596d93147bcad85ab52f"
+    },
+    {
+      "sequence": 6,
+      "unit_id": "body",
+      "title": "正文格式示例",
+      "filename": "06-body.docx",
+      "source_candidate_filename": "06_正文示例_body.docx",
+      "source_block_start": 73,
+      "source_block_end": 115,
+      "source_pages_word": "6–8",
+      "verified_standalone_word_pages": 3,
+      "first_anchor": "第一章 文献综述",
+      "last_anchor": "结论与展望",
+      "boundary_decision": "文献综述、各正文示例章和结论均属于同一正文所有权，不按章节过度拆分。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 1,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 3
+      },
+      "sha256": "51ffe4591ec871b76e8c80abef8c18238f472d98679a1d34e8004eb274abd14a"
+    },
+    {
+      "sequence": 7,
+      "unit_id": "references",
+      "title": "参考文献",
+      "filename": "07-references.docx",
+      "source_candidate_filename": "07_参考文献_references.docx",
+      "source_block_start": 116,
+      "source_block_end": 137,
+      "source_pages_word": "9",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "参考文献",
+      "last_anchor": "CALMS R B.",
+      "boundary_decision": "独立另页的参考文献职责。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f"
+    },
+    {
+      "sequence": 8,
+      "unit_id": "appendix",
+      "title": "附录",
+      "filename": "08-appendix.docx",
+      "source_candidate_filename": "08_附录_appendix.docx",
+      "source_block_start": 138,
+      "source_block_end": 141,
+      "source_pages_word": "10",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "附 录 附录名称",
+      "last_anchor": "此项非必需项",
+      "boundary_decision": "明确另页的可选附录页面。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+    },
+    {
+      "sequence": 9,
+      "unit_id": "academic_achievements",
+      "title": "相关的学术成果目录",
+      "filename": "09-academic-achievements.docx",
+      "source_candidate_filename": "09_相关学术成果_academic_achievements.docx",
+      "source_block_start": 142,
+      "source_block_end": 145,
+      "source_pages_word": "11",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "相关的学术成果目录",
+      "last_anchor": "此项非必需项",
+      "boundary_decision": "明确另页、具有独立内容职责的可选成果目录。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "2666278a54db73946a3f450c27714015fc4d027cf468e553008007a19c996f8a"
+    },
+    {
+      "sequence": 10,
+      "unit_id": "acknowledgement",
+      "title": "致谢",
+      "filename": "10-acknowledgement.docx",
+      "source_candidate_filename": "10_致谢_acknowledgement.docx",
+      "source_block_start": 146,
+      "source_block_end": 152,
+      "source_pages_word": "12",
+      "verified_standalone_word_pages": 1,
+      "first_anchor": "致 谢",
+      "last_anchor": "×××××",
+      "boundary_decision": "明确另页的致谢页面。",
+      "pagination_transformations": {
+        "removed_unit_first_page_breaks_replaced_by_file_boundary": 0,
+        "normalized_duplex_section_types_for_independent_unit": [],
+        "compacted_copied_terminal_blank_paragraph": false,
+        "leading_blank_paragraphs_materialized_with_hidden_space": []
+      },
+      "document_controls": {
+        "odd_page_sections": 0,
+        "even_page_sections": 0,
+        "manual_page_breaks": 0,
+        "page_break_before": 0,
+        "cached_last_rendered_page_breaks": 1
+      },
+      "sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+    }
+  ]
+}

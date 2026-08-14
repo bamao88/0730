@@ -1,0 +1,275 @@
+schema_version: docfit-template-extraction-synthetic-fixtures/v1
+generated_by: fixtures/build_samples.py
+deterministic_zip_timestamp: '2020-01-01T00:00:00Z'
+contains_real_student_data: false
+formal_gold: false
+registry_sha256: 3e62d68c9f26f95039cddcec7f14c58ff075a3a59097282dfec85e1cb2f69583
+eval_config_sha256: db84fa7472513c35c55b87516e0235e2ce7c4c398a4259a7e207a3a908156cfb
+scoring_sha256: 5d9803fbc0e103e338c260118a883e2f16bf0d1a135974b665b4061c4f9168f2
+samples:
+- sample_id: S00-minimal-pass
+  description: minimal exact Actual-Gold match
+  expected_verdict: PASS
+  assets:
+    actual-contract.yaml:
+      sha256: 26398ff343d3b61b3a217d2524f77e7a6e04502e7a0f588199803d73ad058456
+      size: 1903
+    actual-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+    case.yaml:
+      sha256: 2cb179baf8d920ca85749ca556dc2b36e855cd4cbf79b9e0a74254874153067d
+      size: 704
+    gold-contract.yaml:
+      sha256: 50532bb5104b0dc2ff10474794fa05076a3ba51ceaadf378f810df82b4392039
+      size: 2137
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S01-protected-text-changed
+  description: one protected label changes
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: 103933e239a6872c380a81b6bc9fea6d95c7e8a3781d0b7fbfc02b0c1bc67f34
+      size: 1913
+    actual-template.docx:
+      sha256: 79a50ce07baea93d534e7d1178e6ebb8469b21be068f3030111d9db238779ad5
+      size: 1932
+    case.yaml:
+      sha256: cb7972eadeb7969efe78a4197700ad96b1d0a08b9abb041b4f5a6f96f3e22d1c
+      size: 710
+    gold-contract.yaml:
+      sha256: 5ce645f5bb2954f4c24ef6396ac69cce2edd64b8c9b4b23903a4863137f493c2
+      size: 2147
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S02-protected-style-changed
+  description: one protected font size changes
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: c67032c1e628460dabf3b268e73136dafeaff3965dded9279ba3719831f92453
+      size: 1914
+    actual-template.docx:
+      sha256: e447c9f43f4f652b2769ec8e7b8aa2f4a59badc74d8fd13a2c7c3312b6a47ddf
+      size: 1922
+    case.yaml:
+      sha256: ffebfac9552fd6e845812881ec0eb1ba8ab0532772e6ec2c74fb290ae2a64e6d
+      size: 715
+    gold-contract.yaml:
+      sha256: 489b64bd9fa4738e2daf8f1c1d0b7eaf01acd2392036d820af6403e95e5dd3ea
+      size: 2148
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S03-slot-missing
+  description: the only required slot is removed
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: ad3088858e021b3e422abee04a0bb4b4ecb77bca751003676c70795959c7fc25
+      size: 1110
+    actual-template.docx:
+      sha256: 7cb289faab04c7a602d884c053b747a6ccf1b0314b57d7ea2fc0f9f141d51828
+      size: 1837
+    case.yaml:
+      sha256: aa953e0c04d68040581a0f29dcee45cfb9545e935856836dbb9febaea02c08d6
+      size: 706
+    gold-contract.yaml:
+      sha256: ed447eb98ace5bbf2d3435a4fef0d886849967394f1ed81a9cad777d30ed9f57
+      size: 2137
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S04-slot-extra
+  description: one undeclared slot is added
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: 9d367e1c4ed07aaf4c9e29565a12e9df53ea59f926a014d7459d6288e9878ca1
+      size: 2696
+    actual-template.docx:
+      sha256: 9f2d54dbe9f353ad1bad780d8bb2118c99e1d60172be3b162ef1b6c4133a20cc
+      size: 1956
+    case.yaml:
+      sha256: 7c9616bb726b4b0880ab871789ab799b911d142411669d4f3fb80d0a8aeef369
+      size: 699
+    gold-contract.yaml:
+      sha256: c531513d7297aa8938e1a68072d2be30c6960ceb4f9621e589ae1032d31da196
+      size: 2135
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S05-slot-field-wrong
+  description: the slot maps to another registered field
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: bcde96be0d34d791ab17488d38ae2195d17fb313e0705c9106a0a6fac91b1c2a
+      size: 1910
+    actual-template.docx:
+      sha256: ef84238b1e6e164b16117029de8a8c0f878d34986618957f370f1629c39f5789
+      size: 1923
+    case.yaml:
+      sha256: 03e5346624a76f7198430fab9dab366dfa1a88027873938182099d97c8aeddd1
+      size: 718
+    gold-contract.yaml:
+      sha256: 204cd251e8377dfbd5887213face17f5f7f475e07bcc66e54cb84ec08596088b
+      size: 2141
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S06-slot-boundary-wrong
+  description: the slot locator boundary omits the protected colon anchor
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: 702536a033332df816d9a5cb7f7a1d488fc5bbf1e27a47db704186dfe8e5735d
+      size: 1907
+    actual-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+    case.yaml:
+      sha256: 46c559a0ff78ee061e856dcf242ea8c1c87a27fbe90ae94ff10a81889b8ed75d
+      size: 738
+    gold-contract.yaml:
+      sha256: 3fd9a5288f0524da5291625fbc21c8255a7d6b09b02554f700f1fc0ee7742c03
+      size: 2144
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S07-ambiguous-anchor
+  description: a locator without occurrence matches duplicate anchors
+  expected_verdict: UNKNOWN
+  assets:
+    actual-contract.yaml:
+      sha256: 4e4424195f2bc8c4a0ae160a21af15e47d444f7a399f90d491d519250d962bef
+      size: 1866
+    actual-template.docx:
+      sha256: 26671196ac95c25f0e2143077064461e499a557534d3766ad801a187c6d2a7c5
+      size: 1933
+    case.yaml:
+      sha256: d714ec2f4a5c44a0c1123c9a87b30b0e568b57876133e94eb6248e56ed8cd191
+      size: 734
+    gold-contract.yaml:
+      sha256: 04e245005d22093b92e22046cf31da0df8390c7c8e80cdbea04fb74f3184e584
+      size: 2100
+    gold-template.docx:
+      sha256: 26671196ac95c25f0e2143077064461e499a557534d3766ad801a187c6d2a7c5
+      size: 1933
+- sample_id: S08-forbidden-residue
+  description: forbidden instruction text remains in Actual
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: ec516dea1a9b5f85b71a0e4c44ca1614c4da417303546cad91ffd44af75bb93a
+      size: 2168
+    actual-template.docx:
+      sha256: 54f83c98dbdb33a6dca5217f1c3cc16fb9d073f91246d8356e112dd8f6202b99
+      size: 1957
+    case.yaml:
+      sha256: 8d0cb18fd33cd8905e66dd8bcadc9077cd19cf7c35b4816c1055c92d594711a9
+      size: 722
+    gold-contract.yaml:
+      sha256: b9c25891cd60889d52e6aaae40a89863bae8010302a6cab5a8703500e2087a3e
+      size: 2402
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S09-protected-image-missing
+  description: a protected image relationship is removed
+  expected_verdict: FAIL
+  assets:
+    actual-contract.yaml:
+      sha256: 8a42a00a9b006596ff638d050c0f48fa97e6be64a390ff302fc0f2e1a5cf975b
+      size: 1914
+    actual-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+    case.yaml:
+      sha256: f966bab6ba18044da95e9dff05b4f5fe45a8a0f9c93d819fcdb943c1536269e7
+      size: 725
+    gold-contract.yaml:
+      sha256: e9018d5068e3dd43115213d6f8f1da0e1ba2167aef2fcf5bc9116562fec6a87c
+      size: 2457
+    gold-template.docx:
+      sha256: ac94ee2e3ce8b7f85c7a254f7452f60a061118025044a9312a3a4869b187466a
+      size: 2370
+- sample_id: S10-unsupported-object
+  description: a visible altChunk is explicitly unsupported
+  expected_verdict: UNKNOWN
+  assets:
+    actual-contract.yaml:
+      sha256: 3b7eaf407276295a2deae04a0f78505eebdc08b254295daf7893a662f0127c29
+      size: 2147
+    actual-template.docx:
+      sha256: 2d090f49678a543db8c011ee5b7ded811db11631275c92190bd929d43cbd15a6
+      size: 2140
+    case.yaml:
+      sha256: 699b6f4328ab40f94cc21165d6bdf9f446a3b2a401eb6235446b98c3a5050150
+      size: 726
+    gold-contract.yaml:
+      sha256: 89618e1daf58e0ba89e776de6d5aa7a651628fad3a2b004e4e78002fec2ee8b9
+      size: 2381
+    gold-template.docx:
+      sha256: 2d090f49678a543db8c011ee5b7ded811db11631275c92190bd929d43cbd15a6
+      size: 2140
+- sample_id: S11-invalid-input
+  description: Actual lacks the main DOCX part and has an invalid contract
+  expected_verdict: INPUT_ERROR
+  assets:
+    actual-contract.yaml:
+      sha256: 9596634bab040b4400a4185233f75bf1801625571e0a558f9b1b712ba20e339a
+      size: 1795
+    actual-template.docx:
+      sha256: 6e0d5a1e8e5e11bfe1db77ff82e94960410a79d01be3bc9a12d6a4378a5a59e5
+      size: 1388
+    case.yaml:
+      sha256: 099e17c24b773740063a8280d959ccc5ffa8234c0901cbaa59455d0e1fe2e9af
+      size: 742
+    gold-contract.yaml:
+      sha256: 739579491e7777fe5b04ef0dd8ae65b30693c54dc916c0e7c4cf903604892089
+      size: 2138
+    gold-template.docx:
+      sha256: 4e65cc0d88414d7f5bd57c24c5516992b6e72dfc72e6db6537e878075fc4f48a
+      size: 1923
+- sample_id: S12-simple-table-structure
+  description: a deterministic 2x2 table with a horizontal merge
+  expected_verdict: PASS
+  assets:
+    actual-contract.yaml:
+      sha256: a4639b623e8e64e1367f8da4a255a4e6d769e1423cb5e41e9864c0e0dbbb6a56
+      size: 1913
+    actual-template.docx:
+      sha256: fd6c38e956f139b00d2f66a27973d90dd433dc26929cce809a39f9862abd338e
+      size: 2037
+    case.yaml:
+      sha256: 10e06aaa7b18e087f83fbe91782da9bf31f0fdf0d19c8baa0f29cde74ae293a4
+      size: 732
+    gold-contract.yaml:
+      sha256: 784e06b666668dfb55db2c809922bac8e7b1cc6f9497eef7e132e76ac7f3baa9
+      size: 2147
+    gold-template.docx:
+      sha256: fd6c38e956f139b00d2f66a27973d90dd433dc26929cce809a39f9862abd338e
+      size: 2037
+- sample_id: S13-simple-formula-field-bookmark
+  description: a minimal formula, field, and bookmark
+  expected_verdict: PASS
+  assets:
+    actual-contract.yaml:
+      sha256: 24cb65c4956d5c1d588141120d3b54f197f7190850547c34d4d39bcdd0029a63
+      size: 1920
+    actual-template.docx:
+      sha256: 5dbb7de5034b5b4c1a4bae12c8d37b177e1d1ce1f448777d22c77aa2331b42ee
+      size: 2048
+    case.yaml:
+      sha256: ee7e6f0145c891adfcf80d64c80e16987ed96311d0f038120511e5b4c5ab7d50
+      size: 728
+    gold-contract.yaml:
+      sha256: 9105f6bd0160d4c6d00c10a07a72efe48722d60fad860c4deb83ab0d1bf5dd61
+      size: 2154
+    gold-template.docx:
+      sha256: 5dbb7de5034b5b4c1a4bae12c8d37b177e1d1ce1f448777d22c77aa2331b42ee
+      size: 2048

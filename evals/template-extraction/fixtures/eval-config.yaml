@@ -1,0 +1,19 @@
+schema_version: docfit-template-extraction-eval-config/v1
+config_id: synthetic-v1
+marker_protocol:
+  version: docfit-content-control-marker/v1
+  field_identity_property: w:alias
+  slot_identity_property: w:tag
+  internal_id_property: w:id
+tolerances:
+  font_size_pt: 0.01
+  distance_pt: 0.05
+  color_channel: 0
+normalization:
+- ignore_zip_timestamps
+- ignore_word_internal_sdt_id
+- merge_equivalent_runs
+scoring_ref:
+  path: ../config/scoring-v1.yaml
+  version: docfit-template-extraction-scoring/v1
+  sha256: 5d9803fbc0e103e338c260118a883e2f16bf0d1a135974b665b4061c4f9168f2

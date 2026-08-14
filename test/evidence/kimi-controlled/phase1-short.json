@@ -1,0 +1,29 @@
+{
+  "privacy": "metadata_only_no_prompt_or_provider_error_body",
+  "results": [
+    {
+      "accepted_step_count": 0,
+      "api_error_status": null,
+      "duration_ms": 16886,
+      "effort": "high",
+      "exception_type": null,
+      "is_error": false,
+      "model": "kimi-for-coding",
+      "num_turns": 3,
+      "outcome": "pass",
+      "repeat": 1,
+      "sdk_api_duration_ms": 21186,
+      "sdk_duration_ms": 14261,
+      "stop_reason": "tool_use",
+      "structured_output_ok": true,
+      "subtype": "success",
+      "terminal_reason": "completed",
+      "tool_search": false,
+      "tool_use_count": 1,
+      "variant": "current-short-high-search-off",
+      "workload": "short"
+    }
+  ],
+  "schema_version": 1,
+  "target_steps": 12
+}
