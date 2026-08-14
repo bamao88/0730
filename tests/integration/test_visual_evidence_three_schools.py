@@ -14,6 +14,11 @@ SCHOOL_TEMPLATES = (
     "03-pku-graduate",
 )
 
+pytestmark = pytest.mark.skipif(
+    shutil.which("officecli") is None,
+    reason="Three-school visual integration requires the locked OfficeCLI executable",
+)
+
 
 @pytest.mark.parametrize("case_name", SCHOOL_TEMPLATES)
 def test_real_school_template_contact_page_and_object_region(
