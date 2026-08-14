@@ -78,7 +78,7 @@ def capture_template_style_contracts(
     document: Path,
     slots: Sequence[Mapping[str, Any]],
 ) -> tuple[StyleContractSet, JsonObject]:
-    """Transitional v2 executor capture while Workspace migrates to school observations."""
+    """Capture executable style contracts from final Registry-bound interfaces."""
 
     resolver = EffectiveStyleResolver(document)
     styles: list[JsonObject] = []
@@ -160,7 +160,7 @@ def capture_template_style_contracts(
         "occurrences": occurrences,
     }
     validation = StyleContractValidator(contracts).validate(document, manifest)
-    if validation.status != "passed":
+    if validation.failed:
         counts = validation.as_dict()["counts"]
         raise ToolFailure(
             status="error",
@@ -174,7 +174,9 @@ def capture_template_style_contracts(
         )
     return contracts, {
         "schema_version": "docfit-template-style-capture/v2",
-        "status": "passed",
+        "status": (
+            "passed_with_known_gaps" if validation.unresolved else "passed"
+        ),
         "style_contract_set_digest": contracts.digest,
         "occurrence_manifest": manifest,
         "validation": validation.as_dict(),

@@ -1,0 +1,127 @@
+{
+  "scope": "current_task_only",
+  "sources": [
+    {
+      "source_id": "school-template",
+      "kind": "template",
+      "sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+      "location": "input/school-template-nannong-undergraduate.docx; baseline pages 1-12; inspect object refs in evidence/source-inspect.json",
+      "applicability": "仅适用于本轮提供的模板快照；文件的官方身份、发布日期和专业适用范围未由独立书面材料确认"
+    }
+  ],
+  "observed_facts": [
+    {
+      "fact": "源模板是可解析的 DOCX，含 207 个段落、1 个表格、11 个分节、1 个字段、9 个书签、2 张图片、6 个页眉和 13 个页脚。",
+      "evidence": ["school-template sha256 + evidence/source-inspect.json"]
+    },
+    {
+      "fact": "Adobe PDF Services 基线渲染为 12 页，封面、声明、目录、摘要、正文示例、参考文献、附录、学术成果和致谢均有可见页面。",
+      "evidence": ["render/baseline-run/render-ref.json", "visual-048ba449d8e5da5dfae0e4f8"]
+    },
+    {
+      "fact": "模板包含大量红色格式说明和蓝色示例内容；目录页另含一个 inspect/edit 不支持的文本框与 VML 对象。",
+      "evidence": ["school-template page 3-12", "evidence/source-inspect.json risks"]
+    }
+  ],
+  "confirmed_rules": [
+    {
+      "rule": "中文摘要页声明论文中文题名使用小二号黑体，摘要标题使用三号黑体，摘要正文使用小四号宋体、固定值 20 磅行距，关键词 3-5 个且以分号分隔。",
+      "applies_to": "本模板中文摘要页",
+      "evidence": ["school-template page 4; source objects 74-82"]
+    },
+    {
+      "rule": "英文摘要页声明英文题名大写且使用三号 Times New Roman 加粗，摘要正文使用小四号 Times New Roman、固定值 20 磅行距，英文摘要约 300 个实词。",
+      "applies_to": "本模板英文摘要页",
+      "evidence": ["school-template page 5; source objects 83-90"]
+    },
+    {
+      "rule": "正文示例声明章标题三号黑体居中、一级节标题四号黑体居左、二级节标题小四号宋体居左；正文中文小四号宋体、英文和数字小四号 Times New Roman、首行缩进 2 字符、固定值 20 磅行距。",
+      "applies_to": "本模板正文示例",
+      "evidence": ["school-template pages 6-8; source objects 93-126"]
+    },
+    {
+      "rule": "参考文献页声明中文五号宋体、英文及数字五号 Times New Roman，并引用 GB/T 7714-2005。",
+      "applies_to": "本模板参考文献页",
+      "evidence": ["school-template page 9; source objects 136-155"]
+    },
+    {
+      "rule": "附录和相关学术成果目录在模板说明中标为非必需项；致谢正文声明不超过 500 字，标题三号黑体居中，正文小四号宋体、固定值 20 磅行距。",
+      "applies_to": "本模板后置逻辑页",
+      "evidence": ["school-template pages 10-12; source objects 158-169"]
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    {
+      "issue": "未提供独立书面要求，无法确认该模板版本是否为当前学校正式版本，也无法裁决模板内部说明与其他规定是否一致。",
+      "evidence_needed": "当前适用的学校正式格式要求或官方发布页/附件"
+    },
+    {
+      "issue": "目录页文本框/VML 不能由当前 inspect/edit Tool 完整定位和清理。",
+      "evidence_needed": "Tool 增加文本框/VML 的快照定位、清理和后置验证能力"
+    },
+    {
+      "issue": "本轮渲染使用 Adobe 服务托管字体环境，未在 Microsoft Word 中完成最终可见版式复核。",
+      "evidence_needed": "若 Word 为权威交付渲染器，需要在 Word 中复核全部逻辑页起始与域更新结果"
+    }
+  ],
+  "applicability": [
+    {
+      "condition": "仅使用本轮单一模板，且无其他正式要求覆盖",
+      "result": "规则可作为该模板快照的任务内候选格式要求，不自动提升为学校长期事实",
+      "evidence": ["school-template sha256"]
+    }
+  ],
+  "template_text_classification": [
+    {
+      "location": "pages 1-2",
+      "classification": "fixed_content",
+      "condition": "学校名称、封面标签、原创性声明和授权声明保留"
+    },
+    {
+      "location": "page 1 cover lines and page 2 signature/date lines",
+      "classification": "slot_placeholder",
+      "condition": "封面信息可填；签名与日期含人工责任"
+    },
+    {
+      "location": "page 3 TOC field",
+      "classification": "slot_placeholder",
+      "condition": "实际责任是 generate；应保留并更新目录域，不把当前缓存结果当固定内容"
+    },
+    {
+      "location": "page 3 text box and red paragraphs on pages 4-12",
+      "classification": "format_instruction",
+      "condition": "规则迁移后才能从干净模板移除"
+    },
+    {
+      "location": "blue example paragraphs on pages 4-12",
+      "classification": "slot_placeholder",
+      "condition": "示例值应转换为填充、重复、生成或条件接口，不保留具体示例数量"
+    }
+  ],
+  "candidate_tool_parameters": [
+    {
+      "target": "中文摘要正文",
+      "parameter": "font/size/lineSpacing",
+      "value": "宋体/小四/固定值20磅",
+      "evidence": ["school-template page 4"]
+    },
+    {
+      "target": "正文段落",
+      "parameter": "font/size/firstLineIndent/lineSpacing",
+      "value": "中文宋体、英文数字 Times New Roman/小四/2字符/固定值20磅",
+      "evidence": ["school-template pages 6-8"]
+    },
+    {
+      "target": "章标题、一级节标题、二级节标题",
+      "parameter": "font/size/alignment",
+      "value": "三号黑体居中；四号黑体居左；小四宋体居左",
+      "evidence": ["school-template pages 6-8"]
+    }
+  ],
+  "evidence_requests": [
+    "补充当前适用的正式学校格式要求，以确认模板版本与适用范围。",
+    "扩展 Tool 对文本框/VML 和目录域缓存的安全清理、重建与验证能力。"
+  ],
+  "knowledge_used": []
+}

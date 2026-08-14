@@ -37,6 +37,7 @@ EVAL_CONFIG_PATH = EVAL_ROOT / "config/eval-config-v1.yaml"
 CONTRACT_SCHEMA_PATH = EVAL_ROOT / "schemas/fill-contract.schema.json"
 CASE_SCHEMA_PATH = EVAL_ROOT / "schemas/case.schema.json"
 REVISION = "2026-08-13.1"
+HUNAU_REVISION = "2026-08-13.2"
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W = f"{{{W_NS}}}"
@@ -123,8 +124,12 @@ CASES = {
     "01-hunau-undergraduate": {
         "school_id": "hunau-undergraduate",
         "school_name": "湖南农业大学本科",
-        "template": EVAL_ROOT / "cases/01-hunau-undergraduate/gold/template.docx",
-        "contract": EVAL_ROOT / "cases/01-hunau-undergraduate/gold/fill-contract.yaml",
+        "template": REPO_ROOT
+        / "temp/manual-gold-preparation/hunau-gold-rebuild-2026-08-07-placeholder-gray/"
+        "template.docx",
+        "contract": REPO_ROOT
+        / "temp/manual-gold-preparation/hunau-gold-rebuild-2026-08-07-placeholder-gray/"
+        "fill-contract.yaml",
         "kind": "existing_v1",
     },
     "02-njau-undergraduate": {
@@ -139,8 +144,9 @@ CASES = {
             / "temp/docfit-school-extract-v2-njau-tool-v5-r66/work/.docfit/"
             "template-workspace-v1/publication/fill-contract.json"
         ),
-        "policy_contract": EVAL_ROOT
-        / "cases/02-njau-undergraduate/gold/fill-contract.yaml",
+        "policy_contract": REPO_ROOT
+        / "temp/manual-gold-preparation/eval-template-truth-candidates/"
+        "02-njau-undergraduate/template-spec.yaml",
         "kind": "runtime_v2",
     },
     "03-pku-graduate": {
@@ -214,9 +220,12 @@ def _register_namespaces(xml: bytes) -> None:
             continue
 
 
-def _restore_root_namespace_declarations(original: bytes, serialized: bytes) -> bytes:
-    original_match = re.search(rb"<w:document\b[^>]*>", original)
-    serialized_match = re.search(rb"<w:document\b[^>]*>", serialized)
+def _restore_root_namespace_declarations(
+    original: bytes, serialized: bytes, *, root_local_name: str = "document"
+) -> bytes:
+    root_pattern = rb"<w:" + root_local_name.encode("ascii") + rb"\b[^>]*>"
+    original_match = re.search(root_pattern, original)
+    serialized_match = re.search(root_pattern, serialized)
     if original_match is None or serialized_match is None:
         return serialized
     declaration_pattern = re.compile(rb'\s+xmlns(?::[A-Za-z0-9_.-]+)?="[^"]+"')
@@ -246,6 +255,154 @@ def _rpr_rank(element: ElementTree.Element, original_index: int) -> tuple[int, i
     return (RPR_ORDER.get(local_name, 900), original_index)
 
 
+def _w_element(local_name: str, **attributes: str) -> ElementTree.Element:
+    element = ElementTree.Element(f"{W}{local_name}")
+    for key, value in attributes.items():
+        element.set(f"{W}{key}", value)
+    return element
+
+
+def _hunau_toc_style(style_id: str, name: str) -> ElementTree.Element:
+    style = _w_element("style", type="paragraph", customStyle="1", styleId=style_id)
+    style.extend(
+        (
+            _w_element("name", val=name),
+            _w_element("basedOn", val="a"),
+            _w_element("next", val="a"),
+            _w_element("qFormat"),
+        )
+    )
+
+    paragraph_properties = _w_element("pPr")
+    tabs = _w_element("tabs")
+    tabs.append(_w_element("tab", val="right", leader="dot", pos="8958"))
+    paragraph_properties.extend(
+        (
+            tabs,
+            _w_element("spacing", before="0", after="0", line="360", lineRule="auto"),
+            _w_element("ind", left="480", leftChars="200"),
+        )
+    )
+    style.append(paragraph_properties)
+
+    run_properties = _w_element("rPr")
+    run_properties.extend(
+        (
+            _w_element(
+                "rFonts",
+                ascii="Times New Roman",
+                hAnsi="Times New Roman",
+                eastAsia="宋体",
+                cs="Times New Roman",
+            ),
+            _w_element("color", val="000000"),
+            _w_element("sz", val="24"),
+            _w_element("szCs", val="24"),
+        )
+    )
+    style.append(run_properties)
+    return style
+
+
+def _ensure_hunau_toc_styles(styles_root: ElementTree.Element) -> None:
+    existing = {
+        style.get(f"{W}styleId")
+        for style in styles_root.findall(f"{W}style")
+    }
+    for style_id, name in (("TOC1", "toc 1"), ("TOC2", "toc 2"), ("TOC3", "toc 3")):
+        if style_id not in existing:
+            styles_root.append(_hunau_toc_style(style_id, name))
+
+
+def _hunau_toc_cached_paragraph(
+    *, text: str, page: str, style_id: str, first: bool, last: bool
+) -> ElementTree.Element:
+    paragraph = _w_element("p")
+    paragraph_properties = _w_element("pPr")
+    paragraph_properties.append(_w_element("pStyle", val=style_id))
+    paragraph.append(paragraph_properties)
+
+    if first:
+        field_run = _w_element("r")
+        field_run.append(_w_element("fldChar", fldCharType="begin", dirty="true"))
+        paragraph.append(field_run)
+
+        instruction_run = _w_element("r")
+        instruction = _w_element("instrText")
+        instruction.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+        instruction.text = ' TOC \\o "1-3" \\h \\z \\u \\f C '
+        instruction_run.append(instruction)
+        paragraph.append(instruction_run)
+
+        separator_run = _w_element("r")
+        separator_run.append(_w_element("fldChar", fldCharType="separate"))
+        paragraph.append(separator_run)
+
+    text_run = _w_element("r")
+    text_node = _w_element("t")
+    text_node.text = text
+    text_run.append(text_node)
+    paragraph.append(text_run)
+
+    tab_run = _w_element("r")
+    tab_run.append(_w_element("tab"))
+    paragraph.append(tab_run)
+
+    page_run = _w_element("r")
+    page_node = _w_element("t")
+    page_node.text = page
+    page_run.append(page_node)
+    paragraph.append(page_run)
+
+    if last:
+        field_run = _w_element("r")
+        field_run.append(_w_element("fldChar", fldCharType="end"))
+        paragraph.append(field_run)
+    return paragraph
+
+
+def _materialize_hunau_toc_cache(document_root: ElementTree.Element) -> None:
+    body = document_root.find(f"{W}body")
+    if body is None:
+        raise ValueError("HUNAU template has no document body")
+
+    target: ElementTree.Element | None = None
+    for paragraph in body.findall(f"{W}p"):
+        instruction = "".join(
+            node.text or "" for node in paragraph.iter(f"{W}instrText")
+        )
+        if 'TOC \\o "1-3"' in instruction and "\\f C" in instruction:
+            target = paragraph
+            break
+    if target is None:
+        raise ValueError("HUNAU live TOC field was not found")
+
+    cached_entries = (
+        ("摘要", "1", "TOC1"),
+        ("关键词", "1", "TOC1"),
+        ("1 章节标题", "1", "TOC1"),
+        ("1.1 节标题", "1", "TOC2"),
+        ("1.1.1 小节标题", "1", "TOC3"),
+        ("5 结论", "1", "TOC1"),
+        ("参考文献", "2", "TOC1"),
+        ("致谢", "3", "TOC1"),
+        ("附录", "4", "TOC1"),
+    )
+    target_index = list(body).index(target)
+    body.remove(target)
+    for offset, (text, page, style_id) in enumerate(cached_entries):
+        body.insert(
+            target_index + offset,
+            _hunau_toc_cached_paragraph(
+                text=text,
+                page=page,
+                style_id=style_id,
+                first=offset == 0,
+                last=offset == len(cached_entries) - 1,
+            ),
+        )
+
+
 def transform_docx(
     source: Path,
     destination: Path,
@@ -253,13 +410,14 @@ def transform_docx(
     migrate_aliases: bool,
     normalize_slot_color: bool,
     repair_rpr_order: bool,
+    materialize_hunau_toc: bool,
 ) -> None:
     with ZipFile(source) as archive:
         infos = archive.infolist()
         payloads = {info.filename: archive.read(info.filename) for info in infos}
 
     document_xml = payloads["word/document.xml"]
-    if migrate_aliases or normalize_slot_color or repair_rpr_order:
+    if migrate_aliases or normalize_slot_color or repair_rpr_order or materialize_hunau_toc:
         _register_namespaces(document_xml)
         root = ElementTree.fromstring(document_xml)
 
@@ -296,11 +454,26 @@ def transform_docx(
                 if children != ordered:
                     rpr[:] = ordered
 
+        if materialize_hunau_toc:
+            _materialize_hunau_toc_cache(root)
+
         serialized_xml = ElementTree.tostring(
             root, encoding="utf-8", xml_declaration=True
         )
         document_xml = _restore_root_namespace_declarations(document_xml, serialized_xml)
         payloads["word/document.xml"] = document_xml
+
+    if materialize_hunau_toc:
+        styles_xml = payloads["word/styles.xml"]
+        _register_namespaces(styles_xml)
+        styles_root = ElementTree.fromstring(styles_xml)
+        _ensure_hunau_toc_styles(styles_root)
+        serialized_styles = ElementTree.tostring(
+            styles_root, encoding="utf-8", xml_declaration=True
+        )
+        payloads["word/styles.xml"] = _restore_root_namespace_declarations(
+            styles_xml, serialized_styles, root_local_name="styles"
+        )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
@@ -555,7 +728,7 @@ def prepare_existing_v1_contract(
     source: Path, *, school_id: str, template_hash: str
 ) -> dict[str, Any]:
     contract = migrate_field_values(read_yaml(source))
-    contract["revision"] = REVISION
+    contract["revision"] = HUNAU_REVISION
     contract["contract_version"] = "docfit-template-truth-pack-v0.5-candidate-1"
     contract["template_sha256"] = template_hash
     contract["field_registry_ref"] = registry_ref()
@@ -564,6 +737,48 @@ def prepare_existing_v1_contract(
     contract.setdefault("provenance", {})["registry_migration"] = (
         "v0.5_clean_break_field_ids"
     )
+    toc_region = next(
+        region
+        for region in contract["regions"]
+        if region["region_id"] == "region.generated.toc"
+    )
+    toc_region["placement_mode"] = "update_existing_word_toc_field_and_cached_result"
+    toc_region["style_map"] = {
+        "body.heading.outline1": "TOC1",
+        "body.heading.outline2": "TOC2",
+        "body.heading.outline3": "TOC3",
+        "tc_fields_switch_C": "TOC1",
+    }
+    toc_region["evidence_refs"] = [
+        {
+            "type": "template_visible_anchor",
+            "value": "目  录",
+            "status": "machine_checked_live_field_and_visible_cache",
+        }
+    ]
+
+    toc_page = next(
+        page for page in contract["logical_pages"] if page["page_id"] == "toc"
+    )
+    toc_page.update(
+        {
+            "source_policy": "generate_word_toc_from_heading_outline_levels_and_tc_fields",
+            "empty_policy": "preserve_cached_example_and_update_on_fill",
+            "first_anchor": "目  录",
+            "boundary_evidence": (
+                "目录独占第3页；Gold 保留可更新的 TOC 字段，并缓存三级目录、"
+                "点引导线和页码，打开文件即可核对。"
+            ),
+        }
+    )
+    contract.setdefault("validation", {})["toc_cache"] = {
+        "status": "machine_checked",
+        "field_instruction": 'TOC \\o "1-3" \\h \\z \\u \\f C',
+        "visible_cache": "materialized",
+        "levels": ["TOC1", "TOC2", "TOC3"],
+        "entry_count": 9,
+        "update_policy": "refresh_after_student_content_fill",
+    }
     for slot in contract["slots"]:
         tag = slot.get("locator", {}).get("value")
         slot["mapping_status"] = "human_confirmed_product_rule_pending_exact_file_review"
@@ -718,7 +933,7 @@ def prepare_njau_contract(
             slot.setdefault("value_contract", {})["parent_field_id"] = "body.chapters"
 
     contract["regions"] = [
-        migrate_field_values(copy.deepcopy(item)) for item in policy.get("regions", [])
+        normalize_pku_region(item) for item in policy.get("regions", [])
     ]
     contract["regions"].append(
         {
@@ -863,6 +1078,7 @@ def prepare_case(case_id: str, definition: dict[str, Any], output_root: Path) ->
         migrate_aliases=kind != "pku_r02",
         normalize_slot_color=kind != "pku_r02",
         repair_rpr_order=kind == "existing_v1",
+        materialize_hunau_toc=kind == "existing_v1",
     )
     template_hash = sha256_path(template_path)
 

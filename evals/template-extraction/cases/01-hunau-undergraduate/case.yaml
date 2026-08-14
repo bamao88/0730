@@ -7,13 +7,13 @@ case_status: candidate
 gold:
   template: gold/template.docx
   contract: gold/fill-contract.yaml
-  template_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
-  contract_sha256: a5a89a455bff6eefaf764f15522fb34ca760676ef9c8e2d54046ba51fecb78d3
+  template_sha256: 31d58b83141828733a54ca445db7ea217032db6f477db3d13a8a5eddaf1fd68b
+  contract_sha256: 069d18f8eb093c5c338582b7dc2642f121cbf74e877964be60c9f1662a02d5d7
 field_registry_ref:
   path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   id: docfit.thesis.content_fields
   version: 0.5.0
-  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
 eval_config:
   path: ../../config/eval-config-v1.yaml
   id: template-extraction-v1
@@ -26,8 +26,8 @@ gold_review:
   status: candidate
   reviewer: null
   reviewed_at: null
-  source_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
-  source_path: gold/template.docx
+  source_sha256: 70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50
+  source_path: ../../../../temp/manual-gold-preparation/hunau-gold-rebuild-2026-08-07-placeholder-gray/template.docx
   blockers:
   - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
 permissions:

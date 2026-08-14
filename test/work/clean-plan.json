@@ -1,0 +1,873 @@
+{
+  "operations": [
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "8cb37c5095944e5b807e394796abbe3c99cf369f1bb216fee6d5e7b7faad4560",
+        "object_id": "obj-d18219089e77b9565d8dade3",
+        "schema_version": 1
+      },
+      "expected_text": "论文题目",
+      "replacement": "【论文中文题目】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ca07a8bd22f68fe7f6639fee52ca0d2a901f849379380fbe8cc602cd1b7c5ab0",
+        "object_id": "obj-86b2c297716c1412db92fa8b",
+        "schema_version": 1
+      },
+      "expected_text": "摘  要（三号黑体）",
+      "replacement": "摘  要"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "bac2face249008fc44a8daf67ee160e9a8f77cb8c589116130eeb6a63276229a",
+        "object_id": "obj-dbce1f75baa6af161ad59f1d",
+        "schema_version": 1
+      },
+      "expected_text": "摘要内容应概括地反映出本论文的主要内容，主要说明本论文的研究目的、内容、方法、成果和结论。语言力求精练、准确，不含图表，不加注释，具有独立性和完整性，一般在400字左右。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "37c8d8fafc17995c7f0b08f79fca4ef045ed1df6d731e3f5f67ec364126ed0d8",
+        "object_id": "obj-ca9eb1328c2fb9796318e15f",
+        "schema_version": 1
+      },
+      "expected_text": "中文摘要应含论文题目，在题目之下打印“摘要”二字（三号黑体），摘要的内容用小四号宋体, 行间距为固定值20磅。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ef5ca43e4a50d9fa75ed88ab3b0647bc019b4b207bec9cb128597914d66e0f20",
+        "object_id": "obj-3827fd9e1f313911067a36b5",
+        "schema_version": 1
+      },
+      "expected_text": "论文的关键词是反映毕业论文（设计）主题内容的名词，一般为3-5个，排在摘要正文部分下方。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "a9aad0dbe0efd13612b6ce3edd15c0aed48e8c00b01383d03ab68ef962fb5680",
+        "object_id": "obj-c5966bc1af3b11c853319bcf",
+        "schema_version": 1
+      },
+      "expected_text": "摘要内容后下空一行打印“关键词”三字（四号黑体），其后为关键词（小四号宋体），每一关键词之间用分号分开，最后一个关键词后不打标点符号。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "2d8fdc0daf19092747249e11759404c61bde000a8ade6b1fa330a6b81eb07b45",
+        "object_id": "obj-e1675a5a7572019379d3c988",
+        "schema_version": 1
+      },
+      "expected_text": "×××（400字左右，小四号宋体，行间距为固定值20磅）××××××",
+      "replacement": "【中文摘要正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ee0f813e26b422bb210033821373365f1c038280bb0910583babae071f99d219",
+        "object_id": "obj-a203feae5ae12055b7e03414",
+        "schema_version": 1
+      },
+      "expected_text": "关键词（四号黑体）：×××；×××；×××；×××（3-5个，小四号宋体）",
+      "replacement": "关键词：【关键词1；关键词2；关键词3】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "01cb03a0ec49bfd17556d207aad4e19f4610ef472296bd95070ef3c39c789057",
+        "object_id": "obj-733dfa3634e0dd6682f23257",
+        "schema_version": 1
+      },
+      "expected_text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）",
+      "replacement": "【ENGLISH THESIS TITLE】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ad568062428bd22ab7acb9736d47159cd814a06a5c90c678754a946943877071",
+        "object_id": "obj-e9214a00b56e9b215a3d3109",
+        "schema_version": 1
+      },
+      "expected_text": "ABSTRACT（三号Times New Roman，加粗）",
+      "replacement": "ABSTRACT"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "2ca7e43d8d35d154f0055dc6ebba00fc392fb0c11108a3d4fab51e03010bf9c3",
+        "object_id": "obj-8369280e845efbc651dbcb57",
+        "schema_version": 1
+      },
+      "expected_text": "英文摘要和关键词内容与中文摘要和关键词相一致，其中英文摘要以300个左右实词为宜。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "5fc70aca54f2722ba925c4da60c9dd73fe49e1bcd2df757561ba71b30a5f7b85",
+        "object_id": "obj-d7084a3c2221946314996fac",
+        "schema_version": 1
+      },
+      "expected_text": "英文摘要应含论文的英文题目，全部采用大写字母，在题目之下打印“ABSTRACT”（三号字加粗），摘要正文用小四号字Times New Roman，行间距为固定值20磅。摘要内容后下空两行打印“KEY WORDS”（四号字加粗），其后的关键词小写（小四号），每一关键词之间用分号分开，最后一个关键词后不打标点符号。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "4abeb00189c531770972fb6a4d048635026c11c790ef9ee85ec2512422956740",
+        "object_id": "obj-35e33f713724dc8e785fd5cd",
+        "schema_version": 1
+      },
+      "expected_text": "×××（300个实词左右，小四号Times New Roman，行间距为固定值20磅）××××××",
+      "replacement": "【英文摘要正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "b48b3b35fbf311d4da576743da8fb074a3dc12fb34ac1ae726e848790af1eb84",
+        "object_id": "obj-2be75c45328b9d7531343e35",
+        "schema_version": 1
+      },
+      "expected_text": "KEY WORDS（四号Times New Roman，大写加粗）：×××；×××；×××；×××（小四号Times New Roman）",
+      "replacement": "KEY WORDS: 【keyword 1; keyword 2; keyword 3】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "879a6afbc926ed55db20960e214174275b9b6c9a0e4eb0b2deca9810a0ff67d4",
+        "object_id": "obj-0564d31f3c7cf43aff4144a3",
+        "schema_version": 1
+      },
+      "expected_text": "第一章 文献综述（三号黑体居中）",
+      "replacement": "第一章 文献综述"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "b916f97abde08c98a50f0710fc64713d1d81b8b1f09eb56139da263dd12d25f6",
+        "object_id": "obj-05766d7ccbb830c882b13bd0",
+        "schema_version": 1
+      },
+      "expected_text": "文献综述应将与论文内容有关的国内外研究进展作回顾与分析，并阐明本研究的目的和意义。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "dbd6108f491a606dada3a94b1ed9eaae146b8264c0572fd6149fe13a92dea1c2",
+        "object_id": "obj-c3f05e51665595d20e84f750",
+        "schema_version": 1
+      },
+      "expected_text": "各章标题（如，第一章 文献综述）：三号黑体居中；若有分级标题，一级节标题：四号黑体居左；二级节标题：小四号宋体居左。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "2eda76b0f1bd87632fc933805dc6c8471ed240463b526259740b9cd59e4eae7b",
+        "object_id": "obj-8f1379919ddccc853ef2470d",
+        "schema_version": 1
+      },
+      "expected_text": "正文中文一律采用小四号宋体，首行缩进两个字符，无段前、段后间距，行间距为固定值20磅。英文、罗马字符一般采用新罗马体（Times New Roman）。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "5208f8f3fbd65ff616f55ab6b0aad77e10815344b375aaec9904fc9f66ce4cdd",
+        "object_id": "obj-2f37a2f739f7fa3d0596ca62",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+      "replacement": "【文献综述正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "20bbcbfed186b7c370b65663e1e6d02f5332dadfc7e8a50a957fde6288d545f7",
+        "object_id": "obj-245ce518bdd2073e72364595",
+        "schema_version": 1
+      },
+      "expected_text": "1□×××××（四号黑体，居左，□代表空格）",
+      "replacement": "1 【一级节标题】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-31fc84a2e79c1eb0954168c9",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": "【本节正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "dd0da6ce8089e11126c3e64c557ddbf147561c57fe6ab1d0cf5080d321d9b79d",
+        "object_id": "obj-9d9b97ddbbddfc9d71b26393",
+        "schema_version": 1
+      },
+      "expected_text": "1.1□×××××（小四宋体，居左）",
+      "replacement": "1.1 【二级节标题】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-2cb5b1a7091ddb91f265b61b",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": "【本小节正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "199864afc483e6bd09382be2240dd24d20c7af98f3dc1d621b4951f2cd444333",
+        "object_id": "obj-c3bac437729714622098947a",
+        "schema_version": 1
+      },
+      "expected_text": "1.2□×××××（小四宋体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-97f430daab990945cc55b0e1",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "d1c3dd9120acb1d413ef57a727f1ccc0eb3c4c91553929b3f65feac5b8402e25",
+        "object_id": "obj-b35155e0bd1ceb9f0389f1b6",
+        "schema_version": 1
+      },
+      "expected_text": "2□×××××（四号黑体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-4308006c0715e83206e12f0f",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "77ba7835aeaec29d9cbebd9796b47f7d1283d1129647e9442a6ed3676a6a7dea",
+        "object_id": "obj-6436607c936e7aa803a21798",
+        "schema_version": 1
+      },
+      "expected_text": "第X章   （正文标题）（三号黑体，居中）",
+      "replacement": "第X章 【正文标题】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "6db90ad5436b02d3a90030375dface1a40e69011e0b4b4b3e4822ad73a006814",
+        "object_id": "obj-99d8551352c77588559639f4",
+        "schema_version": 1
+      },
+      "expected_text": "实验部分一般由标题、文字叙述、图、表格和公式等部分构成。写作形式因科研项目的性质不同而变化，一般可包括试验材料与方法（计算方法、实验设置和测试方法）、经过整理加工的实验结果、对结果的分析讨论与结论。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "8da8b514646030432d1b5c378b06625cd552612641de549f234ad5fe469af3ba",
+        "object_id": "obj-a65771699e94e39049faabb1",
+        "schema_version": 1
+      },
+      "expected_text": "各章标题：三号黑体居中；一级节标题（如，1 材料与方法）：四号黑体居左；二级节标题（如，1.1 材料）：小四号宋体居左。正文各部分的标题应简明扼要，不使用标点符号。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "2a176308ba7d1155271d1f27bb4cfc4197774e07f23d3aa589d1bcbb34097411",
+        "object_id": "obj-b848b5fb5064b0e67e2fa320",
+        "schema_version": 1
+      },
+      "expected_text": "正文中文为小四号宋体，英文及数字为小四号Times New Roman，首行缩进2个字符，行间距为固定值20磅，其中行间距可在保持论文美观的前提下进行微调。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "67532f165e2ec8347a7df34d206e8f3e424099537a9fef3a47910f80bb86fbc6",
+        "object_id": "obj-23351f858bfe1d3dd4d63667",
+        "schema_version": 1
+      },
+      "expected_text": "图、表格应有中英文标题，居中显示。图表内容一般为5号及小5号宋体，表头及图的文字说明用5号黑体，英文及数字为五号Times New Roman字体。图、表格按章顺序编号，如表5-4为第五章第四表。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "83b4451e44b861444f3ad52b826ca79bebee809963f2cc823023ac9bb883d97e",
+        "object_id": "obj-6e1255a67e72eb89565ad464",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+      "replacement": "【本章正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "61ef2f5846c41e836841bbd71ff420e586d7f3d229e7cb9e582de89a7f48c502",
+        "object_id": "obj-9167b25732853b65664ddf99",
+        "schema_version": 1
+      },
+      "expected_text": "1□材料与方法（四号黑体，居左，□代表空格）",
+      "replacement": "1 【一级节标题】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-3c4d7eae3e04b59571d03a93",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": "【本节正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "dd0da6ce8089e11126c3e64c557ddbf147561c57fe6ab1d0cf5080d321d9b79d",
+        "object_id": "obj-a4c541d2448c8a7ac9b9d18f",
+        "schema_version": 1
+      },
+      "expected_text": "1.1□×××××（小四宋体，居左）",
+      "replacement": "1.1 【二级节标题】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-239ef027019f724fd09210aa",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": "【本小节正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "199864afc483e6bd09382be2240dd24d20c7af98f3dc1d621b4951f2cd444333",
+        "object_id": "obj-af6864bb8cdc3bfde89c81a6",
+        "schema_version": 1
+      },
+      "expected_text": "1.2□×××××（小四宋体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-d63ae80c13195e467a0bfa1c",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "d87220b2c3377b874ecae257838efd58ba10c0d4c0d7cac08959eb3c4540a84f",
+        "object_id": "obj-012405ae6514b5ff08ecaa14",
+        "schema_version": 1
+      },
+      "expected_text": "2□结果与分析（四号黑体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-c0c89475adf89c2aa03751b2",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "fd97cac178043190eb12142d1eb7e121da53c9eec2ca91c85b73ce37ae837d32",
+        "object_id": "obj-0b23ee6b44bac1c48c818ded",
+        "schema_version": 1
+      },
+      "expected_text": "2.1□×××××（小四宋体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-b57a69b3df2160fe44d5d7c1",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "bcb3e2cd5b3ba7dc571c00b2bb46778c87b8e30b043c1888be5221307469757d",
+        "object_id": "obj-ba42f2cac368990e1d5693a5",
+        "schema_version": 1
+      },
+      "expected_text": "2.2□×××××（小四宋体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-15c36003feeb3b213b446de6",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "63a593cec711875a570869f191d6992f69b6b7c107d05850a120c90b86477735",
+        "object_id": "obj-c4accaa451f8467356be0aa0",
+        "schema_version": 1
+      },
+      "expected_text": "3□讨论（四号黑体，居左）",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "65a87ea52a10683616fdc4096441ed5647db1cc05736ce24b314bf796b042d85",
+        "object_id": "obj-9f013ee44b3f8208a9bf6c78",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（小四宋体）××××××",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "251aea2067bbdbc4951a5b3911f880760662f94af1434d686e0d30bbccf42294",
+        "object_id": "obj-332a662bd741824fbd2dd491",
+        "schema_version": 1
+      },
+      "expected_text": "最后一章结论与展望着重总结论文的创新点或新见解及研究展望或建议。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "491d96b2c0a09aab1b4df4635eed6cd033a4aa8fd4fe44a0608a622d873d9df7",
+        "object_id": "obj-a5ecb362967f13e8c3d78d60",
+        "schema_version": 1
+      },
+      "expected_text": "结论是对论文主要研究结果、论点的提炼与概括，应准确、简明、完整、有条理，主要阐述自己的创造性工作及所取得的研究成果在本学术领域中的地位、作用和意义及对生产与社会实践的指导意义。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "512618e1a4d2c4550c3934c082835a8302ca4bb7baaa0871a88edeebba49a537",
+        "object_id": "obj-c14873e005e5b89e8b5c3b70",
+        "schema_version": 1
+      },
+      "expected_text": "结论要严格区分自己取得的成果与导师及他人的科研工作成果。在评价自己的研究工作成果时，要实事求是，除非有足够的证据表明自己的研究是“首次”的、“领先”的、“填补空白”的，否则应避免使用这些或类似词语。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "1181b5fb5acf78a3db5bb3217d54a4b832fcec970ef57cc6a8f01225004f87a7",
+        "object_id": "obj-f01a2edd42b31ad259483e4e",
+        "schema_version": 1
+      },
+      "expected_text": "展望或建议，是在总结研究工作和现有结论的基础上，对该领域今后的发展方向及重要研究内容进行预测，同时对所获研究结果的应用前景和社会影响加以评价，从而对今后的研究有所启发。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "5208f8f3fbd65ff616f55ab6b0aad77e10815344b375aaec9904fc9f66ce4cdd",
+        "object_id": "obj-77835111fbedbd3e27bcddc8",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+      "replacement": "【结论与展望正文】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "20d6d4298a60fadeb0602689befad29eab07bc7b702b9e9fc3159d34f450874a",
+        "object_id": "obj-b8e93351d156ee6f324a7dc6",
+        "schema_version": 1
+      },
+      "expected_text": "参考文献表是文中引用的有具体文字来源的文献集合，应置于正文后并另起页；所有被引用文献均要列入参考文献表中；引文采用著作-出版年制标注时，参考文献表应按著者字顺和出版年排序。中文为五号宋体，英文及数字为五号Times New Roman字体，标点为英文标点。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "13f63719e9820b0dd46c7f71d2d4a5ea9ef98ba665a0f5a54fd178cdff03cdd0",
+        "object_id": "obj-b66990098b13d1d9ea39889d",
+        "schema_version": 1
+      },
+      "expected_text": "论文中引用的文献的标注方法遵照GB/T 7714-2005《文后参考文献著录规则》。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ac9d454235da737cdae475ef21f5fc62154e2997e91db3111749bfdce4cdc6d4",
+        "object_id": "obj-c1af408632dd32f4c4f5f8e2",
+        "schema_version": 1
+      },
+      "expected_text": "在引用别人的科研成果时，应在引用处加以说明，避免论文抄袭现象的发生。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "5f7c3e2b1455e4a18252cc0bb00623a614d879de64601983de78fbed2aa3d309",
+        "object_id": "obj-8df9bc9df9f1c937c3de4a84",
+        "schema_version": 1
+      },
+      "expected_text": "常用的参考文献著录项目和格式示例如下：",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "995a61728ff2faea62be6f21f4768071cb134cdfcd4f2ea1d909e3042d659481",
+        "object_id": "obj-ced1bf32c22fdf9e94af5e19",
+        "schema_version": 1
+      },
+      "expected_text": "普通图书示例",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "019f2e5f20c527697d470c8bdba03a087d36372031fed810afffef8ced4edbee",
+        "object_id": "obj-355eb757f5c0712ba992e7e9",
+        "schema_version": 1
+      },
+      "expected_text": "[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998",
+      "replacement": "【参考文献条目】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "bd4d63dec6ce74027cc5ce1eda16a19628e8a2c251edce600f3f657eb31d6488",
+        "object_id": "obj-c4aa161dbbd14b405fea51b1",
+        "schema_version": 1
+      },
+      "expected_text": "[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "5a9af5162ff09889ddb62fac33f6f2b05db2c56a79b22af0e94db9dc9e817ddb",
+        "object_id": "obj-059edc5f1e24aaefb3e37385",
+        "schema_version": 1
+      },
+      "expected_text": "期刊中析出的文献示例",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "beca4a67470f379c046675d7ab445ffc1183b42dadec9c5aec0b0ca6f146ca56",
+        "object_id": "obj-1424857bbe540514d362a4d2",
+        "schema_version": 1
+      },
+      "expected_text": "[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "f373407ef3d3b6ac695b1af9cc24f2fb955d6544b67ddf72da8dd55ed3a47b2c",
+        "object_id": "obj-1603fef2b492685a928853e2",
+        "schema_version": 1
+      },
+      "expected_text": "[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "101ca0e7427b218655a42a7b911fb7cd9c2574eb45e3aa9d8e7df4f68c7b24b7",
+        "object_id": "obj-54576b541a99657259151bfa",
+        "schema_version": 1
+      },
+      "expected_text": "论文集、会议录示例",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "9931ff736e8bdcd051dc04ee2947da6108a7b6b6c4ababe3c986f29a66b3d951",
+        "object_id": "obj-977d2f4ed8aff4e28c76b922",
+        "schema_version": 1
+      },
+      "expected_text": "[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "97bad17660c776fc4ce35212050e22c8a81218ce4fcdfc762506d02f52f44d58",
+        "object_id": "obj-df2bef6f948476da96363045",
+        "schema_version": 1
+      },
+      "expected_text": "[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "74497c9525456506b2848237f1527e8258f11940cd0ef87444487e54f27c2bce",
+        "object_id": "obj-3ad66ee46d0a74b68cf37f23",
+        "schema_version": 1
+      },
+      "expected_text": "科技报告示例",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ca23069bd38468af4c9df1eb2b1d22ceae73b1ae112d4b3d0ec9148d3cffe21c",
+        "object_id": "obj-e288b7995e38f5e1046755d1",
+        "schema_version": 1
+      },
+      "expected_text": "[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "0cd3129696ea342a5efb2b675bb3e43ab119b70c5e7c4a85931f66eee3bac77a",
+        "object_id": "obj-1ac77499a5731709efd926fc",
+        "schema_version": 1
+      },
+      "expected_text": "[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "a5a41580ada6d4ef95cdb5c00968834026c30c627fe91044a7f6ecdb1ed3e3ab",
+        "object_id": "obj-b401f8c72886500de0bdbf32",
+        "schema_version": 1
+      },
+      "expected_text": "学位论文示例",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "3f2d0732d5d3e38611bb141bcecd044a1d2b320e2b3c0f58163c851bd7f2f11d",
+        "object_id": "obj-e1b3819e68e0d025649c0257",
+        "schema_version": 1
+      },
+      "expected_text": "[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "428d39c0d06b34bac20a764b6e92808f7cebd466fcdb40586468f72f0f3bb904",
+        "object_id": "obj-e7a8a929ee38cf785051c588",
+        "schema_version": 1
+      },
+      "expected_text": "[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ac66871fbfefd39360c2b52f8eba82a33cbadd821dbaed44e166dfaffec23754",
+        "object_id": "obj-7b0a47119b384dfc03f3eb13",
+        "schema_version": 1
+      },
+      "expected_text": "附  录 附录名称（三号黑体，居中）",
+      "replacement": "附  录  【附录名称】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "de3b452e1ad97cfbb8c596fe4beed674fe1cdd900154594c67b20dd82d501734",
+        "object_id": "obj-2064a3ee7d995186b4c58294",
+        "schema_version": 1
+      },
+      "expected_text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。",
+      "replacement": "【附录内容；如不适用，可删除本节】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "ae0c40f5b7cfbd9325c793a5798aa1ea863c77a00aa2a0ac2218aa5770bdee46",
+        "object_id": "obj-007ff349b6a7893833fc2651",
+        "schema_version": 1
+      },
+      "expected_text": "相关的学术成果目录（三号黑体，居中）",
+      "replacement": "相关的学术成果目录"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "2ce668d6fac561c06bff9691b9e66140627c817a7817be1e09914981d9327731",
+        "object_id": "obj-1497d9109f8ce9678219e933",
+        "schema_version": 1
+      },
+      "expected_text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+      "replacement": "【相关学术成果；如不适用，可删除本节】"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "70c2ad25f4013acabfd4fb8f083fa0c7d62068d20f2676a5b2a16d62cc1e4627",
+        "object_id": "obj-a5d04353a3ccfec472fd0036",
+        "schema_version": 1
+      },
+      "expected_text": "致  谢（三号黑体，居中）",
+      "replacement": "致  谢"
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "975e18988dc4d4d10bef9ea38ff8b9e934cd44ce48fd5474972d59c9f6b306f6",
+        "object_id": "obj-d935613e674123c877244335",
+        "schema_version": 1
+      },
+      "expected_text": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "b52e2be1aa782b10a5ff192c7caf34780910748d8731dbc83ac7c5ce3c108a66",
+        "object_id": "obj-9b497b6063241f3beaef67ab",
+        "schema_version": 1
+      },
+      "expected_text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。",
+      "replacement": " "
+    },
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "dd9d809e9c87e60f11457a71206df9e8f4c2921f56e167b82b4edba132a8802e",
+        "object_id": "obj-34751d81c2b4351eeb2c92c8",
+        "schema_version": 1
+      },
+      "expected_text": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+      "replacement": "【致谢正文】"
+    }
+  ]
+}

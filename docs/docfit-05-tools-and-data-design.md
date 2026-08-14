@@ -92,10 +92,9 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 ### 1.5 当前任务证据
 
 - 学校模板、要求文件、官方示例和用户确认只放在授权任务目录；
-- `prepare-template` 的 Registry 源由 task-bound service 私下持有；应用为当前裁图的所有可见
-  顶层对象预取并绑定对象相关候选，同时提供必要子 run。Agent 只在普通证据仍不足时为一个
-  已返回对象追加有界查询，不能读取或枚举全 Registry；提交的字段 ID 必须属于该对象已经提供
-  的候选集合；
+- `prepare-template` 把 Registry 的只读任务副本及其身份交给主 Agent；Agent 根据整份 inventory
+  与当前判断按需读取/查询字段 meaning，再明确选择 field ID。应用不为 crop 预取候选，也不把
+  Registry 编译成固定任务清单；
 - 每个学校专属结论必须能引用当前任务材料 hash 或当前用户确认；
 - 精确格式值可以被规范化为本次 Tool 调用参数，但不写入长期 profile；
 - 来源冲突或适用范围不明时，Agent 保留证据并询问，不用 Knowledge 补齐；
@@ -104,33 +103,21 @@ Knowledge 可以定义“观测值”“目标值”“有效继承值”“覆�
 - 任务结束后，材料和推导结论按任务数据策略处理，不复制到产品 Knowledge；
 - Eval 可以保存合成、脱敏或授权的学校场景，但 Eval fixture 不是运行时 Knowledge。
 
-模板准备的 Agent 公共面只有五个角色化 Tool。语义角色使用
-`template_get_current_work_item`、`template_request_current_context`、
-`template_submit_current_decision`、`template_report_ambiguity`；视觉角色只使用
-`template_get_review_batch`。应用内部继续复用同一 Template Workspace、OfficeCLI、V2 visual
-evidence、对象修改和包验证能力，但不把其 document/region ref、visual cursor、导航或 publish
-入口暴露给 Agent。
+模板准备与普通转换共享唯一五个稳定 Tool：`docx_inspect`、`docx_edit`、`docx_render`、
+`docx_visual_review`、`docx_validate`。清理、内容控件、正文结构、TOC 刷新和逻辑页起点是
+`docx_edit` 的无状态原子 action；不存在第二个 `template_*` Tool 面、Template Workspace 或
+应用 work-item checkpoint。
 
-语义提交最多包含 32 个直接 action operation；应用把短对象 ID 编译为当前 checkpoint 的内部
-引用，校验字段候选集合，原子执行、保护 Word 边界、回读有效结果并返回修改后局部图片。生成
-目录时，Tool 提供可选标题对象以及已经由 Agent 确认的必要正文标题；Agent 显式提交目录条目和
-层级，应用只验证对象身份、层级范围、顺序与必要覆盖后执行，不从标题文案、编号或固定标题表
-反推语义。
+每次 edit 使用绑定输入 hash 的完整 object ref，最多 32 个不冲突 operation，并生成新 DOCX。
+Tool 验证对象身份/承载能力、Registry field、结构边界、包完整性和回读效果；Agent 选择对象、
+字段、正文代表、目录标题/层级与批量边界。visual cursor 只是一项可组合 Tool 的传输分页，不是
+应用语义状态机；主 Agent 可自行选择页面批次并负责合并结论。
 
-相邻同页语义工作项复用一个有界的 Claude Agent SDK 原生 client/session；每项结束后重绑当前
-Tool state，并用 continuation prompt 关闭上一工作项语境。跨页、达到上限或异常时轮换 session，
-失败仍只做有界重试，`max_turns` 不会触发无上限新会话。每次 terminal result 以及原生 client
-启动数量、SDK/API/墙钟耗时和 turn 数都持续 checkpoint 到任务目录，因此进程重启不会让运行
-报告低估已经付出的时间与调用成本。
-
-最终视觉检查由应用按内部 cursor 取齐精确版本的所有原生全页 PNG；视觉 Agent 为当前批次每页
-返回 typed clean/defect。只有显式 verdict 才写入视觉 receipt，图片返回本身不计覆盖。缺陷生成
-单页修复工作项；任何编辑按新 document hash 自动失效旧 receipt，并从第一页重查。全页 clean
-后应用调用内部 publication service，原子发布 `output/final-template.docx` 与
-`output/fill-contract.yaml`。契约由应用根据最终精确 Word 快照、Registry、Agent 已接受的语义决定
-和 Tool 回读生成，Agent 不手写契约；任一文件缺失或 hash 绑定不一致都回滚本次发布。该实现沿用 Claude Agent
-SDK 原生 query/Tool loop、custom in-process MCP Tool 和 structured output，不建立通用 Agent
-runtime；Agent 不提交 plan path、compiler 输出或 Word output path。
+`prepare-template` 对整项任务只发起一次 SDK `query()`；该原生 Agent loop 可在内部进行任意 Tool
+turn 和可选 Subagent 委派，直到主 Agent 完成或预算/权限终止。主 Agent 返回最终候选、render、
+完整逐页证据和 completion 判断；应用重新调用确定性验证与 publication service，确保输入、Word、
+Registry、Fill Contract 和视觉证据绑定同一 hash。该壳不解释学校语义，也不建立第二套 Agent
+runtime/session/workflow。
 
 ### 1.6 加载与使用
 
@@ -491,9 +478,8 @@ include_source_final_section_properties: false
 - all-or-nothing 发布；
 - 合并后重新打开、内容保留和非目标内容检查。
 
-旧的 `import_template_sections` action 为既有调用保留兼容性，只能用于明确的模板资产组装
-任务；它不是 `convert-thesis` 的默认路线，也不能用于把模板节导入学生论文副本后声称完成
-B 路线。OfficeCLI 只支持简单段落复制、无法复制完整依赖闭包时，必须把能力缺口报告为
+旧的 `import_template_sections` 兼容 action 已删除；跨文档对象导入统一使用上述
+`import_content_objects` 合同。OfficeCLI 只支持简单段落复制、无法复制完整依赖闭包时，必须把能力缺口报告为
 不支持或 `verification_gap`，不能把部分合并发布为成功结果。
 
 ### 2.6 `docx_render`

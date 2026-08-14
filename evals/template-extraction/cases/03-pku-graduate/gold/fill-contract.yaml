@@ -13,7 +13,7 @@ field_registry_ref:
   path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   registry_id: docfit.thesis.content_fields
   registry_version: 0.5.0
-  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
 marker_protocol:
   version: docfit-content-control-marker/v1
   field_identity_property: w:alias

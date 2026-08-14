@@ -1,74 +1,84 @@
-# DocFit 学校模板提取 v2 执行胶囊
+# DocFit 学校模板提取：Agent-first 重构状态
 
-- Capsule status: `E2E VERIFIED / TWO-FILE PUBLICATION GAP`
-- Latest user decision: 当前处于准确度测试阶段，来源是否官方只记录、不作为 Gold 门；每个学校
-  模板提取必须原子交付两份文件：可填写 Word 与指导填写的契约文件。
-- Baseline commit: `5b9e491 feat(content): checkpoint extraction and field contracts` 保存本轮开始前
-  已有的 Student Content / Registry / style 工作，聚焦 51 tests、Ruff、Mypy 通过。
+- Status: `IMPLEMENTED / REAL PROVIDER RE-VERIFICATION PENDING`
+- Architecture: `main_agent_full_context/v1`
+- Scope: 模板运行时、Skill/reference、稳定 Tool 面、确定性发布；Eval/Gold 由独立工作流维护。
 
-## 失败证据与根因
+## 根因结论
 
-- 南农原始模板上一轮 E2E 运行耗时 `79m47s`，产生 661 个事件、10 次
-  `error_max_turns`、53 次 final-review 调用、46 次无效 cursor、65 次 edit；最终没有发布 Word。
-- 旧实现把区域推进、跨 session 续跑、cursor、最终页面覆盖、publish 和 built/blocked 终态交给
-  同一个 Agent 做语义控制；`while True` 在 `max_turns` 后自动开新 session，缺少硬进度上限。
-- PNG 被 Tool 返回时就写入 reviewed coverage，没有独立的逐页 clean/defect 判断，导致“证据已
-  提供”和“证据已审查”混为一件事。旧 Agent 还需要复制 document/region ref 和 cursor，直接
-  造成高频无效调用。
+上一代实现把 Agent 当作应用状态机里的局部分类器：应用选择 work item、裁剪上下文、绑定候选、
+推进 cursor、组织重试和决定完成。它把模型失败转化为更多 schema/gate/session，导致 79m47s 的
+NJAU 运行仍未发布。问题不是“协议数量”本身，而是应用通过协议取代了 Agent 的上下文理解、任务
+分解、Tool 选择、重试和完成判断。
 
-## 当前 clean-break 合同
+## 当前运行合同
 
-- 应用拥有当前工作项、checkpoint 推进、有界重试、终止状态、内部页面 batching、视觉证据失效
-  和自动 publication；没有 Agent 控制的流程循环。
-- 语义 Agent 只开放四个工作项 Tool：取得当前项、请求有界上下文、提交一次 typed decision、
-  报告具体歧义。字段 ID 必须来自当前工作项已提供的 Registry 候选；最多两次 bounded attempt。
-- 最终视觉审查使用独立 SDK session，只开放一个“取得当前页批次”Tool。Agent 为绑定批次的每页
-  返回 typed clean/defect；应用验证页码精确覆盖后才记录 verdict。
-- Agent schemas 中不存在 cursor、document_ref、region_ref、publish 或 built/blocked。内部
-  Template Workspace 和 VisualEvidenceService 仍使用 content-addressed ref/cursor 完成确定性
-  绑定，但不把它们暴露给模型。
-- 任一页面 defect 生成有界单页修复工作项；修改产生新 hash，旧视觉 receipt 自动失效，并从
-  第一页重查。最多三轮修复；无新版本或超限返回稳定错误，不继续猜测。
-- 全部页面显式 clean 后，应用内部执行 package/OfficeCLI/style/Registry 检查并原子发布。目标
-  output 必须同时包含 `final-template.docx` 与绑定其 hash 的 `fill-contract.yaml`；PNG/PDF/evidence
-  只作内部质检，不构成第三份主交付物。
-- Skill 已减为领域手册：局部对象责任、填写接口、正文结构、按需 references 和最终视觉不变量。
-  遍历、cursor/ref、重试、终态、发布 API 和 structured output 示例均已移除；新增独立
-  `references/final-visual-review.md`，只在视觉角色使用。
+```text
+模板 + 要求 + Registry + 目标/输出边界
+                    ↓
+        一个主 Agent / 一次 SDK query
+                    ↓
+  自主 inspect / render / review / edit / delegate
+                    ↓
+        Agent 选择最终候选并 validate
+                    ↓
+  应用检查客观后置条件并生成绑定产物
+```
 
-## SDK 基础与边界
+- canonical Skill 只有 `.claude/skills/docfit-school-extract/**`；旧 candidate Skill 已删除。
+- 主 Agent 知道全部输入角色并可取得整份可查询 inventory；渐进披露路径由 Agent 选择。
+- 主 Agent 可使用 SDK 原生 `docfit-unit-analyst` 做自包含只读分析，保留全局合并和写入权。
+- 公开能力保持五个稳定 Tool；模板操作是 `docx_edit` 内无状态 action。
+- 五个 Tool 是可选能力，不是固定调用清单：源模板已合格时可直接选择只读 source snapshot；只有
+  候选发生修改时才要求 `docx_edit` 证据。
+- `TemplateWorkspaceService`、`template_*` work-item Tool/schema 和应用区域状态机已删除。
+- 应用只创建不可变任务副本，配置权限/预算/观测，验证输入、hash、package、Registry、最终全页
+  证据和 Fill Contract/Word 一致性。
+- 旧 checkpoint 不迁移；clean-break 直接拒绝上一代任务目录。
 
-- 继续使用 Claude Agent SDK 原生 query/Tool loop、custom in-process MCP Tool、permissions/
-  hooks、Skill 和 structured output；语义与视觉使用独立短 session，避免旧图片长期滞留上下文。
-- 应用编排只表达模板准备已批准的确定性产品不变量，不复制 SDK 的通用 Agent runtime、session
-  store 或 transcript replay。
-- Official basis: [Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop),
-  [Custom tools](https://code.claude.com/docs/en/agent-sdk/custom-tools),
-  [Structured outputs](https://code.claude.com/docs/en/agent-sdk/structured-outputs),
-  [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions).
+## Skill/reference
 
-## 最终门禁
+Skill 教主 Agent 如何建立全局结构/视觉认识、分类文字、选择正文代表、处理 TOC/集合/可选区、
+形成 Subagent task packet、合并冲突和判定完成。七个 references 是方法与反例，不是应用语义 gate：
 
-- Code/static: role-scoped schemas、应用 orchestrator、typed visual receipt、Skill 和 Tool v5 已落地；
-  Ruff 与 strict Mypy 对本次源文件通过。
-- Automated: 最终相关门禁 124 tests 全部通过；覆盖应用推进、内部 cursor、idle/max-turn 硬上限、
-  精确版本视觉 receipt、有效格式、父子删除归一化、边界保护、幂等分页和增量正文结构。
-- Real E2E: 南农 r66 从原始模板生成 `final-template.docx`，最终 13/13 LibreOffice 页面显式 clean；
-  机械审计确认 26 个内容控件、11 个节、书签平衡、实时目录、固定标题和零示例标记。
-- Word native: 对精确 r66 副本执行打开、全域更新、保存、关闭、重开；Word 原生为 12 页，目录
-  保持黑色、无下划线、1–3 级缩进、点引导线和更新后的页码。Word 重写后的 DOCX 再审计通过。
-- Product boundary: 应用拥有确定性流程；Tool 负责可执行性和事实反馈；Agent 根据当前学校证据决定
-  语义完整性。旧 v4 Tool 合同不保留兼容层。
+- `template-text-classification.md`
+- `body-structure.md`
+- `generated-content-and-toc.md`
+- `collections-and-optional-sections.md`
+- `delegation-strategy.md`
+- `evidence-and-conflicts.md`
+- `completion-and-visual-review.md`
 
-## 当前产品合同差距
+## SDK 官方依据
 
-- 当前代码已在 `work/.docfit/template-workspace-v1/publication/fill-contract.json` 生成并校验与最终
-  Word hash 绑定的 v2 契约，`PrepareTemplateReport` 也返回该内部路径；槽、字段、定位和样式合同
-  能力不是从零缺失。
-- 当前 `output/` 的恢复检查与 built postcondition 仍硬编码“只能有一个
-  `final-template.docx`”，因此第二份契约尚未成为用户可见的原子交付物。
-- 当前运行时契约还没有完整写入本轮已确认的逻辑页顺序、条件页、optional/required 和
-  `manual_only` 动作；因此不能只把内部 JSON 复制到 output 就宣称两文件合同完成。
-- 后续实现只需在不改变 Agent 判断边界的前提下调整 publication service、恢复/幂等检查、报告路径
-  和相应测试，并把已确认的填写政策纳入正式契约；发布前仍由应用从最终快照生成契约，不让
-  Agent 手写。
+- [Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview)：SDK 提供完整 Agent loop、
+  context、Tool、Subagent、permission、session 和 Skill 能力。
+- [Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop)：Claude 评估、选择 Tool、接收结果并
+  重复，直至任务完成；`max_turns`/budget 是生产上限，不是应用语义步骤。
+- [Custom tools](https://code.claude.com/docs/en/agent-sdk/custom-tools)：DocFit 以 in-process MCP 提供
+  领域能力，Tool 由 name/description/schema/handler 构成，不需要工作流 RPC。
+- [Subagents](https://code.claude.com/docs/en/agent-sdk/subagents)：主 Agent 可按任务选择隔离上下文、
+  受限 Tool 的 Subagent。
+- [Sessions](https://code.claude.com/docs/en/agent-sdk/sessions)：一次 `query()` 已可执行完成任务所需的
+  多个 turn；client 多 prompt 用于真正需要共享会话的多轮交互，不用于应用切分一个任务。
+- [Permissions](https://code.claude.com/docs/en/agent-sdk/permissions)：权限策略由 hooks/deny/ask/mode/
+  allow/callback 组合，DocFit 不需借工作项协议实现权限。
+
+## 当前证据（2026-08-13）
+
+- Ruff、strict mypy 与 diff whitespace 检查通过新的 runtime surface。
+- 392 个 contract/unit/Agent-first 测试通过；证明唯一 Skill、一次完整任务、五 Tool 注册、原生
+  Subagent、无 legacy workspace/tool 文件，以及“无修改不强制 edit”的合同。
+- `tests/integration/test_m1_tools.py` 五项全部通过；固定镜像
+  `docfit-libreoffice-visual:25.2.3.2` 已完成真实 inspect/edit/import/render/review/validate 与无状态
+  publication 回归。
+- 真实 provider 小模板探针已验证主 Agent 自主选择 inventory、contact sheet 和 detail page，应用未
+  生成 work item。但 MiniMax 两次在视觉回合后响应超过 6 分钟而未终结；Kimi 三个已配置 key 均因
+  billing-cycle quota 返回 403。真实 provider publication 因外部 provider 状态尚未闭合，不能据此
+  宣称成功率或性能目标已通过。
+
+## 下一门禁
+
+1. Kimi quota 恢复或确定 MiniMax 视觉响应预算后，用真实 provider 对小模板完成 publication。
+2. 再跑 NJAU 大模板，比较 wall time、turn/tool 数、成功率与最终人工/Word 原生证据。
+3. Eval/Gold 只消费产物评分，不反向控制运行时语义。

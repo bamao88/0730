@@ -65,11 +65,12 @@ Skill 使用模块化通用 Knowledge 解释当前材料。书面要求可选；
 
 ### 3.2 输出边界
 
-Agent 通过一个当前对象和有界局部上下文完成“判断 → 直接修改 → 回读/视觉反馈”循环。
-Registry 是 Tool 私下绑定的版本化语义词典，只有在当前对象已被判断为填写位后才做精确
-lookup 或最多五条 search；不得枚举 Registry 或把它当作学校模板的槽位待办表。
+主 Agent 通过完整任务认知与访问边界完成“全局理解 → 自主取证/分解 → 原子修改 → 回读/视觉
+反馈 → 全局复核”循环。完整上下文不要求一次加载全文 XML/图片，而要求 Agent 知道全部输入角色、
+能够取得整份 inventory、随时返回全局结构并自行选择渐进披露路径。Registry 是版本化语义词典，
+不是应用预编译的对象候选列表，也不能被当作跨学校槽位待办表。
 
-成功时用户可见主交付物固定为 `output/final-template.docx` 和 `output/fill-contract.yaml`。
+成功时用户可见主交付物固定为 `output/final-template.docx` 和 `output/fill-contract.json`。
 二者是一个原子产品单元：契约必须绑定精确 Word hash，缺少任一文件或绑定不一致均失败。
 内部不可变 Word 版本、修改回执、manifest、hash、PNG/PDF 和视觉覆盖记录留在
 `work/.docfit/**`，不构成第三份主交付物。它不创建
@@ -95,23 +96,20 @@ DOCX 中提取。当前三校 candidate 文件仍待 Human 签署和 schema 冻�
 
 ### 3.3 工具与反馈边界
 
-`prepare-template` 使用两个互相隔离的 Agent 角色。语义角色只开放
-`template_get_current_work_item`、`template_request_current_context`、
-`template_submit_current_decision` 和 `template_report_ambiguity`；视觉角色只开放
-`template_get_review_batch`。两个角色都只额外获得 Skill 和受限 Read，不开放 Bash、Write、
-AskUserQuestion 或 Subagent。字段 ID 必须来自当前工作项已返回的 Registry 候选；对象 ID 只在
-当前有界上下文中有效。
+`prepare-template` 启动一个拥有完整任务的主 Agent。它获得 canonical
+`docfit-school-extract` Skill、受限 Read/Glob/Grep、AskUserQuestion、SDK 原生 Agent 委派，以及
+五个稳定 `docx_*` Tool；Bash/Write 关闭，所有 DOCX 修改只能通过 `docx_edit`。主 Agent 自行决定
+语义分析、页面查看、编辑、重试、最终全页检查和完成。大模板可委派
+`docfit-unit-analyst` 做自包含的只读局部分析，主 Agent 保留冲突合并与最终写入权。
 
-Skill 说明领域目标、对象判断、填写责任、按需知识和视觉缺陷标准，不描述遍历、cursor、
-document/region ref、重试、终态或发布 API。应用拥有这些确定性控制：选择工作项、原子执行修改、
-回读局部结果、推进 checkpoint、有界重试、组织全部页面批次、验证每页 verdict、失效旧版本证据
-并自动发布。Tool 机械验证对象承载能力、Registry 字段、Word 边界、有效格式、包重开和非目标
-文本保护；它不替 Agent 做局部语义或页面视觉判断。
+Skill 说明领域目标、判断方法、何时看页面、正文/TOC/集合处理、委派 task packet 和完成证据；
+它不是工作流配置或 Tool schema 副本。Tool 机械验证对象承载能力、Registry 字段、Word 边界、
+有效格式、包重开和输入/hash 保护；不替 Agent 做学校语义或页面视觉判断。应用只设置权限/预算/
+观测并检查客观终态，不选择 Agent 的语义视野、步骤或重试策略。
 
-局部语义角色只看当前对象、必要邻接对象和修改后局部反馈，禁止主动逐页扫描；全部局部工作
-完成后，独立视觉角色才读取应用绑定的原生全页 PNG。图片成功返回不等于已审查，只有当前精确
-版本每页都有显式 clean 且没有 defect 才能通过。任何后续编辑都会使旧 hash 的页面结论失效，
-应用从第一页重新组织检查。PNG/PDF/evidence 保留在内部，不扩展用户交付集合。
+最终候选必须由主 Agent 针对精确 hash 渲染并实际查看每一页。图片成功返回不等于已审查；只有
+完整页码覆盖、没有 blocking finding 且 `docx_validate` 绑定同一 Word/render 时才可完成。任何
+后续编辑都会使旧 hash 的页面结论失效。PNG/PDF/evidence 保留在内部，不扩展用户交付集合。
 
 ## 4. `convert-thesis`
 

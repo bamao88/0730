@@ -461,6 +461,19 @@ class DocFitToolService:
                             "target_ref": member_selected.object_ref,
                         }
                     )
+                if (
+                    str(selected.object_ref["object_id"])
+                    != str(members[0].selected.object_ref["object_id"])
+                ):
+                    raise ToolFailure(
+                        status="needs_input",
+                        origin="request",
+                        code="body_structure_anchor_invalid",
+                        message=(
+                            "materialize_structure target_ref must be the first selected "
+                            "member so the structure has one physical, snapshot-bound anchor."
+                        ),
+                    )
                 raw_replaced = operation.get("replaced_structure_ref")
                 if raw_replaced is not None:
                     replaced_structure = resolve_object_ref(raw_replaced, inspection)
@@ -728,17 +741,14 @@ class DocFitToolService:
                     {"command": "set", "path": target.locator, "props": properties}
                 )
                 continue
-            if action not in {"import_content_objects", "import_template_sections"}:
+            if action != "import_content_objects":
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
                     code="unsupported_edit_action",
                     message="An edit operation uses an unsupported M1 action.",
                 )
-            legacy_template_import = action == "import_template_sections"
-            document_field = "template_docx" if legacy_template_import else "source_docx"
-            hash_field = "template_sha256" if legacy_template_import else "source_sha256"
-            source_docx = _document_path(operation, document_field, root)
+            source_docx = _document_path(operation, "source_docx", root)
             if source_docx == input_docx:
                 raise ToolFailure(
                     status="needs_input",
@@ -750,16 +760,12 @@ class DocFitToolService:
                     ),
                 )
             imported_source_hash = sha256_file(source_docx)
-            if operation.get(hash_field) != imported_source_hash:
+            if operation.get("source_sha256") != imported_source_hash:
                 raise ToolFailure(
                     status="needs_input",
                     origin="request",
-                    code=(
-                        "template_hash_mismatch"
-                        if legacy_template_import
-                        else "content_source_hash_mismatch"
-                    ),
-                    message=f"The source snapshot hash does not match {hash_field}.",
+                    code="content_source_hash_mismatch",
+                    message="The source snapshot hash does not match source_sha256.",
                     suggested_actions=("inspect_source_again",),
                 )
             source_inspection = inspect_document(
@@ -779,18 +785,9 @@ class DocFitToolService:
                 resolve_object_ref(reference, source_inspection) for reference in source_refs
             ]
             position = operation.get("position", "end")
-            anchor_ref = operation.get(
-                "insert_anchor_ref" if legacy_template_import else "target_anchor_ref"
-            )
+            anchor_ref = operation.get("target_anchor_ref")
             anchor = resolve_object_ref(anchor_ref, inspection) if anchor_ref is not None else None
-            include_section = operation.get(
-                (
-                    "include_final_section_properties"
-                    if legacy_template_import
-                    else "include_source_final_section_properties"
-                ),
-                False,
-            )
+            include_section = operation.get("include_source_final_section_properties", False)
             if not isinstance(position, str) or not isinstance(include_section, bool):
                 raise ToolFailure(
                     status="needs_input",
@@ -968,11 +965,6 @@ class DocFitToolService:
                     for index, operation in enumerate(operations)
                 ],
                 "content_imports": import_evidence,
-                "template_imports": [
-                    item
-                    for item in import_evidence
-                    if item.get("action") == "import_template_sections"
-                ],
                 "provider": self.office.evidence(),
             }
         finally:

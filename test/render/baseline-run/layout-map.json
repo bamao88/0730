@@ -1,0 +1,139 @@
+{
+  "mapping_quality": "unavailable",
+  "pages": [
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 1
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 2
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 3
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 4
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 5
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 6
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 7
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 8
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 9
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 10
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 11
+    },
+    {
+      "coordinate_space": {
+        "dpi": 144,
+        "height": 1685,
+        "origin": "top_left",
+        "unit": "px",
+        "width": 1191
+      },
+      "elements": [],
+      "page": 12
+    }
+  ],
+  "render_sha256": "ee12422119d28e6c136fa18788d4df28c66d3607344afead32f2d0373d7d3a48",
+  "schema_version": 1
+}

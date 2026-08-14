@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,7 @@ import pytest
 from PIL import Image
 
 from docfit.evals.synthetic_image import make_fixture_png
+from docfit.template.artifact import publish_template_artifact
 from docfit.tools import docx_inspect, docx_visual_review
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import ToolFailure, sha256_file
@@ -360,6 +362,115 @@ def test_stale_ref_and_failed_batch_publish_nothing(tmp_path: Path) -> None:
             }
         )
     assert not output.exists()
+
+
+def test_stable_docx_edit_materializes_registry_bound_slot(tmp_path: Path) -> None:
+    template = tmp_path / "template.docx"
+    result = tmp_path / "result.docx"
+    registry = tmp_path / "field-registry.yaml"
+    _make_template(template)
+    shutil.copyfile(
+        Path(__file__).resolve().parents[2]
+        / "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml",
+        registry,
+    )
+    source_hash = sha256_file(template)
+    service = DocFitToolService(task_root=tmp_path, office=OfficeCliAdapter())
+    inspected = service.inspect({"input_docx": template.name})
+
+    edited = service.edit(
+        {
+            "input_docx": template.name,
+            "output_docx": result.name,
+            "field_registry": registry.name,
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "target_ref": _ref(inspected, "学校封面"),
+                    "field_id": "thesis.title.zh",
+                }
+            ],
+        }
+    )
+
+    assert edited["status"] == "ok"
+    assert edited["committed"] is True
+    assert sha256_file(template) == source_hash
+    assert edited["input_sha256"] == source_hash
+    assert edited["output_sha256"] == sha256_file(result)
+    final = service.inspect({"input_docx": result.name})
+    control = next(item for item in final["objects"] if item["type"] == "sdt")
+    assert control["format"]["alias"] == "thesis.title.zh"
+    assert control["format"]["tag"].startswith("slot.thesis.title.zh.")
+
+
+def test_stateless_template_publication_binds_word_contract_and_review(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "input").mkdir()
+    (tmp_path / "work").mkdir()
+    (tmp_path / "output").mkdir()
+    source = tmp_path / "input/school-template.docx"
+    candidate = tmp_path / "work/candidate.docx"
+    registry = tmp_path / "input/field-registry.yaml"
+    _make_template(source)
+    # The generic integration fixture deliberately references a missing Title
+    # style.  Publication tests objective style evidence, so use the defined
+    # Normal style for this focused artifact test.
+    with zipfile.ZipFile(source, "r") as archive:
+        infos = archive.infolist()
+        parts = {info.filename: archive.read(info.filename) for info in infos}
+    parts["word/document.xml"] = parts["word/document.xml"].replace(
+        b'<w:pStyle w:val="Title" />', b'<w:pStyle w:val="Normal" />'
+    )
+    with zipfile.ZipFile(source, "w") as archive:
+        for info in infos:
+            archive.writestr(info, parts[info.filename])
+    shutil.copyfile(
+        Path(__file__).resolve().parents[2]
+        / "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml",
+        registry,
+    )
+    service = DocFitToolService(task_root=tmp_path, office=OfficeCliAdapter())
+    inspected = service.inspect({"input_docx": str(source)})
+    service.edit(
+        {
+            "input_docx": str(source),
+            "output_docx": str(candidate),
+            "field_registry": str(registry),
+            "operations": [
+                {
+                    "action": "materialize_slot",
+                    "target_ref": _ref(inspected, "学校封面"),
+                    "field_id": "thesis.title.zh",
+                }
+            ],
+        }
+    )
+    candidate_hash = sha256_file(candidate)
+
+    receipt = publish_template_artifact(
+        task_root=tmp_path,
+        source_docx=source,
+        candidate_docx=candidate,
+        field_registry=registry,
+        validation={"final_sha256": candidate_hash, "status": "ok"},
+        visual_review={
+            "document_sha256": candidate_hash,
+            "render_ref": "render:v2:" + "0" * 64,
+            "reviewed_pages": [1],
+            "findings": [],
+        },
+        office=OfficeCliAdapter(),
+    )
+
+    output = tmp_path / "output/final-template.docx"
+    contract = tmp_path / "output/fill-contract.json"
+    assert receipt["published"] is True
+    assert receipt["template_sha256"] == candidate_hash == sha256_file(output)
+    payload = json.loads(contract.read_text(encoding="utf-8"))
+    assert payload["template_sha256"] == candidate_hash
+    assert payload["slots"][0]["field_id"] == "thesis.title.zh"
 
 
 def test_paths_outside_task_root_and_source_overwrite_are_denied(tmp_path: Path) -> None:

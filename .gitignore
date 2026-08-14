@@ -15,3 +15,13 @@ dist/
 temp/manual-gold-preparation/
 temp/docfit-unit-boundary-word-output/
 temp/docfit-unit-boundary-word-output-corrected/
+temp/docfit-school-extract-v2-*/
+temp/docfit-tool-v5-*/
+temp/content-template-bridge-*/
+temp/e2e-real-fallback-*/
+temp/final-fill-independent-eval-*/
+temp/gold-preparation-*/
+temp/student-content-extraction-eval-*/
+temp/docfit-school-extract-reference-drafts/
+temp/pku-fill-module-fixture-inspection.json
+~$*.docx

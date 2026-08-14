@@ -1,5 +1,10 @@
 # DocFit Template Tool v5 Refactor
 
+> **Historical / superseded (2026-08-13).** 本计划记录曾经交付的 application-owned work-item
+> 架构，不再是当前实现权威。当前合同见
+> `docs/status/active/docfit-school-extract-v2.md`；`template_*` Tool 与 Template Workspace 已删除，
+> 其机械能力收敛到稳定 `docx_edit` action。不得按本文恢复兼容层。
+
 ## Plan Ledger
 
 - Status: `COMPLETE`

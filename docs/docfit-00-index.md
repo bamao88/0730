@@ -1,5 +1,9 @@
 # DocFit 设计文档索引（00）
 
+模板准备运行时的当前单一架构权威是
+[DocFit Agent-first 模板准备架构](docfit-agent-first-template-architecture.md)。旧 Template Tool v5、
+body extraction plan 和历史运行 capsule 仅保留证据价值；与该文档冲突时以该文档和当前代码为准。
+
 > 状态：最终架构索引
 > 日期：2026-08-07
 
@@ -50,15 +54,17 @@ Template、Student 和 Placement Truth 仍属于当前任务证据或离线 Eval
 旧 ID alias；Placement/Filling 与完整 M3 仍未完成。后续审查仍必须区分学生源可提取值、任务输入、
 系统生成值和外部/人工资产，避免把目录、评审模式或二维码页错误计为学生提取漏项。
 
-学校模板在线准备采用应用编排、角色隔离的按需对象路线。应用选择当前局部工作项、绑定短对象
-ID 和 Registry 候选、执行 Agent 提交的语义决定、回读修改结果并推进 checkpoint；语义 Agent
-不管理区域遍历、重试、文档版本或终态。局部工作完成后，应用把精确最终版本的全部原生全页
-PNG 分批交给独立视觉审查角色，只有每页都有显式 clean 判定且没有缺陷时才原子发布
-`final-template.docx + fill-contract.yaml` 两份主交付物。填写契约必须绑定精确 Word hash；缺少
-任一文件或二者绑定不一致都视为发布失败。修改会生成新版本并使旧版本视觉结论失效。Agent 不接触 cursor、
-document/region ref 或发布动作。旧 snapshot/decision YAML/compiler/mutate/compare/four-file
-build 协议和旧八 Tool 会话协议均不保留兼容层；静态 Eval 的 Template Truth 继续位于运行时之外，
-只用于生成后评分。
+学校模板在线准备采用 Agent-first 单任务路线。应用一次提供模板、要求、Registry、目标与输出边界；
+主 Agent 拥有整项结果，自主选择全局 inventory、页面/局部证据、修改顺序、批量、重试和只读
+Subagent 委派。渐进披露路径由 Agent 选择，应用不生成语义 work item、crop、region cursor 或
+固定区域状态图。
+
+模板处理复用唯一五个稳定 `docx_*` Tool；模板专用能力是 `docx_edit` 内无状态、可组合的原子
+action。Tool 只守 snapshot/object/Registry/Word/package 等机械不变量，不通过标题、编号或位置替
+Agent 做学校语义。主 Agent 对精确最终候选完成全页视觉检查和 `docx_validate` 后声明完成；应用
+再验证输入不变、证据/hash 绑定并原子发布 Word 与 Fill Contract 审计。旧 work-item Tool、
+Template Workspace、候选 Skill 副本和兼容层均已删除。静态 Eval Truth 位于运行时之外，只用于
+生成后评分。
 
 M2 完成之后的核心转换性能与效率优化是一条独立开发轨道，不等同于恢复 M3。
 06 已记录该轨道的开始条件、执行顺序和延期项：先补齐不含正文或凭据的运行指标，
@@ -74,8 +80,8 @@ Agent/Subagent 树、Tool/事件详情、调查交接、跨运行比较与 O0 �
 论文转换的文档方向固定为“模板主干”：干净、可填写的目标模板工作副本是候选与最终
 DOCX 的唯一主干；学生 DOCX 始终只读，只提供内容真值和来源证据。Agent 根据当前任务
 绑定把学生内容放入模板槽位或区域，不得从学生论文副本开始构建候选，再把模板节导入
-其中。底层仍可保留兼容性的跨文档模板组合操作，但它不是 `convert-thesis` 的默认路线，
-也不能替代学生内容到目标模板的位置映射。
+其中。跨文档对象能力统一为 `import_content_objects`，不存在旧模板组合兼容 action；它也不能
+替代学生内容到目标模板的位置映射。
 
 该轨道的 O0 已进一步批准为一个薄应用壳内的本地只读观测界面，详细目标见
 `docfit-local-observability-design.md`。它只投影 SDK 实际运行事件、脱敏 Tool 摘要与

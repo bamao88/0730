@@ -1,0 +1,15 @@
+{
+  "operations": [
+    {
+      "action": "replace_text",
+      "target_ref": {
+        "document_sha256": "1c387b1991720ab2452284b02d9388ed6ab94ffce143468f43ac60e812331536",
+        "expected_fingerprint": "8cb37c5095944e5b807e394796abbe3c99cf369f1bb216fee6d5e7b7faad4560",
+        "object_id": "obj-d18219089e77b9565d8dade3",
+        "schema_version": 1
+      },
+      "expected_text": "论文题目",
+      "replacement": "【论文中文题目】"
+    }
+  ]
+}

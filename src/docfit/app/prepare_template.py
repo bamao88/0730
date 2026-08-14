@@ -56,11 +56,10 @@ _DEFAULT_REGISTRY = (
 )
 _MANIFEST = "work/.docfit/prepare-template-task.json"
 _TRACE = "work/.docfit/template-agent-execution.json"
-_PUBLICATION = "work/.docfit/template-publication/fill-contract.json"
+_PUBLICATION = "output/fill-contract.json"
 _REQUIRED_AGENT_EVIDENCE = {
     "Skill",
     "mcp__docfit__docx_inspect",
-    "mcp__docfit__docx_edit",
     "mcp__docfit__docx_render",
     "mcp__docfit__docx_visual_review",
     "mcp__docfit__docx_validate",
@@ -206,7 +205,10 @@ def _input_manifest(prepared: PreparedTemplateTask) -> JsonObject:
             "sha256": prepared.registry_sha256,
             "role": "field_registry",
         },
-        "output_boundary": "output/final-template.docx",
+        "output_boundary": [
+            "output/final-template.docx",
+            "output/fill-contract.json",
+        ],
     }
 
 
@@ -321,13 +323,19 @@ def _resume_task(
             "Resume with the same school-requirements input.",
         )
     output = task_root / "output/final-template.docx"
-    output_entries = list((task_root / "output").iterdir())
+    output_contract = task_root / "output/fill-contract.json"
+    output_entries = sorted((task_root / "output").iterdir())
+    expected_outputs = sorted((output, output_contract))
     if output_entries and (
-        output_entries != [output] or output.is_symlink() or not output.is_file()
+        output_entries != expected_outputs
+        or output.is_symlink()
+        or not output.is_file()
+        or output_contract.is_symlink()
+        or not output_contract.is_file()
     ):
         raise _failure(
             "prepare_checkpoint_invalid",
-            "The output directory may contain only final-template.docx.",
+            "The output directory may contain only the published Word/Fill Contract pair.",
         )
     return PreparedTemplateTask(
         task_root=task_root,
@@ -357,8 +365,10 @@ def build_prepare_template_prompt(prepared: PreparedTemplateTask) -> str:
         f"{prepared.registry_source}. The immutable source hash is {prepared.template_sha256}. "
         "Use docx_inspect for the whole-document inventory, Read only for supplied textual "
         "requirements/Registry and Skill references, and only docx_edit for DOCX changes. "
-        "Write intermediate DOCX versions under work/ with new names; never modify input/ and "
-        "never write output/. Determine school-specific semantics yourself from the supplied "
+        "If changes are needed, write intermediate DOCX versions under work/ with new names; "
+        "never modify input/ and never write output/. If the immutable source already satisfies "
+        "the result, you may select it directly without a meaningless edit. Determine "
+        "school-specific semantics yourself from the supplied "
         "materials; Tool feedback is mechanical evidence, not semantic authority. Before "
         "completion, render the exact final candidate, visually review every final page, repair "
         "blocking defects, and call docx_validate with structured review evidence bound to that "
@@ -379,7 +389,10 @@ def build_prepare_template_options(
     environment["DOCFIT_TASK_ROOT"] = str(prepared.task_root)
     return ClaudeAgentOptions(
         tools=["Skill", "Read", "Glob", "Grep", "AskUserQuestion", "Agent"],
-        allowed_tools=list(FULL_TOOL_NAMES),
+        # Let the native permission callback authorize each registered Tool.
+        # Putting whole Tool names in allowed_tools would auto-approve them
+        # before can_use_tool can observe and audit the call.
+        allowed_tools=[],
         disallowed_tools=[*FORBIDDEN_TOOLS, "Bash", "Write"],
         mcp_servers={MCP_SERVER_NAME: build_docfit_server(prepared.task_root)},
         strict_mcp_config=True,
@@ -534,21 +547,34 @@ def _validate_agent_completion(
             status="error",
             origin="postcondition",
             code="template_agent_evidence_incomplete",
-            message="Completion lacks the canonical Skill or one of the five stable Tools.",
+            message=(
+                "Completion lacks the canonical Skill or a required inspection, render, "
+                "visual-review, or validation capability."
+            ),
         )
     candidate = authorized_path(
         output.get("final_docx"),
         task_root=prepared.task_root,
         field="final_docx",
     )
-    if (
-        candidate.suffix.casefold() != ".docx"
-        or prepared.task_root / "work" not in candidate.parents
+    if candidate.suffix.casefold() != ".docx" or (
+        candidate != prepared.template_path
+        and prepared.task_root / "work" not in candidate.parents
     ):
         raise _failure(
             "template_candidate_path_invalid",
-            "The Agent's final candidate must be a DOCX under task work/.",
+            "The final candidate must be the immutable source or a DOCX under task work/.",
             origin="postcondition",
+        )
+    if (
+        candidate != prepared.template_path
+        and "mcp__docfit__docx_edit" not in execution.tool_uses
+    ):
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="template_candidate_edit_evidence_missing",
+            message="A changed candidate requires evidence of a docx_edit call.",
         )
     render_ref = output.get("candidate_render_ref")
     reviewed_pages = output.get("reviewed_pages")

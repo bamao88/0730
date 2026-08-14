@@ -64,7 +64,13 @@ _EDIT_ACTIONS = {
     "apply_style",
     "set_properties",
     "import_content_objects",
-    "import_template_sections",
+    "clear_content",
+    "remove_object",
+    "materialize_slot",
+    "materialize_structure",
+    "normalize_effective_format",
+    "refresh_toc",
+    "ensure_page_start",
 }
 _VISUAL_MODES = {"pages", "regions", "contact_sheet", "compare"}
 _USAGE_KEYS = {
@@ -311,7 +317,6 @@ def _tool_input_summary(
                 if action in _EDIT_ACTIONS:
                     actions.append(action)
                 references.extend(_object_refs(operation.get("target_ref")))
-                references.extend(_object_refs(operation.get("insert_anchor_ref")))
                 references.extend(_object_refs(operation.get("target_anchor_ref")))
                 source_refs = operation.get("source_refs")
                 if isinstance(source_refs, list):

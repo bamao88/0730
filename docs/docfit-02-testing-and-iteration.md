@@ -129,14 +129,15 @@ LibreOffice renderer、Poppler 和 V2 Evidence Store。
 - `docx_validate` 核对当前最终 DOCX、V2 render、全部页面覆盖和 blocking findings；
 - 旧 ref、越权路径、source hash 变化、renderer 失败和损坏 evidence 有稳定失败语义；
 - 普通 Agent 与 `prepare-template` 共用同一视觉服务和 Evidence Store；
-- `prepare-template` 的 Agent schemas 不包含 cursor、document/region ref 或 publish，语义与视觉
-  Tool 集合按 session 角色隔离；
-- 语义工作项在 `max_turns`、无提交或未接受时只做固定次数重试，达到上限后返回稳定失败，不能
-  自动创建无界新 session；
-- 最终 PNG 批次成功返回不增加 reviewed coverage；只有页码集合精确匹配的 typed
-  clean/defect verdict 才写入 exact-version receipt；
-- 任一 defect 阻止发布并生成有界修复工作项；编辑后新 hash 不能复用旧 receipt，必须从第一页
-  重查；应用只在全部页面 clean 后自动发布一次 Word；
+- `prepare-template` 一次 SDK query 接收完整任务，测试 trace 中
+  `application_semantic_work_items == 0`，且源码不存在 `template_*` work-item Tool/Workspace；
+- 主 Agent 加载唯一 canonical Skill，并实际使用五个稳定 Tool；可自主使用受限只读 Subagent，
+  Bash/Write 关闭；
+- 最终 PNG 返回本身不构成 reviewed coverage；结构化页码集合必须等于精确 final render 的
+  `1..page_count`，blocking finding 为零；
+- 任一编辑产生新 hash，旧 object ref/render/review 不能复用；主 Agent 修复后必须重新做全页覆盖；
+- 应用只检查输入不变、package/Registry、validation/render/Word/Fill Contract hash 等客观后置条件，
+  测试不得把标题词、编号或页面位置编码成语义 gate；
 - 三校真实模板均完成“联系表 → 页面 → object_ref 局部图”，通用源码无学校分支。
 
 外部 renderer 的退出码或“success”不能单独证明 Tool 成功；测试必须检查 PDF、页数、

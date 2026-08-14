@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+from xml.etree import ElementTree
+from zipfile import ZipFile
 
 import pytest
 
@@ -39,10 +41,10 @@ SOURCE_ROOT = REPO_ROOT / "temp/manual-gold-preparation/gold/00-inputs/schools"
             "01-hunau-undergraduate",
             "hunau-undergraduate__source-template.docx",
             31,
-            1692,
+            1734,
             494,
-            13,
-            85,
+            21,
+            127,
             9,
         ),
         (
@@ -235,3 +237,39 @@ def test_hunau_12_chinese_abstract_value_style_is_not_bold() -> None:
     assert abstract_slot.expected_value_style.font["bold"] is False
     assert abstract_control.effective_style.font["bold"] is False
     assert keywords_control.effective_style.font["bold"] is False
+
+
+def test_hunau_13_toc_keeps_live_field_and_visible_three_level_cache() -> None:
+    template = PROJECT_ROOT / "cases/01-hunau-undergraduate/gold/template.docx"
+    namespace = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+
+    with ZipFile(template) as archive:
+        document = ElementTree.fromstring(archive.read("word/document.xml"))
+        styles = ElementTree.fromstring(archive.read("word/styles.xml"))
+
+    instruction = "".join(
+        node.text or "" for node in document.iter(f"{namespace}instrText")
+    )
+    visible_text = [
+        "".join(node.text or "" for node in paragraph.iter(f"{namespace}t"))
+        for paragraph in document.iter(f"{namespace}p")
+    ]
+    style_ids = {
+        style.get(f"{namespace}styleId")
+        for style in styles.findall(f"{namespace}style")
+    }
+
+    assert 'TOC \\o "1-3" \\h \\z \\u \\f C' in instruction
+    assert "【自动目录】" not in visible_text
+    assert {
+        "摘要1",
+        "关键词1",
+        "1 章节标题1",
+        "1.1 节标题1",
+        "1.1.1 小节标题1",
+        "5 结论1",
+        "参考文献2",
+        "致谢3",
+        "附录4",
+    }.issubset(set(visible_text))
+    assert {"TOC1", "TOC2", "TOC3"}.issubset(style_ids)

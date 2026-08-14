@@ -109,16 +109,16 @@ uv run docfit prepare-template \
 ```
 
 `--school-requirements` 仅在学校另附书面要求时提供；`--field-registry` 默认使用仓库固定
-的开发期 Registry，也可显式替换。应用逐个绑定局部工作项；语义 Agent 一次取得当前图片中
-全部可见顶层对象、必要子 run 和逐对象 Registry 候选并提交判断，只有证据不足时才追加有界
-context。相邻同页工作项复用一个小而有界的 SDK 原生 session，应用负责在工作项之间重绑
-Tool state，并负责执行、回读、推进、有界重试和失败状态。运行 turn、SDK/API/墙钟耗时以及
-原生 client 数量会跨进程持续计入任务证据。
-局部工作完成后，应用把精确最终版本的全部原生全页 PNG 分批交给独立视觉审查角色；每页必须
-有明确 `clean/defect` 结论，任何修改都会使旧版本页面结论失效并从第一页重查。全部页面
-`clean` 后由应用自动发布。Agent 不接触 cursor、文档/区域版本引用或发布动作，也不生成
-plan/compiler/attempt 文件。成功目录的 `output/` 只包含 `final-template.docx`；PNG 和渲染证据
-保留为内部质检材料。
+的开发期 Registry，也可显式替换。应用把模板、要求、Registry、目标和输出边界作为一个完整
+任务交给主 Agent。主 Agent 自行取得整份 inventory、选择结构/页面证据、批量修改、重试和
+可选只读 Subagent 委派；应用不生成语义 work item、crop、region cursor 或固定区域状态图。
+
+模板能力仍只通过五个稳定 `docx_*` Tool 暴露。`docx_edit` 内的模板 action 只执行 Agent 明确
+选择的对象操作，不拥有工作流状态。主 Agent 对精确最终候选渲染并实际复核全部页面，再调用
+`docx_validate`；应用只复查 hash、输入不变、package/Registry/视觉证据绑定等客观后置条件并
+发布。任何修改都会使旧 object ref 和视觉结论失效。成功目录的 `output/` 包含正式交付对：
+`final-template.docx` 与绑定其 hash 的 `fill-contract.json`；PNG、执行 trace 和其他渲染证据
+保留为任务内审计材料。
 
 用户内容提取与 Gold 对比：
 

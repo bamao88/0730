@@ -1,5 +1,10 @@
 # 正文模板提取与 Gold 准备规范
 
+> **Historical design input / runtime sections superseded (2026-08-13).** 本文仍可作为正文/Gold
+> 语义讨论材料，但其中 application-selected crop/work-item、候选 Skill 路径和 Template Workspace
+> 文件布局不再有效。当前运行时权威见 `docs/status/active/docfit-school-extract-v2.md` 和 canonical
+> `.claude/skills/docfit-school-extract/**`。Eval/Gold 规则继续由独立 Eval 设计维护。
+
 > 状态：实施输入（Draft）
 > 日期：2026-08-07
 > 适用范围：学校论文模板的正文区域分析、Clean Template 候选生成、填写契约生成与 Gold 准备
@@ -22,7 +27,8 @@
 
 本规范遵守以下核心原则：
 
-- Agent 只判断当前任务所需对象，不把全文事实或 Registry 展开成全局待办；
+- 主 Agent 拥有完整任务认知与访问边界，自主选择当前需要的对象/页面，不把 Registry 展开成
+  机械待办；
 - 语义内容树与 Word 中的物理槽位分开建模；
 - 固定内容保留和可填写内容提取分别验收；
 - 可见占位只用 `【】` 标识，不建立独立灰色占位样式协议；
@@ -33,7 +39,7 @@
 
 正文模板准备包含六项工作：
 
-1. **局部观察**：默认向 Agent 提供目标对象裁剪图、父对象和必要邻接事实，不返回整页对象清单；
+1. **全局建模与按需观察**：主 Agent 先取得整份 inventory，再自主选择页面、对象和局部证据；
 2. **语义映射**：由 Agent 把当前对象映射为代码内置的标题、段落、列表、图表、公式、引文等类型；
 3. **代表单元选择**：从学校样例中选择一个覆盖实际独特样式的连续正文单元；
 4. **直接物化**：Tool 一次建立可重复正文结构和内部槽，保留学校对象的实际样式；

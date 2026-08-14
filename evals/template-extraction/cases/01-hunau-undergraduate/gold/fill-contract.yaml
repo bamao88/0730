@@ -3,17 +3,17 @@ contract_id: hunau-undergraduate.fill-contract
 artifact_role: template_fill_contract
 status: candidate_pending_human_acceptance
 template_id: hunau-undergraduate.clean-template
-revision: 2026-08-13.1
+revision: 2026-08-13.2
 contract_version: docfit-template-truth-pack-v0.5-candidate-1
 school_id: hunau-undergraduate
 school_name: 湖南农业大学本科
 template_path: template.docx
-template_sha256: 4de03d2531abd5b26707b74d244cf3b8f0d1c66223282bc4128eb2d8392e6bd1
+template_sha256: 31d58b83141828733a54ca445db7ea217032db6f477db3d13a8a5eddaf1fd68b
 field_registry_ref:
   path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   registry_id: docfit.thesis.content_fields
   registry_version: 0.5.0
-  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
 marker_protocol:
   version: docfit-content-control-marker/v1
   field_identity_property: w:alias
@@ -71,13 +71,17 @@ regions:
     part: word/document.xml
     expected_match_count: 1
     story: document
-  placement_mode: retain_in_place_and_update_existing_field_or_cache
-  style_map: {}
+  placement_mode: update_existing_word_toc_field_and_cached_result
+  style_map:
+    body.heading.outline1: TOC1
+    body.heading.outline2: TOC2
+    body.heading.outline3: TOC3
+    tc_fields_switch_C: TOC1
   repeat_policy: single_generated_section
   evidence_refs:
   - type: template_visible_anchor
     value: 目  录
-    status: candidate_pending_field_structure_review
+    status: machine_checked_live_field_and_visible_cache
   owner: slot
   required: true
 slots:
@@ -2062,10 +2066,10 @@ logical_pages:
   title: 目录
   status: required
   owner: target_school_template
-  source_policy: fill_or_generate_from_declared_fields
-  empty_policy: blocking_review
-  first_anchor: 目录基本格式
-  boundary_evidence: 目录独占原第3页；目录的说明和两类目录示例连续保留。
+  source_policy: generate_word_toc_from_heading_outline_levels_and_tc_fields
+  empty_policy: preserve_cached_example_and_update_on_fill
+  first_anchor: 目  录
+  boundary_evidence: 目录独占第3页；Gold 保留可更新的 TOC 字段，并缓存三级目录、点引导线和页码，打开文件即可核对。
   evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/01-hunau-undergraduate/logical-pages/unit-manifest.json
 - order: 4
   page_id: paper_body
@@ -2166,6 +2170,16 @@ validation:
   libreoffice_render_page_count: 24
   word_round_trip_required_before_acceptance: true
   all_final_pages_human_review_required_before_acceptance: true
+  toc_cache:
+    status: machine_checked
+    field_instruction: TOC \o "1-3" \h \z \u \f C
+    visible_cache: materialized
+    levels:
+    - TOC1
+    - TOC2
+    - TOC3
+    entry_count: 9
+    update_policy: refresh_after_student_content_fill
   gold_preparation:
     registry_version: 0.5.0
     officecli:

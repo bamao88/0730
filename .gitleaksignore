@@ -1,0 +1,3 @@
+# Deterministic 64-character render cache digests, not credentials.
+test/render/baseline-run/render-ref.json:generic-api-key:112
+test/render/candidate-run/render-ref.json:generic-api-key:112

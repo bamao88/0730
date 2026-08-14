@@ -1,4 +1,4 @@
-"""Direct object-level DOCX mutations used by the template workspace.
+"""Direct object-level DOCX mutations used by the stable ``docx_edit`` Tool.
 
 The Agent never sees an OOXML locator or an intermediate mutation plan.  This
 module resolves the already-validated OfficeCLI object selected by the Agent
@@ -915,7 +915,7 @@ def _toc_layout_signature(paragraph: ET.Element) -> bytes:
         value = properties.find(f"{_W}{name}")
         if value is not None:
             selected.append(deepcopy(value))
-    return ET.tostring(selected, encoding="utf-8")
+    return cast(bytes, ET.tostring(selected, encoding="utf-8"))
 
 
 def _containing_paragraph(document_root: ET.Element, target: ET.Element) -> ET.Element:

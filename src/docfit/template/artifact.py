@@ -90,10 +90,16 @@ def _published_slots(
     for control in controls:
         field_id = control.format.get("alias")
         slot_id = control.format.get("tag")
+        # School-authored controls are legitimate source content.  DocFit owns
+        # only controls carrying its explicit slot marker; applying Registry
+        # rules to every pre-existing SDT would silently redefine school
+        # semantics at publication time.
+        if not isinstance(slot_id, str) or not slot_id.startswith("slot."):
+            continue
         if not isinstance(field_id, str) or not isinstance(slot_id, str):
             raise _publication_failure(
                 "content_control_identity_missing",
-                "Every final content control must expose Registry alias and unique tag.",
+                "Every DocFit slot control must expose a Registry alias and unique tag.",
             )
         field = registry.lookup(field_id)
         if slot_id in seen_tags:
@@ -245,37 +251,55 @@ def publish_template_artifact(
     atomic_write_json(contract_path, fill_contract)
 
     output = root / "output/final-template.docx"
-    if output.exists():
+    output_contract = root / "output/fill-contract.json"
+    if output.exists() or output_contract.exists():
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="final_template_exists",
-            message="Publication never overwrites an existing final-template.docx.",
+            code="template_publication_exists",
+            message="Publication never overwrites an existing Word/Fill Contract pair.",
         )
     output.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
+    word_descriptor, word_temporary_name = tempfile.mkstemp(
         prefix=".final-template-", suffix=".docx", dir=output.parent
     )
-    os.close(descriptor)
-    temporary = Path(temporary_name)
+    os.close(word_descriptor)
+    contract_descriptor, contract_temporary_name = tempfile.mkstemp(
+        prefix=".fill-contract-", suffix=".json", dir=output.parent
+    )
+    os.close(contract_descriptor)
+    word_temporary = Path(word_temporary_name)
+    contract_temporary = Path(contract_temporary_name)
     try:
-        shutil.copyfile(candidate, temporary)
-        temporary.chmod(0o600)
-        os.link(temporary, output)
+        shutil.copyfile(candidate, word_temporary)
+        shutil.copyfile(contract_path, contract_temporary)
+        word_temporary.chmod(0o600)
+        contract_temporary.chmod(0o600)
+        os.link(word_temporary, output)
+        try:
+            os.link(contract_temporary, output_contract)
+        except BaseException:
+            output.unlink(missing_ok=True)
+            raise
     except FileExistsError as error:
         raise ToolFailure(
             status="needs_input",
             origin="request",
-            code="final_template_exists",
-            message="Publication never overwrites an existing final-template.docx.",
+            code="template_publication_exists",
+            message="Publication never overwrites an existing Word/Fill Contract pair.",
         ) from error
     finally:
-        temporary.unlink(missing_ok=True)
-    if sha256_file(output) != candidate_hash:
+        word_temporary.unlink(missing_ok=True)
+        contract_temporary.unlink(missing_ok=True)
+    if (
+        sha256_file(output) != candidate_hash
+        or sha256_file(output_contract) != sha256_file(contract_path)
+    ):
         output.unlink(missing_ok=True)
+        output_contract.unlink(missing_ok=True)
         raise _publication_failure(
-            "published_template_hash_mismatch",
-            "The published Word differs from the validated Agent-selected snapshot.",
+            "published_artifact_hash_mismatch",
+            "The published Word/Fill Contract pair differs from the validated artifacts.",
         )
 
     counts: JsonObject = {
@@ -294,7 +318,7 @@ def publish_template_artifact(
         "status": "ok",
         "published": True,
         "artifact_path": "output/final-template.docx",
-        "fill_contract_path": "work/.docfit/template-publication/fill-contract.json",
+        "fill_contract_path": "output/fill-contract.json",
         "template_sha256": candidate_hash,
         "counts": counts,
         "checks": [

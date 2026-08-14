@@ -108,7 +108,7 @@ def test_real_docx_tools_expose_versioned_v2_schemas_without_backend_selector() 
         "action"
     ]["enum"]
     assert "import_content_objects" in edit_actions
-    assert "import_template_sections" in edit_actions
+    assert "import_template_sections" not in edit_actions
     edit_operation_properties = docx_edit.input_schema["properties"]["operations"]["items"][
         "properties"
     ]

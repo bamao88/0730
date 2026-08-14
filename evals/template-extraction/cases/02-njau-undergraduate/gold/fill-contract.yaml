@@ -4,7 +4,7 @@ field_registry_ref:
   path: ../../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   registry_id: docfit.thesis.content_fields
   registry_version: 0.5.0
-  sha256: 706ae6801fcb89c58e674e01df834effabbcaaf363da832512b4fda4be7f6648
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
 marker_protocol: docfit-content-control-marker/v1
 provenance:
   generated_content_count: 1
@@ -1403,6 +1403,8 @@ provenance:
   school_style_candidates: []
 regions:
 - region_id: region.generated.toc
+  owner: slot
+  required: true
   field_ids:
   - generated.toc
   label: 主目录生成区
@@ -1427,8 +1429,6 @@ regions:
   - type: template_visible_anchor
     value: 目  录
     status: candidate_pending_field_structure_review
-  owner: slot
-  required: true
 - region_id: region.body.chapters
   owner: slot
   required: true
@@ -4151,7 +4151,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 本科生毕业论文（设计）
   boundary_evidence: 封面具有独立页面职责；保留源块1的表后空白分节段，并将其独立文件包装行高显式压缩为1磅，避免伪空白末页。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 2
   page_id: declarations
   title: 原创性声明与使用授权声明
@@ -4161,7 +4161,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 南京农业大学本科生毕业论文（设计）原创性声明
   boundary_evidence: 原创性声明与使用授权声明连续排布、共用同一声明页面；保留并显式物化声明节首页的源空白段2。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 3
   page_id: toc
   title: 目录
@@ -4171,7 +4171,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 目 录
   boundary_evidence: 独立目录页；同页底部规范化要求与目录共享物理页，一并保留。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 4
   page_id: abstract_cn
   title: 中文摘要
@@ -4181,7 +4181,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 论文题目（小二号黑体）
   boundary_evidence: 中文摘要具有独立标题、罗马页码和页面职责。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 5
   page_id: abstract_en
   title: 英文摘要
@@ -4191,7 +4191,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: TITLE
   boundary_evidence: 英文摘要具有独立标题、罗马页码和页面职责；文件边界替代源段首分页控制，段落与文字完整保留。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 6
   page_id: body
   title: 正文格式示例
@@ -4201,7 +4201,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 第一章 文献综述
   boundary_evidence: 文献综述、各正文示例章和结论均属于同一正文所有权，不按章节过度拆分。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
   required_chapter_roles:
   - role: literature_review
     position: first
@@ -4220,7 +4220,7 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 参考文献
   boundary_evidence: 独立另页的参考文献职责。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 8
   page_id: appendix
   title: 附录
@@ -4230,7 +4230,7 @@ logical_pages:
   empty_policy: placeholder_review_then_remove_if_not_applicable
   first_anchor: 附 录 附录名称
   boundary_evidence: 明确另页的可选附录页面。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 9
   page_id: academic_achievements
   title: 相关的学术成果目录
@@ -4240,7 +4240,7 @@ logical_pages:
   empty_policy: placeholder_review_then_remove_if_not_applicable
   first_anchor: 相关的学术成果目录
   boundary_evidence: 明确另页、具有独立内容职责的可选成果目录。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
 - order: 10
   page_id: acknowledgement
   title: 致谢
@@ -4250,4 +4250,4 @@ logical_pages:
   empty_policy: blocking_review
   first_anchor: 致 谢
   boundary_evidence: 明确另页的致谢页面。
-  evidence_ref: ../../../../../temp/manual-gold-preparation/gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json
+  evidence_ref: ../../gold/10-school-assets/02-njau-undergraduate/logical-pages/unit-manifest.json

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "document_sha256": "c38d417acd7f4ee0dbb58507e47e0f87264b39001f6d700e4171c9a2e19e2b53",
+  "render_sha256": "b133912d57464675dfb317eb2216258c0c561a022ced64fc7f2e4a900508fef6",
+  "reviewed_pages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  "findings": [
+    {
+      "finding_id": "clean-template-unsupported-textbox",
+      "severity": "blocking",
+      "blocking": true,
+      "page": 3,
+      "evidence_ref": "visual-4ece0989abd5ca416a8484ee",
+      "summary": "目录页的模板说明文本框仍完整可见，当前 inspect/edit 路线将其标记为 unsupported_text_box 与 unsupported_vml_object。"
+    },
+    {
+      "finding_id": "clean-template-stale-toc-cache",
+      "severity": "blocking",
+      "blocking": true,
+      "page": 3,
+      "evidence_ref": "visual-4ece0989abd5ca416a8484ee",
+      "summary": "目录域仍显示原模板的示例条目与页码缓存，未形成无示例值且可重新生成的干净目录接口。"
+    },
+    {
+      "finding_id": "clean-template-visible-format-instruction",
+      "severity": "blocking",
+      "blocking": true,
+      "page": 4,
+      "evidence_ref": "visual-4b81d1d7511dbaed3029bc62",
+      "summary": "中文题名槽仍带可见字号说明，说明语义尚未完全迁移后清除。"
+    },
+    {
+      "finding_id": "clean-template-instructional-colors",
+      "severity": "warning",
+      "blocking": false,
+      "pages": [4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "evidence_ref": "visual-2cd38348d1b1aa1de23cfeb3",
+      "summary": "多数填充接口仍继承红色或蓝色示例字体；作为诊断候选可辨识，但不符合中性冻结模板的视觉收口。"
+    },
+    {
+      "finding_id": "layout-preserved",
+      "severity": "info",
+      "blocking": false,
+      "pages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "evidence_ref": "visual-2cd38348d1b1aa1de23cfeb3",
+      "summary": "12 页均可见，封面、声明、各逻辑单元、页眉页脚和主要分页关系未出现裁切、溢出或坍塌。"
+    }
+  ]
+}

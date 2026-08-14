@@ -384,14 +384,15 @@ LibreOffice 视觉取证、原生图片返回和独立验证。
 - Docker LibreOffice 25.2.3.2 是唯一视觉 renderer；
 - Poppler 建立页数/文字 bbox 并按需栅格化，Pillow 组合视图；
 - 统一任务内 V2 Evidence Store，opaque `render:v2:` / `visual:v2:` ref；
-- 普通 Agent 与 `prepare-template` 共用同一视觉服务。
-- `prepare-template` 采用语义四 Tool、视觉一 Tool 的角色隔离公共面；应用负责有界工作项推进、
-  重试、内部页面批次和自动发布，Agent 不接触 cursor、document/region ref 或 publish；
-- 同一局部已明确决定可一次原子 batch，修改后自动返回局部图，Registry 只为当前对象提供有界
-  候选；最终精确版本必须取得全部原生全页 PNG 的逐页 clean verdict，图片返回不等于已审查；
-  修改会失效旧 hash 的页面证据并从第一页重查，最终只发布一份 Word；
-- 不保留旧八 Tool、YAML/compiler/attempt 协议兼容路线，也不建立替代 Claude Agent SDK 的通用
-  workflow runtime。
+- 普通 Agent 与 `prepare-template` 共用同一五 Tool 与视觉服务；
+- `prepare-template` 用一次完整任务启动主 Agent，不创建语义 work item、crop 状态、区域推进或
+  第二套 session loop；主 Agent 自行选择上下文、重试、视觉批次和可选只读委派；
+- 模板机械能力收敛为 `docx_edit` 原子 action；Registry/object/hash/Word 边界由 Tool 校验，学校
+  语义与目录/正文/集合选择由 Agent 决定；
+- 最终精确版本必须取得全部原生全页 PNG 的逐页结论并通过 `docx_validate`，图片返回不等于已
+  审查；修改会失效旧 hash 的页面证据；
+- 不保留旧八 Tool、五个 work-item Tool、Template Workspace、候选 Skill 副本或
+  YAML/compiler/attempt 兼容路线，也不建立替代 Claude Agent SDK 的通用 workflow runtime。
 
 ### 5.3 视觉验证矩阵
 
@@ -645,8 +646,7 @@ OfficeCLI/LibreOffice，不启动视觉容器。
   和直接格式，并输出属性级 provenance、coverage 与 unresolved；
 - 模板 publish 从最终 DOCX 快照捕获每个 slot 的有效属性，生成 template-bound Style
   Contract Set，并在发布前重新打开代表 occurrence 验证；目标用户可见主交付物为原子绑定的
-  `final-template.docx + fill-contract.yaml`，报告、回执和审计仍留在任务内部；当前代码只公开
-  Word、把 JSON 契约留在内部，因此发布层尚有一个明确的两文件交付缺口；
+  `final-template.docx + fill-contract.json`，报告、回执和审计仍留在任务内部；
 - Placement、Fill 与 Projection 共用 digest-bound 引用。正文、参考文献、题注、公式和
   drawing 的最终段落都生成稳定 paraId occurrence；写入层不修改共享学校命名样式，而是
   只对每个 occurrence 显式写入合同拥有的属性；

@@ -11,7 +11,7 @@ from docfit.tools import FULL_TOOL_NAMES
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 _SKILLS_ROOT = _PROJECT_ROOT / ".claude" / "skills"
 _SKILL_NAMES = ("docfit-school-extract", "convert-thesis")
-_REQUIRED_HEADINGS = (
+_CONVERT_REQUIRED_HEADINGS = (
     "## 触发范围",
     "## 输入与产物",
     "## 不可违反的核心边界",
@@ -32,6 +32,7 @@ _UNIT_ANALYSIS_FIELDS = {
     "proposed_operations",
 }
 _REFERENCE_PATTERN = re.compile(r"\.claude/skills/[A-Za-z0-9_./-]+\.md")
+_LOCAL_REFERENCE_PATTERN = re.compile(r"\(references/([A-Za-z0-9_.-]+\.md)\)")
 
 
 def _skill(name: str) -> tuple[dict[str, Any], str]:
@@ -62,7 +63,10 @@ def _explicit_references(text: str) -> tuple[Path, ...]:
 def _skill_tree(name: str) -> tuple[str, tuple[Path, ...]]:
     _, body = _skill(name)
     references: list[Path] = []
-    queue = list(_explicit_references(body))
+    queue = list(_explicit_references(body)) + [
+        (_SKILLS_ROOT / name / "references" / match).resolve()
+        for match in _LOCAL_REFERENCE_PATTERN.findall(body)
+    ]
     texts = [body]
     while queue:
         reference = queue.pop(0)
@@ -95,12 +99,25 @@ def test_skill_frontmatter_is_a_concise_trigger_not_an_implementation_contract()
 
 
 def test_both_skill_entries_use_the_same_navigable_structure() -> None:
-    for name in _SKILL_NAMES:
-        _, body = _skill(name)
-        positions = [body.index(heading) for heading in _REQUIRED_HEADINGS]
-        assert positions == sorted(positions)
-        assert "| 当前情况 | 下一步 | 读取参考 |" in body
-        assert body.count("- [ ]") >= 6
+    _, conversion = _skill("convert-thesis")
+    positions = [conversion.index(heading) for heading in _CONVERT_REQUIRED_HEADINGS]
+    assert positions == sorted(positions)
+    assert "| 当前情况 | 下一步 | 读取参考 |" in conversion
+    assert conversion.count("- [ ]") >= 6
+
+    _, extraction = _skill("docfit-school-extract")
+    headings = (
+        "## 结果定义",
+        "## 开始任务",
+        "## Reference 路由",
+        "## Tool 模型",
+        "## 语义与确定性边界",
+        "## 执行循环",
+        "## 完成",
+    )
+    positions = [extraction.index(heading) for heading in headings]
+    assert positions == sorted(positions)
+    assert "| 当前问题 | 读取 |" in extraction
 
 
 def test_convert_thesis_uses_only_the_five_public_docfit_tools() -> None:
@@ -126,28 +143,31 @@ def test_convert_thesis_uses_only_the_five_public_docfit_tools() -> None:
     assert "不表示 Bash/Write 权限被关闭" in body
 
 
-def test_school_extract_is_read_only_and_task_scoped() -> None:
-    body, _ = _skill_tree("docfit-school-extract")
+def test_school_extract_owns_the_complete_task_and_uses_the_five_stable_tools() -> None:
+    _, body = _skill("docfit-school-extract")
 
-    assert _tool_names(body) == {
-        "mcp__docfit__docx_inspect",
-        "mcp__docfit__docx_render",
-        "mcp__docfit__docx_visual_review",
-    }
-    assert "scope: current_task_only" in body
-    assert "不修改任何文档" in body
-    assert "不是主 Agent 的文件系统 sandbox" in body
-    assert "Bash/Write 虽然对主" in body
-    assert "Agent 完全开放" in body
-    assert "只对当前任务有效" in body
-    assert "此 Skill 不修改任何文档" in body
+    assert "整项模板整理任务的结果负责人" in body
+    assert "完整的认知与访问边界" in body
+    assert "渐进披露路径必须由 Agent" in body
+    assert "不要等待应用分配 work item" in body
+    assert all(
+        f"`{name}`" in body
+        for name in (
+            "docx_inspect",
+            "docx_edit",
+            "docx_render",
+            "docx_visual_review",
+            "docx_validate",
+        )
+    )
+    assert "所有 DOCX 修改只通过 `mcp__docfit__docx_edit` 完成" in body
+    assert "应用只负责不可变输入、权限/预算/观测和客观发布后置条件" in body
 
 
 def test_each_skill_tree_contains_only_its_own_domain() -> None:
     extraction, extraction_references = _skill_tree("docfit-school-extract")
     conversion, conversion_references = _skill_tree("convert-thesis")
 
-    assert "学生" not in extraction
     assert "`convert-thesis`" not in extraction
     assert "`docfit-school-extract`" not in conversion
     assert all(
@@ -158,19 +178,23 @@ def test_each_skill_tree_contains_only_its_own_domain() -> None:
         path.is_relative_to(_SKILLS_ROOT / "convert-thesis")
         for path in conversion_references
     )
-    assert "本 Skill 的终点是带来源定位的学校材料证据" in extraction
+    assert "干净、可填写、可复用" in extraction
     assert "产物包括最终 DOCX" in conversion
 
 
 def test_each_skill_owns_its_optional_delegation_instructions() -> None:
-    for name in _SKILL_NAMES:
-        delegation = _SKILLS_ROOT / name / "references" / "delegation-task-packet.md"
-        text = delegation.read_text(encoding="utf-8")
-        assert "requested_output: unit_analysis_v1" in text
-        assert all(field in text for field in _UNIT_ANALYSIS_FIELDS)
-        assert "主 Agent" in text
-        other_name = next(item for item in _SKILL_NAMES if item != name)
-        assert other_name not in text
+    conversion = (
+        _SKILLS_ROOT / "convert-thesis/references/delegation-task-packet.md"
+    ).read_text(encoding="utf-8")
+    assert "requested_output: unit_analysis_v1" in conversion
+    assert all(field in conversion for field in _UNIT_ANALYSIS_FIELDS)
+
+    extraction = (
+        _SKILLS_ROOT / "docfit-school-extract/references/delegation-strategy.md"
+    ).read_text(encoding="utf-8")
+    assert "Task packet" in extraction
+    assert "Subagent 不应依赖隐含父上下文" in extraction
+    assert "主 Agent 保留全局事实" in extraction
 
 
 def test_every_local_reference_is_explicitly_routed_from_skill_md() -> None:
@@ -182,7 +206,10 @@ def test_every_local_reference_is_explicitly_routed_from_skill_md() -> None:
         assert local_references
         for reference in local_references:
             project_relative = reference.relative_to(_PROJECT_ROOT).as_posix()
-            assert project_relative in skill_body
+            assert (
+                f"(references/{reference.name})" in skill_body
+                or project_relative in skill_body
+            )
             assert reference.resolve() in routed_references
 
 
@@ -197,15 +224,19 @@ def test_reference_sets_cover_navigation_recovery_and_edge_cases() -> None:
         path.name
         for path in (_SKILLS_ROOT / "convert-thesis" / "references").glob("*.md")
     }
-    common = {
+    assert extraction_refs == {
+        "body-structure.md",
+        "collections-and-optional-sections.md",
+        "completion-and-visual-review.md",
+        "delegation-strategy.md",
+        "evidence-and-conflicts.md",
+        "generated-content-and-toc.md",
+        "template-text-classification.md",
+    }
+    assert {
         "delegation-task-packet.md",
         "tool-usage-and-error-recovery.md",
         "scenarios-and-edge-cases.md",
-    }
-    assert common <= extraction_refs
-    assert common <= conversion_refs
-    assert {"evidence-and-conflicts.md", "output-schema.md"} <= extraction_refs
-    assert {
         "task-evidence-and-conflicts.md",
         "evidence-and-visual-review.md",
         "editing-validation-and-completion.md",
