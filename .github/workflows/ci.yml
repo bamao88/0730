@@ -31,7 +31,8 @@ jobs:
         run: |
           mkdir -p .tmp/visual-renderer-smoke
           docker run --rm --network none --read-only --cap-drop ALL \
-            --security-opt no-new-privileges --tmpfs /tmp:rw,size=512m \
+            --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
+            --tmpfs /tmp:rw,size=512m,mode=1777 \
             -e HOME=/tmp/home \
             -v "$PWD/evals/fixtures/smoke/school-template.docx:/input/document.docx:ro" \
             -v "$PWD/.tmp/visual-renderer-smoke:/output:rw" \
