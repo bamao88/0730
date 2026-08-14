@@ -109,7 +109,9 @@ async def _fake_completed_agent(
     source_refs = [
         item["object_ref"]
         for item in student["objects"]
-        if isinstance(item, dict) and isinstance(item.get("object_ref"), dict)
+        if isinstance(item, dict)
+        and item.get("type") in {"paragraph", "table"}
+        and isinstance(item.get("object_ref"), dict)
     ]
     service.edit(
         {
