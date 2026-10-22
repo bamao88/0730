@@ -1,8 +1,7 @@
 # 模板提取静态 E2E Eval 实施计划
 
-> 状态：W0–W5/G1–G3 已实现；独立模块 99 个测试通过。三校 candidate case 已物化并被
-> 评分入口显式拒绝；现有 case 为 v0.1 历史 candidate，W6 须按 accepted Registry v0.5
-> clean break 重建后再做 Human Gold 验收和每校三条正式评分回归
+> 状态：W0–W6/G1–G3 已实现；三校 accepted Gold 已冻结，并通过每校自比较。后续仍需补齐
+> 每校文字反例、字段反例和 CI/case inventory 接入
 > 上层合同：[DESIGN.md](DESIGN.md)
 > 本计划负责：实施顺序、文件责任、逐代码测试、停止门和完成证据
 > 本计划不负责：重新设计模板提取流程、执行正式填写、自动批准 Gold 或宣称 M3 完成
@@ -19,8 +18,8 @@
 | W3 对齐与三类断言 | `PASS` | S01–S10 归因和 UNKNOWN 路径通过 |
 | W4 评分与报告 | `PASS` | 双 50 分视角、八分项、F1、coverage、JSON/Markdown 同源通过 |
 | W5 独立 runner/CLI | `PASS` | PASS/FAIL/UNKNOWN/INPUT_ERROR 四路径和确定性通过 |
-| W6 三校 case | `PRODUCT_RULES_ACCEPTED / REBUILD_PENDING` | v0.1 目录已物化且 candidate gate 3/3 通过；跨校产品规则已确认；待按 v0.5 重建、精确产物审查和 Gold 签署，accepted Gold 0/3 |
-| W7 收尾 | `PARTIAL_PASS` | build/mypy/323 tests/doctor/core/scoped ruff 与 00–06 漂移检查已通过；全根 ruff 仅被两个无关用户文件阻断，且 W6 仍受 Human gate 约束 |
+| W6 三校 case | `PASS` | HUNAU/NJAU/PKU accepted Gold 3/3；Word 原生全覆盖批注 Review 已写入（227/96/159 条）；每校自比较 `PASS / 100.0` |
+| W7 收尾 | `PARTIAL_PASS` | build/mypy/323 tests/doctor/core/scoped ruff 与当前架构入口漂移检查已通过；仍需补齐 accepted case inventory 和每校正式反例回归 |
 
 本模块按一条离线、确定性的纵向链路实施：
 
@@ -334,14 +333,13 @@ evals/template-extraction/cases/
 
 工作内容：
 
-1. 保留当前 v0.1 candidate 作为历史证据；Gold 准备侧按 Registry v0.5、已确认的复合字段/
+1. 保留当前 v0.1 candidate 作为历史证据；Gold 准备侧已按 Registry v0.5、已确认的复合字段/
    章节角色/逻辑页策略重建两份主文件 `final-template.docx + fill-contract.yaml`，原子绑定 Word
-   hash；validation report、manifest、hash 和 reviewer 记录只作内部验收证据，再物化新 candidate case。
+   hash；validation report、manifest、hash 和 reviewer 记录只作内部验收证据，再物化 accepted case。
 2. 未通过 Human readiness 时，`case_status/gold_review/fill-contract.status` 必须分别为
    `candidate/candidate/candidate_pending_human_acceptance`，`expected_verdict` 固定为
    `INPUT_ERROR`；路径位于 `gold/` 不构成 Gold 晋升。
-3. 重建后的产品可读核对面按规则组 + 例外表签署，机器附件逐槽/区域证明覆盖；
-   随后把精确模板和契约作为 accepted Gold 冻结，并记录 reviewer、日期、来源 hash、
+3. 2026-08-17 已把精确模板和契约作为 accepted Gold 冻结，并记录 reviewer、日期、来源 hash、
    Registry 绑定和已清零的 blockers；物化脚本不得覆盖 accepted case。
 4. 每个新 case 固定引用 Registry v0.5 的同一 ID/version/hash 和 scoring-v1。
 5. 为每校准备三个最小回归：自比较通过、单个 protected 文字变更失败、单个字段映射
@@ -429,7 +427,7 @@ evals/template-extraction/cases/
 |---|---|---|---|
 | `evals/template-extraction/fixtures/build_samples.py` | `FIX-01` 一次生成 manifest 列出的 S00–S13 | `FIX-02` 两次生成的规范事实和 hash 绑定一致 | `FIX-03` 所有生成 DOCX package、契约和 case schema 均有效 |
 
-### 4.6 三校 candidate case 物化代码
+### 4.6 三校 Gold case 与候选物化代码
 
 | 代码 | Case 1 | Case 2 | Case 3 |
 |---|---|---|---|
@@ -560,15 +558,15 @@ uv run docfit doctor
 - Temp 候选不被自动标为 Gold；
 - Gold 存储与 CI 权限有明确记录；
 - 不提交真实学生内容、完整运行 transcript 或凭据；
-- 实施切换时同步受影响的 00–06 和 active capsule，不让代码领先于合同。
+- 实施切换时同步受影响的当前架构入口、模块 Contract 和 active capsule，不让代码领先于合同。
 
 ## 9. 风险、处理和停止条件
 
 | 风险 | 当前事实 | 处理 | 停止条件 |
 |---|---|---|---|
-| 候选不等于 Gold | 三校 manifest 的 `human_acceptance` 仍 pending | 可按最终目录物化，但三层状态固定 candidate 且预期 `INPUT_ERROR`；W6 accepted 门仍等 Human 确认 | 未确认时禁止改为 accepted、进入评分或覆盖已验收 Gold |
-| 两校 OfficeCLI schema FAIL | 湖南农大、南京农大 validation report 当前失败 | 修复真实错误；只有标准/独立工具 + 精确 hash Word 往返证明的 validator false positive 才形成书面 exception | 不得以“Word 能打开”或删除失败断言强行通过 |
-| Registry 快照过时 | 当前 case 仍绑定 v0.1，新模板产品合同为 accepted v0.5 | 保留 v0.1 供历史重放；按 v0.5 重建新 case 并固定 ID/version/hash，不跟随 latest | 禁止把 v0.1 case 直接改名、改 hash 或改状态晋升 |
+| 候选不等于 Gold | 已解决：三校 accepted Gold 3/3 | 候选准备脚本拒绝覆盖 accepted case；accepted 状态只由 review、hash 和数据权限记录绑定 | 后续新增候选未确认时禁止改为 accepted、进入评分或覆盖已验收 Gold |
+| 两校 OfficeCLI schema FAIL | 已解决：三个 Word Gold 文件均通过 `officecli validate` | 保留 Word 原生批注和 validation 证据；真实错误继续修复，false positive 必须有独立证据 | 不得以“Word 能打开”或删除失败断言强行通过 |
+| Registry 快照过时 | 已解决：三校 accepted case 绑定 v0.5 | 保留 v0.1 供历史重放；v0.5 accepted case 固定 ID/version/hash，不跟随 latest | 禁止把 v0.1 case 直接改名、改 hash 或改状态晋升 |
 | 有效样式复杂 | Word 继承、容器和默认值容易出现两套口径 | 统一 analyzer，先用三个小样本锁定 | 不能解释继承来源时返回 UNKNOWN |
 | OOXML 对象覆盖不全 | 文本框、域、公式等可能存在不支持分支 | 显式 unsupported fact 与 coverage | 可见对象被静默忽略即停止合入 |
 | 独立分析器带来重复代码 | Eval 不复用产品 OOXML 实现 | 只复制必要的只读事实能力，以 schema/fixture 对齐数据合同 | 发现需要 import `docfit` 时停止并回到设计层 |
@@ -586,8 +584,7 @@ uv run docfit doctor
 4. `W3`：alignment + 三类 evaluator 及逐文件测试。
 5. `W4`：scoring + reporting 及逐文件测试。
 6. `W5`：runner + 独立 `run_eval.py` + contract/integration 测试。
-7. `W6`：三校 candidate 目录可先物化；Human readiness 通过后再原地晋升 Gold，并启用
-   每校三条样本回归。
+7. `W6`：三校 accepted Gold 已冻结；后续补齐每校文字反例、字段反例等正式回归。
 8. `W7`：全量回归、文档同步和生产接入裁决。
 
 每批完成时更新本计划的 case 计数和证据链接。不要在最后一批才补测试，也不要先提交

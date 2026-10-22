@@ -1,0 +1,450 @@
+{
+  "observed_at": "2026-09-24T05:03:10.503135+00:00",
+  "kind": "observational live Tool timing, not matched total E2E speed comparison",
+  "runs": {
+    "pku-whole-entry": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "d6f1b815908a71f4b0cc94703d3867619da073efb36c88eaef08c89dcb2861a6",
+      "snapshot_bytes": 7177,
+      "complete": true,
+      "count": 23,
+      "minimum_ms": 48053,
+      "median_ms": 50741,
+      "maximum_ms": 58285,
+      "observations": [
+        {
+          "unit_id": "unit-1-cover",
+          "duration_ms": 48233
+        },
+        {
+          "unit_id": "unit-2-copyright",
+          "duration_ms": 50755
+        },
+        {
+          "unit_id": "unit-3-abstract-cn",
+          "duration_ms": 53365
+        },
+        {
+          "unit_id": "unit-4-abstract-en",
+          "duration_ms": 54936
+        },
+        {
+          "unit_id": "unit-5-toc",
+          "duration_ms": 57683
+        },
+        {
+          "unit_id": "unit-6-figure-index",
+          "duration_ms": 53970
+        },
+        {
+          "unit_id": "unit-7-table-index",
+          "duration_ms": 58285
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 52235
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 51104
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 54291
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 50741
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 50405
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 52038
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 49016
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 48053
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 48589
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 50010
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 50577
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 49810
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 49791
+        },
+        {
+          "unit_id": "unit-8-body",
+          "duration_ms": 51508
+        },
+        {
+          "unit_id": "unit-9-references",
+          "duration_ms": 49339
+        },
+        {
+          "unit_id": "unit-10-appendix-a",
+          "duration_ms": 48203
+        }
+      ]
+    },
+    "pku-field-role-shape": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/pku-field-role-shape-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "8a410658ebfc7272af4e4ac07b5ccc10d2fd1562b62eb5483b4a56853341c539",
+      "snapshot_bytes": 6760,
+      "complete": false,
+      "count": 23,
+      "minimum_ms": 511,
+      "median_ms": 598,
+      "maximum_ms": 652,
+      "observations": [
+        {
+          "unit_id": "unit-cover",
+          "duration_ms": 574
+        },
+        {
+          "unit_id": "unit-copyright",
+          "duration_ms": 609
+        },
+        {
+          "unit_id": "unit-abstract-cn",
+          "duration_ms": 589
+        },
+        {
+          "unit_id": "unit-cover-en",
+          "duration_ms": 598
+        },
+        {
+          "unit_id": "unit-abstract-en",
+          "duration_ms": 564
+        },
+        {
+          "unit_id": "unit-toc",
+          "duration_ms": 618
+        },
+        {
+          "unit_id": "unit-toc-figures",
+          "duration_ms": 622
+        },
+        {
+          "unit_id": "unit-toc-tables",
+          "duration_ms": 618
+        },
+        {
+          "unit_id": "unit-chapter-1",
+          "duration_ms": 612
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 592
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 587
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 602
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 559
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 628
+        },
+        {
+          "unit_id": "unit-chapter-2",
+          "duration_ms": 577
+        },
+        {
+          "unit_id": "unit-chapter-3",
+          "duration_ms": 571
+        },
+        {
+          "unit_id": "unit-chapter-4",
+          "duration_ms": 511
+        },
+        {
+          "unit_id": "unit-chapter-5",
+          "duration_ms": 615
+        },
+        {
+          "unit_id": "unit-references",
+          "duration_ms": 569
+        },
+        {
+          "unit_id": "unit-appendix-a",
+          "duration_ms": 598
+        },
+        {
+          "unit_id": "unit-acknowledgements",
+          "duration_ms": 605
+        },
+        {
+          "unit_id": "unit-declaration",
+          "duration_ms": 652
+        },
+        {
+          "unit_id": "unit-declaration",
+          "duration_ms": 637
+        }
+      ]
+    },
+    "hunau-whole-entry": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "4986c189cb593af6c14f87dd2aabf203cb9c6f89ca75baa217ef4dda21d95a8c",
+      "snapshot_bytes": 5666,
+      "complete": true,
+      "count": 15,
+      "minimum_ms": 29831,
+      "median_ms": 31920,
+      "maximum_ms": 38462,
+      "observations": [
+        {
+          "unit_id": "unit-1-cover",
+          "duration_ms": 36072
+        },
+        {
+          "unit_id": "unit-2-integrity-declaration",
+          "duration_ms": 38462
+        },
+        {
+          "unit_id": "unit-3-toc",
+          "duration_ms": 33939
+        },
+        {
+          "unit_id": "unit-4-body",
+          "duration_ms": 34848
+        },
+        {
+          "unit_id": "unit-5-references",
+          "duration_ms": 34362
+        },
+        {
+          "unit_id": "unit-6-acknowledgments",
+          "duration_ms": 33319
+        },
+        {
+          "unit_id": "unit-7-appendix",
+          "duration_ms": 35405
+        },
+        {
+          "unit_id": "unit-8-task-book",
+          "duration_ms": 31920
+        },
+        {
+          "unit_id": "unit-8-task-book",
+          "duration_ms": 29908
+        },
+        {
+          "unit_id": "unit-8-task-book",
+          "duration_ms": 31139
+        },
+        {
+          "unit_id": "unit-9-proposal-report",
+          "duration_ms": 30178
+        },
+        {
+          "unit_id": "unit-9-proposal-report",
+          "duration_ms": 30312
+        },
+        {
+          "unit_id": "unit-9-proposal-report",
+          "duration_ms": 29831
+        },
+        {
+          "unit_id": "unit-9-proposal-report",
+          "duration_ms": 31256
+        },
+        {
+          "unit_id": "unit-9-proposal-report",
+          "duration_ms": 30135
+        }
+      ]
+    },
+    "hunau-field-role-shape": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "bdddc55ac5607a661491c93700ba4460d7e4d9c7f3c99d5818d1400885d8fd7b",
+      "snapshot_bytes": 2821,
+      "complete": false,
+      "count": 9,
+      "minimum_ms": 256,
+      "median_ms": 281,
+      "maximum_ms": 303,
+      "observations": [
+        {
+          "unit_id": "unit-1",
+          "duration_ms": 277
+        },
+        {
+          "unit_id": "unit-2",
+          "duration_ms": 256
+        },
+        {
+          "unit_id": "unit-3",
+          "duration_ms": 269
+        },
+        {
+          "unit_id": "unit-4",
+          "duration_ms": 281
+        },
+        {
+          "unit_id": "unit-4",
+          "duration_ms": 284
+        },
+        {
+          "unit_id": "unit-5",
+          "duration_ms": 259
+        },
+        {
+          "unit_id": "unit-5",
+          "duration_ms": 286
+        },
+        {
+          "unit_id": "unit-5",
+          "duration_ms": 291
+        },
+        {
+          "unit_id": "unit-6",
+          "duration_ms": 303
+        }
+      ]
+    },
+    "njau-whole-entry": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "9075fa361cfb6506900533cdd3822bc27395229a3c6e8c460d1d5e0e184b6cc0",
+      "snapshot_bytes": 4275,
+      "complete": true,
+      "count": 13,
+      "minimum_ms": 5206,
+      "median_ms": 5695,
+      "maximum_ms": 6712,
+      "observations": [
+        {
+          "unit_id": "unit-cover-page",
+          "duration_ms": 6038
+        },
+        {
+          "unit_id": "unit-declaration-originality",
+          "duration_ms": 6712
+        },
+        {
+          "unit_id": "unit-authorization-declaration",
+          "duration_ms": 5397
+        },
+        {
+          "unit_id": "unit-toc",
+          "duration_ms": 6027
+        },
+        {
+          "unit_id": "unit-abstract-zh",
+          "duration_ms": 5695
+        },
+        {
+          "unit_id": "unit-abstract-en",
+          "duration_ms": 5416
+        },
+        {
+          "unit_id": "unit-chapter-1-review",
+          "duration_ms": 5828
+        },
+        {
+          "unit_id": "unit-body-chapter",
+          "duration_ms": 5768
+        },
+        {
+          "unit_id": "unit-conclusion-prospects",
+          "duration_ms": 5287
+        },
+        {
+          "unit_id": "unit-references",
+          "duration_ms": 5206
+        },
+        {
+          "unit_id": "unit-appendix",
+          "duration_ms": 5742
+        },
+        {
+          "unit_id": "unit-academic-achievements",
+          "duration_ms": 5695
+        },
+        {
+          "unit_id": "unit-acknowledgments",
+          "duration_ms": 5431
+        }
+      ]
+    },
+    "njau-field-role-shape": {
+      "audit_path": "temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/tool-call-audit.jsonl",
+      "audit_snapshot_sha256": "5e77496a6b5346895c69e02418318651b0fb9fe8ab8b0d4280339fc1366ca2df",
+      "snapshot_bytes": 3400,
+      "complete": false,
+      "count": 10,
+      "minimum_ms": 163,
+      "median_ms": 171.5,
+      "maximum_ms": 176,
+      "observations": [
+        {
+          "unit_id": "u01",
+          "duration_ms": 170
+        },
+        {
+          "unit_id": "u02",
+          "duration_ms": 175
+        },
+        {
+          "unit_id": "u03",
+          "duration_ms": 164
+        },
+        {
+          "unit_id": "u04",
+          "duration_ms": 175
+        },
+        {
+          "unit_id": "u05",
+          "duration_ms": 173
+        },
+        {
+          "unit_id": "u06",
+          "duration_ms": 163
+        },
+        {
+          "unit_id": "u07",
+          "duration_ms": 174
+        },
+        {
+          "unit_id": "u08",
+          "duration_ms": 170
+        },
+        {
+          "unit_id": "u09",
+          "duration_ms": 176
+        },
+        {
+          "unit_id": "u10",
+          "duration_ms": 169
+        }
+      ]
+    }
+  }
+}

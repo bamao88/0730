@@ -1,0 +1,2130 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+  "semantic_judgments_sha256": "d713ddd8d72567b5fd3036f350eca70c68c6d5554aa632c6b096f87daa7a5ac3",
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "field_registry_ref": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.5.0",
+    "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "operation_count": 0,
+  "cleanup_count": 1,
+  "operations": [],
+  "cleanup": [
+    {
+      "action": "remove_paragraph",
+      "block_id": "source-entry-7413a818272b7938d5bbed52",
+      "source_entry_id": "source-entry-7413a818272b7938d5bbed52",
+      "judgment_refs": [
+        "semantic_judgments[5]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-7413a818272b7938d5bbed52;extent=text[0:75];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+          "locator": "/body/p[@paraId=0F101DDD]/r[1]",
+          "object_id": "obj-e629d537402d8d0c789315c9",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+            "object_id": "obj-e629d537402d8d0c789315c9"
+          },
+          "object_text_end": 19,
+          "object_text_start": 0,
+          "source_text_end": 19,
+          "source_text_start": 0,
+          "text": "在正式提交图书馆的论文版本中，需将此页"
+        },
+        {
+          "fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+          "locator": "/body/p[@paraId=0F101DDD]/r[2]",
+          "object_id": "obj-1a1c33b75c3b259da2f2bc91",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+            "object_id": "obj-1a1c33b75c3b259da2f2bc91"
+          },
+          "object_text_end": 7,
+          "object_text_start": 0,
+          "source_text_end": 26,
+          "source_text_start": 19,
+          "text": "与原创性声明页"
+        },
+        {
+          "fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+          "locator": "/body/p[@paraId=0F101DDD]/r[3]",
+          "object_id": "obj-587b6ab205ce2456d74b4050",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+            "object_id": "obj-587b6ab205ce2456d74b4050"
+          },
+          "object_text_end": 19,
+          "object_text_start": 0,
+          "source_text_end": 45,
+          "source_text_start": 26,
+          "text": "替换为带有二维码的版本，带有二维码的此"
+        },
+        {
+          "fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+          "locator": "/body/p[@paraId=0F101DDD]/r[4]",
+          "object_id": "obj-b6b2124c4a247317de6b73b4",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+            "object_id": "obj-b6b2124c4a247317de6b73b4"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 46,
+          "source_text_start": 45,
+          "text": "二"
+        },
+        {
+          "fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+          "locator": "/body/p[@paraId=0F101DDD]/r[5]",
+          "object_id": "obj-9420398b497cbf4e4145e37b",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+            "object_id": "obj-9420398b497cbf4e4145e37b"
+          },
+          "object_text_end": 29,
+          "object_text_start": 0,
+          "source_text_end": 75,
+          "source_text_start": 46,
+          "text": "页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+        }
+      ]
+    }
+  ],
+  "policy_receipts": [
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0001-aeaed905",
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-1b6ffe9c1b458b8346f00765"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-327d676f0e9b7e1041a374cc"
+          ],
+          "expected_source_content": "版权声明",
+          "extent": {
+            "end": 4,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765"
+          },
+          "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "版权声明",
+          "text_end": 4,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+              "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+              "object_id": "obj-327d676f0e9b7e1041a374cc",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                "object_id": "obj-327d676f0e9b7e1041a374cc"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 4,
+              "source_text_start": 0,
+              "text": "版权声明"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+          "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+          "object_id": "obj-327d676f0e9b7e1041a374cc",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+            "object_id": "obj-327d676f0e9b7e1041a374cc"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 4,
+          "source_text_start": 0,
+          "text": "版权声明"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0002-ec6b6c16",
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-bdc0b516483c20d6b3d936b1"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-357ceca59ea853cc93cd108f",
+            "obj-171786a2879690562433eab7"
+          ],
+          "expected_source_content": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+          "extent": {
+            "end": 90,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 1,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1"
+          },
+          "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+          "text_end": 90,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+              "object_id": "obj-357ceca59ea853cc93cd108f",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                "object_id": "obj-357ceca59ea853cc93cd108f"
+              },
+              "object_text_end": 89,
+              "object_text_start": 0,
+              "source_text_end": 89,
+              "source_text_start": 0,
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+            },
+            {
+              "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+              "object_id": "obj-171786a2879690562433eab7",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                "object_id": "obj-171786a2879690562433eab7"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 90,
+              "source_text_start": 89,
+              "text": "。"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+          "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+          "object_id": "obj-357ceca59ea853cc93cd108f",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+            "object_id": "obj-357ceca59ea853cc93cd108f"
+          },
+          "object_text_end": 89,
+          "object_text_start": 0,
+          "source_text_end": 89,
+          "source_text_start": 0,
+          "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+        },
+        {
+          "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+          "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+          "object_id": "obj-171786a2879690562433eab7",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+            "object_id": "obj-171786a2879690562433eab7"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 90,
+          "source_text_start": 89,
+          "text": "。"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0003-58fa79b2",
+      "source_judgment_refs": [
+        "semantic_judgments[2]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-6c758d4509e2d8f7236b26f0"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-7cf63094e52453c905275340"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 2,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0"
+          },
+          "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+              "locator": "/body/p[@paraId=05A2A89A]",
+              "object_id": "obj-7cf63094e52453c905275340",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                "object_id": "obj-7cf63094e52453c905275340"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+          "locator": "/body/p[@paraId=05A2A89A]",
+          "object_id": "obj-7cf63094e52453c905275340",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+            "object_id": "obj-7cf63094e52453c905275340"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0004-92cad7aa",
+      "source_judgment_refs": [
+        "semantic_judgments[3]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-95e36489b2ff72c9481dc593"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 3,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+          },
+          "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+              "locator": "/body/p[@paraId=093B9B16]",
+              "object_id": "obj-95e36489b2ff72c9481dc593",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                "object_id": "obj-95e36489b2ff72c9481dc593"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+          "locator": "/body/p[@paraId=093B9B16]",
+          "object_id": "obj-95e36489b2ff72c9481dc593",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+            "object_id": "obj-95e36489b2ff72c9481dc593"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0005-3bff767f",
+      "source_judgment_refs": [
+        "semantic_judgments[4]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-1258f967a2596325acd20afd"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 4,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+          },
+          "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+              "locator": "/body/p[@paraId=35ADE725]",
+              "object_id": "obj-1258f967a2596325acd20afd",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                "object_id": "obj-1258f967a2596325acd20afd"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+          "locator": "/body/p[@paraId=35ADE725]",
+          "object_id": "obj-1258f967a2596325acd20afd",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+            "object_id": "obj-1258f967a2596325acd20afd"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    }
+  ],
+  "mutation_receipts": [
+    {
+      "receipt_type": "mutation",
+      "action": "remove_paragraph",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0006-286d1975"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[5]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-7413a818272b7938d5bbed52"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-7413a818272b7938d5bbed52;extent=text[0:75];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "affected_blocks": [
+        "source-entry-7413a818272b7938d5bbed52"
+      ],
+      "before_text_by_block": {
+        "source-entry-7413a818272b7938d5bbed52": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+      },
+      "after_text_by_block": {
+        "source-entry-7413a818272b7938d5bbed52": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "action": "remove_paragraph",
+        "block_id": "source-entry-7413a818272b7938d5bbed52",
+        "source_entry_id": "source-entry-7413a818272b7938d5bbed52",
+        "judgment_refs": [
+          "semantic_judgments[5]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-7413a818272b7938d5bbed52;extent=text[0:75];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+            "locator": "/body/p[@paraId=0F101DDD]/r[1]",
+            "object_id": "obj-e629d537402d8d0c789315c9",
+            "object_ref": {
+              "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "expected_fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+              "object_id": "obj-e629d537402d8d0c789315c9"
+            },
+            "object_text_end": 19,
+            "object_text_start": 0,
+            "source_text_end": 19,
+            "source_text_start": 0,
+            "text": "在正式提交图书馆的论文版本中，需将此页"
+          },
+          {
+            "fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+            "locator": "/body/p[@paraId=0F101DDD]/r[2]",
+            "object_id": "obj-1a1c33b75c3b259da2f2bc91",
+            "object_ref": {
+              "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "expected_fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+              "object_id": "obj-1a1c33b75c3b259da2f2bc91"
+            },
+            "object_text_end": 7,
+            "object_text_start": 0,
+            "source_text_end": 26,
+            "source_text_start": 19,
+            "text": "与原创性声明页"
+          },
+          {
+            "fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+            "locator": "/body/p[@paraId=0F101DDD]/r[3]",
+            "object_id": "obj-587b6ab205ce2456d74b4050",
+            "object_ref": {
+              "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "expected_fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+              "object_id": "obj-587b6ab205ce2456d74b4050"
+            },
+            "object_text_end": 19,
+            "object_text_start": 0,
+            "source_text_end": 45,
+            "source_text_start": 26,
+            "text": "替换为带有二维码的版本，带有二维码的此"
+          },
+          {
+            "fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+            "locator": "/body/p[@paraId=0F101DDD]/r[4]",
+            "object_id": "obj-b6b2124c4a247317de6b73b4",
+            "object_ref": {
+              "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "expected_fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+              "object_id": "obj-b6b2124c4a247317de6b73b4"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 46,
+            "source_text_start": 45,
+            "text": "二"
+          },
+          {
+            "fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+            "locator": "/body/p[@paraId=0F101DDD]/r[5]",
+            "object_id": "obj-9420398b497cbf4e4145e37b",
+            "object_ref": {
+              "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "expected_fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+              "object_id": "obj-9420398b497cbf4e4145e37b"
+            },
+            "object_text_end": 29,
+            "object_text_start": 0,
+            "source_text_end": 75,
+            "source_text_start": 46,
+            "text": "页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+          }
+        ]
+      }
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0001-aeaed905",
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-1b6ffe9c1b458b8346f00765"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-327d676f0e9b7e1041a374cc"
+          ],
+          "expected_source_content": "版权声明",
+          "extent": {
+            "end": 4,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765"
+          },
+          "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "版权声明",
+          "text_end": 4,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+              "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+              "object_id": "obj-327d676f0e9b7e1041a374cc",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                "object_id": "obj-327d676f0e9b7e1041a374cc"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 4,
+              "source_text_start": 0,
+              "text": "版权声明"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+          "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+          "object_id": "obj-327d676f0e9b7e1041a374cc",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+            "object_id": "obj-327d676f0e9b7e1041a374cc"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 4,
+          "source_text_start": 0,
+          "text": "版权声明"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0002-ec6b6c16",
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-bdc0b516483c20d6b3d936b1"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-357ceca59ea853cc93cd108f",
+            "obj-171786a2879690562433eab7"
+          ],
+          "expected_source_content": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+          "extent": {
+            "end": 90,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 1,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1"
+          },
+          "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+          "text_end": 90,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+              "object_id": "obj-357ceca59ea853cc93cd108f",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                "object_id": "obj-357ceca59ea853cc93cd108f"
+              },
+              "object_text_end": 89,
+              "object_text_start": 0,
+              "source_text_end": 89,
+              "source_text_start": 0,
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+            },
+            {
+              "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+              "object_id": "obj-171786a2879690562433eab7",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                "object_id": "obj-171786a2879690562433eab7"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 90,
+              "source_text_start": 89,
+              "text": "。"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+          "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+          "object_id": "obj-357ceca59ea853cc93cd108f",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+            "object_id": "obj-357ceca59ea853cc93cd108f"
+          },
+          "object_text_end": 89,
+          "object_text_start": 0,
+          "source_text_end": 89,
+          "source_text_start": 0,
+          "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+        },
+        {
+          "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+          "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+          "object_id": "obj-171786a2879690562433eab7",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+            "object_id": "obj-171786a2879690562433eab7"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 90,
+          "source_text_start": 89,
+          "text": "。"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0003-58fa79b2",
+      "source_judgment_refs": [
+        "semantic_judgments[2]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-6c758d4509e2d8f7236b26f0"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-7cf63094e52453c905275340"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 2,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0"
+          },
+          "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+              "locator": "/body/p[@paraId=05A2A89A]",
+              "object_id": "obj-7cf63094e52453c905275340",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                "object_id": "obj-7cf63094e52453c905275340"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+          "locator": "/body/p[@paraId=05A2A89A]",
+          "object_id": "obj-7cf63094e52453c905275340",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+            "object_id": "obj-7cf63094e52453c905275340"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0004-92cad7aa",
+      "source_judgment_refs": [
+        "semantic_judgments[3]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-95e36489b2ff72c9481dc593"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 3,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+          },
+          "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+              "locator": "/body/p[@paraId=093B9B16]",
+              "object_id": "obj-95e36489b2ff72c9481dc593",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                "object_id": "obj-95e36489b2ff72c9481dc593"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+          "locator": "/body/p[@paraId=093B9B16]",
+          "object_id": "obj-95e36489b2ff72c9481dc593",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+            "object_id": "obj-95e36489b2ff72c9481dc593"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "style_only",
+      "intent_ref": "intent-0005-3bff767f",
+      "source_judgment_refs": [
+        "semantic_judgments[4]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-1258f967a2596325acd20afd"
+          ],
+          "expected_source_content": "",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "judgment_index": 4,
+          "part_index": 0,
+          "role": "style_only",
+          "scope": {
+            "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+          },
+          "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047",
+          "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+          "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "span_ref": "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+          "text": "",
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+              "locator": "/body/p[@paraId=35ADE725]",
+              "object_id": "obj-1258f967a2596325acd20afd",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                "object_id": "obj-1258f967a2596325acd20afd"
+              },
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+          "locator": "/body/p[@paraId=35ADE725]",
+          "object_id": "obj-1258f967a2596325acd20afd",
+          "object_ref": {
+            "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+            "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+            "object_id": "obj-1258f967a2596325acd20afd"
+          },
+          "text": ""
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    }
+  ],
+  "receipt_count": 6,
+  "write": {
+    "schema_version": 1,
+    "status": "ok",
+    "executor": "ooxml_executor",
+    "output_docx": "temp/id-closure-audit-20260922/replay/pku-02-copyright-v1/candidate.docx",
+    "output_sha256": "64ff7dc262b5ae54602bdbaa9ca654dd335f3055643f662ed9c08dc9fb6542c8",
+    "package_validation": "ok"
+  },
+  "shadow_intent_plan": {
+    "schema_version": 1,
+    "plan_ref": "materialization-plan-268a8347f5b8",
+    "ready": true,
+    "intent_count": 6,
+    "context_count": 6,
+    "command_count": 0,
+    "unsupported_count": 0,
+    "intents": [
+      {
+        "intent_ref": "intent-0001-aeaed905",
+        "intent_type": "keep_fixed_content",
+        "source_judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-1b6ffe9c1b458b8346f00765"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "版权声明"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-327d676f0e9b7e1041a374cc"
+              ],
+              "expected_source_content": "版权声明",
+              "extent": {
+                "end": 4,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765"
+              },
+              "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "版权声明",
+              "text_end": 4,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                  "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+                  "object_id": "obj-327d676f0e9b7e1041a374cc",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                    "object_id": "obj-327d676f0e9b7e1041a374cc"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 0,
+                  "text": "版权声明"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0002-ec6b6c16",
+        "intent_type": "keep_fixed_content",
+        "source_judgment_refs": [
+          "semantic_judgments[1]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-bdc0b516483c20d6b3d936b1"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-357ceca59ea853cc93cd108f",
+                "obj-171786a2879690562433eab7"
+              ],
+              "expected_source_content": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+              "extent": {
+                "end": 90,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1"
+              },
+              "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+              "text_end": 90,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                  "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+                  "object_id": "obj-357ceca59ea853cc93cd108f",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                    "object_id": "obj-357ceca59ea853cc93cd108f"
+                  },
+                  "object_text_end": 89,
+                  "object_text_start": 0,
+                  "source_text_end": 89,
+                  "source_text_start": 0,
+                  "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+                },
+                {
+                  "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                  "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+                  "object_id": "obj-171786a2879690562433eab7",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                    "object_id": "obj-171786a2879690562433eab7"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 90,
+                  "source_text_start": 89,
+                  "text": "。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0003-58fa79b2",
+        "intent_type": "transfer_style_only",
+        "source_judgment_refs": [
+          "semantic_judgments[2]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-6c758d4509e2d8f7236b26f0"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-7cf63094e52453c905275340"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0"
+              },
+              "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                  "locator": "/body/p[@paraId=05A2A89A]",
+                  "object_id": "obj-7cf63094e52453c905275340",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                    "object_id": "obj-7cf63094e52453c905275340"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0004-92cad7aa",
+        "intent_type": "transfer_style_only",
+        "source_judgment_refs": [
+          "semantic_judgments[3]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-95e36489b2ff72c9481dc593"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+              },
+              "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                  "locator": "/body/p[@paraId=093B9B16]",
+                  "object_id": "obj-95e36489b2ff72c9481dc593",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                    "object_id": "obj-95e36489b2ff72c9481dc593"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0005-3bff767f",
+        "intent_type": "transfer_style_only",
+        "source_judgment_refs": [
+          "semantic_judgments[4]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-1258f967a2596325acd20afd"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 4,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+              },
+              "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                  "locator": "/body/p[@paraId=35ADE725]",
+                  "object_id": "obj-1258f967a2596325acd20afd",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                    "object_id": "obj-1258f967a2596325acd20afd"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0006-286d1975",
+        "intent_type": "delete_block",
+        "source_judgment_refs": [
+          "semantic_judgments[5]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-7413a818272b7938d5bbed52"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-e629d537402d8d0c789315c9",
+                "obj-1a1c33b75c3b259da2f2bc91",
+                "obj-587b6ab205ce2456d74b4050",
+                "obj-b6b2124c4a247317de6b73b4",
+                "obj-9420398b497cbf4e4145e37b"
+              ],
+              "expected_source_content": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。",
+              "extent": {
+                "end": 75,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 5,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-7413a818272b7938d5bbed52"
+              },
+              "source_entry_id": "source-entry-7413a818272b7938d5bbed52",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-7413a818272b7938d5bbed52;extent=text[0:75];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。",
+              "text_end": 75,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[1]",
+                  "object_id": "obj-e629d537402d8d0c789315c9",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+                    "object_id": "obj-e629d537402d8d0c789315c9"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 19,
+                  "source_text_start": 0,
+                  "text": "在正式提交图书馆的论文版本中，需将此页"
+                },
+                {
+                  "fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[2]",
+                  "object_id": "obj-1a1c33b75c3b259da2f2bc91",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+                    "object_id": "obj-1a1c33b75c3b259da2f2bc91"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 26,
+                  "source_text_start": 19,
+                  "text": "与原创性声明页"
+                },
+                {
+                  "fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[3]",
+                  "object_id": "obj-587b6ab205ce2456d74b4050",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+                    "object_id": "obj-587b6ab205ce2456d74b4050"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 45,
+                  "source_text_start": 26,
+                  "text": "替换为带有二维码的版本，带有二维码的此"
+                },
+                {
+                  "fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[4]",
+                  "object_id": "obj-b6b2124c4a247317de6b73b4",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+                    "object_id": "obj-b6b2124c4a247317de6b73b4"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 46,
+                  "source_text_start": 45,
+                  "text": "二"
+                },
+                {
+                  "fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[5]",
+                  "object_id": "obj-9420398b497cbf4e4145e37b",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+                    "object_id": "obj-9420398b497cbf4e4145e37b"
+                  },
+                  "object_text_end": 29,
+                  "object_text_start": 0,
+                  "source_text_end": 75,
+                  "source_text_start": 46,
+                  "text": "页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "context_ref": "context-0001-f8ee2400",
+        "kind": "fixed_content",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-1b6ffe9c1b458b8346f00765"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0001-aeaed905",
+          "intent_type": "keep_fixed_content",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-327d676f0e9b7e1041a374cc"
+              ],
+              "expected_source_content": "版权声明",
+              "extent": {
+                "end": 4,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765"
+              },
+              "source_entry_id": "source-entry-1b6ffe9c1b458b8346f00765",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-1b6ffe9c1b458b8346f00765;extent=text[0:4];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "版权声明",
+              "text_end": 4,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                  "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+                  "object_id": "obj-327d676f0e9b7e1041a374cc",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                    "object_id": "obj-327d676f0e9b7e1041a374cc"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 0,
+                  "text": "版权声明"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+              "locator": "/body/p[@paraId=5CF147F8]/r[1]",
+              "object_id": "obj-327d676f0e9b7e1041a374cc",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "7b022014614bbf22f498058b85535b13044b9963cb13565faf10559f48a238de",
+                "object_id": "obj-327d676f0e9b7e1041a374cc"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 4,
+              "source_text_start": 0,
+              "text": "版权声明"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0002-29710000",
+        "kind": "fixed_content",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-bdc0b516483c20d6b3d936b1"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0002-ec6b6c16",
+          "intent_type": "keep_fixed_content",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-357ceca59ea853cc93cd108f",
+                "obj-171786a2879690562433eab7"
+              ],
+              "expected_source_content": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+              "extent": {
+                "end": 90,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1"
+              },
+              "source_entry_id": "source-entry-bdc0b516483c20d6b3d936b1",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-bdc0b516483c20d6b3d936b1;extent=text[0:90];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。",
+              "text_end": 90,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                  "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+                  "object_id": "obj-357ceca59ea853cc93cd108f",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                    "object_id": "obj-357ceca59ea853cc93cd108f"
+                  },
+                  "object_text_end": 89,
+                  "object_text_start": 0,
+                  "source_text_end": 89,
+                  "source_text_start": 0,
+                  "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+                },
+                {
+                  "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                  "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+                  "object_id": "obj-171786a2879690562433eab7",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                    "object_id": "obj-171786a2879690562433eab7"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 90,
+                  "source_text_start": 89,
+                  "text": "。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[1]",
+              "object_id": "obj-357ceca59ea853cc93cd108f",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "aec537969452de78b0518646f139134d569c23cb92b8ae41e0819d47d7431fc2",
+                "object_id": "obj-357ceca59ea853cc93cd108f"
+              },
+              "object_text_end": 89,
+              "object_text_start": 0,
+              "source_text_end": 89,
+              "source_text_start": 0,
+              "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任"
+            },
+            {
+              "fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+              "locator": "/body/p[@paraId=2DE50D1E]/r[2]",
+              "object_id": "obj-171786a2879690562433eab7",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "33fdcaf540078cae30e77801bcefc419e03e4e0a8b1206df1554596a04619aac",
+                "object_id": "obj-171786a2879690562433eab7"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 90,
+              "source_text_start": 89,
+              "text": "。"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0003-7aa30060",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-6c758d4509e2d8f7236b26f0"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0003-58fa79b2",
+          "intent_type": "transfer_style_only",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-7cf63094e52453c905275340"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0"
+              },
+              "source_entry_id": "source-entry-6c758d4509e2d8f7236b26f0",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-6c758d4509e2d8f7236b26f0;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                  "locator": "/body/p[@paraId=05A2A89A]",
+                  "object_id": "obj-7cf63094e52453c905275340",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                    "object_id": "obj-7cf63094e52453c905275340"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+              "locator": "/body/p[@paraId=05A2A89A]",
+              "object_id": "obj-7cf63094e52453c905275340",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "35a86feae80a77aec48422091d820ea040111c91e5aef42fe0747cc4c4489bf2",
+                "object_id": "obj-7cf63094e52453c905275340"
+              },
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0004-d57a9bca",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0004-92cad7aa",
+          "intent_type": "transfer_style_only",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-95e36489b2ff72c9481dc593"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7"
+              },
+              "source_entry_id": "source-entry-0eb87ccfa26dc7f3a80911c7",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-0eb87ccfa26dc7f3a80911c7;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                  "locator": "/body/p[@paraId=093B9B16]",
+                  "object_id": "obj-95e36489b2ff72c9481dc593",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                    "object_id": "obj-95e36489b2ff72c9481dc593"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+              "locator": "/body/p[@paraId=093B9B16]",
+              "object_id": "obj-95e36489b2ff72c9481dc593",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "90c127a5d75e68b11f52307b1f5dff1ebf7bfb75f2ea662b4b6597e859ad18e4",
+                "object_id": "obj-95e36489b2ff72c9481dc593"
+              },
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0005-1f4841e1",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0005-3bff767f",
+          "intent_type": "transfer_style_only",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-1258f967a2596325acd20afd"
+              ],
+              "expected_source_content": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "judgment_index": 4,
+              "part_index": 0,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047"
+              },
+              "source_entry_id": "source-entry-7cb2b4a78dd6a0c66641d047",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-7cb2b4a78dd6a0c66641d047;extent=whole_entry;source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "",
+              "word_fragments": [
+                {
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                  "locator": "/body/p[@paraId=35ADE725]",
+                  "object_id": "obj-1258f967a2596325acd20afd",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                    "object_id": "obj-1258f967a2596325acd20afd"
+                  },
+                  "text": ""
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+              "locator": "/body/p[@paraId=35ADE725]",
+              "object_id": "obj-1258f967a2596325acd20afd",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "884ba30c9f462c91a3236d5b3dcc5ad815446f02c64ab2933f0178a76bfd82e8",
+                "object_id": "obj-1258f967a2596325acd20afd"
+              },
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0006-0c558f5f",
+        "kind": "cleanup_block",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-7413a818272b7938d5bbed52"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0006-286d1975",
+          "intent_type": "delete_block",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-e629d537402d8d0c789315c9",
+                "obj-1a1c33b75c3b259da2f2bc91",
+                "obj-587b6ab205ce2456d74b4050",
+                "obj-b6b2124c4a247317de6b73b4",
+                "obj-9420398b497cbf4e4145e37b"
+              ],
+              "expected_source_content": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。",
+              "extent": {
+                "end": 75,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 5,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-7413a818272b7938d5bbed52"
+              },
+              "source_entry_id": "source-entry-7413a818272b7938d5bbed52",
+              "source_inventory_digest": "45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb",
+              "source_snapshot_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "span_ref": "source_entry_id=source-entry-7413a818272b7938d5bbed52;extent=text[0:75];source_snapshot_sha256=48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+              "text": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。",
+              "text_end": 75,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[1]",
+                  "object_id": "obj-e629d537402d8d0c789315c9",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+                    "object_id": "obj-e629d537402d8d0c789315c9"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 19,
+                  "source_text_start": 0,
+                  "text": "在正式提交图书馆的论文版本中，需将此页"
+                },
+                {
+                  "fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[2]",
+                  "object_id": "obj-1a1c33b75c3b259da2f2bc91",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+                    "object_id": "obj-1a1c33b75c3b259da2f2bc91"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 26,
+                  "source_text_start": 19,
+                  "text": "与原创性声明页"
+                },
+                {
+                  "fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[3]",
+                  "object_id": "obj-587b6ab205ce2456d74b4050",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+                    "object_id": "obj-587b6ab205ce2456d74b4050"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 45,
+                  "source_text_start": 26,
+                  "text": "替换为带有二维码的版本，带有二维码的此"
+                },
+                {
+                  "fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[4]",
+                  "object_id": "obj-b6b2124c4a247317de6b73b4",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+                    "object_id": "obj-b6b2124c4a247317de6b73b4"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 46,
+                  "source_text_start": 45,
+                  "text": "二"
+                },
+                {
+                  "fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+                  "locator": "/body/p[@paraId=0F101DDD]/r[5]",
+                  "object_id": "obj-9420398b497cbf4e4145e37b",
+                  "object_ref": {
+                    "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                    "expected_fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+                    "object_id": "obj-9420398b497cbf4e4145e37b"
+                  },
+                  "object_text_end": 29,
+                  "object_text_start": 0,
+                  "source_text_end": 75,
+                  "source_text_start": 46,
+                  "text": "页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+              "locator": "/body/p[@paraId=0F101DDD]/r[1]",
+              "object_id": "obj-e629d537402d8d0c789315c9",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "0c27bc25d9fa02b4cd45841a0ab8b0246c9b152410cdbb3296c74658754cb72d",
+                "object_id": "obj-e629d537402d8d0c789315c9"
+              },
+              "object_text_end": 19,
+              "object_text_start": 0,
+              "source_text_end": 19,
+              "source_text_start": 0,
+              "text": "在正式提交图书馆的论文版本中，需将此页"
+            },
+            {
+              "fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+              "locator": "/body/p[@paraId=0F101DDD]/r[2]",
+              "object_id": "obj-1a1c33b75c3b259da2f2bc91",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "e8402815a709b8cca6c5b4ef48129a379cbf6570b3ddeeef6568d220925fab10",
+                "object_id": "obj-1a1c33b75c3b259da2f2bc91"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 26,
+              "source_text_start": 19,
+              "text": "与原创性声明页"
+            },
+            {
+              "fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+              "locator": "/body/p[@paraId=0F101DDD]/r[3]",
+              "object_id": "obj-587b6ab205ce2456d74b4050",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "c3d518ef390fd3fafa0a79c86bf0e29bb0829061d3f7814c3101f0fba22dcdd2",
+                "object_id": "obj-587b6ab205ce2456d74b4050"
+              },
+              "object_text_end": 19,
+              "object_text_start": 0,
+              "source_text_end": 45,
+              "source_text_start": 26,
+              "text": "替换为带有二维码的版本，带有二维码的此"
+            },
+            {
+              "fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+              "locator": "/body/p[@paraId=0F101DDD]/r[4]",
+              "object_id": "obj-b6b2124c4a247317de6b73b4",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "5f39171cdc9d7affcd893132b605918514e81d76dd7c74713c6dcf78f083cc51",
+                "object_id": "obj-b6b2124c4a247317de6b73b4"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 46,
+              "source_text_start": 45,
+              "text": "二"
+            },
+            {
+              "fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+              "locator": "/body/p[@paraId=0F101DDD]/r[5]",
+              "object_id": "obj-9420398b497cbf4e4145e37b",
+              "object_ref": {
+                "document_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+                "expected_fingerprint": "da2fbbd3a2e5da2b428f44d375940e72e6d864b8004278c79f90640c4011db4b",
+                "object_id": "obj-9420398b497cbf4e4145e37b"
+              },
+              "object_text_end": 29,
+              "object_text_start": 0,
+              "source_text_end": 75,
+              "source_text_start": 46,
+              "text": "页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+            }
+          ]
+        }
+      }
+    ],
+    "commands": [],
+    "unsupported": [],
+    "source_review_digest": "268a8347f5b8ef363ed8391ce118471f3ececc02d2655c0d20a628c80ceca46f"
+  }
+}

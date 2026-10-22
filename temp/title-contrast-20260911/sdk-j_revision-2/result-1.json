@@ -1,0 +1,263 @@
+{
+  "status": "complete",
+  "summary": "封面单元语义判断完成。16 个 source entry 全部判断：附件1格式前言与所有括号内格式/字号/字体说明作为 cleanup；学校名、文档类型标题、地点作为 fixed_label；中文/英文题名、学生姓名、学号、年级专业班级、导师姓名、导师职称、学院、提交日期均绑定到对应 fill_slot 字段。论文/设计标题条件取舍由宿主按任务配置处理，未发现需要新增字段。",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-f64716e2b627776af88239e5",
+      "parts": [
+        {
+          "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。\"□\" 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "该段为封面外、位于可见文本轮廓之前的格式与样式前言（页边距/行距/对齐/字宽定义/论文-设计条件取舍）。这些是模板编辑说明而非封面正文，应由宿主样式捕获承接，不进入干净模板；论文-设计标题取舍属宿主运行时按任务配置处理，无对应字段。"
+    },
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "上一行留空、用华文行楷一号的格式说明，属模板编辑提示，不进入干净模板。"
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "校名是封面学校固定文案；附加的字号字体说明是模板编辑提示，不进入干净模板，由宿主样式捕获承接。"
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "文档类型标题是学校固定文案；前置格式说明要求论文/设计二选一(无对应字段，由宿主按任务配置条件承担)；字号字体说明是模板编辑提示。"
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "段前空行的格式说明，属模板编辑提示，不进入干净模板。"
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": "（小二黑体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "\"毕业论文（设计）中文题目\" 占据中文题名填写位置，绑定 thesis.title.zh；附加的字号字体说明是模板编辑提示。"
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "英文题名占位文字绑定 thesis.title.en；附加的字体字号与大写说明是模板编辑提示。"
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "英文题名下空行间距说明，属模板编辑提示，不进入干净模板。"
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□学生姓名",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "cleanup"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        },
+        {
+          "text": "（或×□×）",
+          "role": "cleanup"
+        },
+        {
+          "text": "（三号楷体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "标签与冒号为封面固定文案；××× 占据姓名填写位，绑定 author.name.zh；（或×□×）是两字姓名排版备选说明，属模板编辑提示；末段字号字体说明属模板编辑提示，由宿主样式承接；前导空格作为格式说明间距随附表达。"
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□学□□号",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "学号标签与冒号为固定文案；占位绑定 author.student_id。"
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□年级专业及班级",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "年级专业及班级标签为固定文案；占位为年级+专业+班级复合填写值，绑定 author.cohort_class。"
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□指导老师及职称",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□",
+          "role": "style_only"
+        },
+        {
+          "text": "教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "指导老师及职称标签为固定文案；姓名占位绑定 advisor.name.zh；\"教授\"作为示例职称值占位（学校模板允许教授/副教授等），绑定 advisor.title；□ 是姓名与职称之间的间距，由宿主样式承接。"
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□学□□院",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": "（学院名用全称）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "学院标签为固定文案；占位绑定 author.department；（学院名用全称）是模板编辑提示，由宿主样式承接；前导空格作为格式说明间距随附表达。"
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "基本信息下方空行间距说明，属模板编辑提示，不进入干净模板。"
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（小三号黑体）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "学校所在地是封面固定文案；字号字体说明是模板编辑提示；前导空格作为格式说明间距随附表达。"
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "提交日期标签为固定文案；年月占位绑定 submission.date。"
+    }
+  ]
+}

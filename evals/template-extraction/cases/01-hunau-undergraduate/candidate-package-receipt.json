@@ -1,0 +1,8 @@
+{
+  "case_id": "01-hunau-undergraduate",
+  "case_sha256": "33c8ab787beff75cc8d69cde0f353d16a279d60ba15d0dbe2eaff31fb9753c73",
+  "contract_sha256": "0f472fab552586671b39b554eb41afa1e234fa56910a984bbe51e8a39a987663",
+  "gold_review_status": "accepted",
+  "schema_version": "docfit-template-extraction-candidate-package-receipt/v1",
+  "template_sha256": "1a64c68e3afefcc30aa800c390be752b71c2201b754b5136a13c0f3919b3d3c2"
+}

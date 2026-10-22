@@ -1,0 +1,5 @@
+PATH="$PWD/temp/id-closure-20260911/bin:$PATH" DOCFIT_AGENT_BACKEND_ORDER=minimax uv run docfit prepare-template \
+  --school-template temp/id-closure-20260911/cover-e2e/input/school-template.docx \
+  --school-requirements temp/id-closure-20260911/cover-e2e/input/school-requirements.pdf \
+  --field-registry temp/id-closure-20260911/cover-e2e/input/field-registry.yaml \
+  --output temp/skill-effect-e32bcf9-20260911-121504/cover-e2e

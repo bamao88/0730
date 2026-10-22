@@ -68,22 +68,15 @@ def assess_observation_overhead(
     if not disabled or len(disabled) != len(enabled):
         raise ValueError("observation_benchmark_samples_invalid")
     baseline_wall_p95 = _p95([sample.wall_seconds for sample in disabled])
-    wall_increment = _p95(
-        [
-            max(0.0, observed.wall_seconds - baseline.wall_seconds)
-            for baseline, observed in zip(disabled, enabled, strict=True)
-        ]
+    enabled_wall_p95 = _p95([sample.wall_seconds for sample in enabled])
+    wall_increment = max(0.0, enabled_wall_p95 - baseline_wall_p95)
+    baseline_cpu_p95 = _p95([sample.cpu_seconds for sample in disabled])
+    enabled_cpu_p95 = _p95([sample.cpu_seconds for sample in enabled])
+    cpu_increment_ratio = (
+        max(0.0, enabled_cpu_p95 - baseline_cpu_p95) / baseline_cpu_p95
+        if baseline_cpu_p95 > 0
+        else math.inf
     )
-    cpu_ratios = [
-        (
-            max(0.0, observed.cpu_seconds - baseline.cpu_seconds)
-            / baseline.cpu_seconds
-            if baseline.cpu_seconds > 0
-            else math.inf
-        )
-        for baseline, observed in zip(disabled, enabled, strict=True)
-    ]
-    cpu_increment_ratio = _p95(cpu_ratios)
     peak_rss_increment = max(
         0,
         max(sample.peak_rss_bytes for sample in enabled)

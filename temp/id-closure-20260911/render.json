@@ -1,0 +1,46 @@
+{
+  "cache_hit": false,
+  "checks": [
+    {
+      "name": "libreoffice_pdf",
+      "result": "ok"
+    },
+    {
+      "name": "render_integrity",
+      "result": "ok"
+    }
+  ],
+  "document_sha256": "0e1401ac7e1f1cd130dfe260ee5398ad6d904c48e8ad4e487686d3dee8f47ce1",
+  "failure": null,
+  "fidelity": "approximate",
+  "image_paths": [
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/cover-e2e/.docfit/evidence/renders/bce027390167d3c1f4e27acdff8ef440c4edd45589a7de28bfd813ee833c4caf/views/contact-0001-0001-f739415ba759a4fd5a2375681e0bd1cddc886c933fbd3f4392b05ac65a10d894.png"
+  ],
+  "overview": {
+    "covered_pages": [
+      1
+    ],
+    "evidence_ref": "visual:v2:f739415ba759a4fd5a2375681e0bd1cddc886c933fbd3f4392b05ac65a10d894",
+    "has_more": false
+  },
+  "page_count": 1,
+  "render_ref": "render:v2:bce027390167d3c1f4e27acdff8ef440c4edd45589a7de28bfd813ee833c4caf",
+  "renderer": {
+    "container_image": "docfit-libreoffice-visual:25.2.3.2",
+    "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+    "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+    "locale": "zh_CN.UTF-8",
+    "name": "libreoffice",
+    "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}",
+    "version": "LibreOffice 25.2.3.2 520(Build:2)"
+  },
+  "schema_version": 2,
+  "status": "ok",
+  "warnings": [
+    {
+      "code": "approximate_render",
+      "kind": "fidelity",
+      "message": "LibreOffice visual evidence is approximate, not Word pixel parity."
+    }
+  ]
+}

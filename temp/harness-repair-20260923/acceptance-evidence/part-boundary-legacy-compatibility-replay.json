@@ -1,0 +1,44 @@
+{
+  "verification_level": "real replay of accepted judgments; deterministic representation conversion, not new Agent output",
+  "schools": [
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task",
+      "judgment_count": 158,
+      "changed_parts": [],
+      "span_count": 249,
+      "slot_count": 90,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/object-inventory.json": "d5ca1565f6718c90ee1c1c758863bf77258b34901526e48ec696adf46cc700ae",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000049.json": "0313aaef35ab9e8479de38273e7ae0c8a51147873c83ab070861a74ab6df667b",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+      }
+    },
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task",
+      "judgment_count": 51,
+      "changed_parts": [],
+      "span_count": 98,
+      "slot_count": 7,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/object-inventory.json": "6ccda2d4c6ec4e0b6aa822f3b9b452ce3d9a92fe740e3e44062f99aa0fd621eb",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/semantic-revisions/00000017.json": "462835b8470f8a8db266f4bab38eed6cbfb38c386db4e1025ebcd0e4df1e0b1e",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5"
+      }
+    },
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-precise-feedback-task",
+      "judgment_count": 49,
+      "changed_parts": [],
+      "span_count": 50,
+      "slot_count": 4,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-precise-feedback-task/work/.docfit/harness/object-inventory.json": "9d2132a92874f831a492faebfbdb1745e2600023677e04eb9c4a095dffe76703",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000020.json": "108a5e8569b036ce9c8b32bfae2674703557af62e1156d487b18a61673d5d166",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-precise-feedback-task/input/school-template.docx": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375"
+      }
+    }
+  ]
+}

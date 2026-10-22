@@ -98,7 +98,10 @@ class _Office:
     @staticmethod
     def query(document: Path, selector: str) -> tuple[JsonObject, ...]:
         assert document.is_file()
-        assert selector == "paragraph, table, picture"
+        assert selector in {
+            "paragraph, table, picture",
+            "paragraph, table, picture, shape",
+        }
         return (
             {"path": "/body/p[1]", "type": "paragraph", "text": "学生姓名"},
             {"path": "/body/p[2]", "type": "paragraph", "text": "指导教师"},
@@ -214,7 +217,7 @@ def test_regions_use_text_object_and_image_coordinate_selectors(tmp_path: Path) 
     _docx(document)
     service = _service(tmp_path)
     rendered, _ = service.render({"input_docx": document.name, "overview": False})
-    inspected = service.office.query(document, "paragraph, table, picture")
+    inspected = service.office.query(document, "paragraph, table, picture, shape")
     assert inspected[1]["text"] == "指导教师"
     anchors = service._read_index(  # noqa: SLF001 - contract fixture reads stored evidence
         next((tmp_path / ".docfit/evidence/renders").iterdir())

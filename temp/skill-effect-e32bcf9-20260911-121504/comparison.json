@@ -1,0 +1,634 @@
+{
+  "baseline": {
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/cover-e2e",
+    "status": "complete",
+    "completion_status": "complete",
+    "failure": null,
+    "backend": "minimax",
+    "session_id": "0ea4b8f2-50f7-4119-af87-a42d3bbc82af",
+    "skills_loaded": [
+      "docfit-school-extract"
+    ],
+    "sdk_query_count": 3,
+    "harness_feedback_attempts": 1,
+    "semantic_feedback_attempts": 1,
+    "wall_duration_ms": 148891,
+    "judgment_count": 16,
+    "part_count": 24,
+    "field_parts": [
+      {
+        "judgment_index": 6,
+        "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+        "field_id": "thesis.title.en",
+        "role": "fill_slot",
+        "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）"
+      },
+      {
+        "judgment_index": 8,
+        "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+        "field_id": "author.name.zh",
+        "role": "fill_slot",
+        "text": "×××（或×□×）"
+      },
+      {
+        "judgment_index": 9,
+        "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+        "field_id": "author.student_id",
+        "role": "fill_slot",
+        "text": "20××××××××××"
+      },
+      {
+        "judgment_index": 10,
+        "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+        "field_id": "author.cohort_class",
+        "role": "fill_slot",
+        "text": "20××级×××（×）班"
+      },
+      {
+        "judgment_index": 11,
+        "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+        "field_id": "advisor.name.zh",
+        "role": "fill_slot",
+        "text": "×××□教授"
+      },
+      {
+        "judgment_index": 12,
+        "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+        "field_id": "author.department",
+        "role": "fill_slot",
+        "text": "××××学院"
+      },
+      {
+        "judgment_index": 15,
+        "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+        "field_id": "submission.date",
+        "role": "fill_slot",
+        "text": "20××年××月"
+      }
+    ],
+    "judgments": [
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。"
+          }
+        ],
+        "reason": "封面页顶部的“附件1 封面基本格式……”说明段属于学校随模板发放的格式/排版教学注释，清理阶段随其它模板说明一并清除，规则由样式与 post-unit 流程承载。",
+        "source_entry_id": "source-entry-f64716e2b627776af88239e5"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（一号华文行楷空一行）"
+          }
+        ],
+        "reason": "括号化排版提示“一号华文行楷空一行”是学校名上方的版式注释，属于模板说明，应清理。",
+        "source_entry_id": "source-entry-eee86579316ea7c574e3207f"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "湖 南 农 业 大 学（一号华文行楷加粗）"
+          }
+        ],
+        "reason": "“湖 南 农 业 大 学”是学校标识，括号内的字体说明随段保留作为该固定标签同一行的版式注释，整体归学校固定封面抬头 fixed_label；其字号/字体由 style_summary 承载。",
+        "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "全日制普通本科生毕业论文(设计)（一号黑体加粗）"
+          }
+        ],
+        "reason": "“全日制普通本科生毕业论文(设计)”是学校定义的固定论文类型标签，括号内的字体说明随段保留，整体归 fixed_label。",
+        "source_entry_id": "source-entry-41188746a2863266fad60518"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（一号黑体空一行）"
+          }
+        ],
+        "reason": "括号化排版提示“一号黑体空一行”是论文类型标签下方的版式注释，属于模板说明，应清理。",
+        "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "毕业论文（设计）中文题目 （小二黑体加粗）"
+          }
+        ],
+        "reason": "中文题目标签“毕业论文（设计）中文题目”是学校封面固定文字提示；学生填入的中文题名正文由下一段 thesis.title.zh 槽承载。本段整体归 fixed_label，括号字体说明随段保留。",
+        "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3"
+      },
+      {
+        "parts": [
+          {
+            "field_id": "thesis.title.en",
+            "role": "fill_slot",
+            "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）"
+          }
+        ],
+        "reason": "该段为英文论文题名，右对齐、Times New Roman 大写四号加粗；学校要求下学生填入真实英文题名，文本本身即英文题名占位（括号字体说明随段保留）。绑定 field_id_vocabulary 中 allowed_field_ids 的 thesis.title.en，且 usage_affordance.allowed_part_roles 包含 fill_slot。",
+        "source_entry_id": "source-entry-bf74a3353df418bfdb93147b"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（根据题目长短四号字空二或三行）"
+          }
+        ],
+        "reason": "括号化排版提示“根据题目长短四号字空二或三行”是英文题名上方的版式注释，属于模板说明，应清理。",
+        "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学生姓名（三号黑体加粗）："
+          },
+          {
+            "field_id": "author.name.zh",
+            "role": "fill_slot",
+            "text": "×××（或×□×）"
+          },
+          {
+            "role": "style_only",
+            "text": " （三号楷体加粗）"
+          }
+        ],
+        "reason": "五行基本信息首行：固定标签段（含前缀空格占位与字体说明）作为 fixed_label；其后“×××（或×□×）”是学生中文姓名占位（含两/三字姓名排版示意），绑定 author.name.zh（allowed_part_roles 含 fill_slot）；行末空格+括号楷体字体说明作为该 fill_slot 紧随的 style_only。",
+        "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学□□号："
+          },
+          {
+            "field_id": "author.student_id",
+            "role": "fill_slot",
+            "text": "20××××××××××"
+          }
+        ],
+        "reason": "五行基本信息第二行：固定标签“学号：”（含前缀空格占位），其后“20××××××××××”即 12 位学号占位。绑定 author.student_id（allowed_part_roles 含 fill_slot）。",
+        "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□年级专业及班级："
+          },
+          {
+            "field_id": "author.cohort_class",
+            "role": "fill_slot",
+            "text": "20××级×××（×）班"
+          }
+        ],
+        "reason": "五行基本信息第三行：固定标签“年级专业及班级：”（含前缀空格占位），其后“20××级×××（×）班”是年级+专业+班级的复合填写位。绑定 author.cohort_class（label 明确为“年级、专业及班级复合信息”，allowed_part_roles 含 fill_slot）。",
+        "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□指导老师及职称："
+          },
+          {
+            "field_id": "advisor.name.zh",
+            "role": "fill_slot",
+            "text": "×××□教授"
+          }
+        ],
+        "reason": "五行基本信息第四行：固定标签“指导老师及职称：”（含前缀空格占位），其后“×××□教授”是导师姓名与职称的复合占位（姓名为必填、职称示例为“教授”）。姓名部分绑定 advisor.name.zh（allowed_part_roles 含 fill_slot）。advisor.title 在 field_id_vocabulary 中是独立字段，但本行原文将姓名和职称并入同一段，无法仅凭文本分出第二个干净槽，故姓名绑定 advisor.name.zh、职称示例沿用文字。",
+        "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学□□院："
+          },
+          {
+            "field_id": "author.department",
+            "role": "fill_slot",
+            "text": "××××学院"
+          },
+          {
+            "role": "cleanup",
+            "text": " （学院名用全称）"
+          }
+        ],
+        "reason": "五行基本信息第五行：固定标签“学院：”（含前缀空格占位，因排版需要写作“学 □□院”），其后“××××学院”是学生所在院系全称占位，绑定 author.department（allowed_part_roles 含 fill_slot）；行末“（学院名用全称）”是学校随模板发放的填写说明，归 cleanup。",
+        "source_entry_id": "source-entry-0d171ab0a1928731d320b622"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（三号字空二或三行）"
+          }
+        ],
+        "reason": "括号化排版提示“三号字空二或三行”是基本信息下方、地点上方的版式注释，属于模板说明，应清理。",
+        "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "湖南·长沙 （小三号黑体）"
+          }
+        ],
+        "reason": "“湖南·长沙”是学校所在地，是封面学校信息而不是学生值；括号字体说明随段保留，整体归 fixed_label，字体由 style_summary 承载。",
+        "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "提交日期："
+          },
+          {
+            "field_id": "submission.date",
+            "role": "fill_slot",
+            "text": "20××年××月"
+          }
+        ],
+        "reason": "封面最末行：固定标签“提交日期：”，其后“20××年××月”是提交年月占位。绑定 submission.date（allowed_part_roles 含 fill_slot）。这是封面页终止于页脚上方的最后一条可见文本。",
+        "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7"
+      }
+    ],
+    "docx_sha256": "0e1401ac7e1f1cd130dfe260ee5398ad6d904c48e8ad4e487686d3dee8f47ce1",
+    "paragraphs": [
+      "     湖 南 农 业 大 学",
+      "全日制普通本科生毕业论文(设计)",
+      "",
+      "          毕业论文（设计）中文题目",
+      "【英文论文题目】",
+      "",
+      "",
+      "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】 （三号楷体加粗）",
+      "□□□□□□学□□号：【学号】",
+      "□□□□□□年级专业及班级：【年级、专业及班级复合信息】",
+      "□□□□□□指导老师及职称：【导师中文姓名】",
+      "□□□□□□学□□院：【院系】",
+      "",
+      "",
+      "湖南·长沙",
+      "提交日期：【提交年月】",
+      ""
+    ],
+    "content_controls": [
+      {
+        "alias": "thesis.title.en",
+        "tag": "source_entry_id=source-entry-bf74a3353df418bfdb93147b;part_index=0;field_id=thesis.title.en",
+        "text": "【英文论文题目】"
+      },
+      {
+        "alias": "author.name.zh",
+        "tag": "source_entry_id=source-entry-3b879d2fe97520fea28d9eb9;part_index=1;field_id=author.name.zh",
+        "text": "【作者中文姓名】"
+      },
+      {
+        "alias": "author.student_id",
+        "tag": "source_entry_id=source-entry-7bd37b8065820e49cdd60b0d;part_index=1;field_id=author.student_id",
+        "text": "【学号】"
+      },
+      {
+        "alias": "author.cohort_class",
+        "tag": "source_entry_id=source-entry-33b7069c5a23b51f75a2deb5;part_index=1;field_id=author.cohort_class",
+        "text": "【年级、专业及班级复合信息】"
+      },
+      {
+        "alias": "advisor.name.zh",
+        "tag": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=1;field_id=advisor.name.zh",
+        "text": "【导师中文姓名】"
+      },
+      {
+        "alias": "author.department",
+        "tag": "source_entry_id=source-entry-0d171ab0a1928731d320b622;part_index=1;field_id=author.department",
+        "text": "【院系】"
+      },
+      {
+        "alias": "submission.date",
+        "tag": "source_entry_id=source-entry-da54fbc60d2e3ec73e91b3b7;part_index=1;field_id=submission.date",
+        "text": "【提交年月】"
+      }
+    ]
+  },
+  "current": {
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/skill-effect-e32bcf9-20260911-121504/cover-e2e",
+    "status": "failed",
+    "completion_status": "needs_input",
+    "failure": {
+      "code": "template_agent_needs_input",
+      "message": "The main Agent needs additional semantic input: ['Cover unit lacks a textual source entry that contains the Chinese-title student-value span (thesis.title.zh fill area). Layout context shows blank_layout_candidate at order 6 but no source entry text covers the title value span, so a fill_slot part cannot be emitted without violating ordered-part text-coverage.', 'Cover unit lacks a textual source entry that contains the English-title student-value span (thesis.title.en fill area). Layout context shows blank_layout_candidate at orders 10, 11, 18, 19 but no source entry text covers the title value span, so a fill_slot part cannot be emitted without violating ordered-part text-coverage.']",
+      "origin": "agent",
+      "retryable": false,
+      "status": "needs_input",
+      "suggested_actions": []
+    },
+    "backend": "minimax",
+    "session_id": "c7f4ad01-aca2-4e6c-b3ed-eb01e70c56dd",
+    "skills_loaded": [
+      "docfit-school-extract"
+    ],
+    "sdk_query_count": 5,
+    "harness_feedback_attempts": 3,
+    "semantic_feedback_attempts": 2,
+    "wall_duration_ms": 315712,
+    "judgment_count": 16,
+    "part_count": 26,
+    "field_parts": [
+      {
+        "judgment_index": 8,
+        "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+        "field_id": "author.name.zh",
+        "role": "fill_slot",
+        "text": "×××（或×□×）"
+      },
+      {
+        "judgment_index": 9,
+        "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+        "field_id": "author.student_id",
+        "role": "fill_slot",
+        "text": "20××××××××××"
+      },
+      {
+        "judgment_index": 10,
+        "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+        "field_id": "author.cohort_class",
+        "role": "fill_slot",
+        "text": "20××级×××（×）班"
+      },
+      {
+        "judgment_index": 11,
+        "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+        "field_id": "advisor.name.zh",
+        "role": "fill_slot",
+        "text": "×××"
+      },
+      {
+        "judgment_index": 11,
+        "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+        "field_id": "advisor.title",
+        "role": "fill_slot",
+        "text": "教授"
+      },
+      {
+        "judgment_index": 12,
+        "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+        "field_id": "author.department",
+        "role": "fill_slot",
+        "text": "××××学院"
+      },
+      {
+        "judgment_index": 15,
+        "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+        "field_id": "submission.date",
+        "role": "fill_slot",
+        "text": "20××年××月"
+      }
+    ],
+    "judgments": [
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。"
+          }
+        ],
+        "reason": "Block 1 is the 附件1 封面基本格式 preamble. It is a template-author format/style instruction (line spacing, margins, centering rule, the meaning of □, and the 论文 vs 设计 switch). It is style and editing guidance, not part of the visible cover layout. Cleanup; its style obligations are style context, not kept text.",
+        "source_entry_id": "source-entry-f64716e2b627776af88239e5"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（一号华文行楷空一行）"
+          }
+        ],
+        "reason": "Block 2 is a placeholder format instruction (one-line 华文行楷 with a blank row). It tells the author what size/font and spacing to use; it is not visible cover text. Cleanup.",
+        "source_entry_id": "source-entry-eee86579316ea7c574e3207f"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "湖 南 农 业 大 学（一号华文行楷加粗）"
+          }
+        ],
+        "reason": "Block 3's scoped text fuses the university name and the parenthetical font/size style note into a single contiguous string with no separator. Per ordered-part text-coverage rules the entire string must be covered by one part; the university-name fixed content is kept as fixed_label. The style obligation (一号华文行楷加粗) is style context recorded in this reason, not a separate text part, because splitting would leave the visible character sequence unrecoverable.",
+        "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "全日制普通本科生毕业论文(设计)（一号黑体加粗）"
+          }
+        ],
+        "reason": "Block 4's scoped text fuses the document-type label (全日制普通本科生毕业论文(设计)) and the parenthetical font/size style note into a single contiguous string with no separator. The full string is fixed school content kept as fixed_label; the style obligation (一号黑体加粗) is style context recorded in this reason. The 论文/设计 disambiguation itself is in the cover preamble (block 1, cleanup) and does not alter this fixed label.",
+        "source_entry_id": "source-entry-41188746a2863266fad60518"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（一号黑体空一行）"
+          }
+        ],
+        "reason": "Block 5 is a placeholder format instruction (one-line 黑体 with a blank row). Cleanup.",
+        "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "毕业论文（设计）中文题目 （小二黑体加粗）"
+          }
+        ],
+        "reason": "Block 6's scoped text is the Chinese-title label line plus a font/size style note, fused into one contiguous string. The full string is fixed label content kept as fixed_label; the style obligation (小二黑体加粗) is style context recorded in this reason. The Chinese-title fill responsibility (thesis.title.zh) cannot be bound as a fill_slot part on this entry because its visible student-value span is blank whitespace preceding this line in the cover layout, with no source_entry text in the unit packet representing that span — see needs_input.",
+        "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）"
+          }
+        ],
+        "reason": "Block 7's scoped text is the English-title label in uppercase plus a font/size/case style note, fused into one contiguous string. The full string is fixed label content kept as fixed_label; the style obligation (四号Times New Roman加粗，大写) is style context recorded in this reason. The English-title fill responsibility (thesis.title.en) cannot be bound as a fill_slot part on this entry because its visible student-value span is blank whitespace surrounding this label in the cover layout, with no source_entry text in the unit packet representing that span — see needs_input.",
+        "source_entry_id": "source-entry-bf74a3353df418bfdb93147b"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（根据题目长短四号字空二或三行）"
+          }
+        ],
+        "reason": "Block 8 is a placeholder format instruction describing spacing dependent on title length. Cleanup.",
+        "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学生姓名（三号黑体加粗）："
+          },
+          {
+            "field_id": "author.name.zh",
+            "role": "fill_slot",
+            "text": "×××（或×□×）"
+          },
+          {
+            "role": "style_only",
+            "text": " （三号楷体加粗）"
+          }
+        ],
+        "reason": "Block 9 mixes a fixed label (学生姓名 with the bold label formatting and colon delimiter, plus the leading 6-character-width indent) and the example student-value span ×××（或×□×）, plus a parenthetical font/size style note. The label part is fixed_label. The ×××（或×□×） span is the example student name slot, fill_slot for author.name.zh (label meaning 中文作者姓名; content_type text; cardinality one; allowed_part_roles includes fill_slot). The parenthetical (三号楷体加粗) is a font/size style obligation applying to the value, recorded as style_only so the style context is not lost when the example is cleared.",
+        "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学□□号："
+          },
+          {
+            "field_id": "author.student_id",
+            "role": "fill_slot",
+            "text": "20××××××××××"
+          }
+        ],
+        "reason": "Block 10 carries the fixed label 学号 (with leading indent and colon) and the example student-id span 20××××××××××. The label part is fixed_label; the example student-id span is fill_slot for author.student_id (meaning 学号; content_type text; cardinality one; allowed_part_roles includes fill_slot). The leading 20 in the example is part of the example student-id span, not a separate year field — Registry has no separate enrollment-year field on the cover, and the meaning of this line in the template is the full student id.",
+        "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□年级专业及班级："
+          },
+          {
+            "field_id": "author.cohort_class",
+            "role": "fill_slot",
+            "text": "20××级×××（×）班"
+          }
+        ],
+        "reason": "Block 11 carries the fixed label 年级专业及班级 (with indent and colon) and the example composite value 20××级×××（×）班. The label part is fixed_label; the example span is a single visible fill position whose template meaning is the combined grade + major + class. Registry has author.cohort_class (年级、专业及班级复合信息, content_type text, cardinality one, allowed_part_roles includes fill_slot) which matches this single-slot composite responsibility — bind as fill_slot for author.cohort_class. The leading 20 in the example is part of the composite example, not a separately-bound field.",
+        "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□指导老师及职称："
+          },
+          {
+            "field_id": "advisor.name.zh",
+            "role": "fill_slot",
+            "text": "×××"
+          },
+          {
+            "role": "style_only",
+            "text": "□"
+          },
+          {
+            "field_id": "advisor.title",
+            "role": "fill_slot",
+            "text": "教授"
+          }
+        ],
+        "reason": "Block 12 carries the fixed label 指导老师及职称 (with indent and colon), then an example advisor-name span ×××, a one-character-width space □ (style/format separator — kept as style_only to preserve the explicit single-character gap between name and title), and the example title 教授. The label part is fixed_label. The advisor-name example ××× is fill_slot for advisor.name.zh (导师中文姓名; content_type text; cardinality one; allowed_part_roles includes fill_slot). The title example 教授 is fill_slot for advisor.title (导师职称; content_type text; cardinality optional; allowed_part_roles includes fill_slot). The two slots are kept as separate ordered parts because the template line holds two distinct fill responsibilities (name vs title) — they are not collapsed into one combined field.",
+        "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "□□□□□□学□□院："
+          },
+          {
+            "field_id": "author.department",
+            "role": "fill_slot",
+            "text": "××××学院"
+          },
+          {
+            "role": "style_only",
+            "text": " （学院名用全称）"
+          }
+        ],
+        "reason": "Block 13 carries the fixed label 学 院 (with indent and colon), the example department span ××××学院, and a parenthetical instruction 学院名用全称 (use the full college name). The label part is fixed_label; the example span ××××学院 is fill_slot for author.department (院系; content_type text; cardinality one; allowed_part_roles includes fill_slot). The 学院 suffix is part of the example department span, not a separate component — Registry has no separate field for it and the template uses the full-name college as a single value. The parenthetical 学院名用全称 is a naming-style obligation carried by the slot, kept as style_only so the style context is preserved when the example is cleared.",
+        "source_entry_id": "source-entry-0d171ab0a1928731d320b622"
+      },
+      {
+        "parts": [
+          {
+            "role": "cleanup",
+            "text": "（三号字空二或三行）"
+          }
+        ],
+        "reason": "Block 14 is a placeholder format/spacing instruction. Cleanup.",
+        "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "湖南·长沙 （小三号黑体）"
+          }
+        ],
+        "reason": "Block 15's scoped text fuses the school-location string 湖南·长沙 with a parenthetical font/size style note into one contiguous string. The full string is fixed school content kept as fixed_label; the style obligation (小三号黑体) is style context recorded in this reason.",
+        "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39"
+      },
+      {
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "提交日期："
+          },
+          {
+            "field_id": "submission.date",
+            "role": "fill_slot",
+            "text": "20××年××月"
+          }
+        ],
+        "reason": "Block 16 carries the fixed label 提交日期： and an example submission-date span 20××年××月. The label part is fixed_label; the example span is fill_slot for submission.date (提交年月; content_type text; cardinality one; allowed_part_roles includes fill_slot). The 20/×× in the example are part of the single example date, not separate fields.",
+        "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7"
+      }
+    ]
+  },
+  "part_comparison": {
+    "unchanged_source_entries": [
+      "source-entry-f64716e2b627776af88239e5",
+      "source-entry-eee86579316ea7c574e3207f",
+      "source-entry-b153f5e6bf86719aca50c7f9",
+      "source-entry-41188746a2863266fad60518",
+      "source-entry-e726637bb392f4a1cc5cf765",
+      "source-entry-329659f5fc3d1413fb341fb3",
+      "source-entry-6717abf7ed20791ca2c6ce82",
+      "source-entry-3b879d2fe97520fea28d9eb9",
+      "source-entry-7bd37b8065820e49cdd60b0d",
+      "source-entry-33b7069c5a23b51f75a2deb5",
+      "source-entry-4d6dbaaca2332dd64d37df71",
+      "source-entry-fe79111d3d405cb6f20e7d39",
+      "source-entry-da54fbc60d2e3ec73e91b3b7"
+    ],
+    "changed_source_entries": [
+      "source-entry-bf74a3353df418bfdb93147b",
+      "source-entry-1534d668fc2eb3a6672843d7",
+      "source-entry-0d171ab0a1928731d320b622"
+    ]
+  }
+}

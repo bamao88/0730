@@ -189,7 +189,7 @@ async def _fake_completed_agent(
         structured_output=structured,
         final_text="completed",
         tool_uses=tuple(sorted(REQUIRED_CONVERSION_TOOLS)),
-        skills_loaded=("docfit-school-extract", "convert-thesis"),
+        skills_loaded=("convert-thesis",),
         session_id="synthetic-session",
         backend="synthetic-backend",
     )

@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-09-24T06:39:33.977307+00:00",
+  "data": {
+    "feedback": {
+      "blockers": [
+        {
+          "code": "ordered_part_text_mismatch",
+          "expected_text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。     ",
+          "expected_text_length": 123,
+          "expected_trailing_whitespace_codepoints": [
+            "U+0020 × 5"
+          ],
+          "expected_trailing_whitespace_count": 5,
+          "field": "semantic_judgments[0].parts[0]",
+          "first_difference": {
+            "expected": {
+              "character": "“",
+              "codepoint": "U+201C",
+              "end_of_text": false
+            },
+            "submitted": {
+              "character": "\"",
+              "codepoint": "U+0022",
+              "end_of_text": false
+            }
+          },
+          "message": "Ordered part text must equal the source substring at the next exact offset.",
+          "mismatch_offset": 64,
+          "source_entry_id": "source-entry-2eb746e9f08a1ba6d753dcf9",
+          "source_text_length": 123,
+          "submitted_text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。\"□\" 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。     ",
+          "submitted_text_length": 123,
+          "text_end": 123,
+          "text_start": 0
+        }
+      ],
+      "checks": [
+        {
+          "name": "ordered_span_resolution",
+          "result": "needs_input"
+        }
+      ],
+      "failure": {
+        "code": "template_ordered_span_resolution_incomplete",
+        "message": "Harness could not resolve ordered semantic parts to scoped spans.",
+        "origin": "request",
+        "retryable": true,
+        "suggested_actions": [
+          "split_parts_against_exact_source_entry_text"
+        ]
+      },
+      "feedback": {
+        "agent_action": "Revise ordered semantic parts so their text segments partition the named source entry's exact text in order, including any boundary whitespace reported by the current unit packet.",
+        "mechanical": true,
+        "semantic_authority": false,
+        "type": "span_resolution"
+      },
+      "recovery": {
+        "action": "revise",
+        "kind": "semantic_revision",
+        "owner": "agent"
+      },
+      "schema_version": 2,
+      "status": "needs_input",
+      "warnings": []
+    },
+    "request_id": 2
+  },
+  "event_digest": "2d0f2aeb32e51ec691e37330bc9f5b45738b9e0dcc97a701b7ce54e96a454aa7",
+  "evidence_mode": "runtime",
+  "kind": "local_review",
+  "manifest_digest": "7ce59d4e50fa671375672d8c2708983de85d312317a230949b1d57759b7c0fa4",
+  "previous_event_digest": "80c97775b0d131be4db052ea282fdd75539a43fbc60a21a8d2a351b8ca9081ec",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 4
+}

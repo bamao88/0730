@@ -1,0 +1,26 @@
+{
+  "status": "ok",
+  "level": "logic/contract + actual DOCX/publication/consumer real replay",
+  "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "template_sha256": "01d3577e32db695c141cb1fdeeb36dc7a3456c8ccf40be1b8f11b5d956f71d2d",
+  "unchanged_zip_member_count": 15,
+  "unchanged_adjacent_para_ids": [
+    "51575115",
+    "32FA3572",
+    "43E12217"
+  ],
+  "selected_para_ids": [
+    "12BC71FF",
+    "155D2FA9",
+    "1DCE7B4E"
+  ],
+  "slot_refs": [
+    "source_entry_id=source-entry-35928580133227f3cccb41f2;extent=text[14:26];source_snapshot_sha256=5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc;field_id=author.cohort_class",
+    "source_entry_id=source-entry-b58f669431766e041e4c020f;extent=text[11:23];source_snapshot_sha256=5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc;field_id=author.student_id",
+    "source_entry_id=source-entry-bb3b6b45347e8b28632e5b8b;extent=text[0:25];source_snapshot_sha256=5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc;field_id=thesis.title.en"
+  ],
+  "placement_status": "COMPLETE",
+  "placement_operation_count": 3,
+  "publication_receipt_schema": 2,
+  "materialization_digest": "98a89a2bc75af97bc7ec885c445133d1de5d74d388c9106516c64ee8d59649b0"
+}

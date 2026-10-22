@@ -1,0 +1,122 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 10,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 21
+              }
+            },
+            {
+              "field_id": "thesis.title.en",
+              "role": "fill_slot",
+              "text": "Title of Graduation Paper"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            },
+            {
+              "role": "style_only",
+              "text": "（四号Times New Roman，加粗，居中）"
+            }
+          ],
+          "reason": "The English cover title row carries the centered title placeholder 'Title of Graduation Paper' followed by a parenthetical format instruction '（四号Times New Roman，加粗，居中）' that only describes the typeface (size 4 Times New Roman, bold, centered) and is not part of any fillable value. The 21 leading spaces are indentation that preserves the centered layout when the title is replaced; the single space between the placeholder text and the parenthetical separates the value position from the format instruction. The placeholder text binds to the vocabulary field thesis.title.en ('英文论文题目', content_type text, fill_slot role) because the row's only fillable content is the complete English title; the label/wording, surrounding spaces, and the parenthetical format cue are kept as style/layout responsibilities.",
+          "source_entry_id": "source-entry-514625a8c75c1c716bf2e944"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "Student:"
+            },
+            {
+              "field_id": "author.name.en",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "style_only",
+              "text": "（五号Times New Roman，居中）"
+            }
+          ],
+          "reason": "The row is the English-cover author line: the literal English label 'Student:' is a fixed label (kept verbatim with its colon as the separator), and the immediately adjacent '×××' runs are the placeholder for the student name to be supplied; they bind to the vocabulary field author.name.en ('作者英文姓名', content_type text, fill_slot role). The two spaces that follow separate the value position from the parenthetical format cue '（五号Times New Roman，居中）', which only describes the styling (size 5 Times New Roman, centered) and stays as style_only. No part is left uncovered: 'Student:' (8) + '×××' (3) + 2 spaces + '（五号Times New Roman，居中）' (22) reproduces the full 35-character source entry.",
+          "source_entry_id": "source-entry-9c9018b8a780488067d932a6"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "Tutor:"
+            },
+            {
+              "field_id": "advisor.name.en",
+              "role": "fill_slot",
+              "text": "××××"
+            }
+          ],
+          "reason": "English tutor/advisor line: 'Tutor:' is the fixed English label naming the advisor role. '××××' is the placeholder for the advisor's English name on the English cover, bound to advisor.name.en (fill_slot). No formatting annotation appears on this line, so no style_only fragment is needed beyond the label and value.",
+          "source_entry_id": "source-entry-e53eaaefa63842ddb3097b25"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "(College of"
+            },
+            {
+              "field_id": "author.department.en",
+              "role": "fill_slot",
+              "text": "×××××××"
+            },
+            {
+              "role": "fixed_label",
+              "text": ", Hunan Agricultural University, Changsha 410128, China)"
+            }
+          ],
+          "reason": "Affiliation line on English cover: '(College of' (opening paren + English label 'College of') is the fixed prefix. '×××××××' is the placeholder for the English department/college name on the English cover, bound to author.department.en (fill_slot; vocabulary explicitly covers English cover usage). ', Hunan Agricultural University, Changsha 410128, China)' is the fixed institutional and location suffix including the closing paren and is a fixed_label. Together the line yields '(College of <English dept>, Hunan Agricultural University, Changsha 410128, China)'.",
+          "source_entry_id": "source-entry-1e72d390beda2adc18444110"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Standalone Chinese formatting instruction in full-width parens: '（五号字空一行）' prescribes 5号-size font with one blank line of spacing. It carries no content value, so the entire fragment is style_only (layout/spacing requirement for the English cover unit).",
+          "source_entry_id": "source-entry-ca43f4c7dcbbdb525fcb0e01"
+        }
+      ],
+      "status": "complete",
+      "summary": "Judged 5 source entries for unit-cover-english (封面（英文）). Title placeholder 'Title of Graduation Paper' is the thesis.title.en fill_slot. 'Student:×××' splits into fixed_label 'Student:' + author.name.en fill_slot + style_only format note. 'Tutor:××××' splits into fixed_label 'Tutor:' + advisor.name.en fill_slot. '(College of×××××××, ..., China)' splits into fixed_label '(College of' + author.department.en fill_slot + fixed_label ', Hunan Agricultural University, Changsha 410128, China)'. '（五号字空一行）' is a style-only layout note. Leading 21 spaces on the title line preserved as style_only."
+    }
+  },
+  "event_digest": "c5b784baf5b07bb9186d38045e87795a304119e76747bb35935e06f7d5620bde",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "3a4695002a7e3a8588b9f4fa082ee2932a74bfa36af0faa04dcd1a7b483ccb7e",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 11
+}

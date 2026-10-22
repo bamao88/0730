@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-09-24T09:28:47.149549+00:00",
+  "data": {
+    "is_error": false,
+    "request_id": 8,
+    "session_id": "test",
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "reason": "fixed_label",
+              "role": "fixed_label",
+              "text": "wrong-0"
+            }
+          ],
+          "source_entry_id": "source-entry-bab8ce057df1154871c851cd"
+        }
+      ],
+      "status": "complete",
+      "summary": "fixed_label"
+    }
+  },
+  "event_digest": "fed2284c1cd0624aff59a325f20246014760fbe78673c4f46ef555388bec337a",
+  "evidence_mode": "runtime",
+  "kind": "response",
+  "manifest_digest": "969c54bca51006c313805f64344016302389dd5d36a1d27d5f7dbd670a9a82ff",
+  "previous_event_digest": "f7d1d0f060c553b26394d4a76593fe197fa926d720729027115b7876e054c17c",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 9
+}

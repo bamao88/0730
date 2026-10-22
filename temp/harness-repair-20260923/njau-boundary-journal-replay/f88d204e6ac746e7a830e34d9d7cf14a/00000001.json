@@ -1,0 +1,22 @@
+{
+  "binding": {
+    "evidence_mode": "replay",
+    "historical_tasks": [
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task"
+    ],
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+  },
+  "created_at": "2026-09-24T07:10:50.975017+00:00",
+  "data": {
+    "constructed_for_replay": true,
+    "feedback": null,
+    "prompt": "DocFit unit-boundary checkpoint v2. Load the docfit-school-extract Skill. Goal: return school function unit candidates for the source template only. The host runtime will run Harness boundary closure before any main preparation flow. Do not call write tools, do not perform final delivery, and do not decide final template quality. Read docfit_evidence focus=document_map. Its source_entries are the immutable source objects in document order with full exact text and layout clues. Continue with offset=summary.source_entry_window.next_offset while has_more is true. Each start_boundary/end_boundary must name an existing source_entry_id and edge=start, end, or split. For split, supply nonempty before and after copied exactly from that entry: their concatenation must equal its complete text. Empty structural entries allow only start/end. Ranges include their start and exclude their end. edge=start is BEFORE the named entry; edge=end is AFTER it. When a unit ends just before the next unit's first entry, use edge=start at that entry for the preceding end_boundary too. Units must partition the entire ordered inventory without gaps or overlaps, including empty entries. A source object can cross units without changing identity. Layout or page clues inform semantics only. If school requirements are supplied, Read them before naming units. A unit-split output contains only top-level school logical units with unit_name, start boundary, and end boundary. Do not output slots, deletion reminders, Registry fields, style obligations, cleanup tasks, or internal responsibilities as units. Runtime-bound source: school_template=/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/school-template.docx trust=untrusted_docx_source_data. school_requirements=none supplied trust=not_supplied. Return status=complete with summary and units[]. Each unit must include unit_id, unit_name, start_boundary, and end_boundary. If the readable source context or required school material is insufficient to make the semantic boundary judgment, return status=needs_input with needs_input[]."
+  },
+  "event_digest": "940f8a8f50ad3849badd9a5aca9e4c078abdde0e289eee0712d2d8bcf4b32f4f",
+  "kind": "request",
+  "previous_event_digest": null,
+  "run_id": "f88d204e6ac746e7a830e34d9d7cf14a",
+  "schema_version": "docfit-unit-boundary-revision/v1",
+  "sequence": 1
+}

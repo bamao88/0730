@@ -1,0 +1,70 @@
+```json
+{
+  "items": [
+    {
+      "n": 3,
+      "parts": [
+        {"text": "湖 南 农 业 大 学", "role": "fixed_label"},
+        {"text": "（一号华文行楷加粗）", "role": "style_only", "note": "约束学校名"}
+      ]
+    },
+    {
+      "n": 4,
+      "parts": [
+        {"text": "全日制普通本科生毕业论文(设计)", "role": "fixed_label"},
+        {"text": "（一号黑体加粗）", "role": "style_only", "note": "约束文档类别标题"}
+      ]
+    },
+    {
+      "n": 6,
+      "parts": [
+        {"text": "毕业论文（设计）中文题目", "role": "fixed_label"},
+        {"text": "（小二黑体加粗）", "role": "style_only", "note": "约束中文题目占位"}
+      ]
+    },
+    {
+      "n": 7,
+      "parts": [
+        {"text": "TITLE OF GRADUATION PAPER", "role": "fill_slot", "field_id": "thesis.title.en"},
+        {"text": "（四号Times New Roman加粗，大写）", "role": "style_only", "note": "约束英文题目"}
+      ]
+    },
+    {
+      "n": 9,
+      "parts": [
+        {"text": "□□□□□□学生姓名", "role": "fixed_label"},
+        {"text": "（三号黑体加粗）", "role": "style_only", "note": "约束学生姓名标签"},
+        {"text": "：", "role": "fixed_label"},
+        {"text": "×××（或×□×）", "role": "fill_slot", "field_id": "author.name.zh"},
+        {"text": "（三号楷体加粗）", "role": "style_only", "note": "约束作者姓名"}
+      ]
+    },
+    {
+      "n": 10,
+      "parts": [
+        {"text": "□□□□□□学□□号：", "role": "fixed_label"},
+        {"text": "20××××××××××", "role": "fill_slot", "field_id": "author.student_id"}
+      ]
+    },
+    {
+      "n": 11,
+      "parts": [
+        {"text": "□□□□□□年级专业及班级：", "role": "fixed_label"},
+        {"text": "20××级×××（×）班", "role": "fill_slot", "field_id": "author.cohort_class"}
+      ]
+    },
+    {
+      "n": 12,
+      "parts": [
+        {"text": "□□□□□□指导老师及职称：", "role": "fixed_label"},
+        {"text": "×××", "role": "fill_slot", "field_id": "advisor.name.zh"},
+        {"text": "□", "role": "fixed_label"},
+        {"text": "教授", "role": "fill_slot", "field_id": "advisor.title"}
+      ]
+    }
+  ],
+  "open_questions": [
+    "原文未出现院系、专业、研究方向、提交年月、学位类型等字段位置，因此未绑定；不另行造槽。"
+  ]
+}
+```

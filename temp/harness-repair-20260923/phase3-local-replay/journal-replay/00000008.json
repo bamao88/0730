@@ -1,0 +1,108 @@
+{
+  "created_at": "2026-09-23T06:49:28.909170+00:00",
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 7,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "摘"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "要"
+            },
+            {
+              "role": "style_only",
+              "text": "（小四黑体）"
+            },
+            {
+              "role": "fixed_label",
+              "text": "："
+            },
+            {
+              "field_id": "abstract.zh",
+              "role": "fill_slot",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 13
+              }
+            },
+            {
+              "role": "style_only",
+              "text": "（五号宋体）"
+            }
+          ],
+          "reason": "原文字面 33 字符：`□□摘□要（小四黑体）：……             （五号宋体）`。模板全局说明明确 `□` 表示占 1 个字宽（2 字符）的空格，属于布局间距而非正文内容，所以前导 `□□` 与 `摘`/`要` 之间的 `□` 都按 `style_only` 表达字宽占位要求，符号字面不进入最终标题。`摘` 与 `要` 共同构成“摘要”固定标题，分两段标注但责任相同（fixed_label），按原文顺序在 `□` 两侧拆分；这是标题字符边界处与字宽占位的责任切换点。`（小四黑体）` 是模板作者给出的标题字体要求，单独按 `style_only` 标注，约束“摘要”二字使用小四黑体，说明文字不进入最终正文。中文全角冒号 `：` 是固定分隔符，留在 fixed_label。`……` 是中文摘要正文的占位样例，独占摘要正文填写位置，承担填写责任，绑定词表中允许 fill_slot 角色的 abstract.zh 字段；这是 unit-abstract-chinese 中中文摘要正文的唯一真实填写接口。其后 13 个 U+0020 连续空格（offset 14–26）是真实留白，按 `style_only` 表达摘要正文与尾随字体说明之间的版面间距，使用 whitespace 传输 part 精确携带 13 个 U+0020。`（五号宋体）` 紧跟其后，是模板作者给出的摘要正文字体要求，按 `style_only` 标注，约束 abstract.zh 渲染时使用五号宋体，不进入最终内容。所有 part 顺序与原文逐字符对应：2+1+1+1+6+1+2+13+6 = 33，覆盖完整且无重叠或遗漏。",
+          "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "关键词："
+            },
+            {
+              "field_id": "keywords.zh",
+              "role": "fill_slot",
+              "text": "×××；×××；×××；×××"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            }
+          ],
+          "reason": "Keywords line of the Chinese abstract unit. □□ at start are indentation/spacing symbols (style_only). 关键词： is the fixed label 'Keywords:' that stays in the clean template. ××××；×××；×××；××× is the placeholder value for the Chinese keywords, bound to keywords.zh (text, cardinality one, fill_slot role); the four ×××× separated by Chinese semicolons represent one keyword list value. The trailing single space (U+0020, count 1) is recorded via the whitespace transport as style_only since it carries no semantic responsibility beyond spacing.",
+          "source_entry_id": "source-entry-6a3a9448367246bf00ad3477"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Layout instruction at the end of the Chinese abstract unit. （五号字空一行） instructs that one empty line should follow in five-point font; this is a spacing/layout requirement expressed as style_only. No fill_slot, body_structure, or generated_content responsibility applies — the text is not a value position, not body structure, and not a generation result.",
+          "source_entry_id": "source-entry-3b9e599a04e7f5f33874aa88"
+        }
+      ],
+      "status": "complete",
+      "summary": "Judged three source entries for unit 摘要（中文）: abstract header line with abstract.zh placeholder, keywords line with keywords.zh placeholder, and trailing layout instruction."
+    }
+  },
+  "event_digest": "98c9e0eee24c8ad7f04de673084ea5d268f48c4a89e8c4a763199d6e311afa5e",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "c2530b4cc091224a4a2c744be5a5deb972a2fb6831c34c37848335ecb54197b2",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 8
+}

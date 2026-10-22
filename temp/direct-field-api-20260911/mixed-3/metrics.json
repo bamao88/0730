@@ -1,0 +1,26 @@
+{
+  "run": "mixed-3",
+  "input_characters": 762,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 6.307,
+  "first_text_seconds": 1.498,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 419,
+    "output_tokens": 506,
+    "service_tier": "standard",
+    "cache_read_input_tokens": 128
+  },
+  "returned_model": "MiniMax-M3",
+  "exact_text_partition": {
+    "3": true,
+    "4": true,
+    "6": true,
+    "7": true,
+    "9": true,
+    "10": true,
+    "11": true,
+    "12": true
+  }
+}

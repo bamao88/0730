@@ -63,26 +63,58 @@ def test_con_03_registry_hash_or_unknown_field_is_rejected(tmp_path: Path) -> No
 
 
 @pytest.mark.parametrize(
-    ("case_id", "region_count", "component_count"),
+    ("case_id", "error_code"),
     [
-        ("01-hunau-undergraduate", 1, 0),
-        ("02-njau-undergraduate", 2, 0),
-        ("03-pku-graduate", 5, 0),
+        ("01-hunau-undergraduate", InputErrorCode.CONTRACT_MISMATCH),
+        ("02-njau-undergraduate", InputErrorCode.SCHEMA_INVALID),
+        ("03-pku-graduate", InputErrorCode.CONTRACT_MISMATCH),
     ],
 )
-def test_con_04_through_06_school_contracts_close_over_runtime_model(
+def test_con_04_through_06_retired_school_gold_contracts_fail_closed(
     case_id: str,
-    region_count: int,
-    component_count: int,
+    error_code: InputErrorCode,
 ) -> None:
-    contract = load_fill_contract(CASES / case_id / "gold" / "fill-contract.yaml")
-    assert len(contract.regions) == region_count
-    assert sum(len(slot.component_locators) for slot in contract.slots) == component_count
-    assert contract.marker_protocol == "docfit-content-control-marker/v1"
-    assert contract.responsibility_policy is not None
-    assert contract.responsibility_policy.mode == "exhaustive"
+    with pytest.raises(InputContractError) as captured:
+        load_fill_contract(CASES / case_id / "gold" / "fill-contract.gold.yaml")
+
+    assert captured.value.code is error_code
+    assert "v1 is retired" in str(captured.value) or "slot_id" in str(captured.value)
 
 
 def test_con_07_official_registry_equation_type_is_loadable() -> None:
     registry = load_field_registry(OFFICIAL_REGISTRY)
     assert registry.by_id["body.equation"].content_type == "equation"
+
+
+@pytest.mark.parametrize(
+    ("slot_ref", "error_code"),
+    [
+        (
+            "reading_block_id=u-all:block-0001;part_index=0;field_id=author.name.zh",
+            InputErrorCode.SCHEMA_INVALID,
+        ),
+        (
+            "source_entry_id=source-entry-u-all-block-0001;extent=text[4:4];"
+            f"source_snapshot_sha256={'3' * 64};field_id=author.name.zh",
+            InputErrorCode.CONTRACT_MISMATCH,
+        ),
+    ],
+)
+def test_con_08_retired_or_empty_slot_spans_fail_closed(
+    tmp_path: Path,
+    slot_ref: str,
+    error_code: InputErrorCode,
+) -> None:
+    value = yaml.safe_load(
+        (FIXTURES / "S00-minimal-pass" / "gold-contract.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    value["slots"][0]["slot_ref"] = slot_ref
+    contract_path = tmp_path / "fill-contract.yaml"
+    contract_path.write_text(yaml.safe_dump(value, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(InputContractError) as captured:
+        load_fill_contract(contract_path)
+
+    assert captured.value.code is error_code

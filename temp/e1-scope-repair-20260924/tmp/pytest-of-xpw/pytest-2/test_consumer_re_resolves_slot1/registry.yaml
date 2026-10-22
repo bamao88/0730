@@ -1,0 +1,6 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: 中文题目
+    content_type: text

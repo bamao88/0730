@@ -1,0 +1,26 @@
+{
+  "registry": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.5.0",
+    "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "field_count": 54,
+  "vocabulary_digest": "f9ff558a0583b46d12c091bcea5526c2a38af050abc30bf4c31b37e6f7d69895",
+  "example_count": 4,
+  "actual_orders": [
+    3,
+    4,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12
+  ],
+  "system_prompt_characters": 13641,
+  "model": "MiniMax-M3",
+  "thinking": "disabled",
+  "temperature": 1,
+  "max_tokens": 4000,
+  "verification_level": "real direct API semantic experiment; not product E2E"
+}

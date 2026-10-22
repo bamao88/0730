@@ -1,0 +1,37 @@
+{
+  "backend": "manual-proof-for-agent-output-smoke",
+  "checkpoint": "unit-boundary",
+  "harness_feedback_attempts": 0,
+  "resolved_units": [
+    {
+      "end_locator": "/body/p[1]",
+      "start_locator": "/body/p[1]",
+      "unit_id": "u-cover",
+      "unit_name": "封面"
+    }
+  ],
+  "schema_version": 1,
+  "sdk_query_count": 0,
+  "session_id": "manual-unit-boundary-proof",
+  "skills_loaded": [],
+  "source_hash": "a0bf9e820f9ade49b9b34a5c6468d77f8050dc7b3aba2431e7daf9c5897b4964",
+  "status": "ok",
+  "summary": "Single cover title unit for Agent-output contract smoke.",
+  "tool_uses": [],
+  "unit_count": 1,
+  "units": [
+    {
+      "end_boundary": {
+        "page": 1,
+        "seen_text": "论文题目：玉米生长研究"
+      },
+      "start_boundary": {
+        "page": 1,
+        "seen_text": "论文题目：玉米生长研究"
+      },
+      "unit_id": "u-cover",
+      "unit_name": "封面"
+    }
+  ],
+  "wall_duration_ms": 0
+}

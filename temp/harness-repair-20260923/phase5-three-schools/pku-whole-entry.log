@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_query_time_budget_exhausted",
+    "retryable": false,
+    "message": "The semantic stage exceeded its remaining saved time allowance.",
+    "suggested_actions": []
+  }
+}

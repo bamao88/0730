@@ -1,0 +1,8 @@
+{
+  "case": "actual published package, both provenance copies retargeted and materialization digest recomputed",
+  "status": "REJECTED",
+  "code": "template_artifact_provenance_invalid",
+  "message": "Published span differs from the initial source partition.",
+  "source_slot_ref": "source_entry_id=source-entry-e64ca7dfe935cf56c3080379;extent=whole_entry;source_snapshot_sha256=8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268;field_id=body.table",
+  "forged_locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/r[4]"
+}

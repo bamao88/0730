@@ -1,0 +1,8 @@
+{
+  "case_id": "02-njau-undergraduate",
+  "case_sha256": "24274e3130adc410f0170471a55ec78d96eb966912165ab718424c00359a5e9f",
+  "contract_sha256": "5dd9f91149057f15147a39afedded985c7205b0f6a2bb6e758d4d4340bbbfb3e",
+  "gold_review_status": "accepted",
+  "schema_version": "docfit-template-extraction-candidate-package-receipt/v1",
+  "template_sha256": "5eef954abe7caf6653a18f6d1ed02bb957ddf3db1dfa40f85ba261ef2e03b5cb"
+}

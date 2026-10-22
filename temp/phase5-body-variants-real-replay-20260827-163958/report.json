@@ -1,0 +1,68 @@
+{
+  "missing": {
+    "root": "temp/phase5-body-variants-real-replay-20260827-163958/missing-variant-strategy",
+    "failure_code": "template_materialization_readiness_incomplete",
+    "failure_status": "needs_input",
+    "receipt_exists": true,
+    "candidate_files": [],
+    "receipt_status": "needs_input",
+    "has_agent_revision_packet": true,
+    "affected_codes": [
+      "materialization_structure_variant_id_missing",
+      "materialization_structure_variant_strategy_missing",
+      "materialization_structure_variant_id_missing",
+      "materialization_structure_variant_strategy_missing"
+    ],
+    "affected_judgment_ids": [
+      "J-paper-body-017-body-track-a",
+      "J-paper-body-017-body-track-a",
+      "J-paper-body-018-body-track-b",
+      "J-paper-body-018-body-track-b"
+    ],
+    "passed": true
+  },
+  "fixed": {
+    "root": "temp/phase5-body-variants-real-replay-20260827-163958/fixed-primary-alternate-variants",
+    "selected": "work/.docfit/post-unit-materialization/candidate-0001.docx",
+    "candidate_files": [
+      "work/.docfit/post-unit-materialization/candidate-0001.docx"
+    ],
+    "passed": true,
+    "operation_variant_ids": [
+      "track-a-science",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "operation_variant_roles": [
+      "primary",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
+}

@@ -1,0 +1,817 @@
+{
+  "original_bindings": {
+    "temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/harness/object-inventory.json": "b93103be473748515e58ea0954a66da444e8205b84fce8e130809e957ac4db50",
+    "temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/harness/semantic-judgments.json": "05621c5e6402ec8f9e598a51d9aa7fffcfcdd3a6ff81deb5601ab7d9cb0bec9c"
+  },
+  "feedback": {
+    "schema_version": 1,
+    "status": "error",
+    "recovery": {
+      "kind": "execution_unsupported",
+      "owner": "tool",
+      "action": "stop"
+    },
+    "feedback": {
+      "type": "materialization_readiness",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": null
+    },
+    "checks": [
+      {
+        "name": "materialization_readiness",
+        "result": "error"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "materialization_semantic_judgment_unresolved",
+        "missing_requirement": "open_questions",
+        "why_it_blocks_execution": "This semantic_judgment still contains unresolved needs_input or open_questions while the Agent result is complete. Revise the judgment to resolve the listed semantic gaps, or return needs_input at the result level.",
+        "message": "This semantic_judgment still contains unresolved needs_input or open_questions while the Agent result is complete. Revise the judgment to resolve the listed semantic gaps, or return needs_input at the result level.",
+        "source_entry_id": "source-entry-563cf0b9a114312f64d20bc0",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-442eee3ff91448b56139f9b9",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.heading.outline1"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-87d6899a59e63dc17844f6e6",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-ce6a2df70b574916fb072545",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-b8d635aa5bb0c17af595fc73",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-50618f28b761e5eb244fb489",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-6637d4b25cb7d070afb07267",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-ab0565ef00bbc679748b5831",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-cd75e7b179392bc8dd810c58",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-6d651471e3c928def95eb5e6",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-24c49c2f3269baf7a4c32ff7",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-da5effb12989d3e165653094",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-ea0a91278496d7ebe5297ca7",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-06a3f80bc217c4d2b85cfee5",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-4efda80bab66e878958d58a4",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-b0c05c7e6ecfea933e79a3ee",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-4064083b70b0aa72c76cfad0",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-3d9c972614398707aed9b560",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-fe6b7219db3f081e2e4dc21d",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-c3604b328228ecfd7ddb4c17",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-48c10297c5bb1b947f91b532",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-01b3ff0e4bdf68806342cb32",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-2efa598c2c985670cbc36dfb",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-5859b95b5db93a31aca79940",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-2490fb6364307e360fa1ac49",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-e0ab3f864b97627be1909c99",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-59b515ed02e96fb2b2e1c740",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-3cb72c732f32f9cfb1cb7351",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-e339afe90da285809cdcfce4",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-be3c4616cbfc8de204d13bf7",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-3a55daa0f1bf60f5d77e1adc",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-b44474e8f1af76228a4dabf2",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-059ae329bf2dd95eb9d08b12",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-bf1676eaaf3bccaac08bcbe0",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.heading.outline1"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-da4daf5aeea2bdb47e366e9c",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-89d3175c33c0519ac906a42e",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-c629e0a5e9ce2fd960a9558b",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-64ddb390771802210b2a5333",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-7bbf43702262a3a57d362f34",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-e509211a8f7dedd75ee8ff59",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-ed5b17c0a46651f351bf6b88",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-8b1b6feafff306ca454f1391",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-4f58cfca7ad528bc96e7cfbd",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-25a079348ea3faea05fe521c",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-21d4aef7826485a5560f020b",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-ca2e7b1f7ebb4ed789845947",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-16caa4b33dc5302a4a1bea1d",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-c054c6021da9d3f501fa174a",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-d57d3a2109918610bd13fc23",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-48c2597d3349e3395a0e9a9b",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-f6c203864b361e817b112316",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-b766fd20e9351ffecd2ceccd",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-1596544eceb7acfac2a4999b",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-8f5b6fc2359580c1c1e30350",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-61b42ff5292a5679639afc3e",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-e86126925e111d0fb8f73b8c",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-9c26ee2b47f7dbf08ac86afe",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-9ad0e0f6f2ffe0ac97fc11aa",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-9eba7499f33fc487ddb144be",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-782fa797e8bfda350e9b50d2",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-8df67109ea792ba9ac1e2184",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-18178da76976866177314a68",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-6de8753c23b624ef4cd6ef54",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-143fb3ecade1a448ce5a6f98",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-e477331dd4fb2d6e0b70b2a9",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-52c04cbdfcb3f9f52662da53",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-f501137514a2deff45034d3c",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-a06b238e4f880814815d924b",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-23e31b6b1b05550285c4ed4f",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-6edd7fbb1d303327b5968dde",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-5b3aeb03b0ab18abde30e0fd",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-a8965f7bbce02e4185b85fb7",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-52ba91fbb2e52aded97ea338",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-15d5f5f1c1f5e20da541c4e8",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-06a07b6e38834fd0c556afc1",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-074272664e23f3440ddbcc45",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      },
+      {
+        "code": "materialization_body_structure_nested_composite_member",
+        "missing_requirement": "outer_composite_body_member_interface",
+        "why_it_blocks_execution": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "message": "A field-bearing body_structure part resolves inside a composite table. Internal body interfaces are not currently supported by the execution layer; preserve the field judgment.",
+        "source_entry_id": "source-entry-514ec73dbf8404e91f43fd67",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph"
+      }
+    ],
+    "failure": {
+      "origin": "tool",
+      "code": "template_materialization_execution_unsupported",
+      "retryable": false,
+      "message": "Accepted semantic review is not materializable: materialization_semantic_judgment_unresolved, materialization_body_structure_nested_composite_member, materialization_body_structure_nested_composite_member, materialization_body_structure_nested_composite_member, materialization_body_structure_nested_composite_member.",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "warnings": []
+  },
+  "counts": {
+    "materialization_semantic_judgment_unresolved": 1,
+    "materialization_body_structure_nested_composite_member": 76
+  },
+  "original_unchanged": true,
+  "verification_level": "real replay; no Agent call or publication"
+}

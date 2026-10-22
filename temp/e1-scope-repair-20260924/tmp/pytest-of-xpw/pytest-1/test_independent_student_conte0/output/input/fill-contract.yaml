@@ -1,0 +1,85 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: synthetic
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: b6090d9c2b810628c50a08767c66437536de28e8f5c2f81460b508fa00e88a4b
+field_registry_ref:
+  path: registry.yaml
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.1.0
+  sha256: db50342aaa52fcb299a35ac1bdfd07dd16b15962788471c1a7615e837f9181b1
+regions: []
+styles:
+- style_contract_id: style.cover.title
+  application_scope: paragraph
+  owned_properties:
+  - run.color
+  - run.font_size_pt
+  effective_properties:
+    run.color: '000000'
+    run.font_size_pt: 12.0
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  word_style_id: Normal
+  contract_digest: 17b2a88e74cd56fe1f3cb5e1d90eed90ce4d57fa2863ca0baecf3d7f1af7d627
+- style_contract_id: style.body.chapter_title
+  application_scope: paragraph
+  owned_properties:
+  - paragraph.alignment
+  - run.color
+  effective_properties:
+    paragraph.alignment: left
+    run.color: '000000'
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  word_style_id: Normal
+  contract_digest: 31f60b53c9195fcf3e05a9c0de1a7ba29f15a99271360dd2cf4791a41a484152
+- style_contract_id: style.body.chapter_body
+  application_scope: paragraph
+  owned_properties:
+  - paragraph.alignment
+  - run.color
+  - run.font_size_pt
+  effective_properties:
+    paragraph.alignment: left
+    run.color: '000000'
+    run.font_size_pt: 12.0
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  word_style_id: Normal
+  contract_digest: f1b2e1c1af327f97891b0c58b070aa40f8ebce674cee1105451223b295743ad5
+style_contract_set_digest: 8a23ab798343cdf46552a9c0831228a3d601aa9eb33390de5b98cf3f5943352d
+slots:
+- slot_ref: slot.title
+  field_id: thesis.title.en
+  required: true
+  style_contract_ref:
+    style_contract_id: style.cover.title
+    contract_digest: 17b2a88e74cd56fe1f3cb5e1d90eed90ce4d57fa2863ca0baecf3d7f1af7d627
+  locator:
+    type: content_control_tag
+    value: docfit.cover.title_en
+- slot_ref: slot.body
+  field_id: body.heading.outline1
+  required: true
+  style_contract_ref:
+    style_contract_id: style.body.chapter_title
+    contract_digest: 31f60b53c9195fcf3e05a9c0de1a7ba29f15a99271360dd2cf4791a41a484152
+  locator:
+    type: content_control_tag
+    value: docfit.body.chapter_title
+- slot_ref: slot.body.text
+  field_id: body.paragraph
+  required: true
+  style_contract_ref:
+    style_contract_id: style.body.chapter_body
+    contract_digest: f1b2e1c1af327f97891b0c58b070aa40f8ebce674cee1105451223b295743ad5
+  locator:
+    type: content_control_tag
+    value: docfit.body.chapter_body

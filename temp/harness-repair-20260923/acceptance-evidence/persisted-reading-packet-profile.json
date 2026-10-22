@@ -1,0 +1,10 @@
+{
+  "level": "read-only performance diagnostic on real task input; cProfile overhead included",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task",
+  "unit_id": "unit-8-body",
+  "elapsed_seconds": 90.12022816699755,
+  "source_entry_count": 276,
+  "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+  "runtime_commit": "6c72804",
+  "not_a_speedup_claim": true
+}

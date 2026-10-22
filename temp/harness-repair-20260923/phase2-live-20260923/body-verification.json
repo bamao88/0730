@@ -1,0 +1,55 @@
+{
+  "verification_level": "E2E agent loop attempt; not post-unit success",
+  "code_commit": "00267feb6d6957d11723358edb87bb17f66d2efd",
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "event_counts": {
+    "request": 28,
+    "response": 27,
+    "candidate_recorded": 26,
+    "local_rejected": 1,
+    "global_review": 3,
+    "run_failed": 1
+  },
+  "result": {
+    "schema_version": 1,
+    "status": "error",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "agent",
+      "code": "template_agent_backends_exhausted",
+      "retryable": true,
+      "message": "No configured backend completed the main template Agent loop: template_agent_timeout",
+      "suggested_actions": []
+    }
+  },
+  "reviews": [
+    {
+      "sequence": 34,
+      "blockers": {
+        "ordered_part_empty_for_text_entry": 2,
+        "ordered_part_text_gap": 13,
+        "ordered_part_text_mismatch": 12
+      }
+    },
+    {
+      "sequence": 59,
+      "blockers": {
+        "ordered_part_text_mismatch": 12,
+        "ordered_part_text_gap": 10
+      }
+    },
+    {
+      "sequence": 78,
+      "blockers": {
+        "ordered_part_text_mismatch": 11,
+        "ordered_part_text_gap": 9
+      }
+    }
+  ],
+  "product_acceptance": false
+}

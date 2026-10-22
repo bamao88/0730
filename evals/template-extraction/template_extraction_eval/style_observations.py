@@ -139,7 +139,7 @@ def validate_school_style_observation_set(
             expected_property_paths=expected_property_paths,
             path=path,
         )
-        identity = (reference["slot_id"], reference["style_role_id"])
+        identity = (reference["slot_ref"], reference["style_role_id"])
         if identity in identities:
             _raise(
                 InputErrorCode.DUPLICATE_ID,
@@ -150,7 +150,7 @@ def validate_school_style_observation_set(
         observation_refs.append(reference)
     canonical_refs = sorted(
         observation_refs,
-        key=lambda item: (item["slot_id"], item["style_role_id"]),
+        key=lambda item: (item["slot_ref"], item["style_role_id"]),
     )
     if observation_refs != canonical_refs:
         _raise(
@@ -192,7 +192,7 @@ def _validate_observation(
             "unsupported field style observation schema",
             path,
         )
-    slot_id = _string(observation.get("slot_id"), name="slot_id", path=path)
+    slot_ref = _string(observation.get("slot_ref"), name="slot_ref", path=path)
     style_role_id = _string(
         observation.get("style_role_id"), name="style_role_id", path=path
     )
@@ -226,7 +226,7 @@ def _validate_observation(
     )
     properties = _array(
         observation.get("properties"),
-        name=f"{slot_id}.properties",
+        name=f"{slot_ref}.properties",
         path=path,
     )
     expected_paths = tuple(expected_property_paths[role_type])
@@ -236,7 +236,7 @@ def _validate_observation(
     for index, raw_property in enumerate(properties):
         item = _mapping(
             raw_property,
-            name=f"{slot_id}.properties[{index}]",
+            name=f"{slot_ref}.properties[{index}]",
             path=path,
         )
         property_path, state, evidence = _validate_property(item, path=path)
@@ -246,11 +246,11 @@ def _validate_observation(
     if tuple(actual_paths) != expected_paths:
         _raise(
             InputErrorCode.CONTRACT_MISMATCH,
-            f"{slot_id} does not equal the independent fixed property list; "
+            f"{slot_ref} does not equal the independent fixed property list; "
             f"expected={list(expected_paths)}, actual={actual_paths}",
             path,
         )
-    closure = _mapping(observation.get("closure"), name=f"{slot_id}.closure", path=path)
+    closure = _mapping(observation.get("closure"), name=f"{slot_ref}.closure", path=path)
     _validate_closure(
         closure,
         property_paths=actual_paths,
@@ -265,17 +265,17 @@ def _validate_observation(
     }
     supplied_digest = _sha256(
         observation.get("observation_digest"),
-        name=f"{slot_id}.observation_digest",
+        name=f"{slot_ref}.observation_digest",
         path=path,
     )
     if supplied_digest != _digest(semantic_payload, path=path):
         _raise(
             InputErrorCode.HASH_MISMATCH,
-            f"field style observation digest mismatch for {slot_id}",
+            f"field style observation digest mismatch for {slot_ref}",
             path,
         )
     return {
-        "slot_id": slot_id,
+        "slot_ref": slot_ref,
         "style_role_id": style_role_id,
         "observation_digest": supplied_digest,
     }

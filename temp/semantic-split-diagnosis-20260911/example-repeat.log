@@ -1,0 +1,39 @@
+{
+  "artifact_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/task/output/final-template.docx",
+  "backend": "minimax",
+  "client_count": 1,
+  "counts": {
+    "gap": 9,
+    "manual": 0,
+    "remove": 0,
+    "slot": 9,
+    "unresolved": 79
+  },
+  "duration_api_ms": 39595,
+  "duration_ms": 12665,
+  "fill_contract_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/task/output/fill-contract.yaml",
+  "num_turns": 2,
+  "session_count": 1,
+  "session_id": "3991e4d4-6387-4e4b-bc85-e9b193c0b1f5",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "built",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/task",
+  "template_sha256": "407c1e560169cfda72b5e22acd28cf8eb43d6ccb528f49c903a2531f359455d0",
+  "tool_uses": [
+    "Skill",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 42847
+}

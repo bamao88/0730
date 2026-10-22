@@ -3,8 +3,8 @@
 > 状态：目标设计已批准；O0.0–O0.7 已完成
 > 日期：2026-08-04
 > 所属范围：M2 后核心转换优化的 O0 观测面
-> 上位契约：`docfit-00-index.md`–`docfit-06-development-roadmap.md`
-> 实施计划：`plans/docfit-o0-local-observability.md`
+> 上位入口：根目录 `ARCHITECTURE.md`、`tests/README.md`；详细索引见 `docs/README.md` 和
+> `docfit-00-index.md`
 
 ## 0. 产品定义
 
@@ -172,7 +172,7 @@ Agent SDK 自己仍会把 session transcript 写入本地磁盘，并由第 3.4 
 | SDK transcript privacy | App 管理的运行级 `CLAUDE_CONFIG_DIR` lifecycle | `run_id` | active/cleaned/residual/cleanup_failed、数量、年龄区间 | 显示 unknown；不读取 transcript 内容确认 |
 | backend 尝试、超时与选定项 | 薄应用壳 backend 循环 | `run_id` + attempt 序号 | backend/model 名、开始/结束、清洗后的失败分类 | 只显示最终 backend 时标记 attempt history unavailable |
 | 最终转换事实 | `conversion-report.json` 与最终 App 结果 | `run_id`、`session_id`、文档 hash | `COMPLETED/NEEDS_INPUT/ERROR`、产物类型、warning/error 计数 | 没有终态时显示“终态未知” |
-| 文档、对象、render、页面证据 | 五个 Tool 结果与授权任务目录 | document/render/image hash 和 opaque refs | hash/ref/page、Provider、证据可用性 | 显示 unavailable/broken/conflict，不缓存正文 |
+| 文档、对象、render、页面证据 | 当前 DocFit Tool surface 结果与授权任务目录 | document/render/image hash 和 opaque refs | hash/ref/page、Provider、证据可用性 | 显示 unavailable/broken/conflict，不缓存正文 |
 
 主 Agent 的 Bash/Write 由 `allowed_tools` 自动批准时，SDK 可以在 `can_use_tool` 之前完成
 批准，因此观测层不得伪造一条 callback 权限事件。它仍可从 Tool use 与 lifecycle hook
@@ -958,8 +958,8 @@ O0 只有在以下事实都可自动或人工复查时才算完成：
 
 ### 11.1 O0 完成回执
 
-2026-08-04 的 O0.7 总门对上述 18 项给出以下回执；详细阶段提交与命令记录见
-`plans/docfit-o0-local-observability.md` 和 active capsule。
+2026-08-04 的 O0.7 总门对上述 18 项给出以下回执；当前完成状态和证据摘要见
+`status/active/docfit-o0-local-observability.md`。
 
 | 验收项 | 完成证据 |
 |---:|---|
@@ -993,8 +993,8 @@ lock、build、Ruff、mypy 和 base doctor 通过；O0.7 当时的五项 live re
 
 本文锁定产品边界；O0 已按以下顺序完成。未来优化必须继续复用这些边界：
 
-已完成的阶段、技术基线和逐阶段成功标准见
-`plans/docfit-o0-local-observability.md`。下列顺序继续作为专题设计层的强制依赖关系；
+已完成的阶段、技术基线和逐阶段成功标准已经收口到本文和
+`status/active/docfit-o0-local-observability.md`。下列顺序继续作为专题设计层的强制依赖关系；
 后续计划只能细化，不能倒置或绕过。
 
 1. **SDK runtime privacy 与 report v2**：先建立运行级临时 `CLAUDE_CONFIG_DIR`、正常/崩溃
@@ -1016,7 +1016,7 @@ lock、build、Ruff、mypy 和 base doctor 通过；O0.7 当时的五项 live re
 复用优先级是：
 
 - 优先使用 Claude Agent SDK 公开消息流、hooks 和 OpenTelemetry 能力；
-- 优先复用五个 Tool 已有 status/failure/ref/cache/Provider 字段；
+- 优先复用当前 DocFit Tool surface 已有 status/failure/ref/cache/Provider 字段；
 - 可以复用成熟开源 trace UI 的展示组件、时间线或查询逻辑；
 - 不让第三方 trace schema 反向成为 DocFit 的 Tool、Skill 或任务目录合同；
 - 不要求外部 SaaS、云端 collector 或完整 prompt capture 才能运行本地页面。
@@ -1025,14 +1025,14 @@ O0 已选择 Starlette/Uvicorn、SQLite、Jinja2 与本地原生 CSS/JavaScript�
 实现，不升级为公共 Tool 或 Agent 协议。后续替换仍须服从本文件的只读、离线、脱敏、
 可删除与不干扰转换原则。
 
-## 13. 与 00–06 的关系
+## 13. 与当前架构入口的关系
 
 - 01 定义它属于薄应用壳的只读视图，不改变唯一 SDK runtime；
-- 02 定义它如何支撑非 Eval 性能测量与跨运行比较；
-- 05 定义 hash/ref、Tool 摘要、本地证据与隐私数据边界；
-- 06 把它放在 M2 后优化轨道的 O0；当前 O0.0–O0.7 已完成，O1 尚未开始；
-- 03 的 Gold 与 04 的 Skill 不消费监控轨迹，也不因此改变。
+- 02 定义它如何支撑非 Eval 性能测量、跨运行比较和证据分层；
+- 03 的 Gold 不消费监控轨迹，也不因此改变；
+- 模块 Contract 不得把观测事件升级为 Tool、Skill 或任务目录合同；
+- 当前 O0.0–O0.7 已完成，后续优化仍必须保持只读、脱敏和不干扰转换。
 
 如果后续实现需要第六个 Tool、第二个 Agent loop、远程上传正文、任务调度、跨任务
-持久缓存或公开事件协议，必须先修改 00–06 并获得新的明确批准，不能以“监控需要”为由
+持久缓存或公开事件协议，必须先修改当前架构入口和相关 Contract，并获得新的明确批准，不能以“监控需要”为由
 绕过现有架构边界。

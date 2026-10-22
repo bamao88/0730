@@ -1,0 +1,153 @@
+{
+  "accepted_field_id": "thesis.title.zh",
+  "host_validation": {
+    "checks": [
+      {
+        "blocking": false,
+        "evidence": "Independent ZIP/XML reopen passed.",
+        "name": "docx_opens",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "final": {
+            "code": "officecli_failed",
+            "detail": "OfficeCLI rejected the operation or returned a backend error.",
+            "origin": "engine",
+            "passed": false
+          },
+          "new_officecli_regression": "UNKNOWN",
+          "source": {
+            "code": "officecli_failed",
+            "detail": "OfficeCLI rejected the operation or returned a backend error.",
+            "origin": "engine",
+            "passed": false
+          }
+        },
+        "name": "officecli_openxml",
+        "result": "warning",
+        "severity": "warning",
+        "suggested_action": "Repair source-inherited OpenXML validation warnings when strict schema acceptance is required."
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "source_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670"
+        },
+        "name": "source_unchanged",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "missing_object_count": 1
+        },
+        "name": "content_preservation",
+        "result": "issue",
+        "severity": "warning",
+        "suggested_action": "Review intended replacements against source content."
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "placeholder_occurrences": 0
+        },
+        "name": "placeholder_scan",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "all_final_pages_reviewed": false,
+          "blocking_findings": 0,
+          "current_visual_snapshot": false,
+          "missing_pages": [],
+          "page_count": null,
+          "reviewed_pages": [],
+          "unexpected_pages": []
+        },
+        "feedback": {
+          "agent_action": "Render the exact final candidate, review every final page, repair blocking findings, and validate again.",
+          "mechanical": true,
+          "semantic_authority": false,
+          "type": "completion"
+        },
+        "name": "visual_review_coverage",
+        "result": "warning",
+        "severity": "warning",
+        "suggested_action": "Render the current final DOCX and review every final page."
+      }
+    ],
+    "failure": null,
+    "final_sha256": "1966a7d32522db3b5aa1fd59f3b07d76a8598a1e0d1e077df79fe37c66ba76a2",
+    "knowledge_version": null,
+    "provider": {
+      "environment": {
+        "architecture": "arm64",
+        "platform": "Darwin"
+      },
+      "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+      "expected_version": "1.0.143",
+      "license": "Apache-2.0",
+      "name": "officecli",
+      "version": "1.0.144",
+      "version_locked": false
+    },
+    "schema_version": 1,
+    "source_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670",
+    "status": "ok",
+    "summary": {
+      "errors": 0,
+      "issues": 1,
+      "warnings": 3
+    },
+    "task_rule_evidence": [],
+    "warnings": [
+      {
+        "code": "verification_gap",
+        "kind": "visual_review",
+        "message": "Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete."
+      }
+    ]
+  },
+  "publication_failure": {
+    "code": "published_slot_provenance_missing",
+    "message": "A fill-contract slot is not backed by an accepted ordered part.",
+    "origin": "postcondition",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": []
+  },
+  "run": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-field-mismatch",
+  "slot_protocol_status": {
+    "failure": null,
+    "school_content_control_count": 0,
+    "slot_count": 1,
+    "slots": [
+      {
+        "field_id": "author.name.zh",
+        "slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=author.name.zh",
+        "span_ref": "reading_block_id=u-cover:block-0001;part_index=1"
+      }
+    ],
+    "status": "ok"
+  },
+  "tampered_alias": "author.name.zh",
+  "tampered_candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-field-mismatch/work/.docfit/post-unit-materialization/candidate-field-mismatch.docx",
+  "tampered_slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=author.name.zh",
+  "visual_review": {
+    "document_sha256": "1966a7d32522db3b5aa1fd59f3b07d76a8598a1e0d1e077df79fe37c66ba76a2",
+    "findings": [],
+    "origin": "harness",
+    "reviewed_pages": [],
+    "schema_version": 1,
+    "status": "host_review_not_requested"
+  }
+}

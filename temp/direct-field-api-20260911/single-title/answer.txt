@@ -1,0 +1,1 @@
+{"items":[{"n":7,"parts":[{"text":"TITLE OF GRADUATION PAPER","role":"fill_slot","semantic":"毕业论文英文标题"},{"text":"（四号Times New Roman加粗，大写）","role":"style_only"}]}]}

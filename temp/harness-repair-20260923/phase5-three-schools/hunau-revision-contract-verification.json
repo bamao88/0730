@@ -1,0 +1,78 @@
+{
+  "observed_at": "2026-09-23T13:12:25.901969+00:00",
+  "runtime_commit": "3adad8fc9b2252a77c1a03f8327fa6afa1e70e3c",
+  "verification_level": "failed E2E attempt; native SDK API failure on boundary revision, no post-unit",
+  "exit_code": 2,
+  "archive": "temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-revision-contract-task/work/.docfit/unit-boundary-executions/f654393f58b74d8b8aa53fdc22f404c5.json",
+  "archive_sha256": "ddc0cf4055fc212998efb0e31732a4e9c0b0f7e2f395fe16ca12da01346dfd6d",
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "query_count": 2,
+  "result_metadata": [
+    {
+      "elapsed_ms": 118333,
+      "generation_progress": false,
+      "has_structured_output": true,
+      "is_error": false,
+      "message_type": "ResultMessage",
+      "model_usage": {
+        "input_tokens": 102101,
+        "max_output_tokens": 32000,
+        "output_tokens": 26901
+      },
+      "query_index": 1,
+      "result_text_length": 4112,
+      "stage": "unit-boundary",
+      "stage_query_index": 1,
+      "stop_reason": "tool_use",
+      "structured_status": "complete",
+      "subtype": "success",
+      "terminal_reason": "completed",
+      "usage": {
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 121398,
+        "input_tokens": 102101,
+        "output_tokens": 26901
+      }
+    },
+    {
+      "elapsed_ms": 683150,
+      "generation_progress": false,
+      "has_structured_output": false,
+      "is_error": true,
+      "message_type": "ResultMessage",
+      "model_usage": {
+        "input_tokens": 129327,
+        "max_output_tokens": 32000,
+        "output_tokens": 154901
+      },
+      "query_index": 2,
+      "result_text_length": 157,
+      "stage": "unit-boundary",
+      "stage_query_index": 2,
+      "stop_reason": "stop_sequence",
+      "subtype": "success",
+      "terminal_reason": "api_error",
+      "usage": {
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 490306,
+        "input_tokens": 27226,
+        "output_tokens": 128000
+      }
+    }
+  ],
+  "current_application_failure": {
+    "code": "unit_checkpoint_result_invalid",
+    "message": "Unit boundary checkpoint did not return structured units.",
+    "origin": "agent",
+    "retryable": true,
+    "status": "error",
+    "suggested_actions": []
+  },
+  "checkpoint_exists": false,
+  "published_outputs": [],
+  "product_acceptance": false
+}

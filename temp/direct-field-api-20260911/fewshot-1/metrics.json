@@ -1,0 +1,26 @@
+{
+  "run": "fewshot-1",
+  "input_characters": 1033,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 4.548,
+  "first_text_seconds": 1.508,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1,
+    "output_tokens": 757,
+    "service_tier": "standard",
+    "cache_read_input_tokens": 686
+  },
+  "returned_model": "MiniMax-M3",
+  "exact_text_partition": {
+    "3": true,
+    "4": true,
+    "6": false,
+    "7": true,
+    "9": true,
+    "10": true,
+    "11": true,
+    "12": true
+  }
+}

@@ -1,0 +1,14 @@
+registry_id: test.registry
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: Title
+    content_type: text
+  - field_id: advisor.name.zh
+    label: Advisor
+    content_type: text
+  - field_id: generated.toc
+    label: TOC
+    content_type: section
+    value_sources:
+      - system_generated

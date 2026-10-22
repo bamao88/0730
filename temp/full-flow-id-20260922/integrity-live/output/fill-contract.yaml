@@ -1,0 +1,2628 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.6c867472c39606a4
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 1a8358859bdc8d906c207359037193b611c51aed7546ba66661fcfca15a5b377
+school_style_candidates: []
+known_school_style_gaps: []
+regions: []
+slots: []
+styles: []
+style_contract_set_digest: 7ce739c3d241dbe374fc4936dd03241ec1bd238cfe9d7cd14176d4bc0367354c
+provenance:
+  source_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+  body_structure_count: 0
+  agent_owned_semantics: true
+  no_slot_semantic_provenance:
+    source: accepted_no_slot_semantic_review
+    semantic_judgments_sha256: 65116d652711ccff67dea733ff31ad46460d3903259cd1bf39a535435297fa54
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    judgment_count: 35
+    roles:
+    - style_only
+    - fixed_label
+    - manual_region
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    template_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    source_inventory_digest: b09ff75605bc2063f3aed05c0954ad52785585acb12fd39ed9822592f936a700
+    unit_projection_digest: 5091b80c3cbc252daa9174f6d9536b3057c7e717231e58823e774bb1d3b10b25
+    source_partition:
+      document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+      canonical_source_inventory:
+        entry_count: 35
+        inventory_digest: b09ff75605bc2063f3aed05c0954ad52785585acb12fd39ed9822592f936a700
+        schema_version: docfit-canonical-source-inventory/v1
+        source_entries:
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+            locator: /body/p[@paraId=083A92D0]
+            object_id: obj-eea5c2c0961296be3fd8427d
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+              object_id: obj-eea5c2c0961296be3fd8427d
+          source_entry_id: source-entry-9d7d2c3572c90fd2bd5bb169
+          source_order:
+            block: 1
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            end: 22
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: 0b8a54b6269af67d407ed5aa6792f52ea77290291313c94fda1cbfe5dce119e0
+            locator: /body/p[@paraId=4A1EF999]
+            object_id: obj-f329a8a030a9e01681c626db
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 0b8a54b6269af67d407ed5aa6792f52ea77290291313c94fda1cbfe5dce119e0
+              object_id: obj-f329a8a030a9e01681c626db
+            text_span:
+            - 0
+            - 22
+          - fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+            locator: /body/p[@paraId=4A1EF999]/r[1]
+            object_id: obj-3912f2fa053572c9e4bef466
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+              object_id: obj-3912f2fa053572c9e4bef466
+            text_span:
+            - 0
+            - 22
+          source_entry_id: source-entry-9848a143772985dda1e8eac2
+          source_order:
+            block: 2
+            inline: 0
+          text: 湖南农业大学全日制普通本科生毕业论文（设计）
+        - entry_type: text
+          extent:
+            end: 7
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: 25b4a03eb31edd2da10ae39d85bae15b72179c8898db4bfd63318360203ba630
+            locator: /body/p[@paraId=215A39BA]
+            object_id: obj-1b19113699ab20fd798b1beb
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 25b4a03eb31edd2da10ae39d85bae15b72179c8898db4bfd63318360203ba630
+              object_id: obj-1b19113699ab20fd798b1beb
+            text_span:
+            - 0
+            - 7
+          - fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+            locator: /body/p[@paraId=215A39BA]/r[1]
+            object_id: obj-04b885184a5a4c20462de92c
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+              object_id: obj-04b885184a5a4c20462de92c
+            text_span:
+            - 0
+            - 1
+          - fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+            locator: /body/p[@paraId=215A39BA]/r[2]
+            object_id: obj-425e240c3a290bdd4b519534
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+              object_id: obj-425e240c3a290bdd4b519534
+            text_span:
+            - 1
+            - 2
+          - fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+            locator: /body/p[@paraId=215A39BA]/r[3]
+            object_id: obj-0f5212cdc7e967dd48384f09
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+              object_id: obj-0f5212cdc7e967dd48384f09
+            text_span:
+            - 2
+            - 3
+          - fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+            locator: /body/p[@paraId=215A39BA]/r[4]
+            object_id: obj-638a3ae225874e1a093682e6
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+              object_id: obj-638a3ae225874e1a093682e6
+            text_span:
+            - 3
+            - 4
+          - fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+            locator: /body/p[@paraId=215A39BA]/r[5]
+            object_id: obj-101cbd81f417bbf925b6e950
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+              object_id: obj-101cbd81f417bbf925b6e950
+            text_span:
+            - 4
+            - 5
+          - fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+            locator: /body/p[@paraId=215A39BA]/r[6]
+            object_id: obj-a492ac8e001fb6172d226fd6
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+              object_id: obj-a492ac8e001fb6172d226fd6
+            text_span:
+            - 5
+            - 6
+          - fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+            locator: /body/p[@paraId=215A39BA]/r[7]
+            object_id: obj-9e61de0e8601c5fa56ef8d4e
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+              object_id: obj-9e61de0e8601c5fa56ef8d4e
+            text_span:
+            - 6
+            - 7
+          source_entry_id: source-entry-b909cef01fea52cd8414577d
+          source_order:
+            block: 3
+            inline: 0
+          text: 诚 信 声 明
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+            locator: /body/p[@paraId=1D655190]
+            object_id: obj-ba2c70ae3d758a797c8f67d0
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+              object_id: obj-ba2c70ae3d758a797c8f67d0
+          source_entry_id: source-entry-7d343d3c1e413575979fafcd
+          source_order:
+            block: 4
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+            locator: /body/p[@paraId=52F6D59B]
+            object_id: obj-92550811f86ca1d404d4a169
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+              object_id: obj-92550811f86ca1d404d4a169
+          source_entry_id: source-entry-c377f7c4dd93f9c0cfbb9272
+          source_order:
+            block: 5
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            end: 158
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: 692eb0e05257a81b72082fd9fa11e666028321f1a12a34c1d80b4b7a92370ed4
+            locator: /body/p[@paraId=626D8268]
+            object_id: obj-aa6a00085bc372ef7b401f56
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 692eb0e05257a81b72082fd9fa11e666028321f1a12a34c1d80b4b7a92370ed4
+              object_id: obj-aa6a00085bc372ef7b401f56
+            text_span:
+            - 0
+            - 158
+          - fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+            locator: /body/p[@paraId=626D8268]/r[1]
+            object_id: obj-423c3a1dbd69ffe8448b3168
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+              object_id: obj-423c3a1dbd69ffe8448b3168
+            text_span:
+            - 0
+            - 158
+          source_entry_id: source-entry-9f571dc9b798d9c9d0755957
+          source_order:
+            block: 6
+            inline: 0
+          text: 本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+            locator: /body/p[@paraId=1E30CD97]
+            object_id: obj-b51324e6c4977069da2d2200
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+              object_id: obj-b51324e6c4977069da2d2200
+          source_entry_id: source-entry-768960ed9f1b1072f310a199
+          source_order:
+            block: 7
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+            locator: /body/p[@paraId=514BCC5B]
+            object_id: obj-cc51c71095e837ddaa422c5b
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+              object_id: obj-cc51c71095e837ddaa422c5b
+          source_entry_id: source-entry-dd6afc29f66f697bbc394272
+          source_order:
+            block: 8
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+            locator: /body/p[@paraId=63EBA93B]
+            object_id: obj-c36338354c8e5cde15a66779
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+              object_id: obj-c36338354c8e5cde15a66779
+          source_entry_id: source-entry-40ec4fd54fe0f74125dcc2e1
+          source_order:
+            block: 9
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            end: 33
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: 7856db1c8900906fbe7f5b7b336059a0f2796cde2431c11536513e6508d4c6f8
+            locator: /body/p[@paraId=62C82508]
+            object_id: obj-4dffb3d37864bcef2625bccb
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 7856db1c8900906fbe7f5b7b336059a0f2796cde2431c11536513e6508d4c6f8
+              object_id: obj-4dffb3d37864bcef2625bccb
+            text_span:
+            - 0
+            - 33
+          - fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+            locator: /body/p[@paraId=62C82508]/r[1]
+            object_id: obj-2b732fb4d20e7ac887ab9cf6
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+              object_id: obj-2b732fb4d20e7ac887ab9cf6
+            text_span:
+            - 0
+            - 20
+          - fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+            locator: /body/p[@paraId=62C82508]/r[2]
+            object_id: obj-b94e9c38c6a16c791017f0e4
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+              object_id: obj-b94e9c38c6a16c791017f0e4
+            text_span:
+            - 20
+            - 33
+          source_entry_id: source-entry-49428f38bcc86be786e98067
+          source_order:
+            block: 10
+            inline: 0
+          text: '                    毕业论文（设计）作者签名：'
+        - entry_type: text
+          extent:
+            end: 50
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: 734934fff656be5159866d64df6b233b7b1125e174d4b00800620a6caf1549e4
+            locator: /body/p[@paraId=334193A0]
+            object_id: obj-3d90800d3624c9aa92f759a8
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 734934fff656be5159866d64df6b233b7b1125e174d4b00800620a6caf1549e4
+              object_id: obj-3d90800d3624c9aa92f759a8
+            text_span:
+            - 0
+            - 50
+          - fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+            locator: /body/p[@paraId=334193A0]/r[1]
+            object_id: obj-33fc2b718f611beec8cc949f
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+              object_id: obj-33fc2b718f611beec8cc949f
+            text_span:
+            - 0
+            - 39
+          - fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+            locator: /body/p[@paraId=334193A0]/r[2]
+            object_id: obj-07cf774b4fad065e55b72075
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+              object_id: obj-07cf774b4fad065e55b72075
+            text_span:
+            - 39
+            - 40
+          - fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+            locator: /body/p[@paraId=334193A0]/r[3]
+            object_id: obj-d41b4fb9766791a3ffb26c88
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+              object_id: obj-d41b4fb9766791a3ffb26c88
+            text_span:
+            - 40
+            - 44
+          - fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+            locator: /body/p[@paraId=334193A0]/r[4]
+            object_id: obj-f83baf9ab92d8be1b42d80fc
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+              object_id: obj-f83baf9ab92d8be1b42d80fc
+            text_span:
+            - 44
+            - 45
+          - fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+            locator: /body/p[@paraId=334193A0]/r[5]
+            object_id: obj-bc851a9c09b7bd44236fb449
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+              object_id: obj-bc851a9c09b7bd44236fb449
+            text_span:
+            - 45
+            - 49
+          - fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+            locator: /body/p[@paraId=334193A0]/r[6]
+            object_id: obj-7aebc40183d9a213e43df8e8
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+              object_id: obj-7aebc40183d9a213e43df8e8
+            text_span:
+            - 49
+            - 50
+          source_entry_id: source-entry-9c930b771a265cd2a7df8074
+          source_order:
+            block: 11
+            inline: 0
+          text: '                                       年    月    日'
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+            locator: /body/p[@paraId=75C9344B]
+            object_id: obj-addec19d845823b3933ad825
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+              object_id: obj-addec19d845823b3933ad825
+          source_entry_id: source-entry-523b40a69390c67ef181e025
+          source_order:
+            block: 12
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+            locator: /body/p[@paraId=42E812EA]
+            object_id: obj-d74bb4301a4a59c109a8068b
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+              object_id: obj-d74bb4301a4a59c109a8068b
+          source_entry_id: source-entry-624c77971c3b4f496bee2c30
+          source_order:
+            block: 13
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+            locator: /body/p[@paraId=5C2A639D]
+            object_id: obj-27b17dd3d4aca5e7bd337b1f
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+              object_id: obj-27b17dd3d4aca5e7bd337b1f
+          source_entry_id: source-entry-b56807c0c0d12a85f38b272b
+          source_order:
+            block: 14
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+            locator: /body/p[@paraId=613C583F]
+            object_id: obj-035b861559241c6d1547e432
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+              object_id: obj-035b861559241c6d1547e432
+          source_entry_id: source-entry-540b2c468cd421fd00d3125e
+          source_order:
+            block: 15
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+            locator: /body/p[@paraId=63125D66]
+            object_id: obj-2903edaf1617c1d70dbd227d
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+              object_id: obj-2903edaf1617c1d70dbd227d
+          source_entry_id: source-entry-9d805335442603228c51a3af
+          source_order:
+            block: 16
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+            locator: /body/p[@paraId=5295FD34]
+            object_id: obj-7a2d305a8ff3f0f89b4112d9
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+              object_id: obj-7a2d305a8ff3f0f89b4112d9
+          source_entry_id: source-entry-455e022cb9300b54170b32e5
+          source_order:
+            block: 17
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+            locator: /body/p[@paraId=5F1F83FD]
+            object_id: obj-74989b0b007de3572d8ea9e7
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+              object_id: obj-74989b0b007de3572d8ea9e7
+          source_entry_id: source-entry-3dbcaa060e5b0a052f00be88
+          source_order:
+            block: 18
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+            locator: /body/p[@paraId=5717616B]
+            object_id: obj-c732f79f8398948f9308ee58
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+              object_id: obj-c732f79f8398948f9308ee58
+          source_entry_id: source-entry-0fa157cf7bb741da3a2f4092
+          source_order:
+            block: 19
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+            locator: /body/p[@paraId=37011DEA]
+            object_id: obj-53a94c5aabb56da9d076c2a6
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+              object_id: obj-53a94c5aabb56da9d076c2a6
+          source_entry_id: source-entry-dd9005ce9cd7805613eb848c
+          source_order:
+            block: 20
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+            locator: /body/p[@paraId=40E55DE5]
+            object_id: obj-b3c62d7fc69c7f759f885bf4
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+              object_id: obj-b3c62d7fc69c7f759f885bf4
+          source_entry_id: source-entry-a79e37daf75bdc2e9c4ab07e
+          source_order:
+            block: 21
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+            locator: /body/p[@paraId=3A4FE366]
+            object_id: obj-6467f476438d5b0931c1dd85
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+              object_id: obj-6467f476438d5b0931c1dd85
+          source_entry_id: source-entry-8d6d6a929384811c9a37babb
+          source_order:
+            block: 22
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+            locator: /body/p[@paraId=25D3854A]
+            object_id: obj-7230194d37f05387e55afe25
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+              object_id: obj-7230194d37f05387e55afe25
+          source_entry_id: source-entry-a7aa0ba5cf078c3b4816d298
+          source_order:
+            block: 23
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+            locator: /body/p[@paraId=3EAD3B6E]
+            object_id: obj-e9084ccc8344150c4c73d5cb
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+              object_id: obj-e9084ccc8344150c4c73d5cb
+          source_entry_id: source-entry-66e7052642ee292175bb63d7
+          source_order:
+            block: 24
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+            locator: /body/p[@paraId=16CDB2BF]
+            object_id: obj-b0ff116fb0745adfae89bb4b
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+              object_id: obj-b0ff116fb0745adfae89bb4b
+          source_entry_id: source-entry-3f229850dfcd7eb4e26fa908
+          source_order:
+            block: 25
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+            locator: /body/p[@paraId=6C4EFD4F]
+            object_id: obj-4a21bc6d1f8fcd102ce5f539
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+              object_id: obj-4a21bc6d1f8fcd102ce5f539
+          source_entry_id: source-entry-64356116fa5a6a4c8e72a29b
+          source_order:
+            block: 26
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+            locator: /body/p[@paraId=2D58BB2F]
+            object_id: obj-c46a4166fe61004b6432e3f2
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+              object_id: obj-c46a4166fe61004b6432e3f2
+          source_entry_id: source-entry-0598bacc6ae06033c37ff519
+          source_order:
+            block: 27
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+            locator: /body/p[@paraId=4011BABD]
+            object_id: obj-b029f6df35a5449202fe01a9
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+              object_id: obj-b029f6df35a5449202fe01a9
+          source_entry_id: source-entry-f9b83bc146d48fd6b6fcb250
+          source_order:
+            block: 28
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+            locator: /body/p[@paraId=0335B523]
+            object_id: obj-dc94f03cc1c2627e40867df5
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+              object_id: obj-dc94f03cc1c2627e40867df5
+          source_entry_id: source-entry-730605e42350adfa65aa9a00
+          source_order:
+            block: 29
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+            locator: /header[1]/p[@paraId=45BB0141]
+            object_id: obj-4c45343a520494cfdae3abcc
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+              object_id: obj-4c45343a520494cfdae3abcc
+          source_entry_id: source-entry-3f5bb6fd01e59f18cd7042a4
+          source_order:
+            block: 30
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+            locator: /footer[1]/p[@paraId=59E967D9]
+            object_id: obj-26f2b7326f157ed346d12f10
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+              object_id: obj-26f2b7326f157ed346d12f10
+          source_entry_id: source-entry-3077edfaa01ff4ff692c17fb
+          source_order:
+            block: 31
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            locator: /footnote[1]/p[@paraId=0967CC13]
+            object_id: obj-f527b24750d2e0da75384ef5
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              object_id: obj-f527b24750d2e0da75384ef5
+          - extent:
+              kind: whole_entry
+            fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            locator: /footnote[1]/p[@paraId=0967CC13]/r[1]
+            object_id: obj-03edd0f7252b241196f6f63d
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+              object_id: obj-03edd0f7252b241196f6f63d
+          source_entry_id: source-entry-897804e88afb8647e6d6c992
+          source_order:
+            block: 32
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            locator: /footnote[2]/p[@paraId=79C09F15]
+            object_id: obj-ab3ec63f045111008f562cbc
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              object_id: obj-ab3ec63f045111008f562cbc
+          - extent:
+              kind: whole_entry
+            fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            locator: /footnote[2]/p[@paraId=79C09F15]/r[1]
+            object_id: obj-4ad929fb4fe24a8927d3b80d
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+              object_id: obj-4ad929fb4fe24a8927d3b80d
+          source_entry_id: source-entry-766ccc961e5145b00d6ebec2
+          source_order:
+            block: 33
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            locator: /endnote[1]/p[@paraId=4580F59B]
+            object_id: obj-c6a1bd4add2fc6100b1573dc
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              object_id: obj-c6a1bd4add2fc6100b1573dc
+          - extent:
+              kind: whole_entry
+            fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            locator: /endnote[1]/p[@paraId=4580F59B]/r[1]
+            object_id: obj-93ce3498e3cb3dda01325639
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+              object_id: obj-93ce3498e3cb3dda01325639
+          source_entry_id: source-entry-1fd806da7eb38503a4b4679f
+          source_order:
+            block: 34
+            inline: 0
+          text: ''
+        - entry_type: text
+          extent:
+            kind: whole_entry
+          provenance:
+          - extent:
+              kind: whole_entry
+            fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            locator: /endnote[2]/p[@paraId=65E511DA]
+            object_id: obj-1c33af74ba156158db4f8ea2
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              object_id: obj-1c33af74ba156158db4f8ea2
+          - extent:
+              kind: whole_entry
+            fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            locator: /endnote[2]/p[@paraId=65E511DA]/r[1]
+            object_id: obj-dfab3c58ef43954272613968
+            object_ref:
+              document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+              expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+              object_id: obj-dfab3c58ef43954272613968
+          source_entry_id: source-entry-c81f86f495877a4248258e3b
+          source_order:
+            block: 35
+            inline: 0
+          text: ''
+        source_snapshot_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+      source_entries:
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+          locator: /body/p[@paraId=083A92D0]
+          object_id: obj-eea5c2c0961296be3fd8427d
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+            object_id: obj-eea5c2c0961296be3fd8427d
+        source_entry_id: source-entry-9d7d2c3572c90fd2bd5bb169
+        source_order:
+          block: 1
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          end: 22
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: 0b8a54b6269af67d407ed5aa6792f52ea77290291313c94fda1cbfe5dce119e0
+          locator: /body/p[@paraId=4A1EF999]
+          object_id: obj-f329a8a030a9e01681c626db
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 0b8a54b6269af67d407ed5aa6792f52ea77290291313c94fda1cbfe5dce119e0
+            object_id: obj-f329a8a030a9e01681c626db
+          text_span:
+          - 0
+          - 22
+        - fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+          locator: /body/p[@paraId=4A1EF999]/r[1]
+          object_id: obj-3912f2fa053572c9e4bef466
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+            object_id: obj-3912f2fa053572c9e4bef466
+          text_span:
+          - 0
+          - 22
+        source_entry_id: source-entry-9848a143772985dda1e8eac2
+        source_order:
+          block: 2
+          inline: 0
+        text: 湖南农业大学全日制普通本科生毕业论文（设计）
+      - entry_type: text
+        extent:
+          end: 7
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: 25b4a03eb31edd2da10ae39d85bae15b72179c8898db4bfd63318360203ba630
+          locator: /body/p[@paraId=215A39BA]
+          object_id: obj-1b19113699ab20fd798b1beb
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 25b4a03eb31edd2da10ae39d85bae15b72179c8898db4bfd63318360203ba630
+            object_id: obj-1b19113699ab20fd798b1beb
+          text_span:
+          - 0
+          - 7
+        - fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+          locator: /body/p[@paraId=215A39BA]/r[1]
+          object_id: obj-04b885184a5a4c20462de92c
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+            object_id: obj-04b885184a5a4c20462de92c
+          text_span:
+          - 0
+          - 1
+        - fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+          locator: /body/p[@paraId=215A39BA]/r[2]
+          object_id: obj-425e240c3a290bdd4b519534
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+            object_id: obj-425e240c3a290bdd4b519534
+          text_span:
+          - 1
+          - 2
+        - fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+          locator: /body/p[@paraId=215A39BA]/r[3]
+          object_id: obj-0f5212cdc7e967dd48384f09
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+            object_id: obj-0f5212cdc7e967dd48384f09
+          text_span:
+          - 2
+          - 3
+        - fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+          locator: /body/p[@paraId=215A39BA]/r[4]
+          object_id: obj-638a3ae225874e1a093682e6
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+            object_id: obj-638a3ae225874e1a093682e6
+          text_span:
+          - 3
+          - 4
+        - fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+          locator: /body/p[@paraId=215A39BA]/r[5]
+          object_id: obj-101cbd81f417bbf925b6e950
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+            object_id: obj-101cbd81f417bbf925b6e950
+          text_span:
+          - 4
+          - 5
+        - fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+          locator: /body/p[@paraId=215A39BA]/r[6]
+          object_id: obj-a492ac8e001fb6172d226fd6
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+            object_id: obj-a492ac8e001fb6172d226fd6
+          text_span:
+          - 5
+          - 6
+        - fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+          locator: /body/p[@paraId=215A39BA]/r[7]
+          object_id: obj-9e61de0e8601c5fa56ef8d4e
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+            object_id: obj-9e61de0e8601c5fa56ef8d4e
+          text_span:
+          - 6
+          - 7
+        source_entry_id: source-entry-b909cef01fea52cd8414577d
+        source_order:
+          block: 3
+          inline: 0
+        text: 诚 信 声 明
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+          locator: /body/p[@paraId=1D655190]
+          object_id: obj-ba2c70ae3d758a797c8f67d0
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+            object_id: obj-ba2c70ae3d758a797c8f67d0
+        source_entry_id: source-entry-7d343d3c1e413575979fafcd
+        source_order:
+          block: 4
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+          locator: /body/p[@paraId=52F6D59B]
+          object_id: obj-92550811f86ca1d404d4a169
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+            object_id: obj-92550811f86ca1d404d4a169
+        source_entry_id: source-entry-c377f7c4dd93f9c0cfbb9272
+        source_order:
+          block: 5
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          end: 158
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: 692eb0e05257a81b72082fd9fa11e666028321f1a12a34c1d80b4b7a92370ed4
+          locator: /body/p[@paraId=626D8268]
+          object_id: obj-aa6a00085bc372ef7b401f56
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 692eb0e05257a81b72082fd9fa11e666028321f1a12a34c1d80b4b7a92370ed4
+            object_id: obj-aa6a00085bc372ef7b401f56
+          text_span:
+          - 0
+          - 158
+        - fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+          locator: /body/p[@paraId=626D8268]/r[1]
+          object_id: obj-423c3a1dbd69ffe8448b3168
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+            object_id: obj-423c3a1dbd69ffe8448b3168
+          text_span:
+          - 0
+          - 158
+        source_entry_id: source-entry-9f571dc9b798d9c9d0755957
+        source_order:
+          block: 6
+          inline: 0
+        text: 本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+          locator: /body/p[@paraId=1E30CD97]
+          object_id: obj-b51324e6c4977069da2d2200
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+            object_id: obj-b51324e6c4977069da2d2200
+        source_entry_id: source-entry-768960ed9f1b1072f310a199
+        source_order:
+          block: 7
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+          locator: /body/p[@paraId=514BCC5B]
+          object_id: obj-cc51c71095e837ddaa422c5b
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+            object_id: obj-cc51c71095e837ddaa422c5b
+        source_entry_id: source-entry-dd6afc29f66f697bbc394272
+        source_order:
+          block: 8
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+          locator: /body/p[@paraId=63EBA93B]
+          object_id: obj-c36338354c8e5cde15a66779
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+            object_id: obj-c36338354c8e5cde15a66779
+        source_entry_id: source-entry-40ec4fd54fe0f74125dcc2e1
+        source_order:
+          block: 9
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          end: 33
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: 7856db1c8900906fbe7f5b7b336059a0f2796cde2431c11536513e6508d4c6f8
+          locator: /body/p[@paraId=62C82508]
+          object_id: obj-4dffb3d37864bcef2625bccb
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 7856db1c8900906fbe7f5b7b336059a0f2796cde2431c11536513e6508d4c6f8
+            object_id: obj-4dffb3d37864bcef2625bccb
+          text_span:
+          - 0
+          - 33
+        - fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+          locator: /body/p[@paraId=62C82508]/r[1]
+          object_id: obj-2b732fb4d20e7ac887ab9cf6
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+            object_id: obj-2b732fb4d20e7ac887ab9cf6
+          text_span:
+          - 0
+          - 20
+        - fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+          locator: /body/p[@paraId=62C82508]/r[2]
+          object_id: obj-b94e9c38c6a16c791017f0e4
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+            object_id: obj-b94e9c38c6a16c791017f0e4
+          text_span:
+          - 20
+          - 33
+        source_entry_id: source-entry-49428f38bcc86be786e98067
+        source_order:
+          block: 10
+          inline: 0
+        text: '                    毕业论文（设计）作者签名：'
+      - entry_type: text
+        extent:
+          end: 50
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: 734934fff656be5159866d64df6b233b7b1125e174d4b00800620a6caf1549e4
+          locator: /body/p[@paraId=334193A0]
+          object_id: obj-3d90800d3624c9aa92f759a8
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 734934fff656be5159866d64df6b233b7b1125e174d4b00800620a6caf1549e4
+            object_id: obj-3d90800d3624c9aa92f759a8
+          text_span:
+          - 0
+          - 50
+        - fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+          locator: /body/p[@paraId=334193A0]/r[1]
+          object_id: obj-33fc2b718f611beec8cc949f
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+            object_id: obj-33fc2b718f611beec8cc949f
+          text_span:
+          - 0
+          - 39
+        - fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+          locator: /body/p[@paraId=334193A0]/r[2]
+          object_id: obj-07cf774b4fad065e55b72075
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+            object_id: obj-07cf774b4fad065e55b72075
+          text_span:
+          - 39
+          - 40
+        - fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+          locator: /body/p[@paraId=334193A0]/r[3]
+          object_id: obj-d41b4fb9766791a3ffb26c88
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+            object_id: obj-d41b4fb9766791a3ffb26c88
+          text_span:
+          - 40
+          - 44
+        - fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+          locator: /body/p[@paraId=334193A0]/r[4]
+          object_id: obj-f83baf9ab92d8be1b42d80fc
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+            object_id: obj-f83baf9ab92d8be1b42d80fc
+          text_span:
+          - 44
+          - 45
+        - fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+          locator: /body/p[@paraId=334193A0]/r[5]
+          object_id: obj-bc851a9c09b7bd44236fb449
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+            object_id: obj-bc851a9c09b7bd44236fb449
+          text_span:
+          - 45
+          - 49
+        - fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+          locator: /body/p[@paraId=334193A0]/r[6]
+          object_id: obj-7aebc40183d9a213e43df8e8
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+            object_id: obj-7aebc40183d9a213e43df8e8
+          text_span:
+          - 49
+          - 50
+        source_entry_id: source-entry-9c930b771a265cd2a7df8074
+        source_order:
+          block: 11
+          inline: 0
+        text: '                                       年    月    日'
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+          locator: /body/p[@paraId=75C9344B]
+          object_id: obj-addec19d845823b3933ad825
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+            object_id: obj-addec19d845823b3933ad825
+        source_entry_id: source-entry-523b40a69390c67ef181e025
+        source_order:
+          block: 12
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+          locator: /body/p[@paraId=42E812EA]
+          object_id: obj-d74bb4301a4a59c109a8068b
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+            object_id: obj-d74bb4301a4a59c109a8068b
+        source_entry_id: source-entry-624c77971c3b4f496bee2c30
+        source_order:
+          block: 13
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+          locator: /body/p[@paraId=5C2A639D]
+          object_id: obj-27b17dd3d4aca5e7bd337b1f
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+            object_id: obj-27b17dd3d4aca5e7bd337b1f
+        source_entry_id: source-entry-b56807c0c0d12a85f38b272b
+        source_order:
+          block: 14
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+          locator: /body/p[@paraId=613C583F]
+          object_id: obj-035b861559241c6d1547e432
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+            object_id: obj-035b861559241c6d1547e432
+        source_entry_id: source-entry-540b2c468cd421fd00d3125e
+        source_order:
+          block: 15
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+          locator: /body/p[@paraId=63125D66]
+          object_id: obj-2903edaf1617c1d70dbd227d
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+            object_id: obj-2903edaf1617c1d70dbd227d
+        source_entry_id: source-entry-9d805335442603228c51a3af
+        source_order:
+          block: 16
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+          locator: /body/p[@paraId=5295FD34]
+          object_id: obj-7a2d305a8ff3f0f89b4112d9
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+            object_id: obj-7a2d305a8ff3f0f89b4112d9
+        source_entry_id: source-entry-455e022cb9300b54170b32e5
+        source_order:
+          block: 17
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+          locator: /body/p[@paraId=5F1F83FD]
+          object_id: obj-74989b0b007de3572d8ea9e7
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+            object_id: obj-74989b0b007de3572d8ea9e7
+        source_entry_id: source-entry-3dbcaa060e5b0a052f00be88
+        source_order:
+          block: 18
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+          locator: /body/p[@paraId=5717616B]
+          object_id: obj-c732f79f8398948f9308ee58
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+            object_id: obj-c732f79f8398948f9308ee58
+        source_entry_id: source-entry-0fa157cf7bb741da3a2f4092
+        source_order:
+          block: 19
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+          locator: /body/p[@paraId=37011DEA]
+          object_id: obj-53a94c5aabb56da9d076c2a6
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+            object_id: obj-53a94c5aabb56da9d076c2a6
+        source_entry_id: source-entry-dd9005ce9cd7805613eb848c
+        source_order:
+          block: 20
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+          locator: /body/p[@paraId=40E55DE5]
+          object_id: obj-b3c62d7fc69c7f759f885bf4
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+            object_id: obj-b3c62d7fc69c7f759f885bf4
+        source_entry_id: source-entry-a79e37daf75bdc2e9c4ab07e
+        source_order:
+          block: 21
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+          locator: /body/p[@paraId=3A4FE366]
+          object_id: obj-6467f476438d5b0931c1dd85
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+            object_id: obj-6467f476438d5b0931c1dd85
+        source_entry_id: source-entry-8d6d6a929384811c9a37babb
+        source_order:
+          block: 22
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+          locator: /body/p[@paraId=25D3854A]
+          object_id: obj-7230194d37f05387e55afe25
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+            object_id: obj-7230194d37f05387e55afe25
+        source_entry_id: source-entry-a7aa0ba5cf078c3b4816d298
+        source_order:
+          block: 23
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+          locator: /body/p[@paraId=3EAD3B6E]
+          object_id: obj-e9084ccc8344150c4c73d5cb
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+            object_id: obj-e9084ccc8344150c4c73d5cb
+        source_entry_id: source-entry-66e7052642ee292175bb63d7
+        source_order:
+          block: 24
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+          locator: /body/p[@paraId=16CDB2BF]
+          object_id: obj-b0ff116fb0745adfae89bb4b
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+            object_id: obj-b0ff116fb0745adfae89bb4b
+        source_entry_id: source-entry-3f229850dfcd7eb4e26fa908
+        source_order:
+          block: 25
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+          locator: /body/p[@paraId=6C4EFD4F]
+          object_id: obj-4a21bc6d1f8fcd102ce5f539
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+            object_id: obj-4a21bc6d1f8fcd102ce5f539
+        source_entry_id: source-entry-64356116fa5a6a4c8e72a29b
+        source_order:
+          block: 26
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+          locator: /body/p[@paraId=2D58BB2F]
+          object_id: obj-c46a4166fe61004b6432e3f2
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+            object_id: obj-c46a4166fe61004b6432e3f2
+        source_entry_id: source-entry-0598bacc6ae06033c37ff519
+        source_order:
+          block: 27
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+          locator: /body/p[@paraId=4011BABD]
+          object_id: obj-b029f6df35a5449202fe01a9
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+            object_id: obj-b029f6df35a5449202fe01a9
+        source_entry_id: source-entry-f9b83bc146d48fd6b6fcb250
+        source_order:
+          block: 28
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+          locator: /body/p[@paraId=0335B523]
+          object_id: obj-dc94f03cc1c2627e40867df5
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+            object_id: obj-dc94f03cc1c2627e40867df5
+        source_entry_id: source-entry-730605e42350adfa65aa9a00
+        source_order:
+          block: 29
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+          locator: /header[1]/p[@paraId=45BB0141]
+          object_id: obj-4c45343a520494cfdae3abcc
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+            object_id: obj-4c45343a520494cfdae3abcc
+        source_entry_id: source-entry-3f5bb6fd01e59f18cd7042a4
+        source_order:
+          block: 30
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+          locator: /footer[1]/p[@paraId=59E967D9]
+          object_id: obj-26f2b7326f157ed346d12f10
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+            object_id: obj-26f2b7326f157ed346d12f10
+        source_entry_id: source-entry-3077edfaa01ff4ff692c17fb
+        source_order:
+          block: 31
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+          locator: /footnote[1]/p[@paraId=0967CC13]
+          object_id: obj-f527b24750d2e0da75384ef5
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            object_id: obj-f527b24750d2e0da75384ef5
+        - extent:
+            kind: whole_entry
+          fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+          locator: /footnote[1]/p[@paraId=0967CC13]/r[1]
+          object_id: obj-03edd0f7252b241196f6f63d
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            object_id: obj-03edd0f7252b241196f6f63d
+        source_entry_id: source-entry-897804e88afb8647e6d6c992
+        source_order:
+          block: 32
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+          locator: /footnote[2]/p[@paraId=79C09F15]
+          object_id: obj-ab3ec63f045111008f562cbc
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            object_id: obj-ab3ec63f045111008f562cbc
+        - extent:
+            kind: whole_entry
+          fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+          locator: /footnote[2]/p[@paraId=79C09F15]/r[1]
+          object_id: obj-4ad929fb4fe24a8927d3b80d
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            object_id: obj-4ad929fb4fe24a8927d3b80d
+        source_entry_id: source-entry-766ccc961e5145b00d6ebec2
+        source_order:
+          block: 33
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+          locator: /endnote[1]/p[@paraId=4580F59B]
+          object_id: obj-c6a1bd4add2fc6100b1573dc
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            object_id: obj-c6a1bd4add2fc6100b1573dc
+        - extent:
+            kind: whole_entry
+          fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+          locator: /endnote[1]/p[@paraId=4580F59B]/r[1]
+          object_id: obj-93ce3498e3cb3dda01325639
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            object_id: obj-93ce3498e3cb3dda01325639
+        source_entry_id: source-entry-1fd806da7eb38503a4b4679f
+        source_order:
+          block: 34
+          inline: 0
+        text: ''
+      - entry_type: text
+        extent:
+          kind: whole_entry
+        provenance:
+        - extent:
+            kind: whole_entry
+          fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+          locator: /endnote[2]/p[@paraId=65E511DA]
+          object_id: obj-1c33af74ba156158db4f8ea2
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+            object_id: obj-1c33af74ba156158db4f8ea2
+        - extent:
+            kind: whole_entry
+          fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+          locator: /endnote[2]/p[@paraId=65E511DA]/r[1]
+          object_id: obj-dfab3c58ef43954272613968
+          object_ref:
+            document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+            expected_fingerprint: 5d0f402adefa36a9e861ff607adc19a7364cdc089cd674f3e607cde79bc5b7bc
+            object_id: obj-dfab3c58ef43954272613968
+        source_entry_id: source-entry-c81f86f495877a4248258e3b
+        source_order:
+          block: 35
+          inline: 0
+        text: ''
+      unit_boundary_proof:
+        checkpoint: unit-boundary
+        resolved_units:
+        - covered_object_ids:
+          - obj-eea5c2c0961296be3fd8427d
+          - obj-3912f2fa053572c9e4bef466
+          - obj-04b885184a5a4c20462de92c
+          - obj-425e240c3a290bdd4b519534
+          - obj-0f5212cdc7e967dd48384f09
+          - obj-638a3ae225874e1a093682e6
+          - obj-101cbd81f417bbf925b6e950
+          - obj-a492ac8e001fb6172d226fd6
+          - obj-9e61de0e8601c5fa56ef8d4e
+          - obj-ba2c70ae3d758a797c8f67d0
+          - obj-92550811f86ca1d404d4a169
+          - obj-423c3a1dbd69ffe8448b3168
+          - obj-b51324e6c4977069da2d2200
+          - obj-cc51c71095e837ddaa422c5b
+          - obj-c36338354c8e5cde15a66779
+          - obj-2b732fb4d20e7ac887ab9cf6
+          - obj-b94e9c38c6a16c791017f0e4
+          - obj-33fc2b718f611beec8cc949f
+          - obj-07cf774b4fad065e55b72075
+          - obj-d41b4fb9766791a3ffb26c88
+          - obj-f83baf9ab92d8be1b42d80fc
+          - obj-bc851a9c09b7bd44236fb449
+          - obj-7aebc40183d9a213e43df8e8
+          - obj-addec19d845823b3933ad825
+          - obj-d74bb4301a4a59c109a8068b
+          - obj-27b17dd3d4aca5e7bd337b1f
+          - obj-035b861559241c6d1547e432
+          - obj-2903edaf1617c1d70dbd227d
+          - obj-7a2d305a8ff3f0f89b4112d9
+          - obj-74989b0b007de3572d8ea9e7
+          - obj-c732f79f8398948f9308ee58
+          - obj-53a94c5aabb56da9d076c2a6
+          - obj-b3c62d7fc69c7f759f885bf4
+          - obj-6467f476438d5b0931c1dd85
+          - obj-7230194d37f05387e55afe25
+          - obj-e9084ccc8344150c4c73d5cb
+          - obj-b0ff116fb0745adfae89bb4b
+          - obj-4a21bc6d1f8fcd102ce5f539
+          - obj-c46a4166fe61004b6432e3f2
+          - obj-b029f6df35a5449202fe01a9
+          - obj-dc94f03cc1c2627e40867df5
+          - obj-4c45343a520494cfdae3abcc
+          - obj-26f2b7326f157ed346d12f10
+          - obj-f527b24750d2e0da75384ef5
+          - obj-ab3ec63f045111008f562cbc
+          - obj-c6a1bd4add2fc6100b1573dc
+          - obj-1c33af74ba156158db4f8ea2
+          end_boundary:
+            edge: end
+            source_entry_id: source-entry-c81f86f495877a4248258e3b
+          end_locator: /endnote[2]/p[@paraId=65E511DA]
+          source_spans:
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-9d7d2c3572c90fd2bd5bb169
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+              locator: /body/p[@paraId=083A92D0]
+              object_id: obj-eea5c2c0961296be3fd8427d
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 1443cfc1fc7884a68750ae65278cedb6569c6c06803dd03304104838832cf7d2
+                object_id: obj-eea5c2c0961296be3fd8427d
+              text: ''
+          - extent:
+              end: 22
+              kind: text
+              start: 0
+            source_entry_id: source-entry-9848a143772985dda1e8eac2
+            text: 湖南农业大学全日制普通本科生毕业论文（设计）
+            word_fragments:
+            - fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+              locator: /body/p[@paraId=4A1EF999]/r[1]
+              object_id: obj-3912f2fa053572c9e4bef466
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: a4ecbed01f6d55cc23176f795971f96a9e25d5b4cd10d38cd29f1b3d4598809a
+                object_id: obj-3912f2fa053572c9e4bef466
+              object_text_end: 22
+              object_text_start: 0
+              source_text_end: 22
+              source_text_start: 0
+              text: 湖南农业大学全日制普通本科生毕业论文（设计）
+          - extent:
+              end: 7
+              kind: text
+              start: 0
+            source_entry_id: source-entry-b909cef01fea52cd8414577d
+            text: 诚 信 声 明
+            word_fragments:
+            - fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+              locator: /body/p[@paraId=215A39BA]/r[1]
+              object_id: obj-04b885184a5a4c20462de92c
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 8e6d5325909a3e1a106cebcc3e76590cb24ce49166ace9affff6e0383e345805
+                object_id: obj-04b885184a5a4c20462de92c
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 1
+              source_text_start: 0
+              text: 诚
+            - fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+              locator: /body/p[@paraId=215A39BA]/r[2]
+              object_id: obj-425e240c3a290bdd4b519534
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 143ace80577aa76f982518ee937e8d087490c8324f06936d441ec6cac1177241
+                object_id: obj-425e240c3a290bdd4b519534
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 2
+              source_text_start: 1
+              text: ' '
+            - fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+              locator: /body/p[@paraId=215A39BA]/r[3]
+              object_id: obj-0f5212cdc7e967dd48384f09
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 7a244a8553e596ac785d699f56439797065b3757a128f17f99ca083bac696e95
+                object_id: obj-0f5212cdc7e967dd48384f09
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 3
+              source_text_start: 2
+              text: 信
+            - fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+              locator: /body/p[@paraId=215A39BA]/r[4]
+              object_id: obj-638a3ae225874e1a093682e6
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 35cd6f6fb1cf6305f32bddc569387e3b794735d05b832e5d6f62a3b55018c740
+                object_id: obj-638a3ae225874e1a093682e6
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 4
+              source_text_start: 3
+              text: ' '
+            - fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+              locator: /body/p[@paraId=215A39BA]/r[5]
+              object_id: obj-101cbd81f417bbf925b6e950
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 96e6b8a7b119973d8a634acc0a129b1ac3eeb978b84ee2ecdcc74e64f237a6e0
+                object_id: obj-101cbd81f417bbf925b6e950
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 5
+              source_text_start: 4
+              text: 声
+            - fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+              locator: /body/p[@paraId=215A39BA]/r[6]
+              object_id: obj-a492ac8e001fb6172d226fd6
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 06ebfc4fce6a4e5e31292c8d6889460bba5e6e815ef35f894802861f2061a258
+                object_id: obj-a492ac8e001fb6172d226fd6
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 6
+              source_text_start: 5
+              text: ' '
+            - fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+              locator: /body/p[@paraId=215A39BA]/r[7]
+              object_id: obj-9e61de0e8601c5fa56ef8d4e
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 6c3bd226d2c099ea377d6716bfc2a9180ec81d13d5be9c5b27f01feb5572ea65
+                object_id: obj-9e61de0e8601c5fa56ef8d4e
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 7
+              source_text_start: 6
+              text: 明
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-7d343d3c1e413575979fafcd
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+              locator: /body/p[@paraId=1D655190]
+              object_id: obj-ba2c70ae3d758a797c8f67d0
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 7e215884de997c71a5c425d17f7474678f34ce46596b15c33e3938fb9b8ed19f
+                object_id: obj-ba2c70ae3d758a797c8f67d0
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-c377f7c4dd93f9c0cfbb9272
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+              locator: /body/p[@paraId=52F6D59B]
+              object_id: obj-92550811f86ca1d404d4a169
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 0eb01cf8ca63ed156ecce84d9c279db6ce3b212a4a903870c0316bfa9e4019ce
+                object_id: obj-92550811f86ca1d404d4a169
+              text: ''
+          - extent:
+              end: 158
+              kind: text
+              start: 0
+            source_entry_id: source-entry-9f571dc9b798d9c9d0755957
+            text: 本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。
+            word_fragments:
+            - fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+              locator: /body/p[@paraId=626D8268]/r[1]
+              object_id: obj-423c3a1dbd69ffe8448b3168
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 677a6391d94f868a2ac0494d948552791c53f557446656c320876eb208e3bb79
+                object_id: obj-423c3a1dbd69ffe8448b3168
+              object_text_end: 158
+              object_text_start: 0
+              source_text_end: 158
+              source_text_start: 0
+              text: 本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-768960ed9f1b1072f310a199
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+              locator: /body/p[@paraId=1E30CD97]
+              object_id: obj-b51324e6c4977069da2d2200
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 1e8adda03b9893d0853e0f699a7ea3a714bc0730395e7208a325e09f733cdd20
+                object_id: obj-b51324e6c4977069da2d2200
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-dd6afc29f66f697bbc394272
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+              locator: /body/p[@paraId=514BCC5B]
+              object_id: obj-cc51c71095e837ddaa422c5b
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: d816f4f18531a2a221995fb417f4d1f6b8140230751118f2fc6a078bd3f05ce2
+                object_id: obj-cc51c71095e837ddaa422c5b
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-40ec4fd54fe0f74125dcc2e1
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+              locator: /body/p[@paraId=63EBA93B]
+              object_id: obj-c36338354c8e5cde15a66779
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: a132e7ac8c4e61878bbd3ddedfd9cc67f6b8aaf25808f7f213e89fff56edd7cb
+                object_id: obj-c36338354c8e5cde15a66779
+              text: ''
+          - extent:
+              end: 33
+              kind: text
+              start: 0
+            source_entry_id: source-entry-49428f38bcc86be786e98067
+            text: '                    毕业论文（设计）作者签名：'
+            word_fragments:
+            - fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+              locator: /body/p[@paraId=62C82508]/r[1]
+              object_id: obj-2b732fb4d20e7ac887ab9cf6
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: d202bdbe30096002c8e6644119bd4ea78378af1871d7ca8acf36346339413069
+                object_id: obj-2b732fb4d20e7ac887ab9cf6
+              object_text_end: 20
+              object_text_start: 0
+              source_text_end: 20
+              source_text_start: 0
+              text: '                    '
+            - fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+              locator: /body/p[@paraId=62C82508]/r[2]
+              object_id: obj-b94e9c38c6a16c791017f0e4
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 2f08ace5f31711a33e2c04ca89aa581531a3f1c574b46955915725e67a8bd6b6
+                object_id: obj-b94e9c38c6a16c791017f0e4
+              object_text_end: 13
+              object_text_start: 0
+              source_text_end: 33
+              source_text_start: 20
+              text: 毕业论文（设计）作者签名：
+          - extent:
+              end: 50
+              kind: text
+              start: 0
+            source_entry_id: source-entry-9c930b771a265cd2a7df8074
+            text: '                                       年    月    日'
+            word_fragments:
+            - fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+              locator: /body/p[@paraId=334193A0]/r[1]
+              object_id: obj-33fc2b718f611beec8cc949f
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 609230062e0c909585f21c30560bc490e82975eeccf9483c684e79522b680260
+                object_id: obj-33fc2b718f611beec8cc949f
+              object_text_end: 39
+              object_text_start: 0
+              source_text_end: 39
+              source_text_start: 0
+              text: '                                       '
+            - fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+              locator: /body/p[@paraId=334193A0]/r[2]
+              object_id: obj-07cf774b4fad065e55b72075
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 0b78d7cb3e3600b3d7dd3e9d42ce3a21cbcd420aab56cedf0f4e14ea7fa2e746
+                object_id: obj-07cf774b4fad065e55b72075
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 40
+              source_text_start: 39
+              text: 年
+            - fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+              locator: /body/p[@paraId=334193A0]/r[3]
+              object_id: obj-d41b4fb9766791a3ffb26c88
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 6a823aa8c534185250ea8ef9fc25bf2f9befede97050f4736b328d70c5d94f5a
+                object_id: obj-d41b4fb9766791a3ffb26c88
+              object_text_end: 4
+              object_text_start: 0
+              source_text_end: 44
+              source_text_start: 40
+              text: '    '
+            - fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+              locator: /body/p[@paraId=334193A0]/r[4]
+              object_id: obj-f83baf9ab92d8be1b42d80fc
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 67376db208b4445f2e32f8d212951bf00d9421b2462abec9130336de5083cdbe
+                object_id: obj-f83baf9ab92d8be1b42d80fc
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 45
+              source_text_start: 44
+              text: 月
+            - fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+              locator: /body/p[@paraId=334193A0]/r[5]
+              object_id: obj-bc851a9c09b7bd44236fb449
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 5f68d0e5f6cdb7b12fb549a01d342353e67e1ca8b3d1fd82445a4ba311fc2255
+                object_id: obj-bc851a9c09b7bd44236fb449
+              object_text_end: 4
+              object_text_start: 0
+              source_text_end: 49
+              source_text_start: 45
+              text: '    '
+            - fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+              locator: /body/p[@paraId=334193A0]/r[6]
+              object_id: obj-7aebc40183d9a213e43df8e8
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 2d8f3dea0b73b3ec9018759c5d5db8c3d0047fa017d3e90cf3197a929852978e
+                object_id: obj-7aebc40183d9a213e43df8e8
+              object_text_end: 1
+              object_text_start: 0
+              source_text_end: 50
+              source_text_start: 49
+              text: 日
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-523b40a69390c67ef181e025
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+              locator: /body/p[@paraId=75C9344B]
+              object_id: obj-addec19d845823b3933ad825
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 505d5d2b9ed6ebbfe0d6e2d7d4a6805b3055d6783c6ac9782c8e639800afec83
+                object_id: obj-addec19d845823b3933ad825
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-624c77971c3b4f496bee2c30
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+              locator: /body/p[@paraId=42E812EA]
+              object_id: obj-d74bb4301a4a59c109a8068b
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 7fcbdf7c698b33b778a4e18ee0bb044e6bc2627b91320c278a82acfe4aa2c45e
+                object_id: obj-d74bb4301a4a59c109a8068b
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-b56807c0c0d12a85f38b272b
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+              locator: /body/p[@paraId=5C2A639D]
+              object_id: obj-27b17dd3d4aca5e7bd337b1f
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: f78e18c6ea50b137131a88a275073f367b7decac9fe511967086e95effd3a0c5
+                object_id: obj-27b17dd3d4aca5e7bd337b1f
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-540b2c468cd421fd00d3125e
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+              locator: /body/p[@paraId=613C583F]
+              object_id: obj-035b861559241c6d1547e432
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: b630d46cbc1ff4a4a6e8466969a8fa0a33929dc560857c23bf1a0d50ca6b7034
+                object_id: obj-035b861559241c6d1547e432
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-9d805335442603228c51a3af
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+              locator: /body/p[@paraId=63125D66]
+              object_id: obj-2903edaf1617c1d70dbd227d
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 53f49bbf60f8f7053a21691c9d7cfbfa365ec6de5a2ebf1d01b478f35e07e562
+                object_id: obj-2903edaf1617c1d70dbd227d
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-455e022cb9300b54170b32e5
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+              locator: /body/p[@paraId=5295FD34]
+              object_id: obj-7a2d305a8ff3f0f89b4112d9
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: d9ab5b59c5a123d7494300cc5dc07857b1b16e6da29e2acfc77c77aa5e6aa865
+                object_id: obj-7a2d305a8ff3f0f89b4112d9
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-3dbcaa060e5b0a052f00be88
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+              locator: /body/p[@paraId=5F1F83FD]
+              object_id: obj-74989b0b007de3572d8ea9e7
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 53f1f3da684b92b67235ea86b9a35bb2b87513c4308ec2c4cdeccc12e88094a6
+                object_id: obj-74989b0b007de3572d8ea9e7
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-0fa157cf7bb741da3a2f4092
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+              locator: /body/p[@paraId=5717616B]
+              object_id: obj-c732f79f8398948f9308ee58
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 4f51fc19fcbde5233fda3fd1ccbbac2f96f5dc04fdb86591998b34df12f12e71
+                object_id: obj-c732f79f8398948f9308ee58
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-dd9005ce9cd7805613eb848c
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+              locator: /body/p[@paraId=37011DEA]
+              object_id: obj-53a94c5aabb56da9d076c2a6
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 46afd7bac72d31c8e4e72565be05ef896bb915337c9bb39df95b40066ea54cfc
+                object_id: obj-53a94c5aabb56da9d076c2a6
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-a79e37daf75bdc2e9c4ab07e
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+              locator: /body/p[@paraId=40E55DE5]
+              object_id: obj-b3c62d7fc69c7f759f885bf4
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 4a2c2667668906be147529921c5cc1a2390df70a599646667d17a6f23fe0bc86
+                object_id: obj-b3c62d7fc69c7f759f885bf4
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-8d6d6a929384811c9a37babb
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+              locator: /body/p[@paraId=3A4FE366]
+              object_id: obj-6467f476438d5b0931c1dd85
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 18b1c849d1fe58e60ff6631ecba09958b804200747048f41729075021295a7f2
+                object_id: obj-6467f476438d5b0931c1dd85
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-a7aa0ba5cf078c3b4816d298
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+              locator: /body/p[@paraId=25D3854A]
+              object_id: obj-7230194d37f05387e55afe25
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 586ff7955117ff7c9b9d7e196c893401e0605f5ed8201c1f73ee66853e1b81eb
+                object_id: obj-7230194d37f05387e55afe25
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-66e7052642ee292175bb63d7
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+              locator: /body/p[@paraId=3EAD3B6E]
+              object_id: obj-e9084ccc8344150c4c73d5cb
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 68931c88ee584391834534bb3d232a40e57943a74e7c6371286fde492119c9b8
+                object_id: obj-e9084ccc8344150c4c73d5cb
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-3f229850dfcd7eb4e26fa908
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+              locator: /body/p[@paraId=16CDB2BF]
+              object_id: obj-b0ff116fb0745adfae89bb4b
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: afdcc8b9d4e2eece99026dfac336fa86c07d0614ea2b1d363f2dd367ef2a6e5a
+                object_id: obj-b0ff116fb0745adfae89bb4b
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-64356116fa5a6a4c8e72a29b
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+              locator: /body/p[@paraId=6C4EFD4F]
+              object_id: obj-4a21bc6d1f8fcd102ce5f539
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 7ab003eae3530bb66afa53ec7a484df395be6058d977ff4c54529def073d9bb8
+                object_id: obj-4a21bc6d1f8fcd102ce5f539
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-0598bacc6ae06033c37ff519
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+              locator: /body/p[@paraId=2D58BB2F]
+              object_id: obj-c46a4166fe61004b6432e3f2
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 239ee6fd38652f1561d6fd7f8e25e6393414424bde2df52726ec81466740c876
+                object_id: obj-c46a4166fe61004b6432e3f2
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-f9b83bc146d48fd6b6fcb250
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+              locator: /body/p[@paraId=4011BABD]
+              object_id: obj-b029f6df35a5449202fe01a9
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: af0e83cfbf54525bbd88aa38e9cbbf3a25f247be1c18ce6ab86e82f8958840ca
+                object_id: obj-b029f6df35a5449202fe01a9
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-730605e42350adfa65aa9a00
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+              locator: /body/p[@paraId=0335B523]
+              object_id: obj-dc94f03cc1c2627e40867df5
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: e4ba71b182c0cd7458b937ccc7c08c79be839d8bd82d6a2ccf698ca6b4b83512
+                object_id: obj-dc94f03cc1c2627e40867df5
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-3f5bb6fd01e59f18cd7042a4
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+              locator: /header[1]/p[@paraId=45BB0141]
+              object_id: obj-4c45343a520494cfdae3abcc
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1
+                object_id: obj-4c45343a520494cfdae3abcc
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-3077edfaa01ff4ff692c17fb
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+              locator: /footer[1]/p[@paraId=59E967D9]
+              object_id: obj-26f2b7326f157ed346d12f10
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0
+                object_id: obj-26f2b7326f157ed346d12f10
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-897804e88afb8647e6d6c992
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              locator: /footnote[1]/p[@paraId=0967CC13]
+              object_id: obj-f527b24750d2e0da75384ef5
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+                object_id: obj-f527b24750d2e0da75384ef5
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-766ccc961e5145b00d6ebec2
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              locator: /footnote[2]/p[@paraId=79C09F15]
+              object_id: obj-ab3ec63f045111008f562cbc
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+                object_id: obj-ab3ec63f045111008f562cbc
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-1fd806da7eb38503a4b4679f
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              locator: /endnote[1]/p[@paraId=4580F59B]
+              object_id: obj-c6a1bd4add2fc6100b1573dc
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+                object_id: obj-c6a1bd4add2fc6100b1573dc
+              text: ''
+          - extent:
+              kind: whole_entry
+            source_entry_id: source-entry-c81f86f495877a4248258e3b
+            text: ''
+            word_fragments:
+            - extent:
+                kind: whole_entry
+              fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+              locator: /endnote[2]/p[@paraId=65E511DA]
+              object_id: obj-1c33af74ba156158db4f8ea2
+              object_ref:
+                document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+                expected_fingerprint: 3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6
+                object_id: obj-1c33af74ba156158db4f8ea2
+              text: ''
+          start_boundary:
+            edge: start
+            source_entry_id: source-entry-9d7d2c3572c90fd2bd5bb169
+          start_locator: /body/p[@paraId=083A92D0]
+          unit_id: integrity-declaration
+          unit_name: 诚信声明
+        schema_version: docfit-unit-boundary-proof/v2
+        source_hash: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+        source_inventory_digest: b09ff75605bc2063f3aed05c0954ad52785585acb12fd39ed9822592f936a700
+        status: ok
+        unit_projection_digest: 5091b80c3cbc252daa9174f6d9536b3057c7e717231e58823e774bb1d3b10b25
+        units:
+        - end_boundary:
+            edge: end
+            source_entry_id: source-entry-c81f86f495877a4248258e3b
+          start_boundary:
+            edge: start
+            source_entry_id: source-entry-9d7d2c3572c90fd2bd5bb169
+          unit_id: integrity-declaration
+          unit_name: 诚信声明
+      unit_projection_digest: 5091b80c3cbc252daa9174f6d9536b3057c7e717231e58823e774bb1d3b10b25
+    semantic_judgments_sha256: 65116d652711ccff67dea733ff31ad46460d3903259cd1bf39a535435297fa54
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: null
+    slots: []
+  materialization_digest: 86fe1d85e2cee11359eab1edc0c8bc2b0f5a3264cafbb94273209d1d98a9e11a
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+      suggested_action: null
+    - name: content_preservation
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_text_objects_preserved: 5
+      suggested_action: null
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    final_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 0
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.143
+      executable_sha256: 2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: true
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    status: skipped
+    reason: accepted_terminal_source_noop_without_registry_slots
+  school_style_observation:
+    status: skipped_no_registry_slots
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

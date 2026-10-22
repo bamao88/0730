@@ -1,0 +1,41 @@
+{
+  "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+  "frozen_hashes_reverified": true,
+  "latest_revision_event": 83,
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-manifest.json",
+  "observed_at": "2026-09-24T07:35:18.667279+00:00",
+  "recorded_candidate_batches": 15,
+  "runtime_and_skill_frozen": false,
+  "runtime_commit": "37c26bd",
+  "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-boundary-diagnostics/template-extraction",
+  "session_id": 2782,
+  "status": "terminal",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+  "unit_boundary_status": "ok",
+  "unit_harness_feedback_attempts": 0,
+  "unit_sdk_query_count": 1,
+  "exit_code": 2,
+  "verified_file_count": 139,
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 21,
+    "response": 21,
+    "local_review": 17,
+    "local_rejected": 6,
+    "candidate_recorded": 15,
+    "global_review_failed": 1,
+    "run_failed": 1
+  },
+  "failure": {
+    "code": "template_materialization_execution_unsupported",
+    "message": "Accepted semantic review is not materializable: materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers.",
+    "origin": "tool",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": [
+      "Preserve the semantic judgments; repair the reported execution or system issue.",
+      "Do not retry semantic judgment or run materialization handlers for this failure."
+    ]
+  },
+  "product_acceptance": false
+}

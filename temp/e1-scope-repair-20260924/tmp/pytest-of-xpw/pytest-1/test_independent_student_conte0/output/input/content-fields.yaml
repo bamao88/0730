@@ -1,0 +1,15 @@
+registry_id: docfit.thesis.content_fields
+registry_version: 0.1.0
+fields:
+- field_id: thesis.title.en
+  label: English title
+  meaning: The student's English thesis title.
+  content_type: text
+- field_id: body.heading.outline1
+  label: Level-one body heading
+  meaning: A first-level heading in the thesis body.
+  content_type: text
+- field_id: body.paragraph
+  label: Body paragraph
+  meaning: A normal paragraph in the thesis body.
+  content_type: rich_text

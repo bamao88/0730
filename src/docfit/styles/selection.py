@@ -60,6 +60,7 @@ class SelectedStyleRole:
     source_digest: str
     property_profile_ref: JsonObject
     properties: tuple[SelectedStyleProperty, ...]
+    school_gap_refs: tuple[JsonObject, ...] = ()
 
     def contract_semantics(self) -> JsonObject:
         return {
@@ -70,11 +71,14 @@ class SelectedStyleRole:
         }
 
     def as_dict(self) -> JsonObject:
-        return {
+        result: JsonObject = {
             **self.contract_semantics(),
             "source": self.source,
             "source_digest": self.source_digest,
         }
+        if self.school_gap_refs:
+            result["school_gap_refs"] = [dict(item) for item in self.school_gap_refs]
+        return result
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,6 +121,7 @@ def select_complete_style_roles(
     *,
     actual_roles: ActualStyleRoleSet,
     school_candidates: Sequence[Mapping[str, Any]],
+    school_known_gaps: Sequence[Mapping[str, Any]],
     school_observation_set_digest: str,
     preset: GeneralStylePreset,
     registry: StylePropertyProfileRegistry,
@@ -152,6 +157,7 @@ def select_complete_style_roles(
                 f"More than one complete school candidate exists for {role_id}.",
             )
         candidates[role_id] = candidate
+    gaps_by_role = _raw_known_gaps_by_role(school_known_gaps)
 
     selections: list[SelectedStyleRole] = []
     for actual in actual_roles.roles:
@@ -165,13 +171,32 @@ def select_complete_style_roles(
                 school_observation_set_digest=school_observation_set_digest,
             )
         else:
+            school_gap_refs = _validated_known_gaps_for_role(
+                gaps_by_role.get(actual.style_role_id, ()),
+                style_role_id=actual.style_role_id,
+                profile=profile,
+            )
+            if not school_gap_refs:
+                raise _failure(
+                    "style_selection_school_known_gap_missing",
+                    (
+                        f"Preset fallback for {actual.style_role_id} requires an "
+                        "explicit known school style gap from the template package."
+                    ),
+                )
             role = preset.resolve_role(actual.style_role_id)
             if role.role_type != actual.role_type:
                 raise _failure(
                     "style_selection_preset_role_type_mismatch",
                     f"Preset role {actual.style_role_id} has the wrong role type.",
                 )
-            selection = _preset_selection(role.properties, role.role_id, profile, preset)
+            selection = _preset_selection(
+                role.properties,
+                role.role_id,
+                profile,
+                preset,
+                school_gap_refs=school_gap_refs,
+            )
         selections.append(selection)
     normalized = tuple(sorted(selections, key=lambda item: item.style_role_id))
     contract_payload: JsonObject = {
@@ -228,6 +253,23 @@ def compile_selected_style_contracts(
                 f"Selected role {selection.style_role_id} has a stale profile ref.",
             )
         effective = _execution_properties(selection.properties, profile)
+        evidence_refs: list[JsonObject] = [
+            {
+                "type": "style_role_selection",
+                "source": selection.source,
+                "source_digest": selection.source_digest,
+                "selected_style_contract_set_digest": (
+                    receipt.selected_style_contract_set_digest
+                ),
+            }
+        ]
+        evidence_refs.extend(
+            {
+                "type": "school_style_known_gap",
+                **dict(gap_ref),
+            }
+            for gap_ref in selection.school_gap_refs
+        )
         style: JsonObject = {
             "style_contract_id": f"selected.{selection.style_role_id}",
             "label": f"Selected role {selection.style_role_id}",
@@ -239,16 +281,7 @@ def compile_selected_style_contracts(
                 "unmanaged_properties": "preserve",
             },
             "dependencies": [],
-            "evidence_refs": [
-                {
-                    "type": "style_role_selection",
-                    "source": selection.source,
-                    "source_digest": selection.source_digest,
-                    "selected_style_contract_set_digest": (
-                        receipt.selected_style_contract_set_digest
-                    ),
-                }
-            ],
+            "evidence_refs": evidence_refs,
         }
         style["contract_digest"] = style_contract_digest(style)
         styles.append(style)
@@ -417,6 +450,8 @@ def _preset_selection(
     style_role_id: str,
     profile: StylePropertyProfile,
     preset: GeneralStylePreset,
+    *,
+    school_gap_refs: Sequence[Mapping[str, Any]],
 ) -> SelectedStyleRole:
     properties = tuple(
         SelectedStyleProperty(
@@ -439,6 +474,112 @@ def _preset_selection(
         source_digest=sha256_json(role_payload),
         property_profile_ref=profile.ref().as_dict(),
         properties=properties,
+        school_gap_refs=tuple(dict(item) for item in school_gap_refs),
+    )
+
+
+def _raw_known_gaps_by_role(
+    known_gaps: Sequence[Mapping[str, Any]],
+) -> dict[str, tuple[Mapping[str, Any], ...]]:
+    result: dict[str, list[Mapping[str, Any]]] = {}
+    if isinstance(known_gaps, str | bytes):
+        raise _failure(
+            "style_selection_known_gap_invalid",
+            "Known school style gaps must be an array.",
+        )
+    for gap in known_gaps:
+        if not isinstance(gap, Mapping):
+            raise _failure(
+                "style_selection_known_gap_invalid",
+                "Every known school style gap must be an object.",
+            )
+        role_id = gap.get("style_role_id")
+        if not isinstance(role_id, str) or not role_id:
+            raise _failure(
+                "style_selection_known_gap_invalid",
+                "Every known school style gap requires style_role_id.",
+            )
+        result.setdefault(role_id, []).append(gap)
+    return {
+        role_id: tuple(items)
+        for role_id, items in sorted(result.items())
+    }
+
+
+def _validated_known_gaps_for_role(
+    raw_gaps: Sequence[Mapping[str, Any]],
+    *,
+    style_role_id: str,
+    profile: StylePropertyProfile,
+) -> tuple[JsonObject, ...]:
+    refs: list[JsonObject] = []
+    profile_paths = set(profile.property_paths)
+    for raw in raw_gaps:
+        profile_ref = raw.get("property_profile_ref")
+        if not isinstance(profile_ref, Mapping) or dict(profile_ref) != profile.ref().as_dict():
+            raise _failure(
+                "style_selection_known_gap_profile_mismatch",
+                f"Known gap for {style_role_id} is not bound to the current style profile.",
+            )
+        reason = raw.get("reason")
+        property_paths = raw.get("property_paths")
+        if (
+            not isinstance(reason, str)
+            or not reason
+            or not isinstance(property_paths, Sequence)
+            or isinstance(property_paths, str | bytes)
+            or not property_paths
+            or any(not isinstance(path, str) for path in property_paths)
+        ):
+            raise _failure(
+                "style_selection_known_gap_invalid",
+                f"Known gap for {style_role_id} has no typed gap properties.",
+            )
+        property_tuple = tuple(str(path) for path in property_paths)
+        unknown = sorted(set(property_tuple) - profile_paths)
+        if unknown:
+            raise _failure(
+                "style_selection_known_gap_property_mismatch",
+                (
+                    f"Known gap for {style_role_id} cites properties outside its "
+                    "style profile: " + ", ".join(unknown)
+                ),
+            )
+        ref: JsonObject = {
+            "style_role_id": style_role_id,
+            "property_profile_ref": profile.ref().as_dict(),
+            "reason": reason,
+            "property_paths": list(property_tuple),
+        }
+        for optional_key in ("field_id", "slot_id"):
+            value = raw.get(optional_key)
+            if isinstance(value, str) and value:
+                ref[optional_key] = value
+        for optional_key in ("slot_ids", "unresolved_properties"):
+            value = raw.get(optional_key)
+            if (
+                isinstance(value, Sequence)
+                and not isinstance(value, str | bytes)
+                and all(isinstance(item, str) for item in value)
+            ):
+                ref[optional_key] = list(value)
+        ref["known_gap_digest"] = sha256_json(
+            {
+                "schema_version": "docfit-school-style-known-gap-ref/v1",
+                **ref,
+            }
+        )
+        refs.append(ref)
+    return tuple(
+        sorted(
+            refs,
+            key=lambda item: (
+                str(item.get("reason", "")),
+                str(item.get("field_id", "")),
+                str(item.get("slot_id", "")),
+                str(item["known_gap_digest"]),
+            ),
+        )
     )
 
 

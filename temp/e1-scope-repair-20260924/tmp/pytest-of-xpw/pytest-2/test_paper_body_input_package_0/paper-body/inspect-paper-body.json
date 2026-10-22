@@ -1,0 +1,1867 @@
+{
+  "checks": [
+    {
+      "name": "docx_package",
+      "result": "ok"
+    },
+    {
+      "name": "officecli_parse",
+      "result": "ok"
+    }
+  ],
+  "document": {
+    "bookmarks": 0,
+    "comments": false,
+    "content_controls": 0,
+    "drawings": 0,
+    "endnotes": true,
+    "equations": 0,
+    "fields": 0,
+    "footers": 1,
+    "footnotes": true,
+    "graphic_objects": 0,
+    "headers": 1,
+    "hyperlinks": 0,
+    "images": 0,
+    "merged_cells": 0,
+    "numbering_part": false,
+    "package_parts": 16,
+    "paragraphs": 71,
+    "sections": 1,
+    "sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+    "styles_part": true,
+    "tables": 0,
+    "text_boxes": 0,
+    "tracked_deletions": 0,
+    "tracked_insertions": 0,
+    "vml_objects": 0
+  },
+  "failure": null,
+  "focus": [],
+  "objects": [
+    {
+      "format": {
+        "bold": true,
+        "color": "#000000",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=2CBC4055]",
+      "object_id": "obj-467c0ed6f9e9bf154b7da4bd",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "61dc332331f5aa6f27b231664265ae7bd3d7112801a5d39ba7706bb2e9061bf0",
+        "object_id": "obj-467c0ed6f9e9bf154b7da4bd"
+      },
+      "style": "Normal",
+      "text": "   ",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=4CFCB66C]",
+      "object_id": "obj-41fdf50e6fa9fcc1a4ce3c88",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "1006cbf37c341bac008614e99d4c23dcde283fe1cb5f42a97505dbe1788c64a6",
+        "object_id": "obj-41fdf50e6fa9fcc1a4ce3c88"
+      },
+      "style": "Normal",
+      "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=15EF3A42]",
+      "object_id": "obj-7589944037846780a0e356e9",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "1fe86a3ac690cab07af466e2f2887c4b7dc595fdf9dd01c7aace3d267a3e38e3",
+        "object_id": "obj-7589944037846780a0e356e9"
+      },
+      "style": "Normal",
+      "text": "（小二号字空两行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=159AB478]",
+      "object_id": "obj-5b5bdf6c9501a764c2cab238",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "276a925bc853e89e03220ecf81a8eadc6be225d1745d380dcb1c26f627a7e090",
+        "object_id": "obj-5b5bdf6c9501a764c2cab238"
+      },
+      "style": "Normal",
+      "text": "毕业论文（设计）中文题目（小二黑体，加粗，居中）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=6B0A25CD]",
+      "object_id": "obj-ce7bf02b8098e96c2f2b3bac",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "297177d65428fc3ca21769b6912cea2270730e9eae738665a0d868ec5d6dc6d7",
+        "object_id": "obj-ce7bf02b8098e96c2f2b3bac"
+      },
+      "style": "Normal",
+      "text": "                                    学□□生：×××（或×□×）  （五号宋体居中）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=7F590AE0]",
+      "object_id": "obj-f85c809da9f146af984f6e3a",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "55f63931af6f94cf70b7a5505f70eb58cd4e8168120e87b9cfe29435bd5b0e8d",
+        "object_id": "obj-f85c809da9f146af984f6e3a"
+      },
+      "style": "Normal",
+      "text": "指导老师：×××",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=160338AD]",
+      "object_id": "obj-58879606fecabcbc0b0556c8",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "dfec1836c8f8c63bee802e36775e4ed76276760360c550df158f901cedf3bae8",
+        "object_id": "obj-58879606fecabcbc0b0556c8"
+      },
+      "style": "Normal",
+      "text": "(湖南农业大学××××学院，长沙 410128)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=14A1FDB9]",
+      "object_id": "obj-ae73902e2d2467d338369b9c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "0ea55638d7cb142428929866313ec1cea4c427f1d9c589561113667073ccefd2",
+        "object_id": "obj-ae73902e2d2467d338369b9c"
+      },
+      "style": "Normal",
+      "text": "（五号字空一行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=258F5084]",
+      "object_id": "obj-55126e0817a735d2ae1f7b45",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "f462b7be4bda716a3c6936e945eb2f7413358086867bbde306a9237ecace4739",
+        "object_id": "obj-55126e0817a735d2ae1f7b45"
+      },
+      "style": "Normal",
+      "text": "□□摘□要（小四黑体）：……             （五号宋体）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=0610952C]",
+      "object_id": "obj-c07193057bcd9686333b172b",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "ea03cac2de6e9e2b0bbba92140856da81be5e1d3518343b9aaf2367a7aec503c",
+        "object_id": "obj-c07193057bcd9686333b172b"
+      },
+      "style": "Normal",
+      "text": "□□关键词：×××；×××；×××；××× ",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=45377BD2]",
+      "object_id": "obj-b78fbb8ec3ac53c42dee11dc",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "d369e98959d6760b1be10ce3b11e3a36d12b60a4652efd049fd57e3076be0b02",
+        "object_id": "obj-b78fbb8ec3ac53c42dee11dc"
+      },
+      "style": "Normal",
+      "text": "（五号字空一行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=7C960206]",
+      "object_id": "obj-68f4d2d71094dd7af72b6fd6",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "c80e5aeb09a48348012ed6aa30087eff6c8bb929cd0747f988fc0735e64d58d1",
+        "object_id": "obj-68f4d2d71094dd7af72b6fd6"
+      },
+      "style": "Normal",
+      "text": "                     Title of Graduation Paper （四号Times New Roman，加粗，居中）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=21D89F1C]",
+      "object_id": "obj-32b94b07f6e071291e7016c4",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "de3f11466c5821ae1aec1c350dd9c987cd93a270418b9c41701d7feeeda563fe",
+        "object_id": "obj-32b94b07f6e071291e7016c4"
+      },
+      "style": "Normal",
+      "text": "Student:×××  （五号Times New Roman，居中）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=0E5CC37A]",
+      "object_id": "obj-22f73811805eb997a774c52b",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "be0b7065d9080efe0fc4dcb5313a2a9e763353b80294596b95ca8472c85fe10b",
+        "object_id": "obj-22f73811805eb997a774c52b"
+      },
+      "style": "Normal",
+      "text": "Tutor:××××",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=17C3CBAE]",
+      "object_id": "obj-848cff396538eec0f26403b8",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "be7b17b1bad2163523c3a08d3dbd6db0681bbb86759a42b3f684b73dc544b35d",
+        "object_id": "obj-848cff396538eec0f26403b8"
+      },
+      "style": "Normal",
+      "text": "(College of×××××××, Hunan Agricultural University, Changsha 410128, China)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=4D699A11]",
+      "object_id": "obj-95d9e39429adf48d489080ba",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3bccc1bba3214b3492e42da938734d58712ecd7d83cda44c346f7a07ca82fad9",
+        "object_id": "obj-95d9e39429adf48d489080ba"
+      },
+      "style": "Normal",
+      "text": "（五号字空一行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=67485F6E]",
+      "object_id": "obj-890e4bfdaf8573a82731c08c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "34b5b09b15516d470811915952d46bb9afb1827e054f9ed3d15f206c7d399ecd",
+        "object_id": "obj-890e4bfdaf8573a82731c08c"
+      },
+      "style": "Normal",
+      "text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=5E81F652]",
+      "object_id": "obj-0fa05bbbcb6277910fa38332",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "5b06e3ddf5e5061d35ddef0e8ebdd26ba3368d9d3943611562e87a1c6c7c50d9",
+        "object_id": "obj-0fa05bbbcb6277910fa38332"
+      },
+      "style": "Normal",
+      "text": "□□Key words: ×××； ×××；×××； ×××  ",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=3AD38F31]",
+      "object_id": "obj-53163d473d8e74dcf7f1282c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "610f848cca63751d44c515d5302a2ecf47ed46c326cd9cf69428424a7b4648aa",
+        "object_id": "obj-53163d473d8e74dcf7f1282c"
+      },
+      "style": "Normal",
+      "text": "（五号字空一行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=612917C0]",
+      "object_id": "obj-656950fb290a0afc19216a44",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "18af8f645b44c09664891642d50cce2e56564515078914f3bce5f6e65e29db5c",
+        "object_id": "obj-656950fb290a0afc19216a44"
+      },
+      "style": "Normal",
+      "text": "（以下农理工科类用）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=00810F80]",
+      "object_id": "obj-c9534557d5247ef0b00d0f4e",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "53c690b04120a98c72477efd7a5dbf14b783938707ff9949367ce7e71b1836e6",
+        "object_id": "obj-c9534557d5247ef0b00d0f4e"
+      },
+      "style": "Normal",
+      "text": "1□前言  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=723C4071]",
+      "object_id": "obj-b6dc819664683a4d70648333",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "857ae44d6c8af60b618338b51755916346d8d6833dc7b9d9acf6042a92c6c2f1",
+        "object_id": "obj-b6dc819664683a4d70648333"
+      },
+      "style": "Normal",
+      "text": "□□……  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=0C812FEF]",
+      "object_id": "obj-342d9175922f33567c912aff",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "bdf2213294192e178b18b97eab76273c9dffa83f4309e50e84dc9ec324f5dfcf",
+        "object_id": "obj-342d9175922f33567c912aff"
+      },
+      "style": "Normal",
+      "text": "2□××××",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=53188CA9]",
+      "object_id": "obj-4f53770cd2789e33822c739e",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "f784e665f27f7009f09024e3fa1f7eda0c07355d207fe199a373b866ca1a9024",
+        "object_id": "obj-4f53770cd2789e33822c739e"
+      },
+      "style": "Normal",
+      "text": "2.1□×××××（二级标题四号黑体，顶格书写序数，空一格写标题）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "color": "#333333",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt",
+        "widowControl": true
+      },
+      "locator": "/body/p[@paraId=6FD90902]",
+      "object_id": "obj-53d5e4fd34533ad27451e634",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "9da5aee992c8ea7800b0881551572d6aadd7b163a950a95868305daa8ebd30d4",
+        "object_id": "obj-53d5e4fd34533ad27451e634"
+      },
+      "style": "Normal",
+      "text": "2.1.1□×××××（三级标题小四号黑体，顶格书写序数，空一格写标题）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "color": "#333333",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=743B74DB]",
+      "object_id": "obj-b6092baff8bca3830ce21458",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "0b18f09ed24271f04f10aa843e9980a169cacff9f5f266f1cb6e2050b8f46873",
+        "object_id": "obj-b6092baff8bca3830ce21458"
+      },
+      "style": "Normal",
+      "text": "□□（1）……[1]。（一般不设四级标题，如确属需要，第四层次不单独占行书写）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=27FEDB63]",
+      "object_id": "obj-663acd8b89d2b11689c4a74e",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "44d5ab0ba7a68aa7d8c7ae9521d714d2d848a0c323fcb6ace63b78fb2dc4323f",
+        "object_id": "obj-663acd8b89d2b11689c4a74e"
+      },
+      "style": "Normal",
+      "text": "……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=7733391B]",
+      "object_id": "obj-e567788f1db61c93526181da",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "12d97e16a36520e3a2fd85af951469b144632f4acf4d4e7763bca0e0f8d6a99b",
+        "object_id": "obj-e567788f1db61c93526181da"
+      },
+      "style": "Normal",
+      "text": "5□结论",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=0322C057]",
+      "object_id": "obj-d6bd1e6e0127c41bce01cad7",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "e6885ba94a0ddf00bd0ae98f2fbab26d5651c44fc878ffe00ec10fe1a44a6f22",
+        "object_id": "obj-d6bd1e6e0127c41bce01cad7"
+      },
+      "style": "Normal",
+      "text": "□□……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": true,
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=673982EC]",
+      "object_id": "obj-f3f624bd74dd09ae81ab1ad2",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "707e724f56d7253e913f50b8903f3cb6dbd614bd2a59730d0a2e9e944b658cc3",
+        "object_id": "obj-f3f624bd74dd09ae81ab1ad2"
+      },
+      "style": "Normal",
+      "text": "（以下文法经管类用）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=24609638]",
+      "object_id": "obj-a1aec1ca7cd1d6bf56db68b2",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "5086c6289c90e27e335dd1fd4062c10a7691f0de97b71237371f5fab71ddefe0",
+        "object_id": "obj-a1aec1ca7cd1d6bf56db68b2"
+      },
+      "style": "Normal",
+      "text": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=286F9DD7]",
+      "object_id": "obj-ee2d8b6f0c88d558629a6361",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "4b9f063eaa53322e1970b371cb07b0f9c7a6ab62d6e007d4551da3e6e62903e8",
+        "object_id": "obj-ee2d8b6f0c88d558629a6361"
+      },
+      "style": "Normal",
+      "text": "一、×××××（一级标题小三号黑体，顶格书写）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=5D06FD1F]",
+      "object_id": "obj-8c611840460c53f8a1d248c0",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3681dae8a9b74d2ca15f36c063057674ec25c386a3988cce3de39d970d15cf81",
+        "object_id": "obj-8c611840460c53f8a1d248c0"
+      },
+      "style": "Normal",
+      "text": "二、×××××",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "auto",
+        "lineSpacing": "1.5x",
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=70297B0E]",
+      "object_id": "obj-b4bd666f401d46f5def2cd51",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "071e1bd7d430221c998411104ff9fde42fcb66ba1d9cf26f91224ec822a5181c",
+        "object_id": "obj-b4bd666f401d46f5def2cd51"
+      },
+      "style": "Normal",
+      "text": "（一）×××××（二级标题四号黑体，顶格书写）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt",
+        "widowControl": true
+      },
+      "locator": "/body/p[@paraId=0262BE67]",
+      "object_id": "obj-aa02924cbdeba9a264a21f31",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "297fdb5587b10ab046f316b3241cd2b95ca13786fda77d8e3d82902f2a3bccf1",
+        "object_id": "obj-aa02924cbdeba9a264a21f31"
+      },
+      "style": "Normal",
+      "text": "□□1、×××××（三级标题小四号黑体）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "color": "#333333",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt",
+        "widowControl": true
+      },
+      "locator": "/body/p[@paraId=212F21B4]",
+      "object_id": "obj-0dc00c79437472ad73554cbc",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "96949591e3bf18154113d275bc13e5ca83a920ccabbefae010fdf08c93747930",
+        "object_id": "obj-0dc00c79437472ad73554cbc"
+      },
+      "style": "Normal",
+      "text": "□□（1）……[1]。（四级标题不单独占行书写）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "auto",
+        "lineSpacing": "1.5x",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=282CB748]",
+      "object_id": "obj-48ea1579d502863f8d57c985",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "dfafbc06a7f208d09ccf20106e5ef85a93623a25d12e12b2431bb7216c3f5168",
+        "object_id": "obj-48ea1579d502863f8d57c985"
+      },
+      "style": "Normal",
+      "text": "……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "auto",
+        "lineSpacing": "1.5x",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=56801B2C]",
+      "object_id": "obj-cb7966e4f7cb546060eab8a3",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "a5c40fd0be60ae952a686ad9a8f6e0cf6fbdf0581c7719ecbfc8db82eefd0ffa",
+        "object_id": "obj-cb7966e4f7cb546060eab8a3"
+      },
+      "style": "Normal",
+      "text": "……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=0B9F54E8]",
+      "object_id": "obj-8bd54fcfbc9aad2e98283c2b",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "f593c2248399f389c77a72066122476c222ca98c61dce55b287ae62991a1762d",
+        "object_id": "obj-8bd54fcfbc9aad2e98283c2b"
+      },
+      "style": "Normal",
+      "text": "五、结束语",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=7A890DA9]",
+      "object_id": "obj-e0780f05d937327b3198c4f8",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "4af3bf94ea051b8657f4d46591f7e6ddb8773d24fd83c994ac490fbe4ba91787",
+        "object_id": "obj-e0780f05d937327b3198c4f8"
+      },
+      "style": "Normal",
+      "text": "□□……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=76DE143D]",
+      "object_id": "obj-b17870b3d6c19ef8a6ed2ef9",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "45303f3d340ce7d581de056416b35d5af2372ebddfac4bb7818b9aaf1fbbe1ca",
+        "object_id": "obj-b17870b3d6c19ef8a6ed2ef9"
+      },
+      "style": "Normal",
+      "text": "（小四号字空一行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=40BB4E23]",
+      "object_id": "obj-994a572e6c4900297400905f",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "9e6f994ab1bc0da571761c599fcc5690bf18506f685eb2f2c146be94052bcac1",
+        "object_id": "obj-994a572e6c4900297400905f"
+      },
+      "style": "Normal",
+      "text": "参考文献 (小三号黑体)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=6CB176CB]",
+      "object_id": "obj-f981dd30d097ad62a28a1e1c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "21d96c40562b27bd5eb84c6ac0b609b2b3c5f2855b9a5fddf5288252eea6b266",
+        "object_id": "obj-f981dd30d097ad62a28a1e1c"
+      },
+      "style": "Normal",
+      "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.       (五号宋体)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt"
+      },
+      "locator": "/body/p[@paraId=6F274108]",
+      "object_id": "obj-e0ae2f7c8c585378edfd93e1",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "82b0591f6b1c4b1f935d6332235dd97f4e0c8b1f231afa1337539821afd89e6a",
+        "object_id": "obj-e0ae2f7c8c585378edfd93e1"
+      },
+      "style": "Normal",
+      "text": "……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=4FF6B057]",
+      "object_id": "obj-8692c2b77213bfa5b4320b42",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "7d0f4c69cc6106d7ac17fc2adc3e471eeefe0825c075d666575c2d901af1ab7e",
+        "object_id": "obj-8692c2b77213bfa5b4320b42"
+      },
+      "style": "Normal",
+      "text": "（五号字空二行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=45D7CAC1]",
+      "object_id": "obj-29f0361c217123847fd07592",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "71cf74a82ba38784a2a1b2b1217b60d619b2e3bab827e887e18a754224be1b26",
+        "object_id": "obj-29f0361c217123847fd07592"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=028A1D17]",
+      "object_id": "obj-949563c3166ac19c63850974",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "0026277d4ec3ad6aa3b05c901162f69c2a7834f5eb452ec0e4a1f2e2b3a83987",
+        "object_id": "obj-949563c3166ac19c63850974"
+      },
+      "style": "Normal",
+      "text": "            致□□谢  (小三号黑体，居中)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=078AC012]",
+      "object_id": "obj-21c9b70e10ed621bd4926440",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "13dbd19ab15db9778846414b19d56be62f722add8b5263a0753c9114c2885420",
+        "object_id": "obj-21c9b70e10ed621bd4926440"
+      },
+      "style": "Normal",
+      "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 (小四号宋体) ",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=70F7154E]",
+      "object_id": "obj-43e6497d18a3c7fafdbd4e3b",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "46bc4bc1d57fb0ab77f0c377a8496e8825c1abf66d450ea1ba6d86ec5812bcd5",
+        "object_id": "obj-43e6497d18a3c7fafdbd4e3b"
+      },
+      "style": "Normal",
+      "text": "（小四号字空二行）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=51F94CF5]",
+      "object_id": "obj-7714f3ee953071f23f08757a",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "c15091f6fd89548f314b55b13f4773fae31f0dd1f1057fa6c93902cb8072808a",
+        "object_id": "obj-7714f3ee953071f23f08757a"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=640A38AE]",
+      "object_id": "obj-34d4e7271d759f1d68c51f90",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "5ce11315affd23d329a91485a01d73e66350a3f95be1983a3ea25d27f929f4c3",
+        "object_id": "obj-34d4e7271d759f1d68c51f90"
+      },
+      "style": "Normal",
+      "text": "附录(小三号黑体)",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=772D57B4]",
+      "object_id": "obj-b7c7515656dca2f6c22a4fa8",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "9e51114f0a6abf9c88db1cc2576e790c2c4e16de22a7056a23e8e464a8af6983",
+        "object_id": "obj-b7c7515656dca2f6c22a4fa8"
+      },
+      "style": "Normal",
+      "text": "附录1……（小四号宋体）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=218A9532]",
+      "object_id": "obj-019ed3f7b6120f4fffd0313c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "e7d244e4b7e89bafff04f997a005aca31ee6126c771f44734f47a4f7df25f77a",
+        "object_id": "obj-019ed3f7b6120f4fffd0313c"
+      },
+      "style": "Normal",
+      "text": "附录2……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=5C8A5BEE]",
+      "object_id": "obj-b090cdeef0b6cd501935c2eb",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "8cc5f757f950a066066f51672096ab045cca6fccd20b6246bd0b6e69dd8623d5",
+        "object_id": "obj-b090cdeef0b6cd501935c2eb"
+      },
+      "style": "Normal",
+      "text": "……",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "15pt"
+      },
+      "locator": "/body/p[@paraId=42F59F37]",
+      "object_id": "obj-705e6cee6b9a3b4fa259cd4f",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "68c25027204c1cb548723772f1827558e0b5abe168299bf35eb568f6fb2fca2e",
+        "object_id": "obj-705e6cee6b9a3b4fa259cd4f"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=63E9CE14]",
+      "object_id": "obj-801475b0e2ee5244880d4340",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "6c3da2cf295cf8f5855f49363634f7f2678d3156f40f5994df2ee5c8872ac631",
+        "object_id": "obj-801475b0e2ee5244880d4340"
+      },
+      "style": "Normal",
+      "text": "附录1（另起一页，小四号黑体）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "left",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=1B93D1F3]",
+      "object_id": "obj-7f5eda91eabbdaeba9fe6188",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "76dfbd460684ab995e9be4358cbfc70b13d11a217fd1b8034aae9c48a0bc394c",
+        "object_id": "obj-7f5eda91eabbdaeba9fe6188"
+      },
+      "style": "Normal",
+      "text": "……（附录内容的字体字号参照正文的格式要求）",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=10EA1459]",
+      "object_id": "obj-97f584558f4f9f28fe3c54fb",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3c6510f95cb63be2ec415f8b530e4b0feab2d955716a5f494ced61d57fd25632",
+        "object_id": "obj-97f584558f4f9f28fe3c54fb"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "lineRule": "exact",
+        "lineSpacing": "22pt",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=7F1B4F3A]",
+      "object_id": "obj-c499110b082e022665b3a1f0",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "4a19deaddcba76801d7ff8100dd9380e878ee5b54b2dc8698c228bc7453ba94d",
+        "object_id": "obj-c499110b082e022665b3a1f0"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "font.ea": "黑体",
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=55BB6D6A]",
+      "object_id": "obj-384b9eba44e6cbf5cd518f00",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "f0e34498a99e64b04a2609ac7437a2caecdd5afe5190276b7263e58c69f006ff",
+        "object_id": "obj-384b9eba44e6cbf5cd518f00"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/body/p[@paraId=12615367]",
+      "object_id": "obj-738a4f0d9ea5f2606ff22ac7",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "21a6eb5c524f8f8366e98676ccf543f903994e15efc9997c0a8803e2fe793231",
+        "object_id": "obj-738a4f0d9ea5f2606ff22ac7"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/body/p[@paraId=3AC94C5E]",
+      "object_id": "obj-c3432dc7dd78ddf0679fdf5a",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "e79b9c016fa1c02ffc6c5f388b2a7fcf7aaad01dc55cd8756aa872ac7bb92179",
+        "object_id": "obj-c3432dc7dd78ddf0679fdf5a"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/body/p[@paraId=57838398]",
+      "object_id": "obj-08db7d06aa422ddd4d6edb98",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3eebbbd501f3a7a7b1ed2a53fc8a70e5c813875f5a32c2df95df9f12205833d8",
+        "object_id": "obj-08db7d06aa422ddd4d6edb98"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/body/p[@paraId=6B5C4910]",
+      "object_id": "obj-9f5d23a203692c47ab68b819",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "0db15ba0c58460db4ec3ea8a4fc4789edbfe2143d9f15192fdb85d6fef337884",
+        "object_id": "obj-9f5d23a203692c47ab68b819"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "color": "#FF0000",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/body/p[@paraId=4E6BEBC3]",
+      "object_id": "obj-c33cf39702753989963b4a12",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "344321b708fd7f82a025a197b6babd13d0c6fe7128547fa4a902682a8eb43e7b",
+        "object_id": "obj-c33cf39702753989963b4a12"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a6",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a6",
+        "style": "a6",
+        "styleId": "a6",
+        "styleName": "header"
+      },
+      "locator": "/header[1]/p[@paraId=45BB0141]",
+      "object_id": "obj-819f756cdff1bd2c9ecfd4ff",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "8725a3dd461f6f734c7f803b02ecf41c4ea63eb7708ee768490e9368254de5a1",
+        "object_id": "obj-819f756cdff1bd2c9ecfd4ff"
+      },
+      "style": "header",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/a7",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a7",
+        "style": "a7",
+        "styleId": "a7",
+        "styleName": "footer"
+      },
+      "locator": "/footer[1]/p[@paraId=59E967D9]",
+      "object_id": "obj-a2b6d7c4b3dc1c73288edc2d",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "e131a8545438d266e916cb7bc7cc2aa688503ca9ebcfe828d9c89b0d771929e0",
+        "object_id": "obj-a2b6d7c4b3dc1c73288edc2d"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/footnote[1]/p[@paraId=0967CC13]",
+      "object_id": "obj-ad27c6d0995389cc6014c883",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6",
+        "object_id": "obj-ad27c6d0995389cc6014c883"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/footnote[2]/p[@paraId=79C09F15]",
+      "object_id": "obj-26327944ea4fed5bc63cfbda",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6",
+        "object_id": "obj-26327944ea4fed5bc63cfbda"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/endnote[1]/p[@paraId=4580F59B]",
+      "object_id": "obj-16a4814b6e8b35c8b1eb617c",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6",
+        "object_id": "obj-16a4814b6e8b35c8b1eb617c"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/a",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/a",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/a",
+        "effective.size": "10.5pt",
+        "effective.size.src": "/styles/a"
+      },
+      "locator": "/endnote[2]/p[@paraId=65E511DA]",
+      "object_id": "obj-35e0bad85f18bba6c2de0b65",
+      "object_ref": {
+        "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "expected_fingerprint": "3c1eaafc95c6f548d7e956add37e42e7ee7b8d126882949383e3d0ba1a912fd6",
+        "object_id": "obj-35e0bad85f18bba6c2de0b65"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    }
+  ],
+  "provider": {
+    "environment": {
+      "architecture": "arm64",
+      "platform": "Darwin"
+    },
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "expected_version": "1.0.143",
+    "license": "Apache-2.0",
+    "name": "officecli",
+    "version": "1.0.144",
+    "version_locked": false
+  },
+  "risks": [],
+  "schema_version": 1,
+  "status": "ok",
+  "warnings": []
+}

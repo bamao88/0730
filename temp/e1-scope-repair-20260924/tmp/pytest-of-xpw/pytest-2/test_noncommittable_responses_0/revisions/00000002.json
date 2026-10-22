@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-24T09:28:47.245985+00:00",
+  "data": {
+    "is_error": false,
+    "request_id": 1,
+    "result_text": "缺少学校说明",
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        }
+      ],
+      "status": "needs_input",
+      "summary": "判断"
+    }
+  },
+  "event_digest": "9bb861a90c2a41501aa2206812a4aa97fd9d06c24af91d211986b6e115c9a2a8",
+  "evidence_mode": "runtime",
+  "kind": "response",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "previous_event_digest": "cde1bc6825285da71b123674af45e66bed6cd1530bb749c0d0378209bfa501a0",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 2
+}

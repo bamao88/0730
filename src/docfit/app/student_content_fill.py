@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import json
 import os
+import re
 import secrets
 import shutil
 import tempfile
@@ -32,15 +33,22 @@ from docfit.content.extraction import (
     validate_extraction,
 )
 from docfit.content.fill import fill_template
+from docfit.content.partition import compile_final_content_partition
 from docfit.content.placement import build_placement, load_fill_contract
-from docfit.content.projection import project_student_content, resolve_template_style_map
+from docfit.content.projection import (
+    canonical_target_text_value,
+    materialize_post_style_layout_closure,
+    materialize_toc_cache_pages_from_pdf_text,
+    project_student_content,
+    resolve_template_style_map,
+)
 from docfit.content.quality_patches import load_quality_patches
 from docfit.content.student import build_student_inventory
 from docfit.content.style_application import apply_and_validate_candidate_styles
 from docfit.fields.registry import FieldRegistrySnapshot
 from docfit.observability.transcript import SDKTranscriptManager, isolated_sdk_environment
 from docfit.styles import StyleContractSet
-from docfit.tools.inspection import inspect_document
+from docfit.tools.inspection import inspect_document_snapshot
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.package import validate_docx_package
 from docfit.tools.runtime import (
@@ -105,6 +113,38 @@ class PreparedStudentContentFill:
     inventory_path: Path
     candidate_docx: Path
     source_sha256: str
+    template_sha256: str
+    contract_sha256: str
+    registry_sha256: str
+    quality_patches_sha256: str | None
+    inventory: JsonObject
+
+
+@dataclass(frozen=True, slots=True)
+class FinalGenerationRequest:
+    source_docx: Path
+    student_content: Path
+    template_docx: Path
+    fill_contract: Path
+    field_registry: Path
+    output_directory: Path
+    quality_patches: Path | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class PreparedFinalGeneration:
+    task_root: Path
+    source_docx: Path
+    student_content: Path
+    template_docx: Path
+    fill_contract: Path
+    field_registry: Path
+    quality_patches: Path | None
+    inventory_path: Path
+    candidate_docx: Path
+    final_docx: Path
+    source_sha256: str
+    student_content_sha256: str
     template_sha256: str
     contract_sha256: str
     registry_sha256: str
@@ -180,7 +220,7 @@ def prepare_student_content_extraction(
                 "student_extraction_input_changed",
                 "An extraction input changed while its private snapshot was prepared.",
             )
-        inspection = inspect_document(source_copy, office or OfficeCliAdapter())
+        inspection = inspect_document_snapshot(source_copy, office or OfficeCliAdapter())
         inventory = build_student_inventory(inspection, source_docx=source_copy)
         atomic_write_json(work_directory / "student-inventory.json", inventory)
         source_copy.chmod(0o444)
@@ -338,7 +378,8 @@ def prepare_student_content_fill(
                 "The extraction-only input snapshot does not match the bound inputs.",
             )
         source_copy = copies[source]
-        inspection = inspect_document(source_copy, office or OfficeCliAdapter())
+        inspection = inspect_document_snapshot(source_copy, office or OfficeCliAdapter())
+
         inventory = build_student_inventory(inspection, source_docx=source_copy)
         inventory_path = work_directory / "student-inventory.json"
         atomic_write_json(inventory_path, inventory)
@@ -365,9 +406,7 @@ def prepare_student_content_fill(
         extraction=PreparedStudentContentExtraction(
             task_root=output / "extraction",
             source_docx=output / "extraction" / "input" / "student.docx",
-            field_registry=(
-                output / "extraction" / "input" / "content-fields.yaml"
-            ),
+            field_registry=(output / "extraction" / "input" / "content-fields.yaml"),
             inventory_path=output / "work" / "student-inventory.json",
             source_sha256=source_hash,
             registry_sha256=registry_hash,
@@ -378,13 +417,150 @@ def prepare_student_content_fill(
         fill_contract=output / "input" / "fill-contract.yaml",
         field_registry=output / "input" / "content-fields.yaml",
         quality_patches=(
-            output / "input" / "quality-patches.yaml"
-            if quality_patches_path is not None
-            else None
+            output / "input" / "quality-patches.yaml" if quality_patches_path is not None else None
         ),
         inventory_path=output / "work" / "student-inventory.json",
         candidate_docx=output / "candidate.docx",
         source_sha256=source_hash,
+        template_sha256=template_hash,
+        contract_sha256=contract_hash,
+        registry_sha256=registry_hash,
+        quality_patches_sha256=quality_patches_hash,
+        inventory=inventory,
+    )
+
+
+def prepare_final_generation(
+    request: FinalGenerationRequest,
+    *,
+    office: OfficeCliAdapter | None = None,
+) -> PreparedFinalGeneration:
+    """Create a final-generation snapshot from already extracted Student Content."""
+
+    source = _input_file(request.source_docx, ".docx", "source_docx")
+    student_content_path = _input_file(
+        request.student_content,
+        ".json",
+        "student_content",
+    )
+    template = _input_file(request.template_docx, ".docx", "template_docx")
+    contract_path = _input_file(request.fill_contract, ".yaml", "fill_contract")
+    registry_path = _input_file(request.field_registry, ".yaml", "field_registry")
+    quality_patches_path = (
+        _input_file(request.quality_patches, ".yaml", "quality_patches")
+        if request.quality_patches is not None
+        else None
+    )
+    source_hash = sha256_file(source)
+    student_content_hash = sha256_file(student_content_path)
+    template_hash = sha256_file(template)
+    contract_hash = sha256_file(contract_path)
+    registry_hash = sha256_file(registry_path)
+    quality_patches_hash = (
+        sha256_file(quality_patches_path) if quality_patches_path is not None else None
+    )
+    contract = load_fill_contract(contract_path)
+    StyleContractSet.from_fill_contract(contract)
+    registry = FieldRegistrySnapshot.load(registry_path)
+    if contract.get("template_sha256") != template_hash:
+        raise _failure("prepare_template_stale", "The fill contract does not bind this template.")
+    registry_ref = contract.get("field_registry_ref")
+    if not isinstance(registry_ref, dict) or any(
+        registry_ref.get(key) != registry.identity()[key]
+        for key in ("registry_id", "registry_version", "sha256")
+    ):
+        raise _failure(
+            "prepare_registry_stale",
+            "The fill contract does not bind this Registry snapshot.",
+        )
+    student_content = read_json(student_content_path)
+    _validate_ready_student_content(
+        student_content,
+        source_sha256=source_hash,
+        registry=registry,
+    )
+
+    output = request.output_directory.expanduser().resolve()
+    if output.exists() and (not output.is_dir() or any(output.iterdir())):
+        raise _failure(
+            "final_generation_output_not_empty",
+            "The final-generation output directory must be absent or empty.",
+        )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-prepare-", dir=output.parent))
+    try:
+        input_directory = temporary / "input"
+        work_directory = temporary / "work"
+        input_directory.mkdir()
+        work_directory.mkdir()
+        copies = {
+            source: input_directory / "student.docx",
+            student_content_path: input_directory / "student-content.json",
+            template: input_directory / "template.docx",
+            contract_path: input_directory / "fill-contract.yaml",
+            registry_path: input_directory / "content-fields.yaml",
+        }
+        if quality_patches_path is not None:
+            copies[quality_patches_path] = input_directory / "quality-patches.yaml"
+        for original, copied in copies.items():
+            shutil.copy2(original, copied)
+        expected_hashes = {
+            source: source_hash,
+            student_content_path: student_content_hash,
+            template: template_hash,
+            contract_path: contract_hash,
+            registry_path: registry_hash,
+        }
+        if quality_patches_path is not None and quality_patches_hash is not None:
+            expected_hashes[quality_patches_path] = quality_patches_hash
+        if any(
+            sha256_file(original) != expected_hash or sha256_file(copies[original]) != expected_hash
+            for original, expected_hash in expected_hashes.items()
+        ):
+            raise _failure(
+                "final_generation_input_changed",
+                "An input changed while the private task snapshot was prepared.",
+            )
+        source_copy = copies[source]
+        inspection = inspect_document_snapshot(source_copy, office or OfficeCliAdapter())
+        if sha256_file(source_copy) != source_hash:
+            raise _failure(
+                "final_generation_input_changed",
+                "The student input snapshot changed during source inspection.",
+            )
+        inventory = build_student_inventory(inspection, source_docx=source_copy)
+        inventory_path = work_directory / "student-inventory.json"
+        atomic_write_json(inventory_path, inventory)
+        if quality_patches_path is not None:
+            load_quality_patches(
+                copies[quality_patches_path],
+                source_sha256=source_hash,
+                inventory=inventory,
+            )
+        for copied in copies.values():
+            copied.chmod(0o444)
+        input_directory.chmod(0o555)
+        if output.exists():
+            output.rmdir()
+        os.replace(temporary, output)
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+    return PreparedFinalGeneration(
+        task_root=output,
+        source_docx=output / "input" / "student.docx",
+        student_content=output / "input" / "student-content.json",
+        template_docx=output / "input" / "template.docx",
+        fill_contract=output / "input" / "fill-contract.yaml",
+        field_registry=output / "input" / "content-fields.yaml",
+        quality_patches=(
+            output / "input" / "quality-patches.yaml" if quality_patches_path is not None else None
+        ),
+        inventory_path=output / "work" / "student-inventory.json",
+        candidate_docx=output / "candidate.docx",
+        final_docx=output / "final.docx",
+        source_sha256=source_hash,
+        student_content_sha256=student_content_hash,
         template_sha256=template_hash,
         contract_sha256=contract_hash,
         registry_sha256=registry_hash,
@@ -440,9 +616,7 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
             "object_count": prepared.inventory.get("object_count"),
             "content_item_count": prepared.inventory.get("content_item_count"),
             "transferable_object_count": prepared.inventory.get("transferable_object_count"),
-            "semantic_neutral_profile": prepared.inventory.get(
-                "semantic_neutral_profile"
-            ),
+            "semantic_neutral_profile": prepared.inventory.get("semantic_neutral_profile"),
         },
         "batch": {
             "index": batch.get("index", 1),
@@ -486,8 +660,7 @@ def build_student_extraction_prompt(prepared: PreparedStudentContentExtraction) 
         "range, or body sequence field. Keep note absent unless it records a concrete ambiguity "
         "or non-classified decision. Do not produce a batch summary. Return only the requested "
         "structured output.\n\n"
-        "CURRENT_TASK_JSON:\n"
-        + json.dumps(task, ensure_ascii=False, sort_keys=True)
+        "CURRENT_TASK_JSON:\n" + json.dumps(task, ensure_ascii=False, sort_keys=True)
     )
 
 
@@ -714,9 +887,7 @@ async def run_student_extraction_agent(
                         "route": route_label,
                         "attempt": attempt,
                         "outcome": "success",
-                        "wall_duration_ms": round(
-                            (time.perf_counter() - attempt_started) * 1000
-                        ),
+                        "wall_duration_ms": round((time.perf_counter() - attempt_started) * 1000),
                     }
                 )
                 return replace(
@@ -730,16 +901,12 @@ async def run_student_extraction_agent(
                         "route": route_label,
                         "attempt": attempt,
                         "outcome": "timeout",
-                        "wall_duration_ms": round(
-                            (time.perf_counter() - attempt_started) * 1000
-                        ),
+                        "wall_duration_ms": round((time.perf_counter() - attempt_started) * 1000),
                     }
                 )
                 break
             except ToolFailure as error:
-                failures.append(
-                    f"{route_label}:attempt-{attempt}:{error.code}"
-                )
+                failures.append(f"{route_label}:attempt-{attempt}:{error.code}")
                 attempt_evidence.append(
                     {
                         "route": route_label,
@@ -747,26 +914,20 @@ async def run_student_extraction_agent(
                         "outcome": "failure",
                         "failure_code": error.code,
                         "retryable": error.retryable,
-                        "wall_duration_ms": round(
-                            (time.perf_counter() - attempt_started) * 1000
-                        ),
+                        "wall_duration_ms": round((time.perf_counter() - attempt_started) * 1000),
                     }
                 )
                 if not error.retryable:
                     break
             except Exception as error:
-                failures.append(
-                    f"{route_label}:attempt-{attempt}:{type(error).__name__}"
-                )
+                failures.append(f"{route_label}:attempt-{attempt}:{type(error).__name__}")
                 attempt_evidence.append(
                     {
                         "route": route_label,
                         "attempt": attempt,
                         "outcome": "exception",
                         "exception_type": type(error).__name__,
-                        "wall_duration_ms": round(
-                            (time.perf_counter() - attempt_started) * 1000
-                        ),
+                        "wall_duration_ms": round((time.perf_counter() - attempt_started) * 1000),
                     }
                 )
                 break
@@ -852,9 +1013,7 @@ async def _run_batched_student_extraction(
             )
         finally:
             semaphore.release()
-        execution_wall_duration_ms = round(
-            (time.perf_counter() - execution_started) * 1000
-        )
+        execution_wall_duration_ms = round((time.perf_counter() - execution_started) * 1000)
         _save_student_extraction_checkpoint(
             prepared.task_root,
             batch_index=batch_index,
@@ -922,11 +1081,15 @@ async def _run_batched_student_extraction(
         context_ids = tuple(all_ids[context_start:context_end])
         raw = execution.structured_output
         raw_annotations = raw.get("annotations")
-        annotation_map = {
-            str(item.get("source_content_id")): item
-            for item in raw_annotations
-            if isinstance(item, dict) and isinstance(item.get("source_content_id"), str)
-        } if isinstance(raw_annotations, list) else {}
+        annotation_map = (
+            {
+                str(item.get("source_content_id")): item
+                for item in raw_annotations
+                if isinstance(item, dict) and isinstance(item.get("source_content_id"), str)
+            }
+            if isinstance(raw_annotations, list)
+            else {}
+        )
         if (
             raw.get("schema_version") != 3
             or not isinstance(raw_annotations, list)
@@ -981,9 +1144,7 @@ async def _run_batched_student_extraction(
                 "batch_count": len(batches),
                 "primary_content_item_count": len(primary_ids),
                 "context_content_item_count": len(context_ids) - len(primary_ids),
-                "ignored_out_of_scope_relation_count": (
-                    ignored_out_of_scope_relation_count
-                ),
+                "ignored_out_of_scope_relation_count": (ignored_out_of_scope_relation_count),
                 "backend": execution.backend,
                 "session_id": execution.session_id,
                 "tool_uses": list(execution.tool_uses),
@@ -991,9 +1152,7 @@ async def _run_batched_student_extraction(
                 "checkpoint_status": checkpoint_status,
                 "queue_wait_duration_ms": queue_wait_duration_ms,
                 "execution_wall_duration_ms": execution_wall_duration_ms,
-                "batch_wall_duration_ms": (
-                    queue_wait_duration_ms + execution_wall_duration_ms
-                ),
+                "batch_wall_duration_ms": (queue_wait_duration_ms + execution_wall_duration_ms),
                 "sdk_num_turns": execution.num_turns,
                 "sdk_duration_ms": execution.duration_ms,
                 "sdk_duration_api_ms": execution.duration_api_ms,
@@ -1080,9 +1239,7 @@ def _load_student_extraction_checkpoint(
     if any(payload.get(key) != value for key, value in identity.items()):
         return None
     execution = payload.get("execution")
-    if not isinstance(execution, dict) or not isinstance(
-        execution.get("structured_output"), dict
-    ):
+    if not isinstance(execution, dict) or not isinstance(execution.get("structured_output"), dict):
         return None
     usage = execution.get("usage")
     attempt_evidence = execution.get("attempt_evidence")
@@ -1101,11 +1258,7 @@ def _load_student_extraction_checkpoint(
             else None
         ),
         usage=dict(usage) if isinstance(usage, dict) else None,
-        attempt_evidence=tuple(
-            dict(value)
-            for value in attempt_evidence
-            if isinstance(value, dict)
-        )
+        attempt_evidence=tuple(dict(value) for value in attempt_evidence if isinstance(value, dict))
         if isinstance(attempt_evidence, list)
         else (),
     )
@@ -1136,9 +1289,7 @@ def _save_student_extraction_checkpoint(
                 "duration_api_ms": execution.duration_api_ms,
                 "total_cost_usd": execution.total_cost_usd,
                 "usage": dict(execution.usage) if execution.usage else None,
-                "attempt_evidence": [
-                    dict(value) for value in execution.attempt_evidence
-                ],
+                "attempt_evidence": [dict(value) for value in execution.attempt_evidence],
             },
         },
     )
@@ -1229,17 +1380,13 @@ async def run_student_content_extraction(
                 "agent_sdk_duration_ms_sum": execution.duration_ms,
                 "agent_sdk_api_duration_ms_sum": execution.duration_api_ms,
                 "finalization_duration_ms": finalization_duration_ms,
-                "total_wall_duration_ms": round(
-                    (time.perf_counter() - run_started) * 1000
-                ),
+                "total_wall_duration_ms": round((time.perf_counter() - run_started) * 1000),
             },
             "privacy": "report_contains_metadata_and_paths_only",
         }
     except ToolFailure as error:
         if agent_phase_started is not None and agent_wall_duration_ms == 0:
-            agent_wall_duration_ms = round(
-                (time.perf_counter() - agent_phase_started) * 1000
-            )
+            agent_wall_duration_ms = round((time.perf_counter() - agent_phase_started) * 1000)
         report = {
             "schema_version": "docfit-student-content-extraction-report/v1",
             "status": "NEEDS_INPUT" if error.status == "needs_input" else "ERROR",
@@ -1254,9 +1401,7 @@ async def run_student_content_extraction(
                 "preparation_duration_ms": preparation_duration_ms,
                 "agent_wall_duration_ms": agent_wall_duration_ms,
                 "finalization_duration_ms": finalization_duration_ms,
-                "total_wall_duration_ms": round(
-                    (time.perf_counter() - run_started) * 1000
-                ),
+                "total_wall_duration_ms": round((time.perf_counter() - run_started) * 1000),
             },
             "privacy": "report_contains_metadata_and_paths_only",
         }
@@ -1343,6 +1488,41 @@ async def run_student_content_fill(
     return report
 
 
+def run_final_generation(
+    request: FinalGenerationRequest,
+    *,
+    office: OfficeCliAdapter | None = None,
+) -> JsonObject:
+    """Run final-generation from hash-bound upstream artifacts without an Agent."""
+
+    prepared: PreparedFinalGeneration | None = None
+    try:
+        office_adapter = office or OfficeCliAdapter()
+        prepared = prepare_final_generation(request, office=office_adapter)
+        report = finalize_saved_final_generation(
+            prepared.task_root,
+            office=office_adapter,
+        )
+    except ToolFailure as error:
+        report = {
+            "schema_version": "docfit-final-generation-report/v1",
+            "status": "NEEDS_INPUT" if error.status == "needs_input" else "ERROR",
+            "failure": {
+                "origin": error.origin,
+                "code": error.code,
+                "message": error.message,
+            },
+            "source_sha256": prepared.source_sha256 if prepared else None,
+            "student_content_sha256": (prepared.student_content_sha256 if prepared else None),
+            "template_sha256": prepared.template_sha256 if prepared else None,
+            "privacy": "report_contains_metadata_and_paths_only",
+        }
+    report_root = prepared.task_root if prepared is not None else request.output_directory
+    if report_root.is_dir():
+        atomic_write_json(report_root / "run-report.json", report)
+    return report
+
+
 def finalize_saved_student_content_fill(
     task_root: Path,
     *,
@@ -1361,27 +1541,105 @@ def finalize_saved_student_content_fill(
     inventory = read_json(inventory_path)
     raw_extraction = read_json(raw_extraction_path)
     evidence = read_json(evidence_path)
-    contract = load_fill_contract(contract_path)
-    style_contracts = StyleContractSet.from_fill_contract(contract)
     registry = FieldRegistrySnapshot.load(registry_path)
-    quality_patches_path = root / "input" / "quality-patches.yaml"
-    quality_patches = (
-        load_quality_patches(
-            quality_patches_path,
-            source_sha256=sha256_file(source),
-            inventory=inventory,
-        )
-        if quality_patches_path.is_file()
-        else ()
-    )
     _validate_agent_evidence(evidence)
     student_content = validate_extraction(
         raw_extraction,
         inventory=inventory,
         registry=registry,
     )
+    return _finalize_student_content_model(
+        root=root,
+        source=source,
+        template=template,
+        contract_path=contract_path,
+        registry_path=registry_path,
+        inventory=inventory,
+        student_content=student_content,
+        office=office,
+        report_schema_version="docfit-student-content-fill-report/v1",
+        backend=evidence.get("backend"),
+        session_id=evidence.get("session_id"),
+        tool_uses=evidence.get("tool_uses", []),
+        skills_loaded=evidence.get("skills_loaded", []),
+    )
+
+
+def finalize_saved_final_generation(
+    task_root: Path,
+    *,
+    office: OfficeCliAdapter | None = None,
+) -> JsonObject:
+    """Run deterministic final-generation work from a prepared input snapshot."""
+
+    root = task_root.expanduser().resolve(strict=True)
+    source = root / "input" / "student.docx"
+    template = root / "input" / "template.docx"
+    contract_path = root / "input" / "fill-contract.yaml"
+    registry_path = root / "input" / "content-fields.yaml"
+    inventory = read_json(root / "work" / "student-inventory.json")
+    student_content = read_json(root / "input" / "student-content.json")
+    return _finalize_student_content_model(
+        root=root,
+        source=source,
+        template=template,
+        contract_path=contract_path,
+        registry_path=registry_path,
+        inventory=inventory,
+        student_content=student_content,
+        office=office,
+        report_schema_version="docfit-final-generation-report/v1",
+        backend="deterministic-final-generation",
+        session_id=None,
+        tool_uses=(),
+        skills_loaded=(),
+    )
+
+
+def _finalize_student_content_model(
+    *,
+    root: Path,
+    source: Path,
+    template: Path,
+    contract_path: Path,
+    registry_path: Path,
+    inventory: JsonObject,
+    student_content: JsonObject,
+    office: OfficeCliAdapter | None,
+    report_schema_version: str,
+    backend: object,
+    session_id: object,
+    tool_uses: object,
+    skills_loaded: object,
+) -> JsonObject:
+    source_hash = sha256_file(source)
+    contract = load_fill_contract(contract_path)
+    style_contracts = StyleContractSet.from_fill_contract(contract)
+    registry = FieldRegistrySnapshot.load(registry_path)
+    _validate_ready_student_content(
+        student_content,
+        source_sha256=source_hash,
+        registry=registry,
+    )
+    quality_patches_path = root / "input" / "quality-patches.yaml"
+    quality_patches = (
+        load_quality_patches(
+            quality_patches_path,
+            source_sha256=source_hash,
+            inventory=inventory,
+        )
+        if quality_patches_path.is_file()
+        else ()
+    )
     student_content_path = root / "student-content.json"
     atomic_write_json(student_content_path, student_content)
+    partition = compile_final_content_partition(
+        student_content=student_content,
+        contract=contract,
+        registry=registry,
+    )
+    partition_path = root / "content-partition.json"
+    atomic_write_json(partition_path, partition)
     placement = build_placement(
         student_content=student_content,
         contract=contract,
@@ -1404,6 +1662,7 @@ def finalize_saved_student_content_fill(
     projection = project_student_content(
         input_docx=filled_candidate,
         template_docx=template,
+        source_docx=source,
         fill_result=fill_result,
         output_docx=candidate,
         styles=resolve_template_style_map(contract=contract, template_docx=template),
@@ -1419,6 +1678,9 @@ def finalize_saved_student_content_fill(
     atomic_write_json(style_audit_path, style_audit)
     projection["style_contract_set_digest"] = style_contracts.digest
     projection["post_style_output_sha256"] = style_audit["output_sha256"]
+    post_style_layout = materialize_post_style_layout_closure(docx=candidate)
+    projection["post_style_layout"] = post_style_layout
+    projection["post_style_layout_output_sha256"] = sha256_file(candidate)
     projection_path = root / "quality-projection.json"
     atomic_write_json(projection_path, projection)
     office_adapter = office or OfficeCliAdapter()
@@ -1447,6 +1709,16 @@ def finalize_saved_student_content_fill(
     service = DocFitToolService(task_root=root, office=office_adapter)
     render, _ = service.render({"input_docx": str(candidate), "overview": False})
     render_path, _ = EvidenceStore(root).resolve_render(render["render_ref"])
+    toc_render_refresh = materialize_toc_cache_pages_from_pdf_text(
+        docx=candidate,
+        pdf_text_json=render_path / "indexes" / "pdf-text.json",
+    )
+    if int(toc_render_refresh.get("static_toc_page_updates", 0)) > 0:
+        render, _ = service.render({"input_docx": str(candidate), "overview": False})
+        render_path, _ = EvidenceStore(root).resolve_render(render["render_ref"])
+    projection["post_render_toc"] = toc_render_refresh
+    projection["post_render_output_sha256"] = sha256_file(candidate)
+    atomic_write_json(projection_path, projection)
     validation = _validate_partial_candidate(
         source=source,
         template=template,
@@ -1461,18 +1733,23 @@ def finalize_saved_student_content_fill(
     source_coverage = student_content["source_coverage"]
     if source_coverage["unsupported_source_object_ids"]:
         partial_reasons.append("source_objects_unsupported")
-    source_complex = content_audit["source_complex_objects"]
-    selected_complex = content_audit["selected_source_complex_objects"]
-    if any(
-        int(source_complex.get(kind, 0)) > int(selected_complex.get(kind, 0))
-        for kind in ("drawings", "equations", "tables")
+    if _has_unaccounted_source_complex_objects(
+        content_audit=content_audit,
+        source_coverage=source_coverage,
     ):
         partial_reasons.append("source_complex_objects_unmapped")
     if validation.get("new_officecli_regression") == "UNKNOWN":
         partial_reasons.append("officecli_validation_unknown_from_invalid_template_baseline")
+    partial_reasons = list(dict.fromkeys(partial_reasons))
+    final_status = "COMPLETE" if not partial_reasons else "PARTIAL"
+    final_docx = root / "final.docx"
+    final_sha256 = None
+    if final_status == "COMPLETE":
+        shutil.copy2(candidate, final_docx)
+        final_sha256 = sha256_file(final_docx)
     report: JsonObject = {
-        "schema_version": "docfit-student-content-fill-report/v1",
-        "status": placement["status"],
+        "schema_version": report_schema_version,
+        "status": final_status,
         "run_id": f"student-fill-{secrets.token_hex(8)}",
         "source_sha256": sha256_file(source),
         "template_sha256": sha256_file(template),
@@ -1482,16 +1759,25 @@ def finalize_saved_student_content_fill(
             sha256_file(quality_patches_path) if quality_patches_path.is_file() else None
         ),
         "quality_patch_count": len(quality_patches),
-        "backend": evidence.get("backend"),
-        "session_id": evidence.get("session_id"),
-        "tool_uses": list(evidence.get("tool_uses", [])),
-        "skills_loaded": list(evidence.get("skills_loaded", [])),
+        "backend": backend if isinstance(backend, str) else None,
+        "session_id": session_id if isinstance(session_id, str) else None,
+        "tool_uses": (
+            [str(value) for value in tool_uses] if isinstance(tool_uses, list | tuple) else []
+        ),
+        "skills_loaded": (
+            [str(value) for value in skills_loaded]
+            if isinstance(skills_loaded, list | tuple)
+            else []
+        ),
         "candidate_docx": str(candidate),
         "candidate_sha256": sha256_file(candidate),
+        "final_docx": str(final_docx) if final_status == "COMPLETE" else None,
+        "final_sha256": final_sha256,
         "candidate_pdf": str(render_path / "document.pdf"),
         "render_ref": render["render_ref"],
         "page_count": render["page_count"],
         "student_content": str(student_content_path),
+        "content_partition": str(partition_path),
         "placement": str(placement_path),
         "fill_result": str(fill_result_path),
         "quality_projection": str(projection_path),
@@ -1501,10 +1787,8 @@ def finalize_saved_student_content_fill(
         "content_audit": str(content_audit_path),
         "validation": str(validation_path),
         "missing_required_count": len(placement["missing_required"]),
-        "unsupported_source_object_count": len(
-            source_coverage["unsupported_source_object_ids"]
-        ),
-        "partial_reasons": list(dict.fromkeys(partial_reasons)),
+        "unsupported_source_object_count": len(source_coverage["unsupported_source_object_ids"]),
+        "partial_reasons": partial_reasons,
         "privacy": "report_contains_metadata_and_paths_only",
     }
     atomic_write_json(root / "run-report.json", report)
@@ -1554,8 +1838,14 @@ def _audit_candidate(
     office: OfficeCliAdapter,
     approved_text_replacements: tuple[tuple[str, str], ...] = (),
 ) -> JsonObject:
-    final_inspection = inspect_document(candidate, office)
-    final_text = _normalize_text(_document_visible_text(candidate))
+    final_inspection = inspect_document_snapshot(candidate, office)
+    candidate_sha256 = sha256_file(candidate)
+    final_visible_text = _document_visible_text(candidate)
+    final_text = _normalize_text(final_visible_text)
+    final_text_without_object_refs = _normalize_text_without_generated_object_refs(
+        final_visible_text
+    )
+
     by_id = {
         item["source_object_ref"]["object_id"]: item
         for item in inventory.get("objects", [])
@@ -1568,30 +1858,41 @@ def _audit_candidate(
         and operation.get("action") == "replace_block_content_control"
         for object_id in operation.get("source_object_ids", [])
     }
+    semantic_text_by_block_object = _semantic_block_text_values_by_object(
+        placement=placement,
+        selected_block_ids=selected_block_ids,
+        approved_text_replacements=approved_text_replacements,
+    )
+    selected_scalar_content_ids = _selected_scalar_content_ids(placement)
     missing_block_ids = [
         object_id
         for object_id in sorted(selected_block_ids)
-        if (
-            text := _apply_approved_text_replacements(
-                str(by_id.get(object_id, {}).get("text", "")),
-                approved_text_replacements,
-            )
-        ).strip()
-        and _normalize_text(text) not in final_text
+        if _block_text_object_missing(
+            object_id=object_id,
+            raw_text=str(by_id.get(object_id, {}).get("text", "")),
+            final_text=final_text,
+            final_text_without_object_refs=final_text_without_object_refs,
+            semantic_text_by_block_object=semantic_text_by_block_object,
+            approved_text_replacements=approved_text_replacements,
+        )
     ]
     missing_scalar_content_ids = [
         str(item.get("content_id"))
         for item in student_content.get("items", [])
         if isinstance(item, dict)
         and item.get("classification_status") == "classified"
-        and str(item.get("transport_source_object_id")) not in selected_block_ids
+        and item.get("content_id") in selected_scalar_content_ids
+        and not _student_item_selected_by_block(item, selected_block_ids)
         and isinstance(item.get("value"), str)
         and str(item["value"]).strip()
-        and _normalize_text(str(item["value"])) not in final_text
+        and not _audit_text_present(
+            str(item["value"]),
+            final_text=final_text,
+            final_text_without_object_refs=final_text_without_object_refs,
+        )
     ]
     selected_pictures = sum(
-        item.get("physical_type") == "image"
-        and item.get("classification_status") == "classified"
+        item.get("physical_type") == "image" and item.get("classification_status") == "classified"
         for item in student_content.get("items", [])
         if isinstance(item, dict)
     )
@@ -1606,13 +1907,12 @@ def _audit_candidate(
     )
     return {
         "schema_version": "docfit-student-content-audit/v1",
-        "candidate_sha256": final_inspection.document_sha256,
+        "candidate_sha256": candidate_sha256,
         "selected_block_text_object_count": sum(
             bool(str(by_id.get(object_id, {}).get("text", "")).strip())
             for object_id in selected_block_ids
         ),
-        "missing_text_object_count": len(missing_block_ids)
-        + len(missing_scalar_content_ids),
+        "missing_text_object_count": len(missing_block_ids) + len(missing_scalar_content_ids),
         "missing_block_text_object_ids": missing_block_ids,
         "missing_scalar_content_ids": missing_scalar_content_ids,
         "selected_dependency_picture_count": selected_pictures,
@@ -1628,6 +1928,139 @@ def _audit_candidate(
         "candidate_table_count": candidate_tables,
         "package_summary": dict(final_inspection.summary),
     }
+
+
+def _semantic_block_text_values_by_object(
+    *,
+    placement: JsonObject,
+    selected_block_ids: set[str],
+    approved_text_replacements: tuple[tuple[str, str], ...],
+) -> dict[str, list[str]]:
+    values: dict[str, list[str]] = {}
+    for operation in placement.get("operations", []):
+        if not isinstance(operation, dict):
+            continue
+        if operation.get("action") != "replace_block_content_control":
+            continue
+        for item in operation.get("source_content_items", []):
+            if not isinstance(item, dict):
+                continue
+            if item.get("classification_status") != "classified":
+                continue
+            if item.get("physical_type") != "text":
+                continue
+            value = item.get("value")
+            if not isinstance(value, str) or not value.strip():
+                continue
+            canonical = canonical_target_text_value(
+                value,
+                str(item.get("field_id") or ""),
+            )
+            text = _apply_approved_text_replacements(canonical, approved_text_replacements)
+            if not text.strip():
+                continue
+            object_ids = _student_item_block_object_ids(item, selected_block_ids)
+            for object_id in object_ids:
+                values.setdefault(object_id, []).append(text)
+    return {key: list(dict.fromkeys(value)) for key, value in values.items()}
+
+
+def _selected_scalar_content_ids(placement: JsonObject) -> set[str]:
+    content_ids: set[str] = set()
+    for operation in placement.get("operations", []):
+        if not isinstance(operation, dict):
+            continue
+        if operation.get("action") != "replace_text_content_control":
+            continue
+        for item in operation.get("source_content_items", []):
+            if not isinstance(item, dict):
+                continue
+            content_id = item.get("content_id")
+            if isinstance(content_id, str):
+                content_ids.add(content_id)
+    return content_ids
+
+
+def _student_item_selected_by_block(item: JsonObject, selected_block_ids: set[str]) -> bool:
+    return bool(_student_item_block_object_ids(item, selected_block_ids))
+
+
+def _student_item_block_object_ids(item: JsonObject, selected_block_ids: set[str]) -> list[str]:
+    candidates: list[str] = []
+    transport_id = item.get("transport_source_object_id")
+    if isinstance(transport_id, str):
+        candidates.append(transport_id)
+    source_object_ids = item.get("source_object_ids")
+    if isinstance(source_object_ids, list):
+        candidates.extend(str(value) for value in source_object_ids if isinstance(value, str))
+    return list(dict.fromkeys(value for value in candidates if value in selected_block_ids))
+
+
+def _block_text_object_missing(
+    *,
+    object_id: str,
+    raw_text: str,
+    final_text: str,
+    final_text_without_object_refs: str,
+    semantic_text_by_block_object: dict[str, list[str]],
+    approved_text_replacements: tuple[tuple[str, str], ...],
+) -> bool:
+    semantic_values = semantic_text_by_block_object.get(object_id, [])
+    if semantic_values:
+        return not any(
+            _audit_text_present(
+                value,
+                final_text=final_text,
+                final_text_without_object_refs=final_text_without_object_refs,
+            )
+            for value in semantic_values
+        )
+    text = _apply_approved_text_replacements(raw_text, approved_text_replacements)
+    return bool(text.strip()) and not _audit_text_present(
+        text,
+        final_text=final_text,
+        final_text_without_object_refs=final_text_without_object_refs,
+    )
+
+
+def _audit_text_present(
+    value: str,
+    *,
+    final_text: str,
+    final_text_without_object_refs: str,
+) -> bool:
+    normalized = _normalize_text(value)
+    if normalized in final_text:
+        return True
+    without_refs = _normalize_text_without_generated_object_refs(value)
+    return bool(without_refs) and without_refs in final_text_without_object_refs
+
+
+_GENERATED_OBJECT_REF = re.compile(
+    r"(?:图|表|fig\.?|figure|table)\s*\d+(?:\s*[-－—.．]\s*\d+)*",
+    flags=re.IGNORECASE,
+)
+
+
+def _normalize_text_without_generated_object_refs(value: str) -> str:
+    return _normalize_text(_GENERATED_OBJECT_REF.sub("", value))
+
+
+def _has_unaccounted_source_complex_objects(
+    *,
+    content_audit: JsonObject,
+    source_coverage: JsonObject,
+) -> bool:
+    """Return whether final-generation must downgrade for unaccounted complex source objects."""
+
+    if source_coverage.get("all_source_objects_accounted_for") is True:
+        return False
+    source_complex = content_audit["source_complex_objects"]
+    selected_complex = content_audit["selected_source_complex_objects"]
+    return any(
+        int(source_complex.get(kind, 0)) > int(selected_complex.get(kind, 0))
+        for kind in ("drawings", "equations", "tables")
+    )
 
 
 def _selected_ooxml_counts(source: Path, placement: JsonObject) -> dict[str, int]:
@@ -1688,7 +2121,7 @@ def _validate_partial_candidate(
 
     def office_status(document: Path) -> tuple[bool, str]:
         try:
-            office.validate(document)
+            office.validate_snapshot(document)
         except ToolFailure as error:
             return False, error.code
         return True, "officecli_openxml_passed"
@@ -1737,6 +2170,75 @@ def _input_file(path: Path, suffix: str, label: str) -> Path:
     if not resolved.is_file() or resolved.suffix.casefold() != suffix:
         raise _failure("student_fill_input_type", f"{label} has an unsupported file type.")
     return resolved
+
+
+def _validate_ready_student_content(
+    student_content: JsonObject,
+    *,
+    source_sha256: str,
+    registry: FieldRegistrySnapshot,
+) -> None:
+    if student_content.get("schema_version") != "docfit-student-content-model/v2":
+        raise _failure(
+            "final_generation_student_content_invalid",
+            "Final generation requires Student Content Model v2.",
+        )
+    if student_content.get("status") != "READY":
+        raise _failure(
+            "final_generation_student_content_not_ready",
+            "Final generation can only consume READY Student Content.",
+        )
+    if student_content.get("source_sha256") != source_sha256:
+        raise _failure(
+            "final_generation_student_content_source_stale",
+            "Student Content is bound to another student source snapshot.",
+        )
+    if student_content.get("registry") != registry.identity():
+        raise _failure(
+            "final_generation_student_content_registry_stale",
+            "Student Content is bound to another Registry snapshot.",
+        )
+    items = student_content.get("items")
+    if not isinstance(items, list) or any(not isinstance(item, dict) for item in items):
+        raise _failure(
+            "final_generation_student_content_items_invalid",
+            "Student Content must contain one ordered item list.",
+        )
+    orders: list[tuple[int, int]] = []
+    for item in items:
+        source_order = item.get("source_order")
+        if not isinstance(source_order, dict):
+            raise _failure(
+                "final_generation_student_content_order_invalid",
+                "Every Student Content item must preserve source_order.",
+            )
+        block = source_order.get("block")
+        inline = source_order.get("inline")
+        if (
+            not isinstance(block, int)
+            or isinstance(block, bool)
+            or not isinstance(inline, int)
+            or isinstance(inline, bool)
+        ):
+            raise _failure(
+                "final_generation_student_content_order_invalid",
+                "Student Content source_order values must be integer block/inline pairs.",
+            )
+        orders.append((block, inline))
+    if orders != sorted(orders) or len(orders) != len(set(orders)):
+        raise _failure(
+            "final_generation_student_content_order_invalid",
+            "Student Content items must have one strict ascending source order.",
+        )
+    coverage = student_content.get("source_coverage")
+    if not isinstance(coverage, dict) or not isinstance(
+        coverage.get("unsupported_source_object_ids"),
+        list,
+    ):
+        raise _failure(
+            "final_generation_student_content_coverage_invalid",
+            "Student Content must include source coverage metadata.",
+        )
 
 
 def _normalize_text(value: str) -> str:

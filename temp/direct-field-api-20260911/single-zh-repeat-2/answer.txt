@@ -1,0 +1,3 @@
+```json
+{"items":[{"n":6,"parts":[{"text":"毕业论文（设计）中文题目","role":"fixed_label"},{"text":" ","role":"spacer"},{"text":"（小二黑体加粗）","role":"style_only"}]}]}
+```

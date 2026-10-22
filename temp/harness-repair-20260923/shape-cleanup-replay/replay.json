@@ -1,0 +1,51 @@
+{
+  "level": "real replay of original shape cleanup; isolated Tool execution slice",
+  "full_materialization": false,
+  "agent_called": false,
+  "product_acceptance": false,
+  "input_hashes": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/object-inventory.json": "6a13ea7c12d669c410a8cf54958d285e1cd908789b4ea71a9b61f6c4dbe10d01",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-judgments.json": "e4b8a52a516db803f363db8077535043c80d6986b01ac5dacd4a0e42b7462ddc",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+  "exact_locator": "/body/p[53]/r[1]/pict[1]/shape[1]",
+  "receipt": {
+    "action": "remove_shape",
+    "block_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+    "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+    "judgment_refs": [
+      "semantic_judgments[210]"
+    ],
+    "span_refs": [
+      "source_entry_id=source-entry-21b46b7c6b3d4d6775f287dd;extent=text[0:189];source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+    ],
+    "word_fragments": [
+      {
+        "fingerprint": "36a1fce7fb798d90086ec1c9c660f7b244e4080648f18394b89ec58f38a237b0",
+        "locator": "/body/p[53]/r[1]/pict[1]/shape[1]",
+        "object_id": "obj-cf2d42fd6e489c92a68aea00",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "36a1fce7fb798d90086ec1c9c660f7b244e4080648f18394b89ec58f38a237b0",
+          "object_id": "obj-cf2d42fd6e489c92a68aea00"
+        },
+        "object_text_end": 189,
+        "object_text_start": 0,
+        "source_text_end": 189,
+        "source_text_start": 0,
+        "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）"
+      }
+    ]
+  },
+  "only_selected_xml_node_removed": true,
+  "other_package_parts_unchanged": true,
+  "original_task_unchanged": true,
+  "other_compiler_blockers": [
+    "materialization_body_structure_parent_missing",
+    "materialization_body_structure_parent_missing"
+  ],
+  "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/shape-cleanup-replay/diagnostic-shape-deletion.docx",
+  "candidate_sha256": "99553d202d50b3b64ab61938a1307a311a6853b360cb3154c11967576876d607"
+}

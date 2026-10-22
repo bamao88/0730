@@ -1,0 +1,449 @@
+{
+  "schema_version": 1,
+  "scope": "Failure classification by original object identity, exact source range, and actual reached checkpoint; semantic completion is not identity acceptance",
+  "verification_level": "read-only audit of real run evidence and exact source Word XML; not new E2E or product acceptance",
+  "rows": [
+    {
+      "task": "cover-live",
+      "root": "temp/full-flow-id-20260922/cover-live",
+      "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+      "initial": {
+        "entry_count": 28,
+        "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+        "binding": "ok"
+      },
+      "run_failure": {
+        "code": "semantic_batch_result_invalid",
+        "message": "A semantic batch did not return a valid structured result.",
+        "origin": "agent",
+        "retryable": true,
+        "status": "error",
+        "suggested_actions": []
+      },
+      "published": false,
+      "other_docx_files": [],
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/full-flow-id-20260922/cover-live/work/.docfit/initial-source-inventory.json",
+        "temp/full-flow-id-20260922/cover-live/work/.docfit/template-agent-execution.json",
+        "temp/full-flow-id-20260922/cover-live/work/.docfit/unit-boundary-checkpoint.json",
+        "temp/full-flow-id-20260922/cover-live/work/.docfit/harness/object-inventory.json",
+        "temp/full-flow-id-20260922/cover-live/work/.docfit/harness/semantic-batch-candidates.json"
+      ],
+      "accepted_partition": {
+        "unit_count": 1,
+        "span_count": 28,
+        "ids_ranges_and_projection": "ok",
+        "word_mapping": {
+          "fragments_checked": 124,
+          "errors": []
+        }
+      },
+      "candidate_ledger": {
+        "batch_count": 1,
+        "judgment_count": 28,
+        "all_ids_from_initial_inventory": true,
+        "exact_source_parts": "rejected",
+        "invalid_entry_count": 8,
+        "error_counts": {
+          "ordered_part_text_mismatch": 9,
+          "ordered_part_text_gap": 8
+        },
+        "first_error": {
+          "code": "ordered_part_text_mismatch",
+          "field": "semantic_judgments[0].parts[2]",
+          "message": "Ordered part text must equal the source substring at the next exact offset.",
+          "source_entry_id": "source-entry-8ad4a2af5e47c8b049a468a2",
+          "expected_text": "“□” 表示占1个字宽（即2个字符）的空格。",
+          "submitted_text": "\"□\" 表示占1个字宽（即2个字符）的空格。",
+          "source_text_length": 123,
+          "expected_text_length": 22,
+          "submitted_text_length": 22,
+          "mismatch_offset": 64,
+          "expected_trailing_whitespace_count": 5,
+          "expected_trailing_whitespace_codepoints": [
+            "U+0020 × 5"
+          ],
+          "text_start": 64,
+          "text_end": 86
+        },
+        "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+      },
+      "farthest_checkpoint": "accepted unit partition; semantic revision incomplete",
+      "accepted_semantic_review": "not reached",
+      "materialization": "not reached",
+      "responsibility": "Agent proposed parts omit/change exact original text; Harness rejects; provider revision returned no usable text",
+      "id_blocker": false
+    },
+    {
+      "task": "body-live",
+      "root": "temp/full-flow-id-20260922/body-live",
+      "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+      "initial": {
+        "entry_count": 71,
+        "source_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "binding": "ok"
+      },
+      "run_failure": {
+        "code": "semantic_batch_result_invalid",
+        "message": "A semantic batch did not return a valid structured result.",
+        "origin": "agent",
+        "retryable": true,
+        "status": "error",
+        "suggested_actions": []
+      },
+      "published": false,
+      "other_docx_files": [],
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/full-flow-id-20260922/body-live/work/.docfit/initial-source-inventory.json",
+        "temp/full-flow-id-20260922/body-live/work/.docfit/template-agent-execution.json",
+        "temp/full-flow-id-20260922/body-live/work/.docfit/unit-boundary-checkpoint.json",
+        "temp/full-flow-id-20260922/body-live/work/.docfit/harness/object-inventory.json",
+        "temp/full-flow-id-20260922/body-live/work/.docfit/harness/semantic-batch-candidates.json"
+      ],
+      "accepted_partition": {
+        "unit_count": 10,
+        "span_count": 71,
+        "ids_ranges_and_projection": "ok",
+        "word_mapping": {
+          "fragments_checked": 260,
+          "errors": []
+        }
+      },
+      "candidate_ledger": {
+        "batch_count": 10,
+        "judgment_count": 71,
+        "all_ids_from_initial_inventory": true,
+        "exact_source_parts": "rejected",
+        "invalid_entry_count": 12,
+        "error_counts": {
+          "ordered_part_empty_for_text_entry": 10,
+          "ordered_part_text_gap": 12,
+          "ordered_part_text_mismatch": 15
+        },
+        "first_error": {
+          "code": "ordered_part_empty_for_text_entry",
+          "field": "semantic_judgments[0].parts[0]",
+          "message": "An empty part can target only a canonical empty whole-entry source entry.",
+          "source_entry_id": "source-entry-015688bdacef4006d2277542",
+          "source_text_length": 3
+        },
+        "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+      },
+      "farthest_checkpoint": "accepted unit partition; semantic revision incomplete",
+      "accepted_semantic_review": "not reached",
+      "materialization": "not reached",
+      "responsibility": "Agent proposed parts omit/change exact original text; Harness rejects; provider revision returned no usable text",
+      "id_blocker": false
+    },
+    {
+      "task": "pku-cover-live",
+      "root": "temp/full-flow-id-20260922/pku-cover-live",
+      "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+      "initial": {
+        "entry_count": 58,
+        "source_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "binding": "ok"
+      },
+      "run_failure": {
+        "code": "materialization_word_fragment_stale",
+        "message": "An accepted Word fragment no longer resolves to its exact source content.",
+        "origin": "harness",
+        "retryable": true,
+        "status": "needs_input",
+        "suggested_actions": [
+          "Refresh source inventory and semantic judgments before materialization.",
+          "span_ref=source_entry_id=source-entry-3c2637c9cd402df2261d038e;extent=whole_entry;source_snapshot_sha256=93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5"
+        ]
+      },
+      "published": false,
+      "other_docx_files": [],
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/initial-source-inventory.json",
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/template-agent-execution.json",
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/unit-boundary-checkpoint.json",
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/object-inventory.json",
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/semantic-batch-candidates.json",
+        "temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/semantic-judgments.json"
+      ],
+      "accepted_partition": {
+        "unit_count": 5,
+        "span_count": 58,
+        "ids_ranges_and_projection": "ok",
+        "word_mapping": {
+          "fragments_checked": 72,
+          "errors": []
+        }
+      },
+      "candidate_ledger": {
+        "batch_count": 5,
+        "judgment_count": 58,
+        "all_ids_from_initial_inventory": true,
+        "exact_source_parts": "ok",
+        "invalid_entry_count": 0,
+        "error_counts": {},
+        "first_error": null,
+        "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+      },
+      "accepted_semantic_review": {
+        "judgment_count": 58,
+        "span_count": 58,
+        "ids_and_ranges_match_initial": true,
+        "word_mapping": {
+          "fragments_checked": 72,
+          "errors": []
+        }
+      },
+      "readiness": {
+        "status": "needs_input",
+        "blockers": [
+          {
+            "code": "materialization_slot_carrier_unsupported",
+            "source_entry_id": "source-entry-e793d6f1c0b80818f04a76a4",
+            "field_id": null
+          },
+          {
+            "code": "materialization_slot_carrier_unsupported",
+            "source_entry_id": "source-entry-1d5fdd84278716ae4c066143",
+            "field_id": null
+          }
+        ]
+      },
+      "blocked_source_ranges": [
+        {
+          "source_entry_id": "source-entry-e793d6f1c0b80818f04a76a4",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "text": "",
+          "role": "fill_slot",
+          "field_id": "submission.declaration_qr_page",
+          "locators": [
+            "/body/tbl[1]"
+          ]
+        },
+        {
+          "source_entry_id": "source-entry-1d5fdd84278716ae4c066143",
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "text": "",
+          "role": "fill_slot",
+          "field_id": "submission.declaration_qr_page",
+          "locators": [
+            "/body/tbl[2]"
+          ]
+        }
+      ],
+      "farthest_checkpoint": "reviewed semantic ranges; materialization readiness rejected",
+      "materialization": "not reached; no candidate DOCX",
+      "responsibility": "Agent requested an unsupported operation on the same original object; Harness refuses without replacement",
+      "id_blocker": false,
+      "historical_mapping_failure": {
+        "source_entry_id": "source-entry-3c2637c9cd402df2261d038e",
+        "old_failure": "materialization_word_fragment_stale",
+        "current_word_mapping": "all selected original fragments resolve; prior package-story resolver defect no longer reproduces"
+      }
+    },
+    {
+      "task": "pku-abstract-live",
+      "root": "temp/full-flow-id-20260922/pku-abstract-live",
+      "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+      "initial": {
+        "entry_count": 42,
+        "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+        "binding": "ok"
+      },
+      "run_failure": {
+        "code": "template_agent_no_progress_timeout",
+        "message": "The Agent stream did not produce a tool call or structured result within 180 seconds.",
+        "origin": "agent",
+        "retryable": true,
+        "status": "error",
+        "suggested_actions": [
+          "inspect_template_agent_execution_trace",
+          "resume_or_rerun_with_existing_task_root"
+        ]
+      },
+      "published": false,
+      "other_docx_files": [],
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/full-flow-id-20260922/pku-abstract-live/work/.docfit/initial-source-inventory.json",
+        "temp/full-flow-id-20260922/pku-abstract-live/work/.docfit/template-agent-execution.json"
+      ],
+      "farthest_checkpoint": "initial inventory / first Agent attempt",
+      "accepted_partition": "not reached",
+      "accepted_semantic_review": "not reached",
+      "materialization": "not reached",
+      "responsibility": "Agent/provider no-progress timeout; downstream identity unknown",
+      "id_blocker": false
+    },
+    {
+      "task": "pku-abstract-retry",
+      "root": "temp/full-flow-id-20260922/pku-abstract-retry",
+      "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+      "initial": {
+        "entry_count": 42,
+        "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+        "binding": "ok"
+      },
+      "run_failure": {
+        "code": "semantic_batch_global_feedback_failed",
+        "message": "Global semantic review did not converge within its budget.",
+        "origin": "harness",
+        "retryable": true,
+        "status": "needs_input",
+        "suggested_actions": []
+      },
+      "published": false,
+      "other_docx_files": [],
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/initial-source-inventory.json",
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/template-agent-execution.json",
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/unit-boundary-checkpoint.json",
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/harness/object-inventory.json",
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/harness/semantic-batch-candidates.json",
+        "temp/full-flow-id-20260922/pku-abstract-retry/work/.docfit/harness/semantic-judgments.json"
+      ],
+      "accepted_partition": {
+        "unit_count": 5,
+        "span_count": 42,
+        "ids_ranges_and_projection": "ok",
+        "word_mapping": {
+          "fragments_checked": 60,
+          "errors": []
+        }
+      },
+      "candidate_ledger": {
+        "batch_count": 5,
+        "judgment_count": 42,
+        "all_ids_from_initial_inventory": true,
+        "exact_source_parts": "rejected",
+        "invalid_entry_count": 1,
+        "error_counts": {
+          "ordered_part_empty_for_text_entry": 1,
+          "ordered_part_text_mismatch": 1,
+          "ordered_part_text_gap": 1
+        },
+        "first_error": {
+          "code": "ordered_part_empty_for_text_entry",
+          "field": "semantic_judgments[11].parts[1]",
+          "message": "An empty part can target only a canonical empty whole-entry source entry.",
+          "source_entry_id": "source-entry-78b8146eb41aec419986139d",
+          "source_text_length": 40
+        },
+        "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+      },
+      "accepted_semantic_review": {
+        "judgment_count": 42,
+        "span_count": 45,
+        "ids_and_ranges_match_initial": true,
+        "word_mapping": {
+          "fragments_checked": 61,
+          "errors": []
+        }
+      },
+      "readiness": {
+        "status": "needs_input",
+        "blockers": [
+          {
+            "code": "materialization_body_structure_member_crosses_carriers",
+            "source_entry_id": "source-entry-71f352c9ee7a9854dd06e08e",
+            "field_id": "body.heading.outline1"
+          }
+        ]
+      },
+      "blocked_source_ranges": [
+        {
+          "source_entry_id": "source-entry-71f352c9ee7a9854dd06e08e",
+          "extent": {
+            "end": 10,
+            "kind": "text",
+            "start": 0
+          },
+          "text": "第三章\t其他注意事项",
+          "role": "body_structure",
+          "field_id": "body.heading.outline1",
+          "locators": [
+            "/header[7]/p[@paraId=49237ED9]/r[6]",
+            "/header[7]/p[@paraId=49237ED9]",
+            "/header[7]/p[@paraId=49237ED9]/r[14]"
+          ]
+        }
+      ],
+      "farthest_checkpoint": "reviewed semantic ranges; materialization readiness rejected",
+      "materialization": "not reached; no candidate DOCX",
+      "responsibility": "Agent requested an unsupported operation on the same original object; Harness refuses without replacement",
+      "id_blocker": false
+    },
+    {
+      "task": "njau-03-toc-v6",
+      "root": "temp/phase8-v05-20260912/njau-03-toc-v6",
+      "level": "historical post-unit identity only; cannot upgrade to initial-inventory full-flow evidence",
+      "initial_inventory": "missing in legacy run",
+      "entry_count": 30,
+      "review_span_count": 30,
+      "persisted_judgments_and_resolved_ranges": "all IDs/text/ranges agree with persisted post-unit inventory",
+      "source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+      "ledger_source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+      "source_current": true,
+      "prior_replay_record": {
+        "source_path": "temp/phase8-v05-20260912/njau-03-toc-v6/input/school-template.docx",
+        "source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+        "replay": "failed",
+        "error_type": "ToolFailure",
+        "error": "Accepted semantic review is not materializable: materialization_cleanup_carrier_conflict.",
+        "code": "template_materialization_readiness_incomplete"
+      },
+      "new_materialization": "not performed",
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/phase8-v05-20260912/njau-03-toc-v6/work/.docfit/harness/object-inventory.json",
+        "temp/phase8-v05-20260912/njau-03-toc-v6/work/.docfit/harness/semantic-judgments.json",
+        "tests/manual-diagnostics/template-id-closure/evidence.json"
+      ],
+      "word_mapping": {
+        "fragments_checked": 146,
+        "errors": []
+      },
+      "responsibility": "Materialization cleanup/retain carrier conflict; whether semantic choice or overly strict carrier gate is unresolved; no observed object/range substitution",
+      "id_blocker": false
+    },
+    {
+      "task": "njau-07-references-v5",
+      "root": "temp/phase8-v05-20260912/njau-07-references-v5",
+      "level": "historical post-unit identity only; cannot upgrade to initial-inventory full-flow evidence",
+      "initial_inventory": "missing in legacy run",
+      "entry_count": 20,
+      "review_span_count": 20,
+      "persisted_judgments_and_resolved_ranges": "all IDs/text/ranges agree with persisted post-unit inventory",
+      "source_sha256": "273757667bf94d66a973eb1bcdb4494ebc4b15df2d0f0ee2d20214a331f4b407",
+      "ledger_source_sha256": "61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f",
+      "source_current": false,
+      "prior_replay_record": {
+        "stale_source_rejection": "stale_ref",
+        "replay": "source_snapshot_unavailable"
+      },
+      "new_materialization": "not performed",
+      "identity_pipeline_defects": [],
+      "evidence_paths": [
+        "temp/phase8-v05-20260912/njau-07-references-v5/work/.docfit/harness/object-inventory.json",
+        "temp/phase8-v05-20260912/njau-07-references-v5/work/.docfit/harness/semantic-judgments.json",
+        "tests/manual-diagnostics/template-id-closure/evidence.json"
+      ],
+      "word_mapping": "unknown: exact original Word snapshot unavailable; never remap into changed source",
+      "responsibility": "Historical fixture/source snapshot unavailable; stale-source rejection is expected identity protection",
+      "id_blocker": false,
+      "evidence_gap": "Cannot certify historical original-source write identity without its exact snapshot; do not count this run as a successful replay"
+    }
+  ],
+  "new_runtime_identity_defects": [],
+  "remaining_unknown": [
+    "No writes occurred in the five failed fresh runs, so they prove no successful write identity",
+    "Legacy NJAU07 exact original snapshot is absent; its real source/write identity remains uncertified"
+  ]
+}

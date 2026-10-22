@@ -1,0 +1,155 @@
+{
+  "status": "needs_input",
+  "review": {
+    "type": "mechanical_review",
+    "mechanical": true,
+    "semantic_authority": false
+  },
+  "affected": [
+    {
+      "code": "ordered_part_text_mismatch",
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "submitted_text": "            (五号Times New Roman)",
+      "expected_text": "",
+      "source_text_length": 68,
+      "expected_text_length": 0,
+      "submitted_text_length": 31,
+      "mismatch_offset": 68,
+      "field": "semantic_judgments[16].parts[3]",
+      "message": "Ordered part text must equal the source substring at the next exact offset."
+    },
+    {
+      "code": "ordered_part_text_gap",
+      "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+      "uncovered_text": "  ",
+      "source_text_length": 32,
+      "covered_text_length": 30,
+      "uncovered_text_length": 2,
+      "uncovered_whitespace_codepoints": [
+        "U+0020 × 2"
+      ],
+      "field": "semantic_judgments[17]",
+      "message": "Append the listed uncovered whitespace as literal characters to an adjacent part, or keep text empty and submit one whitespace.codepoint/count transport part for each listed codepoint run in source order. Consecutive transport parts may keep the same role and field_id. A whitespace-only source entry is not an empty entry; do not put a role name or description in text. Mentioning the whitespace count only in reason does not cover the source entry. Keep the existing semantic role unless the whitespace itself changes the school-semantic decision."
+    },
+    {
+      "code": "ordered_part_empty_for_text_entry",
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "source_text_length": 31,
+      "field": "semantic_judgments[20].parts[3]",
+      "message": "An empty part can target only a canonical empty whole-entry source entry."
+    },
+    {
+      "code": "ordered_part_text_mismatch",
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "submitted_text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "expected_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标",
+      "source_text_length": 31,
+      "expected_text_length": 25,
+      "submitted_text_length": 25,
+      "mismatch_offset": 4,
+      "expected_leading_whitespace_count": 2,
+      "expected_leading_whitespace_codepoints": [
+        "U+0020 × 2"
+      ],
+      "field": "semantic_judgments[20].parts[4]",
+      "message": "Remove any synthetic text part that contains a role name or whitespace description instead of source characters. Then prepend the listed expected whitespace as literal characters to the first real source-text part, or insert one preceding whitespace transport part per listed codepoint run in source order. Those parts may keep the same role and field_id as the adjacent text. Mentioning the count only in reason does not cover the source entry."
+    },
+    {
+      "code": "ordered_part_text_gap",
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "uncovered_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "source_text_length": 31,
+      "covered_text_length": 4,
+      "uncovered_text_length": 27,
+      "field": "semantic_judgments[20]",
+      "message": "Ordered parts must cover the complete source entry without omissions."
+    },
+    {
+      "code": "ordered_part_empty_for_text_entry",
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "source_text_length": 43,
+      "field": "semantic_judgments[21].parts[2]",
+      "message": "An empty part can target only a canonical empty whole-entry source entry."
+    },
+    {
+      "code": "ordered_part_text_mismatch",
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "submitted_text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "expected_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roma",
+      "source_text_length": 43,
+      "expected_text_length": 37,
+      "submitted_text_length": 37,
+      "mismatch_offset": 4,
+      "expected_leading_whitespace_count": 2,
+      "expected_leading_whitespace_codepoints": [
+        "U+0020 × 2"
+      ],
+      "field": "semantic_judgments[21].parts[3]",
+      "message": "Remove any synthetic text part that contains a role name or whitespace description instead of source characters. Then prepend the listed expected whitespace as literal characters to the first real source-text part, or insert one preceding whitespace transport part per listed codepoint run in source order. Those parts may keep the same role and field_id as the adjacent text. Mentioning the count only in reason does not cover the source entry."
+    },
+    {
+      "code": "ordered_part_text_gap",
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "uncovered_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "source_text_length": 43,
+      "covered_text_length": 4,
+      "uncovered_text_length": 39,
+      "field": "semantic_judgments[21]",
+      "message": "Ordered parts must cover the complete source entry without omissions."
+    },
+    {
+      "code": "ordered_part_text_mismatch",
+      "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+      "submitted_text": "(小三号黑体)",
+      "expected_text": " (小三号黑体",
+      "source_text_length": 12,
+      "expected_text_length": 7,
+      "submitted_text_length": 7,
+      "mismatch_offset": 4,
+      "expected_leading_whitespace_count": 1,
+      "expected_leading_whitespace_codepoints": [
+        "U+0020"
+      ],
+      "field": "semantic_judgments[41].parts[1]",
+      "message": "Remove any synthetic text part that contains a role name or whitespace description instead of source characters. Then prepend the listed expected whitespace as literal characters to the first real source-text part, or insert one preceding whitespace transport part per listed codepoint run in source order. Those parts may keep the same role and field_id as the adjacent text. Mentioning the count only in reason does not cover the source entry."
+    },
+    {
+      "code": "ordered_part_text_gap",
+      "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+      "uncovered_text": " (小三号黑体)",
+      "source_text_length": 12,
+      "covered_text_length": 4,
+      "uncovered_text_length": 8,
+      "field": "semantic_judgments[41]",
+      "message": "Ordered parts must cover the complete source entry without omissions."
+    },
+    {
+      "code": "ordered_part_text_mismatch",
+      "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+      "submitted_text": "(五号宋体)",
+      "expected_text": "      ",
+      "source_text_length": 47,
+      "expected_text_length": 6,
+      "submitted_text_length": 6,
+      "mismatch_offset": 34,
+      "expected_leading_whitespace_count": 7,
+      "expected_leading_whitespace_codepoints": [
+        "U+0020 × 7"
+      ],
+      "field": "semantic_judgments[42].parts[1]",
+      "message": "Remove any synthetic text part that contains a role name or whitespace description instead of source characters. Then prepend the listed expected whitespace as literal characters to the first real source-text part, or insert one preceding whitespace transport part per listed codepoint run in source order. Those parts may keep the same role and field_id as the adjacent text. Mentioning the count only in reason does not cover the source entry."
+    },
+    {
+      "code": "ordered_part_text_gap",
+      "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+      "uncovered_text": "       (五号宋体)",
+      "source_text_length": 47,
+      "covered_text_length": 34,
+      "uncovered_text_length": 13,
+      "field": "semantic_judgments[42]",
+      "message": "Ordered parts must cover the complete source entry without omissions."
+    }
+  ],
+  "responsibility": "agent",
+  "next_step": "Revise affected source entries."
+}

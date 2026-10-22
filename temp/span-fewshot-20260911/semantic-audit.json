@@ -1,0 +1,609 @@
+{
+  "verification_level": "Real E2E agent loops completed; public structured outputs, materialized DOCX XML, and final fill contracts inspected; no rendering or product acceptance performed by this audit.",
+  "runs": {
+    "run-1": {
+      "trace_status": "complete",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "field_bindings": [
+            {
+              "field_id": "thesis.title.zh",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "field_id": "author.name.zh",
+              "text": "：×××（或×□×）"
+            },
+            {
+              "field_id": "author.student_id",
+              "text": "20××××××××××"
+            },
+            {
+              "field_id": "author.cohort_class",
+              "text": "20××级×××（×）班"
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "text": "×××□教授"
+            },
+            {
+              "field_id": "advisor.title",
+              "text": "□教授"
+            },
+            {
+              "field_id": "author.department",
+              "text": "××××学院"
+            },
+            {
+              "field_id": "submission.date",
+              "text": "20××年××月"
+            }
+          ],
+          "author_name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "manual_region"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "：×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            }
+          ]
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "field_bindings": [
+            {
+              "field_id": "thesis.title.zh",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "field_id": "author.name.zh",
+              "text": "×××（或×□×）"
+            },
+            {
+              "field_id": "author.student_id",
+              "text": "20××××××××××"
+            },
+            {
+              "field_id": "author.cohort_class",
+              "text": "20××级×××（×）班"
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "text": "×××□教授"
+            },
+            {
+              "field_id": "advisor.title",
+              "text": "□教授"
+            },
+            {
+              "field_id": "author.department",
+              "text": "××××学院"
+            },
+            {
+              "field_id": "submission.date",
+              "text": "20××年××月"
+            }
+          ],
+          "author_name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "manual_region"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            }
+          ]
+        },
+        {
+          "query_index": 5,
+          "status": "complete",
+          "field_bindings": [
+            {
+              "field_id": "thesis.title.zh",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "field_id": "author.name.zh",
+              "text": "×××（或×□×）"
+            },
+            {
+              "field_id": "author.student_id",
+              "text": "20××××××××××"
+            },
+            {
+              "field_id": "author.cohort_class",
+              "text": "20××级×××（×）班"
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "text": "×××"
+            },
+            {
+              "field_id": "advisor.title",
+              "text": "□教授"
+            },
+            {
+              "field_id": "author.department",
+              "text": "××××学院"
+            },
+            {
+              "field_id": "submission.date",
+              "text": "20××年××月"
+            }
+          ],
+          "author_name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "manual_region"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": " （三号楷体加粗）",
+              "role": "style_only"
+            }
+          ]
+        }
+      ],
+      "host_revision_count": 2,
+      "host_revisions": [
+        {
+          "feedback_type": "ordered_semantic_parts",
+          "blockers": [
+            {
+              "code": "fill_slot_includes_label_delimiter",
+              "field": "semantic_judgments[8].parts[2].text"
+            }
+          ]
+        },
+        {
+          "feedback_type": "span_resolution",
+          "blockers": [
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[2].parts"
+            },
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[3].parts"
+            },
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[5].parts"
+            },
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[6].parts"
+            },
+            {
+              "code": "ordered_part_text_gap",
+              "field": "semantic_judgments[8].parts[2]"
+            },
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[8].parts"
+            },
+            {
+              "code": "ordered_part_text_not_found",
+              "field": "semantic_judgments[11].parts[3].text"
+            },
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[14].parts"
+            }
+          ]
+        }
+      ],
+      "final_fields": [
+        "thesis.title.zh",
+        "author.name.zh",
+        "author.student_id",
+        "author.cohort_class",
+        "advisor.name.zh",
+        "advisor.title",
+        "author.department",
+        "submission.date"
+      ],
+      "final_slot_count": 8,
+      "materialized_controls": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "【中文论文题目】",
+          "slot_ref": "source_entry_id=source-entry-329659f5fc3d1413fb341fb3;part_index=0;field_id=thesis.title.zh"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "【作者中文姓名】",
+          "slot_ref": "source_entry_id=source-entry-3b879d2fe97520fea28d9eb9;part_index=4;field_id=author.name.zh"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "【学号】",
+          "slot_ref": "source_entry_id=source-entry-7bd37b8065820e49cdd60b0d;part_index=2;field_id=author.student_id"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "【年级、专业及班级复合信息】",
+          "slot_ref": "source_entry_id=source-entry-33b7069c5a23b51f75a2deb5;part_index=2;field_id=author.cohort_class"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "【导师中文姓名】",
+          "slot_ref": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=2;field_id=advisor.name.zh"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "【导师职称】",
+          "slot_ref": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=3;field_id=advisor.title"
+        },
+        {
+          "field_id": "author.department",
+          "text": "【院系】",
+          "slot_ref": "source_entry_id=source-entry-0d171ab0a1928731d320b622;part_index=2;field_id=author.department"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "【提交年月】",
+          "slot_ref": "source_entry_id=source-entry-da54fbc60d2e3ec73e91b3b7;part_index=1;field_id=submission.date"
+        }
+      ],
+      "final_paragraph_texts": [
+        {
+          "body_paragraph_index": 1,
+          "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。"
+        },
+        {
+          "body_paragraph_index": 2,
+          "text": "     湖 南 农 业 大 学"
+        },
+        {
+          "body_paragraph_index": 3,
+          "text": "全日制普通本科生毕业论文(设计)"
+        },
+        {
+          "body_paragraph_index": 5,
+          "text": "【中文论文题目】 （小二黑体加粗）"
+        },
+        {
+          "body_paragraph_index": 6,
+          "text": "TITLE OF GRADUATION PAPER"
+        },
+        {
+          "body_paragraph_index": 9,
+          "text": "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】 （三号楷体加粗）"
+        },
+        {
+          "body_paragraph_index": 10,
+          "text": "□□□□□□学□□号：【学号】"
+        },
+        {
+          "body_paragraph_index": 11,
+          "text": "□□□□□□年级专业及班级：【年级、专业及班级复合信息】"
+        },
+        {
+          "body_paragraph_index": 12,
+          "text": "□□□□□□指导老师及职称：【导师中文姓名】【导师职称】"
+        },
+        {
+          "body_paragraph_index": 13,
+          "text": "□□□□□□学□□院：【院系】 （学院名用全称）"
+        },
+        {
+          "body_paragraph_index": 16,
+          "text": "湖南·长沙"
+        },
+        {
+          "body_paragraph_index": 17,
+          "text": "提交日期：【提交年月】"
+        }
+      ]
+    },
+    "run-2": {
+      "trace_status": "complete",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "field_bindings": [
+            {
+              "field_id": "thesis.title.zh",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "field_id": "thesis.title.en",
+              "text": "TITLE OF GRADUATION PAPER"
+            },
+            {
+              "field_id": "author.name.zh",
+              "text": "×××（或×□×）"
+            },
+            {
+              "field_id": "author.student_id",
+              "text": "20××××××××××"
+            },
+            {
+              "field_id": "author.cohort_class",
+              "text": "20××级×××（×）班"
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "text": "×××"
+            },
+            {
+              "field_id": "advisor.title",
+              "text": "教授"
+            },
+            {
+              "field_id": "author.department",
+              "text": "××××学院"
+            },
+            {
+              "field_id": "submission.date",
+              "text": "20××年××月"
+            }
+          ],
+          "author_name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "fixed_label"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ]
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "field_bindings": [
+            {
+              "field_id": "thesis.title.zh",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "field_id": "thesis.title.en",
+              "text": "TITLE OF GRADUATION PAPER"
+            },
+            {
+              "field_id": "author.name.zh",
+              "text": "×××（或×□×）"
+            },
+            {
+              "field_id": "author.student_id",
+              "text": "20××××××××××"
+            },
+            {
+              "field_id": "author.cohort_class",
+              "text": "20××级×××（×）班"
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "text": "×××"
+            },
+            {
+              "field_id": "advisor.title",
+              "text": "教授"
+            },
+            {
+              "field_id": "author.department",
+              "text": "××××学院"
+            },
+            {
+              "field_id": "submission.date",
+              "text": "20××年××月"
+            }
+          ],
+          "author_name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "fixed_label"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ]
+        }
+      ],
+      "host_revision_count": 1,
+      "host_revisions": [
+        {
+          "feedback_type": "span_resolution",
+          "blockers": [
+            {
+              "code": "ordered_part_text_trailing_gap",
+              "field": "semantic_judgments[3].parts"
+            }
+          ]
+        }
+      ],
+      "final_fields": [
+        "thesis.title.zh",
+        "thesis.title.en",
+        "author.name.zh",
+        "author.student_id",
+        "author.cohort_class",
+        "advisor.name.zh",
+        "advisor.title",
+        "author.department",
+        "submission.date"
+      ],
+      "final_slot_count": 9,
+      "materialized_controls": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "【中文论文题目】",
+          "slot_ref": "source_entry_id=source-entry-329659f5fc3d1413fb341fb3;part_index=0;field_id=thesis.title.zh"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "【英文论文题目】",
+          "slot_ref": "source_entry_id=source-entry-bf74a3353df418bfdb93147b;part_index=0;field_id=thesis.title.en"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "【作者中文姓名】",
+          "slot_ref": "source_entry_id=source-entry-3b879d2fe97520fea28d9eb9;part_index=4;field_id=author.name.zh"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "【学号】",
+          "slot_ref": "source_entry_id=source-entry-7bd37b8065820e49cdd60b0d;part_index=3;field_id=author.student_id"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "【年级、专业及班级复合信息】",
+          "slot_ref": "source_entry_id=source-entry-33b7069c5a23b51f75a2deb5;part_index=3;field_id=author.cohort_class"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "【导师中文姓名】",
+          "slot_ref": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=3;field_id=advisor.name.zh"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "【导师职称】",
+          "slot_ref": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=5;field_id=advisor.title"
+        },
+        {
+          "field_id": "author.department",
+          "text": "【院系】",
+          "slot_ref": "source_entry_id=source-entry-0d171ab0a1928731d320b622;part_index=3;field_id=author.department"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "【提交年月】",
+          "slot_ref": "source_entry_id=source-entry-da54fbc60d2e3ec73e91b3b7;part_index=1;field_id=submission.date"
+        }
+      ],
+      "final_paragraph_texts": [
+        {
+          "body_paragraph_index": 1,
+          "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。"
+        },
+        {
+          "body_paragraph_index": 3,
+          "text": "     湖 南 农 业 大 学"
+        },
+        {
+          "body_paragraph_index": 4,
+          "text": "全日制普通本科生毕业论文(设计)"
+        },
+        {
+          "body_paragraph_index": 7,
+          "text": "【中文论文题目】（小二黑体加粗）"
+        },
+        {
+          "body_paragraph_index": 8,
+          "text": "【英文论文题目】（四号Times New Roman加粗，大写）"
+        },
+        {
+          "body_paragraph_index": 12,
+          "text": "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】（三号楷体加粗）"
+        },
+        {
+          "body_paragraph_index": 13,
+          "text": "□□□□□□学□□号：【学号】"
+        },
+        {
+          "body_paragraph_index": 14,
+          "text": "□□□□□□年级专业及班级：【年级、专业及班级复合信息】"
+        },
+        {
+          "body_paragraph_index": 15,
+          "text": "□□□□□□指导老师及职称：【导师中文姓名】□【导师职称】"
+        },
+        {
+          "body_paragraph_index": 16,
+          "text": "□□□□□□学□□院：【院系】（学院名用全称）"
+        },
+        {
+          "body_paragraph_index": 20,
+          "text": "湖南·长沙"
+        },
+        {
+          "body_paragraph_index": 21,
+          "text": "提交日期：【提交年月】"
+        }
+      ]
+    }
+  },
+  "conclusions": [
+    "Both runs bind author.student_id to 20×××××××××× and author.cohort_class to 20××级×××（×）班 from the initial post-unit proposal through final accepted output. Final DOCX retains 学□□号： and 年级专业及班级： outside the controls.",
+    "run-2 has both title slots, advisor.name.zh=×××, advisor.title=教授, and the □ separator outside both values; all remain correct after revision. Final 9 slots.",
+    "run-1 omits thesis.title.en throughout; the English title banner remains fixed_label. The final advisor.name.zh overlap is corrected to ×××, but advisor.title remains □教授 and consumes the separator. Final 8 slots.",
+    "Both final accepted outputs split the name label font instruction （三号黑体加粗） and trailing name instruction （三号楷体加粗） as style_only. These texts remain visible in both DOCX files, an execution-layer issue.",
+    "Long cohort-class placeholder, raw spacing-marker glyphs, and the format preamble remain. Visual layout is not evaluated here.",
+    "Two same-configuration observations support improvement on student_id/cohort_class value spans in these runs, but do not establish stable overall semantic quality or product acceptance."
+  ]
+}

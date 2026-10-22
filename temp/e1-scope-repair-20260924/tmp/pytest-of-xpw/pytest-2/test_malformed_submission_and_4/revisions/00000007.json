@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-24T09:28:47.180923+00:00",
+  "data": {
+    "feedback": {
+      "blockers": [
+        {
+          "code": "invalid",
+          "field": "semantic_judgments[0]",
+          "source_entry_id": "invented"
+        }
+      ]
+    },
+    "output": {
+      "semantic_judgments": [
+        {
+          "parts": [],
+          "source_entry_id": "invented"
+        }
+      ]
+    },
+    "request_id": 5
+  },
+  "event_digest": "9e83bcf07bfe993716edc3f19c28eab0c07e83ccc841bc09b0919070af5c9894",
+  "evidence_mode": "runtime",
+  "kind": "local_rejected",
+  "manifest_digest": "969c54bca51006c313805f64344016302389dd5d36a1d27d5f7dbd670a9a82ff",
+  "previous_event_digest": "2ab2b63dd51a14b4d13f5a6eaa565ed5b6ce26d4ff0e46fa7e2eec48c32aa17a",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 7
+}

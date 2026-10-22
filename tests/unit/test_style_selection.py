@@ -118,11 +118,23 @@ def _school_candidate(
         "evidence_refs": [
             {
                 "type": "school_field_style_observation",
-                "slot_id": "body.table.caption.1",
+                "slot_ref": "body.table.caption.1",
                 "observation_digest": "b" * 64,
                 "school_observation_set_digest": observation_digest,
             }
         ],
+    }
+
+
+def _known_gap(profile: StylePropertyProfile) -> dict[str, Any]:
+    return {
+        "slot_id": "body.table.caption.expected",
+        "field_id": "body.table.caption",
+        "style_role_id": "style.caption.table",
+        "property_profile_ref": profile.ref().as_dict(),
+        "property_paths": list(profile.property_paths),
+        "unresolved_properties": list(profile.property_paths),
+        "reason": "school_role_representative_missing",
     }
 
 
@@ -134,6 +146,7 @@ def test_complete_school_role_is_selected_whole_without_preset_mixing() -> None:
     receipt = select_complete_style_roles(
         actual_roles=_actual(preset),
         school_candidates=[_school_candidate(profile, observation_digest)],
+        school_known_gaps=[],
         school_observation_set_digest=observation_digest,
         preset=preset,
         registry=registry,
@@ -146,13 +159,14 @@ def test_complete_school_role_is_selected_whole_without_preset_mixing() -> None:
     assert receipt.as_dict()["selection_counts"] == {"school": 1, "preset": 0}
 
 
-def test_hunau_missing_table_caption_selects_the_complete_preset_role() -> None:
-    registry, _ = _registry()
+def test_known_school_gap_selects_the_complete_preset_role() -> None:
+    registry, profile = _registry()
     preset = _preset(registry)
 
     receipt = select_complete_style_roles(
         actual_roles=_actual(preset),
         school_candidates=[],
+        school_known_gaps=[_known_gap(profile)],
         school_observation_set_digest="a" * 64,
         preset=preset,
         registry=registry,
@@ -163,8 +177,29 @@ def test_hunau_missing_table_caption_selects_the_complete_preset_role() -> None:
     assert selected.source == "preset"
     assert selected.properties[0].value is False
     assert selected.properties[1].effective_state == "NONE"
+    assert selected.school_gap_refs[0]["reason"] == "school_role_representative_missing"
+    assert receipt.as_dict()["selections"][0]["school_gap_refs"][0][
+        "known_gap_digest"
+    ] == selected.school_gap_refs[0]["known_gap_digest"]
     assert receipt.as_dict()["selection_counts"] == {"school": 0, "preset": 1}
     assert len(receipt.selected_style_contract_set_digest) == 64
+
+
+def test_missing_school_candidate_without_known_gap_fails_before_preset() -> None:
+    registry, _ = _registry()
+    preset = _preset(registry)
+
+    with pytest.raises(ToolFailure) as captured:
+        select_complete_style_roles(
+            actual_roles=_actual(preset),
+            school_candidates=[],
+            school_known_gaps=[],
+            school_observation_set_digest="a" * 64,
+            preset=preset,
+            registry=registry,
+        )
+
+    assert captured.value.code == "style_selection_school_known_gap_missing"
 
 
 def test_corrupt_school_candidate_fails_closed_instead_of_falling_back() -> None:
@@ -177,6 +212,7 @@ def test_corrupt_school_candidate_fails_closed_instead_of_falling_back() -> None
         select_complete_style_roles(
             actual_roles=_actual(preset),
             school_candidates=[candidate],
+            school_known_gaps=[_known_gap(profile)],
             school_observation_set_digest="a" * 64,
             preset=preset,
             registry=registry,
@@ -189,6 +225,7 @@ def test_selection_digests_are_deterministic_and_separate_from_observation() -> 
     kwargs = {
         "actual_roles": _actual(preset),
         "school_candidates": [],
+        "school_known_gaps": [_known_gap(registry.for_role_type("caption"))],
         "school_observation_set_digest": "a" * 64,
         "preset": preset,
         "registry": registry,
@@ -210,6 +247,7 @@ def test_typed_none_compiles_to_an_explicit_occurrence_contract() -> None:
     receipt = select_complete_style_roles(
         actual_roles=_actual(preset),
         school_candidates=[],
+        school_known_gaps=[_known_gap(registry.for_role_type("caption"))],
         school_observation_set_digest="a" * 64,
         preset=preset,
         registry=registry,
@@ -227,6 +265,10 @@ def test_typed_none_compiles_to_an_explicit_occurrence_contract() -> None:
         "run.underline": None,
     }
     assert style.style_contract_id == "selected.style.caption.table"
+    assert any(
+        item["type"] == "school_style_known_gap"
+        for item in style.evidence_refs
+    )
 
 
 @pytest.mark.parametrize("count", [1, 10, 100])
@@ -250,6 +292,7 @@ def test_missing_school_table_caption_preset_is_stable_for_every_occurrence(
     receipt = select_complete_style_roles(
         actual_roles=_actual(preset),
         school_candidates=[],
+        school_known_gaps=[_known_gap(registry.for_role_type("caption"))],
         school_observation_set_digest="a" * 64,
         preset=preset,
         registry=registry,

@@ -104,7 +104,7 @@ Tool 返回成功、缺少信息或失败
 
 ### M2：跑通第一条完整链路
 
-把 Agent、Skill、Knowledge 和五个 Tool 连接起来，让一份合成论文通过 CLI 生成最终产物。
+把 Agent、Skill、Knowledge 和当前 DocFit Tool surface 连接起来，让一份合成论文通过 CLI 生成最终产物。
 
 ### M3：达到可受控试用
 

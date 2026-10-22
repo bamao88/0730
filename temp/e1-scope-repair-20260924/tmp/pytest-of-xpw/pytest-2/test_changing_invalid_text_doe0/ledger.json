@@ -1,0 +1,11 @@
+{
+  "candidate_count": 0,
+  "candidates": [],
+  "field_vocabulary_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "ledger_digest": "917fa4902582119a878709a44f076e0ac99722d8500b3d8fbd025d611e6641ed",
+  "manifest_digest": "969c54bca51006c313805f64344016302389dd5d36a1d27d5f7dbd670a9a82ff",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "205b9cd741291b54c05ca3c0402bdb03edd600c5efe8fd3287ce0bff3a892f68",
+  "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "unit_projection_digest": "d206c8c5746e6f89b5e90a6d9dbe02d0ab4b1630eb6fd1b090d5f576ab88e1fb"
+}

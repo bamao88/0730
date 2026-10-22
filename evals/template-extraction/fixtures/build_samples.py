@@ -10,6 +10,7 @@ import argparse
 import base64
 import hashlib
 import json
+import re
 import shutil
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -28,8 +29,6 @@ TINY_PNG = base64.b64decode(
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUB"
     "AScY42YAAAAASUVORK5CYII="
 )
-
-
 @dataclass(frozen=True)
 class DocumentOptions:
     label: str = "姓名："
@@ -62,12 +61,27 @@ def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+SYNTHETIC_SOURCE_SNAPSHOT_SHA256 = _sha256_bytes(
+    b"docfit-template-extraction-synthetic-source/v1"
+)
+
+
 def _sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _slot_ref(field_id: str, logical_tag: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", logical_tag.casefold()).strip("-")
+    return (
+        f"source_entry_id=source-entry-synthetic-{slug};"
+        "extent=whole_entry;"
+        f"source_snapshot_sha256={SYNTHETIC_SOURCE_SNAPSHOT_SHA256};"
+        f"field_id={field_id}"
+    )
 
 
 def _xml_escape(value: str) -> str:
@@ -146,7 +160,12 @@ def _document_xml(options: DocumentOptions) -> bytes:
     first_paragraph = ["<w:p>", _run(options.label, size_pt=options.label_size_pt)]
     if options.include_slot:
         first_paragraph.append(
-            _slot(options.slot_field_id, options.slot_tag, options.slot_text, 1001)
+            _slot(
+                options.slot_field_id,
+                _slot_ref(options.slot_field_id, options.slot_tag),
+                options.slot_text,
+                1001,
+            )
         )
     first_paragraph.append("</w:p>")
 
@@ -157,7 +176,12 @@ def _document_xml(options: DocumentOptions) -> bytes:
         body.append(
             "<w:p>"
             + _run("学号：")
-            + _slot("author.student_id", "docfit.cover.student_id", "【学号】", 1002)
+            + _slot(
+                "author.student_id",
+                _slot_ref("author.student_id", "docfit.cover.student_id"),
+                "【学号】",
+                1002,
+            )
             + "</w:p>"
         )
     if options.forbidden_text is not None:
@@ -361,6 +385,79 @@ def _style(size_pt: float = 12) -> dict[str, Any]:
     }
 
 
+def _canonical_digest(value: Any) -> str:
+    payload = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _effective_style_properties(style: dict[str, Any]) -> dict[str, Any]:
+    font = style["font"]
+    paragraph = style["paragraph"]
+    page = style["page"]
+    return {
+        "run.east_asia": font["east_asia"],
+        "run.latin": font["latin"],
+        "run.font_size_pt": font["size_pt"],
+        "run.bold": font["bold"],
+        "run.italic": font["italic"],
+        "run.color": font["color"],
+        "paragraph.alignment": paragraph["alignment"],
+        "paragraph.line_spacing_rule": paragraph["line_spacing_rule"],
+        "paragraph.line_spacing_pt": paragraph["line_spacing_pt"],
+        "paragraph.space_before_pt": paragraph["space_before_pt"],
+        "paragraph.space_after_pt": paragraph["space_after_pt"],
+        "page.page_width_pt": page["page_width_pt"],
+        "page.page_height_pt": page["page_height_pt"],
+        "page.margin_top_pt": page["margin_top_pt"],
+        "page.margin_bottom_pt": page["margin_bottom_pt"],
+    }
+
+
+def _style_contract(slot_ref: str, style: dict[str, Any]) -> dict[str, Any]:
+    effective_properties = _effective_style_properties(style)
+    contract = {
+        "style_contract_id": f"style.slot.{_sha256_bytes(slot_ref.encode('utf-8'))[:24]}",
+        "owned_properties": sorted(effective_properties),
+        "effective_properties": effective_properties,
+        "application_scope": "text",
+        "override_policy": {
+            "managed_direct_formatting": "clear_conflicts",
+            "unmanaged_properties": "preserve",
+        },
+        "dependencies": [],
+    }
+    contract["contract_digest"] = _canonical_digest(contract)
+    return contract
+
+
+def _style_contract_set_digest(
+    *, template_sha256: str, styles: list[dict[str, Any]]
+) -> str:
+    refs = sorted(
+        (
+            {
+                "style_contract_id": style["style_contract_id"],
+                "contract_digest": style["contract_digest"],
+            }
+            for style in styles
+        ),
+        key=lambda item: (item["style_contract_id"], item["contract_digest"]),
+    )
+    return _canonical_digest(
+        {
+            "schema_version": "docfit-template-fill-contract/v2",
+            "template_sha256": template_sha256,
+            "styles": refs,
+        }
+    )
+
+
 def _locator_for_label(options: DocumentOptions) -> dict[str, Any]:
     locator: dict[str, Any] = {
         "type": "text_anchor",
@@ -376,8 +473,10 @@ def _locator_for_label(options: DocumentOptions) -> dict[str, Any]:
 
 
 def _slot_contract(field_id: str, tag: str, *, left_anchor: str = "姓名：") -> dict[str, Any]:
+    slot_ref = _slot_ref(field_id, tag)
+    style = _style_contract(slot_ref, _style())
     return {
-        "slot_id": "slot.cover.student_name",
+        "slot_ref": slot_ref,
         "owner": "slot",
         "field_id": field_id,
         "content_type": "text",
@@ -385,7 +484,7 @@ def _slot_contract(field_id: str, tag: str, *, left_anchor: str = "姓名：") -
         "cardinality": "one",
         "locator": {
             "type": "content_control_tag",
-            "value": tag,
+            "value": slot_ref,
             "story": "document",
             "part": "word/document.xml",
             "paragraph_index": 0,
@@ -393,7 +492,10 @@ def _slot_contract(field_id: str, tag: str, *, left_anchor: str = "姓名：") -
             "occurrence": 1,
             "expected_match_count": 1,
         },
-        "expected_value_style": _style(),
+        "style_contract_ref": {
+            "style_contract_id": style["style_contract_id"],
+            "contract_digest": style["contract_digest"],
+        },
     }
 
 
@@ -477,11 +579,11 @@ def _contract(
         )
     if options.include_extra_slot:
         extra = _slot_contract("author.student_id", "docfit.cover.student_id", left_anchor="学号：")
-        extra["slot_id"] = "slot.cover.student_id"
         extra["locator"]["paragraph_index"] = 1
         slots.append(extra)
+    styles = [_style_contract(str(slot["slot_ref"]), _style()) for slot in slots]
     contract = {
-        "schema_version": "docfit-template-fill-contract/v1",
+        "schema_version": "docfit-template-fill-contract/v2",
         "contract_id": contract_id,
         "template_sha256": template_sha256,
         "field_registry_ref": {
@@ -492,6 +594,11 @@ def _contract(
         "marker_protocol": "docfit-content-control-marker/v1",
         "regions": regions,
         "slots": slots,
+        "styles": styles,
+        "style_contract_set_digest": _style_contract_set_digest(
+            template_sha256=template_sha256,
+            styles=styles,
+        ),
     }
     if responsibility_policy:
         contract["responsibility_policy"] = {
@@ -668,6 +775,10 @@ def build_samples(output_root: Path, scoring_path: Path) -> dict[str, Any]:
             actual_template,
             require_main_document=not definition.invalid_actual,
         )
+        if definition.sample_id == "S08-forbidden-residue":
+            # Gold declares the forbidden pattern but the Gold document itself must remain clean.
+            write_docx(gold_template, replace(definition.gold, forbidden_text=None))
+            validate_docx_package(gold_template)
 
         gold_contract = _contract(
             contract_id=f"{definition.sample_id.lower()}.gold",
@@ -683,11 +794,6 @@ def build_samples(output_root: Path, scoring_path: Path) -> dict[str, Any]:
             options=definition.actual,
             boundary_override=definition.boundary_override,
         )
-        if definition.sample_id == "S08-forbidden-residue":
-            # Gold declares the forbidden pattern but the Gold document itself must remain clean.
-            write_docx(gold_template, replace(definition.gold, forbidden_text=None))
-            validate_docx_package(gold_template)
-            gold_contract["template_sha256"] = _sha256_file(gold_template)
         if definition.invalid_actual:
             actual_contract.pop("template_sha256")
             actual_contract["slots"][0].pop("field_id")

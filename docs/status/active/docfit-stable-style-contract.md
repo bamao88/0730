@@ -1,7 +1,7 @@
 # DocFit 稳定样式契约实施状态
 
-- **Capsule status**：DONE（第一垂直切片）；通用兜底 v1 已通过声明范围属性闭包和产品验收，产品定义门为 `PASSED`
-- **来源合同**：`docs/docfit-06-development-roadmap.md` §6.8；2026-08-10 用户批准按稳定样式架构实施并提交代码
+- **Capsule 状态**：DONE（第一垂直切片）；通用兜底 v1 已通过声明范围属性闭包和产品验收，产品定义门为 `PASSED`
+- **来源合同**：稳定样式属于 Final Content Fill 与 Template Extraction handoff 的产品合同；2026-08-10 用户批准按稳定样式架构实施并提交代码
 - **当前目标**：让模板发布、Placement、Fill、Projection 与最终审计共享不可变的 Style Contract；同一 `style_contract_id + digest` 的全部实例具有一致的受管有效属性
 - **当前切片**：建立产品 Style Contract Module、模板发布 artifact、下游引用/落地与 occurrence-level 验证
 - **完成结果**：Fill Contract v2、Style Contract Set、有效样式 resolver、最终模板捕获、逐 occurrence 物化与重新打开校验已经贯通；代码提交为 `819fb50`
@@ -9,7 +9,7 @@
 - **集成环境说明**：学生填充集成执行已进入最终 style audit，`2/2 passed`、`0 failed`、`0 unresolved`；后续视觉阶段因固定 Docker LibreOffice renderer 不可用而中止，不属于 Style Contract 失败，但完整视觉 E2E 仍需在标准渲染环境复验
 - **下一步**：可按已验收 v1 开始整角色模板融合的工程实现；正式标准条款完成授权复核前不得作国家标准符合性声明，运行时与视觉证据通过前不得声称产品能力完成
 - **下一证明**：完整学校角色/完整 v1 角色二选一、填充前完整目标模板、全角色回归、真实学校反例和最终 Word 人工验收
-- **停止条件**：公开 Agent Tool schema 或 Agent runtime 需要改变；发现真实外部 fill-contract v1 消费者需要迁移决策；需要未授权标准数值来源
+- **停止条件**：公开 Agent Tool schema、Agent runtime 或模块 handoff contract 需要改变；发现真实外部 fill-contract v1 消费者需要迁移决策；需要未授权标准数值来源
 - **不修改范围**：Claude Agent SDK loop/session/permission/lifecycle；公开 Tool 名称；Field Registry 语义；visual renderer；真实学生内容与私有样本
 - **已停放**：公共 CLI；M3 Human Gold 晋升
 

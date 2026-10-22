@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}{{ view.run.run_id }} · DocFit Observer{% endblock %}
+{% block header_actions %}<a class="button-secondary" href="/">返回运行总览</a>{% endblock %}
+{% block content %}
+<section class="hero compact run-hero">
+  <div>
+    <p class="eyebrow">RUN DETAIL</p>
+    <h1>{{ view.run.run_id }}</h1>
+    <p class="lede id-wrap">{{ view.run.task_ref or 'task_ref unavailable' }} · {{ view.run.session_id or 'session unavailable' }}</p>
+  </div>
+  <div class="run-actions">
+    <button data-post-url="/api/runs/{{ view.run.run_id }}/mount">重新挂载任务证据</button>
+    <button class="button-danger" data-post-url="/api/runs/{{ view.run.run_id }}/delete" data-redirect="/" data-confirm="只删除这条观测记录，不删除任务文件或 SDK transcript。确认继续？">删除观测记录</button>
+  </div>
+</section>
+
+<section class="dimension-grid" aria-label="四个独立状态维度">
+  <article><span>运行结果</span><strong>{{ view.dimensions.run_result }}</strong><small>App / report</small></article>
+  <article><span>观测覆盖</span><strong>{{ view.dimensions.observation.state }}</strong><small>{{ view.dimensions.observation.source }}</small></article>
+  <article><span>本地证据</span><strong>{{ view.dimensions.local_evidence }}</strong><small>{{ view.dimensions.evidence_association or view.dimensions.evidence_failure or 'session state' }}</small></article>
+  <article><span>SDK transcript</span><strong>{{ view.dimensions.sdk_transcript }}</strong><small>runtime privacy</small></article>
+</section>
+
+<nav class="section-nav" aria-label="运行详情章节">
+  <a href="#summary">摘要</a><a href="#transcript">Transcript / 时间线</a><a href="#tree">Agent 树</a><a href="#subagents">Subagent</a><a href="#tools">Tool</a><a href="#events">事件</a><a href="#evidence">证据</a>
+</nav>
+
+<section id="summary" class="panel">
+  <div class="section-heading"><h2>运行摘要</h2><span class="status status-{{ view.association_status }}">关联 {{ view.association_status }}</span></div>
+  <dl class="metadata-grid">
+    <div><dt>开始</dt><dd>{{ view.run.started_at or 'unknown' }}</dd></div>
+    <div><dt>结束</dt><dd>{{ view.run.completed_at or 'unknown' }}</dd></div>
+    <div><dt>最近事件</dt><dd>{{ view.run.last_observed_at or 'unknown' }}</dd></div>
+    <div><dt>事件载荷</dt><dd>{{ view.run.event_count }} events · {{ view.run.event_bytes }} bytes</dd></div>
+  </dl>
+  <div class="metric-grid">
+    {% for metric in view.metrics %}
+    <article><span>{{ metric.label }}</span><strong>{{ metric.value if metric.value is not none else 'unknown' }}</strong><small>{{ metric.source }}</small></article>
+    {% endfor %}
+  </div>
+  <div class="split-grid">
+    <div><h3>版本</h3>{% for item in view.versions %}<p><code>{{ item.key }}</code> {% if item.availability == 'available' %}{{ item['values']|join(', ') }}{% else %}<span class="quiet">unavailable</span>{% endif %}</p>{% endfor %}</div>
+    <div><h3>文档 hash</h3>{% for item in view.hashes %}<p class="id-wrap"><code>{{ item.key }}</code> {% if item.availability == 'available' %}{{ item['values']|join(', ') }}{% else %}<span class="quiet">unavailable</span>{% endif %}</p>{% endfor %}</div>
+    <div><h3>产物事实</h3>{% for item in view.artifacts %}<p><code>{{ item.key }}</code> <span class="status status-{{ item.status }}">{{ item.status }}</span></p>{% endfor %}</div>
+  </div>
+</section>
+
+<section id="transcript" class="panel">
+  <div class="section-heading"><h2>Transcript / 时间线</h2><span class="quiet">按单调时钟排序的脱敏事件；不是模型完整对话</span></div>
+  <ol class="transcript-list">
+  {% for event in view.events %}
+    <li>
+      <div class="event-rail"><span>{{ '%.1f'|format(event.monotonic_offset_ms) }} ms</span><i></i></div>
+      <article>
+        <header><span class="source-tag">{{ event.source }}</span><strong>{{ event.actor }}</strong><span class="status status-{{ event.status }}">{{ event.status }}</span></header>
+        <p>{{ event.summary_code }}{% if event.tool_name %} · <code>{{ event.tool_name }}</code>{% endif %}</p>
+        <small>#{{ event.source_sequence }} · {{ event.observed_at }}</small>
+      </article>
+    </li>
+  {% else %}<li class="quiet">没有逐事件数据。</li>{% endfor %}
+  </ol>
+</section>
+
+<section id="tree" class="panel">
+  <div class="section-heading"><h2>Agent / Subagent 树</h2><span class="quiet">只使用直接 ID 关系</span></div>
+  <div class="agent-tree">
+    <div class="tree-node main-agent"><strong>Main Agent</strong><small>SDK runtime</small></div>
+    <div class="tree-children">
+      {% for tool in view.tools if not tool.agent_id and tool.tool_name != 'Agent' and tool.association_status == 'verified' %}
+        <div class="tree-node"><span>Tool</span><strong>{{ tool.tool_name }}</strong><small>{{ tool.association_status }} · {{ tool.status }}</small></div>
+      {% endfor %}
+      {% for subagent in view.subagents if subagent.association_status == 'verified' %}
+        <div class="tree-branch">
+          {% if subagent.parent_tool %}<div class="tree-node"><span>Agent invocation</span><strong>{{ subagent.parent_tool.tool_name }}</strong><small>{{ subagent.parent_tool.tool_use_id }}</small></div>{% endif %}
+          <div class="tree-node child"><span>Subagent</span><strong>{{ subagent.agent_type }}</strong><small>{{ subagent.association_status }} · {{ subagent.status }}</small></div>
+          {% for tool in subagent.tools if tool.association_status == 'verified' %}<div class="tree-node child"><span>Tool</span><strong>{{ tool.tool_name }}</strong><small>{{ tool.status }}</small></div>{% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% set gap_tools = view.tools|rejectattr('association_status', 'equalto', 'verified')|list %}
+  {% set gap_subagents = view.subagents|rejectattr('association_status', 'equalto', 'verified')|list %}
+  {% if gap_tools or gap_subagents %}
+  <div class="association-gaps" aria-label="未验证关系缺口">
+    <h3>关系缺口</h3>
+    {% for item in gap_tools %}<div class="gap-node"><strong>Tool · {{ item.tool_name }}</strong><span>{{ item.association_status }} · {{ item.reason_codes|join(', ') }}</span></div>{% endfor %}
+    {% for item in gap_subagents %}<div class="gap-node"><strong>Subagent · {{ item.agent_type }}</strong><span>{{ item.association_status }} · {{ item.reason_codes|join(', ') }}</span></div>{% endfor %}
+  </div>
+  {% endif %}
+  {% if view.relationships %}
+  <details><summary>直接关系证明（{{ view.relationships|length }}）</summary>
+    <ul class="compact-list">{% for relation in view.relationships %}<li><code>{{ relation.kind }}</code> · {{ relation.status }} · {{ relation.proof_fields|join(' + ') }}{% if relation.reason_codes %} · {{ relation.reason_codes|join(', ') }}{% endif %}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+</section>
+
+<section id="subagents" class="panel">
+  <div class="section-heading"><h2>Subagent 活动</h2><span>{{ view.subagents|length }} agents</span></div>
+  <div class="card-grid">
+  {% for subagent in view.subagents %}
+    <article class="detail-card">
+      <header><div><span class="eyebrow">{{ subagent.agent_id or subagent.node_id }}</span><h3>{{ subagent.agent_type }}</h3></div><span class="status status-{{ subagent.status }}">{{ subagent.status }}</span></header>
+      <dl><dt>关联</dt><dd>{{ subagent.association_status }}</dd><dt>父调用</dt><dd class="id-wrap">{{ subagent.parent_tool_use_id or 'unknown' }}</dd><dt>开始</dt><dd>{{ subagent.started_at or 'unknown' }}</dd><dt>结束</dt><dd>{{ subagent.completed_at or 'unknown' }}</dd><dt>耗时</dt><dd>{{ subagent.duration.value if subagent.duration.value is not none else 'unknown' }} · {{ subagent.duration.source }}</dd><dt>Token</dt><dd>{{ subagent.tokens.value if subagent.tokens.value is not none else 'unknown' }} · {{ subagent.tokens.source }}</dd><dt>任务摘要</dt><dd>unavailable（不持久化原始任务正文）</dd><dt>Tool</dt><dd>{{ subagent.tools|length }}</dd><dt>权限</dt><dd>{{ subagent.permission_decisions|join(', ') if subagent.permission_decisions else 'unknown' }}</dd></dl>
+      {% if subagent.reason_codes %}<p class="warning">{{ subagent.reason_codes|join(', ') }}</p>{% endif %}
+      {% for failure in subagent.failures %}<p class="warning">{{ failure.origin }} / {{ failure.code }}</p>{% endfor %}
+    </article>
+  {% else %}<p class="quiet">没有已观测的 Subagent 活动；这不表示 Subagent 数量为 0，除非观测覆盖为 complete。</p>{% endfor %}
+  </div>
+</section>
+
+<section id="tools" class="panel">
+  <div class="section-heading"><h2>Tool 调用</h2><span>{{ view.tools|length }} calls</span></div>
+  <div class="card-grid">
+  {% for tool in view.tools %}
+    <article class="detail-card">
+      <header><div><span class="eyebrow">{{ tool.caller }}</span><h3>{{ tool.tool_name }}</h3></div><span class="status status-{{ tool.status }}">{{ tool.status }}</span></header>
+      <p class="id-wrap"><code>{{ tool.tool_use_id }}</code></p>
+      <dl><dt>关联</dt><dd>{{ tool.association_status }}</dd><dt>开始</dt><dd>{{ tool.started_at or 'unknown' }}</dd><dt>结束</dt><dd>{{ tool.completed_at or 'unknown' }}</dd><dt>耗时</dt><dd>{{ tool.duration.value if tool.duration.value is not none else 'unknown' }} · {{ tool.duration.source }}</dd><dt>父调用</dt><dd class="id-wrap">{{ tool.parent_tool_use_id or 'none' }}</dd></dl>
+      {% if tool.reason_codes %}<p class="warning">{{ tool.reason_codes|join(', ') }}</p>{% endif %}
+      {% if tool.attributes %}<details><summary>脱敏输入/输出字段</summary><dl>{% for item in tool.attributes %}<dt>{{ item.source }} · {{ item.key }}</dt><dd class="id-wrap">{{ item.value }}</dd>{% endfor %}</dl></details>{% endif %}
+      {% if tool.evidence %}<details><summary>文档与证据引用</summary><ul class="reference-list">{% for ref in tool.evidence %}<li><code>{{ ref.kind }}:{{ ref.value }}</code><button class="copy-button" data-copy-value="{{ ref.value }}">复制 ref</button>{% if ref.document_sha256 %}<small>document {{ ref.document_sha256 }}</small>{% endif %}{% if ref.render_sha256 %}<small>render {{ ref.render_sha256 }}</small>{% endif %}</li>{% endfor %}</ul></details>{% endif %}
+      {% for failure in tool.errors %}<p class="warning">{{ failure.origin }} / {{ failure.code }}</p>{% endfor %}
+    </article>
+  {% else %}<p class="quiet">没有已观测的 Tool 调用。</p>{% endfor %}
+  </div>
+</section>
+
+<section id="events" class="panel">
+  <div class="section-heading"><h2>事件详情</h2><span>{{ view.events|length }} events</span></div>
+  <div class="event-grid">
+  {% for event in view.events %}
+    <article class="detail-card" id="event-{{ event.index }}">
+      <header><div><span class="eyebrow">{{ event.source }} #{{ event.source_sequence }}</span><h3>{{ event.kind }}</h3></div><span class="status status-{{ event.status }}">{{ event.status }}</span></header>
+      <p>{{ event.summary_code }}</p>
+      <dl><dt>Actor</dt><dd>{{ event.actor }}</dd><dt>时间</dt><dd>{{ event.observed_at }}</dd><dt>耗时</dt><dd>{{ event.duration_ms if event.duration_ms is not none else 'unknown' }}</dd><dt>Tool</dt><dd>{{ event.tool_name or 'none' }}</dd><dt>tool_use_id</dt><dd class="id-wrap">{{ event.tool_use_id or 'none' }}</dd><dt>parent</dt><dd class="id-wrap">{{ event.parent_tool_use_id or 'none' }}</dd></dl>
+      {% if event.attributes %}<details><summary>Allowlist 字段</summary><dl>{% for item in event.attributes %}<dt>{{ item.key }}</dt><dd class="id-wrap">{{ item.value }}</dd>{% endfor %}</dl></details>{% endif %}
+      {% if event.evidence %}<details><summary>证据引用</summary><ul class="reference-list">{% for ref in event.evidence %}<li><code>{{ ref.kind }}:{{ ref.value }}</code><button class="copy-button" data-copy-value="{{ ref.value }}">复制 ref</button></li>{% endfor %}</ul></details>{% endif %}
+      {% if event.error %}<p class="warning">{{ event.error.origin }} / {{ event.error.code }}</p>{% endif %}
+      <button class="button-secondary" data-copy-json="/api/runs/{{ view.run.run_id }}/debug/{{ event.index }}">复制调试上下文</button>
+    </article>
+  {% else %}<p class="quiet">没有逐事件详情。</p>{% endfor %}
+  </div>
+</section>
+
+<section id="evidence" class="panel">
+  <div class="section-heading"><h2>本地证据</h2><span class="status status-{{ view.dimensions.local_evidence }}">{{ view.dimensions.local_evidence }}</span></div>
+  <p>打开动作只接受预定义 artifact key，并在服务端重新检查 mount root、report 和适用 hash。浏览器不会收到本地路径。</p>
+  <div class="button-row">
+    {% if view.dimensions.local_evidence == 'available' %}
+    {% for artifact, label in [('conversion_report', '打开 conversion report'), ('final_docx', '打开 final.docx'), ('validation', '打开 validation'), ('visual_review', '打开 visual review')] %}
+      <button class="button-secondary" data-post-url="/api/runs/{{ view.run.run_id }}/open/{{ artifact }}">{{ label }}</button>
+    {% endfor %}
+    {% else %}
+      <button class="button-secondary" data-post-url="/api/runs/{{ view.run.run_id }}/mount">选择并重新授权任务目录</button>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

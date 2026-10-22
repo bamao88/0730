@@ -1,0 +1,45 @@
+{
+  "verification_level": "real replay and host completion (reuses real post-unit checkpoint)",
+  "code_commit": "673a27c7a2ca113d3ecc204896c865e6697c0cb6",
+  "frozen_hash_checks": {
+    "original_task_hashes": true,
+    "runtime_source": true
+  },
+  "original_task_unchanged": true,
+  "source_pages_viewed": [
+    1,
+    2
+  ],
+  "candidate_pages_viewed": [
+    1
+  ],
+  "review_kind": "actual external visual review via view_image",
+  "review_status": "blocked",
+  "findings": [
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 1,
+      "message": "封面纵向留白和分区间隔明显收缩。需核对空行/布局载体的语义及物化处理，不能以当前版式发布。",
+      "owner": "needs_attribution"
+    },
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 1,
+      "message": "候选仍保留“（三号黑体加粗）”等格式说明，需检查对应语义判断。",
+      "owner": "semantic_review"
+    }
+  ],
+  "before_review": "final_visual_review_required",
+  "after_review_resume": "final_visual_review_not_passed",
+  "candidate_reused_without_regeneration": true,
+  "published": false,
+  "fresh_e2e": false,
+  "fault_injection": false,
+  "product_acceptance": false,
+  "semantic_attribution": {
+    "spacing": "four instruction paragraphs explicitly judged cleanup; materializer removes all-cleanup paragraphs",
+    "remaining_guidance": "name style guidance explicitly included in fixed_label part"
+  }
+}

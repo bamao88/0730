@@ -1,0 +1,80 @@
+{
+  "verification_level": "natural E2E local batch revision closure; not product acceptance",
+  "task": "njau-whole-entry-task",
+  "runtime": "6c72804",
+  "initial_problem": "9 required source entries omitted",
+  "second_problem": "mixed-use body sample text omitted two repeated placeholder characters",
+  "prior_submission_exactly_retained_in_second_revision": true,
+  "accepted_response_judgment_count": 22,
+  "accepted_target_judgment": {
+    "parts": [
+      {
+        "field_id": "body.paragraph",
+        "role": "body_structure",
+        "text": "×××××"
+      },
+      {
+        "role": "cleanup",
+        "text": "（中文小四宋体，英文、数字小四Times New Roman字体）"
+      },
+      {
+        "field_id": "body.paragraph",
+        "role": "body_structure",
+        "text": "×××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××"
+      },
+      {
+        "field_id": "body.paragraph",
+        "role": "body_structure",
+        "text": "×"
+      },
+      {
+        "role": "fixed_label",
+        "text": "。"
+      }
+    ],
+    "reason": "Sample body paragraph placeholder. Leading × chars (5), the middle × run (71), and the trailing × (1) are all body paragraph placeholders bound to body.paragraph. The parenthetical \"（中文小四宋体，英文、数字小四Times New Roman字体）\" is a style annotation that duplicates the Normal body style; cleaned up. The trailing sentence-ending \"。\" is a fixed punctuation character that stays in the cleaned template as fixed_label.",
+    "source_entry_id": "source-entry-55cbfeb6fec5f17c43e45efd"
+  },
+  "events": {
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000034.json": "65969b91ca36a46fe884498f50364125833210a23532a6282a3e3f0aebebf943",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000035.json": "3450ca78a3fd1b2ff3d5ca145a1e01eb500efb7931d920107cec5f427feca79e",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000036.json": "3e60219b19316a97eba67161a7f4cf77f3155a02a9e59b65278ae3cf9876b675",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000037.json": "3dd6209803d2d67237df183e3b7671d7575b58a59559445f4954e854a3e55cc8",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000038.json": "ce94aafe5e5c32c33798ba0afacd10e6e0fbc69733a76faf87ae39691975c29f",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000039.json": "a7d80ffd7535fc442345c8f4f8f29b8b7baac111ef0dfb968a23d477cc1efe67",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000040.json": "a12c5617439d39fec2dae38fa8517c370acecce07e15c80db9fb53764e411e2e",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000041.json": "3ffa3d2617dcb41f2cd987d8dd97a8770a36dc6983249058d4d9d25c002ccf53",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000042.json": "b284cb0a162a4577dad941ab64a62124a3f85d160e4b1215527848e48835bfa3",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000043.json": "36b9cab2bcec50fff7e0239bccc1f9df0f77be36bb8a8b14f18d55fda7dabcdc",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000044.json": "64df6f834e64344990c5710424cd366af57a8acd54218b1a493d4861878f2af2"
+  },
+  "product_acceptance": false,
+  "previous_target_judgment": {
+    "parts": [
+      {
+        "field_id": "body.paragraph",
+        "role": "body_structure",
+        "text": "×××××"
+      },
+      {
+        "role": "cleanup",
+        "text": "（中文小四宋体，英文、数字小四Times New Roman字体）"
+      },
+      {
+        "field_id": "body.paragraph",
+        "role": "body_structure",
+        "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。"
+      }
+    ],
+    "reason": "Sample body paragraph placeholder. Leading × chars and trailing ×… sequence are body paragraph placeholders bound to body.paragraph. The parenthetical \"（中文小四宋体，英文、数字小四Times New Roman字体）\" is a style annotation that duplicates the Normal body style; cleaned up so the placeholder remains as a continuous body paragraph slot.",
+    "source_entry_id": "source-entry-55cbfeb6fec5f17c43e45efd"
+  },
+  "natural_purpose_revision": {
+    "previous_part_count": 3,
+    "accepted_part_count": 5,
+    "punctuation_role_before": "body_structure",
+    "punctuation_role_after": "fixed_label",
+    "accepted_after_rechecking_exact_source": true,
+    "school_semantic_correctness_proven": false
+  }
+}

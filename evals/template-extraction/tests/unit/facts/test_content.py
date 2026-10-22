@@ -38,7 +38,13 @@ def test_cont_02_extracts_marker_identity_and_range() -> None:
     facts = analyze_docx(FIXTURES / "S00-minimal-pass" / "gold-template.docx")
     control = facts.controls[0]
     assert control.alias == "author.name.zh"
-    assert control.tag == "docfit.cover.student_name"
+    assert control.tag == (
+        "source_entry_id=source-entry-synthetic-docfit-cover-student-name;"
+        "extent=whole_entry;"
+        "source_snapshot_sha256="
+        "330ef47f9669c32211eac596ead0df88a3c19df022d5b2d94df3cbfc0a74eee4;"
+        "field_id=author.name.zh"
+    )
     assert control.text == "【姓名】"
     assert facts.paragraphs[0].text[control.start : control.end] == control.text
 
@@ -66,7 +72,13 @@ def test_cont_04_through_06_inline_and_block_controls_are_all_visible(
     expected_controls: int,
     expected_managed: int,
 ) -> None:
-    template = PROJECT_ROOT / "cases" / case_id / "gold" / "template.docx"
+    template = (
+        PROJECT_ROOT
+        / "cases"
+        / case_id
+        / "gold"
+        / "final-template.gold.docx"
+    )
     controls = analyze_docx(template).controls
     assert len(controls) == expected_controls
     assert len({control.tag for control in controls if control.tag is not None}) == expected_managed

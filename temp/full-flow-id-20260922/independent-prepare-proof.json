@@ -1,0 +1,7 @@
+{
+  "source_sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+  "officecli": "1.0.143",
+  "same_inventory_after_independent_prepare": true,
+  "source_entry_count": 35,
+  "level": "real input preparation; no Agent replay"
+}

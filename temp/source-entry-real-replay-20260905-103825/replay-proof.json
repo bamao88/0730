@@ -1,0 +1,75 @@
+{
+  "agent_visible_entry_keys": [
+    "entry_type",
+    "source_entry_id",
+    "source_order",
+    "style_summary",
+    "text"
+  ],
+  "agent_visible_evidence_shape": "agent_source_entries_v1",
+  "agent_visible_source_entry_count": 1,
+  "assertions": {
+    "accepted_semantics_freshness_gate_accepts_source_entry_shape": true,
+    "agent_payload_used_source_entry_id_without_scope": true,
+    "agent_visible_packet_hides_raw_provenance": true,
+    "agent_visible_packet_uses_source_entries": true,
+    "coverage_gate_source_entry_ok": true,
+    "harness_resolved_source_entry_spans": true,
+    "materializer_consumed_source_entry_span": true,
+    "normalize_created_canonical_source_entry": true,
+    "publication_accepts_source_entry_slot_ref": true,
+    "raw_object_used_only_internal_receipt": true
+  },
+  "candidate_docx": "work/.docfit/post-unit-materialization/candidate-0001.docx",
+  "candidate_sha256": "b8418dda61fd8d787f42e0330134721849a48fa7c9e59788cdf934dad8bd277f",
+  "harness_all_source_entries_have_semantic_coverage": true,
+  "input": "temp/source-entry-real-replay-20260905-103825/input/school-template.docx",
+  "materialization_receipt": "work/.docfit/post-unit-materialization/materialization.json",
+  "missing_source_entry_ids": [],
+  "overlap_source_entry_ids": [],
+  "provenance_objects_present_in_internal_inventory": true,
+  "publication_status": "ok",
+  "resolved_span_refs": [
+    "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=0",
+    "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=1",
+    "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=2"
+  ],
+  "resolved_spans": [
+    {
+      "part_index": 0,
+      "role": "fixed_label",
+      "source_entry_id": "source-entry-a25cecf54e38b7e36227f4fc",
+      "text_end": 19,
+      "text_start": 0
+    },
+    {
+      "field_id": "author.name.zh",
+      "part_index": 1,
+      "role": "fill_slot",
+      "source_entry_id": "source-entry-a25cecf54e38b7e36227f4fc",
+      "text_end": 22,
+      "text_start": 19
+    },
+    {
+      "part_index": 2,
+      "role": "style_only",
+      "source_entry_id": "source-entry-a25cecf54e38b7e36227f4fc",
+      "text_end": 37,
+      "text_start": 22
+    }
+  ],
+  "slot_operation_has_reading_block_id": false,
+  "slot_operation_slot_ref": "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=1;field_id=author.name.zh",
+  "slot_operation_source_entry_id": "source-entry-a25cecf54e38b7e36227f4fc",
+  "slot_operation_span_ref": "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=1",
+  "source_entry_id": "source-entry-a25cecf54e38b7e36227f4fc",
+  "source_entry_provenance_count": 10,
+  "source_entry_text": "□□□□□□学生姓名（三号黑体加粗）：×××（或×□×） （三号楷体加粗）",
+  "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "stored_inventory": "work/.docfit/harness/object-inventory.json",
+  "stored_review": "work/.docfit/harness/semantic-judgments.json",
+  "task_root": "temp/source-entry-real-replay-20260905-103825",
+  "unit_id": "u-cover-slot-real",
+  "unknown_source_entry_ids": [],
+  "verification_level": "real replay"
+}

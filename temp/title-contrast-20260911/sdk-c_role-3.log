@@ -1,0 +1,1 @@
+{"arm": "c_role", "run": "sdk-c_role-3", "is_error": false, "fields": ["thesis.title.zh", "thesis.title.en", "author.name.zh", "author.student_id", "author.cohort_class", "advisor.name.zh", "advisor.title", "author.department", "submission.date"]}

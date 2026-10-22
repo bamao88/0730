@@ -1,0 +1,20 @@
+{
+  "verification_level": "real replay visual inspection; intermediate diagnostic candidate, not final implementation publication",
+  "candidate_pages_actually_viewed": 14,
+  "source_pages_rechecked_this_turn": [
+    2,
+    5,
+    6,
+    7,
+    8
+  ],
+  "prior_source_review": "temp/harness-repair-20260923/njau-style-cleanup-full-replay/work/.docfit/final-visual-review/b32dc30b06bde83e6ebe911c7f4c561778390047bf45a390763cfa07dcee5064/review.json",
+  "all_source_images_identical_to_prior_full_review": true,
+  "source_pages": 13,
+  "candidate_pages": 14,
+  "abstract_page_break_fix_observed": true,
+  "other_findings_remain": true,
+  "product_acceptance": false,
+  "fault_injection": false,
+  "candidate_sha256": "2b8c512da32b0930c18da521dfcbdfb4b21b08402c83249480390520bcc7b40c"
+}

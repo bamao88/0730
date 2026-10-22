@@ -69,7 +69,7 @@ def _facts(
 
 def _contract(*, slots: tuple[SlotContract, ...] = ()) -> FillContract:
     return FillContract(
-        schema_version="docfit-template-fill-contract/v1",
+        schema_version="docfit-template-fill-contract/v2",
         contract_id="synthetic.aligned",
         template_sha256="0" * 64,
         registry_id="registry",
@@ -185,7 +185,7 @@ def test_apr_05_inline_slot_still_checks_the_fixed_label() -> None:
         value="slot.student_name",
     )
     slot = SlotContract(
-        slot_id="student_name",
+        slot_ref="student_name",
         field_id="student.name",
         content_type="text",
         required=True,
@@ -240,7 +240,7 @@ def test_apr_06_slot_only_paragraph_is_not_counted_as_protected_content() -> Non
         value="slot.title",
     )
     slot = SlotContract(
-        slot_id="title",
+        slot_ref="title",
         field_id="thesis.title.cn",
         content_type="text",
         required=True,

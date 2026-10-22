@@ -1,0 +1,25 @@
+{
+  "verification_level": "natural E2E post-unit revision closure, complete-school generation still running",
+  "runtime_commit": "ae1cb9f",
+  "accepted_candidate_events": [
+    {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/semantic-revisions/00000013.json",
+      "sha256": "c990046d5d9ab48142a22a32adaa9b9fd5bbf4abaeeb23bc26bf61fb1902a27d"
+    },
+    {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/semantic-revisions/00000017.json",
+      "sha256": "462835b8470f8a8db266f4bab38eed6cbfb38c386db4e1025ebcd0e4df1e0b1e"
+    }
+  ],
+  "counts_at_observation": {
+    "budget_policy": 1,
+    "request": 5,
+    "response": 4,
+    "local_review": 4,
+    "local_rejected": 2,
+    "candidate_recorded": 2
+  },
+  "third_response_preserves_source_curly_quotes": true,
+  "isolated_feedback_fixes_used": false,
+  "product_acceptance": false
+}

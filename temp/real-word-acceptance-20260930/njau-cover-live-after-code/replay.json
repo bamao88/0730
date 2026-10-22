@@ -1,0 +1,27 @@
+{
+  "verification_level": "real replay; full materializer; original accepted judgments",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/real-word-acceptance-20260930/njau-cover-live",
+  "input_hashes": {
+    "input/school-template.docx": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+    "input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "work/.docfit/initial-source-inventory.json": "7b97795615bd19aa0eef71571f192632b807ab3a005e14264fb1b6eb26f4db5e",
+    "work/.docfit/unit-boundary-checkpoint.json": "366ebf148e46ab24c7d44ed42f4f709fedfe09ccb68c6d88175fec2eb49d9ec3",
+    "work/.docfit/harness/object-inventory.json": "feee1e1e0cab8c3ff52f439548563b7061464e6f04d78312ae8380e148b05b3c",
+    "work/.docfit/harness/semantic-judgments.json": "68a29107c795700607752d8a7abafc81fad9ca63954f50926032ad8d2b389c63"
+  },
+  "original_unchanged": true,
+  "agent_called": false,
+  "product_acceptance": false,
+  "operation_count": 11,
+  "cleanup_count": 8,
+  "effect_verification": {
+    "schema_version": 3,
+    "source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+    "semantic_judgments_sha256": "4814d4859678bba78c1477678184d2dd6987bd37a4453c77487b255b109449b1",
+    "candidate_sha256": "164eaffeaea0a18be7f300e7e8c035ed2f1bab101d6faab9ce653626a0f2cbd1",
+    "status": "ok",
+    "protected_subtree_count": 100,
+    "text_edit_count": 19,
+    "reopened_package": true
+  }
+}

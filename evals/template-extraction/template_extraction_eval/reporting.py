@@ -44,7 +44,7 @@ def issues_from_assertions(assertions: tuple[AssertionResult, ...]) -> tuple[Iss
             status=item.status,
             message=item.message,
             region_id=item.region_id,
-            slot_id=item.slot_id,
+            slot_ref=item.slot_ref,
             gold_locator=item.gold_locator,
             actual_locator=item.actual_locator,
             expected=item.expected,
@@ -127,7 +127,7 @@ def report_markdown(report: EvalReport) -> str:
         lines.append("No FAIL or UNKNOWN assertions.")
     else:
         for issue in report.issues:
-            target = issue.region_id or issue.slot_id or "shared"
+            target = issue.region_id or issue.slot_ref or "shared"
             lines.append(
                 f"- `{issue.issue_id}` `{issue.status.value}` `{issue.dimension}` "
                 f"`{target}` — {issue.message}"

@@ -1,0 +1,546 @@
+{
+  "level": "logic/contract; constructed carriers; not real replay or product acceptance",
+  "same_outcomes_with_different_wording": true,
+  "cases": [
+    {
+      "layout": "direct_run",
+      "text": "KeepValue",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "KeepValue",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "KeepValue",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "KeepValue",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "KeepValue",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "KeepValue",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "KeepValue",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "KeepValue",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "inline_control",
+      "text": "KeepValue",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_scope_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "KeepValue",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "KeepValue",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "KeepValue",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "nested_controls",
+      "text": "KeepValue",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_scope_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "KeepValue",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "KeepValue",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "KeepValue",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "hyperlink",
+      "text": "KeepValue",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "KeepValue",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "KeepValue",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "KeepValue",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "direct_run",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "甲乙丙丁戊己",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "direct_run",
+      "text": "甲乙丙丁戊己",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "甲乙丙丁戊己",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "split_runs",
+      "text": "甲乙丙丁戊己",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "inline_control",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_scope_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "甲乙丙丁戊己",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "inline_control",
+      "text": "甲乙丙丁戊己",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "nested_controls",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_scope_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "甲乙丙丁戊己",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "nested_controls",
+      "text": "甲乙丙丁戊己",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "ok",
+      "reopened_effect_checked": true
+    },
+    {
+      "layout": "hyperlink",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "甲乙丙丁戊己",
+      "action": "partial_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_fixed_content"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "甲乙丙丁戊己",
+      "action": "manual_cleanup",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "keep_manual_table_cell"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    },
+    {
+      "layout": "hyperlink",
+      "text": "甲乙丙丁戊己",
+      "action": "whole_fill",
+      "mapping_matches": true,
+      "ready": true,
+      "compiled_ready": true,
+      "intent": [
+        "materialize_slot"
+      ],
+      "result": "failed",
+      "code": "materialization_text_mapping_unsupported",
+      "origin": "tool"
+    }
+  ]
+}

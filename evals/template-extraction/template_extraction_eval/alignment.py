@@ -1,4 +1,4 @@
-"""Deterministic Actual-Gold alignment by IDs, locators, anchors, and occurrence."""
+"""Deterministic Actual-Gold alignment for template Eval contracts."""
 
 from __future__ import annotations
 
@@ -68,47 +68,13 @@ def align_region(
     ]
     if not actual_regions:
         gold_status, gold_paragraph = _single_paragraph(gold_facts, gold_region)
-        if gold_status is AlignmentStatus.AMBIGUOUS:
-            return RegionAlignment(
-                AlignmentStatus.AMBIGUOUS,
-                gold_region,
-                None,
-                None,
-                None,
-                "Gold fallback locator has multiple equivalent matches",
-            )
-        fallback: list[tuple[RegionContract, ParagraphFact]] = []
-        for candidate in actual_contract.regions:
-            if candidate.owner is not gold_region.owner:
-                continue
-            status, paragraph = _single_paragraph(actual_facts, candidate)
-            if (
-                status is AlignmentStatus.MATCHED
-                and paragraph is not None
-                and gold_paragraph is not None
-                and _paragraph_location(paragraph) == _paragraph_location(gold_paragraph)
-            ):
-                fallback.append((candidate, paragraph))
-        if len(fallback) == 1:
-            return RegionAlignment(
-                AlignmentStatus.MATCHED,
-                gold_region,
-                fallback[0][0],
-                gold_paragraph,
-                fallback[0][1],
-                "matched by unique structural fallback locator",
-            )
         return RegionAlignment(
-            AlignmentStatus.AMBIGUOUS if len(fallback) > 1 else AlignmentStatus.MISSING,
+            AlignmentStatus.MISSING,
             gold_region,
             None,
             gold_paragraph,
             None,
-            (
-                "multiple Actual regions match the structural fallback locator"
-                if len(fallback) > 1
-                else "Actual contract has no matching region_id or unique locator fallback"
-            ),
+            "Actual contract has no matching region_id",
         )
     if len(actual_regions) != 1:
         return RegionAlignment(
@@ -166,6 +132,8 @@ def _controls_for_slot(
     slot: SlotContract,
 ) -> tuple[ContentControlFact, ...]:
     locator = slot.locator
+    if locator.type != "content_control_tag":
+        return ()
     matches = tuple(
         control
         for control in facts.controls
@@ -189,33 +157,16 @@ def align_slot(
     gold_facts: DocumentFacts,
     actual_facts: DocumentFacts,
 ) -> SlotAlignment:
-    actual_slots = [slot for slot in actual_contract.slots if slot.slot_id == gold_slot.slot_id]
+    actual_slots = [slot for slot in actual_contract.slots if slot.slot_ref == gold_slot.slot_ref]
     if not actual_slots:
-        actual_slots = [
-            slot
-            for slot in actual_contract.slots
-            if slot.locator.value == gold_slot.locator.value
-            and slot.locator.story == gold_slot.locator.story
-            and slot.locator.part == gold_slot.locator.part
-        ]
-        if len(actual_slots) > 1:
-            return SlotAlignment(
-                AlignmentStatus.AMBIGUOUS,
-                gold_slot,
-                None,
-                None,
-                None,
-                "multiple Actual slots match the tag fallback locator",
-            )
-        if not actual_slots:
-            return SlotAlignment(
-                AlignmentStatus.MISSING,
-                gold_slot,
-                None,
-                None,
-                None,
-                "Actual contract has no matching slot_id or tag fallback",
-            )
+        return SlotAlignment(
+            AlignmentStatus.MISSING,
+            gold_slot,
+            None,
+            None,
+            None,
+            "Actual contract has no matching slot_ref",
+        )
     if len(actual_slots) != 1:
         return SlotAlignment(
             AlignmentStatus.AMBIGUOUS,
@@ -223,7 +174,7 @@ def align_slot(
             None,
             None,
             None,
-            "Actual contract contains duplicate slot_id values",
+            "Actual contract contains duplicate slot_ref values",
         )
     actual_slot = actual_slots[0]
     gold_controls = _controls_for_slot(gold_facts, gold_slot)

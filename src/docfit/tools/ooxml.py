@@ -8,20 +8,24 @@ import re
 import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
-from typing import cast
 from xml.etree import ElementTree as ET
 
 from docfit.tools.runtime import JsonObject, ToolFailure
+from docfit.tools.word_xml import serialize_word_xml
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 CT_NS = "http://schemas.openxmlformats.org/package/2006/content-types"
 WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
+A14_NS = "http://schemas.microsoft.com/office/drawing/2010/main"
+PIC_NS = "http://schemas.openxmlformats.org/drawingml/2006/picture"
 MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+W14_NS = "http://schemas.microsoft.com/office/word/2010/wordml"
 
 _IGNORABLE_NAMESPACES = {
-    "w14": "http://schemas.microsoft.com/office/word/2010/wordml",
+    "w14": W14_NS,
     "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
     "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
     "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
@@ -36,6 +40,9 @@ _IGNORABLE_NAMESPACES = {
 for prefix, uri in (
     ("w", W_NS),
     ("r", R_NS),
+    ("a", A_NS),
+    ("a14", A14_NS),
+    ("pic", PIC_NS),
     ("wp", WP_NS),
     ("mc", MC_NS),
     *_IGNORABLE_NAMESPACES.items(),
@@ -77,20 +84,7 @@ def _serialize(root: ET.Element) -> bytes:
         ET.register_namespace("", CT_NS)
     elif root.tag == _q(REL_NS, "Relationships"):
         ET.register_namespace("", REL_NS)
-    payload = cast(bytes, ET.tostring(root, encoding="utf-8", xml_declaration=True))
-    ignorable = root.get(_q(MC_NS, "Ignorable"), "").split()
-    missing = [
-        (prefix, _IGNORABLE_NAMESPACES[prefix])
-        for prefix in ignorable
-        if prefix in _IGNORABLE_NAMESPACES and f"xmlns:{prefix}=".encode() not in payload
-    ]
-    if missing:
-        declaration_end = payload.find(b"?>")
-        root_start = payload.find(b"<", declaration_end + 2)
-        root_end = payload.find(b">", root_start)
-        declarations = b"".join(f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing)
-        payload = payload[:root_end] + declarations + payload[root_end:]
-    return payload
+    return serialize_word_xml(root)
 
 
 def _relationship_part(owner: str) -> str:
@@ -179,22 +173,54 @@ def _find_body_element(root: ET.Element, locator: str) -> ET.Element:
 
 
 def _find_direct_body_content_control(body: ET.Element, tag: str) -> ET.Element:
-    matches: list[ET.Element] = []
-    for child in body.findall(_q(W_NS, "sdt")):
-        tag_element = child.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
-        if tag_element is not None and tag_element.get(_q(W_NS, "val")) == tag:
-            matches.append(child)
+    matches, hosts = _body_content_control_matches(body, tag)
     if len(matches) != 1:
         raise ToolFailure(
             status="needs_input",
             origin="request",
             code="content_control_tag_not_unique",
             message=(
-                "A block replacement tag must identify exactly one body-level content control."
+                "A block replacement tag must identify exactly one body-level "
+                f"content control: tag={tag!r}, matches={len(matches)}."
             ),
             suggested_actions=("inspect_template_again", "repair_fill_contract"),
         )
-    return matches[0]
+    return hosts[0]
+
+
+def _body_content_control_matches(
+    body: ET.Element,
+    tag: str,
+) -> tuple[list[ET.Element], list[ET.Element]]:
+    parent_by_id = {
+        id(child): parent
+        for parent in body.iter()
+        for child in list(parent)
+    }
+    matches: list[ET.Element] = []
+    hosts: list[ET.Element] = []
+    for child in body.iter(_q(W_NS, "sdt")):
+        tag_element = child.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
+        if tag_element is not None and tag_element.get(_q(W_NS, "val")) == tag:
+            matches.append(child)
+            host = child
+            parent = parent_by_id.get(id(host))
+            while parent is not None and parent is not body:
+                host = parent
+                parent = parent_by_id.get(id(host))
+            if parent is not body:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="request",
+                    code="content_control_tag_not_body_scoped",
+                    message=(
+                        "A block replacement tag must be scoped under the main "
+                        f"document body: tag={tag!r}."
+                    ),
+                    suggested_actions=("inspect_template_again", "repair_fill_contract"),
+                )
+            hosts.append(host)
+    return matches, hosts
 
 
 @dataclass(slots=True)
@@ -344,7 +370,9 @@ def _copy_numbering(
     copied: list[ET.Element],
     source_parts: dict[str, bytes],
     target_parts: dict[str, bytes],
-) -> tuple[dict[str, str], int]:
+    *,
+    strip_missing: bool = False,
+) -> tuple[dict[str, str], int, int]:
     requested = {
         element.get(_q(W_NS, "val"), "")
         for item in copied
@@ -352,7 +380,7 @@ def _copy_numbering(
     }
     requested.discard("")
     if not requested:
-        return {}, 0
+        return {}, 0, 0
     source_numbering = _xml(source_parts, "word/numbering.xml")
     target_numbering = _ensure_numbering_part(target_parts)
     source_nums = {
@@ -372,9 +400,13 @@ def _copy_numbering(
         + 1
     )
     mapping: dict[str, str] = {}
+    stripped_missing = 0
     for old_num_id in sorted(requested, key=lambda value: int(value) if value.isdigit() else 0):
         source_num = source_nums.get(old_num_id)
         if source_num is None:
+            if strip_missing:
+                stripped_missing += _strip_numbering_reference(copied, old_num_id)
+                continue
             raise ToolFailure(
                 status="error",
                 origin="document",
@@ -385,6 +417,9 @@ def _copy_numbering(
         old_abstract_id = abstract_ref.get(_q(W_NS, "val")) if abstract_ref is not None else None
         source_abstract_item = source_abstract.get(old_abstract_id or "")
         if source_abstract_item is None:
+            if strip_missing:
+                stripped_missing += _strip_numbering_reference(copied, old_num_id)
+                continue
             raise ToolFailure(
                 status="error",
                 origin="document",
@@ -393,13 +428,12 @@ def _copy_numbering(
             )
         abstract_clone = copy.deepcopy(source_abstract_item)
         abstract_clone.set(_q(W_NS, "abstractNumId"), str(next_abstract))
-        target_numbering.append(abstract_clone)
         num_clone = copy.deepcopy(source_num)
         num_clone.set(_q(W_NS, "numId"), str(next_num))
         num_abstract_ref = num_clone.find(_q(W_NS, "abstractNumId"))
         if num_abstract_ref is not None:
             num_abstract_ref.set(_q(W_NS, "val"), str(next_abstract))
-        target_numbering.append(num_clone)
+        _insert_numbering_definition(target_numbering, abstract_clone, num_clone)
         mapping[old_num_id] = str(next_num)
         next_num += 1
         next_abstract += 1
@@ -409,7 +443,44 @@ def _copy_numbering(
             if old in mapping:
                 num_id.set(_q(W_NS, "val"), mapping[old])
     target_parts["word/numbering.xml"] = _serialize(target_numbering)
-    return mapping, len(mapping)
+    return mapping, len(mapping), stripped_missing
+
+
+def _insert_numbering_definition(
+    numbering: ET.Element,
+    abstract_num: ET.Element,
+    num: ET.Element,
+) -> None:
+    """Keep numbering.xml in schema order: abstract definitions before num bindings."""
+
+    first_num_index = _first_child_index(numbering, _q(W_NS, "num"))
+    cleanup_index = _first_child_index(numbering, _q(W_NS, "numIdMacAtCleanup"))
+    abstract_index = min(first_num_index, cleanup_index)
+    numbering.insert(abstract_index, abstract_num)
+
+    cleanup_index = _first_child_index(numbering, _q(W_NS, "numIdMacAtCleanup"))
+    numbering.insert(cleanup_index, num)
+
+
+def _first_child_index(parent: ET.Element, tag: str) -> int:
+    for index, child in enumerate(list(parent)):
+        if child.tag == tag:
+            return index
+    return len(parent)
+
+
+def _strip_numbering_reference(copied: list[ET.Element], num_id: str) -> int:
+    removed = 0
+    for item in copied:
+        for paragraph_properties in item.iter(_q(W_NS, "pPr")):
+            for child in list(paragraph_properties):
+                if child.tag != _q(W_NS, "numPr"):
+                    continue
+                number_id = child.find(_q(W_NS, "numId"))
+                if number_id is not None and number_id.get(_q(W_NS, "val")) == num_id:
+                    paragraph_properties.remove(child)
+                    removed += 1
+    return removed
 
 
 def _ensure_numbering_part(target_parts: dict[str, bytes]) -> ET.Element:
@@ -657,6 +728,12 @@ def mutate_content_controls(
             message="Expected value formatting may only target a replaced content control.",
         )
     controls_by_tag: dict[str, list[ET.Element]] = {}
+    parent_by_id = {
+        id(child): parent
+        for parent in document.iter()
+        for child in list(parent)
+    }
+    text_target_locators: dict[str, str] = {}
     formatted = 0
     for control in document.iter(_q(W_NS, "sdt")):
         tag_element = control.find(f"{_q(W_NS, 'sdtPr')}/{_q(W_NS, 'tag')}")
@@ -705,18 +782,52 @@ def mutate_content_controls(
             placeholder_flag = properties.find(_q(W_NS, "showingPlcHdr"))
             if placeholder_flag is not None:
                 properties.remove(placeholder_flag)
+        locator = _paragraph_locator_for_control(matches[0], parent_by_id)
+        if locator is not None:
+            text_target_locators[tag] = locator
     removed = 0
     for tag in remove_body_tags:
-        control = _find_direct_body_content_control(body, tag)
-        body.remove(control)
+        matches, hosts = _body_content_control_matches(body, tag)
+        if len(matches) > 1:
+            raise ToolFailure(
+                status="needs_input",
+                origin="request",
+                code="content_control_tag_not_unique",
+                message=(
+                    "A body-control removal tag must identify at most one content "
+                    f"control: tag={tag!r}, matches={len(matches)}."
+                ),
+                suggested_actions=("inspect_template_again", "repair_fill_contract"),
+            )
+        if not hosts:
+            continue
+        body.remove(hosts[0])
         removed += 1
     parts["word/document.xml"] = _serialize(document)
     _write_package(output_docx, parts)
     return {
         "text_controls_replaced": len(text_replacements),
         "text_controls_formatted": formatted,
+        "text_control_target_locators": text_target_locators,
         "body_controls_removed": removed,
     }
+
+
+def _paragraph_locator_for_control(
+    control: ET.Element,
+    parent_by_id: dict[int, ET.Element],
+) -> str | None:
+    current: ET.Element | None = control
+    while current is not None:
+        if current.tag == _q(W_NS, "p"):
+            para_id = current.get(_q(W14_NS, "paraId"))
+            return f"/body/p[@paraId={para_id}]" if para_id else None
+        current = parent_by_id.get(id(current))
+    paragraphs = list(control.iter(_q(W_NS, "p")))
+    if len(paragraphs) != 1:
+        return None
+    para_id = paragraphs[0].get(_q(W14_NS, "paraId"))
+    return f"/body/p[@paraId={para_id}]" if para_id else None
 
 
 def import_content_objects(
@@ -785,7 +896,12 @@ def import_content_objects(
     else:
         style_mapping, copied_styles = {}, 0
         stripped_style_references = _strip_style_references(copied)
-    numbering_mapping, copied_numbering = _copy_numbering(copied, source_parts, target_parts)
+    numbering_mapping, copied_numbering, stripped_numbering = _copy_numbering(
+        copied,
+        source_parts,
+        target_parts,
+        strip_missing=not copy_source_styles,
+    )
     remapped_local_ids = _remap_local_ids(copied, target_document)
 
     target_content_types = _xml(target_parts, "[Content_Types].xml")
@@ -890,6 +1006,7 @@ def import_content_objects(
         "source_style_references_stripped": stripped_style_references,
         "numbering_copied": copied_numbering,
         "numbering_id_map": numbering_mapping,
+        "numbering_references_stripped": stripped_numbering,
         "package_parts_copied": len(closure.copied_parts),
         "relationships_copied": closure.copied_relationships,
         "replaced_content_control_tag": replace_content_control_tag,

@@ -1,36 +1,34 @@
-# Adobe delivery high-risk page review
+# Adobe 交付高风险页面复核清单
 
-Use this checklist only with a current `candidate_verification` render produced by Adobe
-PDF Services. Record metadata and findings; never copy student body text into the repository.
+只在已有 Adobe PDF Services 生成的当前 `candidate_verification` 渲染时使用本清单。
+记录元数据和发现；不要把学生正文复制进仓库。
 
-## Evidence identity
+## 证据身份
 
-- [ ] Authorized or deidentified sample ID recorded
-- [ ] Final DOCX SHA-256 recorded
-- [ ] Candidate `render_sha256` recorded
-- [ ] Adobe PDF Services SDK version, conversion profile, opaque font-environment marker, and DPI recorded
-- [ ] Candidate PDF page count matches the render ref
-- [ ] Every final page was supplied to and reviewed by the main Agent
+- [ ] 已记录授权或脱敏样本 ID
+- [ ] 已记录最终 DOCX SHA-256
+- [ ] 已记录候选 `render_sha256`
+- [ ] 已记录 Adobe PDF Services SDK 版本、转换 profile、不透明字体环境标记和 DPI
+- [ ] 候选 PDF 页数与 render ref 匹配
+- [ ] 每个最终页面都已提供给主 Agent 并完成复核
 
-## Human high-risk checks
+## 人工高风险检查
 
-- [ ] Cover title, identity slots, logos, and fixed wording neither overflow nor disappear
-- [ ] No unexpected blank page; every intentional blank page is explained
-- [ ] TOC entries, leaders, indentation, and page numbers align
-- [ ] Heading pagination has no stranded heading, widow, or orphan at a page boundary
-- [ ] Tables retain borders, merged cells, column widths, captions, and readable page breaks
-- [ ] Pictures, equations, footnotes, text boxes, headers, and footers remain positioned
-- [ ] Section breaks, numbering restarts, page orientation, and margins change only where intended
-- [ ] Placeholders and template instruction text are removed or explicitly retained with evidence
-- [ ] No visible application error marker, broken field result, or broken cross-reference remains;
-      use a focused crop when full-page scale cannot resolve small field, caption, or boundary text
-- [ ] No visible tracked-change markup, hidden instruction, repair symptom, unexplained substitution, or blocking finding remains
+- [ ] 封面题名、身份槽、Logo 和固定文案没有溢出或消失
+- [ ] 没有意外空白页；每个有意保留的空白页都有说明
+- [ ] 目录条目、引导线、缩进和页码对齐
+- [ ] 标题分页没有孤立标题、页首孤行或页尾孤行
+- [ ] 表格保留边框、合并单元格、列宽、题注和可读分页
+- [ ] 图片、公式、脚注、文本框、页眉和页脚位置保持正确
+- [ ] 分节符、编号重启、页面方向和页边距只在预期位置变化
+- [ ] 占位符和模板说明文字已移除，或有证据说明需要显式保留
+- [ ] 没有可见应用错误标记、损坏字段结果或损坏交叉引用；全页比例无法看清小字段、
+      题注或边界文字时，使用局部裁剪证据
+- [ ] 没有可见修订标记、隐藏说明、修复痕迹、无法解释的替换或阻断发现
 
-## Result record
+## 结果记录
 
-Record `PASS`, `FAIL`, or `UNKNOWN` for each checked page/range, the evidence ref, finding
-category, severity, and suggested action. A missing page, unavailable Adobe conversion,
-unverifiable managed font environment, or unverifiable layout is `UNKNOWN`, never `PASS`.
-Record the external human reviewer's identity or approved reviewer ID and review date outside the
-repository when the sample is private. Agent review and an internal engineering visual check are
-supporting evidence, not the required human sign-off.
+对每个检查页面或页面范围记录 `PASS`、`FAIL` 或 `UNKNOWN`，以及证据 ref、发现类别、
+严重度和建议动作。缺页、Adobe 转换不可用、托管字体环境不可验证或版式不可验证时，
+结论为 `UNKNOWN`，不得写成 `PASS`。样本为私有时，外部人工 reviewer 身份或批准 ID
+和复核日期记录在仓库外。Agent review 和内部工程视觉检查只是支撑证据，不是必需的人工签署。

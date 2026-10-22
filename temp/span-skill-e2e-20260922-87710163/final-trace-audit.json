@@ -1,0 +1,295 @@
+{
+  "scope": "Public final execution metadata only; no private transcript or hidden reasoning.",
+  "note": "Query 1 is the carried-forward accepted unit-boundary record, not a new boundary query during explicit resume.",
+  "queries": [
+    {
+      "query_index": 1,
+      "stage": "unit-boundary",
+      "batch_id": null,
+      "status": "response_complete",
+      "duration_ms": 77460,
+      "started_unix_ms": 1790087749485,
+      "tools": [
+        "Skill",
+        "Read",
+        "mcp__docfit__docfit_evidence",
+        "mcp__docfit__docfit_evidence",
+        "Read",
+        "mcp__docfit__docfit_evidence",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 2,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0004-0e42901c",
+      "status": "response_complete",
+      "duration_ms": 148722,
+      "started_unix_ms": 1790088482960,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 3,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 44080,
+      "started_unix_ms": 1790088632076,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "Read",
+        "Read",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 4,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0006-088414fc",
+      "status": "response_complete",
+      "duration_ms": 111285,
+      "started_unix_ms": 1790088676540,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 5,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0006-088414fc",
+      "status": "response_complete",
+      "duration_ms": 77597,
+      "started_unix_ms": 1790088787828,
+      "tools": [
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 6,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0007-8429008b",
+      "status": "response_complete",
+      "duration_ms": 497897,
+      "started_unix_ms": 1790088865829,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 7,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0008-6d8e2d11",
+      "status": "response_complete",
+      "duration_ms": 53755,
+      "started_unix_ms": 1790089364327,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 8,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0009-3a1df34d",
+      "status": "response_complete",
+      "duration_ms": 176622,
+      "started_unix_ms": 1790089418996,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 9,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0010-5e111e55",
+      "status": "response_complete",
+      "duration_ms": 218974,
+      "started_unix_ms": 1790089596324,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 10,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0003-ed60bad8",
+      "status": "response_complete",
+      "duration_ms": 381529,
+      "started_unix_ms": 1790089819302,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "Read",
+        "Read",
+        "mcp__docfit__docfit_evidence",
+        "Read",
+        "Read",
+        "mcp__docfit__docfit_evidence",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 11,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0004-0e42901c",
+      "status": "response_complete",
+      "duration_ms": 114463,
+      "started_unix_ms": 1790090202120,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 12,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 210234,
+      "started_unix_ms": 1790090317589,
+      "tools": [
+        "Skill",
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 13,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 458280,
+      "started_unix_ms": 1790090527827,
+      "tools": [
+        "mcp__docfit__docfit_evidence",
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 14,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 158275,
+      "started_unix_ms": 1790090986098,
+      "tools": [
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 15,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 162182,
+      "started_unix_ms": 1790091144495,
+      "tools": [
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 16,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 98857,
+      "started_unix_ms": 1790091306677,
+      "tools": [
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 17,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 76383,
+      "started_unix_ms": 1790091405535,
+      "tools": [
+        "StructuredOutput"
+      ]
+    },
+    {
+      "query_index": 18,
+      "stage": "post-unit",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "status": "response_complete",
+      "duration_ms": 54739,
+      "started_unix_ms": 1790091481919,
+      "tools": [
+        "StructuredOutput"
+      ]
+    }
+  ],
+  "read_permission_events": [
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c98b6ed873aba9fcc3c1"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "current_task_input_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c98b745971b1929d6e3b"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9992d4f72608ad641e9"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9992fa779d1bf83bc2d"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9ab1ab079a398562d6d"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9ab1d0c7991b88f3bad"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9adbb9e734194fe0f81"
+    },
+    {
+      "decision": "allow",
+      "reason_code": "project_skill_references_allowed",
+      "tool_name": "Read",
+      "tool_use_id": "call_01a0c9adc60771f0af0cab3a"
+    }
+  ],
+  "limits": [
+    "Read permission metadata names an allowed root category but does not preserve the exact reference filename.",
+    "Rejected StructuredOutput parts are not persisted by this public trace; failure message does not identify which role/field changed."
+  ]
+}

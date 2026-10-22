@@ -1,0 +1,312 @@
+{
+  "source_inventory_digest": "0fa4170b947c8b01bd08c3572ee172c7ce3fdfffec2cd0e86ce443b7667a0444",
+  "unit_projection_digest": "7b3250bab3aaeed42a4a61ecce96c98b6dd82d4970a5f9f8e276367fcd01a246",
+  "document_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+  "field_id_vocabulary": {
+    "schema_version": "docfit_pre_input_field_vocabulary_v1",
+    "registry": {
+      "registry_id": "test",
+      "registry_version": "1",
+      "sha256": "0c9adfeb2311a45c18078821bf11f5719c31c4e5979889c0561c268066a48264"
+    },
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline4",
+      "body.paragraph",
+      "body.table",
+      "body.equation"
+    ],
+    "field_count": 7,
+    "fields": [
+      {
+        "field_id": "thesis.title.zh",
+        "label": "中文题目",
+        "content_type": "text",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": [
+            "fill_slot"
+          ]
+        }
+      },
+      {
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "content_type": "section",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": []
+        }
+      },
+      {
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.heading.outline4",
+        "label": "四级标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.table",
+        "label": "表格",
+        "content_type": "table",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.equation",
+        "label": "公式",
+        "content_type": "equation",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      }
+    ],
+    "digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99"
+  },
+  "field_vocabulary_digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-0",
+      "parts": [
+        {
+          "role": "manual_region",
+          "text": "Keep"
+        },
+        {
+          "role": "cleanup",
+          "text": "Value"
+        }
+      ],
+      "resolved_spans": [
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "manual_region",
+          "text": "Keep",
+          "source_entry_id": "source-entry-0",
+          "text_start": 0,
+          "text_end": 4,
+          "extent": {
+            "kind": "text",
+            "start": 0,
+            "end": 4
+          },
+          "expected_source_content": "Keep",
+          "source_snapshot_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+          "source_inventory_digest": "0fa4170b947c8b01bd08c3572ee172c7ce3fdfffec2cd0e86ce443b7667a0444",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]/sdt[1]/sdtContent[1]/sdt[1]",
+              "text": "Keep",
+              "source_text_start": 0,
+              "source_text_end": 4,
+              "object_text_start": 0,
+              "object_text_end": 4,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+                "expected_fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+              },
+              "fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        },
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[4:9];source_snapshot_sha256=f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 1,
+          "role": "cleanup",
+          "text": "Value",
+          "source_entry_id": "source-entry-0",
+          "text_start": 4,
+          "text_end": 9,
+          "extent": {
+            "kind": "text",
+            "start": 4,
+            "end": 9
+          },
+          "expected_source_content": "Value",
+          "source_snapshot_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+          "source_inventory_digest": "0fa4170b947c8b01bd08c3572ee172c7ce3fdfffec2cd0e86ce443b7667a0444",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]/sdt[1]/sdtContent[1]/sdt[1]",
+              "text": "Value",
+              "source_text_start": 4,
+              "source_text_end": 9,
+              "object_text_start": 4,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+                "expected_fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+              },
+              "fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        }
+      ]
+    }
+  ],
+  "semantic_judgments_sha256": "4d8cb6a88a518aae7fc2f9877b9e3aac59dd4b5d436e382c06931591f68a3f90",
+  "resolved_spans": [
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 0,
+      "role": "manual_region",
+      "text": "Keep",
+      "source_entry_id": "source-entry-0",
+      "text_start": 0,
+      "text_end": 4,
+      "extent": {
+        "kind": "text",
+        "start": 0,
+        "end": 4
+      },
+      "expected_source_content": "Keep",
+      "source_snapshot_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+      "source_inventory_digest": "0fa4170b947c8b01bd08c3572ee172c7ce3fdfffec2cd0e86ce443b7667a0444",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]/sdt[1]/sdtContent[1]/sdt[1]",
+          "text": "Keep",
+          "source_text_start": 0,
+          "source_text_end": 4,
+          "object_text_start": 0,
+          "object_text_end": 4,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+            "expected_fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+          },
+          "fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    },
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[4:9];source_snapshot_sha256=f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 1,
+      "role": "cleanup",
+      "text": "Value",
+      "source_entry_id": "source-entry-0",
+      "text_start": 4,
+      "text_end": 9,
+      "extent": {
+        "kind": "text",
+        "start": 4,
+        "end": 9
+      },
+      "expected_source_content": "Value",
+      "source_snapshot_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+      "source_inventory_digest": "0fa4170b947c8b01bd08c3572ee172c7ce3fdfffec2cd0e86ce443b7667a0444",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]/sdt[1]/sdtContent[1]/sdt[1]",
+          "text": "Value",
+          "source_text_start": 4,
+          "source_text_end": 9,
+          "object_text_start": 4,
+          "object_text_end": 9,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "f08aa32fc2aa8e9cdc00441bfdf0c58cee975e6b6da0b2c84c5e7935e5468ce1",
+            "expected_fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+          },
+          "fingerprint": "ece29b62015cde2a6faf60a1a2ecc72702d3d5f2139044c7213df665fd2e5d94"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "verification_level": "E2E agent loop (natural local rejection and no-progress stop; not full success)",
+  "code_commit": "f0bb5c449a3a1443be8a2b9e4804bd0c7443bc05",
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 5,
+    "response": 5,
+    "local_review": 5,
+    "candidate_recorded": 2,
+    "local_rejected": 3,
+    "run_failed": 1
+  },
+  "candidate_batches_preserved": 2,
+  "first_stop": {
+    "schema_version": 1,
+    "status": "error",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "harness",
+      "code": "semantic_revision_no_progress",
+      "retryable": false,
+      "message": "Repeated unchanged failure for source-entry-6a3a9448367246bf00ad3477: source_text_partition.",
+      "suggested_actions": [
+        "Inspect the saved judgments, feedback and budget evidence."
+      ]
+    }
+  },
+  "resume_result": {
+    "schema_version": 1,
+    "status": "needs_input",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "harness",
+      "code": "canonical_source_inventory_projection_stale",
+      "retryable": true,
+      "message": "The persisted unit projections do not match the accepted units.",
+      "suggested_actions": [
+        "Restart post-unit preparation from the current source."
+      ]
+    }
+  },
+  "resume_additional_semantic_queries": 0,
+  "resume_additional_unit_boundary_queries": "occurred: old App repeats boundary when --from is omitted",
+  "resume_verified": false,
+  "resume_defect": "new accepted unit boundaries conflict with persisted prior unit projections",
+  "original_failure": "three repeated submissions omit one trailing U+0020 while submitting an empty part",
+  "product_acceptance": false,
+  "completed_post_unit": false,
+  "gold_read": false
+}

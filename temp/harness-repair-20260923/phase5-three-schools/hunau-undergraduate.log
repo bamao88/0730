@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "unit_checkpoint_result_invalid",
+    "retryable": true,
+    "message": "Unit boundary checkpoint did not return structured units.",
+    "suggested_actions": []
+  }
+}

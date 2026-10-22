@@ -1,0 +1,3883 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+  "semantic_judgments_sha256": "e24737527f3778dcd97b6ce43ad643c21fd49d7a5a767611af1fa354574b2561",
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "field_registry_ref": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.5.0",
+    "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "operation_count": 1,
+  "cleanup_count": 3,
+  "operations": [
+    {
+      "action": "materialize_slot",
+      "field_id": "acknowledgement.body",
+      "block_id": "source-entry-c18f2e61a4f647356e6b8d12",
+      "part_index": 0,
+      "span_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+      "slot_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body",
+      "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12",
+      "word_fragments": [
+        {
+          "fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+          "locator": "/body/p[4]/r[1]",
+          "object_id": "obj-baab898199b2760c2efbc8f9",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+            "object_id": "obj-baab898199b2760c2efbc8f9"
+          },
+          "object_text_end": 5,
+          "object_text_start": 0,
+          "source_text_end": 5,
+          "source_text_start": 0,
+          "text": "×××××"
+        },
+        {
+          "fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+          "locator": "/body/p[4]/r[2]",
+          "object_id": "obj-6937ab15443bdfea325846ee",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+            "object_id": "obj-6937ab15443bdfea325846ee"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 6,
+          "source_text_start": 5,
+          "text": "（"
+        },
+        {
+          "fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+          "locator": "/body/p[4]/r[3]",
+          "object_id": "obj-57ec26c83ba0a2b397739fda",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+            "object_id": "obj-57ec26c83ba0a2b397739fda"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 7,
+          "source_text_start": 6,
+          "text": "5"
+        },
+        {
+          "fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+          "locator": "/body/p[4]/r[4]",
+          "object_id": "obj-14b9f66c2d453c12fb4786ff",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+            "object_id": "obj-14b9f66c2d453c12fb4786ff"
+          },
+          "object_text_end": 3,
+          "object_text_start": 0,
+          "source_text_end": 10,
+          "source_text_start": 7,
+          "text": "00字"
+        },
+        {
+          "fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+          "locator": "/body/p[4]/r[5]",
+          "object_id": "obj-163bb6b57d1574a4ad57a6fa",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+            "object_id": "obj-163bb6b57d1574a4ad57a6fa"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 12,
+          "source_text_start": 10,
+          "text": "之内"
+        },
+        {
+          "fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+          "locator": "/body/p[4]/r[6]",
+          "object_id": "obj-942727ba503a2adb8a2608c2",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+            "object_id": "obj-942727ba503a2adb8a2608c2"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 13,
+          "source_text_start": 12,
+          "text": "，"
+        },
+        {
+          "fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+          "locator": "/body/p[4]/r[7]",
+          "object_id": "obj-6a2078003c0ced0cf27588ce",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+            "object_id": "obj-6a2078003c0ced0cf27588ce"
+          },
+          "object_text_end": 7,
+          "object_text_start": 0,
+          "source_text_end": 20,
+          "source_text_start": 13,
+          "text": "中文小四宋体，"
+        },
+        {
+          "fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+          "locator": "/body/p[4]/r[8]",
+          "object_id": "obj-bbaa6384be3d524b00f4027f",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+            "object_id": "obj-bbaa6384be3d524b00f4027f"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 21,
+          "source_text_start": 20,
+          "text": "英"
+        },
+        {
+          "fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+          "locator": "/body/p[4]/r[9]",
+          "object_id": "obj-3b41d339d44d5e496325806b",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+            "object_id": "obj-3b41d339d44d5e496325806b"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 23,
+          "source_text_start": 21,
+          "text": "文、"
+        },
+        {
+          "fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+          "locator": "/body/p[4]/r[10]",
+          "object_id": "obj-072563e70f3a232f6889de5c",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+            "object_id": "obj-072563e70f3a232f6889de5c"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 27,
+          "source_text_start": 23,
+          "text": "数字小四"
+        },
+        {
+          "fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+          "locator": "/body/p[4]/r[11]",
+          "object_id": "obj-0ca8e3508c461dfe9cce8097",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+            "object_id": "obj-0ca8e3508c461dfe9cce8097"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 31,
+          "source_text_start": 27,
+          "text": "Time"
+        },
+        {
+          "fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+          "locator": "/body/p[4]/r[12]",
+          "object_id": "obj-069c7586007a5108b90d9b2e",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+            "object_id": "obj-069c7586007a5108b90d9b2e"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 32,
+          "source_text_start": 31,
+          "text": "s"
+        },
+        {
+          "fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+          "locator": "/body/p[4]/r[13]",
+          "object_id": "obj-0fa038816b16c7fa6278c68a",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+            "object_id": "obj-0fa038816b16c7fa6278c68a"
+          },
+          "object_text_end": 10,
+          "object_text_start": 0,
+          "source_text_end": 42,
+          "source_text_start": 32,
+          "text": " New Roman"
+        },
+        {
+          "fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+          "locator": "/body/p[4]/r[14]",
+          "object_id": "obj-b5a4e2852a022f0a34284df3",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+            "object_id": "obj-b5a4e2852a022f0a34284df3"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 44,
+          "source_text_start": 42,
+          "text": "字体"
+        },
+        {
+          "fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+          "locator": "/body/p[4]/r[15]",
+          "object_id": "obj-ca91df37c1e5ec716e239b83",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+            "object_id": "obj-ca91df37c1e5ec716e239b83"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 45,
+          "source_text_start": 44,
+          "text": "，"
+        },
+        {
+          "fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+          "locator": "/body/p[4]/r[16]",
+          "object_id": "obj-47ff068be1d3db8e07fe9b92",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+            "object_id": "obj-47ff068be1d3db8e07fe9b92"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 49,
+          "source_text_start": 45,
+          "text": "行间距为"
+        },
+        {
+          "fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+          "locator": "/body/p[4]/r[17]",
+          "object_id": "obj-e35e7d00246c889d2b7e4b68",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+            "object_id": "obj-e35e7d00246c889d2b7e4b68"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 51,
+          "source_text_start": 49,
+          "text": "固定"
+        },
+        {
+          "fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+          "locator": "/body/p[4]/r[18]",
+          "object_id": "obj-4b76c7a66b6d89c0b749a32c",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+            "object_id": "obj-4b76c7a66b6d89c0b749a32c"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 52,
+          "source_text_start": 51,
+          "text": "值"
+        },
+        {
+          "fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+          "locator": "/body/p[4]/r[19]",
+          "object_id": "obj-02665776a927d4aecccc059f",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+            "object_id": "obj-02665776a927d4aecccc059f"
+          },
+          "object_text_end": 3,
+          "object_text_start": 0,
+          "source_text_end": 55,
+          "source_text_start": 52,
+          "text": "20磅"
+        },
+        {
+          "fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+          "locator": "/body/p[4]/r[20]",
+          "object_id": "obj-8a9d102e92578aafbb5edeb6",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+            "object_id": "obj-8a9d102e92578aafbb5edeb6"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 56,
+          "source_text_start": 55,
+          "text": "）"
+        },
+        {
+          "fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+          "locator": "/body/p[4]/r[21]",
+          "object_id": "obj-f54ea6f6cb6a602584dd2882",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+            "object_id": "obj-f54ea6f6cb6a602584dd2882"
+          },
+          "object_text_end": 52,
+          "object_text_start": 0,
+          "source_text_end": 108,
+          "source_text_start": 56,
+          "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××"
+        },
+        {
+          "fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+          "locator": "/body/p[4]/r[22]",
+          "object_id": "obj-27c989844a4c75956bcbbd0c",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+            "object_id": "obj-27c989844a4c75956bcbbd0c"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 109,
+          "source_text_start": 108,
+          "text": "×"
+        },
+        {
+          "fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+          "locator": "/body/p[4]/r[23]",
+          "object_id": "obj-0e997756fff6d4e465d6cd54",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+            "object_id": "obj-0e997756fff6d4e465d6cd54"
+          },
+          "object_text_end": 19,
+          "object_text_start": 0,
+          "source_text_end": 128,
+          "source_text_start": 109,
+          "text": "×××××××××××××××××××"
+        },
+        {
+          "fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+          "locator": "/body/p[4]/r[24]",
+          "object_id": "obj-3561416d4798f041fe95594e",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+            "object_id": "obj-3561416d4798f041fe95594e"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 129,
+          "source_text_start": 128,
+          "text": "。"
+        }
+      ],
+      "judgment_refs": [
+        "semantic_judgments[3]"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "action": "remove_exact_fragments",
+      "block_id": "source-entry-458db2a27fd8bc64e2a51932",
+      "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+      "judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[4:13];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+          "locator": "/body/p[1]/r[4]",
+          "object_id": "obj-c297e8714c68c6accbf05516",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+            "object_id": "obj-c297e8714c68c6accbf05516"
+          },
+          "object_text_end": 9,
+          "object_text_start": 0,
+          "source_text_end": 13,
+          "source_text_start": 4,
+          "text": "（三号黑体，居中）"
+        }
+      ]
+    },
+    {
+      "action": "remove_paragraph",
+      "block_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+      "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+      "judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-2f8fecfb1f8463ebb00f322a;extent=text[0:84];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+          "locator": "/body/p[2]/r[1]",
+          "object_id": "obj-330eea119560b26dd0dfeca8",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+            "object_id": "obj-330eea119560b26dd0dfeca8"
+          },
+          "object_text_end": 19,
+          "object_text_start": 0,
+          "source_text_end": 19,
+          "source_text_start": 0,
+          "text": "学位论文正文和附录之后，一般应放置致谢"
+        },
+        {
+          "fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+          "locator": "/body/p[2]/r[2]",
+          "object_id": "obj-97c108c65fc494315b3ac19d",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+            "object_id": "obj-97c108c65fc494315b3ac19d"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 20,
+          "source_text_start": 19,
+          "text": "，"
+        },
+        {
+          "fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+          "locator": "/body/p[2]/r[3]",
+          "object_id": "obj-68863ebf302e0de522009d17",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+            "object_id": "obj-68863ebf302e0de522009d17"
+          },
+          "object_text_end": 28,
+          "object_text_start": 0,
+          "source_text_end": 48,
+          "source_text_start": 20,
+          "text": "主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位"
+        },
+        {
+          "fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+          "locator": "/body/p[2]/r[4]",
+          "object_id": "obj-8d1f688565ea73659cf70dae",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+            "object_id": "obj-8d1f688565ea73659cf70dae"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 49,
+          "source_text_start": 48,
+          "text": "，"
+        },
+        {
+          "fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+          "locator": "/body/p[2]/r[5]",
+          "object_id": "obj-0f6df1fea20d6b48d230671d",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+            "object_id": "obj-0f6df1fea20d6b48d230671d"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 51,
+          "source_text_start": 49,
+          "text": "以及"
+        },
+        {
+          "fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+          "locator": "/body/p[2]/r[6]",
+          "object_id": "obj-3344fb74bf153c8d3c7f7545",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+            "object_id": "obj-3344fb74bf153c8d3c7f7545"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 53,
+          "source_text_start": 51,
+          "text": "资助"
+        },
+        {
+          "fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+          "locator": "/body/p[2]/r[7]",
+          "object_id": "obj-2bd640947d6bc6f2474d0a1c",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+            "object_id": "obj-2bd640947d6bc6f2474d0a1c"
+          },
+          "object_text_end": 23,
+          "object_text_start": 0,
+          "source_text_end": 76,
+          "source_text_start": 53,
+          "text": "的项目。致谢言语应谦虚诚恳，实事求是。字数一般"
+        },
+        {
+          "fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+          "locator": "/body/p[2]/r[8]",
+          "object_id": "obj-cbc6bc96014126443a4c0b1e",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+            "object_id": "obj-cbc6bc96014126443a4c0b1e"
+          },
+          "object_text_end": 5,
+          "object_text_start": 0,
+          "source_text_end": 81,
+          "source_text_start": 76,
+          "text": "在500字"
+        },
+        {
+          "fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+          "locator": "/body/p[2]/r[9]",
+          "object_id": "obj-8cfb05994e40362e1ae3bb64",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+            "object_id": "obj-8cfb05994e40362e1ae3bb64"
+          },
+          "object_text_end": 3,
+          "object_text_start": 0,
+          "source_text_end": 84,
+          "source_text_start": 81,
+          "text": "之内。"
+        }
+      ]
+    },
+    {
+      "action": "remove_paragraph",
+      "block_id": "source-entry-b905f1b7db24a60ade6b7baf",
+      "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf",
+      "judgment_refs": [
+        "semantic_judgments[2]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-b905f1b7db24a60ade6b7baf;extent=text[0:42];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+          "locator": "/body/p[3]/r[1]",
+          "object_id": "obj-5fec49acf4ab73dddc9f9ded",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+            "object_id": "obj-5fec49acf4ab73dddc9f9ded"
+          },
+          "object_text_end": 24,
+          "object_text_start": 0,
+          "source_text_end": 24,
+          "source_text_start": 0,
+          "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容"
+        },
+        {
+          "fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+          "locator": "/body/p[3]/r[2]",
+          "object_id": "obj-c1241689ed16a8e5600d353d",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+            "object_id": "obj-c1241689ed16a8e5600d353d"
+          },
+          "object_text_end": 11,
+          "object_text_start": 0,
+          "source_text_end": 35,
+          "source_text_start": 24,
+          "text": "为小四号宋体，行间距为"
+        },
+        {
+          "fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+          "locator": "/body/p[3]/r[3]",
+          "object_id": "obj-5617fbf27084722f5544aded",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+            "object_id": "obj-5617fbf27084722f5544aded"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 37,
+          "source_text_start": 35,
+          "text": "固定"
+        },
+        {
+          "fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+          "locator": "/body/p[3]/r[4]",
+          "object_id": "obj-30ff1f44695778e63db4eae6",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+            "object_id": "obj-30ff1f44695778e63db4eae6"
+          },
+          "object_text_end": 1,
+          "object_text_start": 0,
+          "source_text_end": 38,
+          "source_text_start": 37,
+          "text": "值"
+        },
+        {
+          "fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+          "locator": "/body/p[3]/r[5]",
+          "object_id": "obj-97380189b1bba4dbf549c010",
+          "object_ref": {
+            "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "expected_fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+            "object_id": "obj-97380189b1bba4dbf549c010"
+          },
+          "object_text_end": 4,
+          "object_text_start": 0,
+          "source_text_end": 42,
+          "source_text_start": 38,
+          "text": "20磅。"
+        }
+      ]
+    }
+  ],
+  "policy_receipts": [],
+  "mutation_receipts": [
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_refs": [
+        "intent-0004-92cad7aa"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[3]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-c18f2e61a4f647356e6b8d12"
+        }
+      ],
+      "field_ids": [
+        "acknowledgement.body"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "slot_refs": [
+        "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body"
+      ],
+      "affected_blocks": [
+        "source-entry-c18f2e61a4f647356e6b8d12"
+      ],
+      "before_text_by_block": {
+        "source-entry-c18f2e61a4f647356e6b8d12": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。"
+      },
+      "after_text_by_block": {
+        "source-entry-c18f2e61a4f647356e6b8d12": "【致谢】"
+      },
+      "operation": {
+        "action": "materialize_slot",
+        "field_id": "acknowledgement.body",
+        "block_id": "source-entry-c18f2e61a4f647356e6b8d12",
+        "part_index": 0,
+        "span_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+        "slot_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body",
+        "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12",
+        "word_fragments": [
+          {
+            "fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+            "locator": "/body/p[4]/r[1]",
+            "object_id": "obj-baab898199b2760c2efbc8f9",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+              "object_id": "obj-baab898199b2760c2efbc8f9"
+            },
+            "object_text_end": 5,
+            "object_text_start": 0,
+            "source_text_end": 5,
+            "source_text_start": 0,
+            "text": "×××××"
+          },
+          {
+            "fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+            "locator": "/body/p[4]/r[2]",
+            "object_id": "obj-6937ab15443bdfea325846ee",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+              "object_id": "obj-6937ab15443bdfea325846ee"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 6,
+            "source_text_start": 5,
+            "text": "（"
+          },
+          {
+            "fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+            "locator": "/body/p[4]/r[3]",
+            "object_id": "obj-57ec26c83ba0a2b397739fda",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+              "object_id": "obj-57ec26c83ba0a2b397739fda"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 7,
+            "source_text_start": 6,
+            "text": "5"
+          },
+          {
+            "fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+            "locator": "/body/p[4]/r[4]",
+            "object_id": "obj-14b9f66c2d453c12fb4786ff",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+              "object_id": "obj-14b9f66c2d453c12fb4786ff"
+            },
+            "object_text_end": 3,
+            "object_text_start": 0,
+            "source_text_end": 10,
+            "source_text_start": 7,
+            "text": "00字"
+          },
+          {
+            "fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+            "locator": "/body/p[4]/r[5]",
+            "object_id": "obj-163bb6b57d1574a4ad57a6fa",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+              "object_id": "obj-163bb6b57d1574a4ad57a6fa"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 12,
+            "source_text_start": 10,
+            "text": "之内"
+          },
+          {
+            "fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+            "locator": "/body/p[4]/r[6]",
+            "object_id": "obj-942727ba503a2adb8a2608c2",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+              "object_id": "obj-942727ba503a2adb8a2608c2"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 13,
+            "source_text_start": 12,
+            "text": "，"
+          },
+          {
+            "fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+            "locator": "/body/p[4]/r[7]",
+            "object_id": "obj-6a2078003c0ced0cf27588ce",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+              "object_id": "obj-6a2078003c0ced0cf27588ce"
+            },
+            "object_text_end": 7,
+            "object_text_start": 0,
+            "source_text_end": 20,
+            "source_text_start": 13,
+            "text": "中文小四宋体，"
+          },
+          {
+            "fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+            "locator": "/body/p[4]/r[8]",
+            "object_id": "obj-bbaa6384be3d524b00f4027f",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+              "object_id": "obj-bbaa6384be3d524b00f4027f"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 21,
+            "source_text_start": 20,
+            "text": "英"
+          },
+          {
+            "fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+            "locator": "/body/p[4]/r[9]",
+            "object_id": "obj-3b41d339d44d5e496325806b",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+              "object_id": "obj-3b41d339d44d5e496325806b"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 23,
+            "source_text_start": 21,
+            "text": "文、"
+          },
+          {
+            "fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+            "locator": "/body/p[4]/r[10]",
+            "object_id": "obj-072563e70f3a232f6889de5c",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+              "object_id": "obj-072563e70f3a232f6889de5c"
+            },
+            "object_text_end": 4,
+            "object_text_start": 0,
+            "source_text_end": 27,
+            "source_text_start": 23,
+            "text": "数字小四"
+          },
+          {
+            "fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+            "locator": "/body/p[4]/r[11]",
+            "object_id": "obj-0ca8e3508c461dfe9cce8097",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+              "object_id": "obj-0ca8e3508c461dfe9cce8097"
+            },
+            "object_text_end": 4,
+            "object_text_start": 0,
+            "source_text_end": 31,
+            "source_text_start": 27,
+            "text": "Time"
+          },
+          {
+            "fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+            "locator": "/body/p[4]/r[12]",
+            "object_id": "obj-069c7586007a5108b90d9b2e",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+              "object_id": "obj-069c7586007a5108b90d9b2e"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 32,
+            "source_text_start": 31,
+            "text": "s"
+          },
+          {
+            "fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+            "locator": "/body/p[4]/r[13]",
+            "object_id": "obj-0fa038816b16c7fa6278c68a",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+              "object_id": "obj-0fa038816b16c7fa6278c68a"
+            },
+            "object_text_end": 10,
+            "object_text_start": 0,
+            "source_text_end": 42,
+            "source_text_start": 32,
+            "text": " New Roman"
+          },
+          {
+            "fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+            "locator": "/body/p[4]/r[14]",
+            "object_id": "obj-b5a4e2852a022f0a34284df3",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+              "object_id": "obj-b5a4e2852a022f0a34284df3"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 44,
+            "source_text_start": 42,
+            "text": "字体"
+          },
+          {
+            "fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+            "locator": "/body/p[4]/r[15]",
+            "object_id": "obj-ca91df37c1e5ec716e239b83",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+              "object_id": "obj-ca91df37c1e5ec716e239b83"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 45,
+            "source_text_start": 44,
+            "text": "，"
+          },
+          {
+            "fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+            "locator": "/body/p[4]/r[16]",
+            "object_id": "obj-47ff068be1d3db8e07fe9b92",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+              "object_id": "obj-47ff068be1d3db8e07fe9b92"
+            },
+            "object_text_end": 4,
+            "object_text_start": 0,
+            "source_text_end": 49,
+            "source_text_start": 45,
+            "text": "行间距为"
+          },
+          {
+            "fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+            "locator": "/body/p[4]/r[17]",
+            "object_id": "obj-e35e7d00246c889d2b7e4b68",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+              "object_id": "obj-e35e7d00246c889d2b7e4b68"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 51,
+            "source_text_start": 49,
+            "text": "固定"
+          },
+          {
+            "fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+            "locator": "/body/p[4]/r[18]",
+            "object_id": "obj-4b76c7a66b6d89c0b749a32c",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+              "object_id": "obj-4b76c7a66b6d89c0b749a32c"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 52,
+            "source_text_start": 51,
+            "text": "值"
+          },
+          {
+            "fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+            "locator": "/body/p[4]/r[19]",
+            "object_id": "obj-02665776a927d4aecccc059f",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+              "object_id": "obj-02665776a927d4aecccc059f"
+            },
+            "object_text_end": 3,
+            "object_text_start": 0,
+            "source_text_end": 55,
+            "source_text_start": 52,
+            "text": "20磅"
+          },
+          {
+            "fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+            "locator": "/body/p[4]/r[20]",
+            "object_id": "obj-8a9d102e92578aafbb5edeb6",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+              "object_id": "obj-8a9d102e92578aafbb5edeb6"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 56,
+            "source_text_start": 55,
+            "text": "）"
+          },
+          {
+            "fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+            "locator": "/body/p[4]/r[21]",
+            "object_id": "obj-f54ea6f6cb6a602584dd2882",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+              "object_id": "obj-f54ea6f6cb6a602584dd2882"
+            },
+            "object_text_end": 52,
+            "object_text_start": 0,
+            "source_text_end": 108,
+            "source_text_start": 56,
+            "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××"
+          },
+          {
+            "fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+            "locator": "/body/p[4]/r[22]",
+            "object_id": "obj-27c989844a4c75956bcbbd0c",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+              "object_id": "obj-27c989844a4c75956bcbbd0c"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 109,
+            "source_text_start": 108,
+            "text": "×"
+          },
+          {
+            "fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+            "locator": "/body/p[4]/r[23]",
+            "object_id": "obj-0e997756fff6d4e465d6cd54",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+              "object_id": "obj-0e997756fff6d4e465d6cd54"
+            },
+            "object_text_end": 19,
+            "object_text_start": 0,
+            "source_text_end": 128,
+            "source_text_start": 109,
+            "text": "×××××××××××××××××××"
+          },
+          {
+            "fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+            "locator": "/body/p[4]/r[24]",
+            "object_id": "obj-3561416d4798f041fe95594e",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+              "object_id": "obj-3561416d4798f041fe95594e"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 129,
+            "source_text_start": 128,
+            "text": "。"
+          }
+        ],
+        "judgment_refs": [
+          "semantic_judgments[3]"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_exact_fragments",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0001-aeaed905"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-458db2a27fd8bc64e2a51932"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[4:13];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "affected_blocks": [
+        "source-entry-458db2a27fd8bc64e2a51932"
+      ],
+      "before_text_by_block": {
+        "source-entry-458db2a27fd8bc64e2a51932": "致  谢（三号黑体，居中）"
+      },
+      "after_text_by_block": {
+        "source-entry-458db2a27fd8bc64e2a51932": "致  谢"
+      },
+      "safety_checks": [],
+      "operation": {
+        "action": "remove_exact_fragments",
+        "block_id": "source-entry-458db2a27fd8bc64e2a51932",
+        "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+        "judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[4:13];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+            "locator": "/body/p[1]/r[4]",
+            "object_id": "obj-c297e8714c68c6accbf05516",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+              "object_id": "obj-c297e8714c68c6accbf05516"
+            },
+            "object_text_end": 9,
+            "object_text_start": 0,
+            "source_text_end": 13,
+            "source_text_start": 4,
+            "text": "（三号黑体，居中）"
+          }
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_paragraph",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0002-ec6b6c16"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-2f8fecfb1f8463ebb00f322a"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-2f8fecfb1f8463ebb00f322a;extent=text[0:84];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "affected_blocks": [
+        "source-entry-2f8fecfb1f8463ebb00f322a"
+      ],
+      "before_text_by_block": {
+        "source-entry-2f8fecfb1f8463ebb00f322a": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。"
+      },
+      "after_text_by_block": {
+        "source-entry-2f8fecfb1f8463ebb00f322a": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "action": "remove_paragraph",
+        "block_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+        "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+        "judgment_refs": [
+          "semantic_judgments[1]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-2f8fecfb1f8463ebb00f322a;extent=text[0:84];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+            "locator": "/body/p[2]/r[1]",
+            "object_id": "obj-330eea119560b26dd0dfeca8",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+              "object_id": "obj-330eea119560b26dd0dfeca8"
+            },
+            "object_text_end": 19,
+            "object_text_start": 0,
+            "source_text_end": 19,
+            "source_text_start": 0,
+            "text": "学位论文正文和附录之后，一般应放置致谢"
+          },
+          {
+            "fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+            "locator": "/body/p[2]/r[2]",
+            "object_id": "obj-97c108c65fc494315b3ac19d",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+              "object_id": "obj-97c108c65fc494315b3ac19d"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 20,
+            "source_text_start": 19,
+            "text": "，"
+          },
+          {
+            "fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+            "locator": "/body/p[2]/r[3]",
+            "object_id": "obj-68863ebf302e0de522009d17",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+              "object_id": "obj-68863ebf302e0de522009d17"
+            },
+            "object_text_end": 28,
+            "object_text_start": 0,
+            "source_text_end": 48,
+            "source_text_start": 20,
+            "text": "主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位"
+          },
+          {
+            "fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+            "locator": "/body/p[2]/r[4]",
+            "object_id": "obj-8d1f688565ea73659cf70dae",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+              "object_id": "obj-8d1f688565ea73659cf70dae"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 49,
+            "source_text_start": 48,
+            "text": "，"
+          },
+          {
+            "fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+            "locator": "/body/p[2]/r[5]",
+            "object_id": "obj-0f6df1fea20d6b48d230671d",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+              "object_id": "obj-0f6df1fea20d6b48d230671d"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 51,
+            "source_text_start": 49,
+            "text": "以及"
+          },
+          {
+            "fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+            "locator": "/body/p[2]/r[6]",
+            "object_id": "obj-3344fb74bf153c8d3c7f7545",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+              "object_id": "obj-3344fb74bf153c8d3c7f7545"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 53,
+            "source_text_start": 51,
+            "text": "资助"
+          },
+          {
+            "fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+            "locator": "/body/p[2]/r[7]",
+            "object_id": "obj-2bd640947d6bc6f2474d0a1c",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+              "object_id": "obj-2bd640947d6bc6f2474d0a1c"
+            },
+            "object_text_end": 23,
+            "object_text_start": 0,
+            "source_text_end": 76,
+            "source_text_start": 53,
+            "text": "的项目。致谢言语应谦虚诚恳，实事求是。字数一般"
+          },
+          {
+            "fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+            "locator": "/body/p[2]/r[8]",
+            "object_id": "obj-cbc6bc96014126443a4c0b1e",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+              "object_id": "obj-cbc6bc96014126443a4c0b1e"
+            },
+            "object_text_end": 5,
+            "object_text_start": 0,
+            "source_text_end": 81,
+            "source_text_start": 76,
+            "text": "在500字"
+          },
+          {
+            "fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+            "locator": "/body/p[2]/r[9]",
+            "object_id": "obj-8cfb05994e40362e1ae3bb64",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+              "object_id": "obj-8cfb05994e40362e1ae3bb64"
+            },
+            "object_text_end": 3,
+            "object_text_start": 0,
+            "source_text_end": 84,
+            "source_text_start": 81,
+            "text": "之内。"
+          }
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_paragraph",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0003-58fa79b2"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[2]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-b905f1b7db24a60ade6b7baf"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-b905f1b7db24a60ade6b7baf;extent=text[0:42];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+      ],
+      "affected_blocks": [
+        "source-entry-b905f1b7db24a60ade6b7baf"
+      ],
+      "before_text_by_block": {
+        "source-entry-b905f1b7db24a60ade6b7baf": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。"
+      },
+      "after_text_by_block": {
+        "source-entry-b905f1b7db24a60ade6b7baf": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "action": "remove_paragraph",
+        "block_id": "source-entry-b905f1b7db24a60ade6b7baf",
+        "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf",
+        "judgment_refs": [
+          "semantic_judgments[2]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-b905f1b7db24a60ade6b7baf;extent=text[0:42];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+            "locator": "/body/p[3]/r[1]",
+            "object_id": "obj-5fec49acf4ab73dddc9f9ded",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+              "object_id": "obj-5fec49acf4ab73dddc9f9ded"
+            },
+            "object_text_end": 24,
+            "object_text_start": 0,
+            "source_text_end": 24,
+            "source_text_start": 0,
+            "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容"
+          },
+          {
+            "fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+            "locator": "/body/p[3]/r[2]",
+            "object_id": "obj-c1241689ed16a8e5600d353d",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+              "object_id": "obj-c1241689ed16a8e5600d353d"
+            },
+            "object_text_end": 11,
+            "object_text_start": 0,
+            "source_text_end": 35,
+            "source_text_start": 24,
+            "text": "为小四号宋体，行间距为"
+          },
+          {
+            "fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+            "locator": "/body/p[3]/r[3]",
+            "object_id": "obj-5617fbf27084722f5544aded",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+              "object_id": "obj-5617fbf27084722f5544aded"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 37,
+            "source_text_start": 35,
+            "text": "固定"
+          },
+          {
+            "fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+            "locator": "/body/p[3]/r[4]",
+            "object_id": "obj-30ff1f44695778e63db4eae6",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+              "object_id": "obj-30ff1f44695778e63db4eae6"
+            },
+            "object_text_end": 1,
+            "object_text_start": 0,
+            "source_text_end": 38,
+            "source_text_start": 37,
+            "text": "值"
+          },
+          {
+            "fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+            "locator": "/body/p[3]/r[5]",
+            "object_id": "obj-97380189b1bba4dbf549c010",
+            "object_ref": {
+              "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "expected_fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+              "object_id": "obj-97380189b1bba4dbf549c010"
+            },
+            "object_text_end": 4,
+            "object_text_start": 0,
+            "source_text_end": 42,
+            "source_text_start": 38,
+            "text": "20磅。"
+          }
+        ]
+      }
+    }
+  ],
+  "receipt_count": 4,
+  "write": {
+    "schema_version": 1,
+    "status": "ok",
+    "executor": "ooxml_executor",
+    "output_docx": "temp/id-closure-audit-20260922/replay/njau-10-acknowledgement-v2/candidate.docx",
+    "output_sha256": "d37bdbb341c42a4e6f40572ab8485250169cca068bfd4dfefe1b6e601358e6be",
+    "package_validation": "ok"
+  },
+  "shadow_intent_plan": {
+    "schema_version": 1,
+    "plan_ref": "materialization-plan-95979c8ef1a7",
+    "ready": true,
+    "intent_count": 4,
+    "context_count": 4,
+    "command_count": 0,
+    "unsupported_count": 0,
+    "intents": [
+      {
+        "intent_ref": "intent-0001-aeaed905",
+        "intent_type": "keep_fixed_content",
+        "source_judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-458db2a27fd8bc64e2a51932"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "致  谢"
+            },
+            {
+              "role": "style_only",
+              "text": "（三号黑体，居中）"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-c986693a6ac99ed802381442",
+                "obj-85c4029d58a422fa008afa8f",
+                "obj-1f3b10c0c39d22b666dfec5d"
+              ],
+              "expected_source_content": "致  谢",
+              "extent": {
+                "end": 4,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932"
+              },
+              "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[0:4];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "致  谢",
+              "text_end": 4,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-c986693a6ac99ed802381442",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+                    "object_id": "obj-c986693a6ac99ed802381442"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 2,
+                  "source_text_start": 0,
+                  "text": "致 "
+                },
+                {
+                  "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-85c4029d58a422fa008afa8f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                    "object_id": "obj-85c4029d58a422fa008afa8f"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 2,
+                  "text": " "
+                },
+                {
+                  "fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-1f3b10c0c39d22b666dfec5d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+                    "object_id": "obj-1f3b10c0c39d22b666dfec5d"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 3,
+                  "text": "谢"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-c297e8714c68c6accbf05516"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 13,
+                "kind": "text",
+                "start": 4
+              },
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932"
+              },
+              "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[4:13];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "（三号黑体，居中）",
+              "text_end": 13,
+              "text_start": 4,
+              "word_fragments": [
+                {
+                  "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-c297e8714c68c6accbf05516",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                    "object_id": "obj-c297e8714c68c6accbf05516"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 13,
+                  "source_text_start": 4,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0002-ec6b6c16",
+        "intent_type": "delete_block",
+        "source_judgment_refs": [
+          "semantic_judgments[1]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2f8fecfb1f8463ebb00f322a"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-330eea119560b26dd0dfeca8",
+                "obj-97c108c65fc494315b3ac19d",
+                "obj-68863ebf302e0de522009d17",
+                "obj-8d1f688565ea73659cf70dae",
+                "obj-0f6df1fea20d6b48d230671d",
+                "obj-3344fb74bf153c8d3c7f7545",
+                "obj-2bd640947d6bc6f2474d0a1c",
+                "obj-cbc6bc96014126443a4c0b1e",
+                "obj-8cfb05994e40362e1ae3bb64"
+              ],
+              "expected_source_content": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。",
+              "extent": {
+                "end": 84,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a"
+              },
+              "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-2f8fecfb1f8463ebb00f322a;extent=text[0:84];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。",
+              "text_end": 84,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-330eea119560b26dd0dfeca8",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+                    "object_id": "obj-330eea119560b26dd0dfeca8"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 19,
+                  "source_text_start": 0,
+                  "text": "学位论文正文和附录之后，一般应放置致谢"
+                },
+                {
+                  "fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-97c108c65fc494315b3ac19d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+                    "object_id": "obj-97c108c65fc494315b3ac19d"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 20,
+                  "source_text_start": 19,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+                  "locator": "/body/p[2]/r[3]",
+                  "object_id": "obj-68863ebf302e0de522009d17",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+                    "object_id": "obj-68863ebf302e0de522009d17"
+                  },
+                  "object_text_end": 28,
+                  "object_text_start": 0,
+                  "source_text_end": 48,
+                  "source_text_start": 20,
+                  "text": "主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位"
+                },
+                {
+                  "fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+                  "locator": "/body/p[2]/r[4]",
+                  "object_id": "obj-8d1f688565ea73659cf70dae",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+                    "object_id": "obj-8d1f688565ea73659cf70dae"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 49,
+                  "source_text_start": 48,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+                  "locator": "/body/p[2]/r[5]",
+                  "object_id": "obj-0f6df1fea20d6b48d230671d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+                    "object_id": "obj-0f6df1fea20d6b48d230671d"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 51,
+                  "source_text_start": 49,
+                  "text": "以及"
+                },
+                {
+                  "fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+                  "locator": "/body/p[2]/r[6]",
+                  "object_id": "obj-3344fb74bf153c8d3c7f7545",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+                    "object_id": "obj-3344fb74bf153c8d3c7f7545"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 53,
+                  "source_text_start": 51,
+                  "text": "资助"
+                },
+                {
+                  "fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+                  "locator": "/body/p[2]/r[7]",
+                  "object_id": "obj-2bd640947d6bc6f2474d0a1c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+                    "object_id": "obj-2bd640947d6bc6f2474d0a1c"
+                  },
+                  "object_text_end": 23,
+                  "object_text_start": 0,
+                  "source_text_end": 76,
+                  "source_text_start": 53,
+                  "text": "的项目。致谢言语应谦虚诚恳，实事求是。字数一般"
+                },
+                {
+                  "fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+                  "locator": "/body/p[2]/r[8]",
+                  "object_id": "obj-cbc6bc96014126443a4c0b1e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+                    "object_id": "obj-cbc6bc96014126443a4c0b1e"
+                  },
+                  "object_text_end": 5,
+                  "object_text_start": 0,
+                  "source_text_end": 81,
+                  "source_text_start": 76,
+                  "text": "在500字"
+                },
+                {
+                  "fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+                  "locator": "/body/p[2]/r[9]",
+                  "object_id": "obj-8cfb05994e40362e1ae3bb64",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+                    "object_id": "obj-8cfb05994e40362e1ae3bb64"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 84,
+                  "source_text_start": 81,
+                  "text": "之内。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0003-58fa79b2",
+        "intent_type": "delete_block",
+        "source_judgment_refs": [
+          "semantic_judgments[2]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b905f1b7db24a60ade6b7baf"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-5fec49acf4ab73dddc9f9ded",
+                "obj-c1241689ed16a8e5600d353d",
+                "obj-5617fbf27084722f5544aded",
+                "obj-30ff1f44695778e63db4eae6",
+                "obj-97380189b1bba4dbf549c010"
+              ],
+              "expected_source_content": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。",
+              "extent": {
+                "end": 42,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf"
+              },
+              "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-b905f1b7db24a60ade6b7baf;extent=text[0:42];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。",
+              "text_end": 42,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+                  "locator": "/body/p[3]/r[1]",
+                  "object_id": "obj-5fec49acf4ab73dddc9f9ded",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+                    "object_id": "obj-5fec49acf4ab73dddc9f9ded"
+                  },
+                  "object_text_end": 24,
+                  "object_text_start": 0,
+                  "source_text_end": 24,
+                  "source_text_start": 0,
+                  "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容"
+                },
+                {
+                  "fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+                  "locator": "/body/p[3]/r[2]",
+                  "object_id": "obj-c1241689ed16a8e5600d353d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+                    "object_id": "obj-c1241689ed16a8e5600d353d"
+                  },
+                  "object_text_end": 11,
+                  "object_text_start": 0,
+                  "source_text_end": 35,
+                  "source_text_start": 24,
+                  "text": "为小四号宋体，行间距为"
+                },
+                {
+                  "fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+                  "locator": "/body/p[3]/r[3]",
+                  "object_id": "obj-5617fbf27084722f5544aded",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+                    "object_id": "obj-5617fbf27084722f5544aded"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 37,
+                  "source_text_start": 35,
+                  "text": "固定"
+                },
+                {
+                  "fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+                  "locator": "/body/p[3]/r[4]",
+                  "object_id": "obj-30ff1f44695778e63db4eae6",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+                    "object_id": "obj-30ff1f44695778e63db4eae6"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 38,
+                  "source_text_start": 37,
+                  "text": "值"
+                },
+                {
+                  "fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+                  "locator": "/body/p[3]/r[5]",
+                  "object_id": "obj-97380189b1bba4dbf549c010",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+                    "object_id": "obj-97380189b1bba4dbf549c010"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 42,
+                  "source_text_start": 38,
+                  "text": "20磅。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0004-92cad7aa",
+        "intent_type": "materialize_slot",
+        "source_judgment_refs": [
+          "semantic_judgments[3]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-c18f2e61a4f647356e6b8d12"
+          }
+        ],
+        "field_ids": [
+          "acknowledgement.body"
+        ],
+        "payload": {
+          "field_ids": [
+            "acknowledgement.body"
+          ],
+          "parts": [
+            {
+              "field_id": "acknowledgement.body",
+              "role": "fill_slot",
+              "text": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-baab898199b2760c2efbc8f9",
+                "obj-6937ab15443bdfea325846ee",
+                "obj-57ec26c83ba0a2b397739fda",
+                "obj-14b9f66c2d453c12fb4786ff",
+                "obj-163bb6b57d1574a4ad57a6fa",
+                "obj-942727ba503a2adb8a2608c2",
+                "obj-6a2078003c0ced0cf27588ce",
+                "obj-bbaa6384be3d524b00f4027f",
+                "obj-3b41d339d44d5e496325806b",
+                "obj-072563e70f3a232f6889de5c",
+                "obj-0ca8e3508c461dfe9cce8097",
+                "obj-069c7586007a5108b90d9b2e",
+                "obj-0fa038816b16c7fa6278c68a",
+                "obj-b5a4e2852a022f0a34284df3",
+                "obj-ca91df37c1e5ec716e239b83",
+                "obj-47ff068be1d3db8e07fe9b92",
+                "obj-e35e7d00246c889d2b7e4b68",
+                "obj-4b76c7a66b6d89c0b749a32c",
+                "obj-02665776a927d4aecccc059f",
+                "obj-8a9d102e92578aafbb5edeb6",
+                "obj-f54ea6f6cb6a602584dd2882",
+                "obj-27c989844a4c75956bcbbd0c",
+                "obj-0e997756fff6d4e465d6cd54",
+                "obj-3561416d4798f041fe95594e"
+              ],
+              "expected_source_content": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+              "extent": {
+                "end": 129,
+                "kind": "text",
+                "start": 0
+              },
+              "field_id": "acknowledgement.body",
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12"
+              },
+              "slot_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body",
+              "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+              "text_end": 129,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+                  "locator": "/body/p[4]/r[1]",
+                  "object_id": "obj-baab898199b2760c2efbc8f9",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+                    "object_id": "obj-baab898199b2760c2efbc8f9"
+                  },
+                  "object_text_end": 5,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 0,
+                  "text": "×××××"
+                },
+                {
+                  "fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+                  "locator": "/body/p[4]/r[2]",
+                  "object_id": "obj-6937ab15443bdfea325846ee",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+                    "object_id": "obj-6937ab15443bdfea325846ee"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 6,
+                  "source_text_start": 5,
+                  "text": "（"
+                },
+                {
+                  "fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+                  "locator": "/body/p[4]/r[3]",
+                  "object_id": "obj-57ec26c83ba0a2b397739fda",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+                    "object_id": "obj-57ec26c83ba0a2b397739fda"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 7,
+                  "source_text_start": 6,
+                  "text": "5"
+                },
+                {
+                  "fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+                  "locator": "/body/p[4]/r[4]",
+                  "object_id": "obj-14b9f66c2d453c12fb4786ff",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+                    "object_id": "obj-14b9f66c2d453c12fb4786ff"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 10,
+                  "source_text_start": 7,
+                  "text": "00字"
+                },
+                {
+                  "fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+                  "locator": "/body/p[4]/r[5]",
+                  "object_id": "obj-163bb6b57d1574a4ad57a6fa",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+                    "object_id": "obj-163bb6b57d1574a4ad57a6fa"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 12,
+                  "source_text_start": 10,
+                  "text": "之内"
+                },
+                {
+                  "fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+                  "locator": "/body/p[4]/r[6]",
+                  "object_id": "obj-942727ba503a2adb8a2608c2",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+                    "object_id": "obj-942727ba503a2adb8a2608c2"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 13,
+                  "source_text_start": 12,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+                  "locator": "/body/p[4]/r[7]",
+                  "object_id": "obj-6a2078003c0ced0cf27588ce",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+                    "object_id": "obj-6a2078003c0ced0cf27588ce"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 20,
+                  "source_text_start": 13,
+                  "text": "中文小四宋体，"
+                },
+                {
+                  "fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+                  "locator": "/body/p[4]/r[8]",
+                  "object_id": "obj-bbaa6384be3d524b00f4027f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+                    "object_id": "obj-bbaa6384be3d524b00f4027f"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 21,
+                  "source_text_start": 20,
+                  "text": "英"
+                },
+                {
+                  "fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+                  "locator": "/body/p[4]/r[9]",
+                  "object_id": "obj-3b41d339d44d5e496325806b",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+                    "object_id": "obj-3b41d339d44d5e496325806b"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 23,
+                  "source_text_start": 21,
+                  "text": "文、"
+                },
+                {
+                  "fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+                  "locator": "/body/p[4]/r[10]",
+                  "object_id": "obj-072563e70f3a232f6889de5c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+                    "object_id": "obj-072563e70f3a232f6889de5c"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 27,
+                  "source_text_start": 23,
+                  "text": "数字小四"
+                },
+                {
+                  "fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+                  "locator": "/body/p[4]/r[11]",
+                  "object_id": "obj-0ca8e3508c461dfe9cce8097",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+                    "object_id": "obj-0ca8e3508c461dfe9cce8097"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 31,
+                  "source_text_start": 27,
+                  "text": "Time"
+                },
+                {
+                  "fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+                  "locator": "/body/p[4]/r[12]",
+                  "object_id": "obj-069c7586007a5108b90d9b2e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+                    "object_id": "obj-069c7586007a5108b90d9b2e"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 32,
+                  "source_text_start": 31,
+                  "text": "s"
+                },
+                {
+                  "fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+                  "locator": "/body/p[4]/r[13]",
+                  "object_id": "obj-0fa038816b16c7fa6278c68a",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+                    "object_id": "obj-0fa038816b16c7fa6278c68a"
+                  },
+                  "object_text_end": 10,
+                  "object_text_start": 0,
+                  "source_text_end": 42,
+                  "source_text_start": 32,
+                  "text": " New Roman"
+                },
+                {
+                  "fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+                  "locator": "/body/p[4]/r[14]",
+                  "object_id": "obj-b5a4e2852a022f0a34284df3",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+                    "object_id": "obj-b5a4e2852a022f0a34284df3"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 44,
+                  "source_text_start": 42,
+                  "text": "字体"
+                },
+                {
+                  "fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+                  "locator": "/body/p[4]/r[15]",
+                  "object_id": "obj-ca91df37c1e5ec716e239b83",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+                    "object_id": "obj-ca91df37c1e5ec716e239b83"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 45,
+                  "source_text_start": 44,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+                  "locator": "/body/p[4]/r[16]",
+                  "object_id": "obj-47ff068be1d3db8e07fe9b92",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+                    "object_id": "obj-47ff068be1d3db8e07fe9b92"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 49,
+                  "source_text_start": 45,
+                  "text": "行间距为"
+                },
+                {
+                  "fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+                  "locator": "/body/p[4]/r[17]",
+                  "object_id": "obj-e35e7d00246c889d2b7e4b68",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+                    "object_id": "obj-e35e7d00246c889d2b7e4b68"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 51,
+                  "source_text_start": 49,
+                  "text": "固定"
+                },
+                {
+                  "fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+                  "locator": "/body/p[4]/r[18]",
+                  "object_id": "obj-4b76c7a66b6d89c0b749a32c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+                    "object_id": "obj-4b76c7a66b6d89c0b749a32c"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 52,
+                  "source_text_start": 51,
+                  "text": "值"
+                },
+                {
+                  "fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+                  "locator": "/body/p[4]/r[19]",
+                  "object_id": "obj-02665776a927d4aecccc059f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+                    "object_id": "obj-02665776a927d4aecccc059f"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 55,
+                  "source_text_start": 52,
+                  "text": "20磅"
+                },
+                {
+                  "fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+                  "locator": "/body/p[4]/r[20]",
+                  "object_id": "obj-8a9d102e92578aafbb5edeb6",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+                    "object_id": "obj-8a9d102e92578aafbb5edeb6"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 56,
+                  "source_text_start": 55,
+                  "text": "）"
+                },
+                {
+                  "fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+                  "locator": "/body/p[4]/r[21]",
+                  "object_id": "obj-f54ea6f6cb6a602584dd2882",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+                    "object_id": "obj-f54ea6f6cb6a602584dd2882"
+                  },
+                  "object_text_end": 52,
+                  "object_text_start": 0,
+                  "source_text_end": 108,
+                  "source_text_start": 56,
+                  "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××"
+                },
+                {
+                  "fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+                  "locator": "/body/p[4]/r[22]",
+                  "object_id": "obj-27c989844a4c75956bcbbd0c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+                    "object_id": "obj-27c989844a4c75956bcbbd0c"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 109,
+                  "source_text_start": 108,
+                  "text": "×"
+                },
+                {
+                  "fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+                  "locator": "/body/p[4]/r[23]",
+                  "object_id": "obj-0e997756fff6d4e465d6cd54",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+                    "object_id": "obj-0e997756fff6d4e465d6cd54"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 128,
+                  "source_text_start": 109,
+                  "text": "×××××××××××××××××××"
+                },
+                {
+                  "fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+                  "locator": "/body/p[4]/r[24]",
+                  "object_id": "obj-3561416d4798f041fe95594e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+                    "object_id": "obj-3561416d4798f041fe95594e"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 129,
+                  "source_text_start": 128,
+                  "text": "。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role",
+          "parts.field_id",
+          "resolved_spans"
+        ],
+        "field_bindings": [
+          {
+            "part_index": 0,
+            "role": "fill_slot",
+            "field_id": "acknowledgement.body",
+            "span_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+            "slot_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body"
+          }
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "context_ref": "context-0001-f8ee2400",
+        "kind": "fixed_content",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-458db2a27fd8bc64e2a51932"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0001-aeaed905",
+          "intent_type": "keep_fixed_content",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-c986693a6ac99ed802381442",
+                "obj-85c4029d58a422fa008afa8f",
+                "obj-1f3b10c0c39d22b666dfec5d"
+              ],
+              "expected_source_content": "致  谢",
+              "extent": {
+                "end": 4,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932"
+              },
+              "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[0:4];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "致  谢",
+              "text_end": 4,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-c986693a6ac99ed802381442",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+                    "object_id": "obj-c986693a6ac99ed802381442"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 2,
+                  "source_text_start": 0,
+                  "text": "致 "
+                },
+                {
+                  "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-85c4029d58a422fa008afa8f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                    "object_id": "obj-85c4029d58a422fa008afa8f"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 2,
+                  "text": " "
+                },
+                {
+                  "fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-1f3b10c0c39d22b666dfec5d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+                    "object_id": "obj-1f3b10c0c39d22b666dfec5d"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 3,
+                  "text": "谢"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-c297e8714c68c6accbf05516"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 13,
+                "kind": "text",
+                "start": 4
+              },
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932"
+              },
+              "source_entry_id": "source-entry-458db2a27fd8bc64e2a51932",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-458db2a27fd8bc64e2a51932;extent=text[4:13];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "（三号黑体，居中）",
+              "text_end": 13,
+              "text_start": 4,
+              "word_fragments": [
+                {
+                  "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-c297e8714c68c6accbf05516",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                    "object_id": "obj-c297e8714c68c6accbf05516"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 13,
+                  "source_text_start": 4,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+              "locator": "/body/p[1]/r[1]",
+              "object_id": "obj-c986693a6ac99ed802381442",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "4b830a8a14f2039713ec7f4ee47948fbc7d15d74149da9f80048a5adbea955c9",
+                "object_id": "obj-c986693a6ac99ed802381442"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 2,
+              "source_text_start": 0,
+              "text": "致 "
+            },
+            {
+              "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+              "locator": "/body/p[1]/r[2]",
+              "object_id": "obj-85c4029d58a422fa008afa8f",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                "object_id": "obj-85c4029d58a422fa008afa8f"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 3,
+              "source_text_start": 2,
+              "text": " "
+            },
+            {
+              "fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+              "locator": "/body/p[1]/r[3]",
+              "object_id": "obj-1f3b10c0c39d22b666dfec5d",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "b7ac06fe08e85cbd625bd82a263c905ad95adfe3aaa59c7264a65c8d8cde4c0e",
+                "object_id": "obj-1f3b10c0c39d22b666dfec5d"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 4,
+              "source_text_start": 3,
+              "text": "谢"
+            },
+            {
+              "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+              "locator": "/body/p[1]/r[4]",
+              "object_id": "obj-c297e8714c68c6accbf05516",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                "object_id": "obj-c297e8714c68c6accbf05516"
+              },
+              "object_text_end": 9,
+              "object_text_start": 0,
+              "source_text_end": 13,
+              "source_text_start": 4,
+              "text": "（三号黑体，居中）"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0002-29710000",
+        "kind": "cleanup_block",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2f8fecfb1f8463ebb00f322a"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0002-ec6b6c16",
+          "intent_type": "delete_block",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-330eea119560b26dd0dfeca8",
+                "obj-97c108c65fc494315b3ac19d",
+                "obj-68863ebf302e0de522009d17",
+                "obj-8d1f688565ea73659cf70dae",
+                "obj-0f6df1fea20d6b48d230671d",
+                "obj-3344fb74bf153c8d3c7f7545",
+                "obj-2bd640947d6bc6f2474d0a1c",
+                "obj-cbc6bc96014126443a4c0b1e",
+                "obj-8cfb05994e40362e1ae3bb64"
+              ],
+              "expected_source_content": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。",
+              "extent": {
+                "end": 84,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a"
+              },
+              "source_entry_id": "source-entry-2f8fecfb1f8463ebb00f322a",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-2f8fecfb1f8463ebb00f322a;extent=text[0:84];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。",
+              "text_end": 84,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-330eea119560b26dd0dfeca8",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+                    "object_id": "obj-330eea119560b26dd0dfeca8"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 19,
+                  "source_text_start": 0,
+                  "text": "学位论文正文和附录之后，一般应放置致谢"
+                },
+                {
+                  "fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-97c108c65fc494315b3ac19d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+                    "object_id": "obj-97c108c65fc494315b3ac19d"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 20,
+                  "source_text_start": 19,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+                  "locator": "/body/p[2]/r[3]",
+                  "object_id": "obj-68863ebf302e0de522009d17",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+                    "object_id": "obj-68863ebf302e0de522009d17"
+                  },
+                  "object_text_end": 28,
+                  "object_text_start": 0,
+                  "source_text_end": 48,
+                  "source_text_start": 20,
+                  "text": "主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位"
+                },
+                {
+                  "fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+                  "locator": "/body/p[2]/r[4]",
+                  "object_id": "obj-8d1f688565ea73659cf70dae",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+                    "object_id": "obj-8d1f688565ea73659cf70dae"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 49,
+                  "source_text_start": 48,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+                  "locator": "/body/p[2]/r[5]",
+                  "object_id": "obj-0f6df1fea20d6b48d230671d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+                    "object_id": "obj-0f6df1fea20d6b48d230671d"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 51,
+                  "source_text_start": 49,
+                  "text": "以及"
+                },
+                {
+                  "fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+                  "locator": "/body/p[2]/r[6]",
+                  "object_id": "obj-3344fb74bf153c8d3c7f7545",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+                    "object_id": "obj-3344fb74bf153c8d3c7f7545"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 53,
+                  "source_text_start": 51,
+                  "text": "资助"
+                },
+                {
+                  "fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+                  "locator": "/body/p[2]/r[7]",
+                  "object_id": "obj-2bd640947d6bc6f2474d0a1c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+                    "object_id": "obj-2bd640947d6bc6f2474d0a1c"
+                  },
+                  "object_text_end": 23,
+                  "object_text_start": 0,
+                  "source_text_end": 76,
+                  "source_text_start": 53,
+                  "text": "的项目。致谢言语应谦虚诚恳，实事求是。字数一般"
+                },
+                {
+                  "fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+                  "locator": "/body/p[2]/r[8]",
+                  "object_id": "obj-cbc6bc96014126443a4c0b1e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+                    "object_id": "obj-cbc6bc96014126443a4c0b1e"
+                  },
+                  "object_text_end": 5,
+                  "object_text_start": 0,
+                  "source_text_end": 81,
+                  "source_text_start": 76,
+                  "text": "在500字"
+                },
+                {
+                  "fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+                  "locator": "/body/p[2]/r[9]",
+                  "object_id": "obj-8cfb05994e40362e1ae3bb64",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+                    "object_id": "obj-8cfb05994e40362e1ae3bb64"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 84,
+                  "source_text_start": 81,
+                  "text": "之内。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+              "locator": "/body/p[2]/r[1]",
+              "object_id": "obj-330eea119560b26dd0dfeca8",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "3d3705fcbdabdbf56d450f008a177f69450cdb9853c7158fc8a72c0a3db83ef0",
+                "object_id": "obj-330eea119560b26dd0dfeca8"
+              },
+              "object_text_end": 19,
+              "object_text_start": 0,
+              "source_text_end": 19,
+              "source_text_start": 0,
+              "text": "学位论文正文和附录之后，一般应放置致谢"
+            },
+            {
+              "fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+              "locator": "/body/p[2]/r[2]",
+              "object_id": "obj-97c108c65fc494315b3ac19d",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "f06824463c33dc7eab6b949188f23d6a65928d2c39bc36feaa782c4e07b69404",
+                "object_id": "obj-97c108c65fc494315b3ac19d"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 20,
+              "source_text_start": 19,
+              "text": "，"
+            },
+            {
+              "fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+              "locator": "/body/p[2]/r[3]",
+              "object_id": "obj-68863ebf302e0de522009d17",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "728191cf80fb50c295e78e4a2839e4e8e11ac3399a1de3b954f0a8959d7133d8",
+                "object_id": "obj-68863ebf302e0de522009d17"
+              },
+              "object_text_end": 28,
+              "object_text_start": 0,
+              "source_text_end": 48,
+              "source_text_start": 20,
+              "text": "主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位"
+            },
+            {
+              "fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+              "locator": "/body/p[2]/r[4]",
+              "object_id": "obj-8d1f688565ea73659cf70dae",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "689bec0779db3fcc721d2a71075656c1f9e5dd536a543e5e042e55506ee2b970",
+                "object_id": "obj-8d1f688565ea73659cf70dae"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 49,
+              "source_text_start": 48,
+              "text": "，"
+            },
+            {
+              "fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+              "locator": "/body/p[2]/r[5]",
+              "object_id": "obj-0f6df1fea20d6b48d230671d",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "53764163b029a18395ff797e746ef40cf1e2714d62a48d05577ffd3fa8066eaa",
+                "object_id": "obj-0f6df1fea20d6b48d230671d"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 51,
+              "source_text_start": 49,
+              "text": "以及"
+            },
+            {
+              "fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+              "locator": "/body/p[2]/r[6]",
+              "object_id": "obj-3344fb74bf153c8d3c7f7545",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "85218f01792348749585ea35964587847391dafe19444a7a1efe252aa9ccf92b",
+                "object_id": "obj-3344fb74bf153c8d3c7f7545"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 53,
+              "source_text_start": 51,
+              "text": "资助"
+            },
+            {
+              "fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+              "locator": "/body/p[2]/r[7]",
+              "object_id": "obj-2bd640947d6bc6f2474d0a1c",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "405e1604a01687e1c030bb5044d9be89b7601dbf7865b4199ca437dbbdd6775a",
+                "object_id": "obj-2bd640947d6bc6f2474d0a1c"
+              },
+              "object_text_end": 23,
+              "object_text_start": 0,
+              "source_text_end": 76,
+              "source_text_start": 53,
+              "text": "的项目。致谢言语应谦虚诚恳，实事求是。字数一般"
+            },
+            {
+              "fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+              "locator": "/body/p[2]/r[8]",
+              "object_id": "obj-cbc6bc96014126443a4c0b1e",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "4f25791568128928b38a25a8f300e87aecbcc77b75c6e06d2d1fe7e035a419cd",
+                "object_id": "obj-cbc6bc96014126443a4c0b1e"
+              },
+              "object_text_end": 5,
+              "object_text_start": 0,
+              "source_text_end": 81,
+              "source_text_start": 76,
+              "text": "在500字"
+            },
+            {
+              "fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+              "locator": "/body/p[2]/r[9]",
+              "object_id": "obj-8cfb05994e40362e1ae3bb64",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "854430760751e072b99fbc7b05e06166199503e5433f17fcd203d7ed056536b1",
+                "object_id": "obj-8cfb05994e40362e1ae3bb64"
+              },
+              "object_text_end": 3,
+              "object_text_start": 0,
+              "source_text_end": 84,
+              "source_text_start": 81,
+              "text": "之内。"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0003-7aa30060",
+        "kind": "cleanup_block",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b905f1b7db24a60ade6b7baf"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0003-58fa79b2",
+          "intent_type": "delete_block",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-5fec49acf4ab73dddc9f9ded",
+                "obj-c1241689ed16a8e5600d353d",
+                "obj-5617fbf27084722f5544aded",
+                "obj-30ff1f44695778e63db4eae6",
+                "obj-97380189b1bba4dbf549c010"
+              ],
+              "expected_source_content": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。",
+              "extent": {
+                "end": 42,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "cleanup",
+              "scope": {
+                "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf"
+              },
+              "source_entry_id": "source-entry-b905f1b7db24a60ade6b7baf",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-b905f1b7db24a60ade6b7baf;extent=text[0:42];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。",
+              "text_end": 42,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+                  "locator": "/body/p[3]/r[1]",
+                  "object_id": "obj-5fec49acf4ab73dddc9f9ded",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+                    "object_id": "obj-5fec49acf4ab73dddc9f9ded"
+                  },
+                  "object_text_end": 24,
+                  "object_text_start": 0,
+                  "source_text_end": 24,
+                  "source_text_start": 0,
+                  "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容"
+                },
+                {
+                  "fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+                  "locator": "/body/p[3]/r[2]",
+                  "object_id": "obj-c1241689ed16a8e5600d353d",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+                    "object_id": "obj-c1241689ed16a8e5600d353d"
+                  },
+                  "object_text_end": 11,
+                  "object_text_start": 0,
+                  "source_text_end": 35,
+                  "source_text_start": 24,
+                  "text": "为小四号宋体，行间距为"
+                },
+                {
+                  "fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+                  "locator": "/body/p[3]/r[3]",
+                  "object_id": "obj-5617fbf27084722f5544aded",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+                    "object_id": "obj-5617fbf27084722f5544aded"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 37,
+                  "source_text_start": 35,
+                  "text": "固定"
+                },
+                {
+                  "fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+                  "locator": "/body/p[3]/r[4]",
+                  "object_id": "obj-30ff1f44695778e63db4eae6",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+                    "object_id": "obj-30ff1f44695778e63db4eae6"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 38,
+                  "source_text_start": 37,
+                  "text": "值"
+                },
+                {
+                  "fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+                  "locator": "/body/p[3]/r[5]",
+                  "object_id": "obj-97380189b1bba4dbf549c010",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+                    "object_id": "obj-97380189b1bba4dbf549c010"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 42,
+                  "source_text_start": 38,
+                  "text": "20磅。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+              "locator": "/body/p[3]/r[1]",
+              "object_id": "obj-5fec49acf4ab73dddc9f9ded",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "0f6714644a674d8dd4e9d272940d40eb16f564b4f74e4a9e14e885f97895abde",
+                "object_id": "obj-5fec49acf4ab73dddc9f9ded"
+              },
+              "object_text_end": 24,
+              "object_text_start": 0,
+              "source_text_end": 24,
+              "source_text_start": 0,
+              "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容"
+            },
+            {
+              "fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+              "locator": "/body/p[3]/r[2]",
+              "object_id": "obj-c1241689ed16a8e5600d353d",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "2852fa5ed47464228596f3ced66d2de7414ea4b2036d43c8c1824f40ae0141b3",
+                "object_id": "obj-c1241689ed16a8e5600d353d"
+              },
+              "object_text_end": 11,
+              "object_text_start": 0,
+              "source_text_end": 35,
+              "source_text_start": 24,
+              "text": "为小四号宋体，行间距为"
+            },
+            {
+              "fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+              "locator": "/body/p[3]/r[3]",
+              "object_id": "obj-5617fbf27084722f5544aded",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "00bc338200f2035bc4bc19f58b2bd7b38eac29337a467ed08da3e03f5fddff5f",
+                "object_id": "obj-5617fbf27084722f5544aded"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 37,
+              "source_text_start": 35,
+              "text": "固定"
+            },
+            {
+              "fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+              "locator": "/body/p[3]/r[4]",
+              "object_id": "obj-30ff1f44695778e63db4eae6",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "012cb7c728cbc2ee4f8c630aa97076c613c3b1aa969d78a05930f1da4f5db8cb",
+                "object_id": "obj-30ff1f44695778e63db4eae6"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 38,
+              "source_text_start": 37,
+              "text": "值"
+            },
+            {
+              "fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+              "locator": "/body/p[3]/r[5]",
+              "object_id": "obj-97380189b1bba4dbf549c010",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "430eb81b8822a4c10ff06e97ba5c051f2f8e9ec25964abcc93b551e2eb33e8a1",
+                "object_id": "obj-97380189b1bba4dbf549c010"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 42,
+              "source_text_start": 38,
+              "text": "20磅。"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0004-d57a9bca",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-c18f2e61a4f647356e6b8d12"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0004-92cad7aa",
+          "intent_type": "materialize_slot",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-baab898199b2760c2efbc8f9",
+                "obj-6937ab15443bdfea325846ee",
+                "obj-57ec26c83ba0a2b397739fda",
+                "obj-14b9f66c2d453c12fb4786ff",
+                "obj-163bb6b57d1574a4ad57a6fa",
+                "obj-942727ba503a2adb8a2608c2",
+                "obj-6a2078003c0ced0cf27588ce",
+                "obj-bbaa6384be3d524b00f4027f",
+                "obj-3b41d339d44d5e496325806b",
+                "obj-072563e70f3a232f6889de5c",
+                "obj-0ca8e3508c461dfe9cce8097",
+                "obj-069c7586007a5108b90d9b2e",
+                "obj-0fa038816b16c7fa6278c68a",
+                "obj-b5a4e2852a022f0a34284df3",
+                "obj-ca91df37c1e5ec716e239b83",
+                "obj-47ff068be1d3db8e07fe9b92",
+                "obj-e35e7d00246c889d2b7e4b68",
+                "obj-4b76c7a66b6d89c0b749a32c",
+                "obj-02665776a927d4aecccc059f",
+                "obj-8a9d102e92578aafbb5edeb6",
+                "obj-f54ea6f6cb6a602584dd2882",
+                "obj-27c989844a4c75956bcbbd0c",
+                "obj-0e997756fff6d4e465d6cd54",
+                "obj-3561416d4798f041fe95594e"
+              ],
+              "expected_source_content": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+              "extent": {
+                "end": 129,
+                "kind": "text",
+                "start": 0
+              },
+              "field_id": "acknowledgement.body",
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12"
+              },
+              "slot_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body",
+              "source_entry_id": "source-entry-c18f2e61a4f647356e6b8d12",
+              "source_inventory_digest": "ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97",
+              "source_snapshot_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "span_ref": "source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+              "text": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。",
+              "text_end": 129,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+                  "locator": "/body/p[4]/r[1]",
+                  "object_id": "obj-baab898199b2760c2efbc8f9",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+                    "object_id": "obj-baab898199b2760c2efbc8f9"
+                  },
+                  "object_text_end": 5,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 0,
+                  "text": "×××××"
+                },
+                {
+                  "fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+                  "locator": "/body/p[4]/r[2]",
+                  "object_id": "obj-6937ab15443bdfea325846ee",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+                    "object_id": "obj-6937ab15443bdfea325846ee"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 6,
+                  "source_text_start": 5,
+                  "text": "（"
+                },
+                {
+                  "fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+                  "locator": "/body/p[4]/r[3]",
+                  "object_id": "obj-57ec26c83ba0a2b397739fda",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+                    "object_id": "obj-57ec26c83ba0a2b397739fda"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 7,
+                  "source_text_start": 6,
+                  "text": "5"
+                },
+                {
+                  "fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+                  "locator": "/body/p[4]/r[4]",
+                  "object_id": "obj-14b9f66c2d453c12fb4786ff",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+                    "object_id": "obj-14b9f66c2d453c12fb4786ff"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 10,
+                  "source_text_start": 7,
+                  "text": "00字"
+                },
+                {
+                  "fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+                  "locator": "/body/p[4]/r[5]",
+                  "object_id": "obj-163bb6b57d1574a4ad57a6fa",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+                    "object_id": "obj-163bb6b57d1574a4ad57a6fa"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 12,
+                  "source_text_start": 10,
+                  "text": "之内"
+                },
+                {
+                  "fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+                  "locator": "/body/p[4]/r[6]",
+                  "object_id": "obj-942727ba503a2adb8a2608c2",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+                    "object_id": "obj-942727ba503a2adb8a2608c2"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 13,
+                  "source_text_start": 12,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+                  "locator": "/body/p[4]/r[7]",
+                  "object_id": "obj-6a2078003c0ced0cf27588ce",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+                    "object_id": "obj-6a2078003c0ced0cf27588ce"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 20,
+                  "source_text_start": 13,
+                  "text": "中文小四宋体，"
+                },
+                {
+                  "fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+                  "locator": "/body/p[4]/r[8]",
+                  "object_id": "obj-bbaa6384be3d524b00f4027f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+                    "object_id": "obj-bbaa6384be3d524b00f4027f"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 21,
+                  "source_text_start": 20,
+                  "text": "英"
+                },
+                {
+                  "fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+                  "locator": "/body/p[4]/r[9]",
+                  "object_id": "obj-3b41d339d44d5e496325806b",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+                    "object_id": "obj-3b41d339d44d5e496325806b"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 23,
+                  "source_text_start": 21,
+                  "text": "文、"
+                },
+                {
+                  "fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+                  "locator": "/body/p[4]/r[10]",
+                  "object_id": "obj-072563e70f3a232f6889de5c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+                    "object_id": "obj-072563e70f3a232f6889de5c"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 27,
+                  "source_text_start": 23,
+                  "text": "数字小四"
+                },
+                {
+                  "fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+                  "locator": "/body/p[4]/r[11]",
+                  "object_id": "obj-0ca8e3508c461dfe9cce8097",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+                    "object_id": "obj-0ca8e3508c461dfe9cce8097"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 31,
+                  "source_text_start": 27,
+                  "text": "Time"
+                },
+                {
+                  "fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+                  "locator": "/body/p[4]/r[12]",
+                  "object_id": "obj-069c7586007a5108b90d9b2e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+                    "object_id": "obj-069c7586007a5108b90d9b2e"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 32,
+                  "source_text_start": 31,
+                  "text": "s"
+                },
+                {
+                  "fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+                  "locator": "/body/p[4]/r[13]",
+                  "object_id": "obj-0fa038816b16c7fa6278c68a",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+                    "object_id": "obj-0fa038816b16c7fa6278c68a"
+                  },
+                  "object_text_end": 10,
+                  "object_text_start": 0,
+                  "source_text_end": 42,
+                  "source_text_start": 32,
+                  "text": " New Roman"
+                },
+                {
+                  "fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+                  "locator": "/body/p[4]/r[14]",
+                  "object_id": "obj-b5a4e2852a022f0a34284df3",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+                    "object_id": "obj-b5a4e2852a022f0a34284df3"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 44,
+                  "source_text_start": 42,
+                  "text": "字体"
+                },
+                {
+                  "fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+                  "locator": "/body/p[4]/r[15]",
+                  "object_id": "obj-ca91df37c1e5ec716e239b83",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+                    "object_id": "obj-ca91df37c1e5ec716e239b83"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 45,
+                  "source_text_start": 44,
+                  "text": "，"
+                },
+                {
+                  "fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+                  "locator": "/body/p[4]/r[16]",
+                  "object_id": "obj-47ff068be1d3db8e07fe9b92",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+                    "object_id": "obj-47ff068be1d3db8e07fe9b92"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 49,
+                  "source_text_start": 45,
+                  "text": "行间距为"
+                },
+                {
+                  "fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+                  "locator": "/body/p[4]/r[17]",
+                  "object_id": "obj-e35e7d00246c889d2b7e4b68",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+                    "object_id": "obj-e35e7d00246c889d2b7e4b68"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 51,
+                  "source_text_start": 49,
+                  "text": "固定"
+                },
+                {
+                  "fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+                  "locator": "/body/p[4]/r[18]",
+                  "object_id": "obj-4b76c7a66b6d89c0b749a32c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+                    "object_id": "obj-4b76c7a66b6d89c0b749a32c"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 52,
+                  "source_text_start": 51,
+                  "text": "值"
+                },
+                {
+                  "fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+                  "locator": "/body/p[4]/r[19]",
+                  "object_id": "obj-02665776a927d4aecccc059f",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+                    "object_id": "obj-02665776a927d4aecccc059f"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 55,
+                  "source_text_start": 52,
+                  "text": "20磅"
+                },
+                {
+                  "fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+                  "locator": "/body/p[4]/r[20]",
+                  "object_id": "obj-8a9d102e92578aafbb5edeb6",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+                    "object_id": "obj-8a9d102e92578aafbb5edeb6"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 56,
+                  "source_text_start": 55,
+                  "text": "）"
+                },
+                {
+                  "fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+                  "locator": "/body/p[4]/r[21]",
+                  "object_id": "obj-f54ea6f6cb6a602584dd2882",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+                    "object_id": "obj-f54ea6f6cb6a602584dd2882"
+                  },
+                  "object_text_end": 52,
+                  "object_text_start": 0,
+                  "source_text_end": 108,
+                  "source_text_start": 56,
+                  "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××"
+                },
+                {
+                  "fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+                  "locator": "/body/p[4]/r[22]",
+                  "object_id": "obj-27c989844a4c75956bcbbd0c",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+                    "object_id": "obj-27c989844a4c75956bcbbd0c"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 109,
+                  "source_text_start": 108,
+                  "text": "×"
+                },
+                {
+                  "fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+                  "locator": "/body/p[4]/r[23]",
+                  "object_id": "obj-0e997756fff6d4e465d6cd54",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+                    "object_id": "obj-0e997756fff6d4e465d6cd54"
+                  },
+                  "object_text_end": 19,
+                  "object_text_start": 0,
+                  "source_text_end": 128,
+                  "source_text_start": 109,
+                  "text": "×××××××××××××××××××"
+                },
+                {
+                  "fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+                  "locator": "/body/p[4]/r[24]",
+                  "object_id": "obj-3561416d4798f041fe95594e",
+                  "object_ref": {
+                    "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                    "expected_fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+                    "object_id": "obj-3561416d4798f041fe95594e"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 129,
+                  "source_text_start": 128,
+                  "text": "。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+              "locator": "/body/p[4]/r[1]",
+              "object_id": "obj-baab898199b2760c2efbc8f9",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044",
+                "object_id": "obj-baab898199b2760c2efbc8f9"
+              },
+              "object_text_end": 5,
+              "object_text_start": 0,
+              "source_text_end": 5,
+              "source_text_start": 0,
+              "text": "×××××"
+            },
+            {
+              "fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+              "locator": "/body/p[4]/r[2]",
+              "object_id": "obj-6937ab15443bdfea325846ee",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef",
+                "object_id": "obj-6937ab15443bdfea325846ee"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 6,
+              "source_text_start": 5,
+              "text": "（"
+            },
+            {
+              "fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+              "locator": "/body/p[4]/r[3]",
+              "object_id": "obj-57ec26c83ba0a2b397739fda",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26",
+                "object_id": "obj-57ec26c83ba0a2b397739fda"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 7,
+              "source_text_start": 6,
+              "text": "5"
+            },
+            {
+              "fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+              "locator": "/body/p[4]/r[4]",
+              "object_id": "obj-14b9f66c2d453c12fb4786ff",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d",
+                "object_id": "obj-14b9f66c2d453c12fb4786ff"
+              },
+              "object_text_end": 3,
+              "object_text_start": 0,
+              "source_text_end": 10,
+              "source_text_start": 7,
+              "text": "00字"
+            },
+            {
+              "fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+              "locator": "/body/p[4]/r[5]",
+              "object_id": "obj-163bb6b57d1574a4ad57a6fa",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070",
+                "object_id": "obj-163bb6b57d1574a4ad57a6fa"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 12,
+              "source_text_start": 10,
+              "text": "之内"
+            },
+            {
+              "fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+              "locator": "/body/p[4]/r[6]",
+              "object_id": "obj-942727ba503a2adb8a2608c2",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2",
+                "object_id": "obj-942727ba503a2adb8a2608c2"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 13,
+              "source_text_start": 12,
+              "text": "，"
+            },
+            {
+              "fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+              "locator": "/body/p[4]/r[7]",
+              "object_id": "obj-6a2078003c0ced0cf27588ce",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4",
+                "object_id": "obj-6a2078003c0ced0cf27588ce"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 20,
+              "source_text_start": 13,
+              "text": "中文小四宋体，"
+            },
+            {
+              "fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+              "locator": "/body/p[4]/r[8]",
+              "object_id": "obj-bbaa6384be3d524b00f4027f",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5",
+                "object_id": "obj-bbaa6384be3d524b00f4027f"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 21,
+              "source_text_start": 20,
+              "text": "英"
+            },
+            {
+              "fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+              "locator": "/body/p[4]/r[9]",
+              "object_id": "obj-3b41d339d44d5e496325806b",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263",
+                "object_id": "obj-3b41d339d44d5e496325806b"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 23,
+              "source_text_start": 21,
+              "text": "文、"
+            },
+            {
+              "fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+              "locator": "/body/p[4]/r[10]",
+              "object_id": "obj-072563e70f3a232f6889de5c",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee",
+                "object_id": "obj-072563e70f3a232f6889de5c"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 27,
+              "source_text_start": 23,
+              "text": "数字小四"
+            },
+            {
+              "fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+              "locator": "/body/p[4]/r[11]",
+              "object_id": "obj-0ca8e3508c461dfe9cce8097",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012",
+                "object_id": "obj-0ca8e3508c461dfe9cce8097"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 31,
+              "source_text_start": 27,
+              "text": "Time"
+            },
+            {
+              "fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+              "locator": "/body/p[4]/r[12]",
+              "object_id": "obj-069c7586007a5108b90d9b2e",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7",
+                "object_id": "obj-069c7586007a5108b90d9b2e"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 32,
+              "source_text_start": 31,
+              "text": "s"
+            },
+            {
+              "fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+              "locator": "/body/p[4]/r[13]",
+              "object_id": "obj-0fa038816b16c7fa6278c68a",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51",
+                "object_id": "obj-0fa038816b16c7fa6278c68a"
+              },
+              "object_text_end": 10,
+              "object_text_start": 0,
+              "source_text_end": 42,
+              "source_text_start": 32,
+              "text": " New Roman"
+            },
+            {
+              "fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+              "locator": "/body/p[4]/r[14]",
+              "object_id": "obj-b5a4e2852a022f0a34284df3",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529",
+                "object_id": "obj-b5a4e2852a022f0a34284df3"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 44,
+              "source_text_start": 42,
+              "text": "字体"
+            },
+            {
+              "fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+              "locator": "/body/p[4]/r[15]",
+              "object_id": "obj-ca91df37c1e5ec716e239b83",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9",
+                "object_id": "obj-ca91df37c1e5ec716e239b83"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 45,
+              "source_text_start": 44,
+              "text": "，"
+            },
+            {
+              "fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+              "locator": "/body/p[4]/r[16]",
+              "object_id": "obj-47ff068be1d3db8e07fe9b92",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637",
+                "object_id": "obj-47ff068be1d3db8e07fe9b92"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 49,
+              "source_text_start": 45,
+              "text": "行间距为"
+            },
+            {
+              "fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+              "locator": "/body/p[4]/r[17]",
+              "object_id": "obj-e35e7d00246c889d2b7e4b68",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602",
+                "object_id": "obj-e35e7d00246c889d2b7e4b68"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 51,
+              "source_text_start": 49,
+              "text": "固定"
+            },
+            {
+              "fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+              "locator": "/body/p[4]/r[18]",
+              "object_id": "obj-4b76c7a66b6d89c0b749a32c",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9",
+                "object_id": "obj-4b76c7a66b6d89c0b749a32c"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 52,
+              "source_text_start": 51,
+              "text": "值"
+            },
+            {
+              "fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+              "locator": "/body/p[4]/r[19]",
+              "object_id": "obj-02665776a927d4aecccc059f",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1",
+                "object_id": "obj-02665776a927d4aecccc059f"
+              },
+              "object_text_end": 3,
+              "object_text_start": 0,
+              "source_text_end": 55,
+              "source_text_start": 52,
+              "text": "20磅"
+            },
+            {
+              "fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+              "locator": "/body/p[4]/r[20]",
+              "object_id": "obj-8a9d102e92578aafbb5edeb6",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d",
+                "object_id": "obj-8a9d102e92578aafbb5edeb6"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 56,
+              "source_text_start": 55,
+              "text": "）"
+            },
+            {
+              "fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+              "locator": "/body/p[4]/r[21]",
+              "object_id": "obj-f54ea6f6cb6a602584dd2882",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021",
+                "object_id": "obj-f54ea6f6cb6a602584dd2882"
+              },
+              "object_text_end": 52,
+              "object_text_start": 0,
+              "source_text_end": 108,
+              "source_text_start": 56,
+              "text": "××××××××××××××××××××××××××××××××××××××××××××××××××××"
+            },
+            {
+              "fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+              "locator": "/body/p[4]/r[22]",
+              "object_id": "obj-27c989844a4c75956bcbbd0c",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3",
+                "object_id": "obj-27c989844a4c75956bcbbd0c"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 109,
+              "source_text_start": 108,
+              "text": "×"
+            },
+            {
+              "fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+              "locator": "/body/p[4]/r[23]",
+              "object_id": "obj-0e997756fff6d4e465d6cd54",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e",
+                "object_id": "obj-0e997756fff6d4e465d6cd54"
+              },
+              "object_text_end": 19,
+              "object_text_start": 0,
+              "source_text_end": 128,
+              "source_text_start": 109,
+              "text": "×××××××××××××××××××"
+            },
+            {
+              "fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+              "locator": "/body/p[4]/r[24]",
+              "object_id": "obj-3561416d4798f041fe95594e",
+              "object_ref": {
+                "document_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+                "expected_fingerprint": "1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649",
+                "object_id": "obj-3561416d4798f041fe95594e"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 129,
+              "source_text_start": 128,
+              "text": "。"
+            }
+          ]
+        }
+      }
+    ],
+    "commands": [],
+    "unsupported": [],
+    "source_review_digest": "95979c8ef1a77f8b5fb597ba21a545e2082b319a33f688bdcf40dd935758adcd"
+  }
+}

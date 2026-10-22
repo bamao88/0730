@@ -1,0 +1,671 @@
+schema_version: docfit-content-field-registry/v0.2
+registry_id: docfit.thesis.content_fields
+registry_version: 0.5.0
+revision: 2026-08-13.1
+status: accepted
+scope: cross_stage_thesis_content_semantics
+open_world: true
+description: 在 accepted v0.4 的 54 个字段职责上，以 clean break 将正文标题语义改为章标题、一级节标题、二级节标题等清晰层级；不提供旧 field_id alias，作为新模板提取与后续内容链路的当前合同。
+authority:
+  design: DESIGN.md
+  consumer_binding: registry_id_registry_version_sha256
+  mutable_latest_allowed: false
+id_policy:
+  canonical_pattern: ^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$
+  canonical_shape: <domain>.<concept>[.<role>][.<qualifier>]
+  forbidden_semantics:
+  - school_or_template_name
+  - locator_or_page_number
+  - style_name
+  - instance_sequence
+  - concrete_field_value
+  language_qualifier_rule: 仅在语言变体是独立逻辑值时使用 zh/en qualifier；重复结构内容的语言记录在 content item。
+unknown_field_policy:
+  field_id: null
+  classification_status: unregistered
+  local_field_key_pattern: ^uf-[0-9]{4,}$
+  required_metadata:
+  - label
+  - meaning
+  - content_type
+  - source_evidence
+  allowed_dispositions:
+  - placed
+  - retain
+  - exclude
+  - manual
+  - unresolved
+  proposed_canonical_id_is_binding: false
+  promotion_requires_human_review: true
+language_policy:
+  item_languages:
+  - zh
+  - en
+  - mixed
+  - und
+  parallel_content_keys:
+  - parallel_group_id
+  - translation_of
+  automatic_translation: forbidden_without_authorized_source
+versioning:
+  patch: non_semantic_label_or_note_correction
+  minor: additive_field_or_alias_or_pre_1_0_consumer_semantic_contract
+  incompatible_change: new_field_id_with_deprecated_and_replaced_by_or_major
+  old_consumers_follow_latest: false
+known_gaps:
+- legacy_optional_mixes_presence_and_cardinality
+- school_specific_meaning_in_body_inline_emphasis
+- multi_parent_relationship_for_body_table_note_unresolved
+- projection_schema_for_composite_values_pending
+derived_from:
+  path: docs/plans/docfit-content-field-registry/content-fields-v0.4.yaml
+  sha256: 8b335cc86b60ed2f391ac696155525841b585be09affcd406042e5ad5e1c3dbb
+  migration: clean_break_rename_body_heading_levels_to_unambiguous_outline_taxonomy_without_aliases
+normalizations:
+- source_field_id: acknowledgement
+  canonical_field_id: acknowledgement.body
+  reason: source identifier lacked the required domain.concept shape
+- field_ids:
+  - body.figure.caption
+  - body.table.caption
+  - appendix.title
+  change: remove fixed zh language; record language and parallel grouping on each content item
+review:
+  status: accepted
+  reviewer: 产品负责人（当前用户）
+  reviewed_at: '2026-08-13'
+  conclusion: accepted_for_clean_break_template_and_content_runtime
+  acceptance_evidence: 用户确认章标题、一级节标题、二级节标题命名与单一可复用正文结构方案。
+  pilots:
+  - school-template-extraction
+  - student-content-runtime
+fields:
+- field_id: thesis.title.zh
+  label: 中文论文题目
+  meaning: 学位论文在封面和中文语境中使用的完整题名。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: author.name.zh
+  label: 作者中文姓名
+  meaning: 学位申请人在中文封面中使用的姓名。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.student_id
+  label: 学号
+  meaning: 学位申请人的校内学号。
+  content_type: text
+  cardinality: one
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.department
+  label: 院系
+  meaning: 学位申请人所属院、系或培养单位名称。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.major
+  label: 专业
+  meaning: 学位申请人的专业名称。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.research_direction
+  label: 研究方向
+  meaning: 学位申请人的研究方向。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: advisor.name.zh
+  label: 导师中文姓名
+  meaning: 论文指导教师在中文封面中使用的姓名；职称不应在无来源时自动补写。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: degree.type
+  label: 学位类型
+  meaning: 封面复选项中的学术学位或专业学位。
+  content_type: text
+  cardinality: one
+  notes: 建议允许值为 academic 或 professional；学校模板可另行约束显示方式。
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: submission.date
+  label: 提交年月
+  meaning: 封面显示的论文提交或定稿年月。
+  content_type: text
+  cardinality: one
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: review.mode
+  label: 评审模式
+  meaning: 决定是否保留实名评审专家名单条件页的任务配置字段。
+  content_type: text
+  cardinality: one
+  notes: 允许值和条件页行为由具体 template-spec 约束；该字段不直接写入论文正文。
+  value_sources:
+  - task_input
+  student_extraction_policy: not_applicable
+- field_id: reviewer.list
+  label: 实名评审专家名单
+  meaning: 实名评审时插入封面后的专家名单内容。
+  content_type: section
+  cardinality: optional
+  notes: 仅在具体模板声明实名评审条件页时适用。
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: submission.copyright_qr_page
+  label: 带二维码版权声明页
+  meaning: 从个人门户取得并用于正式图书馆提交的整页版权声明。
+  content_type: section
+  cardinality: optional
+  value_sources:
+  - student_source
+  - external_asset
+  student_extraction_policy: optional
+- field_id: abstract.zh
+  label: 中文摘要
+  meaning: 论文中文摘要正文。
+  content_type: rich_text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: keywords.zh
+  label: 中文关键词
+  meaning: 中文摘要页的关键词集合。
+  content_type: text
+  cardinality: one
+  language: zh
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+  normalization:
+    preserve_observed_value: true
+    normalized_value_excludes_labels:
+    - 关键词：
+    - '关键词:'
+    trim_outer_whitespace: true
+- field_id: thesis.title.en
+  label: 英文论文题目
+  meaning: 英文摘要页顶部使用的完整英文题名。
+  content_type: text
+  cardinality: one
+  language: en
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: author.name.en
+  label: 作者英文姓名
+  meaning: 英文摘要页使用的作者姓名。
+  content_type: text
+  cardinality: one
+  language: en
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: advisor.name.en
+  label: 导师英文姓名
+  meaning: Directed by Professor 后填写的导师英文姓名。
+  content_type: text
+  cardinality: one
+  language: en
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: abstract.en
+  label: 英文摘要
+  meaning: 论文英文摘要正文。
+  content_type: rich_text
+  cardinality: one
+  language: en
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: keywords.en
+  label: 英文关键词
+  meaning: 英文摘要页的关键词集合。
+  content_type: text
+  cardinality: one
+  language: en
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+  normalization:
+    preserve_observed_value: true
+    normalized_value_excludes_labels:
+    - KEY WORDS：
+    - 'KEY WORDS:'
+    - KEYWORDS：
+    - 'KEYWORDS:'
+    trim_outer_whitespace: true
+- field_id: generated.toc
+  label: 目录
+  meaning: 根据模板既有目录域和最终标题结构生成的目录。
+  content_type: section
+  cardinality: one
+  notes: 由最终标题结构和模板既有目录机制生成，不把缓存文字当作学生正文。
+  value_sources:
+  - system_generated
+  student_extraction_policy: not_applicable
+- field_id: generated.list_of_figures
+  label: 图目录
+  meaning: 根据最终图题域生成的图目录。
+  content_type: section
+  cardinality: optional
+  notes: 由最终图题生成；语言和编号规则由具体 template-spec 约束。
+  value_sources:
+  - system_generated
+  student_extraction_policy: not_applicable
+- field_id: generated.list_of_tables
+  label: 表目录
+  meaning: 根据最终表题域生成的表目录。
+  content_type: section
+  cardinality: optional
+  notes: 由最终表题生成；语言和编号规则由具体 template-spec 约束。
+  value_sources:
+  - system_generated
+  student_extraction_policy: not_applicable
+- field_id: body.chapters
+  label: 正文章节集合
+  meaning: 论文全部普通纵向正文章节及其内部结构。
+  content_type: section
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: body.heading.outline1
+  label: 章标题
+  meaning: 正文章标题；使用模板 Heading 1 编号与页眉机制。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: body.heading.outline2
+  label: 一级节标题
+  meaning: 章内第一层节标题。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.heading.outline3
+  label: 二级节标题
+  meaning: 章内第二层节标题；属于目录范围。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.heading.outline4
+  label: 三级节标题
+  meaning: 章内第三层节标题；模板说明其通常不进入目录。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.heading.outline5
+  label: 四级节标题
+  meaning: 章内第四层节标题；模板说明其通常不进入目录。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.paragraph
+  label: 正文段落
+  meaning: 普通正文段落流。
+  content_type: rich_text
+  cardinality: many
+  parent_field_id: body.chapters
+  notes: 保留文本、对象、域、书签、批注、脚注、超链接、内容控件和修订边界。
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: body.numbered_list_item
+  label: 数字列表项
+  meaning: 使用模板数字列表机制的正文列表项。
+  content_type: rich_text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.inline_emphasis
+  label: 行内要点
+  meaning: 应用 PKU要点字符样式的行内强调内容。
+  content_type: rich_text
+  cardinality: many
+  parent_field_id: body.paragraph
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.inline_quote
+  label: 行中引
+  meaning: 保留在普通正文段落中的短引文。
+  content_type: rich_text
+  cardinality: many
+  parent_field_id: body.paragraph
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.block_quote
+  label: 提行引
+  meaning: 独立成段且不加引号的长引文。
+  content_type: rich_text
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.figure
+  label: 插图
+  meaning: 正文中由同一组题注共同描述的语义插图；可由一个或多个源图片资产组成。
+  content_type: image
+  cardinality: many
+  parent_field_id: body.chapters
+  notes: 一个 content item 可绑定一项或多项 asset_refs；多面板或并排图片若共享同一组题注，按一个语义图提取。仅用于承载图片的无文本表格是布局容器，不另算 body.table。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+  composition:
+    semantic_unit: captioned_figure
+    asset_cardinality: one_or_more
+    layout_only_image_grid_is_body_table: false
+- field_id: body.figure.caption
+  label: 图题
+  meaning: 描述父级图或表的题注正文；源中可位于对象前后，目标位置和编号由模板决定。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.figure
+  notes: 图题的位置、编号和样式由具体模板规范约束；语言保存在具体 content item 上，中英平行图题共享本字段 ID。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+  normalization:
+    preserve_observed_value: true
+    normalized_value_excludes_generated_prefixes:
+    - 图 <chapter>-<sequence>
+    - Fig. <chapter>-<sequence>
+    - Figure <chapter>-<sequence>
+    trim_outer_whitespace: true
+    generation_owner: target_template_caption_numbering
+    source_prefix_grammar:
+      type_labels:
+      - 图
+      - Fig.
+      - Figure
+      source_number: optional
+      number_examples:
+      - '2'
+      - 2-4
+      - 2－4
+      - 2—4
+      remove_from_normalized_value: true
+  caption_binding:
+    primary_evidence: source_structure_adjacency_and_layout
+    source_number_role: trace_evidence_not_object_identity
+    number_mismatch: retain_observed_and_require_human_confirmation
+- field_id: body.equation
+  label: 公式
+  meaning: 正文公式对象。
+  content_type: equation
+  cardinality: many
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.table
+  label: 表格
+  meaning: 正文表格对象；可包含重复表头。
+  content_type: table
+  cardinality: many
+  parent_field_id: body.chapters
+  notes: 保留语义数据表结构；只承载图片排列且无数据单元格语义的表格是 figure 布局容器，不得重复提取为 body.table。具体边框、表头和样式由模板规范约束。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.table.caption
+  label: 表题
+  meaning: 描述父级图或表的题注正文；源中可位于对象前后，目标位置和编号由模板决定。
+  content_type: text
+  cardinality: many
+  parent_field_id: body.table
+  notes: 表题的位置、编号和样式由具体模板规范约束；语言保存在具体 content item 上，中英平行表题共享本字段 ID。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+  normalization:
+    preserve_observed_value: true
+    normalized_value_excludes_generated_prefixes:
+    - 表 <chapter>-<sequence>
+    - Table <chapter>-<sequence>
+    apply_per_language_line: true
+    trim_outer_whitespace: true
+    generation_owner: target_template_caption_numbering
+    source_prefix_grammar:
+      type_labels:
+      - 表
+      - Table
+      source_number: optional
+      number_examples:
+      - '2'
+      - 2-4
+      - 2－4
+      - 2—4
+      remove_from_normalized_value: true
+  caption_binding:
+    primary_evidence: source_structure_adjacency_and_layout
+    source_number_role: trace_evidence_not_object_identity
+    number_mismatch: retain_observed_and_require_human_confirmation
+- field_id: body.table.note
+  label: 图表注
+  meaning: 表格或图片所需的注释段落。
+  content_type: rich_text
+  cardinality: optional
+  parent_field_id: body.table
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: body.landscape_block
+  label: 横向宽表或大图分节
+  meaning: 需要横向 A4 页面时使用的独立几何分节内容。
+  content_type: section
+  cardinality: optional
+  parent_field_id: body.chapters
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: references.entries
+  label: 参考文献条目
+  meaning: 论文参考文献列表。
+  content_type: rich_text
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: required
+- field_id: references.style_system
+  label: 参考文献著录体系
+  meaning: 决定全文采用顺序编码制或著者—出版年制的任务配置字段。
+  content_type: text
+  cardinality: one
+  value_sources:
+  - task_input
+  - human_confirmed
+  student_extraction_policy: not_applicable
+- field_id: achievements.journal_articles
+  label: 期刊论文成果
+  meaning: 博士期间发表或录用的期刊论文条目。
+  content_type: rich_text
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: achievements.conference_papers
+  label: 会议论文成果
+  meaning: 博士期间的会议论文条目。
+  content_type: rich_text
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: achievements.projects
+  label: 参与项目
+  meaning: 博士期间参与的科研项目条目。
+  content_type: rich_text
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: achievements.intellectual_property
+  label: 专利与软件著作权
+  meaning: 博士期间获得的专利或软件著作权条目。
+  content_type: rich_text
+  cardinality: many
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: acknowledgement.body
+  label: 致谢
+  meaning: 论文致谢正文。
+  content_type: rich_text
+  cardinality: optional
+  language: zh
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: submission.declaration_qr_page
+  label: 带二维码原创性声明与授权页
+  meaning: 从个人门户取得并用于正式提交的整页原创性声明与使用授权说明。
+  content_type: section
+  cardinality: optional
+  value_sources:
+  - student_source
+  - external_asset
+  student_extraction_policy: optional
+- field_id: advisor.title
+  label: 导师职称
+  meaning: 指导教师在学校模板要求单独填写的职称。
+  content_type: text
+  cardinality: optional
+  language: zh
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.cohort_class
+  label: 年级、专业及班级复合信息
+  meaning: 学校封面将年级、专业和班级合并为一个填写值时使用的复合字段。
+  content_type: text
+  cardinality: one
+  language: zh
+  notes: 不替代 author.major；拆分来源不足时保留复合值并进入 Human 复核。
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: author.department.en
+  label: 院系英文名称
+  meaning: 英文摘要或英文封面中使用的院、系或培养单位英文名称。
+  content_type: text
+  cardinality: optional
+  language: en
+  value_sources:
+  - student_source
+  - task_input
+  student_extraction_policy: optional
+- field_id: appendix.title
+  label: 附录标题
+  meaning: 附录页或附录章节的标题。
+  content_type: text
+  cardinality: optional
+  notes: 语言保存在具体 content item 上；中英平行附录标题共享本字段 ID。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: appendix.body
+  label: 附录内容
+  meaning: 一个或多个附录的结构化内容。
+  content_type: section
+  cardinality: optional
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+- field_id: achievements.entries
+  label: 未细分的相关学术成果
+  meaning: 模板只提供一个综合成果区域、尚未可靠拆为成果子类时使用的条目集合。
+  content_type: rich_text
+  cardinality: many
+  notes: Human 确认后可拆到既有 achievements.* 子字段。
+  value_sources:
+  - student_source
+  student_extraction_policy: optional
+policy_schema:
+  value_source_kinds:
+  - student_source
+  - task_input
+  - system_generated
+  - external_asset
+  - human_confirmed
+  student_extraction_policy_values:
+  - required
+  - optional
+  - not_applicable
+  required_semantics: 普通论文预期存在；源中不存在时仍输出 missing，不得猜值。
+  optional_semantics: 学生源允许存在；源中不存在时输出 missing，不计作系统生成或任务输入。
+  not_applicable_semantics: 不从学生源抽取；由任务输入、系统生成或显式外部资产承担。
+source_document_view_policy:
+  word_revision_view: final_visible
+  inserted_text: included_in_observed_content_and_retained_as_revision_evidence
+  deleted_text: excluded_from_observed_content_but_accounted_for_as_revision_evidence
+  comments: review_metadata_not_student_thesis_content
+  human_gate: Any ambiguous or semantically conflicting tracked change blocks Gold promotion.
+source_numbering_policy:
+  numbered_list_evidence:
+  - explicit_parenthesized_marker_in_text
+  - word_numPr_with_numbering_definition
+  observed_value: Retain the visible list marker; when Word generates it, also retain the raw text payload and numbering
+    definition evidence.
+  target_generation: Target template owns final list and heading numbering mechanics.

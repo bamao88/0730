@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "source_root": "temp/phase2-p0-n06-e2e-long-20260911",
+  "source_document_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "exact_agent_judgment_count": 8,
+  "explicit_structural_replay_judgment_count": 5,
+  "selected_source_entry_count": 13,
+  "selected_object_count": 50,
+  "inventory_submit_status": "ok",
+  "semantic_submit_status": "ok",
+  "covered_source_entry_count": 13,
+  "covered_object_count": 42,
+  "structural_span_count": 5,
+  "structural_spans_have_no_text_offsets": true,
+  "persisted_reread_exact": true,
+  "resume_app_resolved_spans_exact": true,
+  "shared_tool_review_resolved_spans_exact": true,
+  "compiler_intent_count": 13,
+  "compiler_unsupported_count": 0,
+  "next_consumer_resolved_spans_exact": true,
+  "resolved_span_count": 19,
+  "resolved_spans_digest": "b824d08b6e9d135d984fe82976a43c84e26aad3cd26478c5899dc110748bf26a"
+}

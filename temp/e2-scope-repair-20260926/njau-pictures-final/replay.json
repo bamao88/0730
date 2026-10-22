@@ -1,0 +1,464 @@
+{
+  "verification_level": "real replay; original picture judgments; isolated Tool slice",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+  "input_hashes": {
+    "input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "work/.docfit/unit-boundary-checkpoint.json": "69f00900af7d4b50dc3498b699065cd43d91f4690853878b46374ede1fc745ab",
+    "work/.docfit/harness/object-inventory.json": "701fbce573e3cf5ece213e00afd245a46b5cddd9a004dafbbd238e2d92b3421f",
+    "work/.docfit/harness/semantic-judgments.json": "5a29f6c049f9c0ba8b6e1fa47a20d5f09a93c6dc6ae38c9d08b36b2a3abe1a8d",
+    "work/.docfit/post-unit-materialization/materialization.json": "025a46fffa154cdcb73c8ce07b6a8d652456abbf917ffc864257abbdd571a882"
+  },
+  "original_unchanged": true,
+  "full_materialization": false,
+  "agent_called": false,
+  "product_acceptance": false,
+  "picture_count": 2,
+  "receipts": [
+    {
+      "action": "remove_drawing",
+      "block_id": "source-entry-779d09452b5c02ad0b871941",
+      "source_entry_id": "source-entry-779d09452b5c02ad0b871941",
+      "judgment_refs": [
+        "semantic_judgments[208]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-779d09452b5c02ad0b871941;extent=whole_entry;source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "3b7179e925835134a314f612a1e8d04048861da674eef5f5ec31f959b6b5221d",
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[1]/r[1]",
+          "object_id": "obj-d9910adb07fb7baf860e78f2",
+          "object_ref": {
+            "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+            "expected_fingerprint": "3b7179e925835134a314f612a1e8d04048861da674eef5f5ec31f959b6b5221d",
+            "object_id": "obj-d9910adb07fb7baf860e78f2"
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "action": "remove_drawing",
+      "block_id": "source-entry-741bd7ca7aa2e4c4e09bec91",
+      "source_entry_id": "source-entry-741bd7ca7aa2e4c4e09bec91",
+      "judgment_refs": [
+        "semantic_judgments[209]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-741bd7ca7aa2e4c4e09bec91;extent=whole_entry;source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+      ],
+      "word_fragments": [
+        {
+          "extent": {
+            "kind": "whole_entry"
+          },
+          "fingerprint": "3fe53da925f487d8620aa22076f293b1657b99a6e7b9dea1767ec17b611ece92",
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[2]/r[1]",
+          "object_id": "obj-fd1d2059968cfdea7a91528b",
+          "object_ref": {
+            "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+            "expected_fingerprint": "3fe53da925f487d8620aa22076f293b1657b99a6e7b9dea1767ec17b611ece92",
+            "object_id": "obj-fd1d2059968cfdea7a91528b"
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "only_selected_drawings_removed": true,
+  "reopened_package_verified": true,
+  "protected_subtree_count": 203,
+  "full_review_feedback": {
+    "schema_version": 1,
+    "status": "error",
+    "recovery": {
+      "kind": "execution_unsupported",
+      "owner": "tool",
+      "action": "stop"
+    },
+    "feedback": {
+      "type": "materialization_readiness",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": null
+    },
+    "checks": [
+      {
+        "name": "materialization_readiness",
+        "result": "error"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-3efd73cae8a512c5ce83a203",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-dcf5576c2bfd65495729d26a",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-cdb14f8b3309a8bf179fa46e",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-105fd29ce0a9556e332a14b8",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-d6167ae87cab94b809baef51",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-28e56cb18de09bc75b058829",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-eff74536b46d98e710787702",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0,
+        "recovery": {
+          "kind": "execution_unsupported",
+          "owner": "tool",
+          "action": "stop"
+        }
+      },
+      {
+        "code": "materialization_semantic_scope_conflict",
+        "missing_requirement": "consistent_source_scope_purposes",
+        "why_it_blocks_execution": "The selected content is assigned incompatible purposes: removal overlaps content to retain or fill, or filling ranges overlap. Revise the related source entries so each affected range has one consistent purpose. Removing a whole container also removes its contents.",
+        "message": "The selected content is assigned incompatible purposes: removal overlaps content to retain or fill, or filling ranges overlap. Revise the related source entries so each affected range has one consistent purpose. Removing a whole container also removes its contents.",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "source_judgment_ref": "semantic_judgments[0]",
+        "source_entry_ids": [
+          "source-entry-852593250a6b8daea9640fcb",
+          "source-entry-2e2fe0ca346b5188bc2ecac2",
+          "source-entry-fc0591d9c1444238d6d0645a",
+          "source-entry-9d54f57faf3b5f30eebbf24c",
+          "source-entry-b931deacba2856fb3ce7c86b",
+          "source-entry-5be6ccc670222a702226ff2d",
+          "source-entry-b0fe7d8a79dff391219369f1",
+          "source-entry-1b7591ef0f1788232ed9d779",
+          "source-entry-68fc05ff1056dc3037b2c719",
+          "source-entry-813dfb5f49ef0a4256d95183",
+          "source-entry-17e2679377abb766980c7640",
+          "source-entry-e3bea420b4e548d802e2e1b9",
+          "source-entry-24ac9b719646d00ae5b2dd7f",
+          "source-entry-c5535b8a8362f4863822c436",
+          "source-entry-b666f200010b20ffe84b61c6",
+          "source-entry-d22a3b57b4a4a59adc635195",
+          "source-entry-9dccf7eda8a43cc44a31673b",
+          "source-entry-b4f650846b8a5d913b18ccb4",
+          "source-entry-8a0d7c7d63dd0b97052d545a",
+          "source-entry-2f0225f0c653a4a3a6043d0b",
+          "source-entry-0fdf4dee659c659815e69556",
+          "source-entry-ec6aeef44153c681924e8a3f"
+        ],
+        "source_entries": [
+          {
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+            "entry_type": "text",
+            "text": "本科生毕业论文（设计）"
+          },
+          {
+            "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+            "entry_type": "text",
+            "text": "题    目:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+            "entry_type": "text",
+            "text": "                                    "
+          },
+          {
+            "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+            "entry_type": "text",
+            "text": "姓    名:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-17e2679377abb766980c7640",
+            "entry_type": "text",
+            "text": "学    号:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+            "entry_type": "text",
+            "text": "学    院:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+            "entry_type": "text",
+            "text": "专    业:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+            "entry_type": "text",
+            "text": "指导教师:                 职称               "
+          },
+          {
+            "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+            "entry_type": "text",
+            "text": "20   年   月   日"
+          },
+          {
+            "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2e2fe0ca346b5188bc2ecac2"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-fc0591d9c1444238d6d0645a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9d54f57faf3b5f30eebbf24c"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b931deacba2856fb3ce7c86b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-5be6ccc670222a702226ff2d"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b0fe7d8a79dff391219369f1"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-1b7591ef0f1788232ed9d779"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-68fc05ff1056dc3037b2c719"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-813dfb5f49ef0a4256d95183"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-17e2679377abb766980c7640"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-e3bea420b4e548d802e2e1b9"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-c5535b8a8362f4863822c436"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b666f200010b20ffe84b61c6"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-d22a3b57b4a4a59adc635195"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9dccf7eda8a43cc44a31673b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b4f650846b8a5d913b18ccb4"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-8a0d7c7d63dd0b97052d545a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2f0225f0c653a4a3a6043d0b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-0fdf4dee659c659815e69556"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-ec6aeef44153c681924e8a3f"
+          }
+        ],
+        "recovery": {
+          "kind": "semantic_revision",
+          "owner": "agent",
+          "action": "revise"
+        }
+      }
+    ],
+    "failure": {
+      "origin": "tool",
+      "code": "template_materialization_execution_unsupported",
+      "retryable": false,
+      "message": "Accepted semantic review is not materializable (8 blockers): materialization_body_structure_carrier_unsupported (7), materialization_semantic_scope_conflict (1).",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "warnings": []
+  },
+  "candidate_sha256": "19291ddd8b065bd5875f9e4ef982fbe40d6a44730ac50609f8730e6f4088dc1e"
+}

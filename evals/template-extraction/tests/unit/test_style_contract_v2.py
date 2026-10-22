@@ -13,7 +13,6 @@ from template_extraction_eval.contracts import (
     compute_style_contract_digest,
     compute_style_contract_set_digest,
     load_fill_contract,
-    load_legacy_fill_contract,
 )
 
 V2 = "docfit-template-fill-contract/v2"
@@ -69,7 +68,11 @@ def _contract(styles: list[dict[str, Any]] | None = None) -> dict[str, Any]:
         "regions": [],
         "slots": [
             {
-                "slot_id": "slot.cover.title",
+                "slot_ref": (
+                    "source_entry_id=source-entry-u-all-block-0001;extent=whole_entry;"
+                    f"source_snapshot_sha256={'3' * 64};"
+                    "field_id=thesis.title.zh"
+                ),
                 "owner": "slot",
                 "field_id": "thesis.title.zh",
                 "content_type": "text",
@@ -210,6 +213,17 @@ def test_v2_validates_slot_and_dependency_reference_closure(tmp_path: Path) -> N
     assert "style digest does not match style.base" in str(captured.value)
 
 
+def test_v2_rejects_slot_ref_field_id_mismatch(tmp_path: Path) -> None:
+    value = _contract()
+    value["slots"][0]["field_id"] = "advisor.name.zh"
+
+    with pytest.raises(InputContractError) as captured:
+        load_fill_contract(_write(tmp_path, value))
+
+    assert captured.value.code is InputErrorCode.CONTRACT_MISMATCH
+    assert "slot_ref field_id does not match slot field_id" in str(captured.value)
+
+
 def test_v2_rejects_owned_property_missing_from_effective_properties(tmp_path: Path) -> None:
     value = _contract()
     value["styles"][0]["owned_properties"].append("run.italic")
@@ -226,9 +240,7 @@ def test_v2_rejects_owned_property_missing_from_effective_properties(tmp_path: P
     assert "owns missing effective property run.italic" in str(captured.value)
 
 
-def test_legacy_v1_reader_resolves_style_id_without_forcing_inline_style(
-    tmp_path: Path,
-) -> None:
+def test_v1_fill_contract_is_retired_from_eval_loader(tmp_path: Path) -> None:
     value = _contract()
     value["schema_version"] = "docfit-template-fill-contract/v1"
     value.pop("style_contract_set_digest")
@@ -247,16 +259,7 @@ def test_legacy_v1_reader_resolves_style_id_without_forcing_inline_style(
     ]
     path = _write(tmp_path, value)
 
-    legacy = load_legacy_fill_contract(path)
-    dispatched = load_fill_contract(path)
-
-    assert legacy.slots[0].expected_value_style.font["bold"] is True
-    assert legacy.slots[0].style_contract_ref is None
-    assert legacy.styles == ()
-    assert dispatched == legacy
-
-
-def test_legacy_reader_rejects_v2_contract(tmp_path: Path) -> None:
     with pytest.raises(InputContractError) as captured:
-        load_legacy_fill_contract(_write(tmp_path, _contract()))
+        load_fill_contract(path)
     assert captured.value.code is InputErrorCode.CONTRACT_MISMATCH
+    assert "fill contract v1 is retired" in str(captured.value)

@@ -1,0 +1,219 @@
+{
+  "status": "complete",
+  "summary": "对封面单元（湖南农业大学 全日制普通本科生毕业论文(设计) 封面）的 16 个 source entry 完成了语义判断。附件1 封面基本格式段（block 1）整体判为 cleanup（仅样式说明，不进入模板正文），block 14 的\"三号字空二或三行\"间距说明按 cleanup 处理，其余 14 段拆分为 fixed_label、fill_slot、style_only 三类责任：固定标题、文档类型、单位、地点保留为 fixed_label；中文/英文题名、学生姓名、学号、年级专业及班级、指导老师姓名与职称、学院、提交日期分别绑定到 field_id_vocabulary 中允许 fill_slot 的字段；嵌套的字体字号说明（如\"一号华文行楷加粗\"、\"小二黑体加粗\"等）判为 style_only，承担相邻内容的样式约束。",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-f64716e2b627776af88239e5",
+      "parts": [
+        {
+          "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "此段位于封面布局之前的\"附件1 封面基本格式\"，是模板的样式/排版说明书（含行距、页边距、居中规则、占位符说明、题目措辞规则），不属于封面填写语义。运行时已在 unit-boundary-checkpoint 中将其排除在 cover 可见文本大纲之外。封面所需格式约束应交给 Style Contract 捕获，这里整段判 cleanup，不进入封面正文。"
+    },
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "该行是对下一行\"湖 南 农 业 大 学\"的字体（华文行楷 一号）与段前留空一行的格式说明，属样式约束而非正式内容，由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        }
+      ],
+      "reason": "校名校名是封面固定标题，所有学生论文均相同；其样式（华文行楷 一号加粗居中）由相邻 style_only 段约束。"
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        }
+      ],
+      "reason": "论文类型固定标题，所有本科生共用，按附件1 规则需根据所做内容在\"论文\"或\"设计\"中取舍，此为模板层面的措辞固定；样式（黑体 一号加粗居中）由对应 style 段约束。"
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "对上一行\"全日制普通本科生毕业论文(设计)\"的字体（黑体 一号加粗）与段前留空的格式说明，由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目 ",
+          "role": "fixed_label"
+        },
+        {
+          "text": " ",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        }
+      ],
+      "reason": "该段首部\"毕业论文（设计）中文题目\"是提示标签占据题目值的位置，按学校规则\"论文/设计\"二选一应在样式/合同中体现；此处将标签与提示占据题名位置的部分作为前缀 fixed_label，紧随其后的尾部空白作为中文题名的填入位（题名真值由 host 写入，原文此处置为单空格以保 layout 留位）。词表提供 thesis.title.zh（allowed_part_roles: fill_slot）。样式（小二黑体加粗居中）由相邻 style 段约束。"
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        }
+      ],
+      "reason": "\"TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）\"整体占据英文题名位置，附件1 说明学校要求\"标题中设计/论文不要\"，同理适用于英文标题；标签本身是英文题名的占位提示，应被真实英文题名替换。词表提供 thesis.title.en（allowed_part_roles: fill_slot）。样式（四号 Times New Roman 加粗大写，右对齐）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "该段是对英文标题的排版说明（按题目长度决定留空行数），属于样式/布局要求，由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□学生姓名（三号黑体加粗）：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        },
+        {
+          "text": " （三号楷体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "该行是封面基本信息第 1 行：\"学生姓名\"标签与前导缩进空格为 fixed_label；\"×××（或×□×）\"是姓名占位示例，应被学生中文姓名替换，绑定 author.name.zh（allowed_part_roles: fill_slot）；\"（三号楷体加粗）\"约束姓名字体，由 Style Contract 承接。\"（三号黑体加粗）\"已并入前面的 fixed_label 描述以保留说明约束。"
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□学□□号：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "\"学号\"标签和前导缩进空格为 fixed_label；\"20××××××××××\"是学号示例，应被学生真实学号替换，绑定 author.student_id（allowed_part_roles: fill_slot）。样式（三号黑体加粗）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□年级专业及班级：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "\"年级专业及班级\"是复合填写位，词表专门提供 author.cohort_class（年级、专业及班级复合信息，allowed_part_roles: fill_slot）。标签为 fixed_label；\"20××级×××（×）班\"示例占位整体替换为学生年级专业班级复合值。样式（三号黑体加粗）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□指导老师及职称：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "指导老师行按相邻字段拆：标签\"指导老师及职称：\"和前导空格为 fixed_label；\"×××\"是导师姓名占位，绑定 advisor.name.zh（allowed_part_roles: fill_slot）；姓与职称之间的一个全角空格\"□\"为 fixed_label 间隔；\"教授\"是职称示例占位，应替换为真实职称，词表提供 advisor.title（allowed_part_roles: fill_slot）。样式（三号黑体加粗）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□学□□院：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": " （学院名用全称）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "\"学院\"标签和前导缩进空格为 fixed_label；\"××××学院\"是院系示例占位，绑定 author.department（allowed_part_roles: fill_slot）；\"（学院名用全称）\"是对填入值的格式要求，由 Style Contract 或 Fill Contract 承接，不应出现在填后正文中。样式（三号黑体加粗）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "该段是对基本信息区与下方\"湖南·长沙\"之间留空行数的排版说明，属于布局/样式指令，不进入正式封面正文；Style Contract 应承接相关空白控制。这里判 cleanup 以保证正式输出中不残留此排版提示。"
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        }
+      ],
+      "reason": "学校所在地为封面固定内容，所有学生论文均一致，保留为 fixed_label。样式（小三号黑体）由 Style Contract 承接。"
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "\"提交日期：\"标签为 fixed_label；\"20××年××月\"是日期示例占位，绑定 submission.date（allowed_part_roles: fill_slot），填入时替换为学生实际提交年月。样式（小三号黑体）由 Style Contract 承接。"
+    }
+  ]
+}

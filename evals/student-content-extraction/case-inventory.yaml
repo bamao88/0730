@@ -1,0 +1,67 @@
+schema_version: docfit-student-content-extraction-case-inventory/v1
+status: restricted_local_inventory_restored_with_live_quality_gaps
+module: user-content-extraction
+privacy:
+  contains_student_text: false
+  public_ci_allowed: false
+  reason: Real student source DOCX, Gold packages, review images and product review notes stay in restricted local storage.
+default_commands:
+  list_cases: uv run docfit student-content-e2e --list-cases
+  validate_inputs: uv run docfit student-content-e2e --case <case-id> --validate-inputs-only
+  e2e_extract_only: uv run docfit student-content-e2e --case <case-id> --output <actual> --eval off
+  e2e_with_eval: uv run docfit student-content-e2e --case <case-id> --output <actual> --eval on
+  extract: uv run docfit extract-student-content --input <source> --field-registry <registry> --output <actual>
+  eval: uv run docfit eval-student-content --actual <actual> --gold <gold> --output <actual>/eval --json
+gate_semantics:
+  required: Failure blocks this module in restricted regression.
+  trend_only: Recorded for drift and closure work, but does not block public CI until live quality closure is accepted.
+cases:
+  - id: student-002
+    module: user-content-extraction
+    source: temp/manual-gold-preparation/student-content-real-student-002.docx
+    source_sha256: fc39ac02efd152ddf609199615256393e3077b49629e1cca48e1f437b2e44a9b
+    registry: docs/plans/docfit-content-field-registry/content-fields-v0.3.yaml
+    gold: temp/manual-gold-preparation/gold/20-student-assets/student-002
+    gold_sha256: 3124212e34cc5ddafa2c86381858cfd0f6dc59393bb2e947b80d532e06226ebe
+    gold_revision: 2026-08-12.r5
+    expected: pass
+    gate: required
+    status: accepted_gold_restored_live_passed
+    data_status:
+      source: restored_verified
+      gold: restored_verified
+      materializer: extraction_scope_verified_full_scope_blocked_missing_fill_artifacts
+    missing_artifacts:
+      - temp/e2e-real-fallback-v1-20260811/diagnostic-fill-contract-v2.yaml
+      - temp/e2e-real-fallback-v1-20260811/deterministic-replay/placement.json
+    notes: Extraction Gold r5 is restored and verified. Current live final student-content.json passes Gold after the body heading hierarchy binder was made compatible with body.heading.levelN field IDs. Full materializer scope still requires legacy filling artifacts; those are not required for extraction eval.
+  - id: student-001
+    module: user-content-extraction
+    source: temp/manual-gold-preparation/student-content-real-student-001.docx
+    source_sha256: 2e3d6310611cbe2fafddbda18e7b83387b5f3ea3d1f0f3163154d6ec129a6f60
+    registry: docs/plans/docfit-content-field-registry/content-fields-v0.4.yaml
+    gold: temp/manual-gold-preparation/gold/20-student-assets/student-001
+    gold_sha256: c124a1718a788c6ea348b8895adb5f5a8a4ba619b770adabd913a5896a3c715d
+    gold_revision: 2026-08-12.r2
+    expected: fail
+    gate: trend_only
+    status: accepted_gold_live_quality_closure_pending
+    data_status:
+      source: restored_verified
+      gold: restored_verified
+    notes: Accepted Gold exists; current live extraction quality still needs closure before this becomes required.
+  - id: student-003
+    module: user-content-extraction
+    source: temp/manual-gold-preparation/student-content-real-student-003.docx
+    source_sha256: cf49d90832c44d2f28e7fe6940217f4afe7c637f179b3610c75801b900e7d290
+    registry: docs/plans/docfit-content-field-registry/content-fields-v0.4.yaml
+    gold: temp/manual-gold-preparation/gold/20-student-assets/student-003
+    gold_sha256: 26c593ee7f600fc094dee4d62e7685748ab33de9acaf2f1eb0c719c42c0e88f4
+    gold_revision: 2026-08-12.r2
+    expected: fail
+    gate: trend_only
+    status: accepted_gold_live_quality_closure_pending
+    data_status:
+      source: restored_verified
+      gold: restored_verified
+    notes: Accepted Gold exists; current live extraction quality still needs closure before this becomes required.

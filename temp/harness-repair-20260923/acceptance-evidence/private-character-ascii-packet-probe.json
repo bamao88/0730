@@ -1,0 +1,47 @@
+{
+  "verification_level": "synthetic native SDK copy diagnostic on real source text, not natural school E2E",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/object-inventory.json",
+  "source_sha256": "2352ffca31c5f02fbf232d877e28beebc6c2b473686255fd66f31308b18d3efb",
+  "expected_part": {
+    "text": " 学术学位     专业学位",
+    "role": "fill_slot",
+    "field_id": "degree.type"
+  },
+  "results": [
+    {
+      "source_format": "ASCII-serialized reading packet without duplicate text",
+      "subtype": "success",
+      "is_error": false,
+      "output": {
+        "status": "complete",
+        "summary": "Source entry is a single fill_slot for degree.type. Preserved exact characters including U+F06F and U+F0FE private-use icons, with edge whitespace runs encoded on the visible-text part.",
+        "semantic_judgments": [
+          {
+            "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+            "parts": [
+              {
+                "text": " 学位     学位",
+                "leading_whitespace": [
+                  {
+                    "codepoint": "U+0020",
+                    "count": 1
+                  }
+                ],
+                "trailing_whitespace": [
+                  {
+                    "codepoint": "U+0020",
+                    "count": 1
+                  }
+                ],
+                "role": "fill_slot",
+                "field_id": "degree.type"
+              }
+            ],
+            "reason": "Single fill_slot for degree.type. Total source 16 chars: U+F06F, U+0020, '学士学位' (4 chars), U+0020x4, U+F0FE, U+0020, '专业学位' (4 chars). Leading whitespace is the U+0020 after U+F06F (count 1); trailing whitespace is the U+0020 after U+F0FE (count 1). Interior whitespace (the 4 spaces between the two groups) is preserved literally within text. Both private-use codepoints U+F06F and U+F0FE are preserved as literal characters."
+          }
+        ]
+      },
+      "exact_part_preserved": false
+    }
+  ]
+}

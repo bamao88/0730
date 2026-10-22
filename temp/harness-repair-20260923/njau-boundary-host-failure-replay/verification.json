@@ -1,0 +1,28 @@
+{
+  "logic_contract": {
+    "command": "uv run pytest -q tests/contract",
+    "fixture_updates": "Two check-tool tests now distinguish missing host state from invalid proposal",
+    "initial_regression": {
+      "cause": "host mapping failure became semantic feedback and exhausted two backends",
+      "failed": 3
+    },
+    "passed": 998,
+    "seconds": 18.22
+  },
+  "mypy": {
+    "passed": true,
+    "source_files": 126
+  },
+  "natural_failure": false,
+  "product_acceptance": false,
+  "replay": "temp/harness-repair-20260923/njau-boundary-host-failure-replay/replay.json",
+  "replay_sha256": "957c2552fb705858887450b7e30020aa8b5e70f69069d043189f90c3f10e70cb",
+  "ruff": "passed relevant changed Python files",
+  "runtime_bindings": {
+    "src/docfit/app/prepare_template.py": "e8b14213e32dcd6b57b4016a21957543fee9b3194a89c4080084e979311aa9b6",
+    "src/docfit/tools/service.py": "aa0667ff5cc2483a99014334e3218ed83d9c29c4b39fc8885fdaa4fedc66b6ff"
+  },
+  "runtime_commit": "19950176f2ed1a76bbad3341de06134f5f75fcf7",
+  "updated_at": "2026-09-24T07:00:20.423564+00:00",
+  "verification_level": "logic/contract and real-input fault injection; no live Agent on this runtime"
+}

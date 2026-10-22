@@ -1,0 +1,1142 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+  "semantic_judgments_sha256": "8beaf53523b08f4d42ecefc38006ad0e2b0a05668ddf66c2f5755d443f87ad58",
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "field_registry_ref": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.5.0",
+    "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "operation_count": 2,
+  "cleanup_count": 1,
+  "operations": [
+    {
+      "action": "materialize_slot",
+      "field_id": "appendix.title",
+      "block_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+      "part_index": 1,
+      "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+      "slot_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title",
+      "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+      "word_fragments": [
+        {
+          "fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+          "locator": "/body/p[1]/r[5]",
+          "object_id": "obj-3fdbd42b02ef908e425840d3",
+          "object_ref": {
+            "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "expected_fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+            "object_id": "obj-3fdbd42b02ef908e425840d3"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 7,
+          "source_text_start": 5,
+          "text": "附录"
+        },
+        {
+          "fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+          "locator": "/body/p[1]/r[6]",
+          "object_id": "obj-e33c8bb9191d0b547d05c407",
+          "object_ref": {
+            "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "expected_fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+            "object_id": "obj-e33c8bb9191d0b547d05c407"
+          },
+          "object_text_end": 2,
+          "object_text_start": 0,
+          "source_text_end": 9,
+          "source_text_start": 7,
+          "text": "名称"
+        }
+      ],
+      "judgment_refs": [
+        "semantic_judgments[0]"
+      ]
+    },
+    {
+      "action": "materialize_slot",
+      "field_id": "appendix.body",
+      "block_id": "source-entry-3379b78d7c90d344d4f68510",
+      "part_index": 0,
+      "span_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+      "slot_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body",
+      "source_entry_id": "source-entry-3379b78d7c90d344d4f68510",
+      "word_fragments": [
+        {
+          "fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+          "locator": "/body/p[2]/r[1]",
+          "object_id": "obj-cf9d2c1122e6d6072e228514",
+          "object_ref": {
+            "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "expected_fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+            "object_id": "obj-cf9d2c1122e6d6072e228514"
+          },
+          "object_text_end": 106,
+          "object_text_start": 0,
+          "source_text_end": 106,
+          "source_text_start": 0,
+          "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。"
+        },
+        {
+          "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+          "locator": "/body/p[2]/r[2]",
+          "object_id": "obj-51ca6ff690fb3642f2d43b24",
+          "object_ref": {
+            "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+            "object_id": "obj-51ca6ff690fb3642f2d43b24"
+          },
+          "object_text_end": 7,
+          "object_text_start": 0,
+          "source_text_end": 113,
+          "source_text_start": 106,
+          "text": "此项非必需项。"
+        }
+      ],
+      "judgment_refs": [
+        "semantic_judgments[1]"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "action": "remove_exact_fragments",
+      "block_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+      "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+      "judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[9:18];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+          "locator": "/body/p[1]/r[7]",
+          "object_id": "obj-9cd41e1cfea160e420050c09",
+          "object_ref": {
+            "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "expected_fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+            "object_id": "obj-9cd41e1cfea160e420050c09"
+          },
+          "object_text_end": 9,
+          "object_text_start": 0,
+          "source_text_end": 18,
+          "source_text_start": 9,
+          "text": "（三号黑体，居中）"
+        }
+      ]
+    }
+  ],
+  "policy_receipts": [],
+  "mutation_receipts": [
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_refs": [
+        "intent-0001-aeaed905"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+        }
+      ],
+      "field_ids": [
+        "appendix.title"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+      ],
+      "slot_refs": [
+        "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title"
+      ],
+      "affected_blocks": [
+        "source-entry-454790b5e5bb9f7f6cb975ef"
+      ],
+      "before_text_by_block": {
+        "source-entry-454790b5e5bb9f7f6cb975ef": "附  录 附录名称（三号黑体，居中）"
+      },
+      "after_text_by_block": {
+        "source-entry-454790b5e5bb9f7f6cb975ef": "附  录 【填】"
+      },
+      "operation": {
+        "action": "materialize_slot",
+        "field_id": "appendix.title",
+        "block_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+        "part_index": 1,
+        "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+        "slot_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title",
+        "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+        "word_fragments": [
+          {
+            "fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+            "locator": "/body/p[1]/r[5]",
+            "object_id": "obj-3fdbd42b02ef908e425840d3",
+            "object_ref": {
+              "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "expected_fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+              "object_id": "obj-3fdbd42b02ef908e425840d3"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 7,
+            "source_text_start": 5,
+            "text": "附录"
+          },
+          {
+            "fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+            "locator": "/body/p[1]/r[6]",
+            "object_id": "obj-e33c8bb9191d0b547d05c407",
+            "object_ref": {
+              "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "expected_fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+              "object_id": "obj-e33c8bb9191d0b547d05c407"
+            },
+            "object_text_end": 2,
+            "object_text_start": 0,
+            "source_text_end": 9,
+            "source_text_start": 7,
+            "text": "名称"
+          }
+        ],
+        "judgment_refs": [
+          "semantic_judgments[0]"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_refs": [
+        "intent-0002-ec6b6c16"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-3379b78d7c90d344d4f68510"
+        }
+      ],
+      "field_ids": [
+        "appendix.body"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+      ],
+      "slot_refs": [
+        "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body"
+      ],
+      "affected_blocks": [
+        "source-entry-3379b78d7c90d344d4f68510"
+      ],
+      "before_text_by_block": {
+        "source-entry-3379b78d7c90d344d4f68510": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。"
+      },
+      "after_text_by_block": {
+        "source-entry-3379b78d7c90d344d4f68510": "【附录内容】"
+      },
+      "operation": {
+        "action": "materialize_slot",
+        "field_id": "appendix.body",
+        "block_id": "source-entry-3379b78d7c90d344d4f68510",
+        "part_index": 0,
+        "span_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+        "slot_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body",
+        "source_entry_id": "source-entry-3379b78d7c90d344d4f68510",
+        "word_fragments": [
+          {
+            "fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+            "locator": "/body/p[2]/r[1]",
+            "object_id": "obj-cf9d2c1122e6d6072e228514",
+            "object_ref": {
+              "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "expected_fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+              "object_id": "obj-cf9d2c1122e6d6072e228514"
+            },
+            "object_text_end": 106,
+            "object_text_start": 0,
+            "source_text_end": 106,
+            "source_text_start": 0,
+            "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。"
+          },
+          {
+            "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+            "locator": "/body/p[2]/r[2]",
+            "object_id": "obj-51ca6ff690fb3642f2d43b24",
+            "object_ref": {
+              "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+              "object_id": "obj-51ca6ff690fb3642f2d43b24"
+            },
+            "object_text_end": 7,
+            "object_text_start": 0,
+            "source_text_end": 113,
+            "source_text_start": 106,
+            "text": "此项非必需项。"
+          }
+        ],
+        "judgment_refs": [
+          "semantic_judgments[1]"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_exact_fragments",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0001-aeaed905"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[9:18];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+      ],
+      "affected_blocks": [
+        "source-entry-454790b5e5bb9f7f6cb975ef"
+      ],
+      "before_text_by_block": {
+        "source-entry-454790b5e5bb9f7f6cb975ef": "附  录 附录名称（三号黑体，居中）"
+      },
+      "after_text_by_block": {
+        "source-entry-454790b5e5bb9f7f6cb975ef": "附  录 【填】"
+      },
+      "safety_checks": [],
+      "operation": {
+        "action": "remove_exact_fragments",
+        "block_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+        "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+        "judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[9:18];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+            "locator": "/body/p[1]/r[7]",
+            "object_id": "obj-9cd41e1cfea160e420050c09",
+            "object_ref": {
+              "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "expected_fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+              "object_id": "obj-9cd41e1cfea160e420050c09"
+            },
+            "object_text_end": 9,
+            "object_text_start": 0,
+            "source_text_end": 18,
+            "source_text_start": 9,
+            "text": "（三号黑体，居中）"
+          }
+        ]
+      }
+    }
+  ],
+  "receipt_count": 3,
+  "write": {
+    "schema_version": 1,
+    "status": "ok",
+    "executor": "ooxml_executor",
+    "output_docx": "temp/id-closure-audit-20260922/replay/njau-08-appendix-v5/candidate.docx",
+    "output_sha256": "7db23c9630015bd906b0e1417f442dd035bb58d3df15e3bbaaa0864b5d9441ea",
+    "package_validation": "ok"
+  },
+  "shadow_intent_plan": {
+    "schema_version": 1,
+    "plan_ref": "materialization-plan-04d5c2209027",
+    "ready": true,
+    "intent_count": 2,
+    "context_count": 2,
+    "command_count": 0,
+    "unsupported_count": 0,
+    "intents": [
+      {
+        "intent_ref": "intent-0001-aeaed905",
+        "intent_type": "materialize_slot",
+        "source_judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+          }
+        ],
+        "field_ids": [
+          "appendix.title"
+        ],
+        "payload": {
+          "field_ids": [
+            "appendix.title"
+          ],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "附  录 "
+            },
+            {
+              "field_id": "appendix.title",
+              "role": "fill_slot",
+              "text": "附录名称"
+            },
+            {
+              "role": "style_only",
+              "text": "（三号黑体，居中）"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-16363ea0b7e63e332d96cf31",
+                "obj-50ba3b72b3286e8bf7983e49",
+                "obj-f428e5b54b9fcd6e56d45df2",
+                "obj-4b22f11ab02526817fbcb424"
+              ],
+              "expected_source_content": "附  录 ",
+              "extent": {
+                "end": 5,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[0:5];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "附  录 ",
+              "text_end": 5,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-16363ea0b7e63e332d96cf31",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+                    "object_id": "obj-16363ea0b7e63e332d96cf31"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 2,
+                  "source_text_start": 0,
+                  "text": "附 "
+                },
+                {
+                  "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-50ba3b72b3286e8bf7983e49",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                    "object_id": "obj-50ba3b72b3286e8bf7983e49"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 2,
+                  "text": " "
+                },
+                {
+                  "fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-f428e5b54b9fcd6e56d45df2",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+                    "object_id": "obj-f428e5b54b9fcd6e56d45df2"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 3,
+                  "text": "录"
+                },
+                {
+                  "fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-4b22f11ab02526817fbcb424",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+                    "object_id": "obj-4b22f11ab02526817fbcb424"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 4,
+                  "text": " "
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-3fdbd42b02ef908e425840d3",
+                "obj-e33c8bb9191d0b547d05c407"
+              ],
+              "expected_source_content": "附录名称",
+              "extent": {
+                "end": 9,
+                "kind": "text",
+                "start": 5
+              },
+              "field_id": "appendix.title",
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "slot_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title",
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "附录名称",
+              "text_end": 9,
+              "text_start": 5,
+              "word_fragments": [
+                {
+                  "fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+                  "locator": "/body/p[1]/r[5]",
+                  "object_id": "obj-3fdbd42b02ef908e425840d3",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+                    "object_id": "obj-3fdbd42b02ef908e425840d3"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 7,
+                  "source_text_start": 5,
+                  "text": "附录"
+                },
+                {
+                  "fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+                  "locator": "/body/p[1]/r[6]",
+                  "object_id": "obj-e33c8bb9191d0b547d05c407",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+                    "object_id": "obj-e33c8bb9191d0b547d05c407"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 9,
+                  "source_text_start": 7,
+                  "text": "名称"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-9cd41e1cfea160e420050c09"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 18,
+                "kind": "text",
+                "start": 9
+              },
+              "judgment_index": 0,
+              "part_index": 2,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[9:18];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "（三号黑体，居中）",
+              "text_end": 18,
+              "text_start": 9,
+              "word_fragments": [
+                {
+                  "fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+                  "locator": "/body/p[1]/r[7]",
+                  "object_id": "obj-9cd41e1cfea160e420050c09",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+                    "object_id": "obj-9cd41e1cfea160e420050c09"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 18,
+                  "source_text_start": 9,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role",
+          "parts.field_id",
+          "resolved_spans"
+        ],
+        "field_bindings": [
+          {
+            "part_index": 1,
+            "role": "fill_slot",
+            "field_id": "appendix.title",
+            "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "slot_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title"
+          }
+        ]
+      },
+      {
+        "intent_ref": "intent-0002-ec6b6c16",
+        "intent_type": "materialize_slot",
+        "source_judgment_refs": [
+          "semantic_judgments[1]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-3379b78d7c90d344d4f68510"
+          }
+        ],
+        "field_ids": [
+          "appendix.body"
+        ],
+        "payload": {
+          "field_ids": [
+            "appendix.body"
+          ],
+          "parts": [
+            {
+              "field_id": "appendix.body",
+              "role": "fill_slot",
+              "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-cf9d2c1122e6d6072e228514",
+                "obj-51ca6ff690fb3642f2d43b24"
+              ],
+              "expected_source_content": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。",
+              "extent": {
+                "end": 113,
+                "kind": "text",
+                "start": 0
+              },
+              "field_id": "appendix.body",
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-3379b78d7c90d344d4f68510"
+              },
+              "slot_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body",
+              "source_entry_id": "source-entry-3379b78d7c90d344d4f68510",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。",
+              "text_end": 113,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-cf9d2c1122e6d6072e228514",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+                    "object_id": "obj-cf9d2c1122e6d6072e228514"
+                  },
+                  "object_text_end": 106,
+                  "object_text_start": 0,
+                  "source_text_end": 106,
+                  "source_text_start": 0,
+                  "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。"
+                },
+                {
+                  "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-51ca6ff690fb3642f2d43b24",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                    "object_id": "obj-51ca6ff690fb3642f2d43b24"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 113,
+                  "source_text_start": 106,
+                  "text": "此项非必需项。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role",
+          "parts.field_id",
+          "resolved_spans"
+        ],
+        "field_bindings": [
+          {
+            "part_index": 0,
+            "role": "fill_slot",
+            "field_id": "appendix.body",
+            "span_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+            "slot_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body"
+          }
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "context_ref": "context-0001-f8ee2400",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0001-aeaed905",
+          "intent_type": "materialize_slot",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-16363ea0b7e63e332d96cf31",
+                "obj-50ba3b72b3286e8bf7983e49",
+                "obj-f428e5b54b9fcd6e56d45df2",
+                "obj-4b22f11ab02526817fbcb424"
+              ],
+              "expected_source_content": "附  录 ",
+              "extent": {
+                "end": 5,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[0:5];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "附  录 ",
+              "text_end": 5,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-16363ea0b7e63e332d96cf31",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+                    "object_id": "obj-16363ea0b7e63e332d96cf31"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 2,
+                  "source_text_start": 0,
+                  "text": "附 "
+                },
+                {
+                  "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-50ba3b72b3286e8bf7983e49",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                    "object_id": "obj-50ba3b72b3286e8bf7983e49"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 2,
+                  "text": " "
+                },
+                {
+                  "fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-f428e5b54b9fcd6e56d45df2",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+                    "object_id": "obj-f428e5b54b9fcd6e56d45df2"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 4,
+                  "source_text_start": 3,
+                  "text": "录"
+                },
+                {
+                  "fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-4b22f11ab02526817fbcb424",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+                    "object_id": "obj-4b22f11ab02526817fbcb424"
+                  },
+                  "object_text_end": 1,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 4,
+                  "text": " "
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-3fdbd42b02ef908e425840d3",
+                "obj-e33c8bb9191d0b547d05c407"
+              ],
+              "expected_source_content": "附录名称",
+              "extent": {
+                "end": 9,
+                "kind": "text",
+                "start": 5
+              },
+              "field_id": "appendix.title",
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "slot_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title",
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "附录名称",
+              "text_end": 9,
+              "text_start": 5,
+              "word_fragments": [
+                {
+                  "fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+                  "locator": "/body/p[1]/r[5]",
+                  "object_id": "obj-3fdbd42b02ef908e425840d3",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+                    "object_id": "obj-3fdbd42b02ef908e425840d3"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 7,
+                  "source_text_start": 5,
+                  "text": "附录"
+                },
+                {
+                  "fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+                  "locator": "/body/p[1]/r[6]",
+                  "object_id": "obj-e33c8bb9191d0b547d05c407",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+                    "object_id": "obj-e33c8bb9191d0b547d05c407"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 9,
+                  "source_text_start": 7,
+                  "text": "名称"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-9cd41e1cfea160e420050c09"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 18,
+                "kind": "text",
+                "start": 9
+              },
+              "judgment_index": 0,
+              "part_index": 2,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef"
+              },
+              "source_entry_id": "source-entry-454790b5e5bb9f7f6cb975ef",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[9:18];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "（三号黑体，居中）",
+              "text_end": 18,
+              "text_start": 9,
+              "word_fragments": [
+                {
+                  "fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+                  "locator": "/body/p[1]/r[7]",
+                  "object_id": "obj-9cd41e1cfea160e420050c09",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+                    "object_id": "obj-9cd41e1cfea160e420050c09"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 18,
+                  "source_text_start": 9,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+              "locator": "/body/p[1]/r[1]",
+              "object_id": "obj-16363ea0b7e63e332d96cf31",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "69397b9a0b90fe8497b35949162dc76f3acb500b3c8a0d90cae1d2cb824e097f",
+                "object_id": "obj-16363ea0b7e63e332d96cf31"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 2,
+              "source_text_start": 0,
+              "text": "附 "
+            },
+            {
+              "fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+              "locator": "/body/p[1]/r[2]",
+              "object_id": "obj-50ba3b72b3286e8bf7983e49",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "e3178771554c66f0e86788d7b374b04f99bf6f1ed465ef8081ae9e7b7de5bf19",
+                "object_id": "obj-50ba3b72b3286e8bf7983e49"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 3,
+              "source_text_start": 2,
+              "text": " "
+            },
+            {
+              "fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+              "locator": "/body/p[1]/r[3]",
+              "object_id": "obj-f428e5b54b9fcd6e56d45df2",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "07854dad5d3e0f680551209eeaa2fa2a37f8a595de7f6263cc72f26ce42052ef",
+                "object_id": "obj-f428e5b54b9fcd6e56d45df2"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 4,
+              "source_text_start": 3,
+              "text": "录"
+            },
+            {
+              "fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+              "locator": "/body/p[1]/r[4]",
+              "object_id": "obj-4b22f11ab02526817fbcb424",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "66182cc58e600cd64c400f2aca800ca197a2601b02e1a916c6bd3759025e492f",
+                "object_id": "obj-4b22f11ab02526817fbcb424"
+              },
+              "object_text_end": 1,
+              "object_text_start": 0,
+              "source_text_end": 5,
+              "source_text_start": 4,
+              "text": " "
+            },
+            {
+              "fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+              "locator": "/body/p[1]/r[5]",
+              "object_id": "obj-3fdbd42b02ef908e425840d3",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73",
+                "object_id": "obj-3fdbd42b02ef908e425840d3"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 7,
+              "source_text_start": 5,
+              "text": "附录"
+            },
+            {
+              "fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+              "locator": "/body/p[1]/r[6]",
+              "object_id": "obj-e33c8bb9191d0b547d05c407",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48",
+                "object_id": "obj-e33c8bb9191d0b547d05c407"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 9,
+              "source_text_start": 7,
+              "text": "名称"
+            },
+            {
+              "fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+              "locator": "/body/p[1]/r[7]",
+              "object_id": "obj-9cd41e1cfea160e420050c09",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "e3d7422432179a3f42cdb4cd52fcf6daf1594b598f922387cd1d8fa21b93e64f",
+                "object_id": "obj-9cd41e1cfea160e420050c09"
+              },
+              "object_text_end": 9,
+              "object_text_start": 0,
+              "source_text_end": 18,
+              "source_text_start": 9,
+              "text": "（三号黑体，居中）"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0002-29710000",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-3379b78d7c90d344d4f68510"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0002-ec6b6c16",
+          "intent_type": "materialize_slot",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-cf9d2c1122e6d6072e228514",
+                "obj-51ca6ff690fb3642f2d43b24"
+              ],
+              "expected_source_content": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。",
+              "extent": {
+                "end": 113,
+                "kind": "text",
+                "start": 0
+              },
+              "field_id": "appendix.body",
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fill_slot",
+              "scope": {
+                "source_entry_id": "source-entry-3379b78d7c90d344d4f68510"
+              },
+              "slot_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body",
+              "source_entry_id": "source-entry-3379b78d7c90d344d4f68510",
+              "source_inventory_digest": "083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e",
+              "source_snapshot_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "span_ref": "source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+              "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。",
+              "text_end": 113,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-cf9d2c1122e6d6072e228514",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+                    "object_id": "obj-cf9d2c1122e6d6072e228514"
+                  },
+                  "object_text_end": 106,
+                  "object_text_start": 0,
+                  "source_text_end": 106,
+                  "source_text_start": 0,
+                  "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。"
+                },
+                {
+                  "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-51ca6ff690fb3642f2d43b24",
+                  "object_ref": {
+                    "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                    "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                    "object_id": "obj-51ca6ff690fb3642f2d43b24"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 113,
+                  "source_text_start": 106,
+                  "text": "此项非必需项。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+              "locator": "/body/p[2]/r[1]",
+              "object_id": "obj-cf9d2c1122e6d6072e228514",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e",
+                "object_id": "obj-cf9d2c1122e6d6072e228514"
+              },
+              "object_text_end": 106,
+              "object_text_start": 0,
+              "source_text_end": 106,
+              "source_text_start": 0,
+              "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。"
+            },
+            {
+              "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+              "locator": "/body/p[2]/r[2]",
+              "object_id": "obj-51ca6ff690fb3642f2d43b24",
+              "object_ref": {
+                "document_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+                "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                "object_id": "obj-51ca6ff690fb3642f2d43b24"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 113,
+              "source_text_start": 106,
+              "text": "此项非必需项。"
+            }
+          ]
+        }
+      }
+    ],
+    "commands": [],
+    "unsupported": [],
+    "source_review_digest": "04d5c2209027b0c396ceb8675efa864424221cd966a56ef665ce1b0f1fc34fc6"
+  }
+}

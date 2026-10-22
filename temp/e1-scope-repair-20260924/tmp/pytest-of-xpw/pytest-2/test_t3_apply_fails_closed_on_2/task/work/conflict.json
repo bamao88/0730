@@ -1,0 +1,1 @@
+{"target_refs": [{"object_ref": {"document_sha256": "67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd", "object_id": "obj-child", "expected_fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "type": "run", "text": "学校封面", "locator": "/body/p[1]/r[1]", "ancestor_object_ids": ["obj-parent"]}]}

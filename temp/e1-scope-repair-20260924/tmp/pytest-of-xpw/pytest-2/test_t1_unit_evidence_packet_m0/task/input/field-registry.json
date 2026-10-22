@@ -1,0 +1,1 @@
+{"registry_id": "docfit.test.fields", "registry_version": "0.1.0", "fields": [{"field_id": "author.name.zh", "label": "\u4f5c\u8005\u4e2d\u6587\u59d3\u540d", "meaning": "\u5b66\u751f\u59d3\u540d", "content_type": "text"}, {"field_id": "thesis.title.zh", "label": "\u4e2d\u6587\u8bba\u6587\u9898\u76ee", "meaning": "\u8bba\u6587\u9898\u76ee", "content_type": "text"}]}

@@ -1,0 +1,30 @@
+{
+  "backend": "synthetic",
+  "batches": [
+    {
+      "attempts": [],
+      "backend": "synthetic",
+      "batch_count": 1,
+      "batch_index": 1,
+      "batch_wall_duration_ms": 0,
+      "checkpoint_status": "created",
+      "context_content_item_count": 0,
+      "execution_wall_duration_ms": 0,
+      "ignored_out_of_scope_relation_count": 0,
+      "primary_content_item_count": 2,
+      "queue_wait_duration_ms": 0,
+      "sdk_duration_api_ms": 0,
+      "sdk_duration_ms": 0,
+      "sdk_num_turns": 0,
+      "sdk_total_cost_usd": null,
+      "sdk_usage": null,
+      "session_id": "synthetic-session",
+      "skills_loaded": [],
+      "tool_uses": []
+    }
+  ],
+  "privacy": "metadata_only_no_document_content",
+  "session_id": "synthetic-session",
+  "skills_loaded": [],
+  "tool_uses": []
+}

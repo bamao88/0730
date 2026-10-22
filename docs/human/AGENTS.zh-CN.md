@@ -16,8 +16,8 @@
 
 - 决策权威按以下顺序理解：用户最新明确决定；全局产品与架构不变量；跨模块契约和里程碑
   边界；当前模块已批准的设计；专项文档；现有代码和历史实现。
-- `docs/docfit-00-index.md` 至 `docs/docfit-06-development-roadmap.md` 是持续维护的全局基线；
-  当前状态、证据和阻塞项记录在 `docs/status/active/**`，后者不能覆盖架构决策。
+- 根目录 `ARCHITECTURE.md`、`docs/modules/README.md`、模块 Contract 和模块边界文档是持续维护的架构入口；
+  当前状态、证据和阻塞项记录在 `STATUS.md` 和 `docs/status/active/**`，后者不能覆盖架构决策。
 - 高层产品边界约束模块实现。若任务需要改变架构、公开契约、里程碑范围、安全边界或真实
   外部使用方的迁移责任，应先把它作为决策提交给用户，不得在实现中暗中改变。
 - 涉及 Agent 的架构决策遵循 **Claude Agent SDK-native 优先**：Agent loop、会话、上下文、

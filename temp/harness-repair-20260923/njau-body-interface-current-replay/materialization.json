@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "failure": {
+    "code": "materialization_layout_break_mapping_unsupported",
+    "origin": "tool",
+    "message": "Text replacement has no unambiguous output position for a layout break."
+  }
+}

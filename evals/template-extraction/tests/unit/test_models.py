@@ -39,15 +39,19 @@ def test_mod_02_issue_serialization_contains_actionable_evidence() -> None:
         left_anchor="姓名：",
         occurrence=1,
     )
+    slot_ref = (
+        "source_entry_id=source-entry-u-all-block-0001;extent=whole_entry;"
+        f"source_snapshot_sha256={'3' * 64};field_id=author.name.zh"
+    )
     issue = Issue(
         issue_id="ISS-0001",
         severity=Severity.ERROR,
         view=View.SLOT,
         dimension="slot.field_mapping",
-        assertion_id="slot.cover.student_name.field_id",
+        assertion_id=f"{slot_ref}.field_id",
         status=AssertionStatus.FAIL,
         message="field mismatch",
-        slot_id="slot.cover.student_name",
+        slot_ref=slot_ref,
         gold_locator=locator,
         expected="author.name.zh",
         actual="author.student_id",

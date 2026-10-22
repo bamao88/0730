@@ -1,27 +1,27 @@
 # DocFit LibreOffice 视觉证据 V2 Active Capsule
 
-- Capsule status: IMPLEMENTED / DETERMINISTIC PASS / MINIMAX-M3 IMAGE PASS
-- Source plan: `docs/plans/docfit-libreoffice-visual-evidence-v2.md`
-- Latest user intent: 按方案实施替换式迁移；不考虑兼容，不保留旧契约、旧渲染路径或适配层
-- Official Agent basis:
+- Capsule 状态: IMPLEMENTED / DETERMINISTIC PASS / MINIMAX-M3 IMAGE PASS
+- 来源计划: `docs/plans/docfit-libreoffice-visual-evidence-v2.md`
+- 最新用户意图: 按方案实施替换式迁移；不考虑兼容，不保留旧契约、旧渲染路径或适配层
+- 官方 Agent 依据:
   - 普通客户端 Tool 的 `tool_result` 可返回原生 `image` 内容块
   - programmatic tool calling 只接受文本结果，因此 `docx_visual_review` 保持 direct client Tool
-- Current slice: clean-break 迁移和应用会话根注入完成；运行时和本机私有配置均已永久切换为
+- 当前切片: clean-break 迁移和应用会话根注入完成；运行时和本机私有配置均已永久切换为
   MiniMax 优先、Kimi 回退，MiniMax 默认模型为支持 image/video 内容块的 `MiniMax-M3`
-- Last proven evidence: 三校真实 Docker 链路 3 passed；V2 targeted tests、ruff、mypy 已通过；
+- 最新已验证证据: 三校真实 Docker 链路 3 passed；V2 targeted tests、ruff、mypy 已通过；
   MiniMax-M3 live 已实际调用 render 和 visual-review，并正确读取原生图片
-- Completed slice batch: visual core、MCP/CLI、template/convert、observability、Docker/CI、
-  doctor、旧代码删除、三校验收与 00–06/README 对齐
-- Next slice: 继续定位 M3 只读 Subagent 未进入 child Tool 的原因；这是 Agent
+- 已完成切片批次: visual core、MCP/CLI、template/convert、observability、Docker/CI、
+  doctor、旧代码删除、三校验收与当前架构入口/README 对齐
+- 下一切片: 继续定位 M3 只读 Subagent 未进入 child Tool 的原因；这是 Agent
   qualification，不是第二图片协议
-- Next proof: M3 image gate 已 PASS；M3 subagent gate 只到 `Agent`、未调用 child inspect/review
-- Stop condition: 确定性、真实三校服务、默认模型升级和普通 Agent 原生图片像素验收已满足；
+- 下一证据: M3 image gate 已 PASS；M3 subagent gate 只到 `Agent`、未调用 child inspect/review
+- 停止条件: 确定性、真实三校服务、默认模型升级和普通 Agent 原生图片像素验收已满足；
   只读 Subagent M3 qualification 尚未完成；DocFit 的 M3 质量里程碑不在本工作包
-- No-touch scope: 与本迁移无关的 Knowledge、Eval Truth 与用户临时诊断文件；不覆盖工作区已有无关修改
-- Parked work: MiniMax-M3 Subagent qualification、Word 像素一致、学校补丁/兼容
+- 不改范围: 与本迁移无关的 Knowledge、Eval Truth 与用户临时诊断文件；不覆盖工作区已有无关修改
+- 已停放工作: MiniMax-M3 Subagent qualification、Word 像素一致、学校补丁/兼容
   规则、Provider 平台、旧 render_ref 迁移、第二渲染器
 
-## Evidence
+## 证据
 
 - 固定镜像：`docfit-libreoffice-visual:25.2.3.2`，image ID
   `sha256:5f4df294772c3d5a8fba35f7ddab4b6806b3f7ab0318db18500773deac9837d4`；

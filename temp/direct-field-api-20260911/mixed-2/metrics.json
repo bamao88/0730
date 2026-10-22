@@ -1,0 +1,17 @@
+{
+  "run": "mixed-2",
+  "input_characters": 762,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 7.858,
+  "first_text_seconds": 2.525,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1,
+    "output_tokens": 641,
+    "service_tier": "standard",
+    "cache_read_input_tokens": 546
+  },
+  "returned_model": "MiniMax-M3",
+  "json_error": "AttributeError"
+}

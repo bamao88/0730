@@ -1,0 +1,2746 @@
+[
+  {
+    "idx": 2,
+    "page": 1,
+    "locator": "/body/p[@paraId=124C8F1F]",
+    "type": "paragraph",
+    "text": "博士研究生学位论文"
+  },
+  {
+    "idx": 4,
+    "page": 1,
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[@paraId=16B71489]",
+    "type": "paragraph",
+    "text": "题目："
+  },
+  {
+    "idx": 5,
+    "page": 1,
+    "locator": "/body/tbl[1]/tr[1]/tc[2]/p[@paraId=089B89D0]",
+    "type": "paragraph",
+    "text": "学位论文模板的使用"
+  },
+  {
+    "idx": 12,
+    "page": 1,
+    "locator": "/body/tbl[2]/tr[1]/tc[1]/p[@paraId=4D954E65]",
+    "type": "paragraph",
+    "text": "姓 名："
+  },
+  {
+    "idx": 14,
+    "page": 1,
+    "locator": "/body/tbl[2]/tr[2]/tc[1]/p[@paraId=5C8290CE]",
+    "type": "paragraph",
+    "text": "学 号："
+  },
+  {
+    "idx": 16,
+    "page": 1,
+    "locator": "/body/tbl[2]/tr[3]/tc[1]/p[@paraId=2EA4FE59]",
+    "type": "paragraph",
+    "text": "院 系："
+  },
+  {
+    "idx": 18,
+    "page": 1,
+    "locator": "/body/tbl[2]/tr[4]/tc[1]/p[@paraId=3EDF8960]",
+    "type": "paragraph",
+    "text": "专 业："
+  },
+  {
+    "idx": 20,
+    "page": 1,
+    "locator": "/body/tbl[2]/tr[5]/tc[1]/p[@paraId=7BCA9B59]",
+    "type": "paragraph",
+    "text": "研究方向："
+  },
+  {
+    "idx": 22,
+    "page": 2,
+    "locator": "/body/tbl[2]/tr[6]/tc[1]/p[@paraId=0AF63B3E]",
+    "type": "paragraph",
+    "text": "导师姓名："
+  },
+  {
+    "idx": 25,
+    "page": 2,
+    "locator": "/body/p[@paraId=3466D2A3]",
+    "type": "paragraph",
+    "text": " 学术学位  专业学位"
+  },
+  {
+    "idx": 26,
+    "page": 2,
+    "locator": "/body/p[@paraId=1FED35B6]",
+    "type": "paragraph",
+    "text": "二〇 年 月"
+  },
+  {
+    "idx": 27,
+    "page": 3,
+    "locator": "/body/p[@paraId=5CF147F8]",
+    "type": "paragraph",
+    "text": "版权声明"
+  },
+  {
+    "idx": 28,
+    "page": 3,
+    "locator": "/body/p[@paraId=2DE50D1E]",
+    "type": "paragraph",
+    "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。"
+  },
+  {
+    "idx": 32,
+    "page": 3,
+    "locator": "/body/p[@paraId=0F101DDD]",
+    "type": "paragraph",
+    "text": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+  },
+  {
+    "idx": 35,
+    "page": null,
+    "locator": "/body/p[@paraId=453CC9C5]",
+    "type": "paragraph",
+    "text": "摘要"
+  },
+  {
+    "idx": 36,
+    "page": 4,
+    "locator": "/body/p[@paraId=5898ED75]",
+    "type": "paragraph",
+    "text": "研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。"
+  },
+  {
+    "idx": 37,
+    "page": 4,
+    "locator": "/body/p[@paraId=736FA1F9]",
+    "type": "paragraph",
+    "text": "如有问题，请联系xelmirage@pku.edu.cn"
+  },
+  {
+    "idx": 38,
+    "page": 4,
+    "locator": "/body/p[@paraId=7FB641C5]",
+    "type": "paragraph",
+    "text": "或前往https://github.com/xelmirage/pku_thesis_docx提交问题。"
+  },
+  {
+    "idx": 39,
+    "page": 4,
+    "locator": "/body/p[@paraId=7549EC38]",
+    "type": "paragraph",
+    "text": "欢迎提交pull request"
+  },
+  {
+    "idx": 40,
+    "page": 4,
+    "locator": "/body/p[@paraId=1DBE2250]",
+    "type": "paragraph",
+    "text": "2022年4月之后的修改来自某位匿名网友。一些看起来多余的细节和奇怪的域代码是为了照顾微软Word糟糕的设计，文件里有具体描述。"
+  },
+  {
+    "idx": 41,
+    "page": 4,
+    "locator": "/body/p[@paraId=03C4EAE2]",
+    "type": "paragraph",
+    "text": "摘要、目录、图表目录、参考文献、附录、致谢等节的标题用了与章标题不同的样式“正文前标题”“正文后标题”，在生成目录时占用了第9级目录的样式，以避免Word悬挂缩进的格式bug。"
+  },
+  {
+    "idx": 42,
+    "page": 4,
+    "locator": "/body/p[@paraId=4E568471]",
+    "type": "paragraph",
+    "text": "目录是根据样式建立的（而不是根据大纲级别）。如果不想在目录中显示正文之前的内容，可以在生成目录后手动删除。更正规的做法是：选中整个目录，点击引用-目录-自定义目录-选项，把“正文前标题”样式后面的9删掉。"
+  },
+  {
+    "idx": 43,
+    "page": 5,
+    "locator": "/body/p[@paraId=12A7A2BB]",
+    "type": "paragraph",
+    "text": "本模板使用Word 2021制作。经过大致测试，与其他Word版本兼容性良好。WPS有一些缩进和对齐的细节与Word显示不一样，整体可用。"
+  },
+  {
+    "idx": 46,
+    "page": 5,
+    "locator": "/body/p[@paraId=500CC0C8]",
+    "type": "paragraph",
+    "text": "关键词：城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通"
+  },
+  {
+    "idx": 49,
+    "page": 6,
+    "locator": "/body/p[@paraId=2D66457F]",
+    "type": "paragraph",
+    "text": "English Title of Your Thesis"
+  },
+  {
+    "idx": 50,
+    "page": 6,
+    "locator": "/body/p[@paraId=4784D30E]",
+    "type": "paragraph",
+    "text": "Your Name"
+  },
+  {
+    "idx": 51,
+    "page": 6,
+    "locator": "/body/p[@paraId=71320FCA]",
+    "type": "paragraph",
+    "text": "Directed by Professor Your Professor"
+  },
+  {
+    "idx": 52,
+    "page": 6,
+    "locator": "/body/p[@paraId=4DF3AFBD]",
+    "type": "paragraph",
+    "text": "ABSTRACT"
+  },
+  {
+    "idx": 53,
+    "page": 6,
+    "locator": "/body/p[@paraId=5BA1284E]",
+    "type": "paragraph",
+    "text": "Your English Abstract Here."
+  },
+  {
+    "idx": 60,
+    "page": 6,
+    "locator": "/body/p[@paraId=6D87356B]",
+    "type": "paragraph",
+    "text": "KEY WORDS: Your; English; Keywords; Here"
+  },
+  {
+    "idx": 63,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=69DE31C4]",
+    "type": "paragraph",
+    "text": "目录"
+  },
+  {
+    "idx": 64,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=60DEFAFC]",
+    "type": "paragraph",
+    "text": "摘要 I"
+  },
+  {
+    "idx": 65,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=654F8C88]",
+    "type": "paragraph",
+    "text": "ABSTRACT II"
+  },
+  {
+    "idx": 66,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=37CF2854]",
+    "type": "paragraph",
+    "text": "目录 III"
+  },
+  {
+    "idx": 67,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=214B0013]",
+    "type": "paragraph",
+    "text": "图目录 V"
+  },
+  {
+    "idx": 68,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=554E9F69]",
+    "type": "paragraph",
+    "text": "表目录 VI"
+  },
+  {
+    "idx": 69,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=44465610]",
+    "type": "paragraph",
+    "text": "第一章 研究背景 1"
+  },
+  {
+    "idx": 70,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=59607243]",
+    "type": "paragraph",
+    "text": "1.1 准备工作 1"
+  },
+  {
+    "idx": 71,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=640C54FF]",
+    "type": "paragraph",
+    "text": "1.2 章节标题 2"
+  },
+  {
+    "idx": 72,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=4825A09D]",
+    "type": "paragraph",
+    "text": "1.3 子标题 4"
+  },
+  {
+    "idx": 73,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=668F890A]",
+    "type": "paragraph",
+    "text": "1.3.1 三级标题示例 4"
+  },
+  {
+    "idx": 74,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=2B8934F4]",
+    "type": "paragraph",
+    "text": "1.3.2 要点强调示例 4"
+  },
+  {
+    "idx": 75,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=49C132D5]",
+    "type": "paragraph",
+    "text": "1.3.3 引文示例 4"
+  },
+  {
+    "idx": 76,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=13C7E614]",
+    "type": "paragraph",
+    "text": "第二章 插图、公式与表格 6"
+  },
+  {
+    "idx": 77,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=76D258CA]",
+    "type": "paragraph",
+    "text": "2.1 插图 6"
+  },
+  {
+    "idx": 78,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=7EA5412E]",
+    "type": "paragraph",
+    "text": "2.2 公式 7"
+  },
+  {
+    "idx": 79,
+    "page": 7,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=24C26F09]",
+    "type": "paragraph",
+    "text": "2.3 表格 7"
+  },
+  {
+    "idx": 80,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=522A6058]",
+    "type": "paragraph",
+    "text": "2.4 关于自动编号的注意事项 8"
+  },
+  {
+    "idx": 81,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3EBEF306]",
+    "type": "paragraph",
+    "text": "2.4.1 自动编号出现汉字的修复 9"
+  },
+  {
+    "idx": 82,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3E7E0BF7]",
+    "type": "paragraph",
+    "text": "2.4.2 自动编号在新一章没有从1开始的修复 9"
+  },
+  {
+    "idx": 83,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=049DD3F5]",
+    "type": "paragraph",
+    "text": "2.4.3 图表编号和图表目录的更新 10"
+  },
+  {
+    "idx": 84,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=35D90D96]",
+    "type": "paragraph",
+    "text": "第三章 其他注意事项 11"
+  },
+  {
+    "idx": 85,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=62EAF414]",
+    "type": "paragraph",
+    "text": "3.1 请随时注意核对格式 11"
+  },
+  {
+    "idx": 86,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=6AA29322]",
+    "type": "paragraph",
+    "text": "3.2 排查错误引用项 11"
+  },
+  {
+    "idx": 87,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=79F36075]",
+    "type": "paragraph",
+    "text": "3.3 论文打印装订时的注意事项 11"
+  },
+  {
+    "idx": 88,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=08C851EF]",
+    "type": "paragraph",
+    "text": "3.4 保存为PDF格式的注意事项 12"
+  },
+  {
+    "idx": 89,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=07FBE0D2]",
+    "type": "paragraph",
+    "text": "3.5 插入横向页面 13"
+  },
+  {
+    "idx": 90,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=64EC8518]",
+    "type": "paragraph",
+    "text": "第四章 其他, 而且这里顺便试试看如果标题实在太长的话目录的排版是不是还看得过去 14"
+  },
+  {
+    "idx": 91,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=60BADB62]",
+    "type": "paragraph",
+    "text": "4.1 参考文献 14"
+  },
+  {
+    "idx": 92,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=7B7F2D7E]",
+    "type": "paragraph",
+    "text": "4.2 进一步讨论，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去 14"
+  },
+  {
+    "idx": 93,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=59013461]",
+    "type": "paragraph",
+    "text": "4.2.1 三级标题示例，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去 14"
+  },
+  {
+    "idx": 94,
+    "page": 8,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=1E4365F3]",
+    "type": "paragraph",
+    "text": "第五章 结论与讨论 15"
+  },
+  {
+    "idx": 95,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=1AAAE6A8]",
+    "type": "paragraph",
+    "text": "5.1 结论 15"
+  },
+  {
+    "idx": 96,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=295F8A88]",
+    "type": "paragraph",
+    "text": "5.2 展望 15"
+  },
+  {
+    "idx": 97,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=51525288]",
+    "type": "paragraph",
+    "text": "参考文献 16"
+  },
+  {
+    "idx": 98,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=5E34FE0D]",
+    "type": "paragraph",
+    "text": "附录A 博士期间工作成果 17"
+  },
+  {
+    "idx": 99,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=32031FFA]",
+    "type": "paragraph",
+    "text": "致谢 18"
+  },
+  {
+    "idx": 100,
+    "page": 9,
+    "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3CEE78D6]",
+    "type": "paragraph",
+    "text": "北京大学学位论文原创性声明和使用授权说明 20"
+  },
+  {
+    "idx": 103,
+    "page": 10,
+    "locator": "/body/p[@paraId=53C64667]",
+    "type": "paragraph",
+    "text": "图目录"
+  },
+  {
+    "idx": 104,
+    "page": 10,
+    "locator": "/body/p[@paraId=18D3CD67]",
+    "type": "paragraph",
+    "text": "图 1.1 建立图、表题注标签 1"
+  },
+  {
+    "idx": 105,
+    "page": 10,
+    "locator": "/body/p[@paraId=107BB333]",
+    "type": "paragraph",
+    "text": "图 1.2 保存“构建基块”到你的电脑 2"
+  },
+  {
+    "idx": 106,
+    "page": 10,
+    "locator": "/body/p[@paraId=749669A4]",
+    "type": "paragraph",
+    "text": "图 1.3 使用下一页分隔符来划分章节 2"
+  },
+  {
+    "idx": 107,
+    "page": 10,
+    "locator": "/body/p[@paraId=495FA8AC]",
+    "type": "paragraph",
+    "text": "图 1.4 插入域 3"
+  },
+  {
+    "idx": 108,
+    "page": 10,
+    "locator": "/body/p[@paraId=75D69E21]",
+    "type": "paragraph",
+    "text": "图 1.5 调整页眉标题 3"
+  },
+  {
+    "idx": 109,
+    "page": 10,
+    "locator": "/body/p[@paraId=457D5B6A]",
+    "type": "paragraph",
+    "text": "图 2.1 这是插图的示例，而且这里顺便试试看如果图题太长的话图表目录的排版是不是还看得过去 6"
+  },
+  {
+    "idx": 110,
+    "page": 10,
+    "locator": "/body/p[@paraId=7528BC0F]",
+    "type": "paragraph",
+    "text": "图 2.2 打开交叉引用对话框 6"
+  },
+  {
+    "idx": 111,
+    "page": 10,
+    "locator": "/body/p[@paraId=36C38163]",
+    "type": "paragraph",
+    "text": "图 2.3 复制公式时应选择的范围 7"
+  },
+  {
+    "idx": 112,
+    "page": 10,
+    "locator": "/body/p[@paraId=05478936]",
+    "type": "paragraph",
+    "text": "图 2.4 手动添加跨页的“续表” 8"
+  },
+  {
+    "idx": 113,
+    "page": 10,
+    "locator": "/body/p[@paraId=246792B8]",
+    "type": "paragraph",
+    "text": "图 2.5 修复自动编号的阿拉伯数字形式 9"
+  },
+  {
+    "idx": 114,
+    "page": 10,
+    "locator": "/body/p[@paraId=347455DD]",
+    "type": "paragraph",
+    "text": "图 2.6 修复图表、公式自动编号的按章更新 10"
+  },
+  {
+    "idx": 115,
+    "page": 10,
+    "locator": "/body/p[@paraId=6E0EE1E3]",
+    "type": "paragraph",
+    "text": "图 3.1 错误引用项示例 11"
+  },
+  {
+    "idx": 116,
+    "page": 10,
+    "locator": "/body/p[@paraId=4BFCC32A]",
+    "type": "paragraph",
+    "text": "图 3.2 保存为PDF的建议方法 12"
+  },
+  {
+    "idx": 117,
+    "page": 10,
+    "locator": "/body/p[@paraId=3AD80C48]",
+    "type": "paragraph",
+    "text": "图 3.3 使用下一页分隔符来划分章节 13"
+  },
+  {
+    "idx": 120,
+    "page": 11,
+    "locator": "/body/p[@paraId=7797E62B]",
+    "type": "paragraph",
+    "text": "表目录"
+  },
+  {
+    "idx": 121,
+    "page": 11,
+    "locator": "/body/p[@paraId=1E913A5C]",
+    "type": "paragraph",
+    "text": "表2.1 数据指标 7"
+  },
+  {
+    "idx": 122,
+    "page": 11,
+    "locator": "/body/p[@paraId=4478A8E6]",
+    "type": "paragraph",
+    "text": "表2.2 另一些数据指标，而且这里顺便试试看如果表题太长的话图表目录的排版是不是还看得过去 8"
+  },
+  {
+    "idx": 123,
+    "page": 11,
+    "locator": "/body/p[@paraId=63F45259]",
+    "type": "paragraph",
+    "text": "表4.1 测试数据 14"
+  },
+  {
+    "idx": 126,
+    "page": null,
+    "locator": "/body/p[@paraId=6802F3E5]",
+    "type": "paragraph",
+    "text": "研究背景"
+  },
+  {
+    "idx": 127,
+    "page": 12,
+    "locator": "/body/p[@paraId=2A52083D]",
+    "type": "paragraph",
+    "text": "准备工作"
+  },
+  {
+    "idx": 128,
+    "page": 12,
+    "locator": "/body/p[@paraId=47989FF4]",
+    "type": "paragraph",
+    "text": "使用本模板的最佳实践是在模板上直接动笔。如果你的论文已经写了一些，不方便这样写，那么建议先把从本章标题到本自然段结束的部分完整复制粘贴到你的论文里，再删掉（这样才能保证标题自动编号的正确），然后使用格式刷把本模板的格式复制到你的论文中。"
+  },
+  {
+    "idx": 129,
+    "page": 12,
+    "locator": "/body/p[@paraId=01ED2D58]",
+    "type": "paragraph",
+    "text": "请把这个模板备份一份，一旦出问题，可以从备份里复制粘贴原来的部分。而且该模板中也包含了一些意外和bug的解决方法备查。"
+  },
+  {
+    "idx": 130,
+    "page": null,
+    "locator": "/body/p[@paraId=0AA8A1C4]",
+    "type": "paragraph",
+    "text": "某些版本的Word可能会遇到图题、表题索引丢失的bug。请点击引用-插入题注，检查“标签”列表里有没有“图”“表”两项（注意不是“图表”或“表格”）。若没有，点击“新建标签”，输入一个“图”字，①确定，然后②关闭（不要点确定），如图 1.1。同样步骤，再新建一个“表”的标签，然后关闭。此后在本电脑上不再需要此步。编号如果有问题，详见2.4 关于自动编号的注意事项。"
+  },
+  {
+    "idx": 132,
+    "page": 13,
+    "locator": "/body/p[@paraId=03A3226D]",
+    "type": "paragraph",
+    "text": "图 1.1 建立图、表题注标签"
+  },
+  {
+    "idx": 133,
+    "page": 13,
+    "locator": "/body/p[@paraId=621E7C17]",
+    "type": "paragraph",
+    "text": "如果你对Word不太熟悉，那么请跳过以下进阶操作，直接看1.2 章节标题。"
+  },
+  {
+    "idx": 134,
+    "page": 13,
+    "locator": "/body/p[@paraId=0421C4A2]",
+    "type": "paragraph",
+    "text": "选中整个目录（从“目录”两个字直到目录最后一行），然后点击：插入-文档部件-将所选内容保存到本机的文档部件库，如下设置后确定："
+  },
+  {
+    "idx": 136,
+    "page": 13,
+    "locator": "/body/p[@paraId=3BB4D4A6]",
+    "type": "paragraph",
+    "text": "图 1.2 保存“构建基块”到你的电脑"
+  },
+  {
+    "idx": 137,
+    "page": 13,
+    "locator": "/body/p[@paraId=78E5A544]",
+    "type": "paragraph",
+    "text": "同样，把图目录、表目录都分别保存为构建基块，以备随时使用。类似地，还可以把图题、表题、公式保存为自动图文集。"
+  },
+  {
+    "idx": 138,
+    "page": 14,
+    "locator": "/body/p[@paraId=0F527DE1]",
+    "type": "paragraph",
+    "text": "章节标题"
+  },
+  {
+    "idx": 139,
+    "page": 14,
+    "locator": "/body/p[@paraId=6D4F7FE3]",
+    "type": "paragraph",
+    "text": "不建议自行新建章节标题。如需增加章节，请使用“布局”菜单，在最后一章结尾处插入一个“下一页”分隔符（不建议使用“分页符”，可能有兼容性问题），然后完整复制粘贴某一章的标题至分隔符后："
+  },
+  {
+    "idx": 141,
+    "page": 14,
+    "locator": "/body/p[@paraId=25DD4EC6]",
+    "type": "paragraph",
+    "text": "图 1.3 使用下一页分隔符来划分章节"
+  },
+  {
+    "idx": 142,
+    "page": 14,
+    "locator": "/body/p[@paraId=6DBECF37]",
+    "type": "paragraph",
+    "text": "实际上，按照GB/T 7713.1-2006学位论文编写规则（国家推荐标准）和CY/T 35-2001科技文献的章节编号方法（新闻出版行业推荐标准），章节都应该使用阿拉伯数字编号。但二者都不是强制标准，而且多年来常见的用法都是“第一章”和“第1.1节”混用，学校的示例也如此，所以本模板也采用了习惯用法（后面的一系列图表、公式域代码都是因为这样才变得麻烦）。切换到上述推荐标准只需要把多级目录的第一级改回阿拉伯数字编号即可。"
+  },
+  {
+    "idx": 143,
+    "page": 15,
+    "locator": "/body/p[@paraId=5E8E283D]",
+    "type": "paragraph",
+    "text": "按学校的模板，奇数页页眉是章节编号+名称，偶数页页眉是“北京大学博士学位论文”。如果奇数页页眉未与章节名称与编号同步，请双击奇数页页眉，在上方工具栏选中“链接到前一节”。如果还是不行，请按照如下步骤操作："
+  },
+  {
+    "idx": 144,
+    "page": 15,
+    "locator": "/body/p[@paraId=6A916A20]",
+    "type": "paragraph",
+    "text": "双击奇数页页眉"
+  },
+  {
+    "idx": 145,
+    "page": 15,
+    "locator": "/body/p[@paraId=0F353758]",
+    "type": "paragraph",
+    "text": "删除页眉已有内容"
+  },
+  {
+    "idx": 146,
+    "page": 15,
+    "locator": "/body/p[@paraId=004FEAD0]",
+    "type": "paragraph",
+    "text": "插入→文档部件→域"
+  },
+  {
+    "idx": 147,
+    "page": 15,
+    "locator": "/body/p[@paraId=454EF83C]",
+    "type": "paragraph",
+    "text": "在域名处选择StyleRef，样式名选择标题1，右侧选项勾选“插入段落编号”，点击“确定”；再同样插入一次域，但不勾选“插入段落编号”："
+  },
+  {
+    "idx": 149,
+    "page": 15,
+    "locator": "/body/p[@paraId=28155C7B]",
+    "type": "paragraph",
+    "text": "图 1.4 插入域"
+  },
+  {
+    "idx": 150,
+    "page": 15,
+    "locator": "/body/p[@paraId=1FD50583]",
+    "type": "paragraph",
+    "text": "此时页眉处插入了章序号和标题："
+  },
+  {
+    "idx": 152,
+    "page": null,
+    "locator": "/body/p[@paraId=385E40F8]",
+    "type": "paragraph",
+    "text": "图 1.5 调整页眉标题"
+  },
+  {
+    "idx": 153,
+    "page": 16,
+    "locator": "/body/p[@paraId=2F6213BF]",
+    "type": "paragraph",
+    "text": "正文前后的摘要、参考文献等部分的页眉如果丢失，只需在上述第4步选择样式时分别选择“PKU正文前标题”或“PKU正文尾标题”，只插入不带段落编号的即可。"
+  },
+  {
+    "idx": 154,
+    "page": 16,
+    "locator": "/body/p[@paraId=0381E009]",
+    "type": "paragraph",
+    "text": "子标题"
+  },
+  {
+    "idx": 155,
+    "page": 16,
+    "locator": "/body/p[@paraId=7541A14F]",
+    "type": "paragraph",
+    "text": "这是一个二级标题示例。"
+  },
+  {
+    "idx": 156,
+    "page": 16,
+    "locator": "/body/p[@paraId=18FFAB6F]",
+    "type": "paragraph",
+    "text": "三级标题示例"
+  },
+  {
+    "idx": 157,
+    "page": 16,
+    "locator": "/body/p[@paraId=7552E1FB]",
+    "type": "paragraph",
+    "text": "这是一个三级标题示例。学校的示例使用了介于四号和小四号之间的13磅字体，本模板与之保持一致。"
+  },
+  {
+    "idx": 158,
+    "page": 16,
+    "locator": "/body/p[@paraId=0C7C8F2B]",
+    "type": "paragraph",
+    "text": "四级标题示例"
+  },
+  {
+    "idx": 159,
+    "page": 16,
+    "locator": "/body/p[@paraId=2A6EB1EF]",
+    "type": "paragraph",
+    "text": "四级及以下标题不会显示在目录里。如果需要显示，可以调整目录级别。一般不建议使用四级、五级标题，四级以下的层次建议使用数字编号，例如："
+  },
+  {
+    "idx": 160,
+    "page": 16,
+    "locator": "/body/p[@paraId=73ACDAAA]",
+    "type": "paragraph",
+    "text": "这是一个数字编号，样式已定义为“PKU列表正文”"
+  },
+  {
+    "idx": 161,
+    "page": 17,
+    "locator": "/body/p[@paraId=494D987B]",
+    "type": "paragraph",
+    "text": "正文。正文的样式已单独定义为“PKU正文”。"
+  },
+  {
+    "idx": 162,
+    "page": 17,
+    "locator": "/body/p[@paraId=40DF6FBD]",
+    "type": "paragraph",
+    "text": "另一个数字编号"
+  },
+  {
+    "idx": 163,
+    "page": 17,
+    "locator": "/body/p[@paraId=44294548]",
+    "type": "paragraph",
+    "text": "正文。"
+  },
+  {
+    "idx": 164,
+    "page": null,
+    "locator": "/body/p[@paraId=377DAE9D]",
+    "type": "paragraph",
+    "text": "五级标题示例"
+  },
+  {
+    "idx": 165,
+    "page": 17,
+    "locator": "/body/p[@paraId=51E2A537]",
+    "type": "paragraph",
+    "text": "正文。"
+  },
+  {
+    "idx": 166,
+    "page": 17,
+    "locator": "/body/p[@paraId=673C4FCA]",
+    "type": "paragraph",
+    "text": "要点强调示例"
+  },
+  {
+    "idx": 167,
+    "page": 17,
+    "locator": "/body/p[@paraId=51C96F0E]",
+    "type": "paragraph",
+    "text": "文中需要加粗的要点部分定义了“PKU要点”样式，例如：首先，本文定义了指标；其次，本文收集了数据；最后，本文分析了结果。不建议直接加粗，否则修改正文样式时可能会取消加粗。"
+  },
+  {
+    "idx": 168,
+    "page": 17,
+    "locator": "/body/p[@paraId=7E7A2158]",
+    "type": "paragraph",
+    "text": "引文示例"
+  },
+  {
+    "idx": 169,
+    "page": 17,
+    "locator": "/body/p[@paraId=31C393DD]",
+    "type": "paragraph",
+    "text": "按照CY/T 122-2015学术出版规范-引文，短小的引文使用“行中引”，直接以引号表示；独立成段的引文为“提行引”，不加引号，段落整体左缩进两格，字体字号宜与正文有所区别，例如："
+  },
+  {
+    "idx": 170,
+    "page": 17,
+    "locator": "/body/p[@paraId=370C6019]",
+    "type": "paragraph",
+    "text": "王安石在回答这道手诏的奏章中，仍然坚持其“天变不足畏”的观点，说道："
+  },
+  {
+    "idx": 171,
+    "page": null,
+    "locator": "/body/p[@paraId=70CF7E9D]",
+    "type": "paragraph",
+    "text": "臣等伏观晋武帝五年，彗实出轸；十年，轸又出孛。而其在位二十八年，与《乙巳占》所期不合，盖天道远，人道迩，先王虽有官占，而所信者人事而已。"
+  },
+  {
+    "idx": 172,
+    "page": 18,
+    "locator": "/body/p[@paraId=6AE75965]",
+    "type": "paragraph",
+    "text": "“提行引”的样式已定义为“PKU提行引”。"
+  },
+  {
+    "idx": 174,
+    "page": 19,
+    "locator": "/body/p[@paraId=70FFFB17]",
+    "type": "paragraph",
+    "text": "插图、公式与表格"
+  },
+  {
+    "idx": 175,
+    "page": 19,
+    "locator": "/body/p[@paraId=67C704A5]",
+    "type": "paragraph",
+    "text": "插图"
+  },
+  {
+    "idx": 176,
+    "page": 19,
+    "locator": "/body/p[@paraId=39AA691F]",
+    "type": "paragraph",
+    "text": "图片所在行定义了“PKU图”样式，可保证图和图题不分页。典型的插图如下："
+  },
+  {
+    "idx": 178,
+    "page": null,
+    "locator": "/body/p[@paraId=40AE401A]",
+    "type": "paragraph",
+    "text": "图 2.1 这是插图的示例，而且这里顺便试试看如果图题太长的话图表目录的排版是不是还看得过去"
+  },
+  {
+    "idx": 179,
+    "page": 19,
+    "locator": "/body/p[@paraId=750B1A8A]",
+    "type": "paragraph",
+    "text": "插图标题的样式为“PKU图题”，包含域代码。插入新配图时，建议复制现有图片标题至新配图处。如果图的编号没有自动更新，请选中图号，按F9。图的编号后建议按键盘上的Tab键输入一个制表符，这样目录排版时比较整齐。"
+  },
+  {
+    "idx": 180,
+    "page": null,
+    "locator": "/body/p[@paraId=35528A10]",
+    "type": "paragraph",
+    "text": "当在正文中需要引用图片，如“图 2.1”时，从引用→交叉引用打开交叉引用对话框，引用类型选择“图”，引用内容选择“仅标签和编号”，点击“插入”即可。"
+  },
+  {
+    "idx": 182,
+    "page": null,
+    "locator": "/body/p[@paraId=45B58CF5]",
+    "type": "paragraph",
+    "text": "图 2.2 打开交叉引用对话框"
+  },
+  {
+    "idx": 183,
+    "page": 20,
+    "locator": "/body/p[@paraId=0275DE5F]",
+    "type": "paragraph",
+    "text": "公式"
+  },
+  {
+    "idx": 184,
+    "page": null,
+    "locator": "/body/p[@paraId=2727F6F8]",
+    "type": "paragraph",
+    "text": "典型的公式如(2.1)所示："
+  },
+  {
+    "idx": 187,
+    "page": 20,
+    "locator": "/body/tbl[3]/tr[1]/tc[3]/p[@paraId=675E2E45]",
+    "type": "paragraph",
+    "text": "(2.1)"
+  },
+  {
+    "idx": 188,
+    "page": 20,
+    "locator": "/body/p[@paraId=314A8551]",
+    "type": "paragraph",
+    "text": "公式由于存在编号并且要求公式居中、编号右对齐，使用表格实现（网上用Tab实现的方式在交叉引用时容易出问题）。建议直接复制文档内现有公式。但注意要包括最外层的表格（如下图）。"
+  },
+  {
+    "idx": 190,
+    "page": null,
+    "locator": "/body/p[@paraId=1574A277]",
+    "type": "paragraph",
+    "text": "图 2.3 复制公式时应选择的范围"
+  },
+  {
+    "idx": 191,
+    "page": null,
+    "locator": "/body/p[@paraId=36E5C956]",
+    "type": "paragraph",
+    "text": "复制粘贴后，请选中公式编号，按右键，点“更新域”方可完成自动编号（或选中编号后按快捷键F9）。对公式的引用可直接使用“交叉引用”功能插入，引用时应选择“整项题注”，效果如“(2.2)”。"
+  },
+  {
+    "idx": 195,
+    "page": 21,
+    "locator": "/body/p[@paraId=252A29F9]",
+    "type": "paragraph",
+    "text": "如果公示太长，建议在等号处换行。如果难以实现，尽量在加减号等符号处换行。"
+  },
+  {
+    "idx": 196,
+    "page": 21,
+    "locator": "/body/p[@paraId=7BE5B013]",
+    "type": "paragraph",
+    "text": "表格"
+  },
+  {
+    "idx": 197,
+    "page": null,
+    "locator": "/body/p[@paraId=71FFE5F9]",
+    "type": "paragraph",
+    "text": "表格一般采用三线表。学校的模板配线太粗，本模板已按出版行业常见线宽修改（细线0.5磅，粗线1.5磅）。插入新表格时，建议复制现有表题（定义了“PKU表题”样式）。编号后面建议按键盘上的Tab键输入一个制表符。表格内的文字分别定义了“PKU表格内标题”“PKU表格内文字”两种样式。在正文中引用表格（如表2.1）步骤类似引用图片编号。跨页表格请选中标题行后点击菜单“布局”→“重复标题行”。"
+  },
+  {
+    "idx": 198,
+    "page": 21,
+    "locator": "/body/p[@paraId=3F870C70]",
+    "type": "paragraph",
+    "text": "表2.1 数据指标"
+  },
+  {
+    "idx": 200,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[2]/p[@paraId=420AEB83]",
+    "type": "paragraph",
+    "text": "A"
+  },
+  {
+    "idx": 201,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[3]/p[@paraId=37F9D808]",
+    "type": "paragraph",
+    "text": "B"
+  },
+  {
+    "idx": 202,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[4]/p[@paraId=06E183C6]",
+    "type": "paragraph",
+    "text": "C"
+  },
+  {
+    "idx": 203,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[5]/p[@paraId=148906BE]",
+    "type": "paragraph",
+    "text": "D"
+  },
+  {
+    "idx": 204,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[6]/p[@paraId=67D46942]",
+    "type": "paragraph",
+    "text": "E"
+  },
+  {
+    "idx": 205,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[7]/p[@paraId=5AD6F8B1]",
+    "type": "paragraph",
+    "text": "F"
+  },
+  {
+    "idx": 206,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[8]/p[@paraId=040F97D7]",
+    "type": "paragraph",
+    "text": "G"
+  },
+  {
+    "idx": 207,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[1]/tc[9]/p[@paraId=6540B80B]",
+    "type": "paragraph",
+    "text": "H"
+  },
+  {
+    "idx": 208,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=291B3A13]",
+    "type": "paragraph",
+    "text": "1"
+  },
+  {
+    "idx": 209,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[2]/p[@paraId=148FBD40]",
+    "type": "paragraph",
+    "text": "2.52"
+  },
+  {
+    "idx": 210,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[2]/tc[3]/p[@paraId=695C0BA0]",
+    "type": "paragraph",
+    "text": "2.58"
+  },
+  {
+    "idx": 211,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[2]/tc[4]/p[@paraId=0B36EEFE]",
+    "type": "paragraph",
+    "text": "2.57"
+  },
+  {
+    "idx": 212,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[2]/tc[5]/p[@paraId=557B2F09]",
+    "type": "paragraph",
+    "text": "2.24"
+  },
+  {
+    "idx": 213,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[6]/p[@paraId=71C83EEA]",
+    "type": "paragraph",
+    "text": "2.48"
+  },
+  {
+    "idx": 214,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[7]/p[@paraId=2A227E43]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 215,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[8]/p[@paraId=08528F82]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 216,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[2]/tc[9]/p[@paraId=6258266C]",
+    "type": "paragraph",
+    "text": "2.36"
+  },
+  {
+    "idx": 217,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[3]/tc[1]/p[@paraId=2B9095C4]",
+    "type": "paragraph",
+    "text": "2"
+  },
+  {
+    "idx": 218,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[3]/tc[2]/p[@paraId=64CE455C]",
+    "type": "paragraph",
+    "text": "2.52"
+  },
+  {
+    "idx": 219,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[3]/tc[3]/p[@paraId=5847CD5C]",
+    "type": "paragraph",
+    "text": "2.58"
+  },
+  {
+    "idx": 220,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[3]/tc[4]/p[@paraId=559E34B0]",
+    "type": "paragraph",
+    "text": "2.57"
+  },
+  {
+    "idx": 221,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[3]/tc[5]/p[@paraId=31581DDA]",
+    "type": "paragraph",
+    "text": "2.24"
+  },
+  {
+    "idx": 222,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[3]/tc[6]/p[@paraId=1C7E0CD7]",
+    "type": "paragraph",
+    "text": "2.48"
+  },
+  {
+    "idx": 223,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[3]/tc[7]/p[@paraId=2ABF4303]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 224,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[3]/tc[8]/p[@paraId=067A98B2]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 225,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[3]/tc[9]/p[@paraId=28408689]",
+    "type": "paragraph",
+    "text": "2.36"
+  },
+  {
+    "idx": 226,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[1]/p[@paraId=5C84B9C5]",
+    "type": "paragraph",
+    "text": "3"
+  },
+  {
+    "idx": 227,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[2]/p[@paraId=6AD7AFC1]",
+    "type": "paragraph",
+    "text": "2.52"
+  },
+  {
+    "idx": 228,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[4]/tc[3]/p[@paraId=6F7E5C3F]",
+    "type": "paragraph",
+    "text": "2.58"
+  },
+  {
+    "idx": 229,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[4]/tc[4]/p[@paraId=5DA5D4B2]",
+    "type": "paragraph",
+    "text": "2.57"
+  },
+  {
+    "idx": 230,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[4]/tc[5]/p[@paraId=3DDD9B96]",
+    "type": "paragraph",
+    "text": "2.24"
+  },
+  {
+    "idx": 231,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[6]/p[@paraId=79A6AB0C]",
+    "type": "paragraph",
+    "text": "2.48"
+  },
+  {
+    "idx": 232,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[7]/p[@paraId=09FCD83C]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 233,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[8]/p[@paraId=4400266D]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 234,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[4]/tc[9]/p[@paraId=54CEF904]",
+    "type": "paragraph",
+    "text": "2.36"
+  },
+  {
+    "idx": 235,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[5]/tc[1]/p[@paraId=6A88F650]",
+    "type": "paragraph",
+    "text": "4"
+  },
+  {
+    "idx": 236,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[5]/tc[2]/p[@paraId=235E40E4]",
+    "type": "paragraph",
+    "text": "0.87"
+  },
+  {
+    "idx": 237,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[5]/tc[3]/p[@paraId=71EC3EE5]",
+    "type": "paragraph",
+    "text": "0.88"
+  },
+  {
+    "idx": 238,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[5]/tc[4]/p[@paraId=0F35CFC1]",
+    "type": "paragraph",
+    "text": "0.93"
+  },
+  {
+    "idx": 239,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[5]/tc[5]/p[@paraId=1E6FDCA2]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 240,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[5]/tc[6]/p[@paraId=446FEB33]",
+    "type": "paragraph",
+    "text": "0.90"
+  },
+  {
+    "idx": 241,
+    "page": 21,
+    "locator": "/body/tbl[5]/tr[5]/tc[7]/p[@paraId=149ECDC9]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 242,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[5]/tc[8]/p[@paraId=2B494BB9]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 243,
+    "page": null,
+    "locator": "/body/tbl[5]/tr[5]/tc[9]/p[@paraId=35EAB86C]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 244,
+    "page": null,
+    "locator": "/body/p[@paraId=04BF2904]",
+    "type": "paragraph",
+    "text": "跨页表格的“续表”字样没有得到Word的支持，网上的几种解决方案都非常山寨，一旦修改表格前面的段落，会面临各种问题；有的方案效果较好，却无法处理跨三页的表格。我个人的建议是没有必要加“附表”。如果一定要加，还不如在论文定稿后使用文本框手动添加（或者使用PDF编辑软件，加到PDF里）。在微软更新Word之前，我没有找到更方便的方案。上面即为手动添加的例子，可以选中文本框复制粘贴，然后把它拖到左上角自动出现绿色线的位置，如图 2.4所示。终"
+  },
+  {
+    "idx": 246,
+    "page": null,
+    "locator": "/body/p[@paraId=3671177B]",
+    "type": "paragraph",
+    "text": "图 2.4 手动添加跨页的“续表”"
+  },
+  {
+    "idx": 247,
+    "page": 22,
+    "locator": "/body/p[@paraId=34953DFE]",
+    "type": "paragraph",
+    "text": "本模板已新建“PKU三线表”作为插入表格的默认样式。三线表并非强制要求，如果表格复杂，可以添加辅助线，常见者如分层表头，但全文风格宜一致。"
+  },
+  {
+    "idx": 248,
+    "page": 23,
+    "locator": "/body/p[@paraId=2AFF0A16]",
+    "type": "paragraph",
+    "text": "表2.2 另一些数据指标，而且这里顺便试试看如果表题太长的话图表目录的排版是不是还看得过去"
+  },
+  {
+    "idx": 250,
+    "page": 23,
+    "locator": "/body/tbl[6]/tr[1]/tc[2]/p[@paraId=6422F21C]",
+    "type": "paragraph",
+    "text": "Stage 1 (>7.1 μm)"
+  },
+  {
+    "idx": 251,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[1]/tc[3]/p[@paraId=2BAF1110]",
+    "type": "paragraph",
+    "text": "Stage 2 (4.8-7.1 μm)"
+  },
+  {
+    "idx": 252,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[1]/tc[4]/p[@paraId=762E5412]",
+    "type": "paragraph",
+    "text": "Stage 3 (3.2-4.7 μm)"
+  },
+  {
+    "idx": 254,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[2]/p[@paraId=11DBD019]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 255,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[3]/p[@paraId=38CB16F0]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 256,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[4]/p[@paraId=623BD671]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 257,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[5]/p[@paraId=2C9EA46A]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 258,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[6]/p[@paraId=5D16378B]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 259,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[7]/p[@paraId=385DC2D0]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 260,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[8]/p[@paraId=00076DF3]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 261,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[9]/p[@paraId=3811A239]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 262,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[10]/p[@paraId=17893F39]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 263,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[11]/p[@paraId=074B3F02]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 264,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[12]/p[@paraId=6CBCE646]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 265,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[13]/p[@paraId=25DAEE43]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 266,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[1]/p[@paraId=427603CD]",
+    "type": "paragraph",
+    "text": "H"
+  },
+  {
+    "idx": 267,
+    "page": 21,
+    "locator": "/body/tbl[6]/tr[3]/tc[2]/p[@paraId=447CA02C]",
+    "type": "paragraph",
+    "text": "2.52"
+  },
+  {
+    "idx": 268,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[3]/p[@paraId=7C198382]",
+    "type": "paragraph",
+    "text": "2.58"
+  },
+  {
+    "idx": 269,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[4]/p[@paraId=79D71606]",
+    "type": "paragraph",
+    "text": "2.57"
+  },
+  {
+    "idx": 270,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[5]/p[@paraId=4B74D180]",
+    "type": "paragraph",
+    "text": "2.24"
+  },
+  {
+    "idx": 271,
+    "page": 21,
+    "locator": "/body/tbl[6]/tr[3]/tc[6]/p[@paraId=5B95F5F0]",
+    "type": "paragraph",
+    "text": "2.48"
+  },
+  {
+    "idx": 272,
+    "page": 21,
+    "locator": "/body/tbl[6]/tr[3]/tc[7]/p[@paraId=2308DB3F]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 273,
+    "page": 21,
+    "locator": "/body/tbl[6]/tr[3]/tc[8]/p[@paraId=25CFB84F]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 274,
+    "page": 21,
+    "locator": "/body/tbl[6]/tr[3]/tc[9]/p[@paraId=2CDE7FEC]",
+    "type": "paragraph",
+    "text": "2.36"
+  },
+  {
+    "idx": 275,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[10]/p[@paraId=6EDE56AD]",
+    "type": "paragraph",
+    "text": "2.66"
+  },
+  {
+    "idx": 276,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[11]/p[@paraId=62B011CC]",
+    "type": "paragraph",
+    "text": "2.65"
+  },
+  {
+    "idx": 277,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[12]/p[@paraId=17A7AF21]",
+    "type": "paragraph",
+    "text": "2.64"
+  },
+  {
+    "idx": 278,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[13]/p[@paraId=16F64DAC]",
+    "type": "paragraph",
+    "text": "2.53"
+  },
+  {
+    "idx": 279,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[1]/p[@paraId=0076CC5F]",
+    "type": "paragraph",
+    "text": "E"
+  },
+  {
+    "idx": 280,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[2]/p[@paraId=688AF74F]",
+    "type": "paragraph",
+    "text": "0.87"
+  },
+  {
+    "idx": 281,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[3]/p[@paraId=363E7546]",
+    "type": "paragraph",
+    "text": "0.88"
+  },
+  {
+    "idx": 282,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[4]/p[@paraId=1525D486]",
+    "type": "paragraph",
+    "text": "0.93"
+  },
+  {
+    "idx": 283,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[5]/p[@paraId=6756E734]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 284,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[6]/p[@paraId=0BF09D85]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 285,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[7]/p[@paraId=28D7B2D0]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 286,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[8]/p[@paraId=75F39194]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 287,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[9]/p[@paraId=1C24C790]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 288,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[10]/p[@paraId=4A08AF43]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 289,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[11]/p[@paraId=4A386FE9]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 290,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[4]/tc[12]/p[@paraId=722A1DED]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 291,
+    "page": 23,
+    "locator": "/body/tbl[6]/tr[4]/tc[13]/p[@paraId=54CAF699]",
+    "type": "paragraph",
+    "text": "0.88"
+  },
+  {
+    "idx": 292,
+    "page": 23,
+    "locator": "/body/p[@paraId=05C42AE1]",
+    "type": "paragraph",
+    "text": "注：图表尾注已定义为“PKU图表注”样式。按CYT170-2019，建议表注在表格左墙线后1-2格。建议表格与页面同宽。"
+  },
+  {
+    "idx": 293,
+    "page": 23,
+    "locator": "/body/p[@paraId=6C8CE521]",
+    "type": "paragraph",
+    "text": "关于自动编号的注意事项"
+  },
+  {
+    "idx": 294,
+    "page": 23,
+    "locator": "/body/p[@paraId=6575B5BF]",
+    "type": "paragraph",
+    "text": "微软Word编号对中文数字的支持不好，而国内的惯例是“第一章”和“1.1”混用。本模板插图、公式、表格的自动编号使用域代码实现从汉字“一”到阿拉伯数字“1”的转换，同时为了保证仍然可以“交叉引用”，用了SEQ域。所以请不要使用“插入题注”功能增加“图”“表”“公式”，以免Word把现有的域代码搞乱。插入新图表时请把现有图题、表题复制过去。如果编号出现问题，请用本节的方法修复。"
+  },
+  {
+    "idx": 295,
+    "page": 23,
+    "locator": "/body/p[@paraId=547337BB]",
+    "type": "paragraph",
+    "text": "自动编号出现汉字的修复"
+  },
+  {
+    "idx": 296,
+    "page": null,
+    "locator": "/body/p[@paraId=10D2222B]",
+    "type": "paragraph",
+    "text": "如果误操作用了“插入题注”，可能会导致所有的编号变成“图1.一.1”的样式，此时请在文档里随便找个空白处，点击：引用-插入题注，选择出现问题的“图”“表”或“公式”，然后点击“编号”，去掉“包含章节号”，点击①确定，再点击②取消，可以把全文的编号样式变回来。如图所示："
+  },
+  {
+    "idx": 298,
+    "page": null,
+    "locator": "/body/p[@paraId=0047B578]",
+    "type": "paragraph",
+    "text": "图 2.5 修复自动编号的阿拉伯数字形式"
+  },
+  {
+    "idx": 299,
+    "page": 24,
+    "locator": "/body/p[@paraId=69C12DDC]",
+    "type": "paragraph",
+    "text": "自动编号在新一章没有从1开始的修复"
+  },
+  {
+    "idx": 300,
+    "page": 24,
+    "locator": "/body/p[@paraId=057590B8]",
+    "type": "paragraph",
+    "text": "如果图表公式的编号在新的一章后没有从1开始，图1.2后变成了图2.3（而不是图2.1），那么："
+  },
+  {
+    "idx": 301,
+    "page": 24,
+    "locator": "/body/p[@paraId=5D9F072B]",
+    "type": "paragraph",
+    "text": "按Alt-F9，此时全文的域代码都会显示出来。按Ctrl-H调出替换对话框，假设你需要修正的是“图”的编号，查找内容是SEQ空格图空格\\*空格ARABIC："
+  },
+  {
+    "idx": 303,
+    "page": null,
+    "locator": "/body/p[@paraId=1CDE3E4C]",
+    "type": "paragraph",
+    "text": "图 2.6 修复图表、公式自动编号的按章更新"
+  },
+  {
+    "idx": 304,
+    "page": 25,
+    "locator": "/body/p[@paraId=0519DA18]",
+    "type": "paragraph",
+    "text": "点击“全部替换”，然后按Alt-F9，即可修复。同理，修复表、公式的编号只需把“查找内容”中的“图”字换成“表”或“公式”。"
+  },
+  {
+    "idx": 305,
+    "page": 25,
+    "locator": "/body/p[@paraId=7E5BB433]",
+    "type": "paragraph",
+    "text": "图表编号和图表目录的更新"
+  },
+  {
+    "idx": 306,
+    "page": 25,
+    "locator": "/body/p[@paraId=707117C1]",
+    "type": "paragraph",
+    "text": "增加图表、公式后，建议选中编号项，按F9更新域，编号就会自动更新。更新图表目录时，建议按Ctrl-A选中全文，按F9更新域，“更新整个目录”，然后选中全文再重复一次，以保证图表目录获取最新的编号。"
+  },
+  {
+    "idx": 309,
+    "page": null,
+    "locator": "/body/p[@paraId=5D95D235]",
+    "type": "paragraph",
+    "text": "其他注意事项"
+  },
+  {
+    "idx": 310,
+    "page": 26,
+    "locator": "/body/p[@paraId=0106490A]",
+    "type": "paragraph",
+    "text": "请随时注意核对格式"
+  },
+  {
+    "idx": 311,
+    "page": 26,
+    "locator": "/body/p[@paraId=692CC6B8]",
+    "type": "paragraph",
+    "text": "理论上本模板可提供正确的论文格式，但为确保万无一失，在论文写作过程中与协作完成后请务必注意核对格式的正确性，避免在编辑过程中可能遇到的意外。"
+  },
+  {
+    "idx": 312,
+    "page": 26,
+    "locator": "/body/p[@paraId=1CC38B10]",
+    "type": "paragraph",
+    "text": "排查错误引用项"
+  },
+  {
+    "idx": 314,
+    "page": null,
+    "locator": "/body/p[@paraId=595BD6FE]",
+    "type": "paragraph",
+    "text": "图 3.1 错误引用项示例"
+  },
+  {
+    "idx": 315,
+    "page": null,
+    "locator": "/body/p[@paraId=757C6819]",
+    "type": "paragraph",
+    "text": "在论文编辑过程中，由于种种原因可能会导致引用项产生错误，并导致如错误!未找到引用源。的错误，在写作时可通过查找“未找到引用源”几个字排查此错误，并重新插入对对应项的引用。"
+  },
+  {
+    "idx": 316,
+    "page": 26,
+    "locator": "/body/p[@paraId=44BAAB7A]",
+    "type": "paragraph",
+    "text": "论文打印装订时的注意事项"
+  },
+  {
+    "idx": 317,
+    "page": 26,
+    "locator": "/body/p[@paraId=557E2487]",
+    "type": "paragraph",
+    "text": "博士论文在向图书馆提交纸质论文时，需要在论文中附加各种材料，顺序为："
+  },
+  {
+    "idx": 318,
+    "page": null,
+    "locator": "/body/p[@paraId=3BFBD179]",
+    "type": "paragraph",
+    "text": "封面—实名评审专家名单—版权声明—论文本体—原创性声明—封底"
+  },
+  {
+    "idx": 319,
+    "page": 27,
+    "locator": "/body/p[@paraId=6C3FB43F]",
+    "type": "paragraph",
+    "text": "在正式提交图书馆的论文版本中，版权声明页与原创性声明页应带有二维码，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+  },
+  {
+    "idx": 320,
+    "page": 27,
+    "locator": "/body/p[@paraId=48D5A50A]",
+    "type": "paragraph",
+    "text": "另外论文封面书脊处需要依次打印：论文标题+年份+学号，可在打印论文时要求打印店处理，学校周围经常打印学位论文的打印店对此应该都有经验。注意：去打印店时，请带PDF文件去，以免Word或WPS等格式存在兼容性问题。"
+  },
+  {
+    "idx": 321,
+    "page": 27,
+    "locator": "/body/p[@paraId=2BEBA4E2]",
+    "type": "paragraph",
+    "text": "保存为PDF格式的注意事项"
+  },
+  {
+    "idx": 322,
+    "page": 27,
+    "locator": "/body/p[@paraId=38702EF6]",
+    "type": "paragraph",
+    "text": "Word保存成PDF可以有多种途径，但常规的做法都有各种问题，例如使用菜单栏里的Acrobat“创建PDF”，如果要保留文档结构（阅读PDF时的章节书签），它可能会花十几个小时才能保存完毕。这个bug在多年前就已经有人和Adobe反馈过，但一直没有修复。"
+  },
+  {
+    "idx": 323,
+    "page": 27,
+    "locator": "/body/p[@paraId=1502064C]",
+    "type": "paragraph",
+    "text": "经过测试，截至2024年5月，以下方法具有最好的兼容性，而且可以保存书签："
+  },
+  {
+    "idx": 324,
+    "page": 27,
+    "locator": "/body/p[@paraId=55EA937D]",
+    "type": "paragraph",
+    "text": "点击“文件”，“另存为”，选择保存的位置；"
+  },
+  {
+    "idx": 325,
+    "page": 27,
+    "locator": "/body/p[@paraId=210832B0]",
+    "type": "paragraph",
+    "text": "在弹出的对话框中，把“保存类型”选为pdf；"
+  },
+  {
+    "idx": 326,
+    "page": 27,
+    "locator": "/body/p[@paraId=7A8ACE8C]",
+    "type": "paragraph",
+    "text": "按下图设置，然后保存。"
+  },
+  {
+    "idx": 328,
+    "page": null,
+    "locator": "/body/p[@paraId=2B012AD4]",
+    "type": "paragraph",
+    "text": "图 3.2 保存为PDF的建议方法"
+  },
+  {
+    "idx": 331,
+    "page": 29,
+    "locator": "/body/p[@paraId=1B55EAB2]",
+    "type": "paragraph",
+    "text": "插入横向页面"
+  },
+  {
+    "idx": 332,
+    "page": 29,
+    "locator": "/body/p[@paraId=18BE0EA6]",
+    "type": "paragraph",
+    "text": "论文有时需要插入一个横向页面，例如很大的表格。此时请在打算放置横向页面开始之前的行尾插入一个“下一页”分节符，并在横向页面的最后也插入一个“下一页”分节符，菜单位置如下："
+  },
+  {
+    "idx": 334,
+    "page": null,
+    "locator": "/body/p[@paraId=613CBD21]",
+    "type": "paragraph",
+    "text": "图 3.3 使用下一页分隔符来划分章节"
+  },
+  {
+    "idx": 335,
+    "page": null,
+    "locator": "/body/p[@paraId=720A834A]",
+    "type": "paragraph",
+    "text": "这样，就有了单独的“一节”。将光标放在这一节中任意位置，在菜单“布局”里点击“纸张方向”，点击“横向”，这一节就变成了横向显示。分节符之前、之后的页面都不会受影响。"
+  },
+  {
+    "idx": 338,
+    "page": 31,
+    "locator": "/body/p[@paraId=28453D60]",
+    "type": "paragraph",
+    "text": "其他, 而且这里顺便试试看如果标题实在太长的话目录的排版是不是还看得过去"
+  },
+  {
+    "idx": 339,
+    "page": 31,
+    "locator": "/body/p[@paraId=1E1C93B8]",
+    "type": "paragraph",
+    "text": "参考文献"
+  },
+  {
+    "idx": 340,
+    "page": 31,
+    "locator": "/body/p[@paraId=495BBC01]",
+    "type": "paragraph",
+    "text": "参考文献的管理建议依托参考文献管理软件，例如Endnote、Refman或NoteExpress等。“顺序编码制”和“著者-出版年制”二者只能选择一种，不能混用。具体参见GB/T 7714。建议使用文献管理软件来插入参考文献，常用的软件通常都预置了GB/T 7714 author-year 和 GB/T 7714 numeric格式。"
+  },
+  {
+    "idx": 343,
+    "page": null,
+    "locator": "/body/tbl[7]/tr[1]/tc[3]/p[@paraId=3E31AC5C]",
+    "type": "paragraph",
+    "text": "(4.1)"
+  },
+  {
+    "idx": 344,
+    "page": 31,
+    "locator": "/body/p[@paraId=13D62DC0]",
+    "type": "paragraph",
+    "text": "进一步讨论，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去"
+  },
+  {
+    "idx": 345,
+    "page": 31,
+    "locator": "/body/p[@paraId=6A79048D]",
+    "type": "paragraph",
+    "text": "这是一个二级标题示例。"
+  },
+  {
+    "idx": 346,
+    "page": 31,
+    "locator": "/body/p[@paraId=1AA5D321]",
+    "type": "paragraph",
+    "text": "三级标题示例，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去"
+  },
+  {
+    "idx": 347,
+    "page": 31,
+    "locator": "/body/p[@paraId=66A14B30]",
+    "type": "paragraph",
+    "text": "这是一个三级标题示例。"
+  },
+  {
+    "idx": 348,
+    "page": null,
+    "locator": "/body/p[@paraId=0B68E8B1]",
+    "type": "paragraph",
+    "text": "表4.1 测试数据"
+  },
+  {
+    "idx": 350,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[1]/tc[2]/p[@paraId=4B2A851A]",
+    "type": "paragraph",
+    "text": "Stage 1 (>7.1 μm)"
+  },
+  {
+    "idx": 351,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[1]/tc[3]/p[@paraId=3941209F]",
+    "type": "paragraph",
+    "text": "Stage 2 (4.8-7.1 μm)"
+  },
+  {
+    "idx": 352,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[1]/tc[4]/p[@paraId=128D3600]",
+    "type": "paragraph",
+    "text": "Stage 3 (3.2-4.7 μm)"
+  },
+  {
+    "idx": 354,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[2]/p[@paraId=36975FBD]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 355,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[3]/p[@paraId=68409E43]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 356,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[4]/p[@paraId=120470EB]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 357,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[5]/p[@paraId=4F6CB585]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 358,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[6]/p[@paraId=187C9A77]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 359,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[7]/p[@paraId=7F3E9753]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 360,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[8]/p[@paraId=1F405207]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 361,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[9]/p[@paraId=01978839]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 362,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[10]/p[@paraId=2D51B698]",
+    "type": "paragraph",
+    "text": "Con"
+  },
+  {
+    "idx": 363,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[11]/p[@paraId=32D6AE6D]",
+    "type": "paragraph",
+    "text": "Low"
+  },
+  {
+    "idx": 364,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[12]/p[@paraId=70EE5C55]",
+    "type": "paragraph",
+    "text": "Medium"
+  },
+  {
+    "idx": 365,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[13]/p[@paraId=03590B14]",
+    "type": "paragraph",
+    "text": "High"
+  },
+  {
+    "idx": 366,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[1]/p[@paraId=54B0F5F5]",
+    "type": "paragraph",
+    "text": "H"
+  },
+  {
+    "idx": 367,
+    "page": 21,
+    "locator": "/body/tbl[8]/tr[3]/tc[2]/p[@paraId=23D896A4]",
+    "type": "paragraph",
+    "text": "2.52"
+  },
+  {
+    "idx": 368,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[3]/p[@paraId=4717D4DD]",
+    "type": "paragraph",
+    "text": "2.58"
+  },
+  {
+    "idx": 369,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[4]/p[@paraId=784E0078]",
+    "type": "paragraph",
+    "text": "2.57"
+  },
+  {
+    "idx": 370,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[5]/p[@paraId=6374E1CB]",
+    "type": "paragraph",
+    "text": "2.24"
+  },
+  {
+    "idx": 371,
+    "page": 21,
+    "locator": "/body/tbl[8]/tr[3]/tc[6]/p[@paraId=16071FA9]",
+    "type": "paragraph",
+    "text": "2.48"
+  },
+  {
+    "idx": 372,
+    "page": 21,
+    "locator": "/body/tbl[8]/tr[3]/tc[7]/p[@paraId=2A5653FD]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 373,
+    "page": 21,
+    "locator": "/body/tbl[8]/tr[3]/tc[8]/p[@paraId=4CE0D039]",
+    "type": "paragraph",
+    "text": "2.21"
+  },
+  {
+    "idx": 374,
+    "page": 21,
+    "locator": "/body/tbl[8]/tr[3]/tc[9]/p[@paraId=67A10733]",
+    "type": "paragraph",
+    "text": "2.36"
+  },
+  {
+    "idx": 375,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[10]/p[@paraId=279E3055]",
+    "type": "paragraph",
+    "text": "2.66"
+  },
+  {
+    "idx": 376,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[11]/p[@paraId=7AB0E991]",
+    "type": "paragraph",
+    "text": "2.65"
+  },
+  {
+    "idx": 377,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[12]/p[@paraId=6FFD64D2]",
+    "type": "paragraph",
+    "text": "2.64"
+  },
+  {
+    "idx": 378,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[3]/tc[13]/p[@paraId=6711C3F3]",
+    "type": "paragraph",
+    "text": "2.53"
+  },
+  {
+    "idx": 379,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[1]/p[@paraId=5370DA23]",
+    "type": "paragraph",
+    "text": "E"
+  },
+  {
+    "idx": 380,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[2]/p[@paraId=2B6D5CD7]",
+    "type": "paragraph",
+    "text": "0.87"
+  },
+  {
+    "idx": 381,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[3]/p[@paraId=1D8F5BB4]",
+    "type": "paragraph",
+    "text": "0.88"
+  },
+  {
+    "idx": 382,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[4]/p[@paraId=1FBDD9B1]",
+    "type": "paragraph",
+    "text": "0.93"
+  },
+  {
+    "idx": 383,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[5]/p[@paraId=515511D9]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 384,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[6]/p[@paraId=479A94AA]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 385,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[7]/p[@paraId=104607A4]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 386,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[8]/p[@paraId=699FD5CC]",
+    "type": "paragraph",
+    "text": "0.86"
+  },
+  {
+    "idx": 387,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[9]/p[@paraId=33D9EE4B]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 388,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[10]/p[@paraId=4A977E66]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 389,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[11]/p[@paraId=30D8F003]",
+    "type": "paragraph",
+    "text": "0.9"
+  },
+  {
+    "idx": 390,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[12]/p[@paraId=0D7C7E95]",
+    "type": "paragraph",
+    "text": "0.85"
+  },
+  {
+    "idx": 391,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[4]/tc[13]/p[@paraId=7C10C549]",
+    "type": "paragraph",
+    "text": "0.88"
+  },
+  {
+    "idx": 395,
+    "page": 33,
+    "locator": "/body/p[@paraId=32AD6216]",
+    "type": "paragraph",
+    "text": "结论与讨论"
+  },
+  {
+    "idx": 396,
+    "page": 33,
+    "locator": "/body/p[@paraId=4098A66E]",
+    "type": "paragraph",
+    "text": "结论"
+  },
+  {
+    "idx": 397,
+    "page": 33,
+    "locator": "/body/p[@paraId=3B35ABE5]",
+    "type": "paragraph",
+    "text": "跟微软较劲是个麻烦事，建议学校还是尽量使用国标吧。"
+  },
+  {
+    "idx": 398,
+    "page": 33,
+    "locator": "/body/p[@paraId=75D4FA8D]",
+    "type": "paragraph",
+    "text": "展望"
+  },
+  {
+    "idx": 402,
+    "page": null,
+    "locator": "/body/p[@paraId=11DAB656]",
+    "type": "paragraph",
+    "text": "参考文献"
+  },
+  {
+    "idx": 403,
+    "page": 34,
+    "locator": "/body/p[@paraId=3B89DBB8]",
+    "type": "paragraph",
+    "text": "[1] 张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+  },
+  {
+    "idx": 404,
+    "page": 34,
+    "locator": "/body/p[@paraId=67024E1C]",
+    "type": "paragraph",
+    "text": "[2] DOWLER L. The research university's dilemma: resource sharing and research in a transinstitutional environment[J]. Journal of library administration, 1995, 21 (1/2): 5-26."
+  },
+  {
+    "idx": 406,
+    "page": 34,
+    "locator": "/body/p[@paraId=056F7996]",
+    "type": "paragraph",
+    "text": "张志奇 2021. 猪场母猪的产后护理技术. 今日畜牧兽医 [J], 37: 62."
+  },
+  {
+    "idx": 407,
+    "page": 34,
+    "locator": "/body/p[@paraId=5C5D8EAA]",
+    "type": "paragraph",
+    "text": "DOWLER L, 1995. The research university's dilemma: resource sharing and research in a transinstitutional environment[J]. Journal of library administration, 21 (1/2): 5-26."
+  },
+  {
+    "idx": 409,
+    "page": 34,
+    "locator": "/body/p[@paraId=2919BEEA]",
+    "type": "paragraph",
+    "text": "注：以上分别为“顺序编码制”和“著者-出版年制”的示例，二者只能选择一种，不能混用。具体参见GB/T 7714。建议使用文献管理软件来插入参考文献，常用的软件通常都预置了GB/T 7714 author-year 和 GB/T 7714 numeric格式。"
+  },
+  {
+    "idx": 410,
+    "page": 34,
+    "locator": "/body/p[@paraId=19547B4B]",
+    "type": "paragraph",
+    "text": "如果参考文献软件自动加入的引文目录没有出现在这个位置，可以把生成的引文目录直接剪切粘贴到这个位置（不要选“只保留文本”！），后面软件就会自动在这个位置更新"
+  },
+  {
+    "idx": 412,
+    "page": 35,
+    "locator": "/body/p[@paraId=0D319C89]",
+    "type": "paragraph",
+    "text": "附录A 博士期间工作成果"
+  },
+  {
+    "idx": 413,
+    "page": 35,
+    "locator": "/body/p[@paraId=2FBC3ABA]",
+    "type": "paragraph",
+    "text": "期刊论文"
+  },
+  {
+    "idx": 414,
+    "page": 35,
+    "locator": "/body/p[@paraId=1E037328]",
+    "type": "paragraph",
+    "text": "[1] 期刊论文1"
+  },
+  {
+    "idx": 415,
+    "page": 35,
+    "locator": "/body/p[@paraId=62E47D09]",
+    "type": "paragraph",
+    "text": "会议论文"
+  },
+  {
+    "idx": 416,
+    "page": 35,
+    "locator": "/body/p[@paraId=6290A6E6]",
+    "type": "paragraph",
+    "text": "[1] 会议论文1"
+  },
+  {
+    "idx": 417,
+    "page": 35,
+    "locator": "/body/p[@paraId=434EF269]",
+    "type": "paragraph",
+    "text": "参与项目"
+  },
+  {
+    "idx": 418,
+    "page": 35,
+    "locator": "/body/p[@paraId=4BD94F68]",
+    "type": "paragraph",
+    "text": "[1] 项目1 863计划子课题"
+  },
+  {
+    "idx": 419,
+    "page": 35,
+    "locator": "/body/p[@paraId=754AF888]",
+    "type": "paragraph",
+    "text": "获得专利与软件著作权"
+  },
+  {
+    "idx": 420,
+    "page": 35,
+    "locator": "/body/p[@paraId=01BCF9A5]",
+    "type": "paragraph",
+    "text": "[1] 专利1 专利"
+  },
+  {
+    "idx": 421,
+    "page": 35,
+    "locator": "/body/p[@paraId=0BA61877]",
+    "type": "paragraph",
+    "text": "[2] 著作权1 软件著作权"
+  },
+  {
+    "idx": 424,
+    "page": 36,
+    "locator": "/body/p[@paraId=0F363817]",
+    "type": "paragraph",
+    "text": "致谢"
+  },
+  {
+    "idx": 425,
+    "page": 36,
+    "locator": "/body/p[@paraId=70685273]",
+    "type": "paragraph",
+    "text": "感谢铁岭TV。"
+  },
+  {
+    "idx": 427,
+    "page": 36,
+    "locator": "/body/p[@paraId=34E82034]",
+    "type": "paragraph",
+    "text": "changelog:"
+  },
+  {
+    "idx": 428,
+    "page": 36,
+    "locator": "/body/p[@paraId=0E988DF0]",
+    "type": "paragraph",
+    "text": "2021.1.15：补充注意事项与细节修改"
+  },
+  {
+    "idx": 429,
+    "page": 36,
+    "locator": "/body/p[@paraId=47A5DC5C]",
+    "type": "paragraph",
+    "text": "2021.1.19：完善公式部分说明"
+  },
+  {
+    "idx": 430,
+    "page": 36,
+    "locator": "/body/p[@paraId=4103A1EB]",
+    "type": "paragraph",
+    "text": "2021.2.24：更改表2-1的域代码，从而修正表格编号在新章节没有重新开始编号的问题"
+  },
+  {
+    "idx": 431,
+    "page": 36,
+    "locator": "/body/p[@paraId=54C9E7AB]",
+    "type": "paragraph",
+    "text": "2022.3.16：题注的章节与编号之间分隔改为“.”；结尾添加changelog"
+  },
+  {
+    "idx": 432,
+    "page": 36,
+    "locator": "/body/p[@paraId=1D7A48D7]",
+    "type": "paragraph",
+    "text": "2022.4.3：参照Aqr的经验重做了章编号，图表及公式的使用得到简化。详见第一章的说明。重排了目录格式。末尾补充了原创性声明和使用授权说明。正文样式修改为1.3倍行距，对文内公式和小图片的兼容性好于固定20磅。段前段后增加0.5行间距，纯属个人喜好，不喜欢的可以改回来。以及公式居中、脚注等一些格式修正。"
+  },
+  {
+    "idx": 433,
+    "page": 36,
+    "locator": "/body/p[@paraId=6E56F2B4]",
+    "type": "paragraph",
+    "text": "2022.4.5：图表格式优化，增加图表目录。目录重新排版，让太长的题目看起来整齐些。"
+  },
+  {
+    "idx": 434,
+    "page": 37,
+    "locator": "/body/p[@paraId=7DE72E4B]",
+    "type": "paragraph",
+    "text": "2022.4.6：章标题用域实现了自动编号。"
+  },
+  {
+    "idx": 435,
+    "page": 37,
+    "locator": "/body/p[@paraId=5026DADD]",
+    "type": "paragraph",
+    "text": "2022.4.7：推翻了之前两种自动编号思路（都太复杂），不再使用隐藏字体、自定义序列等容易引起误操作的方法，改用域代码实现了章标题与图表公式编号的中英文混编。重新定义了正文前后的摘要、参考文献等标题。目录排版美化。页眉页脚使用链接。"
+  },
+  {
+    "idx": 436,
+    "page": 37,
+    "locator": "/body/p[@paraId=008B935E]",
+    "type": "paragraph",
+    "text": "2022.4.8：发现部分Word版本的兼容性问题，在开头增加了解决方法。"
+  },
+  {
+    "idx": 437,
+    "page": 37,
+    "locator": "/body/p[@paraId=46ADE021]",
+    "type": "paragraph",
+    "text": "2022.4.9：重新梳理了样式。补充了自动编号出错的补救方法。"
+  },
+  {
+    "idx": 438,
+    "page": 37,
+    "locator": "/body/p[@paraId=6DEBE1C8]",
+    "type": "paragraph",
+    "text": "2022.4.10：修改了表格样式。增加提行引样式。增加横向页面的操作说明。"
+  },
+  {
+    "idx": 439,
+    "page": 37,
+    "locator": "/body/p[@paraId=3125B1D2]",
+    "type": "paragraph",
+    "text": "2022.4.11：增加了图题、表题的操作说明。"
+  },
+  {
+    "idx": 440,
+    "page": 37,
+    "locator": "/body/p[@paraId=49109C9A]",
+    "type": "paragraph",
+    "text": "2022.6.13：细节修改，增加了参考文献示例。"
+  },
+  {
+    "idx": 441,
+    "page": 37,
+    "locator": "/body/p[@paraId=64247A01]",
+    "type": "paragraph",
+    "text": "2023.5.1：增加图表尾注。"
+  },
+  {
+    "idx": 442,
+    "page": 37,
+    "locator": "/body/p[@paraId=1A0B608C]",
+    "type": "paragraph",
+    "text": "2024.1.1：封面页单独成页。增加表格重复标题行说明。增加“要点”样式。"
+  },
+  {
+    "idx": 443,
+    "page": 37,
+    "locator": "/body/p[@paraId=32541CC0]",
+    "type": "paragraph",
+    "text": "2024.5.6：增加了保存为PDF的注意事项。"
+  },
+  {
+    "idx": 444,
+    "page": 37,
+    "locator": "/body/p[@paraId=7BE1C1EA]",
+    "type": "paragraph",
+    "text": "2024.6.27：更换新版论文封面。"
+  },
+  {
+    "idx": 445,
+    "page": 37,
+    "locator": "/body/p[@paraId=71ED359F]",
+    "type": "paragraph",
+    "text": "2024.7.22：样式统一命名。补充章节标题自动编号、续表的操作说明。"
+  },
+  {
+    "idx": 447,
+    "page": 38,
+    "locator": "/body/p[@paraId=0174700E]",
+    "type": "paragraph",
+    "text": "北京大学学位论文原创性声明和使用授权说明"
+  },
+  {
+    "idx": 448,
+    "page": 38,
+    "locator": "/body/p[@paraId=6AFB8673]",
+    "type": "paragraph",
+    "text": "原创性声明"
+  },
+  {
+    "idx": 450,
+    "page": 38,
+    "locator": "/body/p[@paraId=1BFE4F0C]",
+    "type": "paragraph",
+    "text": "本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品或成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本声明的法律结果由本人承担。"
+  },
+  {
+    "idx": 452,
+    "page": null,
+    "locator": "/body/p[@paraId=420DB021]",
+    "type": "paragraph",
+    "text": "论文作者签名： 日期： 年 月 日"
+  },
+  {
+    "idx": 455,
+    "page": 38,
+    "locator": "/body/p[@paraId=5DDBD585]",
+    "type": "paragraph",
+    "text": "学位论文使用授权说明"
+  },
+  {
+    "idx": 456,
+    "page": 38,
+    "locator": "/body/p[@paraId=559B3EA9]",
+    "type": "paragraph",
+    "text": "（必须装订在提交学校图书馆的印刷本）"
+  },
+  {
+    "idx": 458,
+    "page": 38,
+    "locator": "/body/p[@paraId=37D31BE7]",
+    "type": "paragraph",
+    "text": "本人完全了解北京大学关于收集、保存、使用学位论文的规定，即："
+  },
+  {
+    "idx": 459,
+    "page": 38,
+    "locator": "/body/p[@paraId=38E23393]",
+    "type": "paragraph",
+    "text": "按照学校要求提交学位论文的印刷本和电子版本；"
+  },
+  {
+    "idx": 460,
+    "page": 39,
+    "locator": "/body/p[@paraId=58E17341]",
+    "type": "paragraph",
+    "text": "学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；"
+  },
+  {
+    "idx": 461,
+    "page": 39,
+    "locator": "/body/p[@paraId=5C0F712F]",
+    "type": "paragraph",
+    "text": "学校可以采用影印、缩印、数字化或其它复制手段保存论文；"
+  },
+  {
+    "idx": 462,
+    "page": 39,
+    "locator": "/body/p[@paraId=5775F97B]",
+    "type": "paragraph",
+    "text": "因某种特殊原因需要延迟发布学位论文电子版，授权学校□一年/□两年/□三年以后，在校园网上全文发布。"
+  },
+  {
+    "idx": 464,
+    "page": 39,
+    "locator": "/body/p[@paraId=2667068F]",
+    "type": "paragraph",
+    "text": "（保密论文在解密后遵守此规定）"
+  },
+  {
+    "idx": 467,
+    "page": 39,
+    "locator": "/body/p[@paraId=40A797B3]",
+    "type": "paragraph",
+    "text": "论文作者签名： 导师签名："
+  },
+  {
+    "idx": 469,
+    "page": null,
+    "locator": "/body/p[@paraId=4C88AF50]",
+    "type": "paragraph",
+    "text": "日期： 年 月 日"
+  },
+  {
+    "idx": 508,
+    "page": null,
+    "locator": "/body/p[@paraId=2BEF318C]/r[1]",
+    "type": "picture",
+    "text": "Logo与校名"
+  },
+  {
+    "idx": 509,
+    "page": null,
+    "locator": "/body/p[@paraId=52C3455C]/r[1]",
+    "type": "picture",
+    "text": "图片 10"
+  },
+  {
+    "idx": 510,
+    "page": 13,
+    "locator": "/body/p[@paraId=4589F4F7]/r[1]",
+    "type": "picture",
+    "text": "图片 5"
+  },
+  {
+    "idx": 511,
+    "page": 14,
+    "locator": "/body/p[@paraId=44574E40]/r[1]",
+    "type": "picture",
+    "text": "图片 3"
+  },
+  {
+    "idx": 512,
+    "page": 15,
+    "locator": "/body/p[@paraId=0C35BDB2]/r[1]",
+    "type": "picture",
+    "text": "图片 8"
+  },
+  {
+    "idx": 513,
+    "page": null,
+    "locator": "/body/p[@paraId=48D1A97A]/r[1]",
+    "type": "picture",
+    "text": "图片 7"
+  },
+  {
+    "idx": 514,
+    "page": null,
+    "locator": "/body/p[@paraId=096BC65F]/r[1]",
+    "type": "picture",
+    "text": "Errorbar subsampling, all errorbars, only every 6th errorbar, second series shifted by 3"
+  },
+  {
+    "idx": 515,
+    "page": null,
+    "locator": "/body/p[@paraId=0FF7418E]/r[1]",
+    "type": "picture",
+    "text": "图片 2"
+  },
+  {
+    "idx": 516,
+    "page": null,
+    "locator": "/body/p[@paraId=50F3937B]/r[1]",
+    "type": "picture",
+    "text": "图片 4"
+  },
+  {
+    "idx": 517,
+    "page": null,
+    "locator": "/body/p[@paraId=6538DF5C]/r[1]",
+    "type": "picture",
+    "text": "图片 13"
+  },
+  {
+    "idx": 518,
+    "page": null,
+    "locator": "/body/p[@paraId=58C5BAA7]/r[1]",
+    "type": "picture",
+    "text": "图片 6"
+  },
+  {
+    "idx": 519,
+    "page": null,
+    "locator": "/body/p[@paraId=3FB0CACD]/r[1]",
+    "type": "picture",
+    "text": "图片 1"
+  },
+  {
+    "idx": 520,
+    "page": null,
+    "locator": "/body/p[@paraId=393D81DD]/r[1]",
+    "type": "picture",
+    "text": "图片 15"
+  },
+  {
+    "idx": 521,
+    "page": null,
+    "locator": "/body/p[@paraId=3D67A88F]/r[1]",
+    "type": "picture",
+    "text": "图片 11"
+  },
+  {
+    "idx": 522,
+    "page": null,
+    "locator": "/body/p[@paraId=3AF4ED34]/r[1]",
+    "type": "picture",
+    "text": "图片 12"
+  },
+  {
+    "idx": 523,
+    "page": 22,
+    "locator": "/body/p[@paraId=04BF2904]/r[1]/AlternateContent[1]/Fallback[1]/pict[1]/shape[1]",
+    "type": "shape",
+    "text": "续表"
+  }
+]

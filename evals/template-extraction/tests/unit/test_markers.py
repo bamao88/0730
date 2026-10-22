@@ -4,62 +4,183 @@ from pathlib import Path
 
 import pytest
 
-from template_extraction_eval.contracts import load_fill_contract
-from template_extraction_eval.facts import analyze_docx
+from template_extraction_eval.contracts import (
+    InputContractError,
+    InputErrorCode,
+    load_fill_contract,
+)
 from template_extraction_eval.markers import marker_expectations, validate_markers
+from template_extraction_eval.models import (
+    ContentControlFact,
+    DocumentFacts,
+    EffectiveStyle,
+    FillContract,
+    Locator,
+    SlotContract,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CASES = PROJECT_ROOT / "cases"
 
 
 @pytest.mark.parametrize(
-    ("case_id", "expected_tags"),
+    ("case_id", "error_code"),
     [
-        ("01-hunau-undergraduate", 31),
-        ("02-njau-undergraduate", 26),
-        ("03-pku-graduate", 0),
+        ("01-hunau-undergraduate", InputErrorCode.CONTRACT_MISMATCH),
+        ("02-njau-undergraduate", InputErrorCode.SCHEMA_INVALID),
+        ("03-pku-graduate", InputErrorCode.CONTRACT_MISMATCH),
     ],
 )
-def test_marker_01_through_03_school_marker_protocol_is_closed(
+def test_marker_01_through_03_retired_school_gold_contracts_fail_closed(
     case_id: str,
-    expected_tags: int,
+    error_code: InputErrorCode,
 ) -> None:
     root = CASES / case_id / "gold"
-    contract_path = root / "fill-contract.yaml"
-    contract = load_fill_contract(contract_path)
-    expectations = marker_expectations(contract, path=contract_path)
-    assert len(expectations) == expected_tags
+    with pytest.raises(InputContractError) as captured:
+        load_fill_contract(root / "fill-contract.gold.yaml")
+
+    assert captured.value.code is error_code
+
+
+def test_marker_04_current_slot_ref_contract_closes_marker_protocol() -> None:
+    style = EffectiveStyle(font={}, paragraph={}, container={}, page={})
+    slot = SlotContract(
+        slot_ref=(
+            "source_entry_id=source-entry-u-all-block-0001;extent=whole_entry;"
+            f"source_snapshot_sha256={'3' * 64};"
+            "field_id=thesis.title.zh"
+        ),
+        field_id="thesis.title.zh",
+        content_type="text",
+        required=True,
+        locator=Locator(
+            type="content_control_tag",
+            story="document",
+            part="word/document.xml",
+            expected_match_count=1,
+            value="docfit.cover.title",
+        ),
+        expected_value_style=style,
+    )
+    contract = FillContract(
+        schema_version="docfit-template-fill-contract/v2",
+        contract_id="synthetic.marker",
+        template_sha256="0" * 64,
+        registry_id="registry",
+        registry_version="0.1.0",
+        registry_sha256="1" * 64,
+        marker_protocol="docfit-content-control-marker/v1",
+        regions=(),
+        slots=(slot,),
+    )
+    facts = DocumentFacts(
+        document_sha256="0" * 64,
+        parts=("word/document.xml",),
+        relationships=(),
+        paragraphs=(),
+        controls=(
+            ContentControlFact(
+                alias="thesis.title.zh",
+                tag="docfit.cover.title",
+                internal_id="1",
+                story="document",
+                part="word/document.xml",
+                paragraph_index=0,
+                start=0,
+                end=4,
+                text="Title",
+                effective_style=style,
+            ),
+        ),
+        tables=(),
+        objects=(),
+        unsupported=(),
+    )
+
+    assert set(marker_expectations(contract)) == {"docfit.cover.title"}
     validate_markers(
         contract,
-        analyze_docx(root / "template.docx"),
-        label="Gold",
-        path=contract_path,
+        facts,
+        label="Current",
+        path=PROJECT_ROOT / "synthetic-fill-contract.yaml",
     )
 
 
-def test_marker_04_njau_body_region_anchor_is_a_managed_marker() -> None:
-    contract = load_fill_contract(
-        CASES / "02-njau-undergraduate" / "gold" / "fill-contract.yaml"
+def test_marker_05_placeholder_locator_does_not_invent_word_markers() -> None:
+    style = EffectiveStyle(font={}, paragraph={}, container={}, page={})
+    slot = SlotContract(
+        slot_ref=(
+            "source_entry_id=source-entry-u-all-block-0001;extent=whole_entry;"
+            f"source_snapshot_sha256={'3' * 64};"
+            "field_id=thesis.title.zh"
+        ),
+        field_id="thesis.title.zh",
+        content_type="text",
+        required=True,
+        locator=Locator(
+            type="placeholder_anchor",
+            story="document",
+            part="word/document.xml",
+            expected_match_count=1,
+            value="Title",
+        ),
+        expected_value_style=style,
     )
-    assert "body.chapters.1" in marker_expectations(contract)
-
-
-def test_marker_05_pku_placeholder_contract_does_not_invent_word_markers() -> None:
-    contract = load_fill_contract(
-        CASES / "03-pku-graduate" / "gold" / "fill-contract.yaml"
+    contract = FillContract(
+        schema_version="docfit-template-fill-contract/v2",
+        contract_id="synthetic.marker.placeholder",
+        template_sha256="0" * 64,
+        registry_id="registry",
+        registry_version="0.1.0",
+        registry_sha256="1" * 64,
+        marker_protocol="docfit-content-control-marker/v1",
+        regions=(),
+        slots=(slot,),
     )
-    assert {slot.locator.type for slot in contract.slots} == {"placeholder_anchor"}
+
     assert marker_expectations(contract) == {}
 
 
 def test_marker_06_untagged_word_controls_are_not_product_markers() -> None:
-    root = CASES / "03-pku-graduate" / "gold"
-    contract = load_fill_contract(root / "fill-contract.yaml")
-    facts = analyze_docx(root / "template.docx")
-    assert any(control.tag is None for control in facts.controls)
+    style = EffectiveStyle(font={}, paragraph={}, container={}, page={})
+    contract = FillContract(
+        schema_version="docfit-template-fill-contract/v2",
+        contract_id="synthetic.marker.empty",
+        template_sha256="0" * 64,
+        registry_id="registry",
+        registry_version="0.1.0",
+        registry_sha256="1" * 64,
+        marker_protocol="docfit-content-control-marker/v1",
+        regions=(),
+        slots=(),
+    )
+    facts = DocumentFacts(
+        document_sha256="0" * 64,
+        parts=("word/document.xml",),
+        relationships=(),
+        paragraphs=(),
+        controls=(
+            ContentControlFact(
+                alias=None,
+                tag=None,
+                internal_id="1",
+                story="document",
+                part="word/document.xml",
+                paragraph_index=0,
+                start=0,
+                end=4,
+                text="Text",
+                effective_style=style,
+            ),
+        ),
+        tables=(),
+        objects=(),
+        unsupported=(),
+    )
+
     validate_markers(
         contract,
         facts,
-        label="Gold",
-        path=root / "fill-contract.yaml",
+        label="Current",
+        path=PROJECT_ROOT / "synthetic-fill-contract.yaml",
     )

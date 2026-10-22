@@ -1,0 +1,131 @@
+{
+  "actual_model_status": "READY",
+  "api_evidence": {
+    "backend": "synthetic-live-shape",
+    "batch_count": 1,
+    "batches_with_backend_and_session": 1,
+    "evidence_complete": true,
+    "session_count": 1,
+    "tool_uses": [
+      "Read"
+    ]
+  },
+  "artifacts": {
+    "actual_sha256": "8c88625b8efb39d7c42c48ef77619354bacd371fc6196b88f800a9b25ca88ef3",
+    "agent_evidence_sha256": "419374aa19ac7a71654058c772ef7f8b14bf1e5064b481a7b82296a04eb236d9",
+    "gold_sha256": "5a0bc98106ca970f83912afd112fd3df3675f6952225923cc6cb7aa8134134f0",
+    "inventory_sha256": "439328a2e0c51e3dabe1d9d7f234bae58b531aade6ef21633f29c3feb3dac233"
+  },
+  "blockers": [],
+  "counts": {
+    "actual_item_count": 2,
+    "gold_semantic_item_count": 3,
+    "gold_source_bound_semantic_item_count": 2,
+    "gold_synthetic_structure_item_count": 1,
+    "inventory_content_item_count": 2,
+    "inventory_source_object_count": 2
+  },
+  "dimensions": {
+    "content_order": "PASS",
+    "field_semantics": "PASS",
+    "hierarchy": "PASS",
+    "live_run_evidence": "PASS",
+    "provenance": "PASS",
+    "semantic_grouping": "PASS",
+    "source_coverage": "PASS",
+    "value_fidelity": "PASS"
+  },
+  "field_comparison": {
+    "exact_source_field_matches": 2,
+    "field_count_difference_count": 0,
+    "field_count_differences": [],
+    "field_mismatch_count": 0,
+    "field_mismatches": [],
+    "gold_field_occurrence_count": 2,
+    "missing_source_field_count": 0,
+    "missing_source_fields": []
+  },
+  "gold_id": "synthetic-student.extraction",
+  "gold_revision": "2026-08-12.r1",
+  "hierarchy_comparison": {
+    "compared_relationship_count": 2,
+    "direct_parent_matches": 1,
+    "implicit_structural_root_matches": 1,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "semantic_relation_matches": 0
+  },
+  "order_comparison": {
+    "actual_aligned_sequence_length": 2,
+    "authority": "Gold items[] under docfit-source-order/v1",
+    "exact_semantic_sequence_match": true,
+    "first_mismatch": null,
+    "gold_semantic_sequence_length": 2,
+    "matched_binding_relative_order_match": true
+  },
+  "privacy": "metadata_only_no_student_content",
+  "provenance": {
+    "actual_inventory_item_identity_match": true,
+    "actual_inventory_order_match": true,
+    "actual_inventory_source_binding_match": true,
+    "gold_inventory_source_reference_match": true,
+    "gold_source_alignment_complete": true,
+    "registry_identity_match": true,
+    "registry_sha256_match": true,
+    "source_sha256_match": true
+  },
+  "schema_version": "docfit-student-content-extraction-eval-report/v1",
+  "semantic_grouping_comparison": {
+    "actual_duplicate_binding_groups": [],
+    "exact_binding_group_count": 2,
+    "gold_duplicate_binding_groups": [],
+    "gold_source_bound_semantic_item_count": 2,
+    "missing_binding_group_count": 0,
+    "missing_binding_groups": [],
+    "unexpected_binding_group_count": 0,
+    "unexpected_binding_groups": []
+  },
+  "source_alignment": {
+    "aligned_reference_count": 2,
+    "complete": true,
+    "exact_object_id_count": 2,
+    "gold_reference_count": 2,
+    "locator_crosswalk_count": 0,
+    "unresolved_reference_count": 0,
+    "unresolved_references": []
+  },
+  "source_binding": {
+    "actual_overlapping_source_ids": [],
+    "synthetic_gold_items": [
+      {
+        "content_id": "gold-chapters",
+        "field_id": "body.chapters"
+      }
+    ]
+  },
+  "source_coverage_comparison": {
+    "actual_source_count": 2,
+    "correctly_layout_only_count": 0,
+    "gold_excluded_source_count": 0,
+    "gold_mapped_source_count": 2,
+    "incorrectly_handled_excluded": [],
+    "incorrectly_handled_excluded_count": 0,
+    "missing_mapped_source_count": 0,
+    "missing_mapped_source_ids": [],
+    "unexpected_actual_source_count": 0,
+    "unexpected_actual_source_ids": []
+  },
+  "source_reference_comparison": {
+    "gold_reference_count": 2,
+    "mismatch_count": 0,
+    "mismatches": []
+  },
+  "status": "PASS",
+  "value_comparison": {
+    "compared_occurrence_count": 2,
+    "comparison_policy": "whitespace_normalized_no_content_in_report",
+    "exact_value_matches": 2,
+    "mismatch_count": 0,
+    "mismatches": []
+  }
+}

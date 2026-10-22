@@ -1,0 +1,543 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.14545dacbfb1d6cf
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: b5acb5a3854b5a1e9d2224b3d7aad6866114c2c0457d15b2bd1c2611d90d21ff
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+  field_id: appendix.title
+  style_role_id: style.slot.513901e11a569b87cdcaa03b
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+  span_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+  field_id: appendix.title
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.513901e11a569b87cdcaa03b
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 附录标题
+  provenance:
+    field_id: appendix.title
+    span_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+    source_entry_id: source-entry-454790b5e5bb9f7f6cb975ef
+    source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+    expected_source_content: 附录名称
+    word_fragments: &id001
+    - fingerprint: 8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73
+      locator: /body/p[1]/r[5]
+      object_id: obj-3fdbd42b02ef908e425840d3
+      object_ref:
+        document_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+        expected_fingerprint: 8cd9b20e9d4eb4b837fe58a31956ff58edc2abd845b5d0bb92920d6b1090bb73
+        object_id: obj-3fdbd42b02ef908e425840d3
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 5
+      text: 附录
+    - fingerprint: 5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48
+      locator: /body/p[1]/r[6]
+      object_id: obj-e33c8bb9191d0b547d05c407
+      object_ref:
+        document_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+        expected_fingerprint: 5b7cf96e6207b18357ee0f1ac17a3f5d8819fff0454deeedf4587973d6ad9c48
+        object_id: obj-e33c8bb9191d0b547d05c407
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 9
+      source_text_start: 7
+      text: 名称
+    accepted_span: &id003
+      covered_object_ids:
+      - obj-3fdbd42b02ef908e425840d3
+      - obj-e33c8bb9191d0b547d05c407
+      expected_source_content: 附录名称
+      extent:
+        end: 9
+        kind: text
+        start: 5
+      field_id: appendix.title
+      judgment_index: 0
+      part_index: 1
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-454790b5e5bb9f7f6cb975ef
+      slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+      source_entry_id: source-entry-454790b5e5bb9f7f6cb975ef
+      source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+      source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      span_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      text: 附录名称
+      text_end: 9
+      text_start: 5
+      word_fragments: *id001
+    accepted_result: &id004
+      source_judgment_ref: semantic_judgments[0]
+      part_index: 1
+      semantic_judgments_sha256: 8beaf53523b08f4d42ecefc38006ad0e2b0a05668ddf66c2f5755d443f87ad58
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id005
+      outcome: applied
+      candidate_before_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      candidate_after_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+      operation_sha256: 201bae37c1ab3c3ac17f650b3412eff10f65dd351aa6d449f93aaf48b4cca927
+      mutation_receipt_sha256: 0ac891d61b105e52951c3e282e489d0f78f74d499c5585b42799455a886d0d51
+  style_contract_ref:
+    style_contract_id: style.slot.513901e11a569b87cdcaa03b
+    contract_digest: a793887f27f0e8567e955143c5bf90cc29d252e3b9872f007f8852c3c44b8c25
+- slot_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+  span_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+  field_id: appendix.body
+  content_type: section
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: non_style
+  label: 附录内容
+  provenance:
+    field_id: appendix.body
+    span_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    slot_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+    source_entry_id: source-entry-3379b78d7c90d344d4f68510
+    source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+    expected_source_content: 如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。
+    word_fragments: &id002
+    - fingerprint: 68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e
+      locator: /body/p[2]/r[1]
+      object_id: obj-cf9d2c1122e6d6072e228514
+      object_ref:
+        document_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+        expected_fingerprint: 68fe49048b8d05fe529bbb099a2dbda9b6a4ec0cce56d4f426a5173320c9f65e
+        object_id: obj-cf9d2c1122e6d6072e228514
+      object_text_end: 106
+      object_text_start: 0
+      source_text_end: 106
+      source_text_start: 0
+      text: 如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。
+    - fingerprint: 7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331
+      locator: /body/p[2]/r[2]
+      object_id: obj-51ca6ff690fb3642f2d43b24
+      object_ref:
+        document_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+        expected_fingerprint: 7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331
+        object_id: obj-51ca6ff690fb3642f2d43b24
+      object_text_end: 7
+      object_text_start: 0
+      source_text_end: 113
+      source_text_start: 106
+      text: 此项非必需项。
+    accepted_span: &id006
+      covered_object_ids:
+      - obj-cf9d2c1122e6d6072e228514
+      - obj-51ca6ff690fb3642f2d43b24
+      expected_source_content: 如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。
+      extent:
+        end: 113
+        kind: text
+        start: 0
+      field_id: appendix.body
+      judgment_index: 1
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-3379b78d7c90d344d4f68510
+      slot_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+      source_entry_id: source-entry-3379b78d7c90d344d4f68510
+      source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+      source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      span_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      text: 如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。
+      text_end: 113
+      text_start: 0
+      word_fragments: *id002
+    accepted_result: &id007
+      source_judgment_ref: semantic_judgments[1]
+      part_index: 0
+      semantic_judgments_sha256: 8beaf53523b08f4d42ecefc38006ad0e2b0a05668ddf66c2f5755d443f87ad58
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id008
+      outcome: applied
+      candidate_before_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      candidate_after_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+      operation_sha256: 4115c68ade0da6ff55ef67929255c24f1db9d7f92ca9bfd614554ba903433f29
+      mutation_receipt_sha256: 2378ae069206265ae503124c32fce05739ea0026d01c11f23615415ea08464c0
+  style_contract_ref:
+    style_contract_id: style.slot.8c86966cac318becdeedd1a9
+    contract_digest: 37dd35e061779cccb7d8b74bb46220c8c8fd95fabf273d640d1522faadbabf9a
+styles:
+- style_contract_id: style.slot.513901e11a569b87cdcaa03b
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.keep_together
+  - paragraph.keep_with_next
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.outline_level
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.keep_together: true
+    paragraph.keep_with_next: true
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.line_value: 1.5
+    paragraph.outline_level: 0
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 18.0
+    paragraph.space_before_pt: 24.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: FF0000
+    run.font_ascii: 黑体
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: a793887f27f0e8567e955143c5bf90cc29d252e3b9872f007f8852c3c44b8c25
+  label: appendix.title @ source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+    field_id: appendix.title
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.8c86966cac318becdeedd1a9
+  application_scope: section
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.25
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: FF0000
+    run.font_ascii: 宋体
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 37dd35e061779cccb7d8b74bb46220c8c8fd95fabf273d640d1522faadbabf9a
+  label: appendix.body @ source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+    field_id: appendix.body
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 81804f1555298be274206ac2474ed8dfd769e4b7a29fae1dcb79f4fb93d510cb
+provenance:
+  source_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    template_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+    source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+    semantic_judgments_sha256: 8beaf53523b08f4d42ecefc38006ad0e2b0a05668ddf66c2f5755d443f87ad58
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 1529c1b3ddcb03119c567a8fec4cddcb13619d0110b8ef5aaa9ec6c8f769cbad
+    slots:
+    - field_id: appendix.title
+      span_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      slot_ref: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+      source_entry_id: source-entry-454790b5e5bb9f7f6cb975ef
+      source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+      expected_source_content: 附录名称
+      word_fragments: *id001
+      accepted_span: *id003
+      accepted_result: *id004
+      actual_result: *id005
+    - field_id: appendix.body
+      span_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      slot_ref: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+      source_entry_id: source-entry-3379b78d7c90d344d4f68510
+      source_snapshot_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      source_inventory_digest: 083fc56cb702cf97fa8be4481610e870235eb2adb6ca9eafe6c9300af9ebac8e
+      expected_source_content: 如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。
+      word_fragments: *id002
+      accepted_span: *id006
+      accepted_result: *id007
+      actual_result: *id008
+  materialization_digest: fe448d295cd4f9fe0ff10261a7efb9744742449d6061bb6fc9b56457543e120c
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 2
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08
+    final_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 81804f1555298be274206ac2474ed8dfd769e4b7a29fae1dcb79f4fb93d510cb
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 81804f1555298be274206ac2474ed8dfd769e4b7a29fae1dcb79f4fb93d510cb
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.513901e11a569b87cdcaa03b
+          contract_digest: a793887f27f0e8567e955143c5bf90cc29d252e3b9872f007f8852c3c44b8c25
+      - occurrence_id: template-slot:source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.8c86966cac318becdeedd1a9
+          contract_digest: 37dd35e061779cccb7d8b74bb46220c8c8fd95fabf273d640d1522faadbabf9a
+    validation:
+      status: passed
+      counts:
+        passed: 2
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+        style_contract_id: style.slot.513901e11a569b87cdcaa03b
+        contract_digest: a793887f27f0e8567e955143c5bf90cc29d252e3b9872f007f8852c3c44b8c25
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-454790b5e5bb9f7f6cb975ef;extent=text[5:9];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.title
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+        style_contract_id: style.slot.8c86966cac318becdeedd1a9
+        contract_digest: 37dd35e061779cccb7d8b74bb46220c8c8fd95fabf273d640d1522faadbabf9a
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-3379b78d7c90d344d4f68510;extent=text[0:113];source_snapshot_sha256=309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08;field_id=appendix.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

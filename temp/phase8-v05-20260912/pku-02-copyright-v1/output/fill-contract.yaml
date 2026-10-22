@@ -1,0 +1,151 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.0ed7697c16a38a98
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 1a8358859bdc8d906c207359037193b611c51aed7546ba66661fcfca15a5b377
+school_style_candidates: []
+known_school_style_gaps: []
+regions: []
+slots: []
+styles: []
+style_contract_set_digest: 7ce739c3d241dbe374fc4936dd03241ec1bd238cfe9d7cd14176d4bc0367354c
+provenance:
+  source_sha256: 48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43
+  body_structure_count: 0
+  agent_owned_semantics: true
+  no_slot_semantic_provenance:
+    source: accepted_no_slot_semantic_review
+    semantic_judgments_sha256: d713ddd8d72567b5fd3036f350eca70c68c6d5554aa632c6b096f87daa7a5ac3
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    judgment_count: 6
+    roles:
+    - fixed_label
+    - style_only
+    - cleanup
+    materialization_receipt: work/.docfit/post-unit-materialization/materialization.json
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43
+    template_sha256: 0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3
+    source_inventory_digest: 45ad29e390d56741d763983bbf785579de7cbe03c1265ea754aca456bd936feb
+    semantic_judgments_sha256: d713ddd8d72567b5fd3036f350eca70c68c6d5554aa632c6b096f87daa7a5ac3
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: aa13e476be4c7a112e67938192da70a8fa5e0f8f205e7aa54ff862b0372262bc
+    slots: []
+  materialization_digest: ba72be824a259f187db667a9ebfbe5768ed6fbd8d80066463b7369db80bfffb3
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 1
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43
+    final_sha256: 0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    status: skipped
+    reason: accepted_terminal_source_noop_without_registry_slots
+  school_style_observation:
+    status: skipped_no_registry_slots
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

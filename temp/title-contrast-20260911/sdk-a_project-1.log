@@ -1,0 +1,1 @@
+{"arm": "a_project", "run": "sdk-a_project-1", "is_error": false, "fields": ["author.name.zh", "author.student_id", "author.cohort_class", "advisor.name.zh", "advisor.title", "author.department", "submission.date"]}

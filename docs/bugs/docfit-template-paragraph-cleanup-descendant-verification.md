@@ -1,11 +1,11 @@
 # Bug：段落清理被错误判定为修改受保护内容
 
-- Status: `RESOLVED / OBJECT TARGET-CLOSURE REGRESSION COVERED`
-- Severity: `P1`
-- Discovered: `2026-08-07`
-- Subsystem: historical `docfit.template.mutation`; replaced by object-driven `template_edit`
-- Error code: `protected_content_changed`
-- Affected operation: `remove_content / clear_text_preserve_container`
+- 状态: `RESOLVED / OBJECT TARGET-CLOSURE REGRESSION COVERED`
+- 严重度: `P1`
+- 发现日期: `2026-08-07`
+- 子系统: 历史 `docfit.template.mutation`；已由 object-driven `template_edit` 替换
+- 错误码: `protected_content_changed`
+- 影响操作: `remove_content / clear_text_preserve_container`
 
 ## 1. 摘要
 
@@ -18,7 +18,7 @@ run 对象纳入允许变化范围。
 
 这会阻止 Agent 使用段落级清理能力删除模板中的说明文字、示例正文和其他明确授权删除的内容。
 
-## Resolution
+## 解决结果
 
 旧 compiled-plan mutation 模块已被删除。新 `template_edit` 直接接收一个共享 `object_ref`，
 对 paragraph target 的保护比较会排除目标 paragraph 及其 descendant object；对 run target

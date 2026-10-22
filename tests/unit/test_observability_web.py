@@ -104,7 +104,7 @@ def _create_task(root: Path) -> dict[str, object]:
 
 def _seed_database(state_root: Path, task_root: Path) -> Path:
     report = _create_task(task_root)
-    now = datetime(2026, 8, 4, 8, 0, tzinfo=UTC).isoformat()
+    now = datetime.now(UTC).replace(microsecond=0).isoformat()
     hashes = {
         key: str(report[key])
         for key in ("source_sha256", "template_sha256", "requirements_sha256")

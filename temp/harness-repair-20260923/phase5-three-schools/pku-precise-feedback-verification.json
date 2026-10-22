@@ -1,0 +1,31 @@
+{
+  "runtime_commit": "03a35196a249f9cf768712885247c960631c9f4e",
+  "verification_level": "failed fresh full-school E2E; no publication",
+  "exit_code": 2,
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "events": {
+    "budget_policy": 1,
+    "request": 8,
+    "response": 8,
+    "local_rejected": 5,
+    "local_review": 7,
+    "candidate_recorded": 3,
+    "run_failed": 1
+  },
+  "failure": {
+    "code": "semantic_revision_no_progress",
+    "message": "Repeated unchanged failure for source-entry-91edd75e5a4b20fddaa987b2: source_text_partition.",
+    "origin": "harness",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  },
+  "outputs": [],
+  "product_acceptance": false
+}

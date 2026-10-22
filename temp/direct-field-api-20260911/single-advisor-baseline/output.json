@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "n": 12,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "指导老师及职称：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "semantic": "指导老师姓名"
+        },
+        {
+          "text": "□",
+          "role": "spacer"
+        },
+        {
+          "text": "教授",
+          "role": "fixed_label"
+        }
+      ]
+    }
+  ]
+}

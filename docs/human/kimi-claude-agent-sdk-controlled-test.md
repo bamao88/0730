@@ -112,15 +112,15 @@ thinking 也无法复现旧 400。严谨结论只能是：历史问题与修复�
 
 ## 原始证据与复跑入口
 
-原始证据继续保存在 `test`，它们是本页数据的执行依据：
+原始证据继续保存在 `tests/manual-diagnostics`，它们是本页数据的执行依据：
 
-- [短请求基线](../../test/evidence/kimi-controlled/phase1-short.json)
-- [`kimi-for-coding` 长链两次](../../test/evidence/kimi-controlled/current-long-repeat2.json)
-- [`k3-256k` 长链两次](../../test/evidence/kimi-controlled/k3-long-repeat2.json)
-- [默认 effort 与 Tool Search 对照](../../test/evidence/kimi-controlled/flags-one-each.json)
-- [关闭 thinking 两次](../../test/evidence/kimi-controlled/thinking-off-repeat2.json)
-- [控制变量测试程序](../../test/kimi_controlled_probe.py)
-- [`test` 下的执行报告](../../test/KIMI-CONTROLLED-TEST-REPORT.md)
+- [短请求基线](../../tests/manual-diagnostics/evidence/kimi-controlled/phase1-short.json)
+- [`kimi-for-coding` 长链两次](../../tests/manual-diagnostics/evidence/kimi-controlled/current-long-repeat2.json)
+- [`k3-256k` 长链两次](../../tests/manual-diagnostics/evidence/kimi-controlled/k3-long-repeat2.json)
+- [默认 effort 与 Tool Search 对照](../../tests/manual-diagnostics/evidence/kimi-controlled/flags-one-each.json)
+- [关闭 thinking 两次](../../tests/manual-diagnostics/evidence/kimi-controlled/thinking-off-repeat2.json)
+- [控制变量测试程序](../../tests/manual-diagnostics/kimi_controlled_probe.py)
+- [`tests/manual-diagnostics` 下的执行报告](../../tests/manual-diagnostics/KIMI-CONTROLLED-TEST-REPORT.md)
 
 这些 JSON 只包含模型名、变量组合、状态、轮次、Tool 计数和耗时，不包含凭据、论文
 内容、提示正文或 Provider 原始错误正文。

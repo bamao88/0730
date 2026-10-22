@@ -1,0 +1,49 @@
+....F................................................................... [  8%]
+........................................................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 33%]
+........................................................................ [ 41%]
+........................................................................ [ 49%]
+........................................................................ [ 57%]
+........................................................................ [ 66%]
+........................................................................ [ 74%]
+........................................................................ [ 82%]
+........................................................................ [ 91%]
+........................................................................ [ 99%]
+......                                                                   [100%]
+=================================== FAILURES ===================================
+______ test_post_unit_semantic_schema_exposes_only_semantic_work_surface _______
+
+    def test_post_unit_semantic_schema_exposes_only_semantic_work_surface() -> None:
+        for schema in (PREPARE_TEMPLATE_OUTPUT_SCHEMA, POST_UNIT_OUTPUT_SCHEMA):
+            item = _semantic_judgment_item(schema)
+            schema_properties = item["properties"]
+            assert isinstance(schema_properties, dict)
+            properties = set(schema_properties)
+    
+            assert item["additionalProperties"] is False
+            assert properties == _ALLOWED_SEMANTIC_JUDGMENT_FIELDS
+            assert not properties.intersection(_FORBIDDEN_AGENT_VISIBLE_TOKENS)
+            assert set(item["required"]) == {"source_entry_id", "parts"}
+            assert "oneOf" not in item
+            parts = schema_properties["parts"]
+            assert isinstance(parts, dict)
+            part_items = parts["items"]
+            assert isinstance(part_items, dict)
+            part_required = part_items["required"]
+            assert isinstance(part_required, list)
+            assert set(part_required) == {"text", "role"}
+            part_properties = part_items["properties"]
+            assert isinstance(part_properties, dict)
+>           assert set(part_properties) == {"text", "whitespace", "role", "field_id"}
+E           AssertionError: assert {'field_id', ... 'whitespace'} == {'field_id', ... 'whitespace'}
+E             
+E             Extra items in the left set:
+E             'leading_whitespace'
+E             'trailing_whitespace'
+E             Use -v to get more diff
+
+tests/contract/test_agent_boundary_guardrails.py:126: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_agent_boundary_guardrails.py::test_post_unit_semantic_schema_exposes_only_semantic_work_surface
+1 failed, 869 passed in 24.72s

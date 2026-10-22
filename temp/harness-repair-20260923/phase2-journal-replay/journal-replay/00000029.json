@@ -1,0 +1,246 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 28,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "附录"
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体)"
+            }
+          ],
+          "reason": "附录 is the canonical section heading for the Appendix unit, fixed across theses in this template. The trailing (小三号黑体) is a parenthetical style annotation describing the required font (small 3 size, 黑体) — it styles the heading rather than appearing as visible heading content.",
+          "source_entry_id": "source-entry-fb18deaa0a39b544ff1556ad"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录1……"
+            },
+            {
+              "role": "style_only",
+              "text": "（小四号宋体）"
+            }
+          ],
+          "reason": "附录1…… is a template example line demonstrating the format pattern of the first individual appendix item; the ellipsis is an example placeholder, not a real fill position tied to a field. The trailing （小四号宋体） is a parenthetical style annotation (small 4 size, 宋体) for appendix item lines.",
+          "source_entry_id": "source-entry-dc41864a396a92f024e54c1e"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录2……"
+            }
+          ],
+          "reason": "附录2…… is a template example line demonstrating the format pattern of a second individual appendix item. It is example content and should not appear in a clean fillable template.",
+          "source_entry_id": "source-entry-ad5f8a233174605371fc1bd4"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "……"
+            }
+          ],
+          "reason": "…… is a continuation marker indicating that additional appendix items may follow the same pattern; it is template scaffolding, not content for the clean template.",
+          "source_entry_id": "source-entry-077273fefe75263ca82a8b90"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as a visual separator between the format-example block and the format-requirement block. No visible text, layout-only spacing.",
+          "source_entry_id": "source-entry-27ca3789b033fceb17b0952f"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录1"
+            },
+            {
+              "role": "style_only",
+              "text": "（另起一页，小四号黑体）"
+            }
+          ],
+          "reason": "附录1 is a template example for an individual appendix heading starting on a new page. The trailing （另起一页，小四号黑体） is a layout+style instruction (start on a new page, small 4 size, 黑体) describing how each appendix item should be laid out and styled.",
+          "source_entry_id": "source-entry-a3dcaf6d25b787ff8ff9b43d"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": "（附录内容的字体字号参照正文的格式要求）"
+            }
+          ],
+          "reason": "The leading …… is an example placeholder indicating content goes here. The trailing parenthetical （附录内容的字体字号参照正文的格式要求） is a style requirement stating that the appendix body font and size should follow the main text format. The unit_heading_candidate cue reflects that this line heads the body-format specification block; it is template specification, not content.",
+          "source_entry_id": "source-entry-ce1fdd1d3d61385afc728547"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-baff4f366e19bcf4bd10e60b"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-ea8c55234a3be3c6c7dd0d83"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-5324e1f5126459b791012d92"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-17f6271fb61a9ef5efb5950e"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-949f8a0104dfb3bd092ba4d6"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-50b84730e3a7062a28c21874"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-2e67b3e3f3360e2fc2f2e09d"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-54ed74749af6fdd90db79b2c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-66ad5609657e0221be44e8d1"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-3af3dabf5c04965a6a8912a7"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-fb506c2e8801f84714743cdf"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-92fabaacc7f053ad145dd2b5"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-945dabb40ad2465c4f53114c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Final empty paragraph closing the unit; carries no visible text and acts as trailing layout spacing.",
+          "source_entry_id": "source-entry-8cb317548ea15adc31403474"
+        }
+      ],
+      "status": "complete",
+      "summary": "Completed post-unit semantic judgment for unit-appendix batch 10/10. The unit is the Appendix section. Entry 1 carries the canonical \"附录\" section heading (fixed_label) followed by its parenthetical font style annotation \"(小三号黑体)\" (style_only). Entries 2-4 are template example lines showing the format of individual appendix items (\"附录1……\", \"附录2……\", \"……\") paired with the parenthetical \"(小四号宋体)\" style note in entry 2; these example bodies are cleanup, the parenthetical is style_only. Entries 6-7 carry additional format specifications: \"(另起一页，小四号黑体)\" and \"(附录内容的字体字号参照正文的格式要求)\" — each prefix is cleanup, each parenthetical is style_only. Entries 5 and 8-21 are empty paragraphs representing blank layout (style_only). No field bindings used: \"附录\" is the fixed canonical section name (not student-specific), the \"附录1/2……\" patterns are template examples rather than real fill positions, and appendix.body would be carried by the content area outside this candidate's entries."
+    }
+  },
+  "event_digest": "fc932082c8de2e6211a0a0682ce9e64e0bb893250064d74c43302d63c6abbcd8",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "a02c5ceda3e33e99f2dd92242085adb07d893bd1a87ad9692e91f9f9405f0e69",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 29
+}

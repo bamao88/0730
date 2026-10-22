@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "template_agent_needs_input",
+    "retryable": false,
+    "message": "The main Agent needs additional semantic input: ['Confirm whether parts[2] for entry source-entry-6d2edc50afea825d3d5fe765 should split the label \"日期：\" into two parts (parts[2]=text=\"日期\" + leading_whitespace[1 U+0020] as fixed_label, then parts[3]=text=\"：\" as standalone fixed_label) to satisfy the harness, OR whether the entire \"日期：\" stays as one fixed_label with text=\"日期：\" and leading_whitespace=[U+0020, count 1] (in which case the source-order expected_text should be \" 日期：\" not \" 日期\").']",
+    "suggested_actions": []
+  }
+}

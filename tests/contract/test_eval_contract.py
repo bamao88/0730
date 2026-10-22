@@ -36,6 +36,71 @@ def test_core_eval_cli_and_case_inventory() -> None:
     }
 
 
+def test_final_generation_eval_cli_and_case_inventory() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval",
+            "--suite",
+            "final-generation",
+            "--case",
+            "student-001-njau-known-gap",
+            "--checks",
+            "input,style",
+            "--output",
+            "temp/final-generation-e2e-verify-20260816/eval-run-001",
+            "--json",
+        ]
+    )
+    assert args.command == "eval"
+    assert args.suite == "final-generation"
+    assert args.case_id == "student-001-njau-known-gap"
+    assert args.checks == "input,style"
+    assert args.output_directory == "temp/final-generation-e2e-verify-20260816/eval-run-001"
+    assert args.as_json is True
+
+    root = project_root()
+    case = _read_object(
+        root / "evals/final-generation/cases/student-001-njau-known-gap/case.json"
+    )
+    assert case["schema_version"] == "docfit-final-generation-eval-case/v1"
+    assert case["input_package"] == (
+        "temp/final-generation-e2e-inputs-20260816/student-001-njau-known-gap"
+    )
+    assert case["expected"]["selection_case"] == (
+        "no_school_candidate_with_explicit_known_gaps"
+    )
+
+
+def test_final_generation_eval_cli_accepts_base_package_combination_selectors() -> None:
+    args = build_parser().parse_args(
+        [
+            "eval",
+            "--suite",
+            "final-generation",
+            "--student",
+            "001,002",
+            "--school",
+            "njau",
+            "--checks",
+            "input,style",
+            "--base-root",
+            "temp/final-generation-base-packages-20260816",
+            "--output",
+            "temp/final-generation-regression/selector-run-001",
+            "--json",
+        ]
+    )
+
+    assert args.command == "eval"
+    assert args.suite == "final-generation"
+    assert args.students == ["001,002"]
+    assert args.schools == ["njau"]
+    assert args.checks == "input,style"
+    assert args.base_root == "temp/final-generation-base-packages-20260816"
+    assert args.output_directory == "temp/final-generation-regression/selector-run-001"
+    assert args.as_json is True
+
+
 def test_manual_delivery_gate_preserves_unknown() -> None:
     checklist = (
         project_root() / "evals/manual/delivery-high-risk-checklist.md"
@@ -43,4 +108,4 @@ def test_manual_delivery_gate_preserves_unknown() -> None:
     assert "PASS" in checklist
     assert "FAIL" in checklist
     assert "UNKNOWN" in checklist
-    assert "never `PASS`" in checklist
+    assert "不得写成 `PASS`" in checklist

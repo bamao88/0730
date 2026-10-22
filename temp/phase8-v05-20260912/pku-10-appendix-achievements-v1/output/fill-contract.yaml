@@ -1,0 +1,1287 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.f409592632b0bc6f
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 372ac3a35429b3273917d371bb2a1b3b19d4dc33d93a9e6ea236bfce496169ce
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+  field_id: achievements.projects
+  style_role_id: style.slot.ae383d4f43fb2d5e8723d9a5
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+  field_id: achievements.journal_articles
+  style_role_id: style.slot.ccb795437f22d0e21a7e530a
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+  field_id: achievements.conference_papers
+  style_role_id: style.slot.8eefd017937ac111e2f6e36f
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+  field_id: appendix.title
+  style_role_id: style.slot.ac8fee13529cbaf38cb73e98
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+  field_id: achievements.intellectual_property
+  style_role_id: style.slot.7da682c2b2b28429825516b7
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+  span_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  field_id: appendix.title
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.ac8fee13529cbaf38cb73e98
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 附录标题
+  provenance:
+    field_id: appendix.title
+    span_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+    source_entry_id: source-entry-ad8e3fa6c3a4f38246710395
+    source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    expected_source_content: 博士期间工作成果
+    word_fragments: &id001
+    - fingerprint: b03be7b2276f03a524b2ada34745bbcdfcddd484109c340d99d916d0aba92e73
+      locator: /body/p[@paraId=0D319C89]/r[3]
+      object_id: obj-e5f2420d616f63f9c8595d53
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: b03be7b2276f03a524b2ada34745bbcdfcddd484109c340d99d916d0aba92e73
+        object_id: obj-e5f2420d616f63f9c8595d53
+      object_text_end: 8
+      object_text_start: 0
+      source_text_end: 13
+      source_text_start: 5
+      text: 博士期间工作成果
+    accepted_span: &id006
+      covered_object_ids:
+      - obj-e5f2420d616f63f9c8595d53
+      expected_source_content: 博士期间工作成果
+      extent:
+        end: 13
+        kind: text
+        start: 5
+      field_id: appendix.title
+      judgment_index: 0
+      part_index: 2
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-ad8e3fa6c3a4f38246710395
+      slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+      source_entry_id: source-entry-ad8e3fa6c3a4f38246710395
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      span_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      text: 博士期间工作成果
+      text_end: 13
+      text_start: 5
+      word_fragments: *id001
+    accepted_result: &id007
+      source_judgment_ref: semantic_judgments[0]
+      part_index: 2
+      semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id008
+      outcome: applied
+      candidate_before_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      candidate_after_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+      operation_sha256: 2a23e046739b7a6c9e7e1bc268b98496cffdd1127d1449ba1905f090001c8119
+      mutation_receipt_sha256: 770403f9e699f6d7e3caface0c498f995add70f3f0feece1ba42295889193006
+  style_contract_ref:
+    style_contract_id: style.slot.ac8fee13529cbaf38cb73e98
+    contract_digest: 1e5f85194c8a09d823e4453c238d00e8ecc354175c7c2996a8cd82582fb64da9
+- slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+  span_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  field_id: achievements.journal_articles
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.ccb795437f22d0e21a7e530a
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 期刊论文成果
+  provenance:
+    field_id: achievements.journal_articles
+    span_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+    source_entry_id: source-entry-5995467e7f665ff1ecc2880a
+    source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    expected_source_content: 期刊论文1
+    word_fragments: &id002
+    - fingerprint: 5d99b6d0ab6320d9d420738802bb53ec03b1030b569f16943ee9900cbb3f081a
+      locator: /body/p[@paraId=1E037328]/r[3]
+      object_id: obj-8e58bad9e4a80458c266a88f
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: 5d99b6d0ab6320d9d420738802bb53ec03b1030b569f16943ee9900cbb3f081a
+        object_id: obj-8e58bad9e4a80458c266a88f
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 8
+      source_text_start: 4
+      text: 期刊论文
+    - fingerprint: c582026e132766b0dc72e7169960d8f83770b91e06a7b5070bfab22583fa8de3
+      locator: /body/p[@paraId=1E037328]/r[4]
+      object_id: obj-d2e14b080ccb20430b1eb2b2
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: c582026e132766b0dc72e7169960d8f83770b91e06a7b5070bfab22583fa8de3
+        object_id: obj-d2e14b080ccb20430b1eb2b2
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 9
+      source_text_start: 8
+      text: '1'
+    accepted_span: &id009
+      covered_object_ids:
+      - obj-8e58bad9e4a80458c266a88f
+      - obj-d2e14b080ccb20430b1eb2b2
+      expected_source_content: 期刊论文1
+      extent:
+        end: 9
+        kind: text
+        start: 4
+      field_id: achievements.journal_articles
+      judgment_index: 2
+      part_index: 2
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-5995467e7f665ff1ecc2880a
+      slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+      source_entry_id: source-entry-5995467e7f665ff1ecc2880a
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      span_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      text: 期刊论文1
+      text_end: 9
+      text_start: 4
+      word_fragments: *id002
+    accepted_result: &id010
+      source_judgment_ref: semantic_judgments[2]
+      part_index: 2
+      semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id011
+      outcome: applied
+      candidate_before_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      candidate_after_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+      operation_sha256: c68eb2a6716ade26428cf3b658e8e97544a2586fdfeac7869ef85004d9d7a8cb
+      mutation_receipt_sha256: 903e91c409e6cea598b428db996505d8f0722bcb7ed96eee9e55ad278afc1e03
+  style_contract_ref:
+    style_contract_id: style.slot.ccb795437f22d0e21a7e530a
+    contract_digest: 361c444cd2fe6a3289e3e65b56d5495d1e339992a41a185f13690ce9235013bb
+- slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+  span_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  field_id: achievements.conference_papers
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.8eefd017937ac111e2f6e36f
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 会议论文成果
+  provenance:
+    field_id: achievements.conference_papers
+    span_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+    source_entry_id: source-entry-7be6c45bd59d3b205e563251
+    source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    expected_source_content: 会议论文1
+    word_fragments: &id003
+    - fingerprint: cf90a87d9b8481820269f0a23acefc6372d9395cf2dbcec29d2e074bc23221d4
+      locator: /body/p[@paraId=6290A6E6]/r[3]
+      object_id: obj-21ee7789e799faf3aa80d774
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: cf90a87d9b8481820269f0a23acefc6372d9395cf2dbcec29d2e074bc23221d4
+        object_id: obj-21ee7789e799faf3aa80d774
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 8
+      source_text_start: 4
+      text: 会议论文
+    - fingerprint: ca2842c9dc494defa87e8b73b3a06a2b44234f9bb3adf6e5abdf22b7595ffd41
+      locator: /body/p[@paraId=6290A6E6]/r[4]
+      object_id: obj-5097b214ab2f36bfe2a6f967
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: ca2842c9dc494defa87e8b73b3a06a2b44234f9bb3adf6e5abdf22b7595ffd41
+        object_id: obj-5097b214ab2f36bfe2a6f967
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 9
+      source_text_start: 8
+      text: '1'
+    accepted_span: &id012
+      covered_object_ids:
+      - obj-21ee7789e799faf3aa80d774
+      - obj-5097b214ab2f36bfe2a6f967
+      expected_source_content: 会议论文1
+      extent:
+        end: 9
+        kind: text
+        start: 4
+      field_id: achievements.conference_papers
+      judgment_index: 4
+      part_index: 2
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-7be6c45bd59d3b205e563251
+      slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+      source_entry_id: source-entry-7be6c45bd59d3b205e563251
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      span_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      text: 会议论文1
+      text_end: 9
+      text_start: 4
+      word_fragments: *id003
+    accepted_result: &id013
+      source_judgment_ref: semantic_judgments[4]
+      part_index: 2
+      semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id014
+      outcome: applied
+      candidate_before_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      candidate_after_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+      operation_sha256: 668e59a4b887e8015c9ad6420350aad0be88590e9a1553cb30119389960efcc3
+      mutation_receipt_sha256: ee7f79e1a1a14a0f9d71efdfa80da9db3229b3ba336304a7e3251ed45c71f8ff
+  style_contract_ref:
+    style_contract_id: style.slot.8eefd017937ac111e2f6e36f
+    contract_digest: 0a34337531cb67d58fdac7ab5644bfacbea56cea0a4c4656c65c956ff6ee4230
+- slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+  span_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  field_id: achievements.projects
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.ae383d4f43fb2d5e8723d9a5
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参与项目
+  provenance:
+    field_id: achievements.projects
+    span_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+    source_entry_id: source-entry-2cd989ae487869e26d63ddbd
+    source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    expected_source_content: "项目1\t\t\t\t\t863计划子课题"
+    word_fragments: &id004
+    - fingerprint: a9973f800c370e0ff0f126619240cc6fe2946e5755490f57c55bdd2764ed70d6
+      locator: /body/p[@paraId=4BD94F68]/r[3]
+      object_id: obj-4e37be87ff5d28b678751134
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: a9973f800c370e0ff0f126619240cc6fe2946e5755490f57c55bdd2764ed70d6
+        object_id: obj-4e37be87ff5d28b678751134
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 6
+      source_text_start: 4
+      text: 项目
+    - fingerprint: b68952ff5cce6f7e7e7bd6fbad4d309a7184d4bd503436c2447e5e36cf911f06
+      locator: /body/p[@paraId=4BD94F68]/r[4]
+      object_id: obj-d58f7782336ba17ef84b3bb2
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: b68952ff5cce6f7e7e7bd6fbad4d309a7184d4bd503436c2447e5e36cf911f06
+        object_id: obj-d58f7782336ba17ef84b3bb2
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 6
+      text: '1'
+    - fingerprint: ab23cf35d3d785cfa88080ea919e553d8f07ed3861c7e40c5ec4fa4d1779ed25
+      locator: /body/p[@paraId=4BD94F68]
+      object_id: obj-8783f0d111f5c6ab72f2de5d
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: ab23cf35d3d785cfa88080ea919e553d8f07ed3861c7e40c5ec4fa4d1779ed25
+        object_id: obj-8783f0d111f5c6ab72f2de5d
+      object_text_end: 12
+      object_text_start: 7
+      source_text_end: 12
+      source_text_start: 7
+      text: "\t\t\t\t\t"
+    - fingerprint: 2fe01012d01d5141d471739b592eef825a83f2510857806fe8edbe0040a50ee5
+      locator: /body/p[@paraId=4BD94F68]/r[10]
+      object_id: obj-44c11d5923b96e1502da1731
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: 2fe01012d01d5141d471739b592eef825a83f2510857806fe8edbe0040a50ee5
+        object_id: obj-44c11d5923b96e1502da1731
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 15
+      source_text_start: 12
+      text: '863'
+    - fingerprint: ee01de380b007737e9d242bd38fb13a71dd179c012eef14549a5cfcf515a749a
+      locator: /body/p[@paraId=4BD94F68]/r[11]
+      object_id: obj-21851d1298f50678adc2cc22
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: ee01de380b007737e9d242bd38fb13a71dd179c012eef14549a5cfcf515a749a
+        object_id: obj-21851d1298f50678adc2cc22
+      object_text_end: 5
+      object_text_start: 0
+      source_text_end: 20
+      source_text_start: 15
+      text: 计划子课题
+    accepted_span: &id015
+      covered_object_ids:
+      - obj-4e37be87ff5d28b678751134
+      - obj-d58f7782336ba17ef84b3bb2
+      - obj-8783f0d111f5c6ab72f2de5d
+      - obj-44c11d5923b96e1502da1731
+      - obj-21851d1298f50678adc2cc22
+      expected_source_content: "项目1\t\t\t\t\t863计划子课题"
+      extent:
+        end: 20
+        kind: text
+        start: 4
+      field_id: achievements.projects
+      judgment_index: 6
+      part_index: 2
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-2cd989ae487869e26d63ddbd
+      slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+      source_entry_id: source-entry-2cd989ae487869e26d63ddbd
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      span_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      text: "项目1\t\t\t\t\t863计划子课题"
+      text_end: 20
+      text_start: 4
+      word_fragments: *id004
+    accepted_result: &id016
+      source_judgment_ref: semantic_judgments[6]
+      part_index: 2
+      semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id017
+      outcome: applied
+      candidate_before_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      candidate_after_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+      operation_sha256: 7d257c0ce3af3fdcf495d1e7f0a177f767f2336674f4a6cc44d9163b1fea1cfb
+      mutation_receipt_sha256: 88bd85b8d1f096bc27dc8312ab1cc52e5db4f83a6ad71d96df209f1d53c0ee8a
+  style_contract_ref:
+    style_contract_id: style.slot.ae383d4f43fb2d5e8723d9a5
+    contract_digest: 52a5a21d395d473c2a5a20c0bd444f08565b45cf2ef959b559563d239186a243
+- slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+  span_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  field_id: achievements.intellectual_property
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.7da682c2b2b28429825516b7
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 专利与软件著作权
+  provenance:
+    field_id: achievements.intellectual_property
+    span_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+    source_entry_id: source-entry-e16118e69a1ded18df53738e
+    source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    expected_source_content: "专利1\t\t\t\t\t专利"
+    word_fragments: &id005
+    - fingerprint: caaa943e31d1f34434d04af91f56702926087a780ef74800b9a8cf0d8bace748
+      locator: /body/p[@paraId=01BCF9A5]/r[5]
+      object_id: obj-13a4ab12fd338654e3d92f77
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: caaa943e31d1f34434d04af91f56702926087a780ef74800b9a8cf0d8bace748
+        object_id: obj-13a4ab12fd338654e3d92f77
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 6
+      source_text_start: 4
+      text: 专利
+    - fingerprint: 07b58eabbab2ca734979570355e90fb96e5c1b4b28a2ec6e4bc885ce29801dc0
+      locator: /body/p[@paraId=01BCF9A5]/r[6]
+      object_id: obj-95fe13c4ca445d5f7932f84c
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: 07b58eabbab2ca734979570355e90fb96e5c1b4b28a2ec6e4bc885ce29801dc0
+        object_id: obj-95fe13c4ca445d5f7932f84c
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 6
+      text: '1'
+    - fingerprint: c0afda6332e11e48c715dce4ed812435ae4067efd8acf500f3c1f732074d7fd0
+      locator: /body/p[@paraId=01BCF9A5]
+      object_id: obj-c553c689f1529194594175df
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: c0afda6332e11e48c715dce4ed812435ae4067efd8acf500f3c1f732074d7fd0
+        object_id: obj-c553c689f1529194594175df
+      object_text_end: 12
+      object_text_start: 7
+      source_text_end: 12
+      source_text_start: 7
+      text: "\t\t\t\t\t"
+    - fingerprint: 7ecf0a7279756d8358a5aa7776ac190d1af27d539288aceeb6f764c346b3a698
+      locator: /body/p[@paraId=01BCF9A5]/r[12]
+      object_id: obj-bec4c57bc73d614a4a980bf2
+      object_ref:
+        document_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+        expected_fingerprint: 7ecf0a7279756d8358a5aa7776ac190d1af27d539288aceeb6f764c346b3a698
+        object_id: obj-bec4c57bc73d614a4a980bf2
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 14
+      source_text_start: 12
+      text: 专利
+    accepted_span: &id018
+      covered_object_ids:
+      - obj-13a4ab12fd338654e3d92f77
+      - obj-95fe13c4ca445d5f7932f84c
+      - obj-c553c689f1529194594175df
+      - obj-bec4c57bc73d614a4a980bf2
+      expected_source_content: "专利1\t\t\t\t\t专利"
+      extent:
+        end: 14
+        kind: text
+        start: 4
+      field_id: achievements.intellectual_property
+      judgment_index: 8
+      part_index: 2
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-e16118e69a1ded18df53738e
+      slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+      source_entry_id: source-entry-e16118e69a1ded18df53738e
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      span_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      text: "专利1\t\t\t\t\t专利"
+      text_end: 14
+      text_start: 4
+      word_fragments: *id005
+    accepted_result: &id019
+      source_judgment_ref: semantic_judgments[8]
+      part_index: 2
+      semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id020
+      outcome: applied
+      candidate_before_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      candidate_after_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+      operation_sha256: 53aea3e0e128aa19ed56c2f0eb3041f5e87b184a81e60f62c3de044103f6fdae
+      mutation_receipt_sha256: 354b5329f2c3268f32ca9677b1eb3a96b6c0ba36ff4e0a248ef2ddeea0d4c175
+  style_contract_ref:
+    style_contract_id: style.slot.7da682c2b2b28429825516b7
+    contract_digest: 437cffae1c60ce32c5f7064d42d738d4ada800ed7dcf8cb40d48f2a671dce91d
+styles:
+- style_contract_id: style.slot.7da682c2b2b28429825516b7
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 7.8
+    paragraph.space_before_pt: 7.8
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 437cffae1c60ce32c5f7064d42d738d4ada800ed7dcf8cb40d48f2a671dce91d
+  label: achievements.intellectual_property @ source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+    field_id: achievements.intellectual_property
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.8eefd017937ac111e2f6e36f
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 7.8
+    paragraph.space_before_pt: 7.8
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 0a34337531cb67d58fdac7ab5644bfacbea56cea0a4c4656c65c956ff6ee4230
+  label: achievements.conference_papers @ source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+    field_id: achievements.conference_papers
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.ac8fee13529cbaf38cb73e98
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.outline_level
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 2.5
+    paragraph.outline_level: 0
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 15.6
+    paragraph.space_before_pt: 15.6
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Arial
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 黑体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Arial
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 1e5f85194c8a09d823e4453c238d00e8ecc354175c7c2996a8cd82582fb64da9
+  label: appendix.title @ source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+    field_id: appendix.title
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.ae383d4f43fb2d5e8723d9a5
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 7.8
+    paragraph.space_before_pt: 7.8
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 52a5a21d395d473c2a5a20c0bd444f08565b45cf2ef959b559563d239186a243
+  label: achievements.projects @ source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+    field_id: achievements.projects
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.ccb795437f22d0e21a7e530a
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 7.8
+    paragraph.space_before_pt: 7.8
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 361c444cd2fe6a3289e3e65b56d5495d1e339992a41a185f13690ce9235013bb
+  label: achievements.journal_articles @ source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+    field_id: achievements.journal_articles
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: e1f6c2ee99d544b75284d13ae8c11af1a931ea221185ffbe2cce5f3ace646869
+provenance:
+  source_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    template_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+    source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+    semantic_judgments_sha256: e2003ca6f294b97f877c067d5ff9b3811d0c1d079a9b286cd04700be75d8a4b3
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: e44861fad52ea935011c3a34522791b8848036981886a2f9530ecd0eb64a8aa8
+    slots:
+    - field_id: appendix.title
+      span_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      slot_ref: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+      source_entry_id: source-entry-ad8e3fa6c3a4f38246710395
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      expected_source_content: 博士期间工作成果
+      word_fragments: *id001
+      accepted_span: *id006
+      accepted_result: *id007
+      actual_result: *id008
+    - field_id: achievements.journal_articles
+      span_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      slot_ref: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+      source_entry_id: source-entry-5995467e7f665ff1ecc2880a
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      expected_source_content: 期刊论文1
+      word_fragments: *id002
+      accepted_span: *id009
+      accepted_result: *id010
+      actual_result: *id011
+    - field_id: achievements.conference_papers
+      span_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      slot_ref: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+      source_entry_id: source-entry-7be6c45bd59d3b205e563251
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      expected_source_content: 会议论文1
+      word_fragments: *id003
+      accepted_span: *id012
+      accepted_result: *id013
+      actual_result: *id014
+    - field_id: achievements.projects
+      span_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      slot_ref: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+      source_entry_id: source-entry-2cd989ae487869e26d63ddbd
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      expected_source_content: "项目1\t\t\t\t\t863计划子课题"
+      word_fragments: *id004
+      accepted_span: *id015
+      accepted_result: *id016
+      actual_result: *id017
+    - field_id: achievements.intellectual_property
+      span_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      slot_ref: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+      source_entry_id: source-entry-e16118e69a1ded18df53738e
+      source_snapshot_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      source_inventory_digest: 9ef61d0ca725138c55c4e7473e8f8c945e37cad2c0bd0ef40ca1d426950a4edd
+      expected_source_content: "专利1\t\t\t\t\t专利"
+      word_fragments: *id005
+      accepted_span: *id018
+      accepted_result: *id019
+      actual_result: *id020
+  materialization_digest: 772ca3322f6b37c5a288ef0e292385dfb66e3d3248f3ff1ab4910bedb63a0edb
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 6
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88
+    final_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: e1f6c2ee99d544b75284d13ae8c11af1a931ea221185ffbe2cce5f3ace646869
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: e1f6c2ee99d544b75284d13ae8c11af1a931ea221185ffbe2cce5f3ace646869
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.ac8fee13529cbaf38cb73e98
+          contract_digest: 1e5f85194c8a09d823e4453c238d00e8ecc354175c7c2996a8cd82582fb64da9
+      - occurrence_id: template-slot:source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.ccb795437f22d0e21a7e530a
+          contract_digest: 361c444cd2fe6a3289e3e65b56d5495d1e339992a41a185f13690ce9235013bb
+      - occurrence_id: template-slot:source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.8eefd017937ac111e2f6e36f
+          contract_digest: 0a34337531cb67d58fdac7ab5644bfacbea56cea0a4c4656c65c956ff6ee4230
+      - occurrence_id: template-slot:source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.ae383d4f43fb2d5e8723d9a5
+          contract_digest: 52a5a21d395d473c2a5a20c0bd444f08565b45cf2ef959b559563d239186a243
+      - occurrence_id: template-slot:source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.7da682c2b2b28429825516b7
+          contract_digest: 437cffae1c60ce32c5f7064d42d738d4ada800ed7dcf8cb40d48f2a671dce91d
+    validation:
+      status: passed
+      counts:
+        passed: 5
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+        style_contract_id: style.slot.ac8fee13529cbaf38cb73e98
+        contract_digest: 1e5f85194c8a09d823e4453c238d00e8ecc354175c7c2996a8cd82582fb64da9
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-ad8e3fa6c3a4f38246710395;extent=text[5:13];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=appendix.title
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+        style_contract_id: style.slot.ccb795437f22d0e21a7e530a
+        contract_digest: 361c444cd2fe6a3289e3e65b56d5495d1e339992a41a185f13690ce9235013bb
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-5995467e7f665ff1ecc2880a;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.journal_articles
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+        style_contract_id: style.slot.8eefd017937ac111e2f6e36f
+        contract_digest: 0a34337531cb67d58fdac7ab5644bfacbea56cea0a4c4656c65c956ff6ee4230
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7be6c45bd59d3b205e563251;extent=text[4:9];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.conference_papers
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+        style_contract_id: style.slot.ae383d4f43fb2d5e8723d9a5
+        contract_digest: 52a5a21d395d473c2a5a20c0bd444f08565b45cf2ef959b559563d239186a243
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-2cd989ae487869e26d63ddbd;extent=text[4:20];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.projects
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+        style_contract_id: style.slot.7da682c2b2b28429825516b7
+        contract_digest: 437cffae1c60ce32c5f7064d42d738d4ada800ed7dcf8cb40d48f2a671dce91d
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-e16118e69a1ded18df53738e;extent=text[4:14];source_snapshot_sha256=a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88;field_id=achievements.intellectual_property
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

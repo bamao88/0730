@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "template_agent_no_progress_timeout",
+    "retryable": true,
+    "message": "The Agent stream did not produce a tool call or structured result within 180 seconds.",
+    "suggested_actions": [
+      "inspect_template_agent_execution_trace",
+      "resume_or_rerun_with_existing_task_root"
+    ]
+  }
+}

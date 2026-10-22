@@ -1,0 +1,10 @@
+{
+  "agent_called": false,
+  "initial_inventory_sha256": "b0912bc66f6d64eb710e218a865b3b49a01c053e672cd5461b430dcba3d323fe",
+  "product_acceptance": false,
+  "source_entry_count": 525,
+  "source_order_version": "docfit-word-story-order/v1",
+  "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/source-document-order-prepare/pku",
+  "verification_level": "real preparation through actual OfficeCLI and App; no Agent call"
+}

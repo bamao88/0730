@@ -1,0 +1,12 @@
+[
+  {
+    "case": "rehashed changed initial inventory with original_manifest",
+    "result": "REJECTED",
+    "code": "initial_source_inventory_invalid"
+  },
+  {
+    "case": "rehashed changed initial inventory with missing_manifest",
+    "result": "REJECTED",
+    "code": "initial_source_inventory_invalid"
+  }
+]

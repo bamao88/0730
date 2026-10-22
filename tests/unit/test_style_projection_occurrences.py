@@ -84,7 +84,7 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
   <w:p w14:paraId="00000003"><w:r><w:t>1.2试验设计</w:t></w:r></w:p>
   <w:p w14:paraId="00000004"><w:r><w:t>正文内容</w:t></w:r></w:p>
   <w:p w14:paraId="00000005"><w:r><w:t>图 1 结构</w:t></w:r></w:p>
-  <w:p w14:paraId="00000006"><w:r><w:t>表 1 数据</w:t></w:r></w:p>
+  <w:p w14:paraId="00000006"><w:r><w:t>表 数据</w:t></w:r></w:p>
   <w:p w14:paraId="00000007"><m:oMath><m:r><m:t>x</m:t></m:r></m:oMath></w:p>
   <w:p w14:paraId="00000008"><w:r><w:drawing/></w:r></w:p>
   <w:p w14:paraId="00000009"><w:r><w:t>末段正文</w:t></w:r></w:p>
@@ -185,14 +185,16 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
         "H1",
         "H2",
         "H3",
-        "Body",
-        "Caption",
-        "Caption",
+        "direct",
+        "direct",
+        "direct",
         "Body",
         "Normal",
-        "Body",
-        "Ref",
+        "direct",
+        "direct",
     ]
+    assert report["heading_numbering_materialized"] == 1
+    assert report["caption_numbering_materialized"] == 2
     assert all(
         re.fullmatch(r"/body/p\[@paraId=[0-9A-F]{8}\]", item["target_locator"])
         for item in occurrences
@@ -214,5 +216,324 @@ def test_projection_reports_final_roles_and_persistent_paragraph_locators(
         assert match is not None
         paragraph = output_by_para_id[match.group(1)]
         style = paragraph.find(f"{_q('pPr')}/{_q('pStyle')}")
-        assert style is not None
-        assert style.get(_q("val")) == occurrence["word_style_id"]
+        if occurrence["word_style_id"] == "direct":
+            assert style is None
+        else:
+            assert style is not None
+            assert style.get(_q("val")) == occurrence["word_style_id"]
+    output_text = [_text(paragraph) for paragraph in output_body.findall(_q("p"))]
+    assert output_text[:6] == [
+        "第一章 绪论",
+        "1 材料与方法",
+        "1.1 试验设计",
+        "正文内容",
+        "图 1-1 结构",
+        "表 1-1 数据",
+    ]
+
+
+def test_projection_removes_split_image_carrier_residue_without_losing_drawing(
+    tmp_path: Path,
+) -> None:
+    input_docx = tmp_path / "input.docx"
+    template_docx = tmp_path / "template.docx"
+    output_docx = tmp_path / "output.docx"
+    document_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+ <w:body>
+  <w:p w14:paraId="00000001"><w:r><w:t>第一章 绪论</w:t></w:r></w:p>
+  <w:p w14:paraId="00000002">
+   <w:r><w:drawing/></w:r>
+   <w:r><w:t>Figure 3-6 PCR validation of mutants</w:t></w:r>
+  </w:p>
+  <w:p w14:paraId="00000003">
+   <w:r><w:drawing/></w:r>
+   <w:r><w:t>Figure 3-6 PCR validation of mutants</w:t></w:r>
+  </w:p>
+ </w:body>
+</w:document>'''
+    _write_projection_fixture(input_docx, document_xml)
+    _write_projection_fixture(template_docx, document_xml)
+
+    report = project_student_content(
+        input_docx=input_docx,
+        template_docx=template_docx,
+        fill_result={
+            "output_sha256": sha256_file(input_docx),
+            "template_sha256": sha256_file(template_docx),
+            "block_operations": [
+                {
+                    "field_id": "body.ordered_items",
+                    "source_object_ids": ["heading", "image-carrier", "caption-text"],
+                    "inserted_body_refs": [
+                        {"target_locator": "/body/p[@paraId=00000001]"},
+                        {"target_locator": "/body/p[@paraId=00000002]"},
+                        {"target_locator": "/body/p[@paraId=00000003]"},
+                    ],
+                    "source_content_items": [
+                        {
+                            "content_id": "heading",
+                            "source_content_id": "heading-source",
+                            "transport_source_object_id": "heading",
+                            "field_id": "body.heading.outline1",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "source_order": {"block": 1, "inline": 0},
+                        },
+                        {
+                            "content_id": "figure",
+                            "source_content_id": "figure-source",
+                            "transport_source_object_id": "image-carrier",
+                            "field_id": "body.figure",
+                            "classification_status": "classified",
+                            "physical_type": "image",
+                            "source_order": {"block": 2, "inline": 0},
+                        },
+                        {
+                            "content_id": "caption",
+                            "source_content_id": "caption-source",
+                            "transport_source_object_id": "image-carrier",
+                            "source_object_ids": ["caption-text"],
+                            "field_id": "body.figure.caption",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "value": "PCR validation of mutants",
+                            "source_order": {"block": 2, "inline": 1},
+                        },
+                    ],
+                    "relations": [],
+                }
+            ],
+        },
+        output_docx=output_docx,
+        styles=TemplateStyleMap(
+            normal="Normal",
+            body="Body",
+            heading_1="H1",
+            heading_2="H2",
+            heading_3="H3",
+            reference="Ref",
+            caption="Caption",
+        ),
+    )
+
+    assert report["drawing_paragraphs_split"] == 1
+    assert report["image_carrier_residue_paragraphs_removed"] == 1
+    assert report["semantic_drawing_residue_elements_removed"] == 1
+    assert [item["presentation_role"] for item in report["style_occurrences"]] == [
+        "chapter_title",
+        "drawing",
+        "figure_caption",
+    ]
+
+    with zipfile.ZipFile(output_docx) as archive:
+        output_document = ET.fromstring(archive.read("word/document.xml"))
+    output_body = output_document.find(_q("body"))
+    assert output_body is not None
+    output_text = [_text(paragraph) for paragraph in output_body.findall(_q("p"))]
+    assert output_text == ["第一章 绪论", "", "Fig. 1-1 PCR validation of mutants"]
+
+
+def test_projection_treats_table_shaped_figure_carrier_as_figure(
+    tmp_path: Path,
+) -> None:
+    input_docx = tmp_path / "input.docx"
+    template_docx = tmp_path / "template.docx"
+    output_docx = tmp_path / "output.docx"
+    document_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+ <w:body>
+  <w:tbl>
+   <w:tblPr><w:tblW w:type="dxa" w:w="4000"/></w:tblPr>
+   <w:tblGrid><w:gridCol w:w="4000"/></w:tblGrid>
+   <w:tr><w:tc><w:p><w:r><w:drawing/></w:r></w:p></w:tc></w:tr>
+  </w:tbl>
+  <w:p w14:paraId="00000001"><w:r><w:t>Fig. 1 carrier</w:t></w:r></w:p>
+  <w:p w14:paraId="00000002"><w:r><w:t>Table 1 data</w:t></w:r></w:p>
+  <w:tbl>
+   <w:tblPr><w:tblW w:type="dxa" w:w="4000"/></w:tblPr>
+   <w:tblGrid><w:gridCol w:w="2000"/><w:gridCol w:w="2000"/></w:tblGrid>
+   <w:tr><w:tc><w:p><w:r><w:t>处理</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>数值</w:t></w:r></w:p></w:tc></w:tr>
+   <w:tr><w:tc><w:p><w:r><w:t>P0</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>1</w:t></w:r></w:p></w:tc></w:tr>
+  </w:tbl>
+ </w:body>
+</w:document>'''
+    _write_projection_fixture(input_docx, document_xml)
+    _write_projection_fixture(template_docx, document_xml)
+
+    report = project_student_content(
+        input_docx=input_docx,
+        template_docx=template_docx,
+        fill_result={
+            "output_sha256": sha256_file(input_docx),
+            "template_sha256": sha256_file(template_docx),
+            "block_operations": [
+                {
+                    "field_id": "body.ordered_items",
+                    "source_object_ids": [
+                        "figure-carrier",
+                        "figure-caption",
+                        "table-caption",
+                        "data-table",
+                    ],
+                    "inserted_body_refs": [
+                        {"target_locator": "/body/tbl[1]"},
+                        {"target_locator": "/body/p[@paraId=00000001]"},
+                        {"target_locator": "/body/p[@paraId=00000002]"},
+                        {"target_locator": "/body/tbl[2]"},
+                    ],
+                    "source_content_items": [
+                        {
+                            "content_id": "figure",
+                            "source_content_id": "figure-source",
+                            "transport_source_object_id": "figure-carrier",
+                            "field_id": "body.figure",
+                            "classification_status": "classified",
+                            "physical_type": "image",
+                            "source_order": {"block": 1, "inline": 0},
+                        },
+                        {
+                            "content_id": "figure-caption",
+                            "source_content_id": "figure-caption-source",
+                            "transport_source_object_id": "figure-caption",
+                            "field_id": "body.figure.caption",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "value": "carrier",
+                            "source_order": {"block": 2, "inline": 0},
+                        },
+                        {
+                            "content_id": "table-caption",
+                            "source_content_id": "table-caption-source",
+                            "transport_source_object_id": "table-caption",
+                            "field_id": "body.table.caption",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "value": "data",
+                            "source_order": {"block": 3, "inline": 0},
+                        },
+                        {
+                            "content_id": "data-table",
+                            "source_content_id": "data-table-source",
+                            "transport_source_object_id": "data-table",
+                            "field_id": "body.table",
+                            "classification_status": "classified",
+                            "physical_type": "table",
+                            "source_order": {"block": 4, "inline": 0},
+                        },
+                    ],
+                    "relations": [
+                        {
+                            "relation_type": "caption_of",
+                            "source_content_id": "figure-caption",
+                            "target_content_id": "figure",
+                            "confidence": 1.0,
+                        },
+                        {
+                            "relation_type": "caption_of",
+                            "source_content_id": "table-caption",
+                            "target_content_id": "data-table",
+                            "confidence": 1.0,
+                        },
+                    ],
+                }
+            ],
+        },
+        output_docx=output_docx,
+        styles=TemplateStyleMap(
+            normal="Normal",
+            body="Body",
+            heading_1="H1",
+            heading_2="H2",
+            heading_3="H3",
+            reference="Ref",
+            caption="Caption",
+        ),
+    )
+
+    assert report["table_shaped_figure_carriers"] == 1
+    assert report["tables_normalized"] == 1
+    assert report["figure_caption_chains_bound"] == 1
+    assert report["table_caption_chains_bound"] == 1
+    assert report["table_caption_blocks_reordered"] == 0
+
+    with zipfile.ZipFile(output_docx) as archive:
+        output_document = ET.fromstring(archive.read("word/document.xml"))
+    output_body = output_document.find(_q("body"))
+    assert output_body is not None
+    child_tags = [child.tag.rsplit("}", 1)[-1] for child in list(output_body)]
+    assert child_tags[:4] == ["tbl", "p", "p", "tbl"]
+    output_text = [_text(paragraph) for paragraph in output_body.findall(_q("p"))]
+    assert output_text == ["Fig. 1-1 carrier", "Table 1-1 data"]
+
+
+def test_projection_removes_orphan_comment_references_without_comments_part(
+    tmp_path: Path,
+) -> None:
+    input_docx = tmp_path / "input.docx"
+    template_docx = tmp_path / "template.docx"
+    output_docx = tmp_path / "output.docx"
+    document_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+ <w:body>
+  <w:p w14:paraId="00000001">
+   <w:commentRangeStart w:id="1"/>
+   <w:r><w:t>正文内容</w:t></w:r>
+   <w:r><w:commentReference w:id="1"/></w:r>
+   <w:commentRangeEnd w:id="1"/>
+  </w:p>
+ </w:body>
+</w:document>'''
+    _write_projection_fixture(input_docx, document_xml)
+    _write_projection_fixture(template_docx, document_xml)
+
+    report = project_student_content(
+        input_docx=input_docx,
+        template_docx=template_docx,
+        fill_result={
+            "output_sha256": sha256_file(input_docx),
+            "template_sha256": sha256_file(template_docx),
+            "block_operations": [
+                {
+                    "field_id": "body.ordered_items",
+                    "source_object_ids": ["body"],
+                    "inserted_body_refs": [
+                        {"target_locator": "/body/p[@paraId=00000001]"},
+                    ],
+                    "source_content_items": [
+                        {
+                            "content_id": "body",
+                            "source_content_id": "body-source",
+                            "transport_source_object_id": "body",
+                            "field_id": "body.paragraph",
+                            "classification_status": "classified",
+                            "physical_type": "text",
+                            "source_order": {"block": 1, "inline": 0},
+                        }
+                    ],
+                    "relations": [],
+                }
+            ],
+        },
+        output_docx=output_docx,
+        styles=TemplateStyleMap(
+            normal="Normal",
+            body="Body",
+            heading_1="H1",
+            heading_2="H2",
+            heading_3="H3",
+            reference="Ref",
+            caption="Caption",
+        ),
+    )
+
+    assert report["orphan_comment_references_removed"] == 3
+    with zipfile.ZipFile(output_docx) as archive:
+        output_document = ET.fromstring(archive.read("word/document.xml"))
+    assert not list(output_document.iter(_q("commentRangeStart")))
+    assert not list(output_document.iter(_q("commentRangeEnd")))
+    assert not list(output_document.iter(_q("commentReference")))
+
+
+def _text(element: ET.Element) -> str:
+    return "".join(node.text or "" for node in element.iter(_q("t")))

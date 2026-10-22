@@ -1,0 +1,7 @@
+{
+  "head": "bb836c8feeedd9ee84729e0a7b58523f26ed3ed0",
+  "unrelated_changes_preserved": true,
+  "unrelated_dirty_count": 79,
+  "unrelated_diff_sha256": "0c00f4cd6ff845a24ba4a08535f537a961bb5ed0af22816c66a5f2f840a677dc",
+  "code_changes_match_isolated_worktree": true
+}

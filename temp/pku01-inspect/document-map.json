@@ -1,0 +1,1428 @@
+{
+  "checks": [
+    {
+      "name": "docx_package",
+      "result": "ok"
+    },
+    {
+      "name": "officecli_parse",
+      "result": "ok"
+    }
+  ],
+  "document": {
+    "bookmarks": 1,
+    "comments": false,
+    "content_controls": 0,
+    "drawings": 1,
+    "endnotes": true,
+    "equations": 0,
+    "fields": 0,
+    "footers": 8,
+    "footnotes": true,
+    "graphic_objects": 1,
+    "headers": 8,
+    "hyperlinks": 0,
+    "images": 15,
+    "merged_cells": 0,
+    "numbering_part": true,
+    "package_parts": 58,
+    "paragraphs": 55,
+    "sections": 1,
+    "sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+    "styles_part": true,
+    "tables": 2,
+    "text_boxes": 0,
+    "tracked_deletions": 0,
+    "tracked_insertions": 0,
+    "vml_objects": 0
+  },
+  "failure": null,
+  "focus": [
+    "document_map"
+  ],
+  "objects": [
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "lineRule": "auto",
+        "lineSpacing": "1x",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=75507D98]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "c7554abb469b5df86836dfb4fdcce909671110df00912bcb402b1e237bb0c3ea",
+        "object_id": "obj-8f41d7a910266e27bf306278"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/PKU3",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/PKU3",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/PKU3",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/PKU3",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "style": "PKU3",
+        "styleId": "PKU3",
+        "styleName": "PKU图"
+      },
+      "locator": "/body/p[@paraId=2BEF318C]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "2f052ea7a51f41a58fa07c8321bef66c5f57d8457e9849085bb95f372eaed2e0",
+        "object_id": "obj-ad0cbe15c1a5d79522e48213"
+      },
+      "style": "PKU图",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/afc",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/afc",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/afc",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/afc",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/afc",
+        "effective.size": "36pt",
+        "effective.size.src": "/styles/afc",
+        "style": "afc",
+        "styleId": "afc",
+        "styleName": "封面标题"
+      },
+      "locator": "/body/p[@paraId=124C8F1F]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "efa899c1f1ebb1a53cee7e0c91edc062d367979bb6d75ab4102ea576581931bc",
+        "object_id": "obj-46583b0faf635882e83c6363"
+      },
+      "style": "封面标题",
+      "text": "博士研究生学位论文",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.lineSpacing": "1.5x",
+        "effective.lineSpacing.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=1E1B41C6]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "28dc025d6685a0a3d58284099cc710e8a3bc7ca430f6bfba7be15b2ec55ccedc",
+        "object_id": "obj-40e4a0c97f373e843865501c"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/afe",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/afe",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/afe",
+        "effective.size": "22pt",
+        "effective.size.src": "/styles/afe",
+        "lineRule": "auto",
+        "lineSpacing": "1x",
+        "style": "afe",
+        "styleId": "afe",
+        "styleName": "题目："
+      },
+      "locator": "/body/tbl[1]/tr[1]/tc[1]/p[@paraId=16B71489]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "b982172bc2955134144237648386243a17a5b9c36084706a787fb0855983859e",
+        "object_id": "obj-d2772f9955777164cdee4032"
+      },
+      "style": "题目：",
+      "text": "题目：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": false,
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/-",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/-",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/-",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/-",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/-",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/-",
+        "effective.size": "26pt",
+        "effective.size.src": "/styles/-",
+        "style": "-",
+        "styleId": "-",
+        "styleName": "论文标题-封面"
+      },
+      "locator": "/body/tbl[1]/tr[1]/tc[2]/p[@paraId=089B89D0]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "5e942adf9db84c5fb9bfb2c342dbe6e1ce7bc738803a2232f3f7df4aa7d245e8",
+        "object_id": "obj-6884c54359fcc1b8fd0fdecb"
+      },
+      "style": "论文标题-封面",
+      "text": "学位论文模板的使用",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/afe",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/afe",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/afe",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/afe",
+        "effective.size": "22pt",
+        "effective.size.src": "/styles/afe",
+        "style": "afe",
+        "styleId": "afe",
+        "styleName": "题目："
+      },
+      "locator": "/body/tbl[1]/tr[2]/tc[1]/p[@paraId=4CA64AEC]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "685f621f21c685d67a2f52ce77ed9c894e1cac3e18c61a0ec390b4e4d9a25563",
+        "object_id": "obj-34cf12462b8b423f9b4f58d8"
+      },
+      "style": "题目：",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": false,
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/-",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/-",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/-",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/-",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/-",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/-",
+        "effective.size": "26pt",
+        "effective.size.src": "/styles/-",
+        "style": "-",
+        "styleId": "-",
+        "styleName": "论文标题-封面"
+      },
+      "locator": "/body/tbl[1]/tr[2]/tc[2]/p[@paraId=22951C6C]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "9b70eb8d1d9123302e917f1777c7c7332f3b1f4e045b69f1c2f979fc39239831",
+        "object_id": "obj-996ba6cde5745deac1a70183"
+      },
+      "style": "论文标题-封面",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/afe",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/afe",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/afe",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/afe",
+        "effective.size": "22pt",
+        "effective.size.src": "/styles/afe",
+        "style": "afe",
+        "styleId": "afe",
+        "styleName": "题目："
+      },
+      "locator": "/body/tbl[1]/tr[3]/tc[1]/p[@paraId=202897DD]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "9ebe03e14f0bd3a6e80120cbc733e4fc04d7610f69d0f4d12ddb57ce809a0cd2",
+        "object_id": "obj-105ec7dd9412322aaa0d1abf"
+      },
+      "style": "题目：",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "bold": false,
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/-",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/-",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/-",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/-",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/-",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/-",
+        "effective.size": "26pt",
+        "effective.size.src": "/styles/-",
+        "style": "-",
+        "styleId": "-",
+        "styleName": "论文标题-封面"
+      },
+      "locator": "/body/tbl[1]/tr[3]/tc[2]/p[@paraId=5056B5FA]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "8e2b9aaf736a48d086c96beef9ee780f2bd68d0fbdea4f2b2a3b1088edbb3343",
+        "object_id": "obj-8a16ae7b64dcc6b6cea6aa22"
+      },
+      "style": "论文标题-封面",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.lineSpacing": "1.5x",
+        "effective.lineSpacing.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=62E7E023]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "f849f6970354f28d8d3e2d193c3ddd8c3dfb2305d9d2f7487965b598e3368f26",
+        "object_id": "obj-87afc903d1ea2a7d14564b96"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.lineSpacing": "1.5x",
+        "effective.lineSpacing.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=1A29B870]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "1c8ed3a14da2c2722689d9a4230a7ac342bab5e8378712177a4a2e40db29e33e",
+        "object_id": "obj-e152f5195648f333cd57533b"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[1]/tc[1]/p[@paraId=4D954E65]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "0b9715b9a10cc4867d7a4478ee02157992be0c8ef1972eb4aa2fef1aa0965ca9",
+        "object_id": "obj-e36e0c8c5a5b8fb06ddc03cf"
+      },
+      "style": "封面列表项",
+      "text": "姓    名：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[1]/tc[2]/p[@paraId=73ED4AE3]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "c83e7b1d390864ce55f81badff607fce800d16deff112739c3e8ad222526a325",
+        "object_id": "obj-490d148ea74d76121a82a036"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[2]/tc[1]/p[@paraId=5C8290CE]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "30f6cc076c5f283312cf39d88caaa31047be9d9837791ec9c5f2bb6102103286",
+        "object_id": "obj-7d8f703d5e91486ff161008d"
+      },
+      "style": "封面列表项",
+      "text": "学    号：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=17FA23A7]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "c53e26cf0e0144ea061eaba5efa20f3fa9cca7e045b12c7c43c0044d6cdd6b6d",
+        "object_id": "obj-e0854cacff687ab48acb11ae"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[3]/tc[1]/p[@paraId=2EA4FE59]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "f5eab50383756c771e149c0e86a282d4c8a9aba5a17d3c3e9852a11b532714f6",
+        "object_id": "obj-1cbc4d3a9f7565df67a97178"
+      },
+      "style": "封面列表项",
+      "text": "院    系：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[3]/tc[2]/p[@paraId=0ABE580E]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "b40b44240e0301bb8de261d3eca21c1e7d3ce9f0fa9ea15ffac01b1f8a4dbd36",
+        "object_id": "obj-ef14909dfc33f463b3f8956c"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[4]/tc[1]/p[@paraId=3EDF8960]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "f4a16c95162d8c53ce0d5fbc4fc482c77a586450a2cd44415818ba2500953eb0",
+        "object_id": "obj-03732a34cf11741813a47ec6"
+      },
+      "style": "封面列表项",
+      "text": "专    业：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[4]/tc[2]/p[@paraId=20A5F8F3]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "1e8e469d6889acce37894c548bf7a30f1bdbc0d05bd27eb326a39112fb2c11d3",
+        "object_id": "obj-56c83aed86821e8340942f0a"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[5]/tc[1]/p[@paraId=7BCA9B59]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "e257a07f30f2327f08058474d1379a986330afb074bbe8adc43e2e9fb2f1e89e",
+        "object_id": "obj-e1a1d9d67eb5823cb8dbf826"
+      },
+      "style": "封面列表项",
+      "text": "研究方向：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[5]/tc[2]/p[@paraId=26B69474]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "2d694058e05182fb5492c44358bb28579db5b1a4a04d66e1383ad805150f7acb",
+        "object_id": "obj-90aca9be7ea65fe3b02f3f6b"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[6]/tc[1]/p[@paraId=0AF63B3E]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "8df3b73bfc995dba46580650ed307d64a176ad238392fdd77ac48f1321342afe",
+        "object_id": "obj-2f79b26dd2308fda2343a807"
+      },
+      "style": "封面列表项",
+      "text": "导师姓名：",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/aff2",
+        "effective.font.ascii": "黑体",
+        "effective.font.ascii.src": "/styles/aff2",
+        "effective.font.cs": "幼圆",
+        "effective.font.cs.src": "/styles/aff2",
+        "effective.font.eastAsia": "黑体",
+        "effective.font.eastAsia.src": "/styles/aff2",
+        "effective.font.hAnsi": "黑体",
+        "effective.font.hAnsi.src": "/styles/aff2",
+        "effective.lineSpacing": "1.25x",
+        "effective.lineSpacing.src": "/styles/aff2",
+        "effective.size": "15pt",
+        "effective.size.src": "/styles/aff2",
+        "style": "aff2",
+        "styleId": "aff2",
+        "styleName": "封面列表项"
+      },
+      "locator": "/body/tbl[2]/tr[6]/tc[2]/p[@paraId=234B7AF0]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "250726897227d13a1ebfc40dad0abdf742d7c696f2ea2e12a30adef37bbb99fd",
+        "object_id": "obj-0970ff5b743b20e3715f7ddc"
+      },
+      "style": "封面列表项",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.lineSpacing": "1.5x",
+        "effective.lineSpacing.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=3040A251]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "15a41a8edd64b20ff88f2bc97df9cba948d13fd72bf44a91f7f18741b2ae6718",
+        "object_id": "obj-88477ace414a90241eab27f8"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "宋体",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.hAnsi": "宋体",
+        "font.ea": "宋体",
+        "font.latin": "宋体",
+        "lineRule": "auto",
+        "lineSpacing": "1.5x",
+        "size": "16pt",
+        "spaceAfter": "24.45pt",
+        "spaceBefore": "8.15pt"
+      },
+      "locator": "/body/p[@paraId=3466D2A3]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "8a03a110e6e24f32a6a651174cc39b2c25752a61e59ae2cd9760152ca1de1e36",
+        "object_id": "obj-89d8cbbff4900c8056216cd8"
+      },
+      "style": "Normal",
+      "text": " 学术学位     专业学位",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.lineSpacing": "1.5x",
+        "effective.lineSpacing.src": "/styles/affb",
+        "size": "16pt",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/body/p[@paraId=1FED35B6]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "516a85d504772c7a93441689199a29ddd0e7410367b0f171a8a8a7eb6eb247c6",
+        "object_id": "obj-8546ac6eb1edbb2da1795808"
+      },
+      "style": "额外内容",
+      "text": "二〇  年 月",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[1]/p[@paraId=4DF30B00]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "d1f5be2c01895d61a37f4fc808350545a52c674e9f610ede7ff6f557e62c226b",
+        "object_id": "obj-55917782b03ee773066ad108"
+      },
+      "style": "header",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[2]/p[@paraId=40FB20F5]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4cd0985ad30e63eecfbb99954e79ea390c0b411e0c08b1b628de84eebced6ac0",
+        "object_id": "obj-9759e3bcb8181dd21d6d9fd0"
+      },
+      "style": "header",
+      "text": "北京大学博士学位论文",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[3]/p[@paraId=0B7F334E]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "d1f5be2c01895d61a37f4fc808350545a52c674e9f610ede7ff6f557e62c226b",
+        "object_id": "obj-a448a7ce7fda8624d79ed45e"
+      },
+      "style": "header",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[4]/p[@paraId=3112F1AF]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "c817970c750e1a41b066bbfb2077e398ba87754ba1ed4c03425504fca2192c60",
+        "object_id": "obj-b83787f419192b83859867eb"
+      },
+      "style": "header",
+      "text": "致谢",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[5]/p[@paraId=21E21116]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "b6d40c31df412e0c96c00688683263485462916884ced2a76944d1bb8eda2f58",
+        "object_id": "obj-70ef2406d99f0e57961cfa0a"
+      },
+      "style": "header",
+      "text": "图目录",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[6]/p[@paraId=37B1CF7C]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4cd0985ad30e63eecfbb99954e79ea390c0b411e0c08b1b628de84eebced6ac0",
+        "object_id": "obj-a68cd1f32d40c24e6a122599"
+      },
+      "style": "header",
+      "text": "北京大学博士学位论文",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[7]/p[@paraId=49237ED9]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "fe927f740fa8ade95ed77061cab5e8923e5b66c6cb9427f39317461fb4bb9841",
+        "object_id": "obj-40fca1ab91a6e4c6b92f45c1"
+      },
+      "style": "header",
+      "text": "第三章\t其他注意事项",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "center",
+        "effective.alignment.src": "/styles/a9",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/a9",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/a9",
+        "style": "a9",
+        "styleId": "a9",
+        "styleName": "header"
+      },
+      "locator": "/header[8]/p[@paraId=067D0E8B]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "d1f5be2c01895d61a37f4fc808350545a52c674e9f610ede7ff6f557e62c226b",
+        "object_id": "obj-d4ddf95350276fb76281faf5"
+      },
+      "style": "header",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/ab",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/ab",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/ab",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/ab",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/ab",
+        "style": "ab",
+        "styleId": "ab",
+        "styleName": "footer"
+      },
+      "locator": "/footer[4]/p[@paraId=2E5129AB]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4ae42215b78f5a44e94be8d2b1056beaa88632b3ad590638bfbd7120fe9af580",
+        "object_id": "obj-edb72aa25ed23872e96a2381"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/ab",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/ab",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/ab",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/ab",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/ab",
+        "style": "ab",
+        "styleId": "ab",
+        "styleName": "footer"
+      },
+      "locator": "/footer[7]/p[@paraId=785539A3]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4ae42215b78f5a44e94be8d2b1056beaa88632b3ad590638bfbd7120fe9af580",
+        "object_id": "obj-3ff3e8494a850b82bceab03d"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/ab",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/ab",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/ab",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/ab",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/ab",
+        "style": "ab",
+        "styleId": "ab",
+        "styleName": "footer"
+      },
+      "locator": "/footer[7]/p[@paraId=78912077]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4ae42215b78f5a44e94be8d2b1056beaa88632b3ad590638bfbd7120fe9af580",
+        "object_id": "obj-8ef21b75ca835f9b9d15e03d"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/ab",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/ab",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/ab",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/ab",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/ab",
+        "style": "ab",
+        "styleId": "ab",
+        "styleName": "footer"
+      },
+      "locator": "/footer[8]/p[@paraId=0EF7F6F6]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4ae42215b78f5a44e94be8d2b1056beaa88632b3ad590638bfbd7120fe9af580",
+        "object_id": "obj-a9c6cfaf2ae774745ad189ff"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/affb",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/affb",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/affb",
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults",
+        "lineRule": "auto",
+        "lineSpacing": "1x",
+        "style": "affb",
+        "styleId": "affb",
+        "styleName": "额外内容"
+      },
+      "locator": "/footnote[1]/p[@paraId=5C615655]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "c99b464cdc9ca01c4e17f319e0428ca3a640854af8414653f0d6b3a058ddbc80",
+        "object_id": "obj-3df89871791167dca61b8cfb"
+      },
+      "style": "额外内容",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/footnote[2]/p[@paraId=4ECAA6B4]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-c5469de6922c4c27c84d4be1"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/ab",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/ab",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/ab",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/ab",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/ab",
+        "style": "ab",
+        "styleId": "ab",
+        "styleName": "footer"
+      },
+      "locator": "/footnote[3]/p[@paraId=38528609]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "4ae42215b78f5a44e94be8d2b1056beaa88632b3ad590638bfbd7120fe9af580",
+        "object_id": "obj-e6421ea943f772a337674614"
+      },
+      "style": "footer",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.alignment": "left",
+        "effective.alignment.src": "/styles/af",
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/styles/af",
+        "effective.font.cs": "Times New Roman",
+        "effective.font.cs.src": "/styles/af",
+        "effective.font.eastAsia": "宋体",
+        "effective.font.eastAsia.src": "/styles/af",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/styles/af",
+        "effective.size": "9pt",
+        "effective.size.src": "/styles/af",
+        "style": "af",
+        "styleId": "af",
+        "styleName": "footnote text"
+      },
+      "locator": "/footnote[4]/p[@paraId=314DFF3B]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "ff18867a4c03dea4df7144e978aafebe5f4f8611707588e6bd82d12c7a98ad8a",
+        "object_id": "obj-c467af2a8b5c388d46afd4b8"
+      },
+      "style": "footnote text",
+      "text": " 参与实名评审的博士论文需要附加此页，参与匿名评审的博士论文无需附加此页，以实际教务要求为准。",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[1]/p[@paraId=26C4AC0A]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-14f25fd766548ba4fa34123a"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[1]/p[@paraId=6208D060]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-81ed2942b657496d67bd51e3"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[1]/p[@paraId=072EDD6D]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-5dd30916d09221dfc94a1b42"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[1]/p[@paraId=2BF15D50]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-4cbffdf48dcba275387fea36"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[2]/p[@paraId=38551064]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-ca023a4302d337c0cad3200f"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[2]/p[@paraId=3262AC63]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-483d60738024c4040257cf19"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[2]/p[@paraId=0E7C2690]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-f5f71d335fe766d155d9fae7"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[2]/p[@paraId=4BE0188F]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-c7af252aeafb5ec4fd048cf8"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[3]/p[@paraId=7CBF186D]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-c31230da1e0432119218d5ca"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[3]/p[@paraId=4A191033]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-c26b6402b1e0c21afeb037a6"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[3]/p[@paraId=3E8F3F15]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-32ebeb195948779e54a616d7"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.size": "12pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/endnote[3]/p[@paraId=1873D835]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "26c8ee7288b6deef5ff65bde39c7397c90ce1418cb40188b9850b27c9e44b685",
+        "object_id": "obj-043938f709d6add5f7d8e926"
+      },
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "cols": "2",
+        "rows": "3",
+        "width": "auto"
+      },
+      "locator": "/body/tbl[1]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "ad9b60cffe634bd96c443cbe8711cb459e0f2a27a1775e4a4597f2a085eb9665",
+        "object_id": "obj-e2226e651dcec0bc5bff0e66"
+      },
+      "text": "",
+      "type": "table"
+    },
+    {
+      "format": {
+        "alignment": "center",
+        "cols": "2",
+        "rows": "6",
+        "width": "auto"
+      },
+      "locator": "/body/tbl[2]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "98a580b6229531b0c5e12ceb4f9f9c2740abbd29fc2054c0163ea57868b9ae89",
+        "object_id": "obj-fa43e287ea76bbe3f8332cfa"
+      },
+      "text": "",
+      "type": "table"
+    },
+    {
+      "format": {
+        "height": "2.4cm",
+        "id": 9,
+        "width": "8.4cm"
+      },
+      "locator": "/body/p[@paraId=2BEF318C]/r[1]",
+      "object_ref": {
+        "document_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "expected_fingerprint": "5ff35623e69232a9d73b4451de73c034a7a0845f4b777e9528cdc00310c7d731",
+        "object_id": "obj-fa99bbab5099a0d7bf1e510e"
+      },
+      "text": "Logo与校名",
+      "type": "picture"
+    }
+  ],
+  "provider": {
+    "environment": {
+      "architecture": "arm64",
+      "platform": "Darwin"
+    },
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "expected_version": "1.0.143",
+    "license": "Apache-2.0",
+    "name": "officecli",
+    "version": "1.0.144",
+    "version_locked": false
+  },
+  "risks": [],
+  "schema_version": 1,
+  "status": "ok",
+  "warnings": []
+}

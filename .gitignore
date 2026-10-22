@@ -25,3 +25,8 @@ temp/student-content-extraction-eval-*/
 temp/docfit-school-extract-reference-drafts/
 temp/pku-fill-module-fixture-inspection.json
 ~$*.docx
+
+# Restricted local inputs and saved runs for the integrated module Eval entries.
+temp/final-generation-base-packages-*/
+temp/final-generation-e2e-inputs-*/
+temp/student-content-extraction-rerun-*/

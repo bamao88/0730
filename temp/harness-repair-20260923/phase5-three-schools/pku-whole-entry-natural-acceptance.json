@@ -1,0 +1,102 @@
+{
+  "verification_level": "natural E2E agent loop local batch acceptance",
+  "runtime_commit": "6c72804",
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-manifest.json",
+  "events": {
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000006.json": "6ff0adba41feaedd5acc3852a7db1167299aa9d6c242ec8a59be6b58ddfba826",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000007.json": "34d09ecbd172ca989970bf18df5c30d3a4c392c9830ed75966e9e3efb442f356",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000008.json": "72401326abb7219be083fd555d4478a5c8edcce3d65d793c39ad018d1316b8e5",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000009.json": "a1e317140fd5b6935ce2b09edb9e1fd036a2d51fe694169e0fb19496de9eb234"
+  },
+  "judgments": [
+    {
+      "parts": [
+        {
+          "role": "fixed_label",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Unit heading \"版权声明\" is the school's fixed title for the copyright declaration section; preserved as a fixed label, not a value to fill.",
+      "source_entry_id": "source-entry-f244e4152a12921e111bbce6"
+    },
+    {
+      "parts": [
+        {
+          "role": "fixed_label",
+          "whole_entry": true
+        }
+      ],
+      "reason": "The standard copyright statement \"任何收存和保管本论文各种版本的单位和个人...\" is the school's formal, fixed copyright declaration text. It must remain verbatim in the clean template and is not a fill position or generated content.",
+      "source_entry_id": "source-entry-99749d298530dbca9905565d"
+    },
+    {
+      "parts": [
+        {
+          "role": "style_only",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Empty source entry (text length 0) within the copyright unit; layout context marks it as blank_layout_candidate. Acts as vertical blank spacing between the copyright statement and the QR-code instruction; no visible content or fill responsibility.",
+      "source_entry_id": "source-entry-5c2796c5e8398896fd6f7e20"
+    },
+    {
+      "parts": [
+        {
+          "role": "style_only",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Empty source entry marked blank_layout_candidate; provides vertical spacing in the copyright page layout. No text content, no field binding required.",
+      "source_entry_id": "source-entry-afde1cd659a826bf22758fd6"
+    },
+    {
+      "parts": [
+        {
+          "role": "style_only",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Empty source entry marked blank_layout_candidate; provides vertical spacing in the copyright page layout. No text content, no field binding required.",
+      "source_entry_id": "source-entry-4af07d3ee95ca505d2fd5252"
+    },
+    {
+      "parts": [
+        {
+          "role": "cleanup",
+          "whole_entry": true
+        }
+      ],
+      "reason": "The PKU instruction \"在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本...\" is template author guidance telling students to replace this page with a QR-code version downloaded from the personal portal. It is not formal copyright content; the clean template's copyright page is replaced at submission time by the external QR-code asset, so this instructional text is cleaned up.",
+      "source_entry_id": "source-entry-eadbc9cdafdff1d8882c4cec"
+    },
+    {
+      "parts": [
+        {
+          "role": "style_only",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Empty source entry marked blank_layout_candidate; provides vertical spacing after the PKU QR-code instruction. No text content, no field binding required.",
+      "source_entry_id": "source-entry-33f4e4b2948c65be7f36930e"
+    },
+    {
+      "parts": [
+        {
+          "role": "style_only",
+          "whole_entry": true
+        }
+      ],
+      "reason": "Empty source entry marked blank_layout_candidate; provides trailing vertical spacing in the copyright unit. No text content, no field binding required.",
+      "source_entry_id": "source-entry-49232d2654539f87491d8450"
+    }
+  ],
+  "judgment_count": 8,
+  "whole_entry_count": 8,
+  "local_feedback": null,
+  "candidate_recorded": true,
+  "limitations": [
+    "No final Word materialization or publication yet.",
+    "Local scope and vocabulary acceptance does not establish school semantic correctness.",
+    "Degree checkbox from the first batch used literal text; this declaration evidence is the second copyright batch."
+  ]
+}

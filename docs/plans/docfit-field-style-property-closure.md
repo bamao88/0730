@@ -1,24 +1,24 @@
 # DocFit 字段样式提取属性闭包与修复计划
 
-## Plan Ledger
+## 计划台账
 
-- Status: `APPROVED_IN_PROGRESS`
-- Date: `2026-08-11`
-- Task source: 用户确认“字段样式提取也必须使用稳定属性列表”，并要求形成文档与跨模块修复计划
-- Status authority: `docs/status/active/docfit-student-content-dependencies-and-blockers.md`
-- Canonical scope: 模板生成模块中的学校字段/slot 样式观测与缺口报告，以及最终内容填写模块中的实际角色集计算、整角色兜底选择、物化和最终验证
-- Current implementation state: P0-P4 核心已实施；P5 完成 paragraph 核心 typed VALUE/NONE codec；P6 已把 presentation-role inventory、actual role set、整角色选择和可执行合同串成写入前 task-local target 纯编排；P8 已加入不 import 产品 resolver 的固定列表/双轴/digest 独立门禁。完整 caption/table/section/document codec、最终 Fill Contract/Placement 接线与 final-fill 重排尚未完成
-- Current product status: `FAIL`，`production_fill_allowed=false`；修订计划不改变该运行状态
-- Product boundary: 模板生成只报告学校样式事实、完整学校候选和已知缺口，禁止选择或注入兜底；最终内容填写才在实际角色集上执行学校完整角色与版本化兜底完整角色二选一，禁止逐属性混合
-- Artifact boundary: Profile、Observation、Style Contract 和选择 receipt 都是三模块内部能力，不新增产品模块、学校资产类型或用户交付物；用户仍只获得一个最终 Word
-- Approval boundary: 本文获批后才可修改产品代码；新增 Tool 名称、修改 Tool 输入 schema、改变 Claude Agent SDK runtime 或发现真实外部合同消费者时必须重新审批
+- 状态: `APPROVED_IN_PROGRESS`
+- 日期: `2026-08-11`
+- 任务来源: 用户确认“字段样式提取也必须使用稳定属性列表”，并要求形成文档与跨模块修复计划
+- 状态权威: `docs/status/active/docfit-student-content-dependencies-and-blockers.md`
+- 权威范围: 模板生成模块中的学校字段/slot 样式观测与缺口报告，以及最终内容填写模块中的实际角色集计算、整角色兜底选择、物化和最终验证
+- 当前实现状态: P0-P4 核心已实施；P5 完成 paragraph 核心 typed VALUE/NONE codec；P6 已把 presentation-role inventory、actual role set、整角色选择和可执行合同串成写入前 task-local target 纯编排；P8 已加入不 import 产品 resolver 的固定列表/双轴/digest 独立门禁。完整 caption/table/section/document codec、最终 Fill Contract/Placement 接线与 final-fill 重排尚未完成
+- 当前产品状态: `FAIL`，`production_fill_allowed=false`；修订计划不改变该运行状态
+- 产品边界: 模板生成只报告学校样式事实、完整学校候选和已知缺口，禁止选择或注入兜底；最终内容填写才在实际角色集上执行学校完整角色与版本化兜底完整角色二选一，禁止逐属性混合
+- 产物边界: Profile、Observation、Style Contract 和选择 receipt 都是三模块内部能力，不新增产品模块、学校资产类型或用户交付物；用户仍只获得一个最终 Word
+- 批准边界: 本文获批后才可修改产品代码；新增 Tool 名称、修改 Tool 输入 schema、改变 Claude Agent SDK runtime 或发现真实外部合同消费者时必须重新审批
 - Unknown-unknown scout: `COMPLETE_2026_08_11`。现有提交 `819fb50` 已完成 Style Contract v2、
   核心 resolver/materializer、模板代表 occurrence、Placement ref 和最终 occurrence audit 的第一垂直
   切片；尚缺 Profile Registry、双轴 Observation、学校 candidate/gap 发布、actual role set 与整角色
   preset 选择。仓库内消费者仅为当前产品代码、测试/Eval 和临时运行产物，未发现真实外部 v2
   消费者。脏工作区中的属性级国标 fallback 实验与本计划冲突，只保留其稳定 occurrence 证据，
   不得按属性混入；用户内容提取 v2 改动为 no-touch scope。
-- Execution evidence: `3779165` 固定 Profile/双轴 Observation；`3b4eaeb` paragraph resolver；
+- 执行证据: `3779165` 固定 Profile/双轴 Observation；`3b4eaeb` paragraph resolver；
   `997e6a4` 模板发布 school observation/candidate/gap；`09bdd55`/`5845897`/`7c9645f`
   accepted preset、actual role set 与整角色选择；`b293706` typed occurrence codec；`b8727fb` 写入前
   presentation-role inventory；`27182f8` task-local preflight target；`3458ecc` 独立 Eval
@@ -647,17 +647,17 @@ occurrences，并通过 reopen 与最终审计。不得通过删除该角色、�
 
 Preflight status: `APPROVED`
 
-Task source: user decision on 2026-08-11 plus this plan
+任务来源: 用户于 2026-08-11 做出的决策，加上本文计划
 
-Canonical source: `docs/plans/docfit-field-style-property-closure.md`
+权威来源: `docs/plans/docfit-field-style-property-closure.md`
 
-Status authority: `docs/status/active/docfit-student-content-dependencies-and-blockers.md`
+状态权威: `docs/status/active/docfit-student-content-dependencies-and-blockers.md`
 
-Route: durable `$intuitive-flow`
+路由: durable `$intuitive-flow`
 
-Goal: make template generation publish trustworthy fixed-list school style observations, complete school candidates and known gaps without fallback selection; then make final content fill compute the task's actual role set, choose a complete school or preset role, materialize it task-locally, and audit every final occurrence.
+目标: 让模板生成发布可信的固定列表学校样式观测、完整学校候选和已知缺口，且不选择 fallback；随后让 final content fill 计算任务实际角色集，选择完整学校角色或 preset 角色，在任务本地物化，并审计每个最终 occurrence。
 
-Scope:
+范围:
 
 - shared property profile, dual-axis state/schema and consumer inventory;
 - Word effective resolver and provenance;
@@ -682,7 +682,7 @@ Entity budget:
 Context:
 
 - must-read: this plan; `docs/status/active/docfit-student-content-dependencies-and-blockers.md`; `docs/plans/docfit-general-style-preset-v1.review.yaml`; `docs/human/docfit-general-style-preset-v1-product-review.md`; `src/docfit/styles/**`; `src/docfit/template/workspace.py`; `src/docfit/tools/template_tools.py`; `src/docfit/tools/inspection.py`; Fill Contract schemas; independent template-extraction Eval contracts;
-- useful: `docs/docfit-00-index.md` through `docs/docfit-06-development-roadmap.md`; accepted Student Content Contract v2/body extraction spec and regression evidence; real-template reports;
+- useful: `ARCHITECTURE.md`, `docs/README.md`, accepted Student Content Contract v2, current module contracts/eval designs, and real-template reports;
 - avoid-unless-needed: generated temp runs, private thesis contents, unrelated TOC/fallback experiments, old template Tool versions.
 
 Acceptance:

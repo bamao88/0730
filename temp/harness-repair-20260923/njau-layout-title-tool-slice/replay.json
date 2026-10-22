@@ -1,0 +1,152 @@
+{
+  "verification_level": "real replay of unchanged title judgment, isolated real Tool execution slice",
+  "runtime_commit": "0e1f774",
+  "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+  "source_bindings": {
+    "temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/object-inventory.json": "40c620ee998fe19dbc3cca0bd857389b0ba37401d3176757d2dea5a91ecbbbb1",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/semantic-judgments.json": "07e413e62229e515a37563015ebbaa6d20fadb8ff3f2a2353a5d0a330dad3005",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "candidate_sha256": "390f16b6489e0e7c0ec1bf250d098a3f7a8d4ca61fd1a7db56370fa5d9e78b7e",
+  "leading_page_break_preserved": true,
+  "protected_paragraphs_unchanged": 174,
+  "other_package_parts_unchanged": true,
+  "original_task_unchanged": true,
+  "operations": [
+    {
+      "action": "materialize_slot",
+      "field_id": "thesis.title.en",
+      "block_id": "source-entry-9a17584bc062268316b8fb05",
+      "part_index": 0,
+      "span_ref": "source_entry_id=source-entry-9a17584bc062268316b8fb05;extent=text[0:5];source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+      "slot_ref": "source_entry_id=source-entry-9a17584bc062268316b8fb05;extent=text[0:5];source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e;field_id=thesis.title.en",
+      "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+      "word_fragments": [
+        {
+          "fingerprint": "ab06ad17c5fbdeb43fe4fa079b35d4ce1e63ec4faf5f6814fc1b099a78c6957b",
+          "locator": "/body/p[63]/r[2]",
+          "object_id": "obj-f3f92059aef9c0d5a00192eb",
+          "object_ref": {
+            "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+            "expected_fingerprint": "ab06ad17c5fbdeb43fe4fa079b35d4ce1e63ec4faf5f6814fc1b099a78c6957b",
+            "object_id": "obj-f3f92059aef9c0d5a00192eb"
+          },
+          "object_text_end": 5,
+          "object_text_start": 0,
+          "source_text_end": 5,
+          "source_text_start": 0,
+          "text": "TITLE"
+        }
+      ],
+      "judgment_refs": [
+        "semantic_judgments[83]"
+      ]
+    }
+  ],
+  "cleanup": {
+    "action": "remove_exact_fragments",
+    "block_id": "source-entry-9a17584bc062268316b8fb05",
+    "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+    "judgment_refs": [
+      "semantic_judgments[83]"
+    ],
+    "span_refs": [
+      "source_entry_id=source-entry-9a17584bc062268316b8fb05;extent=text[5:43];source_snapshot_sha256=d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+    ],
+    "word_fragments": [
+      {
+        "fingerprint": "cb6b455e6d3b5619b6c746e90d0256c53758f4ea763d35b72e1a422e29185e86",
+        "locator": "/body/p[63]/r[3]",
+        "object_id": "obj-abd44a735108848218ce038c",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "cb6b455e6d3b5619b6c746e90d0256c53758f4ea763d35b72e1a422e29185e86",
+          "object_id": "obj-abd44a735108848218ce038c"
+        },
+        "object_text_end": 8,
+        "object_text_start": 0,
+        "source_text_end": 13,
+        "source_text_start": 5,
+        "text": "（论文英文题目，"
+      },
+      {
+        "fingerprint": "1e96573ee56c11fffcfd6a31338e50fac71a3deb6c7b6f1b5724cfd1193d7ddc",
+        "locator": "/body/p[63]/r[4]",
+        "object_id": "obj-820cfd4f0be72b4d49f362f8",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "1e96573ee56c11fffcfd6a31338e50fac71a3deb6c7b6f1b5724cfd1193d7ddc",
+          "object_id": "obj-820cfd4f0be72b4d49f362f8"
+        },
+        "object_text_end": 2,
+        "object_text_start": 0,
+        "source_text_end": 15,
+        "source_text_start": 13,
+        "text": "三号"
+      },
+      {
+        "fingerprint": "0f927d17553eaf26d5c3f53ad226a1c0ca70d5efabfdce4ea4af545c82210679",
+        "locator": "/body/p[63]/r[5]",
+        "object_id": "obj-7aaf5a2b44121821c395bba7",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "0f927d17553eaf26d5c3f53ad226a1c0ca70d5efabfdce4ea4af545c82210679",
+          "object_id": "obj-7aaf5a2b44121821c395bba7"
+        },
+        "object_text_end": 15,
+        "object_text_start": 0,
+        "source_text_end": 30,
+        "source_text_start": 15,
+        "text": "Times New Roman"
+      },
+      {
+        "fingerprint": "6ff8f8a2011e0427c88880563125cf3ad22082b2e95d6270e90d53fcc536959c",
+        "locator": "/body/p[63]/r[6]",
+        "object_id": "obj-2f6da3ab4bd0769889094493",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "6ff8f8a2011e0427c88880563125cf3ad22082b2e95d6270e90d53fcc536959c",
+          "object_id": "obj-2f6da3ab4bd0769889094493"
+        },
+        "object_text_end": 1,
+        "object_text_start": 0,
+        "source_text_end": 31,
+        "source_text_start": 30,
+        "text": "，"
+      },
+      {
+        "fingerprint": "bd0e21122045c18e58a990edf73cd9863a95154d3438af345647c990b6e830ec",
+        "locator": "/body/p[63]/r[7]",
+        "object_id": "obj-532a8bda7672dfa891bbdf82",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "bd0e21122045c18e58a990edf73cd9863a95154d3438af345647c990b6e830ec",
+          "object_id": "obj-532a8bda7672dfa891bbdf82"
+        },
+        "object_text_end": 3,
+        "object_text_start": 0,
+        "source_text_end": 34,
+        "source_text_start": 31,
+        "text": "加粗，"
+      },
+      {
+        "fingerprint": "bd8209687e3c540d6195d793b2ffb5183d5c32c7eefe2422e9f56561647d962e",
+        "locator": "/body/p[63]/r[8]",
+        "object_id": "obj-f523b809a02c5c888d2b615a",
+        "object_ref": {
+          "document_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "expected_fingerprint": "bd8209687e3c540d6195d793b2ffb5183d5c32c7eefe2422e9f56561647d962e",
+          "object_id": "obj-f523b809a02c5c888d2b615a"
+        },
+        "object_text_end": 9,
+        "object_text_start": 0,
+        "source_text_end": 43,
+        "source_text_start": 34,
+        "text": "全部采用大写字母）"
+      }
+    ]
+  },
+  "full_materialization": false,
+  "product_acceptance": false
+}

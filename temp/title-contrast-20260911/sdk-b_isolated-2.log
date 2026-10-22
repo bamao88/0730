@@ -1,0 +1,1 @@
+{"arm": "b_isolated", "run": "sdk-b_isolated-2", "is_error": false, "fields": ["thesis.title.en", "author.name.zh", "author.student_id", "author.cohort_class", "advisor.name.zh", "advisor.title", "author.department", "submission.date"]}

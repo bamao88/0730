@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "request",
+    "code": "unit_boundary_proof_missing",
+    "retryable": false,
+    "message": "Unit-boundary resume proof is missing or not a regular file.",
+    "suggested_actions": []
+  }
+}

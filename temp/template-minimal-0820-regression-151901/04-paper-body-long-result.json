@@ -1,0 +1,21 @@
+{
+  "unit": "04-paper-body",
+  "status": "completed",
+  "returncode": 0,
+  "elapsed_s": 235.3,
+  "output": "temp/template-minimal-0820-regression-151901/04-paper-body-long/postunit",
+  "stdout_tail": "{\n  \"artifact_path\": null,\n  \"backend\": \"minimax\",\n  \"client_count\": 1,\n  \"counts\": {\n    \"checkpoint\": \"post-unit\",\n    \"covered_object_count\": 228,\n    \"judgment_count\": 12,\n    \"object_count\": 228,\n    \"reading_block_count\": 53\n  },\n  \"duration_api_ms\": 226843,\n  \"duration_ms\": 228704,\n  \"fill_contract_path\": null,\n  \"num_turns\": 17,\n  \"session_count\": 1,\n  \"session_id\": \"96e609ee-6db9-4d16-9ff5-183ddc08d9f4\",\n  \"skills_loaded\": [\n    \"docfit-school-extract\"\n  ],\n  \"status\": \"checkpointed\",\n  \"task_root\": \"/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-regression-151901/04-paper-body-long/postunit\",\n  \"template_sha256\": \"4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc\",\n  \"tool_uses\": [\n    \"docfit_check\",\n    \"Skill\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"mcp__docfit__docfit_evidence\",\n    \"StructuredOutput\"\n  ],\n  \"wall_duration_ms\": 231275\n}\n",
+  "stderr_tail": "",
+  "files": [
+    "input/field-registry.yaml",
+    "input/school-requirements.pdf",
+    "input/school-template.docx",
+    "work/.docfit/harness/object-inventory.json",
+    "work/.docfit/harness/semantic-judgments.json",
+    "work/.docfit/post-unit-checkpoint.json",
+    "work/.docfit/prepare-template-task.json",
+    "work/.docfit/template-agent-execution.json",
+    "work/.docfit/tool-call-audit.jsonl",
+    "work/.docfit/unit-boundary-checkpoint.json"
+  ]
+}

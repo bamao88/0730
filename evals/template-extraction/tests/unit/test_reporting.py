@@ -77,8 +77,8 @@ def _report():  # type: ignore[no-untyped-def]
             "registry_sha256": HASH,
             "schemas": {
                 "case": "docfit-template-extraction-case/v1",
-                "actual_contract": "docfit-template-fill-contract/v1",
-                "gold_contract": "docfit-template-fill-contract/v1",
+                "actual_contract": "docfit-template-fill-contract/v2",
+                "gold_contract": "docfit-template-fill-contract/v2",
             },
         },
         scoring_config=CONFIG,

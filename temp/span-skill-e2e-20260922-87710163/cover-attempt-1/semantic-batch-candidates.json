@@ -1,0 +1,419 @@
+{
+  "candidate_count": 2,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-f5d7bf64",
+      "candidate_digest": "dade1b062b8d779c171572079dc6d183a4de3ffa9c2ecf583f2d35fe97e8fd27",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。     "
+            }
+          ],
+          "reason": "整段为学校封面格式规范正文，含 (1) 附件编号与节标题「附件1  封面基本格式：」、(2) 行距/上下页边距/左右页边距/居中对齐要求、(3) “□” 符号含义解释、(4) 论文与设计在标题中取舍的规则。全文属于学校权威固定说明，不是填写位置、样例值或可清理注释，没有可绑定的字段；按 Style Contract 边界规则，统一以 fixed_label 保留以维持其作为封面格式约束的唯一依据。段内各句责任一致（均为学校固定规范），不分段；末尾 5 个 U+0020 半角空格随同原文一并保留。",
+          "source_entry_id": "source-entry-8ad4a2af5e47c8b049a468a2"
+        }
+      ],
+      "summary": "Judged 1 source entry for unit-1-cover-format-spec: official school cover-format specification text retained as fixed_label."
+    },
+    {
+      "batch_id": "semantic-batch-0002-f1ba7177",
+      "candidate_digest": "aece070a796430bec548b4b78781b38c643ef26dff25b3d0cbf4058d0f9e3b48",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（一号华文行楷空一行）"
+            }
+          ],
+          "reason": "Parenthesized editor note prescribing font and blank-line spacing for the next block; it is a layout/formatting instruction with no content of its own and should not enter the clean template body.",
+          "source_entry_id": "source-entry-eee86579316ea7c574e3207f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "湖 南 农 业 大 学"
+            },
+            {
+              "role": "style_only",
+              "text": "（一号华文行楷加粗）"
+            }
+          ],
+          "reason": "First part is the school name \"湖 南 农 业 大 学\" with its leading indentation preserved; this is fixed institutional text that always appears on the cover. Second part is a parenthetical style instruction (font and weight) that should be treated as a layout obligation rather than rendered content.",
+          "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "全日制普通本科生毕业论文(设计)"
+            },
+            {
+              "role": "style_only",
+              "text": "（一号黑体加粗）"
+            }
+          ],
+          "reason": "The document-type title \"全日制普通本科生毕业论文(设计)\" is fixed institutional text that always appears. The trailing parenthetical is a font/size/weight style note and is a layout obligation only.",
+          "source_entry_id": "source-entry-41188746a2863266fad60518"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（一号黑体空一行）"
+            }
+          ],
+          "reason": "Parenthetical spacing/font instruction that prescribes a blank line in 黑体 one-zheng for the layout; it is purely a formatting requirement and carries no content.",
+          "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty entry whose whole extent is blank; semantically a blank layout paragraph that contributes only vertical spacing to the cover composition. Marked as style_only to preserve the spacing obligation without binding any field.",
+          "source_entry_id": "source-entry-f80317c946091d7e71962e46"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "thesis.title.zh",
+              "role": "fill_slot",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "role": "style_only",
+              "text": "（小二黑体加粗）"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\" occupies the centered title slot on the cover and is the placeholder the student replaces with their full Chinese thesis title; bound to thesis.title.zh (cardinality one, content_type text, fill_slot allowed) per vocabulary. Trailing parenthetical is a style instruction (font size and weight) for the title area and is a layout obligation only.",
+          "source_entry_id": "source-entry-887847f8d224e6aff686190d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "thesis.title.en",
+              "role": "fill_slot",
+              "text": "TITLE OF GRADUATION PAPER"
+            },
+            {
+              "role": "style_only",
+              "text": "（四号Times New Roman加粗，大写）"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER\" is the centered uppercase placeholder for the English thesis title; bound to thesis.title.en (cardinality one, content_type text, fill_slot allowed). Trailing parenthetical is a font/weight/case style instruction for the English title area and is a layout obligation only.",
+          "source_entry_id": "source-entry-bb3b6b45347e8b28632e5b8b"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（根据题目长短四号字空二或三行）"
+            }
+          ],
+          "reason": "Parenthetical layout instruction that says the title block should leave two or three blank lines depending on title length; it is purely a layout/spacing obligation and has no content.",
+          "source_entry_id": "source-entry-a4a1a695958f0f7f118be4c2"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as vertical spacing between the English title block and the student-information block; layout-only, no content, no field bound.",
+          "source_entry_id": "source-entry-9c0d484c056c1c88727cf52c"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as additional vertical spacing before the student-information lines; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-04813ef450ea867c87b94361"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学生姓名（三号黑体加粗）："
+            },
+            {
+              "field_id": "author.name.zh",
+              "role": "fill_slot",
+              "text": "×××（或×□×）"
+            },
+            {
+              "role": "style_only",
+              "text": "（三号楷体加粗）"
+            }
+          ],
+          "reason": "Leading \"□□□□□□\" is placeholder-symbol spacing for the label column and is a preserved layout obligation. The label \"学生姓名（三号黑体加粗）：\" is fixed school text with its inline font/weight style note kept together as a fixed label. The \"×××（或×□×）\" run occupies the single value position for the Chinese author name; bound to author.name.zh (cardinality one, content_type text, fill_slot allowed). The trailing parenthetical is a font/weight style instruction for the value area.",
+          "source_entry_id": "source-entry-4085024389c4c34a9ddd141e"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□号："
+            },
+            {
+              "field_id": "author.student_id",
+              "role": "fill_slot",
+              "text": "20××××××××××"
+            }
+          ],
+          "reason": "Leading \"□□□□□□\" is placeholder-symbol spacing preserved as a layout obligation. The label \"学□□号：\" is fixed school text whose internal \"□□\" are intra-label spacing that belongs with the label. The run \"20××××××××××\" is the example value for the student ID, occupying the value position; bound to author.student_id (cardinality one, content_type text, fill_slot allowed).",
+          "source_entry_id": "source-entry-b58f669431766e041e4c020f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "年级专业及班级："
+            },
+            {
+              "field_id": "author.cohort_class",
+              "role": "fill_slot",
+              "text": "20××级×××（×）班"
+            }
+          ],
+          "reason": "Leading \"□□□□□□\" is preserved label-column spacing. The label \"年级专业及班级：\" is fixed school text. The run \"20××级×××（×）班\" is the example composite value combining cohort, major, and class; bound to author.cohort_class (cardinality one, content_type text, fill_slot allowed) per vocabulary, which is the composite field for this combined row.",
+          "source_entry_id": "source-entry-35928580133227f3cccb41f2"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "指导老师及职称："
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "field_id": "advisor.title",
+              "role": "fill_slot",
+              "text": "□教授"
+            }
+          ],
+          "reason": "Leading \"□□□□□□\" is preserved label-column spacing. The label \"指导老师及职称：\" is fixed school text spanning two adjacent values (name and title). The run \"×××\" is the example advisor-name value, bound to advisor.name.zh (cardinality one, content_type text, fill_slot allowed). The run \"□教授  \" (with internal spacing placeholder and trailing space) is the example advisor-title value, bound to advisor.title (cardinality optional, content_type text, fill_slot allowed) per the vocabulary, keeping the two values as independent adjacent fields.",
+          "source_entry_id": "source-entry-fcf5ddf12ee9812b36b0f73d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□院："
+            },
+            {
+              "field_id": "author.department",
+              "role": "fill_slot",
+              "text": "××××学院"
+            },
+            {
+              "role": "cleanup",
+              "text": "（学院名用全称）"
+            }
+          ],
+          "reason": "Leading \"□□□□□□\" is preserved label-column spacing. The label \"学□□院：\" is fixed school text. The run \"××××学院\" is the example department value, bound to author.department (cardinality one, content_type text, fill_slot allowed). The trailing parenthetical \"（学院名用全称）\" is an editor guidance note about how to fill the department value and is not formal template content; marked as cleanup so the clean template body does not carry the instruction while the binding and value are preserved.",
+          "source_entry_id": "source-entry-409b074a4b1a5f6d6462a74f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（三号字空二或三行）"
+            }
+          ],
+          "reason": "Parenthetical layout instruction prescribing font-size and blank-line count for the next block; pure formatting obligation with no content of its own.",
+          "source_entry_id": "source-entry-692d92d4e1e3d4caee787eb9"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as vertical spacing between the advisor/department block and the location/date block; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-121975758a68f1470d6b808d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as further vertical spacing before the location line; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-7a1a6239effe88fe230fe434"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "湖南·长沙"
+            },
+            {
+              "role": "style_only",
+              "text": "（小三号黑体）"
+            }
+          ],
+          "reason": "\"湖南·长沙\" is the fixed city/location line that always appears on the cover. The trailing parenthetical is a font/size style instruction for the location line and is a layout obligation only.",
+          "source_entry_id": "source-entry-7037639ea0acd6749ed9baa3"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "提交日期："
+            },
+            {
+              "field_id": "submission.date",
+              "role": "fill_slot",
+              "text": "20××年××月"
+            }
+          ],
+          "reason": "The label \"提交日期：\" is fixed school text introducing the submission date. The run \"20××年××月  \" (with trailing space preserved) is the example date value, bound to submission.date (cardinality one, content_type text, fill_slot allowed) per vocabulary; the marker carries field-slot and date-area semantics, supporting this binding.",
+          "source_entry_id": "source-entry-dcd6229069b523fc5510c265"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as trailing vertical spacing at the bottom of the cover page; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-c0905f3fbe28f8f66977b1c8"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph continuing trailing vertical spacing on the cover; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-14b0c758c2e5bdcffac3a521"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph continuing trailing vertical spacing on the cover; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-a5af985e3b0aabf785ce6109"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph continuing trailing vertical spacing on the cover; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-08f8471bcd1bad16569bcc78"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph continuing trailing vertical spacing on the cover; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-f8ff8480459e3442f099afd8"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph continuing trailing vertical spacing on the cover; layout-only with no content and no field bound.",
+          "source_entry_id": "source-entry-c6e8abdea70996961de20f19"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Final empty paragraph at the end of the unit, matching the unit_context end boundary; layout-only spacing with no content and no field bound.",
+          "source_entry_id": "source-entry-3bedecf1a10059e67d655b9b"
+        }
+      ],
+      "summary": "Completed batch 2 of 2 for unit-2-cover (封面). Judged 27 source entries in manifest order, partitioning each entry into ordered parts that cover the source text exactly once. Recognized the school name (湖南农业大学), document type title, Chinese/English title placeholders, student name/ID/cohort/advisor/department fields, location line, and submission date field with their adjacent style notes and leading indentation marks. Empty entries were partitioned as single blank-layout style_only parts. All fill_slot bindings were selected from the supplied vocabulary (thesis.title.zh, thesis.title.en, author.name.zh, author.student_id, author.cohort_class, advisor.name.zh, advisor.title, author.department, submission.date)."
+    }
+  ],
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "ledger_digest": "f2357a51c07188ffaa907bf25808c0b8a5d95b280811f3e3a8e480219383e8f6",
+  "manifest_digest": "05e4c26b0b729f77d622adf328d4d62e95ca18ea0524a46088f5b4931d16e2f0",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "5ffb2cf4dbc0a61959f7dc00e602563b539a01d83c9c9fbe291a7f6c50ecdd6a",
+  "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "unit_projection_digest": "bd214c4d95f6fef6f3b51b81f058dd3e92c882f941660f97b27c1c72c40a7ab4"
+}

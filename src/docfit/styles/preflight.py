@@ -53,6 +53,7 @@ def compile_task_local_style_target(
     student_content: Mapping[str, Any],
     student_inventory: Mapping[str, Any],
     school_candidates: Sequence[Mapping[str, Any]],
+    school_known_gaps: Sequence[Mapping[str, Any]],
     school_observation_set_digest: str,
     template_sha256: str,
     retained_field_ids: Sequence[str] = (),
@@ -81,6 +82,7 @@ def compile_task_local_style_target(
     selection = select_complete_style_roles(
         actual_roles=actual_roles,
         school_candidates=school_candidates,
+        school_known_gaps=school_known_gaps,
         school_observation_set_digest=school_observation_set_digest,
         preset=preset,
         registry=registry,

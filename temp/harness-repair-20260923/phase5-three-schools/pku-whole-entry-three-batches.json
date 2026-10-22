@@ -1,0 +1,72 @@
+{
+  "observed_at": "2026-09-24T03:18:36.722022+00:00",
+  "verification_level": "natural E2E local batch acceptance snapshot; task still running",
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "accepted_batches": [
+    {
+      "request_sequence": 2,
+      "response_sequence": 3,
+      "review_sequence": 4,
+      "candidate_sequence": 5,
+      "judgment_count": 27,
+      "whole_entry_count": 0,
+      "multi_part_judgments": []
+    },
+    {
+      "request_sequence": 6,
+      "response_sequence": 7,
+      "review_sequence": 8,
+      "candidate_sequence": 9,
+      "judgment_count": 8,
+      "whole_entry_count": 8,
+      "multi_part_judgments": []
+    },
+    {
+      "request_sequence": 10,
+      "response_sequence": 11,
+      "review_sequence": 12,
+      "candidate_sequence": 13,
+      "judgment_count": 14,
+      "whole_entry_count": 13,
+      "multi_part_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "关键词："
+            },
+            {
+              "field_id": "keywords.zh",
+              "role": "fill_slot",
+              "text": "城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通"
+            }
+          ],
+          "reason": "Entry mixes two responsibilities: the \"关键词：\" prefix is the school-fixed label that names the keyword list and must remain in the template. The semicolon-delimited list after the label occupies the value position of the Chinese keywords field and will be replaced with the actual student keywords; binding it to keywords.zh (text cardinality, allowed_part_roles includes fill_slot).",
+          "source_entry_id": "source-entry-09b9142d267b2e7b0df419d7"
+        }
+      ]
+    }
+  ],
+  "events": {
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000001.json": "9cff8edfc2832fd2553d8460e32e1470b580b82a7534c36b16205e3f096fd840",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000002.json": "f0110a5f7b9ef2dda1171293d5e737ca1b948a84aa10640b6d9717d7c17e6dab",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000003.json": "8951bb8b70c5257ef4f7b01eab2216b0a1226bab4160fe6fc1d390ac510b48bf",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000004.json": "facee3edcefac37667dbeba15b5d5aba238ac44286b4229aea9431c19b85d7ad",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000005.json": "80be8e6b7b426b8f5d00cdaaee99dead06bb830a45d69189897222ca0b8b5d21",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000006.json": "6ff0adba41feaedd5acc3852a7db1167299aa9d6c242ec8a59be6b58ddfba826",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000007.json": "34d09ecbd172ca989970bf18df5c30d3a4c392c9830ed75966e9e3efb442f356",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000008.json": "72401326abb7219be083fd555d4478a5c8edcce3d65d793c39ad018d1316b8e5",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000009.json": "a1e317140fd5b6935ce2b09edb9e1fd036a2d51fe694169e0fb19496de9eb234",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000010.json": "cd7d42c9b1309a8feb871bc98a622f94bbf143b8a9bf385091a02ea068e6dc94",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000011.json": "2f86e3931e752a24bd582b65f85012e549b743f59c6c3510676f49c720c9da22",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000012.json": "208df75915f2db6275b64778b3123e9d7f4cf7fe56d081b55836607f7cbd42c3",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000013.json": "9e1b877151bc550104647b949dc18fe719ea82e2de468e6693489415bb0836e5"
+  },
+  "final_publication": false,
+  "product_acceptance": false,
+  "limitation": "Acceptance checks representation, source ranges and vocabulary; it is not a school semantic or final layout acceptance."
+}

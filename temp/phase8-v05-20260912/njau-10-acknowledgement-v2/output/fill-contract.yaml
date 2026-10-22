@@ -1,0 +1,651 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.c07b3a94c4bcb524
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: f3d101d4feadb3063c39b4d811dba9e2b03f0992ed10e04f16d44a3baf0c91b6
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+  field_id: acknowledgement.body
+  style_role_id: style.slot.d2382f52ddb7f3391054862e
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+  span_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+  field_id: acknowledgement.body
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.d2382f52ddb7f3391054862e
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 致谢
+  provenance:
+    field_id: acknowledgement.body
+    span_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+    slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+    source_entry_id: source-entry-c18f2e61a4f647356e6b8d12
+    source_snapshot_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+    source_inventory_digest: ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97
+    expected_source_content: ×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。
+    word_fragments: &id001
+    - fingerprint: 9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044
+      locator: /body/p[4]/r[1]
+      object_id: obj-baab898199b2760c2efbc8f9
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 9f331e23ac4d939a1c8485f1f6504505041108696ff649b259aaeaa8e81e6044
+        object_id: obj-baab898199b2760c2efbc8f9
+      object_text_end: 5
+      object_text_start: 0
+      source_text_end: 5
+      source_text_start: 0
+      text: ×××××
+    - fingerprint: 3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef
+      locator: /body/p[4]/r[2]
+      object_id: obj-6937ab15443bdfea325846ee
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 3a0b0da4c5cd1f2dc6610c3497eb3273051ba19f278db0a2f5a8fca48bca84ef
+        object_id: obj-6937ab15443bdfea325846ee
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 6
+      source_text_start: 5
+      text: （
+    - fingerprint: 93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26
+      locator: /body/p[4]/r[3]
+      object_id: obj-57ec26c83ba0a2b397739fda
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 93292f40af119d63955311618fcdc9ba5331d9e03391ea0100858c6b931a5b26
+        object_id: obj-57ec26c83ba0a2b397739fda
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 6
+      text: '5'
+    - fingerprint: c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d
+      locator: /body/p[4]/r[4]
+      object_id: obj-14b9f66c2d453c12fb4786ff
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: c5a3297aefb9f0708cd1f96a944800a9fc8eafebde4dd2edeb004fd459bb959d
+        object_id: obj-14b9f66c2d453c12fb4786ff
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 10
+      source_text_start: 7
+      text: 00字
+    - fingerprint: 92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070
+      locator: /body/p[4]/r[5]
+      object_id: obj-163bb6b57d1574a4ad57a6fa
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 92049d2d3cbfbced1d701cdddb62e362f347934e370bd6f56b336867c49ab070
+        object_id: obj-163bb6b57d1574a4ad57a6fa
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 12
+      source_text_start: 10
+      text: 之内
+    - fingerprint: 7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2
+      locator: /body/p[4]/r[6]
+      object_id: obj-942727ba503a2adb8a2608c2
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 7a2ce8cda267794af6b1efa9d1909655b28f2ad3da12ded95b4b9c1a4f66afe2
+        object_id: obj-942727ba503a2adb8a2608c2
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 13
+      source_text_start: 12
+      text: ，
+    - fingerprint: 3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4
+      locator: /body/p[4]/r[7]
+      object_id: obj-6a2078003c0ced0cf27588ce
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 3a6e5389308ff9c07327cd6bd24bd4ea07de75dc4e5f9a50ce41e65723eaf0f4
+        object_id: obj-6a2078003c0ced0cf27588ce
+      object_text_end: 7
+      object_text_start: 0
+      source_text_end: 20
+      source_text_start: 13
+      text: 中文小四宋体，
+    - fingerprint: a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5
+      locator: /body/p[4]/r[8]
+      object_id: obj-bbaa6384be3d524b00f4027f
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: a3fe5bd194d31511567adcbcdd0eaf3b4806516b428f3d0930698f7ef054f2e5
+        object_id: obj-bbaa6384be3d524b00f4027f
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 21
+      source_text_start: 20
+      text: 英
+    - fingerprint: be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263
+      locator: /body/p[4]/r[9]
+      object_id: obj-3b41d339d44d5e496325806b
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: be2426381ba952559d94b6352c94afe5d9e0763f44ddbdc2e272d47e4ac67263
+        object_id: obj-3b41d339d44d5e496325806b
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 23
+      source_text_start: 21
+      text: 文、
+    - fingerprint: 8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee
+      locator: /body/p[4]/r[10]
+      object_id: obj-072563e70f3a232f6889de5c
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 8791f1d0b3700c9653365464188f0f6b823ec97ebc970606e48998f6bb5d71ee
+        object_id: obj-072563e70f3a232f6889de5c
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 27
+      source_text_start: 23
+      text: 数字小四
+    - fingerprint: c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012
+      locator: /body/p[4]/r[11]
+      object_id: obj-0ca8e3508c461dfe9cce8097
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: c140f09ed4ee87e5d42064100d4ffa68a090f45b53e4f28fcddef4206f76b012
+        object_id: obj-0ca8e3508c461dfe9cce8097
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 31
+      source_text_start: 27
+      text: Time
+    - fingerprint: 2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7
+      locator: /body/p[4]/r[12]
+      object_id: obj-069c7586007a5108b90d9b2e
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 2cb877c88d462ed6809e07f6898555ec07367d7a7db3e943f7004c82f60503a7
+        object_id: obj-069c7586007a5108b90d9b2e
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 32
+      source_text_start: 31
+      text: s
+    - fingerprint: 555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51
+      locator: /body/p[4]/r[13]
+      object_id: obj-0fa038816b16c7fa6278c68a
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 555be970793f514aa5571f3c5a9112276ca7edb749ecbbd30796721f22b6ff51
+        object_id: obj-0fa038816b16c7fa6278c68a
+      object_text_end: 10
+      object_text_start: 0
+      source_text_end: 42
+      source_text_start: 32
+      text: ' New Roman'
+    - fingerprint: 6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529
+      locator: /body/p[4]/r[14]
+      object_id: obj-b5a4e2852a022f0a34284df3
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 6eb96a8b96192cb0012afc28717a229b38ffb7c3751aa2c36f8f18188689a529
+        object_id: obj-b5a4e2852a022f0a34284df3
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 44
+      source_text_start: 42
+      text: 字体
+    - fingerprint: f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9
+      locator: /body/p[4]/r[15]
+      object_id: obj-ca91df37c1e5ec716e239b83
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: f4f1445ba4cfd3ef9a5470199afbce0baa69cc1745c20d16d61c2cc6b4d23ea9
+        object_id: obj-ca91df37c1e5ec716e239b83
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 45
+      source_text_start: 44
+      text: ，
+    - fingerprint: dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637
+      locator: /body/p[4]/r[16]
+      object_id: obj-47ff068be1d3db8e07fe9b92
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: dc3bf9b67837a77a0790cff2d9a001f708ca7695dcf2e1b708860d375d902637
+        object_id: obj-47ff068be1d3db8e07fe9b92
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 49
+      source_text_start: 45
+      text: 行间距为
+    - fingerprint: 72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602
+      locator: /body/p[4]/r[17]
+      object_id: obj-e35e7d00246c889d2b7e4b68
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 72d5b6b5a4ef6e07cc1903dcd0de19f02168bc5d5abbf3591f029dd686616602
+        object_id: obj-e35e7d00246c889d2b7e4b68
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 51
+      source_text_start: 49
+      text: 固定
+    - fingerprint: 7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9
+      locator: /body/p[4]/r[18]
+      object_id: obj-4b76c7a66b6d89c0b749a32c
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 7445475f96c368cadc117a37827424e5c83bec68391986516d0a4f02931c1fd9
+        object_id: obj-4b76c7a66b6d89c0b749a32c
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 52
+      source_text_start: 51
+      text: 值
+    - fingerprint: 1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1
+      locator: /body/p[4]/r[19]
+      object_id: obj-02665776a927d4aecccc059f
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 1a1d8fbf32e87c89feb0c43c4f9e62fc38248472fd8ccac13bd8470650e9a7b1
+        object_id: obj-02665776a927d4aecccc059f
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 55
+      source_text_start: 52
+      text: 20磅
+    - fingerprint: 6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d
+      locator: /body/p[4]/r[20]
+      object_id: obj-8a9d102e92578aafbb5edeb6
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 6f2536387e295d3f4b761686ced41246bcc06647d35bc26fdea8c3fa4a61466d
+        object_id: obj-8a9d102e92578aafbb5edeb6
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 56
+      source_text_start: 55
+      text: ）
+    - fingerprint: 7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021
+      locator: /body/p[4]/r[21]
+      object_id: obj-f54ea6f6cb6a602584dd2882
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 7a80dad0e57dce25d62c998084a6377b7e85b882cc39b88523d7002608dc3021
+        object_id: obj-f54ea6f6cb6a602584dd2882
+      object_text_end: 52
+      object_text_start: 0
+      source_text_end: 108
+      source_text_start: 56
+      text: ××××××××××××××××××××××××××××××××××××××××××××××××××××
+    - fingerprint: 06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3
+      locator: /body/p[4]/r[22]
+      object_id: obj-27c989844a4c75956bcbbd0c
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 06f55acbfdfce6e5545a7ec84668834dcac5d7d6b56d90ef06e2a1017d019df3
+        object_id: obj-27c989844a4c75956bcbbd0c
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 109
+      source_text_start: 108
+      text: ×
+    - fingerprint: 5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e
+      locator: /body/p[4]/r[23]
+      object_id: obj-0e997756fff6d4e465d6cd54
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 5b6147f077a6cf2ebec55d5ec64372436b6a4943031622313eb97f96ad67a77e
+        object_id: obj-0e997756fff6d4e465d6cd54
+      object_text_end: 19
+      object_text_start: 0
+      source_text_end: 128
+      source_text_start: 109
+      text: ×××××××××××××××××××
+    - fingerprint: 1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649
+      locator: /body/p[4]/r[24]
+      object_id: obj-3561416d4798f041fe95594e
+      object_ref:
+        document_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+        expected_fingerprint: 1c382d1288f7eed6a8d5a405690642085d44ca72720ecf57f01382827e976649
+        object_id: obj-3561416d4798f041fe95594e
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 129
+      source_text_start: 128
+      text: 。
+    accepted_span: &id002
+      covered_object_ids:
+      - obj-baab898199b2760c2efbc8f9
+      - obj-6937ab15443bdfea325846ee
+      - obj-57ec26c83ba0a2b397739fda
+      - obj-14b9f66c2d453c12fb4786ff
+      - obj-163bb6b57d1574a4ad57a6fa
+      - obj-942727ba503a2adb8a2608c2
+      - obj-6a2078003c0ced0cf27588ce
+      - obj-bbaa6384be3d524b00f4027f
+      - obj-3b41d339d44d5e496325806b
+      - obj-072563e70f3a232f6889de5c
+      - obj-0ca8e3508c461dfe9cce8097
+      - obj-069c7586007a5108b90d9b2e
+      - obj-0fa038816b16c7fa6278c68a
+      - obj-b5a4e2852a022f0a34284df3
+      - obj-ca91df37c1e5ec716e239b83
+      - obj-47ff068be1d3db8e07fe9b92
+      - obj-e35e7d00246c889d2b7e4b68
+      - obj-4b76c7a66b6d89c0b749a32c
+      - obj-02665776a927d4aecccc059f
+      - obj-8a9d102e92578aafbb5edeb6
+      - obj-f54ea6f6cb6a602584dd2882
+      - obj-27c989844a4c75956bcbbd0c
+      - obj-0e997756fff6d4e465d6cd54
+      - obj-3561416d4798f041fe95594e
+      expected_source_content: ×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。
+      extent:
+        end: 129
+        kind: text
+        start: 0
+      field_id: acknowledgement.body
+      judgment_index: 3
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-c18f2e61a4f647356e6b8d12
+      slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+      source_entry_id: source-entry-c18f2e61a4f647356e6b8d12
+      source_inventory_digest: ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97
+      source_snapshot_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      span_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      text: ×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。
+      text_end: 129
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id003
+      source_judgment_ref: semantic_judgments[3]
+      part_index: 0
+      semantic_judgments_sha256: e24737527f3778dcd97b6ce43ad643c21fd49d7a5a767611af1fa354574b2561
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id004
+      outcome: applied
+      candidate_before_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      candidate_after_sha256: c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11
+      operation_sha256: a91680617078b78f99ded7b2daa667383718f307b9add92d8e1c0075d110a7a3
+      mutation_receipt_sha256: ecbe5ccef77a567b63ceefa03e052c2539f273b028188c12d4c3afc498d0b3db
+  style_contract_ref:
+    style_contract_id: style.slot.d2382f52ddb7f3391054862e
+    contract_digest: cc245ef0045d628aa5200aa0b673868321905571c3ac721e33156d9983470b1a
+styles:
+- style_contract_id: style.slot.d2382f52ddb7f3391054862e
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.25
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: cc245ef0045d628aa5200aa0b673868321905571c3ac721e33156d9983470b1a
+  label: acknowledgement.body @ source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+    field_id: acknowledgement.body
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 218f840375efce1aca05ca8e6d1eb9e64a0ee2ba490f1d2f2556393e6d7b14fe
+provenance:
+  source_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+    template_sha256: c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11
+    source_inventory_digest: ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97
+    semantic_judgments_sha256: e24737527f3778dcd97b6ce43ad643c21fd49d7a5a767611af1fa354574b2561
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: abca289a0512274f4515430eb9175fd6368f7d9e71c27113da600f945292586a
+    slots:
+    - field_id: acknowledgement.body
+      span_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      slot_ref: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+      source_entry_id: source-entry-c18f2e61a4f647356e6b8d12
+      source_snapshot_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      source_inventory_digest: ebe7b145c6f332b8e92118499030765b2cd5a98f05a7f7d8cbbe372469a7db97
+      expected_source_content: ×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。
+      word_fragments: *id001
+      accepted_span: *id002
+      accepted_result: *id003
+      actual_result: *id004
+  materialization_digest: 465a2f204ec14a851c61ea160bc12a9cdcaf4c598337014029feeaabf44946f0
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 3
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01
+    final_sha256: c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 218f840375efce1aca05ca8e6d1eb9e64a0ee2ba490f1d2f2556393e6d7b14fe
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 218f840375efce1aca05ca8e6d1eb9e64a0ee2ba490f1d2f2556393e6d7b14fe
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.d2382f52ddb7f3391054862e
+          contract_digest: cc245ef0045d628aa5200aa0b673868321905571c3ac721e33156d9983470b1a
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+        style_contract_id: style.slot.d2382f52ddb7f3391054862e
+        contract_digest: cc245ef0045d628aa5200aa0b673868321905571c3ac721e33156d9983470b1a
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-c18f2e61a4f647356e6b8d12;extent=text[0:129];source_snapshot_sha256=aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01;field_id=acknowledgement.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "application",
+    "code": "final_visual_review_required",
+    "retryable": true,
+    "message": "Final-page images are ready. Review /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/final-visual-review/e1b0e33b87ede49347b5560c499ae8fee77d26f577dd7ffece2782193d77a811/request.json and save actual conclusions to /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/final-visual-review/e1b0e33b87ede49347b5560c499ae8fee77d26f577dd7ffece2782193d77a811/review.json.",
+    "suggested_actions": [
+      "Review the saved final-page evidence and record actual observations before resuming.",
+      "Do not change school semantic judgments to bypass the final visual review."
+    ]
+  }
+}

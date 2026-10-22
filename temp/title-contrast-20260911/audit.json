@@ -1,0 +1,4903 @@
+{
+  "sdk-a_project-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 0,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": false
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": false,
+        "11": false
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [],
+      "nonspace_partition_errors": [],
+      "bindings": [],
+      "titles": []
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 7,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": false
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": false,
+        "11": false
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        9,
+        13
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "□□□□□□学□□号：20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "□□□□□□年级专业及班级：20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "□□□□□□指导老师及职称：×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "□□□□□□学□□院：××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "提交日期：20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+              "role": "fixed_label"
+            }
+          ],
+          "reason": "The visible Chinese-title placeholder phrase is itself a fixed cover label; the actual thesis title value is supplied via the thesis.title.zh fill slot elsewhere in the cover binding. The parenthetical font hint is style context."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fixed_label"
+            }
+          ],
+          "reason": "The visible English-title placeholder phrase is itself a fixed cover label; the actual English thesis title value is supplied via the thesis.title.en fill slot. The parenthetical font specification is style context."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-a_project-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        15
+      ],
+      "nonspace_partition_errors": [
+        9
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目” 占据中文题名填写位置，无另设填写区，整体作为中文论文题目的填值片段，绑定 thesis.title.zh；括号为字号/字体要求。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER” 是英文标题的占位提示文字，占据英文题名填写位置，绑定 thesis.title.en；括号内为字号、字体与排版要求。原行采用右对齐样式，与前置格式说明不冲突，作为英文标题位置的样式线索一并保留。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        15
+      ],
+      "nonspace_partition_errors": [
+        9
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目” 占据中文题名填写位置，无另设填写区，整体作为中文论文题目的填值片段，绑定 thesis.title.zh；括号为字号/字体要求。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER” 是英文标题的占位提示文字，占据英文题名填写位置，绑定 thesis.title.en；括号内为字号、字体与排版要求。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-a_project-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The whole \"毕业论文（设计）中文题目\" segment occupies the Chinese title position on the cover; the next slot shows no real value. Per the school rule, when the work is a 论文 the parenthetical 设计 is dropped and when it is a 设计 the 论文 is dropped — that conditional belongs to post-unit materialization, not to a part split. The whole placeholder text is the Chinese thesis title fill position, so it is a single fill_slot bound to thesis.title.zh (which has allowed_part_roles includes fill_slot). The trailing parenthetical specifies the font and bold requirement on the title value, so it is style_only."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "TITLE OF GRADUATION PAPER occupies the English title position on the cover; this is the English thesis title fill position, so it is a single fill_slot bound to thesis.title.en (allowed_part_roles includes fill_slot). The parenthetical specifies the font, weight, and capitalization requirement on the title value, so it is style_only."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The whole \"毕业论文（设计）中文题目\" segment occupies the Chinese title position on the cover; the next slot shows no real value. Per the school rule, when the work is a 论文 the parenthetical 设计 is dropped and when it is a 设计 the 论文 is dropped — that conditional belongs to post-unit materialization, not to a part split. The whole placeholder text is the Chinese thesis title fill position, so it is a single fill_slot bound to thesis.title.zh (which has allowed_part_roles includes fill_slot). The trailing parenthetical specifies the font and bold requirement on the title value, so it is style_only."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "TITLE OF GRADUATION PAPER occupies the English title position on the cover; this is the English thesis title fill position, so it is a single fill_slot bound to thesis.title.en (allowed_part_roles includes fill_slot). The parenthetical specifies the font, weight, and capitalization requirement on the title value, so it is style_only."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-b_isolated-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Position occupying the Chinese thesis title in the cover layout. Binds to thesis.title.zh; the parenthetical sets font/size/weight for that field. The 论文 vs 设计 alternation from the preamble still applies, but that alternation is a host style obligation, not a separate fill here."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Position occupying the English thesis title. The host template convention caps in uppercase Times New Roman; the parenthetical sets font/size/weight/casing. Binds to thesis.title.en."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Position occupying the Chinese thesis title in the cover layout. Binds to thesis.title.zh; the parenthetical sets font/size/weight for that field. The 论文 vs 设计 alternation from the preamble still applies, but that alternation is a host style obligation, not a separate fill here."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Position occupying the English thesis title. The host template convention caps in uppercase Times New Roman; the parenthetical sets font/size/weight/casing. Binds to thesis.title.en."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-b_isolated-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×） （三号楷体加粗）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院 （学院名用全称）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+              "role": "fixed_label"
+            },
+            {
+              "text": "",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            }
+          ],
+          "reason": "This entry is the author label \"毕业论文（设计）中文题目 （小二黑体加粗）\" that names the line, but the visible text in the cover layout at this position is just the label (no actual title value rendered, since the title placeholder sits empty in the template). Per the brief, the source text as supplied contains only the label text — the Chinese title fill position is implicit at this line. Keep the visible label as fixed_label. The title fill is bound to thesis.title.zh (allowed_part_roles includes fill_slot) on a placeholder text part. Note: this entry's text is the label only; the actual title content is filled at this cover-line position via the thesis.title.zh field — there is no in-source title text to copy, so the fill_slot text is the empty segment as supplied."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "This entry supplies the English title placeholder line. The visible text contains both the placeholder literal \"TITLE OF GRADUATION PAPER\" and the inline format instruction \"（四号Times New Roman加粗，大写）\". Treat the entire source text as a fill_slot whose value will be replaced by thesis.title.en (allowed_part_roles includes fill_slot); the parenthetical format obligation (Times New Roman bold, all caps, 4号) is preserved by the entry's own style_summary and is not a separate user-visible fragment to delete here — its obligation is carried by the style contract on this line. No fixed_label part because the literal placeholder text \"TITLE OF GRADUATION PAPER\" is itself the value position to be replaced."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×） （三号楷体加粗）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院 （学院名用全称）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fixed_label"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This source entry contains only the line label \"毕业论文（设计）中文题目\" plus the inline font note \"（小二黑体加粗）\". The Chinese title value itself is not present in source text (the template leaves the title position blank for the host to fill). The label is fixed_label; the inline font note is style_only. The fill responsibility for thesis.title.zh at this cover line is acknowledged in open_questions — see notes — because the source text on this entry has no title placeholder to bind as a fill_slot part."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "This entry supplies the English title placeholder line. The visible text contains both the placeholder literal \"TITLE OF GRADUATION PAPER\" and the inline format instruction \"（四号Times New Roman加粗，大写）\". Treat the entire source text as a fill_slot whose value will be replaced by thesis.title.en (allowed_part_roles includes fill_slot). The font obligation (Times New Roman bold, all caps, 4号) is preserved by the entry's own style_summary and is not a separate user-visible fragment to delete here."
+        }
+      ]
+    },
+    "reads": [
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/b_isolated/.claude/skills/docfit-school-extract/references/template-text-classification.md"
+      },
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/b_isolated/.claude/skills/docfit-school-extract/references/registry-interface-binding.md"
+      },
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/b_isolated/.claude/skills/docfit-school-extract/references/collections-and-optional-sections.md"
+      }
+    ]
+  },
+  "sdk-b_isolated-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The label 毕业论文（设计）中文题目 is a fixed cover heading; the surrounding value position for the Chinese title is empty in this entry and is bound as a fill_slot in the immediately following English-title block context via thesis.title.zh. The parenthetical specifies font/size/bold required for the Chinese title value."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The uppercase English title placeholder text occupies the value position of the English title on the cover; it must be replaced by the student's actual English title. The parenthetical specifies font/size/bold/uppercase styling required for that value. thesis.title.zh is carried by the preceding empty-value title slot bounded by the Chinese-title label; thesis.title.en is carried here."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The label 毕业论文（设计）中文题目 is a fixed cover heading; the surrounding value position for the Chinese title is empty in this entry and is bound as a fill_slot in the immediately following English-title block context via thesis.title.zh. The parenthetical specifies font/size/bold required for the Chinese title value."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The uppercase English title placeholder text occupies the value position of the English title on the cover; it must be replaced by the student's actual English title. The parenthetical specifies font/size/bold/uppercase styling required for that value. thesis.title.zh is carried by the preceding empty-value title slot bounded by the Chinese-title label; thesis.title.en is carried here."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-c_role-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 7,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": false,
+        "11": false
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        9
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "：20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "：20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            }
+          ],
+          "reason": "The centered row whose body occupies the Chinese title position on the cover. Per the registry, thesis.title.zh is the full Chinese thesis title used on the cover, and its allowed_part_roles include fill_slot. The trailing parenthetical style note is treated as part of the same visible text here because the source entry packages it together, but the field binding is on the title value; the host should honor the (小二黑体加粗) style obligation when rendering."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "Right-aligned row whose body occupies the English title position on the cover. Per the registry, thesis.title.en is the complete English title; its allowed_part_roles include fill_slot. The label \"TITLE OF GRADUATION PAPER\" is the template's placeholder that occupies the English title value position and should be replaced by the actual English title (typically in capital letters and Times New Roman 4pt bold per the parenthetical style note, which is captured as the style obligation)."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 7,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": false,
+        "11": false
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        9
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "：20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "：20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 （小二黑体加粗）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            }
+          ],
+          "reason": "The centered row whose body occupies the Chinese title position on the cover. Per the registry, thesis.title.zh is the full Chinese thesis title used on the cover, and its allowed_part_roles include fill_slot. The trailing parenthetical style note is treated as part of the same visible text here because the source entry packages it together, but the field binding is on the title value; the host should honor the (小二黑体加粗) style obligation when rendering."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "Right-aligned row whose body occupies the English title position on the cover. Per the registry, thesis.title.en is the complete English title; its allowed_part_roles include fill_slot. The label \"TITLE OF GRADUATION PAPER\" is the template's placeholder that occupies the English title value position and should be replaced by the actual English title (typically in capital letters and Times New Roman 4pt bold per the parenthetical style note, which is captured as the style obligation)."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-c_role-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "□教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目”整体占中文题目填写位，是该位置的提示文字，填写后应被 thesis.title.zh 的真实题名整体替换；括号内为字体说明，应清出。thesis.title.zh 的 usage_affordance.allowed_part_roles 含 fill_slot。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER”为英文题名位置的占位提示，填写后应被 thesis.title.en 的真实英文题名整体替换；括号为字体说明，清出。thesis.title.en 的 allowed_part_roles 含 fill_slot。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "□教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目”整体占中文题目填写位，是该位置的提示文字，填写后应被 thesis.title.zh 的真实题名整体替换；括号内为字体说明，应清出。thesis.title.zh 的 usage_affordance.allowed_part_roles 含 fill_slot。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER”为英文题名位置的占位提示，填写后应被 thesis.title.en 的真实英文题名整体替换；括号为字体说明，清出。thesis.title.en 的 allowed_part_roles 含 fill_slot。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-c_role-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This line occupies the Chinese title slot on the cover. The textual prefix \"毕业论文（设计）中文题目\" sits in the value position that the actual Chinese thesis title replaces; per the template-text-classification guidance, a value-position line that names the field behaves as a fill_slot. thesis.title.zh in vocabulary allows fill_slot role. The parenthetical is a font/weight style requirement."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The English title line sits in the value position of the English thesis title on the cover; thesis.title.en allows fill_slot. The parenthetical encodes font, weight, and capitalization requirements."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This line occupies the Chinese title slot on the cover. The textual prefix \"毕业论文（设计）中文题目\" sits in the value position that the actual Chinese thesis title replaces; per the template-text-classification guidance, a value-position line that names the field behaves as a fill_slot. thesis.title.zh in vocabulary allows fill_slot role. The parenthetical is a font/weight style requirement."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The English title line sits in the value position of the English thesis title on the cover; thesis.title.en allows fill_slot. The parenthetical encodes font, weight, and capitalization requirements."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-d_review-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The \"毕业论文（设计）中文题目\" segment occupies the title's position; per the preamble's 论文/设计 rule, the actual value comes from thesis.title.zh. The trailing parenthetical carries the 小二黑体加粗 style obligation and is kept as style-only."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER\" is the uppercase English title placeholder; bound to thesis.title.en (allowed_part_roles include fill_slot). The parenthetical is a 四号Times New Roman加粗大写 style requirement retained separately."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The \"毕业论文（设计）中文题目\" segment occupies the title's position; per the preamble's 论文/设计 rule, the actual value comes from thesis.title.zh. The trailing parenthetical carries the 小二黑体加粗 style obligation and is kept as style-only."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER\" is the uppercase English title placeholder; bound to thesis.title.en (allowed_part_roles include fill_slot). The parenthetical is a 四号Times New Roman加粗大写 style requirement retained separately."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-d_review-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This line is the Chinese title position; the prefix 毕业论文（设计） is part of the title placeholder shown in the template (the bracketed 论文/设计 option belongs to the thesis title content). The parenthetical is the font/size/bold style requirement for the Chinese title. Bound to thesis.title.zh (allowed_part_roles includes fill_slot)."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Right-aligned English title position; the literal \"TITLE OF GRADUATION PAPER\" stands in for the English title value, so this whole placeholder is the fill slot for the English thesis title. Parenthetical is the font/size/bold/case style requirement. Bound to thesis.title.en (allowed_part_roles includes fill_slot)."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This line is the Chinese title position; the prefix 毕业论文（设计） is part of the title placeholder shown in the template (the bracketed 论文/设计 option belongs to the thesis title content). The parenthetical is the font/size/bold style requirement for the Chinese title. Bound to thesis.title.zh (allowed_part_roles includes fill_slot)."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "Right-aligned English title position; the literal \"TITLE OF GRADUATION PAPER\" stands in for the English title value, so this whole placeholder is the fill slot for the English thesis title. Parenthetical is the font/size/bold/case style requirement. Bound to thesis.title.en (allowed_part_roles includes fill_slot)."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-d_review-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": false,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "□□□□□□学□□号：20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "□□□□□□指导老师及职称：×××□教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "□□□□□□学□□院：××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "提交日期：20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The phrase 毕业论文（设计）中文题目 occupies the Chinese thesis title position with no separate value area, so it is the prompt/example for the thesis.title.zh fill slot. The trailing parenthetical is the school's 小二黑体加粗 style obligation for that title line."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The all-caps English title placeholder occupies the English title position with no separate value area, so it is the prompt/example for the thesis.title.en fill slot. The trailing parenthetical is the Times New Roman 四号加粗大写 style obligation."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": false,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "□□□□□□学□□号：20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "□□□□□□指导老师及职称：×××□教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "□□□□□□学□□院：××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "提交日期：20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The phrase 毕业论文（设计）中文题目 occupies the Chinese thesis title position with no separate value area, so it is the prompt/example for the thesis.title.zh fill slot. The trailing parenthetical is the school's 小二黑体加粗 style obligation for that title line."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The all-caps English title placeholder occupies the English title position with no separate value area, so it is the prompt/example for the thesis.title.en fill slot. The trailing parenthetical is the Times New Roman 四号加粗大写 style obligation."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-e_brief-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 0,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": false
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": false,
+        "11": false
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        6
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\"在原文中以标签/章节标题形式居中显示，且没有伴随 ×××、下划线或空白等示例占位，仅承担\"此处放置中文题目\"的固定标签责任；其后括注为样式说明。当前块内不绑定 thesis.title.zh 字段；若宿主在版式上需要在该位置提供中文题名填写区，由宿主根据 cover 单元的整体布局另行建立。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 7,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": false
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": false,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\"在原文中以标签形式居中显示，未伴随 ××× 或下划线等示例占位，仅承担标签责任；其后的\"小二黑体加粗\"为样式说明。本块不绑定 thesis.title.zh；如后续宿主在版式上需要在中文题名位置提供填写区，由宿主根据 cover 单元整体布局另行建立。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "该行右对齐显示的\"TITLE OF GRADUATION PAPER\"作为英文题名位置的固定标签/占位词，未在原文中给出具体英文题名示例，不绑定 thesis.title.en；其后的括注为对该行的字体与大小写样式说明。"
+        }
+      ]
+    },
+    "reads": [
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/e_brief/.claude/skills/docfit-school-extract/references/template-text-classification.md"
+      },
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/e_brief/.claude/skills/docfit-school-extract/references/registry-interface-binding.md"
+      }
+    ]
+  },
+  "sdk-f_combined-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 8,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": false,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        6,
+        6,
+        7,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4,
+        6,
+        6,
+        7,
+        15
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 ",
+              "role": "fixed_label"
+            }
+          ],
+          "reason": "该段首部\"毕业论文（设计）中文题目\"是提示标签占据题目值的位置，按学校规则\"论文/设计\"二选一应在样式/合同中体现；此处将标签与提示占据题名位置的部分一起保留为 fixed_label 形式的前缀，紧随其后的中文题名作为独立 fill_slot。样式（小二黑体加粗居中）由相邻 style 段约束。"
+        },
+        {
+          "block": 6,
+          "parts": [
+            {},
+            {
+              "$text": "fill_slot"
+            },
+            {
+              "$text": "thesis.title.zh"
+            }
+          ],
+          "reason": null
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）\"整体占据英文题名位置，附件1 说明学校要求\"标题中设计/论文不要\"，同理适用于英文标题；标签本身是英文题名的占位提示，应被真实英文题名替换。词表提供 thesis.title.en（allowed_part_roles: fill_slot）。样式（四号 Times New Roman 加粗大写，右对齐）由 Style Contract 承接。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": false,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        6,
+        7,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4,
+        6,
+        7,
+        15
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": " ",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目 ",
+              "role": "fixed_label"
+            },
+            {
+              "text": " ",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            }
+          ],
+          "reason": "该段首部\"毕业论文（设计）中文题目\"是提示标签占据题目值的位置，按学校规则\"论文/设计\"二选一应在样式/合同中体现；此处将标签与提示占据题名位置的部分作为前缀 fixed_label，紧随其后的尾部空白作为中文题名的填入位（题名真值由 host 写入，原文此处置为单空格以保 layout 留位）。词表提供 thesis.title.zh（allowed_part_roles: fill_slot）。样式（小二黑体加粗居中）由相邻 style 段约束。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）\"整体占据英文题名位置，附件1 说明学校要求\"标题中设计/论文不要\"，同理适用于英文标题；标签本身是英文题名的占位提示，应被真实英文题名替换。词表提供 thesis.title.en（allowed_part_roles: fill_slot）。样式（四号 Times New Roman 加粗大写，右对齐）由 Style Contract 承接。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-f_combined-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": false,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        6,
+        7,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4,
+        7
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "该行文本整体占据中文论文题目位置，其中前半部分“毕业论文（设计）中文题目 ”为题目示例性提示/占位描述，按其填写责任整段将被中文题名替换；括号内的“（小二黑体加粗）”是对该位置的字体/字号要求说明，保留为样式约束。thesis.title.zh 的 usage_affordance.allowed_part_roles 包含 fill_slot，语义匹配。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "该行英文文本为英文题名示例，整体将被真实英文题名替换；括号内的字体说明保留为样式约束。thesis.title.en 的 usage_affordance.allowed_part_roles 包含 fill_slot，语义匹配。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": false,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        3,
+        4,
+        6,
+        7,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        3,
+        4,
+        7
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "该行文本整体占据中文论文题目位置，其中前半部分“毕业论文（设计）中文题目 ”为题目示例性提示/占位描述，按其填写责任整段将被中文题名替换；括号内的“（小二黑体加粗）”是对该位置的字体/字号要求说明，保留为样式约束。thesis.title.zh 的 usage_affordance.allowed_part_roles 包含 fill_slot，语义匹配。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "该行英文文本为英文题名示例，整体将被真实英文题名替换；括号内的字体说明保留为样式约束。thesis.title.en 的 usage_affordance.allowed_part_roles 包含 fill_slot，语义匹配。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-g_reasoning-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目”在封面布局中占据论文中文题名位置,且该位置无其他填写区,属于提示文字本身为填写位的形式,因此按 fill_slot 绑定 thesis.title.zh;同行括号为字号字体说明,归 style_only。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER”是封面英文题名位置的提示/占位,绑定 thesis.title.en;括号内字体字号说明归 style_only。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“毕业论文（设计）中文题目”在封面布局中占据论文中文题名位置,且该位置无其他填写区,属于提示文字本身为填写位的形式,因此按 fill_slot 绑定 thesis.title.zh;同行括号为字号字体说明,归 style_only。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "“TITLE OF GRADUATION PAPER”是封面英文题名位置的提示/占位,绑定 thesis.title.en;括号内字体字号说明归 style_only。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-h_adaptive-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The text 毕业论文（设计）中文题目 occupies the Chinese-title position on the cover and is replaced by the student's actual thesis title. The (设计) component is governed by the preamble rule for thesis vs design, which is carried by the fill_slot value itself. The parenthetical 小二黑体加粗 describes the font for the title; carried by post-unit style handling."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The English placeholder occupies the English-title position on the cover and is replaced by the student's actual English thesis title. The parenthetical 四号Times New Roman加粗大写 describes the font for the title; carried by post-unit style handling."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The text 毕业论文（设计）中文题目 occupies the Chinese-title position on the cover and is replaced by the student's actual thesis title. The (设计) component is governed by the preamble rule for thesis vs design, which is carried by the fill_slot value itself. The parenthetical 小二黑体加粗 describes the font for the title; carried by post-unit style handling."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The English placeholder occupies the English-title position on the cover and is replaced by the student's actual English thesis title. The parenthetical 四号Times New Roman加粗大写 describes the font for the title; carried by post-unit style handling."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-h_adaptive-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "块6 文本「毕业论文（设计）中文题目」处于中文标题的实际填写位置，看似标签，实则占据最终题名位置（依据 skill：描述字段的提示文字本身也可能占据最终值的位置），故整体作为 fill_slot，绑定 thesis.title.zh；尾部括号为样式说明，style_only。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "块7 同块6 逻辑：英文标题位置上的提示文本整体作为 fill_slot 绑定 thesis.title.en；括号样式说明 style_only。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": true,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××（或×□×）",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "块6 文本「毕业论文（设计）中文题目」处于中文标题的实际填写位置，看似标签，实则占据最终题名位置（依据 skill：描述字段的提示文字本身也可能占据最终值的位置），故整体作为 fill_slot，绑定 thesis.title.zh；尾部括号为样式说明，style_only。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "块7 同块6 逻辑：英文标题位置上的提示文本整体作为 fill_slot 绑定 thesis.title.en；括号样式说明 style_only。"
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-h_adaptive-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This text occupies the Chinese title line position and is replaced by the student's actual Chinese thesis title; the trailing parenthetical is the style note for the title."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "English title placeholder occupying the title line position; replaced by the actual English title. Parenthetical is style note."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This text occupies the Chinese title line position and is replaced by the student's actual Chinese thesis title; the trailing parenthetical is the style note for the title."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "English title placeholder occupying the title line position; replaced by the actual English title. Parenthetical is style note."
+        }
+      ]
+    },
+    "reads": [
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/h_adaptive/.claude/skills/docfit-school-extract/references/template-text-classification.md"
+      },
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/h_adaptive/.claude/skills/docfit-school-extract/references/registry-interface-binding.md"
+      },
+      {
+        "file_path": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/h_adaptive/.claude/skills/docfit-school-extract/references/collections-and-optional-sections.md"
+      }
+    ]
+  },
+  "sdk-i_project_adaptive-1": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The whole \"毕业论文（设计）中文题目\" placeholder text occupies the Chinese thesis title position and is replaced by the actual title when filled, so it is the fill_slot for thesis.title.zh. The \"(设计)\" portion is conditional per the preamble rule — template-level conditional, not a field concern. Trailing parenthetical is format spec."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "All-caps English placeholder occupies the English thesis title position and is replaced by the actual English title when filled. Trailing parenthetical is format spec for font/size/weight/case."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "The whole \"毕业论文（设计）中文题目\" placeholder text occupies the Chinese thesis title position and is replaced by the actual title when filled, so it is the fill_slot for thesis.title.zh. The \"(设计)\" portion is conditional per the preamble rule — template-level conditional, not a field concern. Trailing parenthetical is format spec."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "All-caps English placeholder occupies the English thesis title position and is replaced by the actual English title when filled. Trailing parenthetical is format spec for font/size/weight/case."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-i_project_adaptive-2": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": false,
+    "attempt_count": 1,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This block occupies the Chinese title position on the cover; the placeholder is replaced by the actual Chinese thesis title. The \"毕业论文（设计）\" wording inside the placeholder is governed by the preamble rule (drop \"设计\" for thesis-only, drop \"论文\" for design-only). The parenthetical specifies font/size/weight for the title."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This block occupies the English title position on the cover; the placeholder is replaced by the actual English thesis title. The parenthetical specifies Times New Roman 4 font with bold and uppercase."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This block occupies the Chinese title position on the cover; the placeholder is replaced by the actual Chinese thesis title. The \"毕业论文（设计）\" wording inside the placeholder is governed by the preamble rule (drop \"设计\" for thesis-only, drop \"论文\" for design-only). The parenthetical specifies font/size/weight for the title."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "This block occupies the English title position on the cover; the placeholder is replaced by the actual English thesis title. The parenthetical specifies Times New Roman 4 font with bold and uppercase."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-i_project_adaptive-3": {
+    "native_mechanical_accepted": false,
+    "stopped_incomplete": true,
+    "attempt_count": 0,
+    "complete": false,
+    "first": null,
+    "final": null,
+    "reads": []
+  },
+  "sdk-j_revision-1": {
+    "native_mechanical_accepted": true,
+    "stopped_incomplete": false,
+    "attempt_count": 2,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\" exclusively occupies the Chinese thesis title position and is the placeholder text that gets replaced by thesis.title.zh; the parenthetical carries the font/size requirement."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER\" exclusively occupies the English thesis title position and is the placeholder text replaced by thesis.title.en; the parenthetical carries the font/size/case requirement."
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": " （小二黑体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\" exclusively occupies the Chinese thesis title position and is the placeholder text that gets replaced by thesis.title.zh; the parenthetical carries the font/size requirement."
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "style_only"
+            }
+          ],
+          "reason": "\"TITLE OF GRADUATION PAPER\" exclusively occupies the English thesis title position and is the placeholder text replaced by thesis.title.en; the parenthetical carries the font/size/case requirement."
+        }
+      ]
+    },
+    "reads": []
+  },
+  "sdk-j_revision-2": {
+    "native_mechanical_accepted": true,
+    "stopped_incomplete": false,
+    "attempt_count": 3,
+    "complete": true,
+    "first": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        1,
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [
+        1
+      ],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\" 占据中文题名填写位置，绑定 thesis.title.zh；附加的字号字体说明是模板编辑提示。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "英文题名占位文字绑定 thesis.title.en；附加的字体字号与大写说明是模板编辑提示。"
+        }
+      ]
+    },
+    "final": {
+      "valid_result": true,
+      "status": "complete",
+      "field_count": 9,
+      "matches_single_span_reference": false,
+      "title_fields_present": {
+        "thesis.title.zh": true,
+        "thesis.title.en": true
+      },
+      "checked_value_spans": {
+        "6": true,
+        "7": true,
+        "10": true,
+        "11": true
+      },
+      "fixed_landmarks_preserved": {
+        "3": true,
+        "4": true,
+        "15": true
+      },
+      "literal_partition_differences": [
+        6,
+        9,
+        13,
+        15
+      ],
+      "nonspace_partition_errors": [],
+      "bindings": [
+        {
+          "field_id": "thesis.title.zh",
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "thesis.title.en",
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.student_id",
+          "text": "20××××××××××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.cohort_class",
+          "text": "20××级×××（×）班",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "text": "×××",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "advisor.title",
+          "text": "教授",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "author.department",
+          "text": "××××学院",
+          "role": "fill_slot"
+        },
+        {
+          "field_id": "submission.date",
+          "text": "20××年××月",
+          "role": "fill_slot"
+        }
+      ],
+      "titles": [
+        {
+          "block": 6,
+          "parts": [
+            {
+              "text": "毕业论文（设计）中文题目",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（小二黑体加粗）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "\"毕业论文（设计）中文题目\" 占据中文题名填写位置，绑定 thesis.title.zh；附加的字号字体说明是模板编辑提示，前方留白随附格式说明。"
+        },
+        {
+          "block": 7,
+          "parts": [
+            {
+              "text": "TITLE OF GRADUATION PAPER",
+              "role": "fill_slot",
+              "field_id": "thesis.title.en"
+            },
+            {
+              "text": "（四号Times New Roman加粗，大写）",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "英文题名占位文字绑定 thesis.title.en；附加的字体字号与大写说明是模板编辑提示。"
+        }
+      ]
+    },
+    "reads": []
+  }
+}

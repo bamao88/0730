@@ -1,0 +1,41 @@
+{
+  "verification_level": "actual E2E unit-boundary slice; first proposal accepted, no revision round",
+  "runtime_commit": "aefe343",
+  "input_and_event_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/input/school-template.docx": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/initial-source-inventory.json": "b0912bc66f6d64eb710e218a865b3b49a01c053e672cd5461b430dcba3d323fe",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/unit-boundary-checkpoint.json": "403e13690598bae9bf6645c7d2ac14618a5384a5ab7db49f272be57f819bebd8",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/unit-boundary-revisions/40ddf8b9817c4e6cae1530296fffcbf2/00000001.json": "4be42870f6e61ddb2952a6353b97fcbaab1004cb9bdd54b94276fdae72babe23",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/unit-boundary-revisions/40ddf8b9817c4e6cae1530296fffcbf2/00000002.json": "e07411b229d6414e18f57ef3230c786453f1fa538868ecbcbe8e56082b44d7e1",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/unit-boundary-revisions/40ddf8b9817c4e6cae1530296fffcbf2/00000003.json": "9fa78ee184150fc4ab995366eb03d08856a9a12e938de742aca861e8dcb62902",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task/work/.docfit/unit-boundary-revisions/40ddf8b9817c4e6cae1530296fffcbf2/00000004.json": "9657e45d0650ccdf1f9cdf980cd1a171d6c434c92039d24a17ba8783585909d3"
+  },
+  "journal_chain_and_checkpoint_validated": true,
+  "event_kinds": [
+    "request",
+    "response",
+    "review",
+    "checkpoint"
+  ],
+  "unit_count": 17,
+  "sdk_query_count": 1,
+  "harness_feedback_attempts": 0,
+  "original_unchanged": true,
+  "new_container_unit_evidence": [
+    {
+      "container": "/body/tbl[5]",
+      "source_entry_id": "source-entry-622e9cc6fdce73ba850af367",
+      "unit_id": "unit-10-ch2",
+      "descendants": 45
+    },
+    {
+      "container": "/body/tbl[6]",
+      "source_entry_id": "source-entry-579aebfdb4d9f7466ab6d7db",
+      "unit_id": "unit-10-ch2",
+      "descendants": 43
+    }
+  ],
+  "full_school_complete": false,
+  "product_acceptance": false
+}

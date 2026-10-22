@@ -1,0 +1,360 @@
+{
+  "verification_level": "natural E2E local revision closed: source-space count error, complete previous submission, corrected response accepted",
+  "events": {
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000003.json": "9bbbb42dc5911b457d3a991f425a262dd4ff549b0ecdb6a43405dd353adc8058",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000004.json": "0f19bc517b0d8d33f37fc27906693cd2e3fb55d348cf2ee8dacc5950d7389435",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000005.json": "9f2609d02e33d062250fe09ff85efae37191648872d0bc3cc1835f1da7c06259",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000006.json": "42bb11082d9f15e91b9d8a534f53634dda600a9f56e6dac19ef2046d67efc2dd",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000007.json": "087e564f849d74892fb9872fad165e0656e3290bf5e3ad7bd3d03bee90edb338",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000008.json": "e03ebedeeec818aac10c4609e58f73b1fe9f9995c8f2824383dac0184f4f04d0",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-revisions/00000009.json": "60be93a5add9f94c109e27762681bbf6f79c892b2d888a8ee3ba78768d187e1b"
+  },
+  "prior_judgments_exactly_preserved": true,
+  "prior_judgment_count": 23,
+  "prior_whole_entry_parts_preserved": 14,
+  "failure": {
+    "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+    "source_spaces": 36,
+    "submitted_spaces": 72,
+    "first_difference": {
+      "expected": {
+        "character": "",
+        "codepoint": null,
+        "end_of_text": true
+      },
+      "submitted": {
+        "character": " ",
+        "codepoint": "U+0020",
+        "end_of_text": false
+      }
+    }
+  },
+  "role_field_reconsideration_instruction_present": true,
+  "natural_revision_closed": true,
+  "product_acceptance": false,
+  "accepted_request_sequence": 6,
+  "accepted_candidate_sequence": 9,
+  "observed_at": "2026-09-24T03:21:54.831213+00:00",
+  "changes": [
+    {
+      "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "题    目:"
+          },
+          {
+            "field_id": "thesis.title.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"题    目:\" is the fixed label; the 36 trailing spaces form the writing area for the thesis Chinese title, bound to thesis.title.zh.",
+        "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "题    目:"
+          },
+          {
+            "field_id": "thesis.title.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"题    目:\" is the fixed label (7 chars). The 36 trailing spaces form the writing area for the thesis Chinese title, bound to thesis.title.zh.",
+        "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "style_only",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 72
+            }
+          }
+        ],
+        "reason": "Continuation line of blank space beneath the thesis title row; extends the writing area for the same thesis.title.zh fill region without adding a second interface.",
+        "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "style_only",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "All-whitespace block (36 spaces; leading and trailing counts refer to the same characters, not summed). Continuation line of blank space beneath the thesis title row; extends the writing area for the same thesis.title.zh fill region without adding a second interface. Per layout-safety ref, continuation whitespace for the same fill area carries no field, so role is style_only.",
+        "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "姓    名:"
+          },
+          {
+            "field_id": "author.name.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"姓    名:\" is the fixed label; the 36 trailing spaces form the writing area for the author Chinese name, bound to author.name.zh.",
+        "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "姓    名:"
+          },
+          {
+            "field_id": "author.name.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"姓    名:\" is the fixed label. The 36 trailing spaces form the writing area for the author Chinese name, bound to author.name.zh.",
+        "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-17e2679377abb766980c7640",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "学    号:"
+          },
+          {
+            "field_id": "author.student_id",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"学    号:\" is the fixed label; the 36 trailing spaces form the writing area for the student id, bound to author.student_id.",
+        "source_entry_id": "source-entry-17e2679377abb766980c7640"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "学    号:"
+          },
+          {
+            "field_id": "author.student_id",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"学    号:\" is the fixed label. The 36 trailing spaces form the writing area for the student id, bound to author.student_id.",
+        "source_entry_id": "source-entry-17e2679377abb766980c7640"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "学    院:"
+          },
+          {
+            "field_id": "author.department",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"学    院:\" is the fixed label; the 36 trailing spaces form the writing area for the department, bound to author.department.",
+        "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "学    院:"
+          },
+          {
+            "field_id": "author.department",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"学    院:\" is the fixed label. The 36 trailing spaces form the writing area for the department, bound to author.department.",
+        "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "专    业:"
+          },
+          {
+            "field_id": "author.major",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"专    业:\" is the fixed label; the 36 trailing spaces form the writing area for the major, bound to author.major.",
+        "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "专    业:"
+          },
+          {
+            "field_id": "author.major",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 36
+            }
+          }
+        ],
+        "reason": "\"专    业:\" is the fixed label. The 36 trailing spaces form the writing area for the major, bound to author.major.",
+        "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+      }
+    },
+    {
+      "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+      "before": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "指导教师:"
+          },
+          {
+            "field_id": "advisor.name.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 17
+            }
+          },
+          {
+            "role": "fixed_label",
+            "text": "职称"
+          },
+          {
+            "field_id": "advisor.title",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 15
+            }
+          }
+        ],
+        "reason": "\"指导教师:\" is the fixed label for the advisor name writing area; the 17 spaces between the label and \"职称\" form the advisor name fill, bound to advisor.name.zh. \"职称\" is a fixed label separating two independent values; the 15 trailing spaces form the advisor title writing area, bound to advisor.title. Name and title are independent values per the registry, so they bind separately.",
+        "source_entry_id": "source-entry-c5535b8a8362f4863822c436"
+      },
+      "after": {
+        "open_questions": [],
+        "parts": [
+          {
+            "role": "fixed_label",
+            "text": "指导教师:"
+          },
+          {
+            "field_id": "advisor.name.zh",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 17
+            }
+          },
+          {
+            "role": "fixed_label",
+            "text": "职称"
+          },
+          {
+            "field_id": "advisor.title",
+            "role": "fill_slot",
+            "text": "",
+            "whitespace": {
+              "codepoint": "U+0020",
+              "count": 15
+            }
+          }
+        ],
+        "reason": "\"指导教师:\" is the fixed label for the advisor name writing area; the 17 interior spaces form the advisor name fill, bound to advisor.name.zh. \"职称\" is a fixed label separating two independent values; the 15 trailing spaces form the advisor title writing area, bound to advisor.title. Name and title are independent values per the registry, so they bind separately.",
+        "source_entry_id": "source-entry-c5535b8a8362f4863822c436"
+      }
+    }
+  ],
+  "limitations": [
+    "Only cover batch revision closed; not whole-school generation or semantic/product acceptance."
+  ]
+}

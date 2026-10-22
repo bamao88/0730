@@ -1,0 +1,312 @@
+{
+  "source_inventory_digest": "0a834b764f5ee6f403d23d4b100c8e2b436f6fdf1f1243e68c657ed4b49fa1d9",
+  "unit_projection_digest": "cf8c2eded826b112a0fae7da34da2b4979836d5d5297fd6cd512132ec757bb23",
+  "document_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+  "field_id_vocabulary": {
+    "schema_version": "docfit_pre_input_field_vocabulary_v1",
+    "registry": {
+      "registry_id": "test",
+      "registry_version": "1",
+      "sha256": "0c9adfeb2311a45c18078821bf11f5719c31c4e5979889c0561c268066a48264"
+    },
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline4",
+      "body.paragraph",
+      "body.table",
+      "body.equation"
+    ],
+    "field_count": 7,
+    "fields": [
+      {
+        "field_id": "thesis.title.zh",
+        "label": "中文题目",
+        "content_type": "text",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": [
+            "fill_slot"
+          ]
+        }
+      },
+      {
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "content_type": "section",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": []
+        }
+      },
+      {
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.heading.outline4",
+        "label": "四级标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.table",
+        "label": "表格",
+        "content_type": "table",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.equation",
+        "label": "公式",
+        "content_type": "equation",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      }
+    ],
+    "digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99"
+  },
+  "field_vocabulary_digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-0",
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "Keep"
+        },
+        {
+          "role": "cleanup",
+          "text": "Value"
+        }
+      ],
+      "resolved_spans": [
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "fixed_label",
+          "text": "Keep",
+          "source_entry_id": "source-entry-0",
+          "text_start": 0,
+          "text_end": 4,
+          "extent": {
+            "kind": "text",
+            "start": 0,
+            "end": 4
+          },
+          "expected_source_content": "Keep",
+          "source_snapshot_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+          "source_inventory_digest": "0a834b764f5ee6f403d23d4b100c8e2b436f6fdf1f1243e68c657ed4b49fa1d9",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]/hyperlink[1]",
+              "text": "Keep",
+              "source_text_start": 0,
+              "source_text_end": 4,
+              "object_text_start": 0,
+              "object_text_end": 4,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+                "expected_fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+              },
+              "fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        },
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[4:9];source_snapshot_sha256=1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 1,
+          "role": "cleanup",
+          "text": "Value",
+          "source_entry_id": "source-entry-0",
+          "text_start": 4,
+          "text_end": 9,
+          "extent": {
+            "kind": "text",
+            "start": 4,
+            "end": 9
+          },
+          "expected_source_content": "Value",
+          "source_snapshot_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+          "source_inventory_digest": "0a834b764f5ee6f403d23d4b100c8e2b436f6fdf1f1243e68c657ed4b49fa1d9",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]/hyperlink[1]",
+              "text": "Value",
+              "source_text_start": 4,
+              "source_text_end": 9,
+              "object_text_start": 4,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+                "expected_fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+              },
+              "fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        }
+      ]
+    }
+  ],
+  "semantic_judgments_sha256": "56567130c5f475e4fa55690c308289f63e360cb0be27343e29535241a690ddc5",
+  "resolved_spans": [
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 0,
+      "role": "fixed_label",
+      "text": "Keep",
+      "source_entry_id": "source-entry-0",
+      "text_start": 0,
+      "text_end": 4,
+      "extent": {
+        "kind": "text",
+        "start": 0,
+        "end": 4
+      },
+      "expected_source_content": "Keep",
+      "source_snapshot_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+      "source_inventory_digest": "0a834b764f5ee6f403d23d4b100c8e2b436f6fdf1f1243e68c657ed4b49fa1d9",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]/hyperlink[1]",
+          "text": "Keep",
+          "source_text_start": 0,
+          "source_text_end": 4,
+          "object_text_start": 0,
+          "object_text_end": 4,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+            "expected_fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+          },
+          "fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    },
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[4:9];source_snapshot_sha256=1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 1,
+      "role": "cleanup",
+      "text": "Value",
+      "source_entry_id": "source-entry-0",
+      "text_start": 4,
+      "text_end": 9,
+      "extent": {
+        "kind": "text",
+        "start": 4,
+        "end": 9
+      },
+      "expected_source_content": "Value",
+      "source_snapshot_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+      "source_inventory_digest": "0a834b764f5ee6f403d23d4b100c8e2b436f6fdf1f1243e68c657ed4b49fa1d9",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]/hyperlink[1]",
+          "text": "Value",
+          "source_text_start": 4,
+          "source_text_end": 9,
+          "object_text_start": 4,
+          "object_text_end": 9,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "1b0f40c83e99960b3f13c1ed8ac3f2f66701ecc38e96b91f5ededd54515451d5",
+            "expected_fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+          },
+          "fingerprint": "cb4d197eb805be3ba5933c41e7e588af77e8d48cf7890452fc35d0918f2bc570"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    }
+  ]
+}

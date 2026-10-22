@@ -1,0 +1,1 @@
+{"registry_id": "docfit.test.fields", "registry_version": "0.1.0", "fields": [{"field_id": "body.chapters", "label": "body.chapters", "meaning": "body section", "content_type": "section"}, {"field_id": "body.heading.outline1", "label": "body.heading.outline1", "meaning": "body heading", "content_type": "text", "parent_field_id": "body.chapters"}]}

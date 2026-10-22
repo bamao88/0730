@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "checks": [
+    {
+      "name": "evidence_integrity",
+      "result": "ok"
+    }
+  ],
+  "warnings": [],
+  "failure": null,
+  "render_ref": "render:v2:e2f3acc2993525f45ecd01585a216a8db2a9905896f158c5cd25f0fa8670352d",
+  "document_sha256": "654e9bc00e6d4a78ea5c433544d9cf4351b44eab7b9f92b0b477568c175a33b3",
+  "fidelity": "approximate",
+  "renderer": {
+    "container_image": "docfit-libreoffice-visual:25.2.3.2",
+    "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+    "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+    "locale": "zh_CN.UTF-8",
+    "name": "libreoffice",
+    "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}",
+    "version": "LibreOffice 25.2.3.2 520(Build:2)"
+  },
+  "mode": "pages",
+  "quality": "review",
+  "evidence": [
+    {
+      "evidence_ref": "visual:v2:1000f8533952047c9944f6f5826d07536fea5d6fafc3fad9f8fae931a16b41be",
+      "image_sha256": "feaf2914163c1c98d02a42b6b9811ef280bf70808d4b2ff1ec4505688d815d51",
+      "page": 1,
+      "dpi": 144,
+      "pixel_size": [
+        1191,
+        1684
+      ],
+      "bbox_pdf": [
+        0.0,
+        0.0,
+        595.303937,
+        841.889764
+      ]
+    }
+  ],
+  "next_cursor": null
+}

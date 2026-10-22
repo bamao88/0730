@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "postcondition",
+    "code": "fillable_slots_missing",
+    "retryable": false,
+    "message": "A clean school template must expose at least one Registry-bound fill interface.",
+    "suggested_actions": []
+  }
+}

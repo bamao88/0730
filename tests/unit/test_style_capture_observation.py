@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from docfit.styles.capture import (
+    capture_template_style_contracts,
     capture_template_style_observations,
     compile_school_style_contracts,
 )
@@ -76,7 +77,7 @@ def _write_docx(path: Path) -> None:
 def _slot(profile: StylePropertyProfile) -> dict[str, object]:
     return {
         "field_id": "body.paragraph",
-        "slot_id": "body.paragraph.1",
+        "slot_ref": "body.paragraph.1",
         "style_role_id": "style.body.paragraph",
         "style_role_type": "paragraph",
         "property_profile_ref": profile.ref().as_dict(),
@@ -86,6 +87,31 @@ def _slot(profile: StylePropertyProfile) -> dict[str, object]:
             "part": "word/document.xml",
         },
     }
+
+
+def test_style_contract_capture_skips_declared_non_style_slots(tmp_path: Path) -> None:
+    document = tmp_path / "school.docx"
+    _write_docx(document)
+
+    contracts, capture = capture_template_style_contracts(
+        document,
+        [
+            {
+                "slot_ref": "body.table.1",
+                "field_id": "body.table",
+                "content_type": "table",
+                "handling": "non_style",
+                "locator": {
+                    "type": "content_control_tag",
+                    "value": "not-resolvable-and-must-not-be-read",
+                    "part": "word/document.xml",
+                },
+            }
+        ],
+    )
+
+    assert contracts.styles == ()
+    assert capture["occurrence_manifest"]["occurrences"] == []
 
 
 def test_capture_returns_fixed_dual_axis_observation_and_complete_candidate(
@@ -133,7 +159,7 @@ def test_missing_expected_role_is_a_known_school_gap_not_observation_failure(
     registry, profile = _registry()
     expected_table_caption = {
         "field_id": "body.table.caption",
-        "slot_id": "body.table.caption.expected",
+        "slot_ref": "body.table.caption.expected",
         "style_role_id": "style.body.table.caption",
         "style_role_type": "paragraph",
         "property_profile_ref": profile.ref().as_dict(),

@@ -1,0 +1,2 @@
+case=01-hunau-undergraduate status=started started_at=2026-08-16T10:03:38Z task=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed/01-hunau-undergraduate/task
+case=01-hunau-undergraduate status=failed exit_code=2 ended_at=2026-08-16T10:34:03Z final_template_exists=no fill_contract_exists=no task=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed/01-hunau-undergraduate/task

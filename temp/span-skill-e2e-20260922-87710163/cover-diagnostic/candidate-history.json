@@ -1,0 +1,83 @@
+{
+  "reviewed_at_utc": "2026-09-22T15:10:29.251350+00:00",
+  "verification_level": "Read-only observed public candidate snapshots, compared with final current candidate ledger; not accepted judgments or product acceptance.",
+  "scope": "Cover only. No transcript or hidden reasoning was read. No live task files were modified.",
+  "observed_snapshot_file_count": 2,
+  "unique_observed_ledger_states": 2,
+  "initial_saved_batch_candidate_versions_observed": 2,
+  "changes_to_previously_saved_batch_candidates_observed": 0,
+  "field_span_role_changes_observed_in_previously_saved_candidates": 0,
+  "final_ledger_equals_last_observed_snapshot": true,
+  "trajectory": [
+    {
+      "file": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/observed-ledgers/cover-143905274399-semantic-batch-candidates.json",
+      "sha256": "f9b5794e5fe87ba7a2d9a955f28143eb1824e9857606c378feff703989174513",
+      "snapshot_time_from_filename": "143905274399",
+      "candidate_count": 1,
+      "ledger_digest": "469ce1860fa43b550c8a4a18a374f3631f48dd8d9bc497e0337cebabbcaceb60",
+      "batches": [
+        {
+          "batch_id": "semantic-batch-0001-f5d7bf64",
+          "candidate_digest": "dade1b062b8d779c171572079dc6d183a4de3ffa9c2ecf583f2d35fe97e8fd27",
+          "judgment_count": 1
+        }
+      ],
+      "added_batches_since_previous_observation": [
+        "semantic-batch-0001-f5d7bf64"
+      ],
+      "removed_batches_since_previous_observation": [],
+      "changed_existing_batches_since_previous_observation": []
+    },
+    {
+      "file": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/observed-ledgers/cover-144032423343-semantic-batch-candidates.json",
+      "sha256": "444567abff3bd5102e4b52647db3fe8c306000734f926d7cc6a5d4cb7345c315",
+      "snapshot_time_from_filename": "144032423343",
+      "candidate_count": 2,
+      "ledger_digest": "f2357a51c07188ffaa907bf25808c0b8a5d95b280811f3e3a8e480219383e8f6",
+      "batches": [
+        {
+          "batch_id": "semantic-batch-0001-f5d7bf64",
+          "candidate_digest": "dade1b062b8d779c171572079dc6d183a4de3ffa9c2ecf583f2d35fe97e8fd27",
+          "judgment_count": 1
+        },
+        {
+          "batch_id": "semantic-batch-0002-f1ba7177",
+          "candidate_digest": "aece070a796430bec548b4b78781b38c643ef26dff25b3d0cbf4058d0f9e3b48",
+          "judgment_count": 27
+        }
+      ],
+      "added_batches_since_previous_observation": [
+        "semantic-batch-0002-f1ba7177"
+      ],
+      "removed_batches_since_previous_observation": [],
+      "changed_existing_batches_since_previous_observation": []
+    },
+    {
+      "file": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task/work/.docfit/harness/semantic-batch-candidates.json",
+      "sha256": "444567abff3bd5102e4b52647db3fe8c306000734f926d7cc6a5d4cb7345c315",
+      "snapshot_time_from_filename": null,
+      "candidate_count": 2,
+      "ledger_digest": "f2357a51c07188ffaa907bf25808c0b8a5d95b280811f3e3a8e480219383e8f6",
+      "batches": [
+        {
+          "batch_id": "semantic-batch-0001-f5d7bf64",
+          "candidate_digest": "dade1b062b8d779c171572079dc6d183a4de3ffa9c2ecf583f2d35fe97e8fd27",
+          "judgment_count": 1
+        },
+        {
+          "batch_id": "semantic-batch-0002-f1ba7177",
+          "candidate_digest": "aece070a796430bec548b4b78781b38c643ef26dff25b3d0cbf4058d0f9e3b48",
+          "judgment_count": 27
+        }
+      ],
+      "added_batches_since_previous_observation": [],
+      "removed_batches_since_previous_observation": [],
+      "changed_existing_batches_since_previous_observation": []
+    }
+  ],
+  "conclusion_zh": "观察到两份候选账本快照：先保存第1批，再新增第2批；已有第1批未变化。当前最终账本与第2份快照逐字节一致。没有观察到任何已保存候选的 field/span/role 修订，不能把7次反馈query写成7次成功保存修订。",
+  "limitations_zh": [
+    "快照记录的是观察到的状态，不能据此计数相同内容的重复写入，也不能排除观察间隔内未被记录的瞬时变化。",
+    "候选账本不能独立证明反馈query次数、工具调用成功次数或模型曾尝试的未保存输出；这些需分别引用主任务的公开运行事件。"
+  ]
+}

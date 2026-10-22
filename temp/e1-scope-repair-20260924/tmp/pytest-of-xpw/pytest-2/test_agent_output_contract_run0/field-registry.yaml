@@ -1,0 +1,6 @@
+registry_id: test.registry
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: Chinese thesis title
+    content_type: text

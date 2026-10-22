@@ -1,0 +1,257 @@
+diff --git a/src/docfit/app/prepare_template.py b/src/docfit/app/prepare_template.py
+index 094aa70..1535f34 100644
+--- a/src/docfit/app/prepare_template.py
++++ b/src/docfit/app/prepare_template.py
+@@ -20,7 +20,7 @@ from pathlib import Path
+ from typing import Any, Literal, NoReturn
+ 
+ from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
+-from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
++from claude_agent_sdk.types import AssistantMessage, ResultMessage, StreamEvent, ToolUseBlock
+ 
+ from docfit.app.agent import (
+     AGENT_SDK_MAX_BUFFER_BYTES,
+@@ -521,6 +521,27 @@ def _timing_summary(timing_events: tuple[JsonObject, ...] | list[JsonObject]) ->
+     return summary
+ 
+ 
++def _sdk_has_generation_progress(message: object) -> bool:
++    """Count generated content as activity without retaining its contents."""
++    if not isinstance(message, StreamEvent):
++        return False
++    if message.event.get("type") != "content_block_delta":
++        return False
++    delta = message.event.get("delta")
++    if not isinstance(delta, dict):
++        return False
++    delta_type = delta.get("type")
++    if not isinstance(delta_type, str):
++        return False
++    payload_key = {
++        "thinking_delta": "thinking",
++        "text_delta": "text",
++        "input_json_delta": "partial_json",
++    }.get(delta_type)
++    payload = delta.get(payload_key) if payload_key is not None else None
++    return isinstance(payload, str) and bool(payload)
++
++
+ def _sdk_receive_event(
+     message: object,
+     *,
+@@ -555,6 +576,11 @@ def _sdk_receive_event(
+         tool_uses = [block.name for block in content if isinstance(block, ToolUseBlock)]
+         if tool_uses:
+             event["tool_uses"] = tool_uses
++    if isinstance(message, StreamEvent):
++        event["stream_event_type"] = message.event.get("type")
++        delta = message.event.get("delta")
++        if isinstance(delta, dict):
++            event["delta_type"] = delta.get("type")
+     if isinstance(message, ResultMessage):
+         event["is_error"] = message.is_error
+         event["has_structured_output"] = isinstance(message.structured_output, dict)
+@@ -1462,7 +1488,8 @@ def build_prepare_template_options(
+         env=environment,
+         model=backend.model,
+         max_turns=POST_UNIT_MAX_TURNS,
+-        thinking={"type": "disabled"},
++        thinking={"type": "adaptive"},
++        include_partial_messages=True,
+         effort="low",
+         max_buffer_size=AGENT_SDK_MAX_BUFFER_BYTES,
+         output_format={"type": "json_schema", "schema": POST_UNIT_OUTPUT_SCHEMA},
+@@ -3490,7 +3517,7 @@ async def _run_backend(
+                             )
+                         )
+                         del sdk_events[:-200]
+-                        made_progress = False
++                        made_progress = _sdk_has_generation_progress(message)
+                         if isinstance(message, AssistantMessage):
+                             for block in message.content:
+                                 if not isinstance(block, ToolUseBlock):
+diff --git a/tests/agent/school_extract_v2/test_agent_first_prepare_template.py b/tests/agent/school_extract_v2/test_agent_first_prepare_template.py
+index 13dae3c..50460ad 100644
+--- a/tests/agent/school_extract_v2/test_agent_first_prepare_template.py
++++ b/tests/agent/school_extract_v2/test_agent_first_prepare_template.py
+@@ -210,7 +210,8 @@ def test_full_options_are_bounded_post_unit_semantic_transaction(
+     assert not options.agents
+     assert options.max_turns <= 20
+     assert options.effort == "low"
+-    assert options.thinking == {"type": "disabled"}
++    assert options.thinking == {"type": "adaptive"}
++    assert options.include_partial_messages is True
+     assert "post-unit school-template semantic judgment Agent" in str(
+         options.system_prompt
+     )
+@@ -243,7 +244,8 @@ def test_post_unit_options_are_bounded_semantic_transaction(
+     assert not options.agents
+     assert options.max_turns <= 20
+     assert options.effort == "low"
+-    assert options.thinking == {"type": "disabled"}
++    assert options.thinking == {"type": "adaptive"}
++    assert options.include_partial_messages is True
+     assert set(options.mcp_servers or ()) == {"docfit"}
+     assert "post-unit school-template semantic judgment Agent" in str(
+         options.system_prompt
+diff --git a/tests/contract/test_prepare_template_runtime.py b/tests/contract/test_prepare_template_runtime.py
+index c79fe33..7c3f44d 100644
+--- a/tests/contract/test_prepare_template_runtime.py
++++ b/tests/contract/test_prepare_template_runtime.py
+@@ -7,7 +7,7 @@ from pathlib import Path
+ from typing import Any
+ 
+ import pytest
+-from claude_agent_sdk.types import AssistantMessage, ResultMessage, ToolUseBlock
++from claude_agent_sdk.types import AssistantMessage, ResultMessage, StreamEvent, ToolUseBlock
+ 
+ from docfit.app.cli import build_parser
+ from docfit.app.prepare_template import (
+@@ -18,7 +18,9 @@ from docfit.app.prepare_template import (
+     _ensure_post_unit_inventory,
+     _post_unit_checkpoint_report,
+     _post_unit_inventory_from_checkpoint,
++    _run_backend,
+     _run_unit_boundary_checkpoint,
++    _sdk_receive_event,
+     _select_host_candidate_for_accepted_semantics,
+     _semantic_coverage_feedback,
+     _unit_boundary_checkpoint_payload,
+@@ -1884,6 +1886,137 @@ def test_from_unit_boundary_uses_existing_proof_without_rerunning_checkpoint(
+     assert trace["unit_boundary_checkpoint"]["source_hash"] == prepared.template_sha256
+ 
+ 
++@pytest.mark.parametrize("generates_content", [True, False], ids=["generation", "heartbeats"])
++def test_post_unit_receive_loop_distinguishes_generation_from_heartbeats(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    generates_content: bool,
++) -> None:
++    prepared = _prepared(tmp_path)
++    config = tmp_path / "config"
++    config.mkdir()
++    elapsed_seconds = 0.0
++    received_result = False
++    generated_deltas = (
++        {"type": "thinking_delta", "thinking": "synthetic-private-reasoning"},
++        {"type": "text_delta", "text": "synthetic-private-answer"},
++        {"type": "input_json_delta", "partial_json": "synthetic-private-tool-input"},
++    )
++    heartbeat_events = (
++        {"type": "ping"},
++        {"type": "content_block_delta", "delta": {"type": "text_delta", "text": ""}},
++        {
++            "type": "content_block_delta",
++            "delta": {"type": "signature_delta", "signature": "synthetic-signature"},
++        },
++    )
++
++    class StreamingClient:
++        def __init__(self, *, options: object) -> None:
++            self.options = options
++
++        async def __aenter__(self) -> StreamingClient:
++            return self
++
++        async def __aexit__(self, *_: object) -> None:
++            return None
++
++        async def query(self, _prompt: str) -> None:
++            return None
++
++        async def receive_response(self) -> Any:
++            nonlocal elapsed_seconds, received_result
++            # Each generation phase lasts longer than the no-progress budget,
++            # while individual chunks arrive well within it. No tools intervene.
++            for delta in generated_deltas:
++                for chunk_index in range(4):
++                    elapsed_seconds += 60
++                    yield StreamEvent(
++                        uuid=f"stream-{elapsed_seconds}",
++                        session_id="session-streaming",
++                        event=(
++                            {"type": "content_block_delta", "delta": delta}
++                            if generates_content
++                            else heartbeat_events[chunk_index % len(heartbeat_events)]
++                        ),
++                    )
++            received_result = True
++            yield ResultMessage(
++                subtype="success",
++                duration_ms=int(elapsed_seconds * 1000),
++                duration_api_ms=int(elapsed_seconds * 1000),
++                is_error=False,
++                num_turns=1,
++                session_id="session-streaming",
++                structured_output={
++                    "status": "complete",
++                    "summary": "semantic judgments complete",
++                    "semantic_judgments": _source_noop_agent_semantic_judgments(),
++                },
++            )
++
++    monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", StreamingClient)
++    monkeypatch.setattr("docfit.app.prepare_template.time.perf_counter", lambda: elapsed_seconds)
++    monkeypatch.setattr(
++        "docfit.app.prepare_template.PREPARE_TEMPLATE_NO_PROGRESS_TIMEOUT_SECONDS", 180
++    )
++    monkeypatch.setattr(
++        "docfit.app.prepare_template._ensure_post_unit_inventory",
++        lambda _prepared, _checkpoint: {},
++    )
++    monkeypatch.setattr(
++        "docfit.app.prepare_template._runtime_feedback_for_complete_output",
++        lambda *_args, **_kwargs: (None, False),
++    )
++
++    run = _run_backend(
++        prepared,
++        _backend(),
++        config,
++        existing_unit_boundary_checkpoint=_unit_checkpoint(prepared),
++        stop_after_post_unit=True,
++    )
++    if not generates_content:
++        with pytest.raises(ToolFailure) as caught:
++            asyncio.run(run)
++        assert caught.value.code == "template_agent_no_progress_timeout"
++        assert not received_result
++        assert elapsed_seconds == 180
++        return
++
++    execution = asyncio.run(run)
++    assert received_result
++    assert execution.structured_output["status"] == "complete"
++    assert execution.wall_duration_ms == 720_000
++    assert execution.sdk_query_count == 2  # Existing boundary query plus this post-unit query.
++    assert execution.sdk_events[-1]["message_type"] == "ResultMessage"
++    assert len(execution.sdk_events) == 13
++    events_text = json.dumps(execution.sdk_events)
++    for delta in generated_deltas:
++        assert all(value not in events_text for key, value in delta.items() if key != "type")
++
++
++def test_sdk_receive_event_does_not_record_streamed_content() -> None:
++    message = StreamEvent(
++        uuid="private-stream-id",
++        session_id="private-session-id",
++        event={
++            "type": "content_block_delta",
++            "index": 0,
++            "delta": {"type": "thinking_delta", "thinking": "synthetic-private-content"},
++        },
++    )
++
++    assert _sdk_receive_event(message, elapsed_ms=12, stage="post-unit", query_index=2) == {
++        "message_type": "StreamEvent",
++        "elapsed_ms": 12,
++        "stage": "post-unit",
++        "query_index": 2,
++        "stream_event_type": "content_block_delta",
++        "delta_type": "thinking_delta",
++    }
++
++
+ def test_from_unit_boundary_fails_with_trace_when_sdk_has_no_business_progress(
+     tmp_path: Path,
+     monkeypatch: pytest.MonkeyPatch,

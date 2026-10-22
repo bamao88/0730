@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "request",
+    "code": "template_harness_argument_invalid",
+    "retryable": false,
+    "message": "reading_blocks[0].object_text_spans is required for text reading blocks with covered_object_ids.",
+    "suggested_actions": []
+  }
+}

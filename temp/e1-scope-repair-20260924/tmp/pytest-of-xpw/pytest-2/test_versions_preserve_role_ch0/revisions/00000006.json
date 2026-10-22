@@ -1,0 +1,65 @@
+{
+  "created_at": "2026-09-24T09:28:47.221636+00:00",
+  "data": {
+    "diff": [
+      {
+        "after": {
+          "parts": [
+            {
+              "role": "manual_region",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        },
+        "before": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        },
+        "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+      }
+    ],
+    "ledger": {
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "batch_id": "semantic-batch-0001-77ddf8db",
+          "candidate_digest": "4d630141facae335117f574c7c0ce30aadd162a363d47bc95a82b384eaa95e9c",
+          "semantic_judgments": [
+            {
+              "parts": [
+                {
+                  "role": "manual_region",
+                  "text": "姓名：  "
+                }
+              ],
+              "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+            }
+          ],
+          "summary": "判断"
+        }
+      ],
+      "field_vocabulary_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "ledger_digest": "79369ec91e62118e2a847bc49d00df44e3618adbe7a549baba3f61d1c0f3ad99",
+      "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+      "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+      "source_inventory_digest": "f1241959bb2e3c5f38aecdafaa95639435060edbd49b29f1e2307578fb9e550c",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "unit_projection_digest": "7cf98c9dfe83b349f32f0fb3b33588cbc5c690a2660f736d96b6527bb0cfa25b"
+    },
+    "parent_ledger_digest": "968047f46687c60d592e167b58bd0c4cf19f066e1d4d753b4c963cd17a57884d",
+    "request_id": 4
+  },
+  "event_digest": "afbb027129f307185341d1457971d6827ca930420414ec5d1f1ae862da0ae342",
+  "evidence_mode": "runtime",
+  "kind": "candidate_recorded",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "previous_event_digest": "4e0d4a0626afbed3808c6bdae601190f1cc7c8d330b7973c3e9f67216c30f970",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 6
+}

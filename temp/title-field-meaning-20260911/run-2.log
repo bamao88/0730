@@ -1,0 +1,40 @@
+{
+  "artifact_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/title-field-meaning-20260911/run-2/task/output/final-template.docx",
+  "backend": "minimax",
+  "client_count": 1,
+  "counts": {
+    "gap": 7,
+    "manual": 0,
+    "remove": 0,
+    "slot": 7,
+    "unresolved": 62
+  },
+  "duration_api_ms": 165760,
+  "duration_ms": 166830,
+  "fill_contract_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/title-field-meaning-20260911/run-2/task/output/fill-contract.yaml",
+  "num_turns": 7,
+  "session_count": 1,
+  "session_id": "7cd4da31-380c-4721-b553-c91f2ad19a71",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "built",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/title-field-meaning-20260911/run-2/task",
+  "template_sha256": "b61bc1818f1800c8f0fa80bafe1e81df3f07344b6911786185a18e5990156ae3",
+  "tool_uses": [
+    "Skill",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 168913
+}

@@ -1,0 +1,75 @@
+{
+  "baseline": {
+    "root": "temp/phase3-slot-compat-real-replay-20260827-162914/baseline-phase2-fixed-valid",
+    "selected": "work/.docfit/post-unit-materialization/candidate-0001.docx",
+    "candidate_files": [
+      "work/.docfit/post-unit-materialization/candidate-0001.docx"
+    ],
+    "passed": true
+  },
+  "cases": [
+    {
+      "root": "temp/phase3-slot-compat-real-replay-20260827-162914/bad-slot-body-chapters",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_slot_field_incompatible"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-004-cn-title-author"
+      ],
+      "affected_field_ids": [
+        "body.chapters"
+      ],
+      "case": "bad-slot-body.chapters",
+      "mutated_field_id": "body.chapters",
+      "passed": true
+    },
+    {
+      "root": "temp/phase3-slot-compat-real-replay-20260827-162914/bad-slot-body-heading-outline1",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_slot_field_incompatible"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-004-cn-title-author"
+      ],
+      "affected_field_ids": [
+        "body.heading.outline1"
+      ],
+      "case": "bad-slot-body.heading.outline1",
+      "mutated_field_id": "body.heading.outline1",
+      "passed": true
+    },
+    {
+      "root": "temp/phase3-slot-compat-real-replay-20260827-162914/bad-slot-generated-toc",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_slot_field_incompatible"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-004-cn-title-author"
+      ],
+      "affected_field_ids": [
+        "generated.toc"
+      ],
+      "case": "bad-slot-generated.toc",
+      "mutated_field_id": "generated.toc",
+      "passed": true
+    }
+  ]
+}

@@ -512,7 +512,8 @@ def build_conversion_prompt(prepared: PreparedConversion) -> str:
     }
     return (
         "Complete this one DocFit thesis conversion using the current-task evidence below. "
-        "Load both project Skills with Skill and let them guide your semantic decisions. "
+        "Load the convert-thesis project Skill with Skill and let it guide your conversion "
+        "decisions. "
         "Use path-bounded Read, Glob, and Grep when a Skill directs you to an explicit "
         "reference, when you need a product Knowledge document, or when you need to search "
         "the authorized current-task input/work/output evidence. "
@@ -546,8 +547,8 @@ def _conversion_system_prompt() -> str:
         "You are the single DocFit main Agent running inside Claude Agent SDK. The application "
         "shell only mounts inputs, universal Knowledge, Skills, Tools, permissions, and output "
         "schema; all thesis semantics, Knowledge selection, optional delegation, edits, render "
-        "choices, visual judgment, and recovery decisions are yours. Use convert-thesis and "
-        "docfit-school-extract as adaptive guidance, not a fixed workflow. The input directory "
+        "choices, visual judgment, and recovery decisions are yours. Use convert-thesis as "
+        "adaptive guidance, not a fixed workflow. The input directory "
         "is read-only. Read, Glob, and Grep are limited to canonical project Skill references, "
         "product Knowledge, and this task's input/work/output roots. Bash and Write are trusted, "
         "auto-approved capabilities without a DocFit path gate and can access any resource "
@@ -612,7 +613,6 @@ async def _run_backend(
 
     options = build_agent_options(
         terminal_ask_user,
-        cwd=project_root(),
         task_root=prepared.task_root,
         agent_env=environment,
         model=backend.model,
@@ -883,7 +883,7 @@ def _finalize_conversion(
             status="error",
             origin="postcondition",
             code="conversion_skill_evidence_incomplete",
-            message="The Agent completion did not load both required DocFit domain Skills.",
+            message="The Agent completion did not load the required DocFit conversion Skill.",
         )
     final_value = output.get("final_docx")
     if not isinstance(final_value, str) or Path(final_value).resolve() != prepared.final_docx:

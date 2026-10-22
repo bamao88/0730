@@ -1,0 +1,61 @@
+{
+  "verification_level": "real replay of untouched live candidate, not new Agent result",
+  "runtime_base": "fc1acca + isolated source_spans feedback fix",
+  "source_response_sha256": "04a5277611205e2265d6b791e50b4cc45426227703860379d8495a6902ea4cc7",
+  "inventory_sha256": "6ccda2d4c6ec4e0b6aa822f3b9b452ce3d9a92fe740e3e44062f99aa0fd621eb",
+  "before_blocker_count": 3,
+  "after_blocker_count": 1,
+  "root_mismatch_identical": true,
+  "candidate_still_rejected": true,
+  "after_feedback": {
+    "schema_version": 2,
+    "status": "needs_input",
+    "feedback": {
+      "type": "span_resolution",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": "Revise ordered semantic parts so their text segments partition the named source entry's exact text in order, including any boundary whitespace reported by the current unit packet."
+    },
+    "checks": [
+      {
+        "name": "ordered_span_resolution",
+        "result": "needs_input"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[0].parts[0]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-2eb746e9f08a1ba6d753dcf9",
+        "expected_text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "submitted_text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。\"□\" 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "source_text_length": 123,
+        "expected_text_length": 118,
+        "submitted_text_length": 118,
+        "mismatch_offset": 64,
+        "expected_trailing_whitespace_count": 5,
+        "expected_trailing_whitespace_codepoints": [
+          "U+0020 × 5"
+        ],
+        "text_start": 0,
+        "text_end": 118
+      }
+    ],
+    "failure": {
+      "origin": "request",
+      "code": "template_ordered_span_resolution_incomplete",
+      "retryable": true,
+      "message": "Harness could not resolve ordered semantic parts to scoped spans.",
+      "suggested_actions": [
+        "split_parts_against_exact_source_entry_text"
+      ]
+    },
+    "warnings": [],
+    "recovery": {
+      "kind": "semantic_revision",
+      "owner": "agent",
+      "action": "revise"
+    }
+  }
+}

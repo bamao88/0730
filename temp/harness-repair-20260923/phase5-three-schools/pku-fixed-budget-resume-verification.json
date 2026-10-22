@@ -1,0 +1,35 @@
+{
+  "code_commit": "3adad8f",
+  "verification_level": "real default CLI resume on completed original PKU task",
+  "exit_code": 2,
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_query_time_budget_exhausted",
+    "retryable": false,
+    "message": "The saved semantic time allowance was exhausted; resume cannot renew it.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  },
+  "changed_existing_checkpoint_inventory_candidate_or_events": [],
+  "events_before": {
+    "budget_policy": 1,
+    "request": 25,
+    "response": 23,
+    "local_review": 19,
+    "local_rejected": 8,
+    "candidate_recorded": 15,
+    "run_failed": 2
+  },
+  "events_after": {
+    "budget_policy": 1,
+    "request": 25,
+    "response": 23,
+    "local_review": 19,
+    "local_rejected": 8,
+    "candidate_recorded": 15,
+    "run_failed": 3
+  },
+  "no_new_queries": true,
+  "product_acceptance": false
+}

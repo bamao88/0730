@@ -1,0 +1,1116 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.4ccdbcc0e86a42d5
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 4ccdbcc0e86a42d5110c69f46868e6046a5473a05d832b26106acd39badc4fc0
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: afcf5297f784432bc84eea614ffc9f99408aecef5e2cfc8373aab8623bbc8b56
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+  field_id: thesis.title.zh
+  style_role_id: style.slot.f45d08c936ec0db482437ed1
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+  field_id: author.name.zh
+  style_role_id: style.slot.931392ecf57dc29f5a06e138
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+  field_id: author.student_id
+  style_role_id: style.slot.9c05f9bf05f1dcf89c1e503d
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+  field_id: author.department
+  style_role_id: style.slot.88f524c1a38d518cf024a055
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+  field_id: author.major
+  style_role_id: style.slot.662c4bae376358168fed92e2
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+  field_id: advisor.name.zh
+  style_role_id: style.slot.813c4c449e0c76af8729810d
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+  field_id: submission.date
+  style_role_id: style.slot.77a0ade3c658d152015396de
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+  span_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1
+  field_id: thesis.title.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.f45d08c936ec0db482437ed1
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文论文题目
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[3]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0004
+  style_contract_ref:
+    style_contract_id: style.slot.f45d08c936ec0db482437ed1
+    contract_digest: 5d9e83486d9628f2c965692861b9d438ed4952fb8e72c1b5540b80d3f7eda01a
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+  span_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1
+  field_id: author.name.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.931392ecf57dc29f5a06e138
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 作者中文姓名
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[4]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0005
+  style_contract_ref:
+    style_contract_id: style.slot.931392ecf57dc29f5a06e138
+    contract_digest: 54bfce2f586c50a488bf792fcf1cf5f404185af6b53fd1582068dcda000ecac2
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+  span_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1
+  field_id: author.student_id
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.9c05f9bf05f1dcf89c1e503d
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 学号
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[5]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0006
+  style_contract_ref:
+    style_contract_id: style.slot.9c05f9bf05f1dcf89c1e503d
+    contract_digest: a04deffc85b8fe32001a72935060d29c278bad78428c5290d11e5d7b3579a149
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+  span_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1
+  field_id: author.department
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.88f524c1a38d518cf024a055
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 院系
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[6]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0007
+  style_contract_ref:
+    style_contract_id: style.slot.88f524c1a38d518cf024a055
+    contract_digest: 70a0521a57da0c7695cc456fc89b8d5f26e5aef1a5d08f5e9089b6b3d5c063a3
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+  span_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1
+  field_id: author.major
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.662c4bae376358168fed92e2
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 专业
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[7]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0008
+  style_contract_ref:
+    style_contract_id: style.slot.662c4bae376358168fed92e2
+    contract_digest: 1bb798714538ceaeea025174084c9186547183636339e2017179b29a3969df4f
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+  span_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1
+  field_id: advisor.name.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.813c4c449e0c76af8729810d
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 导师中文姓名
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[8]
+    part_index: 1
+    span_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0009
+  style_contract_ref:
+    style_contract_id: style.slot.813c4c449e0c76af8729810d
+    contract_digest: e268e53352c614862cf78524d2843d8a0a67c979bdc57d463019b6a6d46d0d01
+- slot_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+  span_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0
+  field_id: submission.date
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.77a0ade3c658d152015396de
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 提交年月
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[9]
+    part_index: 0
+    span_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-0001-cover-page:block-0010
+  style_contract_ref:
+    style_contract_id: style.slot.77a0ade3c658d152015396de
+    contract_digest: 7557090fcbe724237570a10d4298c295a74cbf457787b8845f667744fa69f9b9
+styles:
+- style_contract_id: style.slot.662c4bae376358168fed92e2
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 4.0
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 1bb798714538ceaeea025174084c9186547183636339e2017179b29a3969df4f
+  label: author.major @ reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+    field_id: author.major
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.77a0ade3c658d152015396de
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.25
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 宋体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 7557090fcbe724237570a10d4298c295a74cbf457787b8845f667744fa69f9b9
+  label: submission.date @ reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+    field_id: submission.date
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.813c4c449e0c76af8729810d
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 4.0
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: e268e53352c614862cf78524d2843d8a0a67c979bdc57d463019b6a6d46d0d01
+  label: advisor.name.zh @ reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+    field_id: advisor.name.zh
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.88f524c1a38d518cf024a055
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 4.0
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 70a0521a57da0c7695cc456fc89b8d5f26e5aef1a5d08f5e9089b6b3d5c063a3
+  label: author.department @ reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+    field_id: author.department
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.931392ecf57dc29f5a06e138
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 4.0
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 54bfce2f586c50a488bf792fcf1cf5f404185af6b53fd1582068dcda000ecac2
+  label: author.name.zh @ reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+    field_id: author.name.zh
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.9c05f9bf05f1dcf89c1e503d
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.underline
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 4.0
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.underline: single
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: a04deffc85b8fe32001a72935060d29c278bad78428c5290d11e5d7b3579a149
+  label: author.student_id @ reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+    field_id: author.student_id
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.f45d08c936ec0db482437ed1
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.underline
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 35.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Courier New
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.underline: single
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 5d9e83486d9628f2c965692861b9d438ed4952fb8e72c1b5540b80d3f7eda01a
+  label: thesis.title.zh @ reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+    field_id: thesis.title.zh
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 38635da1a8342699072d16fdecf91dd6f8e8f058aa812dbc5638e8183ece5d7a
+provenance:
+  source_sha256: 8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268
+  body_structure_count: 0
+  agent_owned_semantics: true
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 7
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268
+    final_sha256: 4ccdbcc0e86a42d5110c69f46868e6046a5473a05d832b26106acd39badc4fc0
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 4ccdbcc0e86a42d5110c69f46868e6046a5473a05d832b26106acd39badc4fc0
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 38635da1a8342699072d16fdecf91dd6f8e8f058aa812dbc5638e8183ece5d7a
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 38635da1a8342699072d16fdecf91dd6f8e8f058aa812dbc5638e8183ece5d7a
+      occurrences:
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.f45d08c936ec0db482437ed1
+          contract_digest: 5d9e83486d9628f2c965692861b9d438ed4952fb8e72c1b5540b80d3f7eda01a
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.931392ecf57dc29f5a06e138
+          contract_digest: 54bfce2f586c50a488bf792fcf1cf5f404185af6b53fd1582068dcda000ecac2
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.9c05f9bf05f1dcf89c1e503d
+          contract_digest: a04deffc85b8fe32001a72935060d29c278bad78428c5290d11e5d7b3579a149
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.88f524c1a38d518cf024a055
+          contract_digest: 70a0521a57da0c7695cc456fc89b8d5f26e5aef1a5d08f5e9089b6b3d5c063a3
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.662c4bae376358168fed92e2
+          contract_digest: 1bb798714538ceaeea025174084c9186547183636339e2017179b29a3969df4f
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.813c4c449e0c76af8729810d
+          contract_digest: e268e53352c614862cf78524d2843d8a0a67c979bdc57d463019b6a6d46d0d01
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.77a0ade3c658d152015396de
+          contract_digest: 7557090fcbe724237570a10d4298c295a74cbf457787b8845f667744fa69f9b9
+    validation:
+      status: passed
+      counts:
+        passed: 7
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+        style_contract_id: style.slot.f45d08c936ec0db482437ed1
+        contract_digest: 5d9e83486d9628f2c965692861b9d438ed4952fb8e72c1b5540b80d3f7eda01a
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0004;part_index=1;field_id=thesis.title.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+        style_contract_id: style.slot.931392ecf57dc29f5a06e138
+        contract_digest: 54bfce2f586c50a488bf792fcf1cf5f404185af6b53fd1582068dcda000ecac2
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0005;part_index=1;field_id=author.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+        style_contract_id: style.slot.9c05f9bf05f1dcf89c1e503d
+        contract_digest: a04deffc85b8fe32001a72935060d29c278bad78428c5290d11e5d7b3579a149
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0006;part_index=1;field_id=author.student_id
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+        style_contract_id: style.slot.88f524c1a38d518cf024a055
+        contract_digest: 70a0521a57da0c7695cc456fc89b8d5f26e5aef1a5d08f5e9089b6b3d5c063a3
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0007;part_index=1;field_id=author.department
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+        style_contract_id: style.slot.662c4bae376358168fed92e2
+        contract_digest: 1bb798714538ceaeea025174084c9186547183636339e2017179b29a3969df4f
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0008;part_index=1;field_id=author.major
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+        style_contract_id: style.slot.813c4c449e0c76af8729810d
+        contract_digest: e268e53352c614862cf78524d2843d8a0a67c979bdc57d463019b6a6d46d0d01
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0009;part_index=1;field_id=advisor.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+        style_contract_id: style.slot.77a0ade3c658d152015396de
+        contract_digest: 7557090fcbe724237570a10d4298c295a74cbf457787b8845f667744fa69f9b9
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001-cover-page:block-0010;part_index=0;field_id=submission.date
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

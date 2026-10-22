@@ -342,17 +342,17 @@ def build_responsibility_inventory(
 
     for slot in contract.slots:
         add(
-            f"slot-contract:{slot.slot_id}:field",
+            f"slot-contract:{slot.slot_ref}:field",
             Owner.SLOT,
             "slot.field_mapping",
-            slot.slot_id,
+            slot.slot_ref,
             {"field_id": slot.field_id, "content_type": slot.content_type},
         )
         add(
-            f"slot-contract:{slot.slot_id}:style",
+            f"slot-contract:{slot.slot_ref}:style",
             Owner.SLOT,
             "slot.value_style",
-            slot.slot_id,
+            slot.slot_ref,
             slot.expected_value_style,
         )
 

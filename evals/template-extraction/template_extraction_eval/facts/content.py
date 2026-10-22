@@ -35,6 +35,10 @@ def element_text(element: ElementTree.Element) -> str:
     return "".join(_node_text(node) for node in element.iter())
 
 
+def _is_comment_reference_run(run: ElementTree.Element) -> bool:
+    return run.find(f"{W}commentReference") is not None and element_text(run) == ""
+
+
 def _tokens(paragraph: ElementTree.Element) -> tuple[str, ...]:
     tokens: list[str] = []
     seen_nodes: set[int] = set()
@@ -179,6 +183,8 @@ def _analyze_story(
         runs: list[RunFact] = []
         cursor = 0
         for run in paragraph.iter(f"{W}r"):
+            if _is_comment_reference_run(run):
+                continue
             run_text = element_text(run)
             start = cursor
             cursor += len(run_text)

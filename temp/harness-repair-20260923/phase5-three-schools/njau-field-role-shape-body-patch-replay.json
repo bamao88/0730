@@ -1,0 +1,71 @@
+{
+  "verification_level": "real replay of unmodified persisted full candidate; no Agent call or publication",
+  "runtime_commit": "cbefb17",
+  "source_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/object-inventory.json": "80134d845d8ac06033397a6b4c37c0feb0f9a85742df50f5b8041b02a0a6b9d3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/semantic-judgments.json": "86ede60b6ca288f7927a3069f2cd9584d1ec390b20f6390131971a4c638a3a5b",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "before_blocker_counts": {
+    "materialization_body_structure_member_ambiguous": 18,
+    "materialization_body_structure_carrier_conflict": 18,
+    "materialization_intent_unclassified": 1
+  },
+  "after_blocker_counts": {
+    "materialization_intent_unclassified": 1
+  },
+  "after_feedback": {
+    "schema_version": 1,
+    "status": "error",
+    "recovery": {
+      "kind": "execution_unsupported",
+      "owner": "tool",
+      "action": "stop"
+    },
+    "feedback": {
+      "type": "materialization_readiness",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": null
+    },
+    "checks": [
+      {
+        "name": "materialization_readiness",
+        "result": "error"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "materialization_intent_unclassified",
+        "missing_requirement": "executable_ordered_part_roles",
+        "why_it_blocks_execution": "Ordered part roles do not form a single executable materialization intent.",
+        "message": "Ordered part roles do not form a single executable materialization intent.",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "source_judgment_ref": "semantic_judgments[169]",
+        "source_entry_ids": [
+          "source-entry-3c8a71cc4dcc018098df31ed"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-3c8a71cc4dcc018098df31ed"
+          }
+        ]
+      }
+    ],
+    "failure": {
+      "origin": "tool",
+      "code": "template_materialization_execution_unsupported",
+      "retryable": false,
+      "message": "Accepted semantic review is not materializable: materialization_intent_unclassified.",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "warnings": []
+  },
+  "source_unchanged": true
+}

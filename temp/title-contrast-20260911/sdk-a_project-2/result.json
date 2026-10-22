@@ -1,0 +1,275 @@
+{
+  "status": "complete",
+  "summary": "返回 cover 单元 16 个 source entry 的语义判断。前导 block-0001 是封面格式/样式说明，作为整体单元前置 style_only 责任；block-0002/0005/0008/0014 是版式空行说明，作为 style_only。固定文字、占位填写值、样式说明按责任分段；标题与五项基本信息分别绑定到词表字段；英文标题 TITLE OF GRADUATION PAPER 整行作为 thesis.title.en 的提示位置，括号样式说明作为 style_only。提交日期 20××年××月 的占位值绑定 submission.date。学院名后括号提示按 style_only 保留为学院名用全称的填写要求。指导老师行将姓名与职称分别绑定 advisor.name.zh 与 advisor.title。",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-f64716e2b627776af88239e5",
+      "parts": [
+        {
+          "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+          "role": "style_only"
+        }
+      ],
+      "reason": "封面基本格式说明（行距、页边距、居中规则、占位空格宽度及标题中“论文/设计”取舍规则）属于学校样式/排版要求，由宿主样式契约承载；不进入填写值，但需作为封面整体版式约束保留。"
+    },
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "紧贴校名前的空行与字体要求，属于校名排版约束，不承载任何填写值。"
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "“湖 南 农 业 大 学” 是学校固定校名，应原样保留；尾随括号为字体/字号要求，不属于校名正文。"
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "“全日制普通本科生毕业论文(设计)” 是学校固定的封面文件类型标题，正文必须保留；括号内容为字体/字号要求。括号内“论文/设计”取舍规则由前置格式说明承载。"
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "文件类型标题与中文题目之间的空行与字号说明，仅作为版式约束。"
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": "（小二黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "“毕业论文（设计）中文题目” 占据中文题名填写位置，无另设填写区，整体作为中文论文题目的填值片段，绑定 thesis.title.zh；括号为字号/字体要求。"
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "“TITLE OF GRADUATION PAPER” 是英文标题的占位提示文字，占据英文题名填写位置，绑定 thesis.title.en；括号内为字号、字体与排版要求。"
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "英文标题与基本信息之间的版式空行说明，仅为排版约束。"
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "style_only"
+        },
+        {
+          "text": "学生姓名",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "style_only"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        }
+      ],
+      "reason": "基本信息行 1：前导 □ 占位属版式约束；标签“学生姓名”与冒号保留；姓名的示例值 “×××（或×□×）” 占据作者中文姓名填写位置，绑定 author.name.zh。括号“（三号黑体加粗）” 实际为整行字号/字体要求；姓名段末的括号“（或×□×）” 描述姓名字符数备选，属于示例结构而非样式说明，因此保留在姓名示例值内。"
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "style_only"
+        },
+        {
+          "text": "学□□号",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "基本信息行 2：标签“学□号”与冒号原样保留；“20××××××××××” 是学号示例值，占据学号填写位置，绑定 author.student_id。原行字号为三号黑体，由宿主样式契约承担，未在文中以括号重复说明。"
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "style_only"
+        },
+        {
+          "text": "年级专业及班级",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "基本信息行 3：标签“年级专业及班级”与冒号保留；“20××级×××（×）班” 将年级、专业、班组合并为一个填写位置，与 author.cohort_class 复合字段含义一致；括号“×” 属示例值结构，不属于字段说明。"
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "style_only"
+        },
+        {
+          "text": "指导老师及职称",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□",
+          "role": "style_only"
+        },
+        {
+          "text": "教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "基本信息行 4：标签“指导老师及职称”与冒号保留；姓名的“×××” 与职称的“教授” 分属不同填写责任，且 advisor.title 与 advisor.name.zh 在词表中均为允许的 fill_slot，分别绑定。中间 □ 视为版式占位，不进入字段值。"
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "style_only"
+        },
+        {
+          "text": "学□□院",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": " （学院名用全称）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "基本信息行 5：标签“学□院”与冒号保留；“××××学院” 示例值占据学院名填写位置，绑定 author.department；括号“学院名用全称” 为填写要求说明，不属于学院名称本体。"
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "基本信息与落款之间的版式空行与字号说明，仅为排版约束。"
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（小三号黑体）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "“湖南·长沙” 是学校所在地，作为封面固定文字保留；括号为字体/字号要求。"
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "“提交日期：” 标签原样保留；“20××年××月” 为年月占位示例值，绑定 submission.date。无字体/字号括号说明，由宿主样式契约承担。"
+    }
+  ]
+}

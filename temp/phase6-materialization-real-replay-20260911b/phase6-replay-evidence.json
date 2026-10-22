@@ -1,0 +1,20 @@
+{
+  "status": "ok",
+  "level": "logic/contract + actual DOCX/publication/consumer real replay",
+  "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "template_sha256": "01d3577e32db695c141cb1fdeeb36dc7a3456c8ccf40be1b8f11b5d956f71d2d",
+  "unchanged_zip_member_count": 15,
+  "unselected_paragraph_count": 19,
+  "selected_para_ids": [
+    "12BC71FF",
+    "155D2FA9",
+    "1DCE7B4E"
+  ],
+  "slot_count": 3,
+  "persisted_consumer_status": "PARTIAL",
+  "persisted_consumer_reason": "template_fill_contract_not_human_accepted",
+  "accepted_consumer_status": "COMPLETE",
+  "placement_operation_count": 3,
+  "materialization_digest": "a9f01474a3a8d2485583da27d21480f2507be110ab32a598acdacd76a886984b",
+  "accepted_span_schema": "docfit-template-materialization-provenance/v1"
+}

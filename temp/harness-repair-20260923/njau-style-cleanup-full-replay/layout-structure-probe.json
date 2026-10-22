@@ -1,0 +1,380 @@
+{
+  "source": {
+    "breaks": [
+      {
+        "paragraph_index": 1,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00CA4CD2\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId10\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId11\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"284\" ns0:footer=\"284\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 24,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"005A3704\" ns0:rsidRPr=\"005A3704\" ns0:rsidSect=\"004617F8\"><ns0:headerReference ns0:type=\"even\" ns1:id=\"rId12\" /><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId13\" /><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId14\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId15\" /><ns0:headerReference ns0:type=\"first\" ns1:id=\"rId16\" /><ns0:footerReference ns0:type=\"first\" ns1:id=\"rId17\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"851\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 53,
+        "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00F17900\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId18\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId19\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"lowerRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 63,
+        "text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）",
+        "structural_nodes": [
+          "<ns0:br xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"page\" />"
+        ]
+      },
+      {
+        "paragraph_index": 72,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00E22938\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId20\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 86,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00D43528\" ns0:rsidSect=\"0094600B\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId21\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId22\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+          "<ns0:br xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"page\" />"
+        ]
+      },
+      {
+        "paragraph_index": 108,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"000921BD\" ns0:rsidSect=\"0094600B\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId23\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 115,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00A3041D\" ns0:rsidRPr=\"00E11F0C\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId24\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+          "<ns0:br xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"page\" />"
+        ]
+      },
+      {
+        "paragraph_index": 137,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C858A4\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId25\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 141,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C16BEB\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId26\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 145,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00156E80\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId27\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      }
+    ],
+    "footers": {
+      "word/footer12.xml": {
+        "sha256": "ab6c7ac1cfcd89110c96d88b827afa9806821dfd12e346225ec55130780a85b7",
+        "text": "6",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00D43528\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>6</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00D43528\" ns0:rsidRDefault=\"00D43528\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer6.xml": {
+        "sha256": "209eab06ca286de133cd7cc7b59460d26783cac30e2ab27bf910e02d6e29835e",
+        "text": "I",
+        "field_instructions": [
+          " PAGE   \\* MERGEFORMAT "
+        ],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:sdt><ns0:sdtPr><ns0:id ns0:val=\"7867427\" /><ns0:docPartObj><ns0:docPartGallery ns0:val=\"Page Numbers (Bottom of Page)\" /><ns0:docPartUnique /></ns0:docPartObj></ns0:sdtPr><ns0:sdtEndPr /><ns0:sdtContent><ns0:p ns0:rsidR=\"00F17900\" ns0:rsidRDefault=\"003846F3\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:fldChar ns0:fldCharType=\"begin\" /></ns0:r><ns0:r><ns0:instrText xml:space=\"preserve\"> PAGE   \\* MERGEFORMAT </ns0:instrText></ns0:r><ns0:r><ns0:fldChar ns0:fldCharType=\"separate\" /></ns0:r><ns0:r ns0:rsidR=\"00167650\" ns0:rsidRPr=\"00167650\"><ns0:rPr><ns0:noProof /><ns0:lang ns0:val=\"zh-CN\" /></ns0:rPr><ns0:t>I</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:noProof /><ns0:lang ns0:val=\"zh-CN\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"end\" /></ns0:r></ns0:p></ns0:sdtContent></ns0:sdt><ns0:p ns0:rsidR=\"0094600B\" ns0:rsidRDefault=\"0094600B\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer5.xml": {
+        "sha256": "d77a9fda470e99ecde275455f67a6094abbeda2d89cabd50bc18295fb0bd3ae0",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer7.xml": {
+        "sha256": "758f6ba460ce64536cc4f6daf9f5e97165b202a5df36b9c7b635a92a4354642e",
+        "text": "1",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"0028399B\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>1</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"0028399B\" ns0:rsidRDefault=\"0028399B\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer8.xml": {
+        "sha256": "92deeaab32efa19a6f1b9cd4f7d0475123500b08f4784d1997013ad5df5cc3c7",
+        "text": "2",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>2</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer9.xml": {
+        "sha256": "4752b7fe6614d22b4540dfd47357f0b8daf6fb6181d6ea33833c42941d977e7a",
+        "text": "3",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00E0462C\" ns0:rsidRDefault=\"00A3041D\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>3</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00E0462C\" ns0:rsidRDefault=\"00E0462C\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer10.xml": {
+        "sha256": "3b575ecb9bcb62699adc72e704f46a7cf030ec410ff95618ebb593ff37e32129",
+        "text": "4",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>4</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer11.xml": {
+        "sha256": "86cf38d775997c72643159e7f2bf15174850c7bca3563c80ee57c6661fd5b3e8",
+        "text": "5",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>5</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer4.xml": {
+        "sha256": "13e16a24946c315511f3a5c7d7dd2ea5692a69a4d7f7ea37254df444598907ea",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr></ns0:p><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer3.xml": {
+        "sha256": "d77a9fda470e99ecde275455f67a6094abbeda2d89cabd50bc18295fb0bd3ae0",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer1.xml": {
+        "sha256": "4627377e27e1ea90364e16527282c7bd7da16ba8a810459c0a10c297975d8d74",
+        "text": "",
+        "field_instructions": [
+          "PAGE  "
+        ],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00045122\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:framePr ns0:wrap=\"around\" ns0:vAnchor=\"text\" ns0:hAnchor=\"margin\" ns0:xAlign=\"center\" ns0:y=\"1\" /><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr></ns0:pPr><ns0:r><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"begin\" /></ns0:r><ns0:r ns0:rsidR=\"00B04E19\"><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:instrText xml:space=\"preserve\">PAGE  </ns0:instrText></ns0:r><ns0:r><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"end\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00B04E19\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer13.xml": {
+        "sha256": "270592c8343b7a29d406ac8d1a40c9f0a6382d03ad78bf179f900f4c6db4a4bc",
+        "text": "7",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t>7</ns0:t></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer2.xml": {
+        "sha256": "ddaa0b6fd74b551e80677d00c57797c358e699b8dc25b6c28ac57ffe7955eacd",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00CA4CD2\" ns0:rsidRDefault=\"00CA4CD2\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr></ns0:p><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00B04E19\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      }
+    },
+    "section_properties": [
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00CA4CD2\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId10\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId11\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"284\" ns0:footer=\"284\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"005A3704\" ns0:rsidRPr=\"005A3704\" ns0:rsidSect=\"004617F8\"><ns0:headerReference ns0:type=\"even\" ns1:id=\"rId12\" /><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId13\" /><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId14\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId15\" /><ns0:headerReference ns0:type=\"first\" ns1:id=\"rId16\" /><ns0:footerReference ns0:type=\"first\" ns1:id=\"rId17\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"851\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00F17900\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId18\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId19\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"lowerRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00E22938\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId20\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00D43528\" ns0:rsidSect=\"0094600B\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId21\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId22\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"000921BD\" ns0:rsidSect=\"0094600B\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId23\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00A3041D\" ns0:rsidRPr=\"00E11F0C\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId24\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C858A4\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId25\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C16BEB\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId26\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00156E80\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId27\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00AE0799\" ns0:rsidRPr=\"00AE0799\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId28\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+    ]
+  },
+  "candidate": {
+    "breaks": [
+      {
+        "paragraph_index": 1,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00CA4CD2\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId10\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId11\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"284\" ns0:footer=\"284\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 24,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"005A3704\" ns0:rsidRPr=\"005A3704\" ns0:rsidSect=\"004617F8\"><ns0:headerReference ns0:type=\"even\" ns1:id=\"rId12\" /><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId13\" /><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId14\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId15\" /><ns0:headerReference ns0:type=\"first\" ns1:id=\"rId16\" /><ns0:footerReference ns0:type=\"first\" ns1:id=\"rId17\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"851\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 53,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00F17900\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId18\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId19\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"lowerRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 67,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00E22938\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId20\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 68,
+        "text": "【正文段落】",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00D43528\" ns0:rsidSect=\"0094600B\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId21\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId22\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 69,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"000921BD\" ns0:rsidSect=\"0094600B\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId23\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 70,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00A3041D\" ns0:rsidRPr=\"00E11F0C\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId24\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+          "<ns0:br xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"page\" />"
+        ]
+      },
+      {
+        "paragraph_index": 75,
+        "text": "【参考文献条目】",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C858A4\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId25\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 78,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C16BEB\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId26\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      },
+      {
+        "paragraph_index": 82,
+        "text": "",
+        "structural_nodes": [
+          "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00156E80\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId27\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+        ]
+      }
+    ],
+    "footers": {
+      "word/footer12.xml": {
+        "sha256": "f9d373d61d23cb7b2ebe750e11961b64b5766c2b980c51ce0da8c930757736d7",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00D43528\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00D43528\" ns0:rsidRDefault=\"00D43528\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer6.xml": {
+        "sha256": "209eab06ca286de133cd7cc7b59460d26783cac30e2ab27bf910e02d6e29835e",
+        "text": "I",
+        "field_instructions": [
+          " PAGE   \\* MERGEFORMAT "
+        ],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:sdt><ns0:sdtPr><ns0:id ns0:val=\"7867427\" /><ns0:docPartObj><ns0:docPartGallery ns0:val=\"Page Numbers (Bottom of Page)\" /><ns0:docPartUnique /></ns0:docPartObj></ns0:sdtPr><ns0:sdtEndPr /><ns0:sdtContent><ns0:p ns0:rsidR=\"00F17900\" ns0:rsidRDefault=\"003846F3\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:fldChar ns0:fldCharType=\"begin\" /></ns0:r><ns0:r><ns0:instrText xml:space=\"preserve\"> PAGE   \\* MERGEFORMAT </ns0:instrText></ns0:r><ns0:r><ns0:fldChar ns0:fldCharType=\"separate\" /></ns0:r><ns0:r ns0:rsidR=\"00167650\" ns0:rsidRPr=\"00167650\"><ns0:rPr><ns0:noProof /><ns0:lang ns0:val=\"zh-CN\" /></ns0:rPr><ns0:t>I</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:noProof /><ns0:lang ns0:val=\"zh-CN\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"end\" /></ns0:r></ns0:p></ns0:sdtContent></ns0:sdt><ns0:p ns0:rsidR=\"0094600B\" ns0:rsidRDefault=\"0094600B\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer5.xml": {
+        "sha256": "d77a9fda470e99ecde275455f67a6094abbeda2d89cabd50bc18295fb0bd3ae0",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer7.xml": {
+        "sha256": "63733ac670efb3e966d639988a0f1d7b9a20822319e17e94bf6f0a6835f62547",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"0028399B\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"0028399B\" ns0:rsidRDefault=\"0028399B\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer8.xml": {
+        "sha256": "dd2329a01b2920e63b3be1db497b8ee48d268a9e51c6cb4bb0294f4cc9e9a25c",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer9.xml": {
+        "sha256": "d2751c6595ea19596bc03edcdaaacbe78e54ac3b04396c509d52be36efa8f42c",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00E0462C\" ns0:rsidRDefault=\"00A3041D\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00E0462C\" ns0:rsidRDefault=\"00E0462C\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer10.xml": {
+        "sha256": "dd2329a01b2920e63b3be1db497b8ee48d268a9e51c6cb4bb0294f4cc9e9a25c",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer11.xml": {
+        "sha256": "dd2329a01b2920e63b3be1db497b8ee48d268a9e51c6cb4bb0294f4cc9e9a25c",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer4.xml": {
+        "sha256": "13e16a24946c315511f3a5c7d7dd2ea5692a69a4d7f7ea37254df444598907ea",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr></ns0:p><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer3.xml": {
+        "sha256": "d77a9fda470e99ecde275455f67a6094abbeda2d89cabd50bc18295fb0bd3ae0",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"005A3704\" ns0:rsidRDefault=\"005A3704\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:ind ns0:firstLine=\"360\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer1.xml": {
+        "sha256": "4627377e27e1ea90364e16527282c7bd7da16ba8a810459c0a10c297975d8d74",
+        "text": "",
+        "field_instructions": [
+          "PAGE  "
+        ],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00045122\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:framePr ns0:wrap=\"around\" ns0:vAnchor=\"text\" ns0:hAnchor=\"margin\" ns0:xAlign=\"center\" ns0:y=\"1\" /><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr></ns0:pPr><ns0:r><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"begin\" /></ns0:r><ns0:r ns0:rsidR=\"00B04E19\"><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:instrText xml:space=\"preserve\">PAGE  </ns0:instrText></ns0:r><ns0:r><ns0:rPr><ns0:rStyle ns0:val=\"a5\" /></ns0:rPr><ns0:fldChar ns0:fldCharType=\"end\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00B04E19\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer13.xml": {
+        "sha256": "dd2329a01b2920e63b3be1db497b8ee48d268a9e51c6cb4bb0294f4cc9e9a25c",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr><ns0:r><ns0:rPr><ns0:rFonts ns0:hint=\"eastAsia\" /></ns0:rPr><ns0:t xml:space=\"preserve\" /></ns0:r></ns0:p><ns0:p ns0:rsidR=\"001E696F\" ns0:rsidRDefault=\"001E696F\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      },
+      "word/footer2.xml": {
+        "sha256": "ddaa0b6fd74b551e80677d00c57797c358e699b8dc25b6c28ac57ffe7955eacd",
+        "text": "",
+        "field_instructions": [],
+        "simple_fields": [],
+        "xml": "<ns0:ftr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" ns1:Ignorable=\"w14 w15 w16se wp14\"><ns0:p ns0:rsidR=\"00CA4CD2\" ns0:rsidRDefault=\"00CA4CD2\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /><ns0:jc ns0:val=\"center\" /></ns0:pPr></ns0:p><ns0:p ns0:rsidR=\"00B04E19\" ns0:rsidRDefault=\"00B04E19\"><ns0:pPr><ns0:pStyle ns0:val=\"a3\" /></ns0:pPr></ns0:p></ns0:ftr>"
+      }
+    },
+    "section_properties": [
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00CA4CD2\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId10\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId11\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"284\" ns0:footer=\"284\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"005A3704\" ns0:rsidRPr=\"005A3704\" ns0:rsidSect=\"004617F8\"><ns0:headerReference ns0:type=\"even\" ns1:id=\"rId12\" /><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId13\" /><ns0:footerReference ns0:type=\"even\" ns1:id=\"rId14\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId15\" /><ns0:headerReference ns0:type=\"first\" ns1:id=\"rId16\" /><ns0:footerReference ns0:type=\"first\" ns1:id=\"rId17\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"851\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00F17900\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId18\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId19\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"lowerRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00E22938\" ns0:rsidSect=\"00F17900\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId20\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:fmt=\"upperRoman\" ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00D43528\" ns0:rsidSect=\"0094600B\"><ns0:headerReference ns0:type=\"default\" ns1:id=\"rId21\" /><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId22\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"000921BD\" ns0:rsidSect=\"0094600B\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId23\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:pgNumType ns0:start=\"1\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00A3041D\" ns0:rsidRPr=\"00E11F0C\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId24\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C858A4\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId25\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"002C5865\" ns0:rsidRPr=\"00C16BEB\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId26\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00156E80\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId27\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>",
+      "<ns0:sectPr xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:ns1=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" ns0:rsidR=\"00AE0799\" ns0:rsidRPr=\"00AE0799\" ns0:rsidSect=\"004617F8\"><ns0:footerReference ns0:type=\"default\" ns1:id=\"rId28\" /><ns0:pgSz ns0:w=\"11906\" ns0:h=\"16838\" ns0:code=\"9\" /><ns0:pgMar ns0:top=\"1134\" ns0:right=\"1134\" ns0:bottom=\"1134\" ns0:left=\"1134\" ns0:header=\"850\" ns0:footer=\"992\" ns0:gutter=\"284\" /><ns0:cols ns0:space=\"425\" /><ns0:docGrid ns0:linePitch=\"312\" /></ns0:sectPr>"
+    ]
+  }
+}

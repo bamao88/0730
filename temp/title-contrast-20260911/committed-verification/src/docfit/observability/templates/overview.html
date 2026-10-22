@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}运行总览 · DocFit Observer{% endblock %}
+{% block header_actions %}
+<button class="button-secondary" data-post-url="/api/history/clear" data-confirm="只清除观测历史，不删除任务文件或 SDK transcript。确认继续？">清空观测历史</button>
+{% endblock %}
+{% block content %}
+<section class="hero compact">
+  <div>
+    <p class="eyebrow">RUN OVERVIEW</p>
+    <h1>最近运行</h1>
+    <p class="lede">这里只展示脱敏运行投影。任务证据默认未挂载，网站不会扫描本地目录。</p>
+  </div>
+  <div class="hero-stat"><strong>{{ runs|length }}</strong><span>当前列表运行数</span></div>
+</section>
+
+{% if runs %}
+<section class="panel" aria-labelledby="compare-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">RUN COMPARISON</p>
+      <h2 id="compare-title">比较两个运行</h2>
+    </div>
+    <span class="quiet">先验证可比性，再展示差值</span>
+  </div>
+  <form class="comparison-picker" action="/compare" method="get">
+    <label>基线运行
+      <select name="left" required>
+        {% for item in runs %}<option value="{{ item.run.run_id }}">{{ item.run.run_id }} · {{ item.dimensions.run_result }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>候选运行
+      <select name="right" required>
+        {% for item in runs|reverse %}<option value="{{ item.run.run_id }}">{{ item.run.run_id }} · {{ item.dimensions.run_result }}</option>{% endfor %}
+      </select>
+    </label>
+    <button type="submit">生成可比性摘要</button>
+  </form>
+</section>
+<section class="panel table-panel" aria-labelledby="run-table-title">
+  <div class="section-heading">
+    <h2 id="run-table-title">运行记录</h2>
+    <span class="quiet">按最近活动排序</span>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>运行</th><th>结果</th><th>观测</th><th>本地证据</th><th>事件</th><th>Tool / Subagent</th><th>最近活动</th></tr></thead>
+      <tbody>
+      {% for item in runs %}
+        <tr>
+          <td><a class="id-link" href="/runs/{{ item.run.run_id }}">{{ item.run.run_id }}</a><small>{{ item.run.task_ref or 'task_ref unavailable' }}</small></td>
+          <td><span class="status status-{{ item.dimensions.run_result|lower }}">{{ item.dimensions.run_result }}</span></td>
+          <td><span class="status status-{{ item.dimensions.observation.state }}">{{ item.dimensions.observation.state }}</span></td>
+          <td><span class="status status-{{ item.dimensions.local_evidence }}">{{ item.dimensions.local_evidence }}</span></td>
+          <td>{{ item.run.event_count }}<small>{{ item.run.event_bytes }} bytes</small></td>
+          <td>
+            {% for metric in item.metrics %}
+              {% if metric.label in ['Tool calls', 'Subagents'] %}<small>{{ metric.label }}: {{ metric.value if metric.value is not none else 'unknown' }}</small>{% endif %}
+            {% endfor %}
+          </td>
+          <td>{{ item.run.last_observed_at or item.run.completed_at or item.run.started_at or 'unknown' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% else %}
+<section class="empty-state">
+  <p class="eyebrow">NO RUNS</p>
+  <h2>还没有可显示的观测记录</h2>
+  <p>运行一次 <code>docfit convert</code> 合成任务后再刷新；如需禁用观测，显式传入 <code>--observation off</code>。</p>
+</section>
+{% endif %}
+{% endblock %}

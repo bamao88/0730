@@ -1,0 +1,311 @@
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 23%]
+........................................................................ [ 31%]
+........................................................................ [ 39%]
+..FF.................................................................... [ 47%]
+........................................................................ [ 55%]
+........................................................................ [ 63%]
+........................................................................ [ 71%]
+........................................................................ [ 79%]
+........................................................................ [ 87%]
+........................................................................ [ 95%]
+..........................................                               [100%]
+=================================== FAILURES ===================================
+_ test_local_text_review_precedes_next_batch_and_budget_survives_resume[False] _
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-0/test_local_text_review_precede0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e5a8620>
+stuck = False
+
+    @pytest.mark.parametrize("stuck", [False, True])
+    def test_local_text_review_precedes_next_batch_and_budget_survives_resume(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stuck: bool
+    ) -> None:
+        prepared = _prepared(tmp_path)
+        checkpoint = _unit_checkpoint(prepared)
+        config = tmp_path / "config"
+        config.mkdir()
+        inventory = _semantic_batch_inventory_with_count(prepared, checkpoint, count=130)
+        entries = inventory["canonical_source_inventory"]["source_entries"]
+        texts = {entry["source_entry_id"]: entry["text"] for entry in entries}
+        attempts: dict[str, int] = {}
+        requested: list[list[str]] = []
+        global_reviews = 0
+    
+        class BatchClient:
+            def __init__(self, *, options: object) -> None:
+                self.source_entry_ids: list[str] = []
+    
+            async def __aenter__(self) -> BatchClient:
+                return self
+    
+            async def __aexit__(self, *_: object) -> None:
+                return None
+    
+            async def query(self, prompt: str) -> None:
+                # Assert the actual SDK request, including initial and repair queries.
+                # The old startup builder is not used by this batch runtime.
+                assert "For any part made only of whitespace" in prompt
+                assert "including a whitespace part inside an entry" in prompt
+                assert "merely describing it in reason does not cover it" in prompt
+                assert "Boundary counts describe characters already present" in prompt
+                assert "leading and trailing counts refer to the same characters" in prompt
+                assert "arrays on that SAME part" in prompt
+                assert "do not split one fill_slot into several parts" in prompt
+                assert "Harness expands each run only when it exactly matches" in prompt
+                self.source_entry_ids = json.loads(
+                    next(line for line in prompt.splitlines() if line.startswith("["))
+                )
+                requested.append(self.source_entry_ids)
+                key = self.source_entry_ids[0]
+                attempts[key] = attempts.get(key, 0) + 1
+    
+            async def receive_response(self) -> Any:
+                attempt = attempts[self.source_entry_ids[0]]
+                judgments = [
+                    {"source_entry_id": key, "parts": [{"text": texts[key], "role": "fixed_label"}]}
+                    for key in self.source_entry_ids
+                ]
+                if attempt <= 3:
+                    judgments[0]["parts"][0]["text"] += "X" * (1 if stuck else attempt)
+                yield AssistantMessage(
+                    content=[
+                        TextBlock("  synthetic visible output \u00a0 "),
+                        ThinkingBlock(thinking="private-thinking", signature="synthetic"),
+                    ],
+                    model="synthetic-model",
+                )
+                yield AssistantMessage(
+                    content=[TextBlock("private-assistant-error")],
+                    model="synthetic-model",
+                    error="unknown",
+                )
+                yield ResultMessage(
+                    subtype="success",
+                    duration_ms=10,
+                    duration_api_ms=8,
+                    is_error=False,
+                    num_turns=1,
+                    session_id=f"batch-{len(requested)}",
+                    structured_output={
+                        "status": "complete",
+                        "summary": "synthetic candidate",
+                        "semantic_judgments": judgments,
+                    },
+                )
+    
+        def aggregate_review(_prepared, output, **kwargs):
+            nonlocal global_reviews
+            global_reviews += 1
+            assert len(output["semantic_judgments"]) == 130
+            assert len(requested) == 12
+            return None, True
+    
+        monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", BatchClient)
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._ensure_post_unit_inventory", lambda *_: inventory
+        )
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._runtime_feedback_for_complete_output", aggregate_review
+        )
+    
+        def run():
+            return asyncio.run(
+                _run_backend(
+                    prepared,
+                    _backend(),
+                    config,
+                    existing_unit_boundary_checkpoint=checkpoint,
+                    stop_after_post_unit=True,
+                )
+            )
+    
+        if stuck:
+            for _ in range(2):
+                with pytest.raises(ToolFailure) as caught:
+                    run()
+                assert caught.value.code == "semantic_revision_no_progress"
+                assert caught.value.status == "error"
+                assert len(requested) == 3
+            assert global_reviews == 0
+        else:
+>           execution = run()
+                        ^^^^^
+
+tests/contract/test_prepare_template_runtime.py:4466: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/contract/test_prepare_template_runtime.py:4447: in run
+    return asyncio.run(
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+src/docfit/app/prepare_template.py:4494: in _run_backend
+    return await _run_semantic_batch_stage(
+src/docfit/app/prepare_template.py:4144: in _run_semantic_batch_stage
+    await client.query(prompt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_prepare_template_runtime.test_local_text_review_precedes_next_batch_and_budget_survives_resume.<locals>.BatchClient object at 0x10e808b00>
+prompt = 'DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=uni...lly after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. '
+
+    async def query(self, prompt: str) -> None:
+        # Assert the actual SDK request, including initial and repair queries.
+        # The old startup builder is not used by this batch runtime.
+>       assert "For any part made only of whitespace" in prompt
+E       AssertionError: assert 'For any part made only of whitespace' in 'DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=uni...lly after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. '
+
+tests/contract/test_prepare_template_runtime.py:4382: AssertionError
+_ test_local_text_review_precedes_next_batch_and_budget_survives_resume[True] __
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-0/test_local_text_review_precede1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e5aa210>
+stuck = True
+
+    @pytest.mark.parametrize("stuck", [False, True])
+    def test_local_text_review_precedes_next_batch_and_budget_survives_resume(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stuck: bool
+    ) -> None:
+        prepared = _prepared(tmp_path)
+        checkpoint = _unit_checkpoint(prepared)
+        config = tmp_path / "config"
+        config.mkdir()
+        inventory = _semantic_batch_inventory_with_count(prepared, checkpoint, count=130)
+        entries = inventory["canonical_source_inventory"]["source_entries"]
+        texts = {entry["source_entry_id"]: entry["text"] for entry in entries}
+        attempts: dict[str, int] = {}
+        requested: list[list[str]] = []
+        global_reviews = 0
+    
+        class BatchClient:
+            def __init__(self, *, options: object) -> None:
+                self.source_entry_ids: list[str] = []
+    
+            async def __aenter__(self) -> BatchClient:
+                return self
+    
+            async def __aexit__(self, *_: object) -> None:
+                return None
+    
+            async def query(self, prompt: str) -> None:
+                # Assert the actual SDK request, including initial and repair queries.
+                # The old startup builder is not used by this batch runtime.
+                assert "For any part made only of whitespace" in prompt
+                assert "including a whitespace part inside an entry" in prompt
+                assert "merely describing it in reason does not cover it" in prompt
+                assert "Boundary counts describe characters already present" in prompt
+                assert "leading and trailing counts refer to the same characters" in prompt
+                assert "arrays on that SAME part" in prompt
+                assert "do not split one fill_slot into several parts" in prompt
+                assert "Harness expands each run only when it exactly matches" in prompt
+                self.source_entry_ids = json.loads(
+                    next(line for line in prompt.splitlines() if line.startswith("["))
+                )
+                requested.append(self.source_entry_ids)
+                key = self.source_entry_ids[0]
+                attempts[key] = attempts.get(key, 0) + 1
+    
+            async def receive_response(self) -> Any:
+                attempt = attempts[self.source_entry_ids[0]]
+                judgments = [
+                    {"source_entry_id": key, "parts": [{"text": texts[key], "role": "fixed_label"}]}
+                    for key in self.source_entry_ids
+                ]
+                if attempt <= 3:
+                    judgments[0]["parts"][0]["text"] += "X" * (1 if stuck else attempt)
+                yield AssistantMessage(
+                    content=[
+                        TextBlock("  synthetic visible output \u00a0 "),
+                        ThinkingBlock(thinking="private-thinking", signature="synthetic"),
+                    ],
+                    model="synthetic-model",
+                )
+                yield AssistantMessage(
+                    content=[TextBlock("private-assistant-error")],
+                    model="synthetic-model",
+                    error="unknown",
+                )
+                yield ResultMessage(
+                    subtype="success",
+                    duration_ms=10,
+                    duration_api_ms=8,
+                    is_error=False,
+                    num_turns=1,
+                    session_id=f"batch-{len(requested)}",
+                    structured_output={
+                        "status": "complete",
+                        "summary": "synthetic candidate",
+                        "semantic_judgments": judgments,
+                    },
+                )
+    
+        def aggregate_review(_prepared, output, **kwargs):
+            nonlocal global_reviews
+            global_reviews += 1
+            assert len(output["semantic_judgments"]) == 130
+            assert len(requested) == 12
+            return None, True
+    
+        monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", BatchClient)
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._ensure_post_unit_inventory", lambda *_: inventory
+        )
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._runtime_feedback_for_complete_output", aggregate_review
+        )
+    
+        def run():
+            return asyncio.run(
+                _run_backend(
+                    prepared,
+                    _backend(),
+                    config,
+                    existing_unit_boundary_checkpoint=checkpoint,
+                    stop_after_post_unit=True,
+                )
+            )
+    
+        if stuck:
+            for _ in range(2):
+                with pytest.raises(ToolFailure) as caught:
+>                   run()
+
+tests/contract/test_prepare_template_runtime.py:4460: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/contract/test_prepare_template_runtime.py:4447: in run
+    return asyncio.run(
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+src/docfit/app/prepare_template.py:4494: in _run_backend
+    return await _run_semantic_batch_stage(
+src/docfit/app/prepare_template.py:4144: in _run_semantic_batch_stage
+    await client.query(prompt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_prepare_template_runtime.test_local_text_review_precedes_next_batch_and_budget_survives_resume.<locals>.BatchClient object at 0x10e589580>
+prompt = 'DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=uni...lly after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. '
+
+    async def query(self, prompt: str) -> None:
+        # Assert the actual SDK request, including initial and repair queries.
+        # The old startup builder is not used by this batch runtime.
+>       assert "For any part made only of whitespace" in prompt
+E       AssertionError: assert 'For any part made only of whitespace' in 'DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=uni...lly after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. '
+
+tests/contract/test_prepare_template_runtime.py:4382: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_prepare_template_runtime.py::test_local_text_review_precedes_next_batch_and_budget_survives_resume[False]
+FAILED tests/contract/test_prepare_template_runtime.py::test_local_text_review_precedes_next_batch_and_budget_survives_resume[True]
+2 failed, 904 passed in 21.61s

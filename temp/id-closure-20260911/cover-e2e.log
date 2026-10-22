@@ -1,0 +1,36 @@
+{
+  "artifact_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/cover-e2e/output/final-template.docx",
+  "backend": "minimax",
+  "client_count": 1,
+  "counts": {
+    "gap": 7,
+    "manual": 0,
+    "remove": 0,
+    "slot": 7,
+    "unresolved": 61
+  },
+  "duration_api_ms": 88617,
+  "duration_ms": 36404,
+  "fill_contract_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/cover-e2e/output/fill-contract.yaml",
+  "num_turns": 2,
+  "session_count": 1,
+  "session_id": "0ea4b8f2-50f7-4119-af87-a42d3bbc82af",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "built",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/cover-e2e",
+  "template_sha256": "0e1401ac7e1f1cd130dfe260ee5398ad6d904c48e8ad4e487686d3dee8f47ce1",
+  "tool_uses": [
+    "Skill",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 148891
+}

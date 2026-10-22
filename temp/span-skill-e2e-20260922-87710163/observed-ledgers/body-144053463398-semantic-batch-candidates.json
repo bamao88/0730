@@ -1,0 +1,238 @@
+{
+  "candidate_count": 3,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-30226bc4",
+      "candidate_digest": "4f86be8ab1e2289e97f990c9965ce291d1ee110a8881075f23455dce72f7c444",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "  "
+            }
+          ],
+          "reason": "Entry text is exactly three U+0020 spaces; it sits at block-0001 (14pt Normal) immediately before the format-notes paragraph and carries no label or value. Semantically it serves as paragraph/layout spacing that must remain in front of the unit-format-notes body, hence style_only rather than fixed_label. No field binds because it is spacing, not a value position.",
+          "source_entry_id": "source-entry-015688bdacef4006d2277542"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+            }
+          ],
+          "reason": "This single 9pt Normal run is the entire body of unit-format-notes. It states body-text line spacing (固定值22磅), notes that figures/tables may adjust it, gives top/bottom and left/right page margins (2.54 cm / 2.6 cm), and explains that \"□\" denotes a space equal to one full-width character (two standard characters). The unit's purpose is precisely to record these school format rules, so the whole sentence is school template instructional content that must remain in the clean template as fixed_label. There is no Registry field whose meaning matches \"body format rule description\", and the sentence contains no fillable value position (no fill_slot), so no field_id is bound. Splitting at unit-context boundaries: this entry is one continuous sentence ending at the entry's trailing boundary, so a single part suffices.",
+          "source_entry_id": "source-entry-aa77e7afa8c743aa48cba17b"
+        }
+      ],
+      "summary": "Batch 1 of 10 for unit-format-notes. Judged the two assigned source entries: (1) the leading 3-space whitespace run (block-0001, 14pt Normal) acts as paragraph/layout spacing before the format notes and is preserved under style_only; (2) the format instruction sentence \"正文基本格式：行距固定值22磅...表示占1个字宽（即2个字符）的空格。\" (block-0002, 9pt Normal) is the entire unit-format-notes body — it documents body-text line spacing, page margins, and the meaning of the \"□\" spacing symbol, and is retained as fixed_label content of the unit. No field binds to either part: there is no Registry field whose meaning matches this school-level format rule documentation, and the text contains no fillable value position. Parts split at every unit-context boundary and there is one judgment per listed source entry, in manifest order."
+    },
+    {
+      "batch_id": "semantic-batch-0002-9b2d8443",
+      "candidate_digest": "1cfd008cf7495eb6595f2476ce3e7f5bda95d9477e60073e65def3557c90012a",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（小二号字空两行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note that describes how the cover should be laid out; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-0e8dfd6bd9282950de55de0b"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "thesis.title.zh",
+              "role": "fill_slot",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "role": "cleanup",
+              "text": "（小二黑体，加粗，居中）"
+            }
+          ],
+          "reason": "The first segment is the prompt/placeholder for the Chinese thesis title and will be replaced by the thesis.title.zh field value; the parenthetical is a style instruction (font, weight, alignment) to be cleaned.",
+          "source_entry_id": "source-entry-e9483ae0a9e7042fd27ac0ce"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 36
+              }
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□生："
+            },
+            {
+              "field_id": "author.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "role": "cleanup",
+              "text": "（或×□×）"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（五号宋体居中）"
+            }
+          ],
+          "reason": "Leading 36 spaces carry the centering layout requirement (style_only); the literal label '学□□生：' is fixed text; '×××' is the fill slot bound to author.name.zh; '（或×□×）' is an alternative-format authoring example that should be cleaned; the two spaces between cleanup parts are pure layout whitespace; '（五号宋体居中）' is a font/alignment instruction to be cleaned.",
+          "source_entry_id": "source-entry-df09cdb77fb41813ec986d20"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "指导老师："
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            }
+          ],
+          "reason": "'指导老师：' is the fixed advisor label; '×××' is the placeholder for the advisor name and is bound to advisor.name.zh.",
+          "source_entry_id": "source-entry-b511494b4d9c6ab1aa0d6e50"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "(湖南农业大学"
+            },
+            {
+              "field_id": "author.department",
+              "role": "fill_slot",
+              "text": "××××"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学院，长沙 410128)"
+            }
+          ],
+          "reason": "'(湖南农业大学' is the fixed university name for this template plus the opening parenthesis; '××××' is the placeholder for the specific college within the university and is bound to author.department; '学院，长沙 410128)' is the fixed affiliation suffix and closing parenthesis.",
+          "source_entry_id": "source-entry-49da2e477eeed285d9d5663d"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note for the cover layout; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-7860371bca78326ca68727e4"
+        }
+      ],
+      "summary": "Completed semantic judgment batch 2 of 10 for unit '封面（中文）'. All 6 source entries were annotated: cover-page style notes bracketing the title and student lines were marked as cleanup; the title prompt and student/advisor/college placeholders were bound to thesis.title.zh, author.name.zh, advisor.name.zh and author.department respectively; fixed labels (student/advisor markers, punctuation, university name) and the leading centering whitespace were preserved."
+    },
+    {
+      "batch_id": "semantic-batch-0003-ed60bad8",
+      "candidate_digest": "53fcecdba90c6615b4fbc5525ef4aa4fa7101362339b1e1c6fb8e07b845ef53d",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "摘□要"
+            },
+            {
+              "role": "style_only",
+              "text": "（小四黑体）"
+            },
+            {
+              "role": "fixed_label",
+              "text": "："
+            },
+            {
+              "field_id": "abstract.zh",
+              "role": "fill_slot",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": ""
+            },
+            {
+              "role": "style_only",
+              "text": "（五号宋体）"
+            }
+          ],
+          "reason": "Abstract unit header line. □□ at start represent leading indentation/spacing (style_only). 摘□要 is the fixed section title label 'Abstract'. （小四黑体） is a typography specification (small four-point Heiti) that applies to the label, expressed as style_only. ： is the colon separator that introduces the abstract body value position. …… is the placeholder for the Chinese abstract body, bound to abstract.zh (rich_text, cardinality one, fill_slot role). The whitespace between …… and （五号宋体） is spacing (style_only). （五号宋体） is the typography specification (five-point Songti) for the content that follows, expressed as style_only. The two fixed_label pieces are separated by the style_only typography annotation, so they remain distinct parts per responsibility change.",
+          "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "关键词："
+            },
+            {
+              "field_id": "keywords.zh",
+              "role": "fill_slot",
+              "text": "×××；×××；×××；×××"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            }
+          ],
+          "reason": "Keywords line of the Chinese abstract unit. □□ at start are indentation/spacing symbols (style_only). 关键词： is the fixed label 'Keywords:' that stays in the clean template. ××××；×××；×××；××× is the placeholder value for the Chinese keywords, bound to keywords.zh (text, cardinality one, fill_slot role); the four ×××× separated by Chinese semicolons represent one keyword list value. The trailing single space (U+0020, count 1) is recorded via the whitespace transport as style_only since it carries no semantic responsibility beyond spacing.",
+          "source_entry_id": "source-entry-6a3a9448367246bf00ad3477"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Layout instruction at the end of the Chinese abstract unit. （五号字空一行） instructs that one empty line should follow in five-point font; this is a spacing/layout requirement expressed as style_only. No fill_slot, body_structure, or generated_content responsibility applies — the text is not a value position, not body structure, and not a generation result.",
+          "source_entry_id": "source-entry-3b9e599a04e7f5f33874aa88"
+        }
+      ],
+      "summary": "Judged three source entries for unit 摘要（中文）: abstract header line with abstract.zh placeholder, keywords line with keywords.zh placeholder, and trailing layout instruction."
+    }
+  ],
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "ledger_digest": "a19871c46ff26022b1571fb4682ddf8f50720b4f46c25d35c35faab2539d436a",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "6d131383f4e4cba421041cd161af071c7163b6e50da2b2c32dc7fa51ceeb8ec8",
+  "source_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+  "unit_projection_digest": "42c183a401be2120483ebf171b7304438cb02a1afa16361ef3b860b8dbe59971"
+}

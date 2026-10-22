@@ -31,5 +31,5 @@ Knowledge 不是学校规则来源。只读取当前判断所需的最小通用�
 | Tool 返回信息不足以证明成功 | 将状态视为未确认，不发布输出 |
 
 错误恢复不得通过 Bash、Python、Office、压缩包或 XML 工具直接修改 DOCX。这里约束的
-是转换证据和完成行为，不表示 Bash/Write 权限被关闭；若相同能力缺口无法在五个 Tool
+是转换证据和完成行为，不表示 Bash/Write 权限被关闭；若相同能力缺口无法在当前 DocFit Tool surface
 内解决，明确报告阻断点。

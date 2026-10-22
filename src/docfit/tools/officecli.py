@@ -6,11 +6,12 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from docfit.tools.runtime import JsonObject, ToolFailure, provider_evidence
+from docfit.tools.runtime import JsonObject, ToolFailure, provider_evidence, sha256_file
 
 OFFICECLI_EXPECTED_VERSION = "1.0.143"
 OFFICECLI_EXPECTED_SHA256 = "2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096"
@@ -200,3 +201,21 @@ class OfficeCliAdapter:
             "passed": True,
             "detail": result.message or "OfficeCLI OpenXML validation passed.",
         }
+
+    def validate_snapshot(self, document: Path) -> JsonObject:
+        """Validate a private copy so Office backends cannot dirty caller-owned files."""
+
+        source_hash = sha256_file(document)
+        with tempfile.TemporaryDirectory(prefix="docfit-validate-") as temporary_name:
+            snapshot = Path(temporary_name) / document.name
+            shutil.copyfile(document, snapshot)
+            snapshot.chmod(0o600)
+            result = self.validate(snapshot)
+        if sha256_file(document) != source_hash:
+            raise ToolFailure(
+                status="error",
+                origin="postcondition",
+                code="validation_source_changed",
+                message="The source document changed while its private validation snapshot ran.",
+            )
+        return result

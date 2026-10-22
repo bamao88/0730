@@ -14,6 +14,7 @@ from docfit.app.agent import (
     AUTO_APPROVED_TOOL_NAMES,
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
+    DOMAIN_SKILL_NAMES,
     FORBIDDEN_TOOLS,
     LOGGING_POLICY,
     MAIN_AGENT_READ_POLICY,
@@ -50,6 +51,10 @@ def test_options_expose_trusted_main_tools_and_one_five_tool_server(tmp_path: Pa
     assert options.permission_mode == "default"
     assert options.setting_sources == ["project"]
     assert options.skills == list(SKILL_NAMES)
+    assert DOMAIN_SKILL_NAMES == ("docfit-school-extract", "convert-thesis")
+    assert SKILL_NAMES == ("convert-thesis",)
+    assert "docfit-school-extract" not in (options.skills or [])
+    assert "two enabled domain Skills" not in str(options.system_prompt)
     assert options.agents is not None
     assert tuple(options.agents) == (SUBAGENT_NAME,)
     assert options.agents[SUBAGENT_NAME] == build_unit_analyst_definition()
@@ -75,6 +80,7 @@ def test_options_expose_trusted_main_tools_and_one_five_tool_server(tmp_path: Pa
         "current_task_input_read_only",
         "current_task_work_read_only",
         "current_task_output_read_only",
+        "word_packages_through_docfit_tools_only",
         "realpath_before_authorization",
         "sensitive_outside_and_symlink_escape_denied",
     )
@@ -241,6 +247,35 @@ def test_read_policy_denies_sensitive_outside_other_task_and_symlink_escape(
     )
     assert search_escape.allowed is False
     assert search_escape.reason_code == "read_search_symlink_denied"
+
+
+def test_native_read_tools_do_not_open_word_packages(tmp_path: Path) -> None:
+    policy, paths = _read_policy_fixture(tmp_path)
+    docx = paths["task_root"] / "input" / "school-template.docx"
+    docx.write_bytes(b"PK\x03\x04")
+
+    read_decision = policy.authorize("Read", {"file_path": str(docx)})
+    grep_file_decision = policy.authorize(
+        "Grep",
+        {"path": str(docx), "pattern": "word"},
+    )
+    paths["credential"].unlink()
+    grep_dir_decision = policy.authorize(
+        "Grep",
+        {"path": str(docx.parent), "pattern": "word"},
+    )
+    glob_decision = policy.authorize(
+        "Glob",
+        {"path": str(docx.parent), "pattern": "*.docx"},
+    )
+
+    assert read_decision.allowed is False
+    assert read_decision.reason_code == "word_package_native_read_denied"
+    assert grep_file_decision.allowed is False
+    assert grep_file_decision.reason_code == "word_package_native_read_denied"
+    assert grep_dir_decision.allowed is False
+    assert grep_dir_decision.reason_code == "word_package_native_read_denied"
+    assert glob_decision.allowed is True
 
 
 def test_project_skill_root_cannot_be_replaced_by_an_escaping_symlink(

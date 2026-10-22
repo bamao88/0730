@@ -1,0 +1,138 @@
+{
+  "model": "MiniMax-M3",
+  "thinking": {
+    "type": "adaptive"
+  },
+  "effort": "low",
+  "include_partial_messages": true,
+  "cwd": "/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/docfit-title-contrast-y98wg8rk/j_revision",
+  "setting_sources": [
+    "project"
+  ],
+  "skills": [
+    "docfit-school-extract"
+  ],
+  "system_prompt": "You are DocFit's post-unit school-template semantic judgment Agent. This run is a bounded semantic-output stage over accepted units. Use unit_evidence_packet source_entries for bounded source text and choose field IDs only from its field_id_vocabulary, then return semantic_judgments. Runtime Harness checks completeness, vocabulary provenance, field existence, and mechanical closure at the phase boundary. Do not delegate, ask the user, perform DOCX materialization, render, visually review, or deliver artifacts in this run.",
+  "output_format": {
+    "type": "json_schema",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "needs_input"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "needs_input": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "semantic_judgments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_entry_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "object",
+                "properties": {
+                  "reading_block_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reading_range_id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "parts": {
+                "type": "array",
+                "description": "Partition the supplied visible text in reading order. Each part labels one consecutive substring; together they account for the original text once, without overlap or reordering. Semantic boundaries may fall inside unbroken text. This is source annotation, not before/after edits.",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Exact consecutive text copied from the supplied entry or range, preserving punctuation and internal whitespace. Include text to be cleaned as its own part; do not rewrite the source or add a new placeholder."
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "fixed_label",
+                        "fill_slot",
+                        "body_structure",
+                        "generated_content",
+                        "manual_region",
+                        "style_only",
+                        "cleanup"
+                      ],
+                      "description": "Responsibility of this exact text. A fill_slot is the text to replace with a field value, including a prompt or example occupying that value's position. style_only describes a formatting requirement, not an example field value."
+                    },
+                    "field_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Field from the supplied vocabulary whose meaning and allowed role match the responsibility this part carries in context. A fill_slot binds the value replacing this exact part. Only for fill_slot, body_structure or generated_content."
+                    }
+                  },
+                  "required": [
+                    "text",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "reason": {
+                "type": "string"
+              },
+              "open_questions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "parts"
+            ],
+            "oneOf": [
+              {
+                "required": [
+                  "source_entry_id"
+                ]
+              },
+              {
+                "required": [
+                  "scope"
+                ]
+              }
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "status",
+        "summary",
+        "semantic_judgments"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

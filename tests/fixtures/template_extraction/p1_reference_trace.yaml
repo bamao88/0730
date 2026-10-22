@@ -1,0 +1,8 @@
+trace_id: p1-reference-routing-template-text
+judgment_problem: 彩色括号中的“姓名”可能是固定说明，也可能是学生填写示例值。
+agent_observed_issue: 固定文字、说明、示例值、填写位置难以区分
+expected_reference: template-text-classification.md
+expected_reference_terms:
+  - 正式名称中的括号仍是名称
+  - 学生填写位置
+  - 清理前闭合责任

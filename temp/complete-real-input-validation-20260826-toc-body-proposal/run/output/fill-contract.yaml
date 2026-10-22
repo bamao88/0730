@@ -1,0 +1,2219 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.94d8c22f545e2702
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 94d8c22f545e2702d99385c2d5d227a6289c693136f538dc4fe4c156b28494a1
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 0d4e9478211bb0954307ed5bc0356b33e13a9c2a338c32133923d1e3b283f902
+school_style_candidates: []
+known_school_style_gaps:
+- slot_id: slot.abstract.en.dacbac3888
+  field_id: abstract.en
+  style_role_id: style.slot.slot.abstract.en.dacbac3888
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.abstract.zh.afef43bf0a
+  field_id: abstract.zh
+  style_role_id: style.slot.slot.abstract.zh.afef43bf0a
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.acknowledgement.body.4738ad38a3
+  field_id: acknowledgement.body
+  style_role_id: style.slot.slot.acknowledgement.body.4738ad38a3
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.advisor.name.en.064b5bf0d6
+  field_id: advisor.name.en
+  style_role_id: style.slot.slot.advisor.name.en.064b5bf0d6
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.advisor.name.zh.e31d570ada
+  field_id: advisor.name.zh
+  style_role_id: style.slot.slot.advisor.name.zh.e31d570ada
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.appendix.title.48bcd68368
+  field_id: appendix.title
+  style_role_id: style.slot.slot.appendix.title.48bcd68368
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.appendix.title.8b9b1efa1d
+  field_id: appendix.title
+  style_role_id: style.slot.slot.appendix.title.8b9b1efa1d
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.appendix.title.b8e4432b24
+  field_id: appendix.title
+  style_role_id: style.slot.slot.appendix.title.b8e4432b24
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.author.department.1dca434e16
+  field_id: author.department
+  style_role_id: style.slot.slot.author.department.1dca434e16
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.author.department.en.4c53e3bed3
+  field_id: author.department.en
+  style_role_id: style.slot.slot.author.department.en.4c53e3bed3
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.author.name.en.5613ac3e58
+  field_id: author.name.en
+  style_role_id: style.slot.slot.author.name.en.5613ac3e58
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.author.name.zh.2f1609fd1e
+  field_id: author.name.zh
+  style_role_id: style.slot.slot.author.name.zh.2f1609fd1e
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.keywords.en.773494425e
+  field_id: keywords.en
+  style_role_id: style.slot.slot.keywords.en.773494425e
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.keywords.zh.d972cd117d
+  field_id: keywords.zh
+  style_role_id: style.slot.slot.keywords.zh.d972cd117d
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.thesis.title.en.c35ec12e64
+  field_id: thesis.title.en
+  style_role_id: style.slot.slot.thesis.title.en.c35ec12e64
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_id: slot.thesis.title.zh.8acd7aa68c
+  field_id: thesis.title.zh
+  style_role_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_id: slot.thesis.title.zh.8acd7aa68c
+  field_id: thesis.title.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.thesis.title.zh.8acd7aa68c
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文论文题目
+  style_contract_ref:
+    style_contract_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+    contract_digest: 8200f31e0351a354e0c371b5946f151dccd29af2b9e34bfbfcc25ef0c8a3a32b
+- slot_id: slot.author.name.zh.2f1609fd1e
+  field_id: author.name.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.author.name.zh.2f1609fd1e
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.author.name.zh.2f1609fd1e
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 作者中文姓名
+  style_contract_ref:
+    style_contract_id: style.slot.slot.author.name.zh.2f1609fd1e
+    contract_digest: 55b8efa36c2b802ea13c07aeead0448faff54dae7d7bdcd656ae0b719ad47289
+- slot_id: slot.advisor.name.zh.e31d570ada
+  field_id: advisor.name.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.advisor.name.zh.e31d570ada
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.advisor.name.zh.e31d570ada
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 导师中文姓名
+  style_contract_ref:
+    style_contract_id: style.slot.slot.advisor.name.zh.e31d570ada
+    contract_digest: abea35363fbb4e6decc2c30f7eff64c43822a3f1fbbb42cf049e6bffc50323b4
+- slot_id: slot.author.department.1dca434e16
+  field_id: author.department
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.author.department.1dca434e16
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.author.department.1dca434e16
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 院系
+  style_contract_ref:
+    style_contract_id: style.slot.slot.author.department.1dca434e16
+    contract_digest: a494af1e56a70ee9b9fe39032d7cdafe18f604d02ce9e80a8357adca70b78810
+- slot_id: slot.abstract.zh.afef43bf0a
+  field_id: abstract.zh
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.abstract.zh.afef43bf0a
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.abstract.zh.afef43bf0a
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文摘要
+  style_contract_ref:
+    style_contract_id: style.slot.slot.abstract.zh.afef43bf0a
+    contract_digest: d4121f9467daea2cbd0cce72db7cce37317e9225df8d1d734160339dc461344e
+- slot_id: slot.keywords.zh.d972cd117d
+  field_id: keywords.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.keywords.zh.d972cd117d
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.keywords.zh.d972cd117d
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文关键词
+  style_contract_ref:
+    style_contract_id: style.slot.slot.keywords.zh.d972cd117d
+    contract_digest: 99403fac16706fa226ceca5e86185ee12c769f8154f8dad4bcd758494f70b4d4
+- slot_id: slot.thesis.title.en.c35ec12e64
+  field_id: thesis.title.en
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.thesis.title.en.c35ec12e64
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.thesis.title.en.c35ec12e64
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 英文论文题目
+  style_contract_ref:
+    style_contract_id: style.slot.slot.thesis.title.en.c35ec12e64
+    contract_digest: 6775a99048155f78a199c4a7fbcf2e5677296a0eba3b80b50ee4e2b2504fecdd
+- slot_id: slot.author.name.en.5613ac3e58
+  field_id: author.name.en
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.author.name.en.5613ac3e58
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.author.name.en.5613ac3e58
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 作者英文姓名
+  style_contract_ref:
+    style_contract_id: style.slot.slot.author.name.en.5613ac3e58
+    contract_digest: 5c625645dd9758f3e0eefee42fa27b855d6453f10ffd5abed26b24288ba644d6
+- slot_id: slot.advisor.name.en.064b5bf0d6
+  field_id: advisor.name.en
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.advisor.name.en.064b5bf0d6
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.advisor.name.en.064b5bf0d6
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 导师英文姓名
+  style_contract_ref:
+    style_contract_id: style.slot.slot.advisor.name.en.064b5bf0d6
+    contract_digest: 8b6f2aacc56d8f915acea5ab63f2d1c409c39aa5c12a89da5d065e3dc3ae08ba
+- slot_id: slot.author.department.en.4c53e3bed3
+  field_id: author.department.en
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.author.department.en.4c53e3bed3
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.author.department.en.4c53e3bed3
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 院系英文名称
+  style_contract_ref:
+    style_contract_id: style.slot.slot.author.department.en.4c53e3bed3
+    contract_digest: e431c21717ca506130b66a5e0985fdf4de4df87a37eb8421e5ddfcc15e78a3ef
+- slot_id: slot.abstract.en.dacbac3888
+  field_id: abstract.en
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.abstract.en.dacbac3888
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.abstract.en.dacbac3888
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 英文摘要
+  style_contract_ref:
+    style_contract_id: style.slot.slot.abstract.en.dacbac3888
+    contract_digest: 7372c3cb7b52df71d69c8a54225a22fab7408093e625570cbb805cad327d346e
+- slot_id: slot.keywords.en.773494425e
+  field_id: keywords.en
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.keywords.en.773494425e
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.keywords.en.773494425e
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 英文关键词
+  style_contract_ref:
+    style_contract_id: style.slot.slot.keywords.en.773494425e
+    contract_digest: e44b88f7fbaae94d48b17f2eff21e01e967b2b1611fd0727fe69362edd913d9f
+- slot_id: slot.acknowledgement.body.4738ad38a3
+  field_id: acknowledgement.body
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.acknowledgement.body.4738ad38a3
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.acknowledgement.body.4738ad38a3
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 致谢
+  style_contract_ref:
+    style_contract_id: style.slot.slot.acknowledgement.body.4738ad38a3
+    contract_digest: f5e43c137af7f9f3e4fc804cff054689adac612d78c5c0ffa381abacc6ebf528
+- slot_id: slot.appendix.title.48bcd68368
+  field_id: appendix.title
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.appendix.title.48bcd68368
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.appendix.title.48bcd68368
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 附录标题
+  style_contract_ref:
+    style_contract_id: style.slot.slot.appendix.title.48bcd68368
+    contract_digest: a00992f1d191d08eefef27c3472deb5e249cf0579805ab70fb66a7ded3926f37
+- slot_id: slot.appendix.title.b8e4432b24
+  field_id: appendix.title
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.appendix.title.b8e4432b24
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.appendix.title.b8e4432b24
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 附录标题
+  style_contract_ref:
+    style_contract_id: style.slot.slot.appendix.title.b8e4432b24
+    contract_digest: bd1459a55b68513082c8135c50b1a1a3b9e6cf67b291d30b8e89aa4ca9d0f92b
+- slot_id: slot.appendix.title.8b9b1efa1d
+  field_id: appendix.title
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: slot.appendix.title.8b9b1efa1d
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.slot.appendix.title.8b9b1efa1d
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 附录标题
+  style_contract_ref:
+    style_contract_id: style.slot.slot.appendix.title.8b9b1efa1d
+    contract_digest: e0f720a41b616c602bde3e71d9a8cfdf9785b926ccdd4857b2f434bf9f481180
+styles:
+- style_contract_id: style.slot.slot.abstract.en.dacbac3888
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 7372c3cb7b52df71d69c8a54225a22fab7408093e625570cbb805cad327d346e
+  label: abstract.en @ slot.abstract.en.dacbac3888
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.abstract.en.dacbac3888
+    field_id: abstract.en
+    locator:
+      type: content_control_tag
+      value: slot.abstract.en.dacbac3888
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.abstract.zh.afef43bf0a
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: d4121f9467daea2cbd0cce72db7cce37317e9225df8d1d734160339dc461344e
+  label: abstract.zh @ slot.abstract.zh.afef43bf0a
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.abstract.zh.afef43bf0a
+    field_id: abstract.zh
+    locator:
+      type: content_control_tag
+      value: slot.abstract.zh.afef43bf0a
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.acknowledgement.body.4738ad38a3
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: f5e43c137af7f9f3e4fc804cff054689adac612d78c5c0ffa381abacc6ebf528
+  label: acknowledgement.body @ slot.acknowledgement.body.4738ad38a3
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.acknowledgement.body.4738ad38a3
+    field_id: acknowledgement.body
+    locator:
+      type: content_control_tag
+      value: slot.acknowledgement.body.4738ad38a3
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.advisor.name.en.064b5bf0d6
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 17.0
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 8b6f2aacc56d8f915acea5ab63f2d1c409c39aa5c12a89da5d065e3dc3ae08ba
+  label: advisor.name.en @ slot.advisor.name.en.064b5bf0d6
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.advisor.name.en.064b5bf0d6
+    field_id: advisor.name.en
+    locator:
+      type: content_control_tag
+      value: slot.advisor.name.en.064b5bf0d6
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.advisor.name.zh.e31d570ada
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: 宋体
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 14.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: abea35363fbb4e6decc2c30f7eff64c43822a3f1fbbb42cf049e6bffc50323b4
+  label: advisor.name.zh @ slot.advisor.name.zh.e31d570ada
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.advisor.name.zh.e31d570ada
+    field_id: advisor.name.zh
+    locator:
+      type: content_control_tag
+      value: slot.advisor.name.zh.e31d570ada
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.appendix.title.48bcd68368
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: 宋体
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: a00992f1d191d08eefef27c3472deb5e249cf0579805ab70fb66a7ded3926f37
+  label: appendix.title @ slot.appendix.title.48bcd68368
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.appendix.title.48bcd68368
+    field_id: appendix.title
+    locator:
+      type: content_control_tag
+      value: slot.appendix.title.48bcd68368
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.appendix.title.8b9b1efa1d
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 15.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: e0f720a41b616c602bde3e71d9a8cfdf9785b926ccdd4857b2f434bf9f481180
+  label: appendix.title @ slot.appendix.title.8b9b1efa1d
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.appendix.title.8b9b1efa1d
+    field_id: appendix.title
+    locator:
+      type: content_control_tag
+      value: slot.appendix.title.8b9b1efa1d
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.appendix.title.b8e4432b24
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: 宋体
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: bd1459a55b68513082c8135c50b1a1a3b9e6cf67b291d30b8e89aa4ca9d0f92b
+  label: appendix.title @ slot.appendix.title.b8e4432b24
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.appendix.title.b8e4432b24
+    field_id: appendix.title
+    locator:
+      type: content_control_tag
+      value: slot.appendix.title.b8e4432b24
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.author.department.1dca434e16
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 9.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: a494af1e56a70ee9b9fe39032d7cdafe18f604d02ce9e80a8357adca70b78810
+  label: author.department @ slot.author.department.1dca434e16
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.author.department.1dca434e16
+    field_id: author.department
+    locator:
+      type: content_control_tag
+      value: slot.author.department.1dca434e16
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.author.department.en.4c53e3bed3
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: e431c21717ca506130b66a5e0985fdf4de4df87a37eb8421e5ddfcc15e78a3ef
+  label: author.department.en @ slot.author.department.en.4c53e3bed3
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.author.department.en.4c53e3bed3
+    field_id: author.department.en
+    locator:
+      type: content_control_tag
+      value: slot.author.department.en.4c53e3bed3
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.author.name.en.5613ac3e58
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.first_line_indent_chars: 17.0
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 5c625645dd9758f3e0eefee42fa27b855d6453f10ffd5abed26b24288ba644d6
+  label: author.name.en @ slot.author.name.en.5613ac3e58
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.author.name.en.5613ac3e58
+    field_id: author.name.en
+    locator:
+      type: content_control_tag
+      value: slot.author.name.en.5613ac3e58
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.author.name.zh.2f1609fd1e
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 14.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 55b8efa36c2b802ea13c07aeead0448faff54dae7d7bdcd656ae0b719ad47289
+  label: author.name.zh @ slot.author.name.zh.2f1609fd1e
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.author.name.zh.2f1609fd1e
+    field_id: author.name.zh
+    locator:
+      type: content_control_tag
+      value: slot.author.name.zh.2f1609fd1e
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.keywords.en.773494425e
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: e44b88f7fbaae94d48b17f2eff21e01e967b2b1611fd0727fe69362edd913d9f
+  label: keywords.en @ slot.keywords.en.773494425e
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.keywords.en.773494425e
+    field_id: keywords.en
+    locator:
+      type: content_control_tag
+      value: slot.keywords.en.773494425e
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.keywords.zh.d972cd117d
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 99403fac16706fa226ceca5e86185ee12c769f8154f8dad4bcd758494f70b4d4
+  label: keywords.zh @ slot.keywords.zh.d972cd117d
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.keywords.zh.d972cd117d
+    field_id: keywords.zh
+    locator:
+      type: content_control_tag
+      value: slot.keywords.zh.d972cd117d
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.thesis.title.en.c35ec12e64
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 6775a99048155f78a199c4a7fbcf2e5677296a0eba3b80b50ee4e2b2504fecdd
+  label: thesis.title.en @ slot.thesis.title.en.c35ec12e64
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.thesis.title.en.c35ec12e64
+    field_id: thesis.title.en
+    locator:
+      type: content_control_tag
+      value: slot.thesis.title.en.c35ec12e64
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.line_spacing_pt: 22.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: true
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 18.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 8200f31e0351a354e0c371b5946f151dccd29af2b9e34bfbfcc25ef0c8a3a32b
+  label: thesis.title.zh @ slot.thesis.title.zh.8acd7aa68c
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: slot.thesis.title.zh.8acd7aa68c
+    field_id: thesis.title.zh
+    locator:
+      type: content_control_tag
+      value: slot.thesis.title.zh.8acd7aa68c
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: b880db1046af21e50b4f84156b3c338b1d64903fad5c506ae8f75f7a4564ce65
+provenance:
+  source_sha256: dbbf6918816ddd9145c5696687003d276a1688438f1d5289fafd3761b957725e
+  body_structure_count: 0
+  agent_owned_semantics: true
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: dbbf6918816ddd9145c5696687003d276a1688438f1d5289fafd3761b957725e
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 44
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: dbbf6918816ddd9145c5696687003d276a1688438f1d5289fafd3761b957725e
+    final_sha256: 94d8c22f545e2702d99385c2d5d227a6289c693136f538dc4fe4c156b28494a1
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 94d8c22f545e2702d99385c2d5d227a6289c693136f538dc4fe4c156b28494a1
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: b880db1046af21e50b4f84156b3c338b1d64903fad5c506ae8f75f7a4564ce65
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: b880db1046af21e50b4f84156b3c338b1d64903fad5c506ae8f75f7a4564ce65
+      occurrences:
+      - occurrence_id: template-slot:slot.thesis.title.zh.8acd7aa68c
+        locator:
+          type: content_control_tag
+          value: slot.thesis.title.zh.8acd7aa68c
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+          contract_digest: 8200f31e0351a354e0c371b5946f151dccd29af2b9e34bfbfcc25ef0c8a3a32b
+      - occurrence_id: template-slot:slot.author.name.zh.2f1609fd1e
+        locator:
+          type: content_control_tag
+          value: slot.author.name.zh.2f1609fd1e
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.author.name.zh.2f1609fd1e
+          contract_digest: 55b8efa36c2b802ea13c07aeead0448faff54dae7d7bdcd656ae0b719ad47289
+      - occurrence_id: template-slot:slot.advisor.name.zh.e31d570ada
+        locator:
+          type: content_control_tag
+          value: slot.advisor.name.zh.e31d570ada
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.advisor.name.zh.e31d570ada
+          contract_digest: abea35363fbb4e6decc2c30f7eff64c43822a3f1fbbb42cf049e6bffc50323b4
+      - occurrence_id: template-slot:slot.author.department.1dca434e16
+        locator:
+          type: content_control_tag
+          value: slot.author.department.1dca434e16
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.author.department.1dca434e16
+          contract_digest: a494af1e56a70ee9b9fe39032d7cdafe18f604d02ce9e80a8357adca70b78810
+      - occurrence_id: template-slot:slot.abstract.zh.afef43bf0a
+        locator:
+          type: content_control_tag
+          value: slot.abstract.zh.afef43bf0a
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.abstract.zh.afef43bf0a
+          contract_digest: d4121f9467daea2cbd0cce72db7cce37317e9225df8d1d734160339dc461344e
+      - occurrence_id: template-slot:slot.keywords.zh.d972cd117d
+        locator:
+          type: content_control_tag
+          value: slot.keywords.zh.d972cd117d
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.keywords.zh.d972cd117d
+          contract_digest: 99403fac16706fa226ceca5e86185ee12c769f8154f8dad4bcd758494f70b4d4
+      - occurrence_id: template-slot:slot.thesis.title.en.c35ec12e64
+        locator:
+          type: content_control_tag
+          value: slot.thesis.title.en.c35ec12e64
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.thesis.title.en.c35ec12e64
+          contract_digest: 6775a99048155f78a199c4a7fbcf2e5677296a0eba3b80b50ee4e2b2504fecdd
+      - occurrence_id: template-slot:slot.author.name.en.5613ac3e58
+        locator:
+          type: content_control_tag
+          value: slot.author.name.en.5613ac3e58
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.author.name.en.5613ac3e58
+          contract_digest: 5c625645dd9758f3e0eefee42fa27b855d6453f10ffd5abed26b24288ba644d6
+      - occurrence_id: template-slot:slot.advisor.name.en.064b5bf0d6
+        locator:
+          type: content_control_tag
+          value: slot.advisor.name.en.064b5bf0d6
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.advisor.name.en.064b5bf0d6
+          contract_digest: 8b6f2aacc56d8f915acea5ab63f2d1c409c39aa5c12a89da5d065e3dc3ae08ba
+      - occurrence_id: template-slot:slot.author.department.en.4c53e3bed3
+        locator:
+          type: content_control_tag
+          value: slot.author.department.en.4c53e3bed3
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.author.department.en.4c53e3bed3
+          contract_digest: e431c21717ca506130b66a5e0985fdf4de4df87a37eb8421e5ddfcc15e78a3ef
+      - occurrence_id: template-slot:slot.abstract.en.dacbac3888
+        locator:
+          type: content_control_tag
+          value: slot.abstract.en.dacbac3888
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.abstract.en.dacbac3888
+          contract_digest: 7372c3cb7b52df71d69c8a54225a22fab7408093e625570cbb805cad327d346e
+      - occurrence_id: template-slot:slot.keywords.en.773494425e
+        locator:
+          type: content_control_tag
+          value: slot.keywords.en.773494425e
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.keywords.en.773494425e
+          contract_digest: e44b88f7fbaae94d48b17f2eff21e01e967b2b1611fd0727fe69362edd913d9f
+      - occurrence_id: template-slot:slot.acknowledgement.body.4738ad38a3
+        locator:
+          type: content_control_tag
+          value: slot.acknowledgement.body.4738ad38a3
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.acknowledgement.body.4738ad38a3
+          contract_digest: f5e43c137af7f9f3e4fc804cff054689adac612d78c5c0ffa381abacc6ebf528
+      - occurrence_id: template-slot:slot.appendix.title.48bcd68368
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.48bcd68368
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.appendix.title.48bcd68368
+          contract_digest: a00992f1d191d08eefef27c3472deb5e249cf0579805ab70fb66a7ded3926f37
+      - occurrence_id: template-slot:slot.appendix.title.b8e4432b24
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.b8e4432b24
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.appendix.title.b8e4432b24
+          contract_digest: bd1459a55b68513082c8135c50b1a1a3b9e6cf67b291d30b8e89aa4ca9d0f92b
+      - occurrence_id: template-slot:slot.appendix.title.8b9b1efa1d
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.8b9b1efa1d
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.slot.appendix.title.8b9b1efa1d
+          contract_digest: e0f720a41b616c602bde3e71d9a8cfdf9785b926ccdd4857b2f434bf9f481180
+    validation:
+      status: passed
+      counts:
+        passed: 16
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:slot.thesis.title.zh.8acd7aa68c
+        style_contract_id: style.slot.slot.thesis.title.zh.8acd7aa68c
+        contract_digest: 8200f31e0351a354e0c371b5946f151dccd29af2b9e34bfbfcc25ef0c8a3a32b
+        locator:
+          type: content_control_tag
+          value: slot.thesis.title.zh.8acd7aa68c
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.author.name.zh.2f1609fd1e
+        style_contract_id: style.slot.slot.author.name.zh.2f1609fd1e
+        contract_digest: 55b8efa36c2b802ea13c07aeead0448faff54dae7d7bdcd656ae0b719ad47289
+        locator:
+          type: content_control_tag
+          value: slot.author.name.zh.2f1609fd1e
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.advisor.name.zh.e31d570ada
+        style_contract_id: style.slot.slot.advisor.name.zh.e31d570ada
+        contract_digest: abea35363fbb4e6decc2c30f7eff64c43822a3f1fbbb42cf049e6bffc50323b4
+        locator:
+          type: content_control_tag
+          value: slot.advisor.name.zh.e31d570ada
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.author.department.1dca434e16
+        style_contract_id: style.slot.slot.author.department.1dca434e16
+        contract_digest: a494af1e56a70ee9b9fe39032d7cdafe18f604d02ce9e80a8357adca70b78810
+        locator:
+          type: content_control_tag
+          value: slot.author.department.1dca434e16
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.abstract.zh.afef43bf0a
+        style_contract_id: style.slot.slot.abstract.zh.afef43bf0a
+        contract_digest: d4121f9467daea2cbd0cce72db7cce37317e9225df8d1d734160339dc461344e
+        locator:
+          type: content_control_tag
+          value: slot.abstract.zh.afef43bf0a
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.keywords.zh.d972cd117d
+        style_contract_id: style.slot.slot.keywords.zh.d972cd117d
+        contract_digest: 99403fac16706fa226ceca5e86185ee12c769f8154f8dad4bcd758494f70b4d4
+        locator:
+          type: content_control_tag
+          value: slot.keywords.zh.d972cd117d
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.thesis.title.en.c35ec12e64
+        style_contract_id: style.slot.slot.thesis.title.en.c35ec12e64
+        contract_digest: 6775a99048155f78a199c4a7fbcf2e5677296a0eba3b80b50ee4e2b2504fecdd
+        locator:
+          type: content_control_tag
+          value: slot.thesis.title.en.c35ec12e64
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.author.name.en.5613ac3e58
+        style_contract_id: style.slot.slot.author.name.en.5613ac3e58
+        contract_digest: 5c625645dd9758f3e0eefee42fa27b855d6453f10ffd5abed26b24288ba644d6
+        locator:
+          type: content_control_tag
+          value: slot.author.name.en.5613ac3e58
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.advisor.name.en.064b5bf0d6
+        style_contract_id: style.slot.slot.advisor.name.en.064b5bf0d6
+        contract_digest: 8b6f2aacc56d8f915acea5ab63f2d1c409c39aa5c12a89da5d065e3dc3ae08ba
+        locator:
+          type: content_control_tag
+          value: slot.advisor.name.en.064b5bf0d6
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.author.department.en.4c53e3bed3
+        style_contract_id: style.slot.slot.author.department.en.4c53e3bed3
+        contract_digest: e431c21717ca506130b66a5e0985fdf4de4df87a37eb8421e5ddfcc15e78a3ef
+        locator:
+          type: content_control_tag
+          value: slot.author.department.en.4c53e3bed3
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.abstract.en.dacbac3888
+        style_contract_id: style.slot.slot.abstract.en.dacbac3888
+        contract_digest: 7372c3cb7b52df71d69c8a54225a22fab7408093e625570cbb805cad327d346e
+        locator:
+          type: content_control_tag
+          value: slot.abstract.en.dacbac3888
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.keywords.en.773494425e
+        style_contract_id: style.slot.slot.keywords.en.773494425e
+        contract_digest: e44b88f7fbaae94d48b17f2eff21e01e967b2b1611fd0727fe69362edd913d9f
+        locator:
+          type: content_control_tag
+          value: slot.keywords.en.773494425e
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.acknowledgement.body.4738ad38a3
+        style_contract_id: style.slot.slot.acknowledgement.body.4738ad38a3
+        contract_digest: f5e43c137af7f9f3e4fc804cff054689adac612d78c5c0ffa381abacc6ebf528
+        locator:
+          type: content_control_tag
+          value: slot.acknowledgement.body.4738ad38a3
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.appendix.title.48bcd68368
+        style_contract_id: style.slot.slot.appendix.title.48bcd68368
+        contract_digest: a00992f1d191d08eefef27c3472deb5e249cf0579805ab70fb66a7ded3926f37
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.48bcd68368
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.appendix.title.b8e4432b24
+        style_contract_id: style.slot.slot.appendix.title.b8e4432b24
+        contract_digest: bd1459a55b68513082c8135c50b1a1a3b9e6cf67b291d30b8e89aa4ca9d0f92b
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.b8e4432b24
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:slot.appendix.title.8b9b1efa1d
+        style_contract_id: style.slot.slot.appendix.title.8b9b1efa1d
+        contract_digest: e0f720a41b616c602bde3e71d9a8cfdf9785b926ccdd4857b2f434bf9f481180
+        locator:
+          type: content_control_tag
+          value: slot.appendix.title.8b9b1efa1d
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    detail: 'Validation passed: no errors found.'

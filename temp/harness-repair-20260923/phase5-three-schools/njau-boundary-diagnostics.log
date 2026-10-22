@@ -1,0 +1,21 @@
+Using CPython 3.12.11
+Creating virtual environment at: .venv
+   Building docfit-agent @ file:///Users/xpw/.codex/worktrees/harness-boundary-diagnostics/template-extraction
+      Built docfit-agent @ file:///Users/xpw/.codex/worktrees/harness-boundary-diagnostics/template-extraction
+Installed 47 packages in 202ms
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "tool",
+    "code": "template_materialization_execution_unsupported",
+    "retryable": false,
+    "message": "Accepted semantic review is not materializable: materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers.",
+    "suggested_actions": [
+      "Preserve the semantic judgments; repair the reported execution or system issue.",
+      "Do not retry semantic judgment or run materialization handlers for this failure."
+    ]
+  }
+}

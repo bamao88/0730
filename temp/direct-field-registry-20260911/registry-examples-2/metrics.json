@@ -1,0 +1,25 @@
+{
+  "run": "registry-examples-2",
+  "input_characters": 14068,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 6.686,
+  "first_text_seconds": 2.305,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 4294,
+    "output_tokens": 458,
+    "service_tier": "standard"
+  },
+  "returned_model": "MiniMax-M3",
+  "exact_text_partition": {
+    "3": true,
+    "4": true,
+    "6": true,
+    "7": true,
+    "9": true,
+    "10": true,
+    "11": true,
+    "12": true
+  }
+}

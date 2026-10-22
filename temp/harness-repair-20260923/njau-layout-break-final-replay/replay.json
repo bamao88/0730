@@ -1,0 +1,33 @@
+{
+  "verification_level": "real replay; original judgments, no Agent call or publication",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/object-inventory.json": "80134d845d8ac06033397a6b4c37c0feb0f9a85742df50f5b8041b02a0a6b9d3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/semantic-judgments.json": "86ede60b6ca288f7927a3069f2cd9584d1ec390b20f6390131971a4c638a3a5b"
+  },
+  "original_unchanged": true,
+  "candidate_sha256": null,
+  "source_breaks": [
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    },
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    },
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    }
+  ],
+  "candidate_breaks": null,
+  "result_summary": {
+    "status": "blocked",
+    "operation_count": null,
+    "cleanup_count": null,
+    "failure": {
+      "code": "materialization_layout_break_mapping_unsupported",
+      "origin": "tool",
+      "message": "Text replacement cannot map an internal or nested layout break safely."
+    }
+  }
+}

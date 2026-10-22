@@ -1,0 +1,411 @@
+{
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-924e95fa",
+      "candidate_digest": "0c390e9d520b9ce4d07dcb3d92187ca3dd7a2fc3ba767bbc2a634acc2cf04a6f",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+              "trailing_whitespace": [
+                {
+                  "codepoint": "U+0020",
+                  "count": 5
+                }
+              ]
+            }
+          ],
+          "reason": "Entry is the cover-format specification prose (附件1 caption + margin/centering/placeholder rules). It is template guidance, not retained cover content; cleanup removes it from the clean template while preserving the 5 trailing U+0020 spaces. The opening/closing quotes around □ are U+201C/U+201D exactly as in the source.",
+          "source_entry_id": "source-entry-2eb746e9f08a1ba6d753dcf9"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（一号华文行楷空一行）"
+            }
+          ],
+          "reason": "Inline format hint for the centered heading line; full-width parens preserved. Not cover content.",
+          "source_entry_id": "source-entry-a79ebe4d35f00ce60425c8fb"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 5
+              }
+            },
+            {
+              "role": "fixed_label",
+              "text": "湖 南 农 业 大 学"
+            },
+            {
+              "role": "cleanup",
+              "text": "（一号华文行楷加粗）"
+            }
+          ],
+          "reason": "Leading 5 U+0020 spaces encode the centered indent requirement (style_only). The spaced school name \"湖 南 农 业 大 学\" is the fixed university heading. The trailing full-width-parenthesized hint is the inline font/size instruction to be cleaned from the clean template.",
+          "source_entry_id": "source-entry-9b2d25e2ec28a655fd44e544"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "全日制普通本科生毕业论文(设计)"
+            },
+            {
+              "role": "cleanup",
+              "text": "（一号黑体加粗）"
+            }
+          ],
+          "reason": "Document-type subtitle line is a fixed label on the cover (ASCII parens around 设计 preserved exactly). The trailing full-width-parenthesized hint is an inline font instruction and is cleaned up.",
+          "source_entry_id": "source-entry-10cfd98db3c56bc0e57d4045"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（一号黑体空一行）"
+            }
+          ],
+          "reason": "Inline format hint for spacing after the subtitle; full-width parens preserved. Not cover content.",
+          "source_entry_id": "source-entry-8b5e13175bbd973284180ce1"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty source paragraph (text_length=0) providing vertical spacing between subtitle and the thesis title block; style-only layout responsibility.",
+          "source_entry_id": "source-entry-937c6030b089a6b34dde55a4"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 10
+              }
+            },
+            {
+              "field_id": "thesis.title.zh",
+              "role": "fill_slot",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（小二黑体加粗）"
+            }
+          ],
+          "reason": "Leading 10 U+0020 spaces encode centered indent (style_only). The centered body \"毕业论文（设计）中文题目\" is the Chinese thesis title value position and binds thesis.title.zh. The 2-space gap separates the value from the format hint. The trailing full-width-parenthesized hint is the inline font/size instruction and is cleaned up.",
+          "source_entry_id": "source-entry-f3ac4bef4cb2115a98e2e353"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "thesis.title.en",
+              "role": "fill_slot",
+              "text": "TITLE OF GRADUATION PAPER"
+            },
+            {
+              "role": "cleanup",
+              "text": "（四号Times New Roman加粗，大写）"
+            }
+          ],
+          "reason": "The English title placeholder is the value position for thesis.title.en. The trailing full-width-parenthesized hint (with U+FF0C full-width comma) is an inline font/size instruction and is cleaned up.",
+          "source_entry_id": "source-entry-8ed59c3df37967d503e83103"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（根据题目长短四号字空二或三行）"
+            }
+          ],
+          "reason": "Inline format hint for spacing after the English title; full-width parens preserved. Not cover content.",
+          "source_entry_id": "source-entry-7eccdaff1ed7001a420165c1"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing vertical spacing between the English title and the basic-information block; style-only layout responsibility.",
+          "source_entry_id": "source-entry-0b82f1a2420993d2c460d0b3"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing additional vertical spacing inside the basic-information block; style-only layout responsibility.",
+          "source_entry_id": "source-entry-6646b3e8e5b6c1c7204e4082"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学生姓名"
+            },
+            {
+              "role": "cleanup",
+              "text": "（三号黑体加粗）"
+            },
+            {
+              "role": "fixed_label",
+              "text": "："
+            },
+            {
+              "field_id": "author.name.zh",
+              "role": "fill_slot",
+              "text": "×××（或×□×）"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（三号楷体加粗）"
+            }
+          ],
+          "reason": "Six □ characters (U+25A1) are layout spacing (style_only). \"学生姓名\" plus the full-width colon U+FF1A are the fixed label; the inline full-width-parenthesized hint \"（三号黑体加粗）\" is a font instruction to clean up. The example \"×××（或×□×）\" with its alternative form occupies the value position for author.name.zh. The 1-space gap separates the value from the trailing full-width-parenthesized hint \"（三号楷体加粗）\" which is cleaned up.",
+          "source_entry_id": "source-entry-9c3b8ddd48c088f666c01ff7"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□号"
+            },
+            {
+              "role": "fixed_label",
+              "text": "："
+            },
+            {
+              "field_id": "author.student_id",
+              "role": "fill_slot",
+              "text": "20××××××××××"
+            }
+          ],
+          "reason": "Leading □□□□□□ (6× U+25A1) is layout spacing (style_only). \"学□□号\" plus the full-width colon U+FF1A is the fixed label \"学号\" rendered with character spacing. The masked \"20××××××××××\" (2+12 U+00D7) is the value position for author.student_id.",
+          "source_entry_id": "source-entry-1300443cc0df8ee26d260495"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "年级专业及班级："
+            },
+            {
+              "field_id": "author.cohort_class",
+              "role": "fill_slot",
+              "text": "20××级×××（×）班"
+            }
+          ],
+          "reason": "Leading □□□□□□ (6× U+25A1) is layout spacing (style_only). \"年级专业及班级：\" (with full-width colon U+FF1A) is the fixed label. The masked value \"20××级×××（×）班\" is the value position for the combined grade/major/class field author.cohort_class.",
+          "source_entry_id": "source-entry-42fa2ae697ef6d04fda9644a"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "指导老师及职称："
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "role": "fill_slot",
+              "text": "×××□教授"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            }
+          ],
+          "reason": "Leading □□□□□□ (6× U+25A1) is layout spacing (style_only). \"指导老师及职称：\" (with full-width colon U+FF1A) is the fixed label. The example \"×××□教授\" with interior □ spacing placeholder is the value position for advisor.name.zh. Trailing U+0020 is preserved as whitespace transport.",
+          "source_entry_id": "source-entry-8a333f36d8520490edcb1d99"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□□□□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□院："
+            },
+            {
+              "field_id": "author.department",
+              "role": "fill_slot",
+              "text": "××××学院"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（学院名用全称）"
+            }
+          ],
+          "reason": "Leading □□□□□□ (6× U+25A1) is layout spacing (style_only). \"学□□院：\" (with full-width colon U+FF1A) is the fixed label \"学院\" rendered with character spacing. The masked \"××××学院\" is the value position for author.department. The 2-space gap separates the value from the full-width-parenthesized cleanup note about using the full department name.",
+          "source_entry_id": "source-entry-4c55c6a63f2e1c82c6ee0c92"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（三号字空二或三行）"
+            }
+          ],
+          "reason": "Inline format hint for spacing after the basic-information block; full-width parens preserved. Not cover content.",
+          "source_entry_id": "source-entry-3d77b81ab87109fefe9b3362"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing vertical spacing between the basic-information block and the location/date block; style-only layout responsibility.",
+          "source_entry_id": "source-entry-f656e98c282dd8b0b44d7771"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing additional vertical spacing inside the location/date block; style-only layout responsibility.",
+          "source_entry_id": "source-entry-66dcc338ae2c88784dde59eb"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "湖南·长沙"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（小三号黑体）"
+            }
+          ],
+          "reason": "\"湖南·长沙\" (with U+00B7 middle dot) is the fixed school location label. The 1-space gap separates the label from the trailing full-width-parenthesized hint \"（小三号黑体）\" which is the inline font/size instruction to be cleaned up.",
+          "source_entry_id": "source-entry-34b77e98043cd2e3cf96bb85"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "提交日期："
+            },
+            {
+              "field_id": "submission.date",
+              "role": "fill_slot",
+              "text": "20××年××月"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            }
+          ],
+          "reason": "\"提交日期：\" (with full-width colon U+FF1A) is the fixed label. The masked \"20××年××月\" (with U+00D7 multiplication-sign placeholders) is the value position for submission.date. Trailing U+0020 is preserved as whitespace transport.",
+          "source_entry_id": "source-entry-fd61900f8bd29c28a6049935"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing vertical spacing between the date and the cover's bottom edge; style-only layout responsibility.",
+          "source_entry_id": "source-entry-5132a31893d0019a8cb53359"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "whole_entry": true
+            }
+          ],
+          "reason": "Empty paragraph (text_length=0) providing final vertical spacing at the cover's bottom edge; style-only layout responsibility.",
+          "source_entry_id": "source-entry-64168d4279e7ece9dd5c3e9e"
+        }
+      ],
+      "summary": "Re-submitted batch 1 of 15 for unit-cover with corrected U+201C/U+201D curly quotes in block 1 and verified exact source characters across all 23 source entries."
+    }
+  ],
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "ledger_digest": "9e68a3fcc0a3d023d0f5a43a8f13ba26bd35dc7531ca00098b144f09d6625aae",
+  "manifest_digest": "7ce59d4e50fa671375672d8c2708983de85d312317a230949b1d57759b7c0fa4",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "ce34ab643ad28a1c7a36c7fb25edb412292fb9a63237943237a943351fc2ebec",
+  "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+  "unit_projection_digest": "39600357767a950c707fe25ce824e3899bea90a1086083c66a5c18220aed4c3d"
+}

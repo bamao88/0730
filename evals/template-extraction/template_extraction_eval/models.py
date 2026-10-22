@@ -60,6 +60,7 @@ class Locator:
     part: str
     expected_match_count: int
     value: str | None = None
+    match_mode: str | None = None
     section_index: int | None = None
     paragraph_index: int | None = None
     table_index: int | None = None
@@ -154,7 +155,7 @@ class ComponentLocator:
 
 @dataclass(frozen=True)
 class SlotContract:
-    slot_id: str
+    slot_ref: str
     field_id: str
     content_type: str
     required: bool
@@ -427,7 +428,7 @@ class AssertionResult:
     expected: Any = None
     actual: Any = None
     region_id: str | None = None
-    slot_id: str | None = None
+    slot_ref: str | None = None
     gold_locator: Locator | None = None
     actual_locator: Locator | None = None
     message: str = ""
@@ -444,7 +445,7 @@ class Issue:
     status: AssertionStatus
     message: str
     region_id: str | None = None
-    slot_id: str | None = None
+    slot_ref: str | None = None
     gold_locator: Locator | None = None
     actual_locator: Locator | None = None
     expected: Any = None

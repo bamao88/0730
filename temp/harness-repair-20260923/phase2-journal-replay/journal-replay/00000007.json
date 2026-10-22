@@ -1,0 +1,16 @@
+{
+  "data": {
+    "base_ledger_digest": "518e6d1f6f51c4112a3ce540027896a647e5d399423ba3e7108b9de777fdc0b6",
+    "batch_id": "semantic-batch-0003-ed60bad8",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=unit_evidence_packet and unit_id=unit-abstract-chinese. This is batch 3 of 10 for accepted unit '摘要（中文）'. Each entry includes all unit_contexts it crosses, with exact text per unit. Judge each assigned entry once over its complete text. Ordered parts must end at each unit-context text boundary, even when adjacent roles are identical. The unit packet remains the readable context, but this candidate owns exactly the following source entries in this exact order:\n[\"source-entry-2ad80198c69fc3f56cd3545f\", \"source-entry-6a3a9448367246bf00ad3477\", \"source-entry-3b9e599a04e7f5f33874aa88\"]\nReturn status=complete with one source_entry_id + ordered parts judgment for every listed entry, in manifest order, and no judgment for any other entry. Choose field IDs only from the packet field_id_vocabulary and preserve exact source text. If the readable school evidence is insufficient, return status=needs_input and stop; do not invent an answer. This is a candidate only: Harness accepts the complete aggregated semantic set atomically after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. "
+  },
+  "event_digest": "ea0c9e385e35c0a045e0b2a3a7b20a4170126972159ea5f1dccaeba937e475b2",
+  "evidence_mode": "replay",
+  "kind": "request",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "516b7a5257ab487dd9ca76d76380462d5163ecc7d77547a57f5b1321e0824a25",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 7
+}

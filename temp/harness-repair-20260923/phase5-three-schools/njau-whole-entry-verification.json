@@ -1,0 +1,46 @@
+{
+  "verified_at": "2026-09-24T04:02:45.523068+00:00",
+  "verification_level": "fresh complete-input E2E attempt, stopped in execution readiness after 13 local batch acceptances",
+  "exit_code": 2,
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-manifest.json",
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 17,
+    "response": 17,
+    "local_review": 16,
+    "local_rejected": 4,
+    "candidate_recorded": 13,
+    "global_review_failed": 1,
+    "run_failed": 1
+  },
+  "failure": {
+    "origin": "tool",
+    "code": "template_materialization_execution_unsupported",
+    "retryable": false,
+    "message": "Accepted semantic review is not materializable: materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous.",
+    "suggested_actions": [
+      "Preserve the semantic judgments; repair the reported execution or system issue.",
+      "Do not retry semantic judgment or run materialization handlers for this failure."
+    ]
+  },
+  "published_files": [],
+  "product_acceptance": false,
+  "complete_readiness_blocker_counts": {
+    "materialization_body_structure_member_ambiguous": 8,
+    "materialization_slot_field_incompatible": 2,
+    "materialization_body_structure_carrier_conflict": 8,
+    "materialization_body_structure_parent_missing": 2,
+    "materialization_cleanup_carrier_conflict": 1
+  },
+  "summary_truncation_note": "Terminal message lists only first five codes; full materialization report contains all blockers.",
+  "next_attribution": [
+    "Repeated body.paragraph members in one paragraph separated by cleanup: execution support gap needs analysis, preserve judgments.",
+    "fill_slot/body.paragraph and body_structure/appendix.body: incompatible with input vocabulary role affordances; local check should reject these before final readiness.",
+    "Cleanup carrier conflict: inspect exact source and protected carrier before any execution change."
+  ]
+}

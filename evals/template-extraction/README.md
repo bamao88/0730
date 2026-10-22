@@ -1,12 +1,24 @@
-# Template Extraction Eval
+# 模板提取 Eval
+
+本文应该回答：
+
+- 已生成的模板提取 Actual 产物如何与 accepted Gold 做离线评分；
+- Gold/candidate 准备、评分配置、schema、报告和 evaluator 自身回归如何组织；
+- 为什么本目录不能作为 `prepare-template` 生成测试的 expected output 来源；
+- 哪些内容属于最终 Actual-vs-Gold Eval，哪些阶段 replay 应该去单独文档查看。
+
+本 README 只用于离线 Actual—Gold 评分、Gold/candidate 准备和 evaluator 自身回归。
+如果任务只是测试 `docfit prepare-template` 能否从输入生成文档，先读
+`../../tests/README.md`，不要在本目录寻找 expected output 或 Gold 样例。
+如果任务是模板提取的中间阶段 replay，例如只验证 unit-boundary checkpoint，读
+[stage-replay.md](stage-replay.md)，不要把 Gold 注入 Agent runtime。
 
 这是一个与 DocFit 产品代码、依赖和 CLI 物理解耦的只读静态评测工程。它只承接已经生成
 的 Actual 模板与 Actual 填写契约，和 case 绑定的 Gold 模板、Gold 填写契约做确定性对比；
 不关心模板由哪个 Agent、模型或提取流程生成。
 
-正文模板如何分析、槽化并准备成 candidate Gold，见
-`../../docs/plans/docfit-body-template-extraction-spec.md`。该生成规范不属于本 Eval 的运行时
-依赖；Eval 仍只读取产物并做独立评分。
+早期正文模板生成计划已从当前计划入口移除；本 Eval 不依赖该计划，只读取已生成 Actual
+与 accepted Gold 做独立评分。
 
 ## 评测目标与输出
 
@@ -53,24 +65,82 @@ template-extraction-eval-report.md     # 从同一 report model 派生的人工�
 
 ```text
 evals/template-extraction/
-├── run_eval.py                         # 正式 accepted-Gold 评分入口
-├── run_raw_source_sentinel.py          # 原始模板作为 Actual 的诊断哨兵
-├── config/                             # 评分权重和 Eval 容差
-├── schemas/                            # case、契约、Registry consumer、报告合同
-├── cases/                              # 三校 candidate Gold；不属于产品运行目录
-├── fixtures/                           # S00–S13 合成回归样本
-├── template_extraction_eval/           # 独立 Eval Python 包
+├── README.md                           # Eval 模块说明：运行方式、Gold 状态、目录约定
+├── pyproject.toml                      # Eval 自己的 Python 项目配置
+├── uv.lock                             # Eval 独立依赖锁文件，不改变产品依赖
+├── run_eval.py                         # 正式评分入口：Actual 模板/契约 vs accepted Gold
+├── run_raw_source_sentinel.py          # 原始学校模板诊断哨兵，不算正式评分
+├── materialize_candidate_cases.py      # 候选 case 物化脚本；拒绝覆盖 accepted Gold
+├── prepare_v05_gold_pairs.py           # v0.5 Gold pair 准备脚本
+│
+├── config/                             # 评分配置
+│   ├── eval-config-v1.yaml             # Eval 运行配置
+│   └── scoring-v1.yaml                 # 双视角和分项权重配置
+│
+├── schemas/                            # 输入/输出合同 schema
+│   ├── case.schema.json                # case.yaml 的 schema
+│   ├── eval-config.schema.json         # eval 配置 schema
+│   ├── field-catalog.schema.json       # 字段目录 schema
+│   ├── fill-contract.schema.json       # fill-contract.gold.yaml 的 schema
+│   └── report.schema.json              # 评分报告 schema
+│
+├── cases/                              # 三校正式 accepted Gold case
+│   ├── 01-hunau-undergraduate/         # 湖南农大本科模板提取 Gold
+│   │   ├── case.yaml                   # case 元数据、Gold hash、accepted 状态和权限
+│   │   ├── candidate-package-receipt.json # 候选准备/物化收据
+│   │   ├── gold/                       # 正式评分 Truth；评分只认这里
+│   │   │   ├── final-template.gold.docx # 正式 Gold Word，含 Word 原生批注
+│   │   │   └── fill-contract.gold.yaml # 正式 Gold 填写契约
+│   │   └── review/accepted-2026-08-17/ # 人工批准留档，不作为第三份评分 Truth
+│   │       ├── reviewed-final-template.gold.docx # 批准时查看的批注版 Word 快照
+│   │       └── approval-record.yaml    # 快照与 Gold pair 的 hash 对应记录
+│   │
+│   ├── 02-njau-undergraduate/          # 南京农大本科模板提取 Gold；结构同上
+│   └── 03-pku-graduate/                # 北京大学研究生模板提取 Gold；结构同上
+│
+├── candidate-sources/                  # 候选来源材料；不是正式评分 Truth
+│   ├── v0.5.yaml                       # v0.5 候选来源清单
+│   └── v0.5/                           # 三校候选源材料
+│
+├── fixtures/                           # S00-S13 合成测试样本，不是真实学校 Gold
+│   ├── build_samples.py                # 合成 fixture 生成器
+│   ├── field-registry.yaml             # 合成样本字段目录
+│   ├── manifest.yaml                   # 合成样本清单
+│   ├── S00-minimal-pass/               # 最小 PASS 样本
+│   ├── ...
+│   └── S13-simple-formula-field-bookmark/ # 公式/域/书签覆盖样本
+│
+├── template_extraction_eval/           # Eval 核心运行代码
 │   ├── facts/                          # 共享 DOCX/OOXML 事实分析
 │   ├── evaluators/                     # protected、slot、remove 断言
-│   ├── contracts.py                    # 输入和 Gold 资格门禁
+│   ├── aligned_protected.py            # Gold 全量 protected 事实对齐与逐原子断言
+│   ├── alignment.py                    # Actual 与 Gold 稳定对齐
+│   ├── contracts.py                    # case、contract、hash、accepted 状态校验
 │   ├── markers.py                      # 主槽、组件、连续区域的标记闭包
+│   ├── models.py                       # Eval 数据模型
+│   ├── reporting.py                    # JSON/Markdown 报告输出
 │   ├── responsibility.py               # 全文事实责任归类与 protected 补集比较
-│   ├── aligned_protected.py             # Gold 全量 protected 事实对齐与逐原子断言
+│   ├── runner.py                       # Eval 编排入口
 │   ├── scoring.py                      # 双视角评分和覆盖率
 │   └── sentinel.py                     # diagnostic-only 哨兵编排
-├── tests/                              # contract、unit、integration 测试
-└── .runs/                              # 被忽略的本地报告，不进入正式 Gold
+│
+├── template_extraction_prep/           # Gold/candidate 准备辅助代码
+│   ├── candidate_package.py            # 候选包生成/校验
+│   ├── docx_package.py                 # DOCX 包处理
+│   ├── normalizers.py                  # 准备阶段归一化工具
+│   ├── sources.py                      # 来源读取
+│   └── writers.py                      # 输出写入
+│
+└── tests/                              # Eval 自己的测试
+    ├── contract/                       # 输入合同、CLI、Gold gate 测试
+    ├── integration/                    # 集成链路测试
+    └── unit/                           # 单元测试
+        ├── evaluators/                 # evaluator 单元测试
+        └── facts/                      # facts 分析器单元测试
 ```
+
+本地生成目录不属于正式 Eval 结构：`.runs/`、`.venv/`、`.pytest_cache/`、`.ruff_cache/`、
+`__pycache__/`、`.DS_Store` 和 Word 打开文件时生成的 `~$*.docx` 临时锁文件。
 
 核心脚本与能力责任如下：
 
@@ -87,7 +157,7 @@ evals/template-extraction/
 | `template_extraction_eval/scoring.py` | 双视角、八分项、slot F1、覆盖率和硬失败结论 |
 | `template_extraction_eval/reporting.py` | 原子发布同源 JSON/Markdown 报告 |
 | `fixtures/build_samples.py` | 只生成 S00–S13 合成样本，不生成正式 Gold |
-| `materialize_candidate_cases.py` | 只准备三校 candidate；拒绝覆盖 accepted case，不参与评分运行 |
+| `materialize_candidate_cases.py` | 只准备候选数据包；拒绝覆盖 accepted case，不参与正式评分运行 |
 
 ## 运行
 
@@ -148,16 +218,22 @@ uv run pytest -q
 ## 三校 Gold 状态
 
 `cases/01-hunau-undergraduate`、`02-njau-undergraduate` 和 `03-pku-graduate` 已按最终
-case 目录物化，但三者仍是 `candidate / candidate_pending_human_acceptance`。运行时会以
-`GOLD_NOT_ACCEPTED` 拒绝评分，不计入 Gold 通过率。当前三包仍绑定历史 Registry v0.1
-和旧槽形态，不得原地只改状态晋升。
+case 目录冻结为正式 accepted Gold。每校核心 Truth 只保留
+`gold/final-template.gold.docx + gold/fill-contract.gold.yaml`，并由 `case.yaml`、hash、
+reviewer 和数据权限记录绑定。
 
-2026-08-13 跨校产品规则已获 Human 确认；W6 仍须按 accepted Registry v0.5 clean break
-重建三校 candidate，完成绑定新 hash 的规则组/例外审查、槽样式、protected/remove Truth、
-validation finding、数据权限和 reviewer 记录后，才能改为 accepted 并启用每校三条
-正式评分回归。
+2026-08-18 已在三个原始 Word Gold 文件中用 Word 原生批注补齐全覆盖 Review：
+HUNAU 227 条、NJAU 96 条、PKU 159 条。批注分为对象级批注和覆盖批注：对象级批注覆盖
+字段槽、处理区域、逻辑页和已接受样式缺口；覆盖批注覆盖正文所有可见内容块，并用总览批注
+说明页眉/页脚内容的保留策略。批注包含字段、处理动作、样式和人工确认结论。三校自比较均为
+`PASS / 100.0`。
+
+每校在 `review/accepted-2026-08-17/` 保留批注版 Word 快照
+`reviewed-final-template.gold.docx` 和 `approval-record.yaml`。2026-08-18 已按人工反馈补齐
+全覆盖批注，当前记录为 `coverage_completed_pending_manual_recheck`。该目录只用于追溯批注版
+Word 与当前 Gold pair 的 hash 对应关系；评分 Truth 仍只来自 `gold/` 下两份核心文件。
 
 当前测试阶段以准确度为 Gold 核心：来源是否官方只记录，不参与资格或评分。每校产品结果是
 `final-template.docx + fill-contract.yaml` 两份原子绑定的主文件；在 Eval 内分别物化为
-`gold/template.docx + gold/fill-contract.yaml`。`case.yaml`、Registry、reviewer 与报告属于数据集
+`gold/final-template.gold.docx + gold/fill-contract.gold.yaml`。`case.yaml`、Registry、reviewer 与报告属于数据集
 元数据/验收证据，不是第三份产品交付物。

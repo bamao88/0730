@@ -1,0 +1,353 @@
+{
+  "source-entry-9a17584bc062268316b8fb05": {
+    "parts": [
+      {
+        "field_id": "thesis.title.en",
+        "role": "fill_slot",
+        "text": "TITLE"
+      },
+      {
+        "role": "style_only",
+        "text": "（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）"
+      }
+    ],
+    "reason": "\"TITLE\" is the centered heading placeholder that gets replaced by the actual English title (thesis.title.en). The parenthetical is a format constraint description (size 3 / Times New Roman / bold / all uppercase) that follows the placeholder; it is preserved as style_only so the school format requirements stay bound to this position.",
+    "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+    "locators": [
+      "/body/p[63]/r[2]",
+      "/body/p[63]/r[3]",
+      "/body/p[63]/r[4]",
+      "/body/p[63]/r[5]",
+      "/body/p[63]/r[6]",
+      "/body/p[63]/r[7]",
+      "/body/p[63]/r[8]"
+    ]
+  },
+  "source-entry-af94d3739958c6d96720765e": {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "参考文献表是文中引用的有具体文字来源的文献集合，应置于正文后并另起页；所有被引用文献均要列入参考文献表中；引文采用著作-出版年制标注时，参考文献表应按著者字顺和出版年排序。中文为五号宋体，英文及数字为五号Times New Roman字体，标点为英文标点。"
+      }
+    ],
+    "reason": "This paragraph is a fixed school requirement describing what the reference list is, where it is placed, sorting rules under author-year style, and the font requirement (五号宋体 / 五号Times New Roman / 英文标点). It must remain in every thesis using this template.",
+    "source_entry_id": "source-entry-af94d3739958c6d96720765e",
+    "locators": [
+      "/body/p[117]/r[1]",
+      "/body/p[117]/r[2]"
+    ]
+  },
+  "source-entry-c2a241d40f4f42cf912415b6": {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。"
+      }
+    ],
+    "reason": "The full 61-character paragraph is the school's fixed instructional text attached to this achievements section: it names the kinds of items that belong here (undergraduate papers, certified technical achievements, invention patents related to the thesis) and ends with \"此项非必需项。\" declaring the section itself is optional. The whole entry shares one responsibility (school-authored guidance that survives into the clean template) and one role (fixed_label); no student value occupies this slot and no vocabulary field matches this description, so the entire entry stays as fixed template content via whole_entry=true with no field_id.",
+    "source_entry_id": "source-entry-c2a241d40f4f42cf912415b6",
+    "locators": [
+      "/body/p[143]/r[1]",
+      "/body/p[143]/r[2]"
+    ]
+  },
+  "source-entry-3efd73cae8a512c5ce83a203": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "5"
+      }
+    ],
+    "reason": "Single digit '5' rendered in centered footer alignment; the literal number is a sample value demonstrating the centered footer page-number style asset. Real page numbers will be produced by Word's PAGE field, so the sample serves the style obligation rather than carrying a fillable field value.",
+    "source_entry_id": "source-entry-3efd73cae8a512c5ce83a203",
+    "locators": [
+      "/footer[1]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-86c6d6a405acca8b6ed3eaec": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-86c6d6a405acca8b6ed3eaec",
+    "locators": [
+      "/footer[1]/p[2]"
+    ]
+  },
+  "source-entry-b1f98ce67223efa7d2d16e7c": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-b1f98ce67223efa7d2d16e7c",
+    "locators": [
+      "/footer[2]/p[1]"
+    ]
+  },
+  "source-entry-dcf5576c2bfd65495729d26a": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "4"
+      }
+    ],
+    "reason": "Single digit '4' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset. Real page numbers will be produced by Word's PAGE field.",
+    "source_entry_id": "source-entry-dcf5576c2bfd65495729d26a",
+    "locators": [
+      "/footer[3]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-1bb4f15eb9d084817f8662b4": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-1bb4f15eb9d084817f8662b4",
+    "locators": [
+      "/footer[3]/p[2]"
+    ]
+  },
+  "source-entry-00fb0b27615512120e21d201": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-00fb0b27615512120e21d201",
+    "locators": [
+      "/footer[4]/p[1]"
+    ]
+  },
+  "source-entry-7e3f48c8d48678c07b44b89c": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-7e3f48c8d48678c07b44b89c",
+    "locators": [
+      "/footer[4]/p[2]"
+    ]
+  },
+  "source-entry-cdb14f8b3309a8bf179fa46e": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "3"
+      }
+    ],
+    "reason": "Single digit '3' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset.",
+    "source_entry_id": "source-entry-cdb14f8b3309a8bf179fa46e",
+    "locators": [
+      "/footer[5]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-38b4cda6291765442e69838e": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-38b4cda6291765442e69838e",
+    "locators": [
+      "/footer[5]/p[2]"
+    ]
+  },
+  "source-entry-3a453b2abe95075c5935ca37": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-3a453b2abe95075c5935ca37",
+    "locators": [
+      "/footer[6]/p[1]"
+    ]
+  },
+  "source-entry-53070a30b55e55d24b60d128": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-53070a30b55e55d24b60d128",
+    "locators": [
+      "/footer[6]/p[2]"
+    ]
+  },
+  "source-entry-105fd29ce0a9556e332a14b8": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "2"
+      }
+    ],
+    "reason": "Single digit '2' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset.",
+    "source_entry_id": "source-entry-105fd29ce0a9556e332a14b8",
+    "locators": [
+      "/footer[7]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-63db11795f33b36aa87c663a": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-63db11795f33b36aa87c663a",
+    "locators": [
+      "/footer[7]/p[2]"
+    ]
+  },
+  "source-entry-d6167ae87cab94b809baef51": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "7"
+      }
+    ],
+    "reason": "Single digit '7' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset on a later template page.",
+    "source_entry_id": "source-entry-d6167ae87cab94b809baef51",
+    "locators": [
+      "/footer[8]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-b03dc2857b398f70878b31ab": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-b03dc2857b398f70878b31ab",
+    "locators": [
+      "/footer[8]/p[2]"
+    ]
+  },
+  "source-entry-5074eab96f3392ec4d35b7aa": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-5074eab96f3392ec4d35b7aa",
+    "locators": [
+      "/footer[9]/p[1]"
+    ]
+  },
+  "source-entry-829575b79eda946a3f820a36": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-829575b79eda946a3f820a36",
+    "locators": [
+      "/footer[9]/p[2]"
+    ]
+  },
+  "source-entry-25af91dad12d32ee780f32ad": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-25af91dad12d32ee780f32ad",
+    "locators": [
+      "/footer[10]/p[1]"
+    ]
+  },
+  "source-entry-347a1a6897c18071300aff74": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-347a1a6897c18071300aff74",
+    "locators": [
+      "/footer[11]/p[1]"
+    ]
+  },
+  "source-entry-28e56cb18de09bc75b058829": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "1"
+      }
+    ],
+    "reason": "Single digit '1' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset.",
+    "source_entry_id": "source-entry-28e56cb18de09bc75b058829",
+    "locators": [
+      "/footer[12]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-305c404c303b9fa546aebb2d": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-305c404c303b9fa546aebb2d",
+    "locators": [
+      "/footer[12]/p[2]"
+    ]
+  },
+  "source-entry-eff74536b46d98e710787702": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": "6"
+      }
+    ],
+    "reason": "Single digit '6' rendered in centered footer alignment; literal sample value demonstrating the centered footer page-number style asset.",
+    "source_entry_id": "source-entry-eff74536b46d98e710787702",
+    "locators": [
+      "/footer[13]/p[1]/r[1]"
+    ]
+  },
+  "source-entry-40700a064920decd48ad24c4": {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph with zero characters; layout-only spacing block.",
+    "source_entry_id": "source-entry-40700a064920decd48ad24c4",
+    "locators": [
+      "/footer[13]/p[2]"
+    ]
+  }
+}

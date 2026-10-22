@@ -1,0 +1,74 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 13,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "Abstract(小四号Times New Roman， 加粗)"
+            },
+            {
+              "role": "cleanup",
+              "text": ":……            (五号Times New Roman)"
+            },
+            {
+              "role": "style_only",
+              "text": "            (五号Times New Roman)"
+            }
+          ],
+          "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+          "source_entry_id": "source-entry-f0c63376279768f327365472"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "Key words: "
+            },
+            {
+              "field_id": "keywords.en",
+              "role": "fill_slot",
+              "text": "×××； ×××；×××； ×××"
+            }
+          ],
+          "reason": "Re-reading the entry as '□□Key words: ×××； ×××；×××； ×××  ' with the two □ as leading spacing symbols that only carry indentation. 'Key words:' together with the colon is the fixed English-keywords label. The four '×××' tokens joined by Chinese semicolons '；' form one continuous value-position example block occupying the keywords value slot: there is no separate independent label and the example text itself sits where the real keywords will appear, so the whole semicolon-joined example block binds to keywords.en as a single fill_slot whose complete value contains the same number of separated keywords. The two trailing U+0020 spaces are ordinary post-line whitespace belonging to the keywords block rather than a separate obligation. After replacement with a normal English keyword list of the same shape the line reads 'Key words: kw1; kw2; kw3; kw4' with the original 'Key words:' label preserved.",
+          "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "The centered short text '（五号字空一行）' is a vertical-spacing instruction: '五号字空一行' means leave one blank line at five-point size after the keywords block. The whole parenthetical is a layout obligation rather than a heading, fixed label or fillable value, so the entire entry is a single style_only part. No field binding is appropriate. The instruction applies to the spacing that follows the English abstract unit (after the keywords line), and the requirement itself must remain in effect even though the literal text does not appear in the final body content.",
+          "source_entry_id": "source-entry-f35c3f86700250c36a1034ae"
+        }
+      ],
+      "status": "complete",
+      "summary": "Three-source-entry semantic judgment for unit-abstract-english batch 5: the first entry holds the Abstract header line mixing style spacing, fixed label, an ellipsis that is the actual English-abstract fill position, and trailing format guidance; the second entry is the Key words line mixing style spacing, fixed label and an English-keywords fill slot; the third entry is a standalone vertical-spacing style instruction that follows the abstract block. All fill_slots bind to abstract.en and keywords.en respectively."
+    }
+  },
+  "event_digest": "66533902c5482dde80b754bbe1c51d3dddbd071c2456ad1ccec6d69d30384b77",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "129d627b7f3cc39643e78abaec62c264060644295ecd7e51e62647992e648ad0",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 14
+}

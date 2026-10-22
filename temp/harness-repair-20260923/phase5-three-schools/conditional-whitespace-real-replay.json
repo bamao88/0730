@@ -1,0 +1,16 @@
+{
+  "verification_level": "real rejected candidate schema replay plus synthetic live SDK compatibility; not live school behavior after fix",
+  "source_event": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/semantic-revisions/00000021.json",
+  "source_event_sha256": "ba01159ade3e1cb7a15ac6aeec73cd800b8b7be19235e13131896c1619ad5e5a",
+  "validation_path": [
+    "semantic_judgments",
+    2,
+    "parts",
+    4,
+    "text"
+  ],
+  "constraint": "const",
+  "original_candidate_unchanged": true,
+  "synthetic_live_probe_used_exact_same_schema": true,
+  "schema_sha256": "40eb09e3429d7c1982a16221eb9d1d175799d599244606914434ce9cdca0ccc6"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "DocFit Gold Word Review"
+  short_description: "用 Word 原生批注审核 DocFit Gold 文件"
+  default_prompt: "Use $docfit-gold-word-review to prepare a DocFit Gold DOCX for human review with Word-native coverage comments."

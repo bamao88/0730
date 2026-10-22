@@ -1,0 +1,32 @@
+schema_version: docfit-template-extraction-gold-approval/v1
+case_id: 02-njau-undergraduate
+approved_by: xpw
+approved_at: '2026-08-18T13:20:00+08:00'
+approval_conclusion: approved_gold_pair_with_post_approval_comment_coverage_fix
+approval_note: user_reported_comment_coverage_gap; coverage_comments_completed_pending_manual_recheck
+reviewed_word:
+  path: review/accepted-2026-08-17/reviewed-final-template.gold.docx
+  sha256: 5eef954abe7caf6653a18f6d1ed02bb957ddf3db1dfa40f85ba261ef2e03b5cb
+  relation_to_gold_template: byte_identical_snapshot_after_coverage_review
+  word_comments:
+    review_status: coverage_completed_pending_manual_recheck
+    authors:
+      - Codex Gold Review
+      - Codex Gold Coverage Review
+    object_review_comment_count: 39
+    coverage_comment_count: 57
+    total_comment_count: 96
+    visible_body_blocks: 56
+    header_footer_visible_blocks: 10
+    scope: slots_regions_styles_logical_pages_and_all_visible_body_blocks_plus_header_footer_summary
+gold_pair:
+  template:
+    path: gold/final-template.gold.docx
+    sha256: 5eef954abe7caf6653a18f6d1ed02bb957ddf3db1dfa40f85ba261ef2e03b5cb
+  contract:
+    path: gold/fill-contract.gold.yaml
+    sha256: 5dd9f91149057f15147a39afedded985c7205b0f6a2bb6e758d4d4340bbbfb3e
+retention:
+  keep_reviewed_word_snapshot: true
+  keep_gold_pair: true
+  purpose: future_issue_triage_and_gold_optimization_baseline

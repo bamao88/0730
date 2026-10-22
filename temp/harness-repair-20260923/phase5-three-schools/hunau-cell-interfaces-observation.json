@@ -1,0 +1,37 @@
+{
+  "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+  "frozen_hashes_reverified": true,
+  "latest_revision_event": 54,
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-manifest.json",
+  "observed_at": "2026-09-24T07:35:18.624919+00:00",
+  "recorded_candidate_batches": 9,
+  "runtime_and_skill_frozen": false,
+  "runtime_commit": "9c211c1",
+  "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-cell-interfaces/template-extraction",
+  "session_id": 1720,
+  "status": "terminal",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task",
+  "unit_boundary_status": "ok",
+  "unit_harness_feedback_attempts": 0,
+  "unit_sdk_query_count": 1,
+  "exit_code": 2,
+  "verified_file_count": 139,
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 14,
+    "response": 13,
+    "local_review": 12,
+    "local_rejected": 4,
+    "candidate_recorded": 9,
+    "run_failed": 1
+  },
+  "failure": {
+    "code": "semantic_query_time_budget_exhausted",
+    "message": "The semantic stage exceeded its remaining saved time allowance.",
+    "origin": "harness",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": []
+  },
+  "product_acceptance": false
+}

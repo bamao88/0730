@@ -1,0 +1,543 @@
+{
+  "binding": {
+    "evidence_mode": "replay",
+    "historical_tasks": [
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task"
+    ],
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+  },
+  "created_at": "2026-09-24T07:10:50.993382+00:00",
+  "data": {
+    "feedback": {
+      "blockers": [
+        {
+          "code": "unit_boundary_point_invalid",
+          "evidence_focus": "document_map",
+          "field": "units[2].end_boundary",
+          "message": "The boundary names a source_entry_id absent from the current document_map.",
+          "source_entries": [],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+              },
+              "unit_id": "authorization-declaration",
+              "unit_name": "使用授权声明"
+            }
+          ],
+          "unit_id": "authorization-declaration"
+        },
+        {
+          "code": "unit_boundary_point_invalid",
+          "evidence_focus": "document_map",
+          "field": "units[3].start_boundary",
+          "message": "The boundary names a source_entry_id absent from the current document_map.",
+          "source_entries": [],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+              },
+              "unit_id": "table-of-contents",
+              "unit_name": "目录"
+            }
+          ],
+          "unit_id": "table-of-contents"
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 1 and 2 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca",
+              "text": "南京农业大学本科生毕业论文（设计）原创性声明"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+              },
+              "unit_id": "cover-page",
+              "unit_name": "封面 (本科生毕业论文（设计）首页)"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+              },
+              "unit_id": "originality-declaration",
+              "unit_name": "原创性声明"
+            }
+          ],
+          "unit_ids": [
+            "cover-page",
+            "originality-declaration"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 5 and 6 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+              "text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+              },
+              "unit_id": "chinese-abstract",
+              "unit_name": "摘要 (中文摘要与关键词)"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+              },
+              "unit_id": "english-abstract",
+              "unit_name": "ABSTRACT (英文摘要与关键词)"
+            }
+          ],
+          "unit_ids": [
+            "chinese-abstract",
+            "english-abstract"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 6 and 7 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-b29f36b0b400e9175833a48d",
+              "text": ""
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+              },
+              "unit_id": "english-abstract",
+              "unit_name": "ABSTRACT (英文摘要与关键词)"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+              },
+              "unit_id": "chapter-1-literature-review",
+              "unit_name": "第一章 文献综述"
+            }
+          ],
+          "unit_ids": [
+            "english-abstract",
+            "chapter-1-literature-review"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 7 and 8 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f",
+              "text": ""
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+              },
+              "unit_id": "chapter-1-literature-review",
+              "unit_name": "第一章 文献综述"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+              },
+              "unit_id": "main-body-chapter",
+              "unit_name": "第X章 正文章节 (材料与方法/结果与分析等)"
+            }
+          ],
+          "unit_ids": [
+            "chapter-1-literature-review",
+            "main-body-chapter"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 8 and 9 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da",
+              "text": "第X章 结论与展望"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+              },
+              "unit_id": "main-body-chapter",
+              "unit_name": "第X章 正文章节 (材料与方法/结果与分析等)"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+              },
+              "unit_id": "conclusion-and-outlook",
+              "unit_name": "第X章 结论与展望"
+            }
+          ],
+          "unit_ids": [
+            "main-body-chapter",
+            "conclusion-and-outlook"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 9 and 10 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-1919c9230321596eadb114b3",
+              "text": "参考文献"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+              },
+              "unit_id": "conclusion-and-outlook",
+              "unit_name": "第X章 结论与展望"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+              },
+              "unit_id": "references",
+              "unit_name": "参考文献"
+            }
+          ],
+          "unit_ids": [
+            "conclusion-and-outlook",
+            "references"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 10 and 11 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-9d0033633d338f39b3eabb85",
+              "text": "附  录 附录名称（三号黑体，居中）"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+              },
+              "unit_id": "references",
+              "unit_name": "参考文献"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+              },
+              "unit_id": "appendix",
+              "unit_name": "附录"
+            }
+          ],
+          "unit_ids": [
+            "references",
+            "appendix"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 11 and 12 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a",
+              "text": "相关的学术成果目录（三号黑体，居中）"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+              },
+              "unit_id": "appendix",
+              "unit_name": "附录"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+              },
+              "unit_id": "academic-achievements",
+              "unit_name": "相关的学术成果目录"
+            }
+          ],
+          "unit_ids": [
+            "appendix",
+            "academic-achievements"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 12 and 13 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-aafb36ce0102c361f941480b",
+              "text": "致  谢（三号黑体，居中）"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+              },
+              "unit_id": "academic-achievements",
+              "unit_name": "相关的学术成果目录"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+              },
+              "unit_id": "acknowledgements",
+              "unit_name": "致谢"
+            }
+          ],
+          "unit_ids": [
+            "academic-achievements",
+            "acknowledgements"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 13 and 14 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "text",
+              "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca",
+              "text": "南京农业大学本科毕业论文（设计）"
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+              },
+              "unit_id": "acknowledgements",
+              "unit_name": "致谢"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+              },
+              "unit_id": "page-header-footer",
+              "unit_name": "页眉页脚 (学校页眉文字与页码)"
+            }
+          ],
+          "unit_ids": [
+            "acknowledgements",
+            "page-header-footer"
+          ]
+        },
+        {
+          "code": "unit_boundary_overlap",
+          "message": "Units 14 and 15 overlap on the listed source content. Decide which unit it belongs to and revise their boundaries to meet.",
+          "source_entries": [
+            {
+              "entry_type": "table",
+              "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+              "text": ""
+            }
+          ],
+          "unit_boundaries": [
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+              },
+              "unit_id": "page-header-footer",
+              "unit_name": "页眉页脚 (学校页眉文字与页码)"
+            },
+            {
+              "end_boundary": {
+                "edge": "end",
+                "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+              },
+              "start_boundary": {
+                "edge": "start",
+                "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+              },
+              "unit_id": "template-specification-text-box",
+              "unit_name": "本科生毕业论文（设计）规范化要求说明文本框"
+            }
+          ],
+          "unit_ids": [
+            "page-header-footer",
+            "template-specification-text-box"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "name": "unit_source_partition_invalid",
+          "result": "needs_input"
+        }
+      ],
+      "failure": {
+        "code": "unit_source_partition_invalid",
+        "message": "The unit proposal has 13 boundary problem(s).",
+        "origin": "request",
+        "retryable": true,
+        "suggested_actions": [
+          "Revise source-entry boundary points to partition all entries."
+        ]
+      },
+      "feedback": {
+        "mechanical": true,
+        "semantic_authority": false,
+        "source_hash": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+        "type": "unit_coverage"
+      },
+      "schema_version": "mechanical_feedback_v1",
+      "status": "needs_input",
+      "warnings": []
+    },
+    "response_sequence": 2
+  },
+  "event_digest": "1c34dffc93efb4f342b79c8cd366eb54545f853cc94e7848a8529c6d9da8a133",
+  "kind": "review",
+  "previous_event_digest": "7da864ce5903559addbd6d3498cd47d2c97f5684ee5611dc3c7c98e54e266166",
+  "run_id": "f88d204e6ac746e7a830e34d9d7cf14a",
+  "schema_version": "docfit-unit-boundary-revision/v1",
+  "sequence": 3
+}

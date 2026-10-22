@@ -1,0 +1,77 @@
+{
+  "verification_level": "E2E agent loop",
+  "code_commit": "6257ff0",
+  "requires_working_tree_baseline": "runtime-baseline.json",
+  "built": "complete",
+  "harness_feedback_attempts": 1,
+  "semantic_feedback_attempts": 1,
+  "slot_checks": [
+    {
+      "field_id": "thesis.title.en",
+      "slot_ref": "source_entry_id=source-entry-bf74a3353df418bfdb93147b;part_index=0;field_id=thesis.title.en",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "author.name.zh",
+      "slot_ref": "source_entry_id=source-entry-3b879d2fe97520fea28d9eb9;part_index=1;field_id=author.name.zh",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "author.student_id",
+      "slot_ref": "source_entry_id=source-entry-7bd37b8065820e49cdd60b0d;part_index=1;field_id=author.student_id",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "author.cohort_class",
+      "slot_ref": "source_entry_id=source-entry-33b7069c5a23b51f75a2deb5;part_index=1;field_id=author.cohort_class",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "advisor.name.zh",
+      "slot_ref": "source_entry_id=source-entry-1534d668fc2eb3a6672843d7;part_index=1;field_id=advisor.name.zh",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "author.department",
+      "slot_ref": "source_entry_id=source-entry-0d171ab0a1928731d320b622;part_index=1;field_id=author.department",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    },
+    {
+      "field_id": "submission.date",
+      "slot_ref": "source_entry_id=source-entry-da54fbc60d2e3ec73e91b3b7;part_index=1;field_id=submission.date",
+      "field_in_input_vocabulary": true,
+      "matches_accepted_part": true,
+      "source_entry_present": true,
+      "source_based_span": true
+    }
+  ],
+  "product_acceptance": "rejected",
+  "product_blockers": [
+    "Chinese thesis title has no fill slot",
+    "Advisor name slot absorbs title responsibility",
+    "Visible format guidance and square placeholders remain",
+    "Long class placeholder wraps"
+  ],
+  "render_pages_reviewed": [
+    1
+  ],
+  "human_signoff": false
+}

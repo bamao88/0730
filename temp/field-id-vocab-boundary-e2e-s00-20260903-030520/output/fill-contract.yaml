@@ -1,0 +1,298 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.021436bb0dd9692d
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 021436bb0dd9692d592a7cb253283e224280cad049b14381c87e3db65daea170
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 8ab805e011bab3c5d22ab1dfd21193bfadf7f73ac2a03326b4ac8c681e1e88d2
+school_style_candidates: []
+known_school_style_gaps:
+- slot_id: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+  field_id: author.name.zh
+  style_role_id: style.slot.2ace5434f12a848c4b95b462
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_id: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+  slot_ref: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+  span_ref: reading_block_id=unit-0001:block-0002;part_index=0
+  field_id: author.name.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.2ace5434f12a848c4b95b462
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 作者中文姓名
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[1]
+    part_index: 0
+    span_ref: reading_block_id=unit-0001:block-0002;part_index=0
+    slot_ref: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+    field_vocabulary_digest: d1f142c96649682a22428210828f7ebd32c1dad499cb9f0f252c83676ac6978b
+    reading_block_id: unit-0001:block-0002
+  style_contract_ref:
+    style_contract_id: style.slot.2ace5434f12a848c4b95b462
+    contract_digest: b14c6dc05e93ea7188b18d59e6167933ddc5c025e0981b13e76c8ee56dd538b6
+styles:
+- style_contract_id: style.slot.2ace5434f12a848c4b95b462
+  application_scope: text
+  owned_properties:
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.0
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: '000000'
+    run.font_ascii: Times New Roman
+    run.font_east_asia: 宋体
+    run.font_hansi: Times New Roman
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: b14c6dc05e93ea7188b18d59e6167933ddc5c025e0981b13e76c8ee56dd538b6
+  label: author.name.zh @ reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_id: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+    field_id: author.name.zh
+    locator:
+      type: content_control_tag
+      value: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 7bc02f9310bfa2b019796e91b034e08907c7559bc1d09e6072b4052a166d3fda
+provenance:
+  source_sha256: d4981af8fc9ca1d59185d5ab019f7f769740ddd25535eaea06cc1d4c182996b8
+  body_structure_count: 0
+  agent_owned_semantics: true
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: warning
+      severity: warning
+      blocking: false
+      evidence:
+        source:
+          passed: false
+          code: officecli_failed
+          origin: engine
+          detail: OfficeCLI rejected the operation or returned a backend error.
+        final:
+          passed: false
+          code: officecli_failed
+          origin: engine
+          detail: OfficeCLI rejected the operation or returned a backend error.
+        new_officecli_regression: UNKNOWN
+      suggested_action: Repair source-inherited OpenXML validation warnings when strict schema acceptance is required.
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: d4981af8fc9ca1d59185d5ab019f7f769740ddd25535eaea06cc1d4c182996b8
+      suggested_action: null
+    - name: content_preservation
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_text_objects_preserved: 1
+      suggested_action: null
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: d4981af8fc9ca1d59185d5ab019f7f769740ddd25535eaea06cc1d4c182996b8
+    final_sha256: 021436bb0dd9692d592a7cb253283e224280cad049b14381c87e3db65daea170
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 0
+      warnings: 3
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 021436bb0dd9692d592a7cb253283e224280cad049b14381c87e3db65daea170
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 7bc02f9310bfa2b019796e91b034e08907c7559bc1d09e6072b4052a166d3fda
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 7bc02f9310bfa2b019796e91b034e08907c7559bc1d09e6072b4052a166d3fda
+      occurrences:
+      - occurrence_id: template-slot:reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.2ace5434f12a848c4b95b462
+          contract_digest: b14c6dc05e93ea7188b18d59e6167933ddc5c025e0981b13e76c8ee56dd538b6
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+        style_contract_id: style.slot.2ace5434f12a848c4b95b462
+        contract_digest: b14c6dc05e93ea7188b18d59e6167933ddc5c025e0981b13e76c8ee56dd538b6
+        locator:
+          type: content_control_tag
+          value: reading_block_id=unit-0001:block-0002;part_index=0;field_id=author.name.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: false
+    source:
+      passed: false
+      code: officecli_failed
+      origin: engine
+      detail: OfficeCLI rejected the operation or returned a backend error.
+    final:
+      passed: false
+      code: officecli_failed
+      origin: engine
+      detail: OfficeCLI rejected the operation or returned a backend error.
+    new_officecli_regression: UNKNOWN

@@ -1,0 +1,4 @@
+interface:
+  display_name: "DocFit 模板提取开发"
+  short_description: "面向模板提取的设计与实现，明确各层职责并交付可填写模板"
+  default_prompt: "使用 $docfit-template-extraction-development 处理当前模板提取开发任务，从可用模板的目标出发，完成正确分层的设计、实现与验收。"

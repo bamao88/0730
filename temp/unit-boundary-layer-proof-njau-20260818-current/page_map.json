@@ -1,0 +1,830 @@
+{
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/tests/manual-diagnostics/input/school-template-nannong-undergraduate.docx",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/unit-boundary-layer-proof-njau-20260818-current",
+  "source_hash": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+  "render_ref": "render:v2:182e2a11a06d7ea4b42351601e976618ec0241b31755cc260dac30704be04a82",
+  "pages": [
+    {
+      "page": 1,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[3]",
+          "type": "paragraph",
+          "text": "本科生毕业论文（设计）"
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]",
+          "type": "paragraph",
+          "text": "题    目:                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[9]",
+          "type": "paragraph",
+          "text": "                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]",
+          "type": "paragraph",
+          "text": "姓    名:                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]",
+          "type": "paragraph",
+          "text": "学    号:                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]",
+          "type": "paragraph",
+          "text": "学    院:                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]",
+          "type": "paragraph",
+          "text": "专    业:                                    "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]",
+          "type": "paragraph",
+          "text": "指导教师:                 职称               "
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[15]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[16]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[17]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[18]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]",
+          "type": "paragraph",
+          "text": "20   年   月   日"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "truncated": false,
+      "objects": []
+    },
+    {
+      "page": 3,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[3]",
+          "type": "paragraph",
+          "text": "南京农业大学本科生毕业论文（设计）原创性声明"
+        },
+        {
+          "locator": "/body/p[4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[5]",
+          "type": "paragraph",
+          "text": "本人郑重声明：所呈交的毕业论文（设计），是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标…"
+        },
+        {
+          "locator": "/body/p[6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[8]",
+          "type": "paragraph",
+          "text": "论文作者签名：                   日期：       年     月     日"
+        },
+        {
+          "locator": "/body/p[9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[10]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[11]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[12]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[13]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[14]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[15]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[16]",
+          "type": "paragraph",
+          "text": "南京农业大学本科生毕业论文（设计）使用授权声明"
+        },
+        {
+          "locator": "/body/p[17]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[18]",
+          "type": "paragraph",
+          "text": "本学位论文作者完全了解学校有关保留、使用毕业论文（设计）的规定，同意学校保留并向国家有关部门或机构送交论文的复印件和电子版，允许论文被查阅和借阅。本人授权南京农业大学教务处可以将本毕业论文（设计）的全部或部分内容编入有关数据库进行检索，可…"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[25]",
+          "type": "paragraph",
+          "text": "目  录"
+        },
+        {
+          "locator": "/body/p[26]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[27]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[28]",
+          "type": "paragraph",
+          "text": "摘  要\tⅠ"
+        },
+        {
+          "locator": "/body/p[29]",
+          "type": "paragraph",
+          "text": "ABSTRACT\tⅡ"
+        },
+        {
+          "locator": "/body/p[30]",
+          "type": "paragraph",
+          "text": "第一章 文献综述\t1"
+        },
+        {
+          "locator": "/body/p[31]",
+          "type": "paragraph",
+          "text": "1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[32]",
+          "type": "paragraph",
+          "text": "2 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[33]",
+          "type": "paragraph",
+          "text": "3 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[34]",
+          "type": "paragraph",
+          "text": "第二章 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[35]",
+          "type": "paragraph",
+          "text": "1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[36]",
+          "type": "paragraph",
+          "text": "1.1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[37]",
+          "type": "paragraph",
+          "text": "1.2 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[38]",
+          "type": "paragraph",
+          "text": "2 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[39]",
+          "type": "paragraph",
+          "text": "2.1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[40]",
+          "type": "paragraph",
+          "text": "3 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[41]",
+          "type": "paragraph",
+          "text": "第X章 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[42]",
+          "type": "paragraph",
+          "text": "1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[43]",
+          "type": "paragraph",
+          "text": "1.1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[44]",
+          "type": "paragraph",
+          "text": "1.2 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[45]",
+          "type": "paragraph",
+          "text": "2 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[46]",
+          "type": "paragraph",
+          "text": "2.1 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[47]",
+          "type": "paragraph",
+          "text": "3 XXX\tXX"
+        },
+        {
+          "locator": "/body/p[48]",
+          "type": "paragraph",
+          "text": "第X章 结论与展望\tXX"
+        },
+        {
+          "locator": "/body/p[49]",
+          "type": "paragraph",
+          "text": "参考文献\tXX"
+        },
+        {
+          "locator": "/body/p[50]",
+          "type": "paragraph",
+          "text": "附  录（此项非必需项）\tXX"
+        },
+        {
+          "locator": "/body/p[51]",
+          "type": "paragraph",
+          "text": "相关的学术成果目录（此项非必需项）\tXX"
+        },
+        {
+          "locator": "/body/p[52]",
+          "type": "paragraph",
+          "text": "致  谢\tXX"
+        },
+        {
+          "locator": "/footer[5]/p[1]",
+          "type": "paragraph",
+          "text": "3"
+        },
+        {
+          "locator": "/footer[7]/p[1]",
+          "type": "paragraph",
+          "text": "2"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[54]",
+          "type": "paragraph",
+          "text": "论文题目（小二号黑体）"
+        },
+        {
+          "locator": "/body/p[55]",
+          "type": "paragraph",
+          "text": "摘  要（三号黑体）"
+        },
+        {
+          "locator": "/body/p[56]",
+          "type": "paragraph",
+          "text": "摘要内容应概括地反映出本论文的主要内容，主要说明本论文的研究目的、内容、方法、成果和结论。语言力求精练、准确，不含图表，不加注释，具有独立性和完整性，一般在400字左右。"
+        },
+        {
+          "locator": "/body/p[57]",
+          "type": "paragraph",
+          "text": "中文摘要应含论文题目，在题目之下打印“摘要”二字（三号黑体），摘要的内容用小四号宋体, 行间距为固定值20磅。"
+        },
+        {
+          "locator": "/body/p[58]",
+          "type": "paragraph",
+          "text": "论文的关键词是反映毕业论文（设计）主题内容的名词，一般为3-5个，排在摘要正文部分下方。"
+        },
+        {
+          "locator": "/body/p[59]",
+          "type": "paragraph",
+          "text": "摘要内容后下空一行打印“关键词”三字（四号黑体），其后为关键词（小四号宋体），每一关键词之间用分号分开，最后一个关键词后不打标点符号。"
+        },
+        {
+          "locator": "/body/p[60]",
+          "type": "paragraph",
+          "text": "×××（400字左右，小四号宋体，行间距为固定值20磅）××××××"
+        },
+        {
+          "locator": "/body/p[61]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[62]",
+          "type": "paragraph",
+          "text": "关键词（四号黑体）：×××；×××；×××；×××（3-5个，小四号宋体）"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[63]",
+          "type": "paragraph",
+          "text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）"
+        },
+        {
+          "locator": "/body/p[64]",
+          "type": "paragraph",
+          "text": "ABSTRACT（三号Times New Roman，加粗）"
+        },
+        {
+          "locator": "/body/p[65]",
+          "type": "paragraph",
+          "text": "英文摘要和关键词内容与中文摘要和关键词相一致，其中英文摘要以300个左右实词为宜。"
+        },
+        {
+          "locator": "/body/p[66]",
+          "type": "paragraph",
+          "text": "英文摘要应含论文的英文题目，全部采用大写字母，在题目之下打印“ABSTRACT”（三号字加粗），摘要正文用小四号字Times New Roman，行间距为固定值20磅。摘要内容后下空两行打印“KEY WORDS”（四号字加粗），其后的关键…"
+        },
+        {
+          "locator": "/body/p[67]",
+          "type": "paragraph",
+          "text": "×××（300个实词左右，小四号Times New Roman，行间距为固定值20磅）××××××"
+        },
+        {
+          "locator": "/body/p[68]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[69]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[70]",
+          "type": "paragraph",
+          "text": "KEY WORDS（四号Times New Roman，大写加粗）：×××；×××；×××；×××（小四号Times New Roman）"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[73]",
+          "type": "paragraph",
+          "text": "第一章 文献综述（三号黑体居中）"
+        },
+        {
+          "locator": "/body/p[74]",
+          "type": "paragraph",
+          "text": "文献综述应将与论文内容有关的国内外研究进展作回顾与分析，并阐明本研究的目的和意义。"
+        },
+        {
+          "locator": "/body/p[75]",
+          "type": "paragraph",
+          "text": "各章标题（如，第一章 文献综述）：三号黑体居中；若有分级标题，一级节标题：四号黑体居左；二级节标题：小四号宋体居左。"
+        },
+        {
+          "locator": "/body/p[76]",
+          "type": "paragraph",
+          "text": "正文中文一律采用小四号宋体，首行缩进两个字符，无段前、段后间距，行间距为固定值20磅。英文、罗马字符一般采用新罗马体（Times New Roman）。"
+        },
+        {
+          "locator": "/body/p[77]",
+          "type": "paragraph",
+          "text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××…"
+        },
+        {
+          "locator": "/body/p[78]",
+          "type": "paragraph",
+          "text": "1□×××××（四号黑体，居左，□代表空格）"
+        },
+        {
+          "locator": "/body/p[79]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[83]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[84]",
+          "type": "paragraph",
+          "text": "2□×××××（四号黑体，居左）"
+        },
+        {
+          "locator": "/body/p[85]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[80]",
+          "type": "paragraph",
+          "text": "1.1□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[82]",
+          "type": "paragraph",
+          "text": "1.2□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[87]",
+          "type": "paragraph",
+          "text": "第X章   （正文标题）（三号黑体，居中）"
+        },
+        {
+          "locator": "/body/p[88]",
+          "type": "paragraph",
+          "text": "实验部分一般由标题、文字叙述、图、表格和公式等部分构成。写作形式因科研项目的性质不同而变化，一般可包括试验材料与方法（计算方法、实验设置和测试方法）、经过整理加工的实验结果、对结果的分析讨论与结论。"
+        },
+        {
+          "locator": "/body/p[89]",
+          "type": "paragraph",
+          "text": "各章标题：三号黑体居中；一级节标题（如，1 材料与方法）：四号黑体居左；二级节标题（如，1.1 材料）：小四号宋体居左。正文各部分的标题应简明扼要，不使用标点符号。"
+        },
+        {
+          "locator": "/body/p[90]",
+          "type": "paragraph",
+          "text": "正文中文为小四号宋体，英文及数字为小四号Times New Roman，首行缩进2个字符，行间距为固定值20磅，其中行间距可在保持论文美观的前提下进行微调。"
+        },
+        {
+          "locator": "/body/p[91]",
+          "type": "paragraph",
+          "text": "图、表格应有中英文标题，居中显示。图表内容一般为5号及小5号宋体，表头及图的文字说明用5号黑体，英文及数字为五号Times New Roman字体。图、表格按章顺序编号，如表5-4为第五章第四表。"
+        },
+        {
+          "locator": "/body/p[92]",
+          "type": "paragraph",
+          "text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××。"
+        },
+        {
+          "locator": "/body/p[93]",
+          "type": "paragraph",
+          "text": "1□材料与方法（四号黑体，居左，□代表空格）"
+        },
+        {
+          "locator": "/body/p[94]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[95]",
+          "type": "paragraph",
+          "text": "1.1□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[97]",
+          "type": "paragraph",
+          "text": "1.2□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[98]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[99]",
+          "type": "paragraph",
+          "text": "2□结果与分析（四号黑体，居左）"
+        },
+        {
+          "locator": "/body/p[100]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[101]",
+          "type": "paragraph",
+          "text": "2.1□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[102]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[103]",
+          "type": "paragraph",
+          "text": "2.2□×××××（小四宋体，居左）"
+        },
+        {
+          "locator": "/body/p[104]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/body/p[105]",
+          "type": "paragraph",
+          "text": "3□讨论（四号黑体，居左）"
+        },
+        {
+          "locator": "/body/p[106]",
+          "type": "paragraph",
+          "text": "×××××（小四宋体）××××××"
+        },
+        {
+          "locator": "/header[3]/p[1]",
+          "type": "paragraph",
+          "text": "南京农业大学本科毕业论文（设计）"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[109]",
+          "type": "paragraph",
+          "text": "第X章 结论与展望"
+        },
+        {
+          "locator": "/body/p[110]",
+          "type": "paragraph",
+          "text": "最后一章结论与展望着重总结论文的创新点或新见解及研究展望或建议。"
+        },
+        {
+          "locator": "/body/p[111]",
+          "type": "paragraph",
+          "text": "结论是对论文主要研究结果、论点的提炼与概括，应准确、简明、完整、有条理，主要阐述自己的创造性工作及所取得的研究成果在本学术领域中的地位、作用和意义及对生产与社会实践的指导意义。"
+        },
+        {
+          "locator": "/body/p[112]",
+          "type": "paragraph",
+          "text": "结论要严格区分自己取得的成果与导师及他人的科研工作成果。在评价自己的研究工作成果时，要实事求是，除非有足够的证据表明自己的研究是“首次”的、“领先”的、“填补空白”的，否则应避免使用这些或类似词语。"
+        },
+        {
+          "locator": "/body/p[113]",
+          "type": "paragraph",
+          "text": "展望或建议，是在总结研究工作和现有结论的基础上，对该领域今后的发展方向及重要研究内容进行预测，同时对所获研究结果的应用前景和社会影响加以评价，从而对今后的研究有所启发。"
+        },
+        {
+          "locator": "/body/p[114]",
+          "type": "paragraph",
+          "text": "×××××（中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××…"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[116]",
+          "type": "paragraph",
+          "text": "参考文献"
+        },
+        {
+          "locator": "/body/p[117]",
+          "type": "paragraph",
+          "text": "参考文献表是文中引用的有具体文字来源的文献集合，应置于正文后并另起页；所有被引用文献均要列入参考文献表中；引文采用著作-出版年制标注时，参考文献表应按著者字顺和出版年排序。中文为五号宋体，英文及数字为五号Times New Roman字体…"
+        },
+        {
+          "locator": "/body/p[118]",
+          "type": "paragraph",
+          "text": "论文中引用的文献的标注方法遵照GB/T 7714-2005《文后参考文献著录规则》。"
+        },
+        {
+          "locator": "/body/p[119]",
+          "type": "paragraph",
+          "text": "在引用别人的科研成果时，应在引用处加以说明，避免论文抄袭现象的发生。"
+        },
+        {
+          "locator": "/body/p[120]",
+          "type": "paragraph",
+          "text": "常用的参考文献著录项目和格式示例如下："
+        },
+        {
+          "locator": "/body/p[121]",
+          "type": "paragraph",
+          "text": "普通图书示例"
+        },
+        {
+          "locator": "/body/p[122]",
+          "type": "paragraph",
+          "text": "[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998"
+        },
+        {
+          "locator": "/body/p[123]",
+          "type": "paragraph",
+          "text": "[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995."
+        },
+        {
+          "locator": "/body/p[124]",
+          "type": "paragraph",
+          "text": "期刊中析出的文献示例"
+        },
+        {
+          "locator": "/body/p[125]",
+          "type": "paragraph",
+          "text": "[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8."
+        },
+        {
+          "locator": "/body/p[126]",
+          "type": "paragraph",
+          "text": "[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoi…"
+        },
+        {
+          "locator": "/body/p[127]",
+          "type": "paragraph",
+          "text": "论文集、会议录示例"
+        },
+        {
+          "locator": "/body/p[128]",
+          "type": "paragraph",
+          "text": "[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990."
+        },
+        {
+          "locator": "/body/p[129]",
+          "type": "paragraph",
+          "text": "[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: …"
+        },
+        {
+          "locator": "/body/p[130]",
+          "type": "paragraph",
+          "text": "科技报告示例"
+        },
+        {
+          "locator": "/body/p[131]",
+          "type": "paragraph",
+          "text": "[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997."
+        },
+        {
+          "locator": "/body/p[132]",
+          "type": "paragraph",
+          "text": "[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, …"
+        },
+        {
+          "locator": "/body/p[133]",
+          "type": "paragraph",
+          "text": "学位论文示例"
+        },
+        {
+          "locator": "/body/p[134]",
+          "type": "paragraph",
+          "text": "[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998."
+        },
+        {
+          "locator": "/body/p[135]",
+          "type": "paragraph",
+          "text": "[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965."
+        },
+        {
+          "locator": "/footer[3]/p[1]",
+          "type": "paragraph",
+          "text": "4"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[138]",
+          "type": "paragraph",
+          "text": "附  录 附录名称（三号黑体，居中）"
+        },
+        {
+          "locator": "/body/p[139]",
+          "type": "paragraph",
+          "text": "如果有不宜放在正文中的重要支撑材料，可编入毕业论文（设计）的附录中。包括某些重要的原始数据、详细数学推导、程序全文及其说明、复杂的图表、设计图纸等一系列需要补充提供的说明材料。附录的篇幅不宜太多，一般不超过正文。此项非必需项。"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[142]",
+          "type": "paragraph",
+          "text": "相关的学术成果目录（三号黑体，居中）"
+        },
+        {
+          "locator": "/body/p[143]",
+          "type": "paragraph",
+          "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。"
+        },
+        {
+          "locator": "/footer[13]/p[1]",
+          "type": "paragraph",
+          "text": "6"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[146]",
+          "type": "paragraph",
+          "text": "致  谢（三号黑体，居中）"
+        },
+        {
+          "locator": "/body/p[147]",
+          "type": "paragraph",
+          "text": "学位论文正文和附录之后，一般应放置致谢，主要感谢指导老师和对论文工作有直接贡献和帮助的人士和单位，以及资助的项目。致谢言语应谦虚诚恳，实事求是。字数一般在500字之内。"
+        },
+        {
+          "locator": "/body/p[148]",
+          "type": "paragraph",
+          "text": "“致谢”用三号黑体居中，两字之间空两格。致谢内容为小四号宋体，行间距为固定值20磅。"
+        },
+        {
+          "locator": "/body/p[149]",
+          "type": "paragraph",
+          "text": "×××××（500字之内，中文小四宋体，英文、数字小四Times New Roman字体，行间距为固定值20磅）×××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××…"
+        },
+        {
+          "locator": "/footer[8]/p[1]",
+          "type": "paragraph",
+          "text": "7"
+        }
+      ]
+    }
+  ]
+}

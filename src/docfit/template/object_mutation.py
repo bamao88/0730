@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import os
 import re
-import unicodedata
 import zipfile
 from copy import deepcopy
 from dataclasses import dataclass
@@ -19,43 +18,30 @@ from pathlib import Path
 from typing import cast
 from xml.etree import ElementTree as ET
 
+from docfit.template.placeholder_layout import preserve_underlined_fill_width
+from docfit.tools.edit_actions import DomainEditAction
 from docfit.tools.inspection import InspectedObject
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
+from docfit.tools.word_xml import (
+    resolve_word_locator as resolve_word_locator,
+)
+from docfit.tools.word_xml import (
+    resolve_word_locator_pair as _resolve,
+)
+from docfit.tools.word_xml import serialize_word_xml
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
-W14_NS = "http://schemas.microsoft.com/office/word/2010/wordml"
 _W = f"{{{W_NS}}}"
-_KNOWN_NAMESPACES = {
-    "w": W_NS,
-    "mc": MC_NS,
-    "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
-    "w14": W14_NS,
-    "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
-    "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
-    "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
-    "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
-    "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
-    "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
-    "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
-    "wp": "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing",
-    "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing",
-}
-for _prefix, _uri in _KNOWN_NAMESPACES.items():
-    ET.register_namespace(_prefix, _uri)
-
-_SEGMENT = re.compile(r"^(?P<name>[A-Za-z]+)\[(?P<selector>.+)]$")
-_ATTRIBUTE = re.compile(r"^@(?P<name>[A-Za-z0-9]+)=(?P<value>.+)$")
-
 
 @dataclass(frozen=True)
 class ObjectMutation:
     """One already-resolved operation in an atomic page-sized edit batch."""
 
     selected: InspectedObject
-    action: str
+    action: DomainEditAction
     field_id: str | None = None
-    slot_id: str | None = None
+    structure_ref: str | None = None
+    slot_ref: str | None = None
     content_type: str = "text"
     placeholder_text: str | None = None
     effective_format: tuple[tuple[str, str], ...] = ()
@@ -70,7 +56,7 @@ class StructureMember:
 
     selected: InspectedObject
     field_id: str
-    slot_id: str
+    slot_ref: str
     content_type: str
     placeholder_text: str
     effective_format: tuple[tuple[str, str], ...] = ()
@@ -85,94 +71,11 @@ class TocEntry:
 
 
 def _serialize(root: ET.Element) -> bytes:
-    payload = ET.tostring(root, encoding="utf-8", xml_declaration=True)
-    ignorable = root.get(f"{{{MC_NS}}}Ignorable", "").split()
-    missing = [
-        (prefix, _KNOWN_NAMESPACES[prefix])
-        for prefix in ignorable
-        if prefix in _KNOWN_NAMESPACES and f"xmlns:{prefix}=".encode() not in payload
-    ]
-    if missing:
-        declaration_end = payload.find(b"?>")
-        root_start = payload.find(b"<", declaration_end + 2)
-        root_end = payload.find(b">", root_start)
-        declarations = b"".join(f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing)
-        payload = payload[:root_end] + declarations + payload[root_end:]
-    return cast(bytes, payload)
+    return serialize_word_xml(root)
 
 
 def _local_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
-
-
-def _attribute_value(element: ET.Element, name: str) -> str | None:
-    return next(
-        (
-            value
-            for key, value in element.attrib.items()
-            if _local_name(key).casefold() == name.casefold()
-        ),
-        None,
-    )
-
-
-def _selected_child(parent: ET.Element, segment: str) -> ET.Element:
-    if segment == "body":
-        values = [child for child in parent if _local_name(child.tag) == "body"]
-        if len(values) == 1:
-            return values[0]
-        raise _target_not_found()
-    match = _SEGMENT.fullmatch(segment)
-    if match is None:
-        raise _target_not_found()
-    name = match.group("name")
-    candidates = [child for child in parent if _local_name(child.tag) == name]
-    if not candidates and _local_name(parent.tag) == "sdt":
-        # OfficeCLI object locators deliberately flatten the OOXML-only
-        # sdtContent container. Keep mutation resolution on that same public
-        # abstraction so an Agent never has to manufacture hidden XML paths.
-        content = parent.find(f"{_W}sdtContent")
-        if content is not None:
-            candidates = [child for child in content if _local_name(child.tag) == name]
-    selector = match.group("selector")
-    if selector.isdigit():
-        index = int(selector) - 1
-        if 0 <= index < len(candidates):
-            return candidates[index]
-        raise _target_not_found()
-    attribute = _ATTRIBUTE.fullmatch(selector)
-    if attribute is not None:
-        attribute_name = attribute.group("name")
-        attribute_value = attribute.group("value")
-
-        def matches_attribute(child: ET.Element) -> bool:
-            if _attribute_value(child, attribute_name) == attribute_value:
-                return True
-            if name == "sdt" and attribute_name.casefold() == "sdtid":
-                identifier = child.find(f"{_W}sdtPr/{_W}id")
-                return (
-                    identifier is not None
-                    and _attribute_value(identifier, "val") == attribute_value
-                )
-            return False
-
-        found = [child for child in candidates if matches_attribute(child)]
-        if len(found) == 1:
-            return found[0]
-    raise _target_not_found()
-
-
-def _resolve(root: ET.Element, locator: str) -> tuple[ET.Element, ET.Element]:
-    current = root
-    parent = root
-    for segment in (value for value in locator.split("/") if value):
-        selected = _selected_child(current, segment)
-        parent = next(
-            (container for container in current.iter() if selected in list(container)),
-            current,
-        )
-        current = selected
-    return parent, current
 
 
 def _target_not_found() -> ToolFailure:
@@ -321,7 +224,7 @@ def _materialize_effective_fonts(
 
     A paragraph can contain conflicting paragraph-mark and run-level font
     declarations.  Inspection has already resolved the font that is visibly in
-    force for the Agent-selected object.  Once that paragraph is turned into a
+    force for the Harness-selected object.  Once that paragraph is turned into a
     content control, leaving the placeholder run's fonts implicit can expose a
     different inheritance path to later style capture (and to text inserted by
     Word).  Persist the resolved script fonts as a deterministic part of slot
@@ -369,14 +272,6 @@ def _materialize_effective_fonts(
     properties[:] = _ordered_children(list(properties), _RPR_ORDER)
 
 
-def _display_width_units(value: str) -> int:
-    """Estimate the source run's East-Asian inline width without using len()."""
-
-    return sum(
-        2 if unicodedata.east_asian_width(character) in {"W", "F"} else 1 for character in value
-    )
-
-
 def _placeholder_preserving_underlined_fill(
     target: ET.Element,
     *,
@@ -391,13 +286,11 @@ def _placeholder_preserving_underlined_fill(
     the changed-region render remains the final authority for proportional fonts.
     """
 
-    if source_text.strip() or target.find(f"{_W}rPr/{_W}u") is None:
-        return placeholder_text
-    remaining = max(
-        0,
-        _display_width_units(source_text) - _display_width_units(placeholder_text),
+    return preserve_underlined_fill_width(
+        source_text=source_text,
+        placeholder_text=placeholder_text,
+        underlined=target.find(f"{_W}rPr/{_W}u") is not None,
     )
-    return f"{placeholder_text}{' ' * remaining}"
 
 
 def _apply_run_outcomes(properties: ET.Element, outcomes: dict[str, str]) -> None:
@@ -454,20 +347,104 @@ def _apply_effective_format(
 def _sdt(
     *,
     field_id: str,
-    slot_id: str,
+    slot_ref: str,
     content_type: str,
 ) -> tuple[ET.Element, ET.Element]:
     control = ET.Element(f"{_W}sdt")
     properties = ET.SubElement(control, f"{_W}sdtPr")
     ET.SubElement(properties, f"{_W}alias", {f"{_W}val": field_id})
-    ET.SubElement(properties, f"{_W}tag", {f"{_W}val": slot_id})
-    internal_id = int(sha256_json({"slot_id": slot_id})[:7], 16)
+    ET.SubElement(properties, f"{_W}tag", {f"{_W}val": slot_ref})
+    internal_id = int(sha256_json({"slot_ref": slot_ref})[:7], 16)
     ET.SubElement(properties, f"{_W}id", {f"{_W}val": str(internal_id)})
     # Brackets in visible content are the whole placeholder protocol.  In
     # particular, do not add w:showingPlcHdr or placeholder-specific shading.
     if content_type not in {"rich_text", "section"}:
         ET.SubElement(properties, f"{_W}text")
     return control, ET.SubElement(control, f"{_W}sdtContent")
+
+
+def _structure_sdt(*, group_ref: str) -> tuple[ET.Element, ET.Element]:
+    control = ET.Element(f"{_W}sdt")
+    properties = ET.SubElement(control, f"{_W}sdtPr")
+    internal_id = int(sha256_json({"body_structure_group_ref": group_ref})[:7], 16)
+    ET.SubElement(properties, f"{_W}id", {f"{_W}val": str(internal_id)})
+    return control, ET.SubElement(control, f"{_W}sdtContent")
+
+
+def _sdt_properties(control: ET.Element) -> ET.Element:
+    properties = control.find(f"{_W}sdtPr")
+    if properties is not None:
+        return properties
+    properties = ET.Element(f"{_W}sdtPr")
+    content = control.find(f"{_W}sdtContent")
+    children = list(control)
+    position = children.index(content) if content in children else 0
+    control.insert(position, properties)
+    return properties
+
+
+def _set_sdt_property(
+    properties: ET.Element,
+    name: str,
+    *,
+    value: str | None = None,
+) -> ET.Element:
+    matches = [child for child in properties if _local_name(child.tag) == name]
+    if matches:
+        selected = matches[0]
+        for extra in matches[1:]:
+            properties.remove(extra)
+    else:
+        selected = ET.Element(f"{_W}{name}")
+        properties.append(selected)
+    if value is not None:
+        selected.set(f"{_W}val", value)
+    return selected
+
+
+def _adopt_content_control(
+    document_root: ET.Element,
+    control: ET.Element,
+    *,
+    field_id: str,
+    slot_ref: str,
+    content_type: str,
+) -> list[str]:
+    if _local_name(control.tag) != "sdt":
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="slot_target_not_content_control",
+            message="Existing content-control adoption requires an sdt target.",
+        )
+    if _inside_content_control(document_root, control):
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="nested_content_control_adoption_denied",
+            message="A nested content control cannot be adopted as a DocFit slot.",
+            suggested_actions=(
+                "Refresh target_affordance and select the outer intended content control.",
+            ),
+        )
+    if control.find(f"{_W}sdtContent") is None:
+        raise ToolFailure(
+            status="error",
+            origin="document",
+            code="content_control_structure_invalid",
+            message="The selected content control has no sdtContent container.",
+        )
+    properties = _sdt_properties(control)
+    _set_sdt_property(properties, "alias", value=field_id)
+    _set_sdt_property(properties, "tag", value=slot_ref)
+    _set_sdt_property(
+        properties,
+        "id",
+        value=str(int(sha256_json({"slot_ref": slot_ref})[:7], 16)),
+    )
+    if content_type not in {"rich_text", "section"}:
+        _set_sdt_property(properties, "text")
+    return []
 
 
 _RANGE_START_ELEMENTS = {
@@ -513,10 +490,18 @@ def _materialize(
     *,
     selected: InspectedObject,
     field_id: str,
-    slot_id: str,
+    slot_ref: str,
     content_type: str,
     placeholder_text: str,
 ) -> list[str]:
+    if selected.kind == "sdt":
+        return _adopt_content_control(
+            document_root,
+            target,
+            field_id=field_id,
+            slot_ref=slot_ref,
+            content_type=content_type,
+        )
     if selected.kind not in {"paragraph", "run"}:
         raise ToolFailure(
             status="needs_input",
@@ -531,9 +516,22 @@ def _materialize(
             code="target_already_fillable",
             message="The selected object is already inside a content control.",
         )
+    if selected.kind == "paragraph" and next(target.iter(f"{_W}sdt"), None) is not None:
+        raise ToolFailure(
+            status="needs_input",
+            origin="request",
+            code="existing_content_control_boundary",
+            message=(
+                "materialize_slot would wrap a paragraph that already contains a content control."
+            ),
+            suggested_actions=(
+                "Refresh target_affordance and select the existing sdt target_ref.",
+                "Do not repeat materialize_slot for the same paragraph target.",
+            ),
+        )
     sdt, content = _sdt(
         field_id=field_id,
-        slot_id=slot_id,
+        slot_ref=slot_ref,
         content_type=content_type,
     )
 
@@ -671,18 +669,17 @@ def _materialize_structure(
     document_root: ET.Element,
     members: list[tuple[ET.Element, ET.Element, StructureMember]],
     *,
-    field_id: str,
-    slot_id: str,
+    structure_ref: str,
     replaced_structure: tuple[ET.Element, ET.Element] | None = None,
 ) -> None:
     """Extract ordered representative school objects into a reusable structure.
 
-    When the Agent later discovers a better representative block, replace the
-    earlier structure atomically.  The Tool only performs the requested
-    replacement; deciding that the newer block is semantically better remains
-    the Agent's responsibility.  Representative objects may have instruction or
-    redundant sample objects between them: those unselected objects stay in the
-    document for the Agent's later cleanup instead of becoming structure members.
+    When a later reviewed body representative replaces an earlier one, perform
+    the replacement atomically.  The Tool only performs the requested
+    replacement; deciding semantic preference remains outside object mutation.
+    Representative objects may have instruction or redundant sample objects
+    between them: those unselected objects stay in the document for later
+    semantic cleanup instead of becoming structure members.
     """
 
     if not members:
@@ -763,7 +760,14 @@ def _materialize_structure(
             and block.find(f"{_W}pPr/{_W}sectPr") is None
         )
     ]
-    outer, content = _sdt(field_id=field_id, slot_id=slot_id, content_type="section")
+    outer, content = _structure_sdt(
+        group_ref=sha256_json(
+            {
+                "structure_ref": structure_ref,
+                "member_slot_refs": [member.slot_ref for _, _, member in members],
+            }
+        )
+    )
     for block in layout_blocks:
         parent.remove(block)
         content.append(block)
@@ -776,7 +780,7 @@ def _materialize_structure(
                 target,
                 selected=member.selected,
                 field_id=member.field_id,
-                slot_id=member.slot_id,
+                slot_ref=member.slot_ref,
                 content_type=member.content_type,
                 placeholder_text=member.placeholder_text,
             )
@@ -785,7 +789,7 @@ def _materialize_structure(
             # make the sample addressable without inventing a replacement table.
             control, member_content = _sdt(
                 field_id=member.field_id,
-                slot_id=member.slot_id,
+                slot_ref=member.slot_ref,
                 content_type=member.content_type,
             )
             outer_content = outer.find(f"{_W}sdtContent")
@@ -982,7 +986,7 @@ def _materialize_toc_source_levels(
     document_root: ET.Element,
     entries: tuple[TocEntry, ...],
 ) -> tuple[list[JsonObject], list[JsonObject]]:
-    """Make the Agent-selected entries the exact 1-3 source set for Word updates."""
+    """Make the Harness-reviewed entries the exact 1-3 source set for Word updates."""
 
     results: list[JsonObject] = []
     selected_paragraphs: set[int] = set()
@@ -1205,7 +1209,7 @@ def _stabilize_toc_styles(
         ) from error
     default_run = styles.find(f"{_W}docDefaults/{_W}rPrDefault/{_W}rPr")
     by_id = {style.get(f"{_W}styleId", ""): style for style in styles.findall(f"{_W}style")}
-    fallback_tabs = next(
+    template_tabs = next(
         (
             deepcopy(tabs)
             for template in templates.values()
@@ -1214,8 +1218,8 @@ def _stabilize_toc_styles(
         ),
         None,
     )
-    if fallback_tabs is None:
-        fallback_tabs = next(
+    if template_tabs is None:
+        template_tabs = next(
             (
                 deepcopy(tabs)
                 for style_id in style_ids.values()
@@ -1249,8 +1253,8 @@ def _stabilize_toc_styles(
                 source = template_paragraph_properties.find(f"{_W}{name}")
                 if source is not None:
                     paragraph_properties.append(deepcopy(source))
-        if paragraph_properties.find(f"{_W}tabs") is None and fallback_tabs is not None:
-            paragraph_properties.append(deepcopy(fallback_tabs))
+        if paragraph_properties.find(f"{_W}tabs") is None and template_tabs is not None:
+            paragraph_properties.append(deepcopy(template_tabs))
         spacing = paragraph_properties.find(f"{_W}spacing")
         if spacing is not None:
             spacing.attrib.setdefault(f"{_W}before", "0")
@@ -1296,7 +1300,7 @@ def _stabilize_toc_styles(
 
     # Word can recreate the Hyperlink character style when a TOC with the \h
     # switch is updated. If the current TOC cache already uses a character
-    # style, normalize that exact style as the durable field-update fallback.
+    # style, normalize that exact style as the durable field-update source.
     character_style_ids = (
         {
             value
@@ -1575,7 +1579,7 @@ def _refresh_toc(
             continue
         templates[candidate_level] = paragraph
         missing_levels.remove(candidate_level)
-    fallback = siblings[start]
+    template_paragraph = siblings[start]
     instruction_text = "".join(
         node.text or ""
         for paragraph in siblings[start : end + 1]
@@ -1594,12 +1598,12 @@ def _refresh_toc(
     )
     replacements = [
         _toc_paragraph(
-            templates.get(entry.level, fallback),
+            templates.get(entry.level, template_paragraph),
             entry.selected.text,
             level=entry.level,
             style_id=(
                 style_ids.get(entry.level)
-                or _paragraph_style_id(templates.get(entry.level, fallback))
+                or _paragraph_style_id(templates.get(entry.level, template_paragraph))
                 or f"TOC{entry.level}"
             ),
             instruction_text=instruction_text,
@@ -1755,7 +1759,7 @@ def mutate_objects(
             )
     refreshed_toc = False
     preserved_boundaries: list[JsonObject] = []
-    migrated_boundaries: list[JsonObject] = []
+    relocated_boundaries: list[JsonObject] = []
     page_start_results: list[JsonObject] = []
     style_scope_changes: list[JsonObject] = []
     toc_source_levels: list[JsonObject] = []
@@ -1763,20 +1767,20 @@ def mutate_objects(
     toc_style_ids = _toc_style_ids(parts)
     for index, (parent, target, mutation) in enumerate(resolved):
         if mutation.action == "materialize_slot":
-            if mutation.field_id is None or mutation.slot_id is None:
+            if mutation.field_id is None or mutation.slot_ref is None:
                 raise AssertionError("materialize_slot requires field and slot identifiers")
             _apply_effective_format(target, mutation.effective_format)
-            migrated = _materialize(
+            relocated = _materialize(
                 document_root,
                 parent,
                 target,
                 selected=mutation.selected,
                 field_id=mutation.field_id,
-                slot_id=mutation.slot_id,
+                slot_ref=mutation.slot_ref,
                 content_type=mutation.content_type,
                 placeholder_text=mutation.placeholder_text or f"【{mutation.field_id}】",
             )
-            migrated_boundaries.extend(
+            relocated_boundaries.extend(
                 {
                     "kind": kind,
                     "object_id": str(
@@ -1786,16 +1790,15 @@ def mutate_objects(
                     ),
                     "representation": "outside_content_control",
                 }
-                for kind in migrated
+                for kind in relocated
             )
         elif mutation.action == "materialize_structure":
-            if mutation.field_id is None or mutation.slot_id is None:
-                raise AssertionError("materialize_structure requires field and slot identifiers")
+            if mutation.structure_ref is None:
+                raise AssertionError("materialize_structure requires a structure_ref")
             _materialize_structure(
                 document_root,
                 structure_resolved[index],
-                field_id=mutation.field_id,
-                slot_id=mutation.slot_id,
+                structure_ref=mutation.structure_ref,
                 replaced_structure=replaced_structures.get(index),
             )
         elif mutation.action == "normalize_effective_format":
@@ -1891,7 +1894,7 @@ def mutate_objects(
         os.fsync(handle.fileno())
     return {
         "preserved_boundaries": preserved_boundaries,
-        "migrated_boundaries": migrated_boundaries,
+        "relocated_boundaries": relocated_boundaries,
         "page_start_results": page_start_results,
         "style_scope_changes": style_scope_changes,
         "toc_source_levels": toc_source_levels,

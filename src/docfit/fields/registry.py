@@ -3,73 +3,15 @@
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
+from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_json
 
-
-def _normalize(value: str) -> str:
-    return "".join(value.split()).casefold()
-
-
-_SEARCH_STOP_WORDS = {
-    "all",
-    "available",
-    "cover",
-    "current",
-    "field",
-    "fields",
-    "fillable",
-    "list",
-    "object",
-    "page",
-    "template",
-}
-_SEARCH_ALIASES = {
-    "college": "department",
-    "student": "author",
-    "supervisor": "advisor",
-    "teacher": "advisor",
-    "topic": "title",
-    "作者": "author",
-    "学生": "author",
-    "学院": "department",
-    "院系": "department",
-    "指导教师": "advisor",
-    "导师": "advisor",
-    "职称": "advisor.title",
-    "论文题目": "thesis.title",
-    "题目": "title",
-    "学号": "author.student_id",
-    "专业": "author.major",
-}
-
-
-def _search_terms(value: str) -> tuple[str, ...]:
-    raw = re.findall(r"[a-z0-9]+|[\u3400-\u9fff]+", value.casefold())
-    terms: list[str] = []
-    for term in raw:
-        if term in _SEARCH_STOP_WORDS:
-            continue
-        if re.fullmatch(r"[\u3400-\u9fff]+", term):
-            expanded = [
-                mapped
-                for source, mapped in sorted(
-                    _SEARCH_ALIASES.items(),
-                    key=lambda item: len(item[0]),
-                    reverse=True,
-                )
-                if source in term
-            ]
-            terms.extend(expanded or [term])
-            continue
-        terms.append(_SEARCH_ALIASES.get(term, term))
-    return tuple(dict.fromkeys(terms))
+FIELD_VOCABULARY_SCHEMA_VERSION = "docfit_pre_input_field_vocabulary_v1"
 
 
 @dataclass(frozen=True, slots=True)
@@ -132,6 +74,7 @@ class FieldRegistrySnapshot:
                         "value_sources",
                         "student_extraction_policy",
                         "normalization",
+                        "materialization",
                     )
                     if key in item
                 }
@@ -163,6 +106,13 @@ class FieldRegistrySnapshot:
             normalization = field.get("normalization")
             if normalization is not None and not isinstance(normalization, dict):
                 raise _invalid_registry()
+            materialization = field.get("materialization")
+            if materialization is not None and not isinstance(materialization, dict):
+                raise _invalid_registry()
+            if isinstance(materialization, dict):
+                slot_layout = materialization.get("slot_layout")
+                if slot_layout is not None and slot_layout != "centered_title":
+                    raise _invalid_registry()
         return cls(
             source,
             sha256_file(source),
@@ -178,6 +128,51 @@ class FieldRegistrySnapshot:
             "sha256": self.sha256,
         }
 
+    def pre_input_vocabulary(
+        self,
+        *,
+        allowed_field_ids: tuple[str, ...] | None = None,
+    ) -> JsonObject:
+        """Return the Agent-visible field-id vocabulary for this task snapshot."""
+
+        fields_by_id = {str(field["field_id"]): field for field in self.fields}
+        selected_ids = (
+            tuple(str(field["field_id"]) for field in self.fields)
+            if allowed_field_ids is None
+            else tuple(dict.fromkeys(field_id.strip() for field_id in allowed_field_ids))
+        )
+        unknown = [field_id for field_id in selected_ids if field_id not in fields_by_id]
+        if unknown:
+            raise ToolFailure(
+                status="error",
+                origin="environment",
+                code="field_vocabulary_unknown_field_id",
+                message=(
+                    "Pre-input field vocabulary can only be built from the bound "
+                    "Registry snapshot."
+                ),
+            )
+        vocabulary: JsonObject = {
+            "schema_version": FIELD_VOCABULARY_SCHEMA_VERSION,
+            "registry": self.identity(),
+            "allowed_field_ids": list(selected_ids),
+            "field_count": len(selected_ids),
+            "fields": [
+                _field_vocabulary_entry(
+                    fields_by_id[field_id],
+                    has_children=self.has_children(field_id),
+                )
+                for field_id in selected_ids
+            ],
+        }
+        vocabulary["digest"] = sha256_json(vocabulary)
+        return vocabulary
+
+    def has_children(self, field_id: str) -> bool:
+        """Return whether this snapshot defines direct semantic child fields."""
+
+        return any(field.get("parent_field_id") == field_id for field in self.fields)
+
     def lookup(self, field_id: str) -> JsonObject:
         item = next((field for field in self.fields if field["field_id"] == field_id), None)
         if item is None:
@@ -186,57 +181,12 @@ class FieldRegistrySnapshot:
                 origin="request",
                 code="field_not_registered",
                 message="The requested field is not present in this Registry snapshot.",
-                suggested_actions=("search_registry_for_current_object",),
+                suggested_actions=(
+                    "Select a field_id from the pre-input field_id_vocabulary "
+                    "or return needs_input.",
+                ),
             )
         return dict(item)
-
-    def search(self, text: str, *, limit: int = 5) -> tuple[JsonObject, ...]:
-        query = _normalize(text)
-        if not query:
-            raise ToolFailure(
-                status="needs_input",
-                origin="request",
-                code="field_query_empty",
-                message="Registry search requires a non-empty object-specific query.",
-            )
-        query_terms = _search_terms(text)
-        ranked: list[tuple[int, int, JsonObject]] = []
-        for index, item in enumerate(self.fields):
-            field_id = _normalize(str(item.get("field_id", "")))
-            label = _normalize(str(item.get("label", "")))
-            meaning = _normalize(str(item.get("meaning", "")))
-            notes = _normalize(str(item.get("notes", "")))
-            score = 0
-            if query in (field_id, label):
-                score = 1000
-            elif query in field_id or query in label:
-                score = 800
-            elif query in meaning:
-                score = 500
-            elif query in notes:
-                score = 200
-            else:
-                matched_terms = 0
-                for term in query_terms:
-                    normalized_term = _normalize(term)
-                    if normalized_term in field_id:
-                        score += 100
-                        matched_terms += 1
-                    elif normalized_term in label:
-                        score += 80
-                        matched_terms += 1
-                    elif normalized_term in meaning:
-                        score += 30
-                        matched_terms += 1
-                    elif normalized_term in notes:
-                        score += 10
-                        matched_terms += 1
-                if matched_terms == 0:
-                    continue
-                score += matched_terms * 10
-            ranked.append((score, -index, item))
-        ranked.sort(reverse=True, key=lambda value: (value[0], value[1]))
-        return tuple(dict(item) for _, _, item in ranked[:limit])
 
 
 def _invalid_registry() -> ToolFailure:
@@ -246,3 +196,46 @@ def _invalid_registry() -> ToolFailure:
         code="field_registry_invalid",
         message="The configured field Registry does not match the supported snapshot contract.",
     )
+
+
+def _field_vocabulary_entry(field: JsonObject, *, has_children: bool) -> JsonObject:
+    entry: JsonObject = {
+        key: field[key]
+        for key in (
+            "field_id",
+            "label",
+            "meaning",
+            "content_type",
+            "cardinality",
+            "parent_field_id",
+            "value_sources",
+        )
+        if key in field
+    }
+    entry["usage_affordance"] = {
+        "selectable_by_agent": True,
+        "source": "pre_input_field_vocabulary",
+        "requires_agent_semantic_part": True,
+        "has_parent_field": isinstance(field.get("parent_field_id"), str),
+        "allowed_part_roles": _allowed_part_roles(field, has_children=has_children),
+    }
+    return entry
+
+
+def _allowed_part_roles(field: JsonObject, *, has_children: bool) -> list[str]:
+    content_type = str(field.get("content_type") or "").strip().casefold()
+    raw_value_sources = field.get("value_sources", [])
+    value_sources = {
+        str(value).strip().casefold()
+        for value in raw_value_sources
+        if str(value).strip()
+    } if isinstance(raw_value_sources, list) else set()
+    if "system_generated" in value_sources:
+        return ["generated_content"]
+    if isinstance(field.get("parent_field_id"), str):
+        return ["body_structure"]
+    if content_type in {"text", "rich_text"} or (
+        content_type == "section" and not has_children
+    ):
+        return ["fill_slot"]
+    return []

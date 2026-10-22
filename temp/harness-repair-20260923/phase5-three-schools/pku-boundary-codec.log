@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "environment",
+    "code": "template_agent_api_error",
+    "retryable": true,
+    "message": "The model API request failed; no semantic revision was requested. Inspect the saved SDK diagnostics.",
+    "suggested_actions": []
+  }
+}

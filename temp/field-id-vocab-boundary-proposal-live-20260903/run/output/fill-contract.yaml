@@ -1,0 +1,127 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.4c05ea894121b3dd
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 1a8358859bdc8d906c207359037193b611c51aed7546ba66661fcfca15a5b377
+school_style_candidates: []
+known_school_style_gaps: []
+regions: []
+slots: []
+styles: []
+style_contract_set_digest: 7ce739c3d241dbe374fc4936dd03241ec1bd238cfe9d7cd14176d4bc0367354c
+provenance:
+  source_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+  body_structure_count: 0
+  agent_owned_semantics: true
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+      suggested_action: null
+    - name: content_preservation
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_text_objects_preserved: 19
+      suggested_action: null
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+    final_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 0
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    status: skipped
+    reason: accepted_terminal_source_noop_without_registry_slots
+  school_style_observation:
+    status: skipped_no_registry_slots
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

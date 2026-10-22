@@ -1,0 +1,756 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.051cb43853ff6a42
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 230585df871b2220831d3e84af9c5796b562879b93d6a37e097a958b87d5a32f
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+  field_id: abstract.zh
+  style_role_id: style.slot.b683b9d7f9278616c458a070
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+  field_id: keywords.zh
+  style_role_id: style.slot.5d979e5b469196901824b4d9
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+  span_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+  field_id: abstract.zh
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.b683b9d7f9278616c458a070
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文摘要
+  provenance:
+    field_id: abstract.zh
+    span_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+    source_entry_id: source-entry-0c9758c8ed1a93f4c408fc22
+    source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+    expected_source_content: 研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。
+    word_fragments: &id001
+    - fingerprint: da54c47c1d722aac402679df2c5c465c0a8412517198a5bac02e0d74b6021852
+      locator: /body/p[@paraId=5898ED75]/r[1]
+      object_id: obj-db73416838cc9e8398788cb9
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: da54c47c1d722aac402679df2c5c465c0a8412517198a5bac02e0d74b6021852
+        object_id: obj-db73416838cc9e8398788cb9
+      object_text_end: 41
+      object_text_start: 0
+      source_text_end: 41
+      source_text_start: 0
+      text: 研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。
+    - fingerprint: e896d51ee615afc2e4d97435d7e9d0378f11a19fe757e642e9ddb626f5a4c473
+      locator: /body/p[@paraId=5898ED75]/r[2]
+      object_id: obj-b25e6762299aacbb584838cb
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: e896d51ee615afc2e4d97435d7e9d0378f11a19fe757e642e9ddb626f5a4c473
+        object_id: obj-b25e6762299aacbb584838cb
+      object_text_end: 25
+      object_text_start: 0
+      source_text_end: 66
+      source_text_start: 41
+      text: 力求只需填写内容，无需在排版与格式上耗费过多精力。
+    accepted_span: &id003
+      covered_object_ids:
+      - obj-db73416838cc9e8398788cb9
+      - obj-b25e6762299aacbb584838cb
+      expected_source_content: 研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。
+      extent:
+        end: 66
+        kind: text
+        start: 0
+      field_id: abstract.zh
+      judgment_index: 1
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-0c9758c8ed1a93f4c408fc22
+      slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+      source_entry_id: source-entry-0c9758c8ed1a93f4c408fc22
+      source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+      source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      span_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      text: 研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。
+      text_end: 66
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id004
+      source_judgment_ref: semantic_judgments[1]
+      part_index: 0
+      semantic_judgments_sha256: 9e3e6a119ace50ac68ea7005ee915bcd2b0f2d70c426dd74bd9331bb602b056a
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id005
+      outcome: applied
+      candidate_before_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      candidate_after_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+      operation_sha256: 71f54e4d8e889c861635ae30a9a600bde6e06bce92d2e3c2ab419872b2117e14
+      mutation_receipt_sha256: e392ac6d89778e2153da5a432bd0611d5ff2989fd9e874dcc387c5a6b6301ddc
+  style_contract_ref:
+    style_contract_id: style.slot.b683b9d7f9278616c458a070
+    contract_digest: 73f98283ace850c4314270dd1218accbe144787d1ed9189a05b0b3e9332cd5f8
+- slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+  span_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+  field_id: keywords.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.5d979e5b469196901824b4d9
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 中文关键词
+  provenance:
+    field_id: keywords.zh
+    span_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+    source_entry_id: source-entry-ec984ed144af751134d95b96
+    source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+    expected_source_content: 城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通
+    word_fragments: &id002
+    - fingerprint: 4e0379e51fed6099681c697bfd0cb34f9b8af0d43d895889ef0c9dbae5dea49d
+      locator: /body/p[@paraId=500CC0C8]/r[2]
+      object_id: obj-8c6ff1f9a1edd9a46e692046
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 4e0379e51fed6099681c697bfd0cb34f9b8af0d43d895889ef0c9dbae5dea49d
+        object_id: obj-8c6ff1f9a1edd9a46e692046
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 8
+      source_text_start: 4
+      text: 城乡规划
+    - fingerprint: 053ef56784eb6038b45fd015028482dcb39daa8532abf290de98ada1686e7166
+      locator: /body/p[@paraId=500CC0C8]/r[3]
+      object_id: obj-451e0e9fa5d0615974ec352c
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 053ef56784eb6038b45fd015028482dcb39daa8532abf290de98ada1686e7166
+        object_id: obj-451e0e9fa5d0615974ec352c
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 9
+      source_text_start: 8
+      text: ；
+    - fingerprint: fe65b56db84a266b22129aca938a95e5d4a1f79e1b6f71801a77eec8124ece1d
+      locator: /body/p[@paraId=500CC0C8]/r[4]
+      object_id: obj-644a6d1e45aa4895d9a9ad00
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: fe65b56db84a266b22129aca938a95e5d4a1f79e1b6f71801a77eec8124ece1d
+        object_id: obj-644a6d1e45aa4895d9a9ad00
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 13
+      source_text_start: 9
+      text: 建筑材料
+    - fingerprint: 85ffee29204492c004317767e491ab5ead1cbe63147f9a3aac01c9d853c1413a
+      locator: /body/p[@paraId=500CC0C8]/r[5]
+      object_id: obj-a40a499c324bc5c5dfef33b9
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 85ffee29204492c004317767e491ab5ead1cbe63147f9a3aac01c9d853c1413a
+        object_id: obj-a40a499c324bc5c5dfef33b9
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 14
+      source_text_start: 13
+      text: ；
+    - fingerprint: 1c8ac0e972ff31f4513e72334847263ceabf88284f2cbbb63f8d4eba31b7fc85
+      locator: /body/p[@paraId=500CC0C8]/r[6]
+      object_id: obj-9b72b46e1cd116c6d071a4a9
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 1c8ac0e972ff31f4513e72334847263ceabf88284f2cbbb63f8d4eba31b7fc85
+        object_id: obj-9b72b46e1cd116c6d071a4a9
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 16
+      source_text_start: 14
+      text: 建筑
+    - fingerprint: 382f0e9d6c6d6f42d635c84ac1b9243871ea4b08c1f1f084a277b8338208a781
+      locator: /body/p[@paraId=500CC0C8]/r[7]
+      object_id: obj-aa4462543162b5a537159966
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 382f0e9d6c6d6f42d635c84ac1b9243871ea4b08c1f1f084a277b8338208a781
+        object_id: obj-aa4462543162b5a537159966
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 17
+      source_text_start: 16
+      text: ；
+    - fingerprint: 585bb123232ed60791c2e1c3879da5b488939df14aad8411ba6fcc2356713958
+      locator: /body/p[@paraId=500CC0C8]/r[8]
+      object_id: obj-3dd20a600684c9e8a1b29ee5
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 585bb123232ed60791c2e1c3879da5b488939df14aad8411ba6fcc2356713958
+        object_id: obj-3dd20a600684c9e8a1b29ee5
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 19
+      source_text_start: 17
+      text: 电力
+    - fingerprint: f3ee4625e634e203b944c74146fd28fa89a4751e6cb9b105248e3f191456f961
+      locator: /body/p[@paraId=500CC0C8]/r[9]
+      object_id: obj-2589814d6cd98ec7c8e01d62
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: f3ee4625e634e203b944c74146fd28fa89a4751e6cb9b105248e3f191456f961
+        object_id: obj-2589814d6cd98ec7c8e01d62
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 20
+      source_text_start: 19
+      text: ；
+    - fingerprint: a38f5848da41ed23502bb9fe5640347365b3b8d0ac0f2647d4df2aafa4604f9f
+      locator: /body/p[@paraId=500CC0C8]/r[10]
+      object_id: obj-d0bcbf07d899890bbc4c109c
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: a38f5848da41ed23502bb9fe5640347365b3b8d0ac0f2647d4df2aafa4604f9f
+        object_id: obj-d0bcbf07d899890bbc4c109c
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 22
+      source_text_start: 20
+      text: 冶金
+    - fingerprint: 5d52b36dcc04ad7e3ccdb27b6dc833c8dc19d22a2f784f765d2d20ac1ba95e5b
+      locator: /body/p[@paraId=500CC0C8]/r[11]
+      object_id: obj-8e4a4293b5ff758fd5cbcf15
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 5d52b36dcc04ad7e3ccdb27b6dc833c8dc19d22a2f784f765d2d20ac1ba95e5b
+        object_id: obj-8e4a4293b5ff758fd5cbcf15
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 23
+      source_text_start: 22
+      text: ；
+    - fingerprint: dda1d1f40074f2330b9e0ed0c75faee27e1f081c74fe76867c6996b705178cc9
+      locator: /body/p[@paraId=500CC0C8]/r[12]
+      object_id: obj-563c99c9c10aaa678a80f9aa
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: dda1d1f40074f2330b9e0ed0c75faee27e1f081c74fe76867c6996b705178cc9
+        object_id: obj-563c99c9c10aaa678a80f9aa
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 25
+      source_text_start: 23
+      text: 石油
+    - fingerprint: 1b53b01d035b19f0962131b22999636045996f32ce80bc12c5fee317f16d2b1d
+      locator: /body/p[@paraId=500CC0C8]/r[13]
+      object_id: obj-028ca8a659700c4d54176635
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 1b53b01d035b19f0962131b22999636045996f32ce80bc12c5fee317f16d2b1d
+        object_id: obj-028ca8a659700c4d54176635
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 26
+      source_text_start: 25
+      text: ；
+    - fingerprint: dd0ee8a7bbfda4afde6db17c1d9bcdd289b34241d59a91be60c77a2e5aae36c9
+      locator: /body/p[@paraId=500CC0C8]/r[14]
+      object_id: obj-bdf2f84840478ec86beff85e
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: dd0ee8a7bbfda4afde6db17c1d9bcdd289b34241d59a91be60c77a2e5aae36c9
+        object_id: obj-bdf2f84840478ec86beff85e
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 28
+      source_text_start: 26
+      text: 煤炭
+    - fingerprint: 42873cc11e1d27771351f3463d031e86b278689822be83c46464051bdeb95513
+      locator: /body/p[@paraId=500CC0C8]/r[15]
+      object_id: obj-cb67e25b238499ba8e453e73
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 42873cc11e1d27771351f3463d031e86b278689822be83c46464051bdeb95513
+        object_id: obj-cb67e25b238499ba8e453e73
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 29
+      source_text_start: 28
+      text: ；
+    - fingerprint: 1409657b8b55fcfb01d30705ef3e33c635f6b211c56cf135b01fbe92afc68896
+      locator: /body/p[@paraId=500CC0C8]/r[16]
+      object_id: obj-f748279688f99fcea6cc5acc
+      object_ref:
+        document_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+        expected_fingerprint: 1409657b8b55fcfb01d30705ef3e33c635f6b211c56cf135b01fbe92afc68896
+        object_id: obj-f748279688f99fcea6cc5acc
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 31
+      source_text_start: 29
+      text: 交通
+    accepted_span: &id006
+      covered_object_ids:
+      - obj-8c6ff1f9a1edd9a46e692046
+      - obj-451e0e9fa5d0615974ec352c
+      - obj-644a6d1e45aa4895d9a9ad00
+      - obj-a40a499c324bc5c5dfef33b9
+      - obj-9b72b46e1cd116c6d071a4a9
+      - obj-aa4462543162b5a537159966
+      - obj-3dd20a600684c9e8a1b29ee5
+      - obj-2589814d6cd98ec7c8e01d62
+      - obj-d0bcbf07d899890bbc4c109c
+      - obj-8e4a4293b5ff758fd5cbcf15
+      - obj-563c99c9c10aaa678a80f9aa
+      - obj-028ca8a659700c4d54176635
+      - obj-bdf2f84840478ec86beff85e
+      - obj-cb67e25b238499ba8e453e73
+      - obj-f748279688f99fcea6cc5acc
+      expected_source_content: 城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通
+      extent:
+        end: 31
+        kind: text
+        start: 4
+      field_id: keywords.zh
+      judgment_index: 11
+      part_index: 1
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-ec984ed144af751134d95b96
+      slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+      source_entry_id: source-entry-ec984ed144af751134d95b96
+      source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+      source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      span_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      text: 城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通
+      text_end: 31
+      text_start: 4
+      word_fragments: *id002
+    accepted_result: &id007
+      source_judgment_ref: semantic_judgments[11]
+      part_index: 1
+      semantic_judgments_sha256: 9e3e6a119ace50ac68ea7005ee915bcd2b0f2d70c426dd74bd9331bb602b056a
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id008
+      outcome: applied
+      candidate_before_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      candidate_after_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+      operation_sha256: ffbe6540ffe634c6c243aef198e87d7e50efbaaff25a0a4c04310b852e9c46bf
+      mutation_receipt_sha256: 8e2c291655b246c1040dfaf530b50dd47854a34629b0d5d7f407a925533457b2
+  style_contract_ref:
+    style_contract_id: style.slot.5d979e5b469196901824b4d9
+    contract_digest: f992ea17df1858a35df26fae817f905542a4f6f3ae7a830525e1f1a5259f1c20
+styles:
+- style_contract_id: style.slot.5d979e5b469196901824b4d9
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 8.15
+    paragraph.space_before_pt: 8.15
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: f992ea17df1858a35df26fae817f905542a4f6f3ae7a830525e1f1a5259f1c20
+  label: keywords.zh @ source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+    field_id: keywords.zh
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.b683b9d7f9278616c458a070
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 8.15
+    paragraph.space_before_pt: 8.15
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 73f98283ace850c4314270dd1218accbe144787d1ed9189a05b0b3e9332cd5f8
+  label: abstract.zh @ source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+    field_id: abstract.zh
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 20e4482d77f5158be62703f983029dbd3c0573aaf3a5fbccd59455a8aa7b4e25
+provenance:
+  source_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    template_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+    source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+    semantic_judgments_sha256: 9e3e6a119ace50ac68ea7005ee915bcd2b0f2d70c426dd74bd9331bb602b056a
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 3a7f10f44e75d42cb57701ac07f5cf381c3a87524de4ae82bea5d4061780b5cb
+    slots:
+    - field_id: abstract.zh
+      span_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      slot_ref: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+      source_entry_id: source-entry-0c9758c8ed1a93f4c408fc22
+      source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+      expected_source_content: 研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。
+      word_fragments: *id001
+      accepted_span: *id003
+      accepted_result: *id004
+      actual_result: *id005
+    - field_id: keywords.zh
+      span_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      slot_ref: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+      source_entry_id: source-entry-ec984ed144af751134d95b96
+      source_snapshot_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      source_inventory_digest: acb709540ebd454a2ad4aa6cd898e4e78505f19b20beba073d77e43f9d93a0a8
+      expected_source_content: 城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通
+      word_fragments: *id002
+      accepted_span: *id006
+      accepted_result: *id007
+      actual_result: *id008
+  materialization_digest: 6c0a6c415a20cd0d04964b3b20f0fe28a0ba92e6f0528324a213a0eff4851378
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 9
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c
+    final_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 20e4482d77f5158be62703f983029dbd3c0573aaf3a5fbccd59455a8aa7b4e25
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 20e4482d77f5158be62703f983029dbd3c0573aaf3a5fbccd59455a8aa7b4e25
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.b683b9d7f9278616c458a070
+          contract_digest: 73f98283ace850c4314270dd1218accbe144787d1ed9189a05b0b3e9332cd5f8
+      - occurrence_id: template-slot:source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.5d979e5b469196901824b4d9
+          contract_digest: f992ea17df1858a35df26fae817f905542a4f6f3ae7a830525e1f1a5259f1c20
+    validation:
+      status: passed
+      counts:
+        passed: 2
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+        style_contract_id: style.slot.b683b9d7f9278616c458a070
+        contract_digest: 73f98283ace850c4314270dd1218accbe144787d1ed9189a05b0b3e9332cd5f8
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-0c9758c8ed1a93f4c408fc22;extent=text[0:66];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=abstract.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+        style_contract_id: style.slot.5d979e5b469196901824b4d9
+        contract_digest: f992ea17df1858a35df26fae817f905542a4f6f3ae7a830525e1f1a5259f1c20
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-ec984ed144af751134d95b96;extent=text[4:31];source_snapshot_sha256=e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c;field_id=keywords.zh
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

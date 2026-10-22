@@ -1,0 +1,1156 @@
+{
+  "candidate_count": 10,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-30226bc4",
+      "candidate_digest": "53ac686f39ea66d4fa785c4ff0ab01518f24f34440a37b4e8fa5fb449d473284",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "   "
+            }
+          ],
+          "reason": "Entry text is exactly three U+0020 spaces; it sits at block-0001 (14pt Normal) immediately before the format-notes paragraph and carries no label or value. Semantically it serves as paragraph/layout spacing that must remain in front of the unit-format-notes body, hence style_only rather than fixed_label. No field binds because it is spacing, not a value position.",
+          "source_entry_id": "source-entry-015688bdacef4006d2277542"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+            }
+          ],
+          "reason": "This single 9pt Normal run is the entire body of unit-format-notes. It states body-text line spacing (固定值22磅), notes that figures/tables may adjust it, gives top/bottom and left/right page margins (2.54 cm / 2.6 cm), and explains that \"□\" denotes a space equal to one full-width character (two standard characters). The unit's purpose is precisely to record these school format rules, so the whole sentence is school template instructional content that must remain in the clean template as fixed_label. There is no Registry field whose meaning matches \"body format rule description\", and the sentence contains no fillable value position (no fill_slot), so no field_id is bound. Splitting at unit-context boundaries: this entry is one continuous sentence ending at the entry's trailing boundary, so a single part suffices.",
+          "source_entry_id": "source-entry-aa77e7afa8c743aa48cba17b"
+        }
+      ],
+      "summary": "Batch 1 of 10 for unit-format-notes. Judged the two assigned source entries: (1) the leading 3-space whitespace run (block-0001, 14pt Normal) acts as paragraph/layout spacing before the format notes and is preserved under style_only; (2) the format instruction sentence \"正文基本格式：行距固定值22磅...表示占1个字宽（即2个字符）的空格。\" (block-0002, 9pt Normal) is the entire unit-format-notes body — it documents body-text line spacing, page margins, and the meaning of the \"□\" spacing symbol, and is retained as fixed_label content of the unit. No field binds to either part: there is no Registry field whose meaning matches this school-level format rule documentation, and the text contains no fillable value position. Parts split at every unit-context boundary and there is one judgment per listed source entry, in manifest order."
+    },
+    {
+      "batch_id": "semantic-batch-0002-9b2d8443",
+      "candidate_digest": "1cfd008cf7495eb6595f2476ce3e7f5bda95d9477e60073e65def3557c90012a",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（小二号字空两行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note that describes how the cover should be laid out; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-0e8dfd6bd9282950de55de0b"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "thesis.title.zh",
+              "role": "fill_slot",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "role": "cleanup",
+              "text": "（小二黑体，加粗，居中）"
+            }
+          ],
+          "reason": "The first segment is the prompt/placeholder for the Chinese thesis title and will be replaced by the thesis.title.zh field value; the parenthetical is a style instruction (font, weight, alignment) to be cleaned.",
+          "source_entry_id": "source-entry-e9483ae0a9e7042fd27ac0ce"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 36
+              }
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□生："
+            },
+            {
+              "field_id": "author.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "role": "cleanup",
+              "text": "（或×□×）"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（五号宋体居中）"
+            }
+          ],
+          "reason": "Leading 36 spaces carry the centering layout requirement (style_only); the literal label '学□□生：' is fixed text; '×××' is the fill slot bound to author.name.zh; '（或×□×）' is an alternative-format authoring example that should be cleaned; the two spaces between cleanup parts are pure layout whitespace; '（五号宋体居中）' is a font/alignment instruction to be cleaned.",
+          "source_entry_id": "source-entry-df09cdb77fb41813ec986d20"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "指导老师："
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            }
+          ],
+          "reason": "'指导老师：' is the fixed advisor label; '×××' is the placeholder for the advisor name and is bound to advisor.name.zh.",
+          "source_entry_id": "source-entry-b511494b4d9c6ab1aa0d6e50"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "(湖南农业大学"
+            },
+            {
+              "field_id": "author.department",
+              "role": "fill_slot",
+              "text": "××××"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学院，长沙 410128)"
+            }
+          ],
+          "reason": "'(湖南农业大学' is the fixed university name for this template plus the opening parenthesis; '××××' is the placeholder for the specific college within the university and is bound to author.department; '学院，长沙 410128)' is the fixed affiliation suffix and closing parenthesis.",
+          "source_entry_id": "source-entry-49da2e477eeed285d9d5663d"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note for the cover layout; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-7860371bca78326ca68727e4"
+        }
+      ],
+      "summary": "Completed semantic judgment batch 2 of 10 for unit '封面（中文）'. All 6 source entries were annotated: cover-page style notes bracketing the title and student lines were marked as cleanup; the title prompt and student/advisor/college placeholders were bound to thesis.title.zh, author.name.zh, advisor.name.zh and author.department respectively; fixed labels (student/advisor markers, punctuation, university name) and the leading centering whitespace were preserved."
+    },
+    {
+      "batch_id": "semantic-batch-0003-ed60bad8",
+      "candidate_digest": "53fcecdba90c6615b4fbc5525ef4aa4fa7101362339b1e1c6fb8e07b845ef53d",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "摘□要"
+            },
+            {
+              "role": "style_only",
+              "text": "（小四黑体）"
+            },
+            {
+              "role": "fixed_label",
+              "text": "："
+            },
+            {
+              "field_id": "abstract.zh",
+              "role": "fill_slot",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": ""
+            },
+            {
+              "role": "style_only",
+              "text": "（五号宋体）"
+            }
+          ],
+          "reason": "Abstract unit header line. □□ at start represent leading indentation/spacing (style_only). 摘□要 is the fixed section title label 'Abstract'. （小四黑体） is a typography specification (small four-point Heiti) that applies to the label, expressed as style_only. ： is the colon separator that introduces the abstract body value position. …… is the placeholder for the Chinese abstract body, bound to abstract.zh (rich_text, cardinality one, fill_slot role). The whitespace between …… and （五号宋体） is spacing (style_only). （五号宋体） is the typography specification (five-point Songti) for the content that follows, expressed as style_only. The two fixed_label pieces are separated by the style_only typography annotation, so they remain distinct parts per responsibility change.",
+          "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "关键词："
+            },
+            {
+              "field_id": "keywords.zh",
+              "role": "fill_slot",
+              "text": "×××；×××；×××；×××"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            }
+          ],
+          "reason": "Keywords line of the Chinese abstract unit. □□ at start are indentation/spacing symbols (style_only). 关键词： is the fixed label 'Keywords:' that stays in the clean template. ××××；×××；×××；××× is the placeholder value for the Chinese keywords, bound to keywords.zh (text, cardinality one, fill_slot role); the four ×××× separated by Chinese semicolons represent one keyword list value. The trailing single space (U+0020, count 1) is recorded via the whitespace transport as style_only since it carries no semantic responsibility beyond spacing.",
+          "source_entry_id": "source-entry-6a3a9448367246bf00ad3477"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Layout instruction at the end of the Chinese abstract unit. （五号字空一行） instructs that one empty line should follow in five-point font; this is a spacing/layout requirement expressed as style_only. No fill_slot, body_structure, or generated_content responsibility applies — the text is not a value position, not body structure, and not a generation result.",
+          "source_entry_id": "source-entry-3b9e599a04e7f5f33874aa88"
+        }
+      ],
+      "summary": "Judged three source entries for unit 摘要（中文）: abstract header line with abstract.zh placeholder, keywords line with keywords.zh placeholder, and trailing layout instruction."
+    },
+    {
+      "batch_id": "semantic-batch-0004-0e42901c",
+      "candidate_digest": "383bb777fc5b53027858887cd71cec20286410e60e42f0cf14aad1c27ef64713",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 21
+              }
+            },
+            {
+              "field_id": "thesis.title.en",
+              "role": "fill_slot",
+              "text": "Title of Graduation Paper"
+            },
+            {
+              "role": "style_only",
+              "text": "（四号Times New Roman，加粗，居中）"
+            }
+          ],
+          "reason": "Cover English title line: 21 leading spaces are centering/padding layout artifacts (style_only, preserved via whitespace transport from boundary metadata). 'Title of Graduation Paper' is the English cover title placeholder replaced by the student's actual English thesis title (fill_slot, thesis.title.en). The parenthesized ' （四号Times New Roman，加粗，居中）' is a formatting instruction in full-width parens (size, font, weight, alignment) and belongs to style_only, not content.",
+          "source_entry_id": "source-entry-514625a8c75c1c716bf2e944"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "Student:"
+            },
+            {
+              "field_id": "author.name.en",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "role": "style_only",
+              "text": "（五号Times New Roman，居中）"
+            }
+          ],
+          "reason": "English author line: 'Student:' is the fixed English label naming the author role. '×××' is the placeholder for the student's English name on the English cover, bound to author.name.en (fill_slot). The trailing parenthesized note ' （五号Times New Roman，居中）' specifies size/font/alignment and is a style-only formatting instruction; the two leading spaces are visual separator from the value position and stay with the style_only fragment.",
+          "source_entry_id": "source-entry-9c9018b8a780488067d932a6"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "Tutor:"
+            },
+            {
+              "field_id": "advisor.name.en",
+              "role": "fill_slot",
+              "text": "××××"
+            }
+          ],
+          "reason": "English tutor/advisor line: 'Tutor:' is the fixed English label naming the advisor role. '××××' is the placeholder for the advisor's English name on the English cover, bound to advisor.name.en (fill_slot). No formatting annotation appears on this line, so no style_only fragment is needed beyond the label and value.",
+          "source_entry_id": "source-entry-e53eaaefa63842ddb3097b25"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "(College of"
+            },
+            {
+              "field_id": "author.department.en",
+              "role": "fill_slot",
+              "text": "×××××××"
+            },
+            {
+              "role": "fixed_label",
+              "text": ", Hunan Agricultural University, Changsha 410128, China)"
+            }
+          ],
+          "reason": "Affiliation line on English cover: '(College of' (opening paren + English label 'College of') is the fixed prefix. '×××××××' is the placeholder for the English department/college name on the English cover, bound to author.department.en (fill_slot; vocabulary explicitly covers English cover usage). ', Hunan Agricultural University, Changsha 410128, China)' is the fixed institutional and location suffix including the closing paren and is a fixed_label. Together the line yields '(College of <English dept>, Hunan Agricultural University, Changsha 410128, China)'.",
+          "source_entry_id": "source-entry-1e72d390beda2adc18444110"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Standalone Chinese formatting instruction in full-width parens: '（五号字空一行）' prescribes 5号-size font with one blank line of spacing. It carries no content value, so the entire fragment is style_only (layout/spacing requirement for the English cover unit).",
+          "source_entry_id": "source-entry-ca43f4c7dcbbdb525fcb0e01"
+        }
+      ],
+      "summary": "Judged 5 source entries for unit-cover-english (封面（英文）). Title placeholder 'Title of Graduation Paper' is the thesis.title.en fill_slot. 'Student:×××' splits into fixed_label 'Student:' + author.name.en fill_slot + style_only format note. 'Tutor:××××' splits into fixed_label 'Tutor:' + advisor.name.en fill_slot. '(College of×××××××, ..., China)' splits into fixed_label '(College of' + author.department.en fill_slot + fixed_label ', Hunan Agricultural University, Changsha 410128, China)'. '（五号字空一行）' is a style-only layout note. Leading 21 spaces on the title line preserved as style_only."
+    },
+    {
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "candidate_digest": "5b2d8b842961a931e83e603275a3c151df57c60461b6da3ed60365ce374e5aba",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "Abstract(小四号Times New Roman， 加粗)"
+            },
+            {
+              "role": "cleanup",
+              "text": ":……            (五号Times New Roman)"
+            },
+            {
+              "role": "style_only",
+              "text": "            (五号Times New Roman)"
+            }
+          ],
+          "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+          "source_entry_id": "source-entry-f0c63376279768f327365472"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "Key words: "
+            },
+            {
+              "field_id": "keywords.en",
+              "role": "fill_slot",
+              "text": "×××； ×××；×××； ×××"
+            }
+          ],
+          "reason": "Re-reading the entry as '□□Key words: ×××； ×××；×××； ×××  ' with the two □ as leading spacing symbols that only carry indentation. 'Key words:' together with the colon is the fixed English-keywords label. The four '×××' tokens joined by Chinese semicolons '；' form one continuous value-position example block occupying the keywords value slot: there is no separate independent label and the example text itself sits where the real keywords will appear, so the whole semicolon-joined example block binds to keywords.en as a single fill_slot whose complete value contains the same number of separated keywords. The two trailing U+0020 spaces are ordinary post-line whitespace belonging to the keywords block rather than a separate obligation. After replacement with a normal English keyword list of the same shape the line reads 'Key words: kw1; kw2; kw3; kw4' with the original 'Key words:' label preserved.",
+          "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "The centered short text '（五号字空一行）' is a vertical-spacing instruction: '五号字空一行' means leave one blank line at five-point size after the keywords block. The whole parenthetical is a layout obligation rather than a heading, fixed label or fillable value, so the entire entry is a single style_only part. No field binding is appropriate. The instruction applies to the spacing that follows the English abstract unit (after the keywords line), and the requirement itself must remain in effect even though the literal text does not appear in the final body content.",
+          "source_entry_id": "source-entry-f35c3f86700250c36a1034ae"
+        }
+      ],
+      "summary": "Three-source-entry semantic judgment for unit-abstract-english batch 5: the first entry holds the Abstract header line mixing style spacing, fixed label, an ellipsis that is the actual English-abstract fill position, and trailing format guidance; the second entry is the Key words line mixing style spacing, fixed label and an English-keywords fill slot; the third entry is a standalone vertical-spacing style instruction that follows the abstract block. All fill_slots bind to abstract.en and keywords.en respectively."
+    },
+    {
+      "batch_id": "semantic-batch-0006-088414fc",
+      "candidate_digest": "641562aeab40b7e79acda37759738a3984a25c4da0b8cee4cbc13cd6b7a10046",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（以下农理工科类用）"
+            }
+          ],
+          "reason": "Template authoring note marking which category the following body template applies to. The unit is already named 正文（农理工科类）, so this marker is redundant and should not appear in the clean template.",
+          "source_entry_id": "source-entry-858d67683f6dcc5b457eea40"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "1"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "前言"
+            },
+            {
+              "role": "style_only",
+              "text": ""
+            },
+            {
+              "role": "cleanup",
+              "text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）"
+            }
+          ],
+          "reason": "Level 1 heading example. The literal \"1\" in the source is a placeholder for auto-numbering generated by the Heading 1 numbering mechanism (consistent with body.heading.outline1's \"使用模板Heading 1编号\"), so it is style_only; the whitespace separator is style_only; the title text 前言 is bound to body.heading.outline1 (allowed_part_roles: body_structure); parenthetical cleanup is a template authoring note about level 1 heading formatting (font 小三号黑体, top-aligned ordinal, space before title) which should be captured by host style, not appear as visible content.",
+          "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": ""
+            },
+            {
+              "role": "cleanup",
+              "text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+            }
+          ],
+          "reason": "Body paragraph placeholder example. Leading whitespace is style_only indent; ellipsis placeholder marks the body paragraph structural position bound to body.paragraph; parenthetical is template authoring note about body text font (中文 小四号宋体, 英文 小四号Times New Roman) which should be captured by host style.",
+          "source_entry_id": "source-entry-344bb676258ff9ee88721d53"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "2"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "××××"
+            }
+          ],
+          "reason": "Level 1 heading placeholder example. Chapter number 2 is a placeholder for Heading 1 auto-numbering (style_only, per body.heading.outline1's \"使用模板Heading 1编号\" semantics); whitespace separator is style_only; placeholder title ×××× is bound to body.heading.outline1 (body_structure role per field's allowed_part_roles) to be replaced by the actual chapter title from student content.",
+          "source_entry_id": "source-entry-7c3e626fe5c6677d3e3d997f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "2.1"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "field_id": "body.heading.outline2",
+              "role": "body_structure",
+              "text": "×××××"
+            },
+            {
+              "role": "cleanup",
+              "text": "（二级标题四号黑体，顶格书写序数，空一格写标题）"
+            }
+          ],
+          "reason": "Level 2 heading example. Section number 2.1 is a placeholder for Heading 2 auto-numbering (style_only); whitespace separator is style_only; placeholder title ××××× is bound to body.heading.outline2; parenthetical cleanup is a template authoring note about level 2 heading formatting (font 四号黑体) to be captured by host style.",
+          "source_entry_id": "source-entry-8bc31cf3301960b25fbb406a"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "2.1.1"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "field_id": "body.heading.outline3",
+              "role": "body_structure",
+              "text": "×××××"
+            },
+            {
+              "role": "cleanup",
+              "text": "（三级标题小四号黑体，顶格书写序数，空一格写标题）"
+            }
+          ],
+          "reason": "Level 3 heading example. Section number 2.1.1 is a placeholder for Heading 3 auto-numbering (style_only); whitespace separator is style_only; placeholder title ××××× is bound to body.heading.outline3; parenthetical cleanup is a template authoring note about level 3 heading formatting (font 小四号黑体) to be captured by host style.",
+          "source_entry_id": "source-entry-6c79bef32b17c58ac3236380"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "（1）……[1]。"
+            },
+            {
+              "role": "cleanup",
+              "text": "（一般不设四级标题，如确属需要，第四层次不单独占行书写）"
+            }
+          ],
+          "reason": "Inline fourth-level heading example. Indent whitespace is style_only; the inline format with parenthetical number, body content ellipsis, and citation marker represents body paragraph structure bound to body.paragraph (since the instruction explicitly states fourth-level headings are not on separate lines, this is paragraph-level body text with inline numbering); parenthetical cleanup explains the fourth-level convention (rarely used, and when used, not on a separate line).",
+          "source_entry_id": "source-entry-2c43f0412405875489baeda8"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "Body paragraph placeholder (ellipsis) bound to body.paragraph, marking the position where additional body content paragraphs go.",
+          "source_entry_id": "source-entry-b13d59f52a95aeacc201f6c5"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "5"
+            },
+            {
+              "role": "style_only",
+              "text": "□"
+            },
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "结论"
+            }
+          ],
+          "reason": "Level 1 heading for the canonical \"Conclusion\" chapter. Chapter number 5 is a placeholder for Heading 1 auto-numbering (style_only, per body.heading.outline1's \"使用模板Heading 1编号\" semantics); whitespace separator is style_only; title text 结论 is bound to body.heading.outline1 (body_structure role per field's allowed_part_roles).",
+          "source_entry_id": "source-entry-06e0be7244ca2ef0438397e1"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "Body paragraph placeholder after the \"结论\" heading. Indent whitespace is style_only; ellipsis bound to body.paragraph marks the position where conclusion body content goes.",
+          "source_entry_id": "source-entry-c31cc04aa66a920175d04e4d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（以下文法经管类用）"
+            }
+          ],
+          "reason": "Template authoring note marking the boundary to the next category (literature/economics body template). This is the closing delimiter for the current unit and should not appear in the clean template, similar to the opening delimiter in entry 1.",
+          "source_entry_id": "source-entry-d262983d771a6a30b0a9320b"
+        }
+      ],
+      "summary": "Revised batch 6 of 10 for 正文（农理工科类）: chapter/section numbers (1, 2, 5, 2.1, 2.1.1) reclassified as style_only (auto-numbering generated by Heading style per body.heading.outline1's \"使用模板Heading 1编号\" semantics) so that body_structure parts only carry field-bound title text bound to body.heading.outline1/2/3. Section delimiters (entries 1, 11) remain cleanup; body paragraph placeholders (entries 3, 7, 8, 10) and level 1-3 heading templates remain bound to body.paragraph and body.heading.outline1/2/3."
+    },
+    {
+      "batch_id": "semantic-batch-0007-8429008b",
+      "candidate_digest": "d4b3600cf7d0bb593210f3db03a5841e609db65f70b7d8bccb89546918999bfb",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "（导入语）"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"（导入语）\" is the literal intro-section label students keep. \"……\" is a body paragraph sample bound to body.paragraph. The trailing parenthetical is a style specification note for body text fonts.",
+          "source_entry_id": "source-entry-e190b04a11e55c8a8e6aa5ec"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "一、×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（一级标题小三号黑体，顶格书写）"
+            }
+          ],
+          "reason": "\"一、×××××\" is a level-1 chapter heading sample bound to body.heading.outline1. The parenthetical is the style specification for level-1 headings (15pt 黑体, flush left).",
+          "source_entry_id": "source-entry-d73245363c9e52fb291d036d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "二、×××××"
+            }
+          ],
+          "reason": "\"二、×××××\" is another level-1 chapter heading sample bound to body.heading.outline1, showing the numbered chapter pattern continues.",
+          "source_entry_id": "source-entry-0dd04c32ebb4b94194ac9742"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline2",
+              "role": "body_structure",
+              "text": "（一）×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（二级标题四号黑体，顶格书写）"
+            }
+          ],
+          "reason": "\"（一）×××××\" is a level-2 section heading sample bound to body.heading.outline2. The parenthetical is the style specification for level-2 headings (14pt 黑体, flush left).",
+          "source_entry_id": "source-entry-4b7d6c274cfc11f8469c21ea"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.heading.outline3",
+              "role": "body_structure",
+              "text": "1、×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（三级标题小四号黑体）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"1、×××××\" is a level-3 subsection heading sample bound to body.heading.outline3. The parenthetical is the style specification for level-3 headings (12pt 黑体).",
+          "source_entry_id": "source-entry-8604275707e5876f28e5328c"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.heading.outline4",
+              "role": "body_structure",
+              "text": "（1）"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……[1]。"
+            },
+            {
+              "role": "style_only",
+              "text": "（四级标题不单独占行书写）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"（1）\" is the inline level-4 heading sample bound to body.heading.outline4. \"……[1]。\" is the body text sample with a citation reference, bound to body.paragraph. The parenthetical is the layout specification that level-4 headings do not occupy their own line.",
+          "source_entry_id": "source-entry-7ea6a5525cb5350f7459b141"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "\"……\" is a body paragraph continuation sample bound to body.paragraph, showing ordinary body text following the heading structure.",
+          "source_entry_id": "source-entry-029d1e73922cb977024762d2"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "\"……\" is another body paragraph continuation sample bound to body.paragraph, showing additional body content.",
+          "source_entry_id": "source-entry-fe45e587043a4e3b847c336f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "五、结束语"
+            }
+          ],
+          "reason": "\"五、结束语\" is the level-1 chapter heading \"结束语\" (Conclusion) bound to body.heading.outline1. The literal \"结束语\" is the standard conclusion chapter title used in this template.",
+          "source_entry_id": "source-entry-466233315738633254f9ddcd"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"……\" is a body paragraph sample bound to body.paragraph, representing the content following the conclusion heading.",
+          "source_entry_id": "source-entry-e73a30e93d3e432cebfc478b"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（小四号字空一行）"
+            }
+          ],
+          "reason": "\"（小四号字空一行）\" is a layout specification note indicating a blank line should be left after the body content. This is purely a style/layout instruction, not fillable content.",
+          "source_entry_id": "source-entry-e3661836c32afde5fc237b0e"
+        }
+      ],
+      "summary": "Judged 11 source entries in manifest order for unit 正文（文法经管类）. Split each entry by responsibility: leading □□ as style_only spacing, numbered heading samples (一、二、五、 一级标题；（一） 二级标题；1、 三级标题；（1） 四级标题) as body_structure bound to body.heading.outlineN, \"导入语\"/\"结束语\" headings preserved as fixed labels, \"……\" body paragraph samples bound to body.paragraph, and parenthetical style specifications (字体字号、顶格书写、空一行) as style_only notes."
+    },
+    {
+      "batch_id": "semantic-batch-0008-6d8e2d11",
+      "candidate_digest": "c00ecec685ffb23663743b363fdbafffdaab446d81fee4b23449459f35c415fc",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "参考文献"
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体)"
+            }
+          ],
+          "reason": "The text '参考文献' is the section heading for the references unit — a fixed school label, not bound to any field (references.entries is for the list body, references.style_system is the citation system configuration). The trailing ' (小三号黑体)' is a parenthetical font specification (small-size-3, Hei font) describing the heading's required style, so it is style_only, not content to be filled.",
+          "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "references.entries",
+              "role": "fill_slot",
+              "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B."
+            },
+            {
+              "role": "style_only",
+              "text": "(五号宋体)"
+            }
+          ],
+          "reason": "The example '[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.' is a sample reference entry illustrating the sequential-numeric citation format the school requires; per template-text-classification, an example value can serve as a fill_slot bound to references.entries (the references list) — the student's first reference will replace this example in the same numbered-citation form. Trailing whitespace is preserved with the fill_slot since it visually trails the example content. The parenthetical '(五号宋体)' is a font specification (size-5 Song font) for the reference body text and is style_only.",
+          "source_entry_id": "source-entry-bc83b192a296aad304c5ae79"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "references.entries",
+              "role": "fill_slot",
+              "text": "……"
+            }
+          ],
+          "reason": "The Chinese ellipsis '……' in this template context represents the continuation of the references list — the place where additional numbered entries ([2], [3], ...) will be filled by the student source. Bound to references.entries (cardinality many) to capture that additional entries follow.",
+          "source_entry_id": "source-entry-68fe5f9235e778cd5b1dc18e"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空二行）"
+            }
+          ],
+          "reason": "The parenthetical '（五号字空二行）' is a typographic spacing instruction meaning 'leave two blank lines in size-5 font' after the references list. This is a style/layout obligation, not fillable content, so it is style_only.",
+          "source_entry_id": "source-entry-7abd1e1ad54e1ba2c93b070c"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": ""
+            }
+          ],
+          "reason": "This empty entry is the trailing paragraph at the end of the unit-references block; it carries no visible text but serves as the unit-end boundary marker (the unit_context's end_boundary points to this entry_id). Represented as a single empty fixed_label part per the empty-entry rule, since it is a fixed structural element without fillable content.",
+          "source_entry_id": "source-entry-4544bbf8bd8ba8737268c5cc"
+        }
+      ],
+      "summary": "Judged all 5 source entries in unit-references: the section heading '参考文献' is a fixed_label with its '(小三号黑体)' style annotation; the example reference '[1] 作者.论文题名[J].期刊名...' and the ellipsis '……' are both fill_slots bound to references.entries representing the reference list positions; '(五号宋体)' and '(五号字空二行)' are style_only requirements; the trailing empty paragraph is a fixed structural boundary."
+    },
+    {
+      "batch_id": "semantic-batch-0009-3a1df34d",
+      "candidate_digest": "91e01326de1b6e3452227de6f3b7a55f91e27bfa7b239d8132620d2eb4b15d12",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "            "
+            },
+            {
+              "role": "fixed_label",
+              "text": "致□□谢"
+            },
+            {
+              "role": "style_only",
+              "text": "  "
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体，居中)"
+            }
+          ],
+          "reason": "致谢 is the fixed section title for the acknowledgments unit. The internal □□ glyphs function as visual spacing inside the heading and stay with the fixed label. The 12 leading ASCII spaces and the 2 inner spaces are layout whitespace; '(小三号黑体，居中)' is the designer style requirement (small-3 Hei, centered) and must be preserved as style_only so the host can apply the heading formatting.",
+          "source_entry_id": "source-entry-e22945551ec47c442d2a7763"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "acknowledgement.body",
+              "role": "fill_slot",
+              "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 "
+            },
+            {
+              "role": "style_only",
+              "text": "(小四号宋体) "
+            }
+          ],
+          "reason": "Example body sentence (with ××× as advisor-name placeholder and 省略号+句号) is template example text that will be replaced wholesale by student-authored acknowledgments; it binds to acknowledgement.body (the only content_type=rich_text field for acknowledgments). Trailing '(小四号宋体)' (plus trailing space) is the style requirement (small-4 Song) for the body paragraph and is preserved as style_only.",
+          "source_entry_id": "source-entry-81eccf507eafa44c86e0bd16"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（小四号字空二行）"
+            }
+          ],
+          "reason": "'（小四号字空二行）' (full-width parentheses) is a layout instruction specifying two blank lines using 小四号 size after the acknowledgments section; it carries a spacing/format requirement rather than visible content and is preserved as style_only. The 'centered_heading_candidate' cue does not apply to this entry.",
+          "source_entry_id": "source-entry-9b10bd4022408814a4bbab1c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty trailing entry whose extent equals the whole entry; it marks the end_boundary of the unit and carries no semantic content, so a single empty part with style_only role is appropriate.",
+          "source_entry_id": "source-entry-84a2948ae46182d411e6f89b"
+        }
+      ],
+      "summary": "Analyzed 4 source entries for unit-acknowledgments (致谢). Section heading '致□□谢' is fixed label with style notes; example body text maps to acknowledgement.body fill_slot; layout instruction '（小四号字空二行）' is style_only; trailing empty entry marks end of unit."
+    },
+    {
+      "batch_id": "semantic-batch-0010-5e111e55",
+      "candidate_digest": "9552786187f4d0e7d78c9ccc62f0639ac63bb16ce2797fbcec4cf993d755fe41",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "附录"
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体)"
+            }
+          ],
+          "reason": "附录 is the canonical section heading for the Appendix unit, fixed across theses in this template. The trailing (小三号黑体) is a parenthetical style annotation describing the required font (small 3 size, 黑体) — it styles the heading rather than appearing as visible heading content.",
+          "source_entry_id": "source-entry-fb18deaa0a39b544ff1556ad"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录1……"
+            },
+            {
+              "role": "style_only",
+              "text": "（小四号宋体）"
+            }
+          ],
+          "reason": "附录1…… is a template example line demonstrating the format pattern of the first individual appendix item; the ellipsis is an example placeholder, not a real fill position tied to a field. The trailing （小四号宋体） is a parenthetical style annotation (small 4 size, 宋体) for appendix item lines.",
+          "source_entry_id": "source-entry-dc41864a396a92f024e54c1e"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录2……"
+            }
+          ],
+          "reason": "附录2…… is a template example line demonstrating the format pattern of a second individual appendix item. It is example content and should not appear in a clean fillable template.",
+          "source_entry_id": "source-entry-ad5f8a233174605371fc1bd4"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "……"
+            }
+          ],
+          "reason": "…… is a continuation marker indicating that additional appendix items may follow the same pattern; it is template scaffolding, not content for the clean template.",
+          "source_entry_id": "source-entry-077273fefe75263ca82a8b90"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph acting as a visual separator between the format-example block and the format-requirement block. No visible text, layout-only spacing.",
+          "source_entry_id": "source-entry-27ca3789b033fceb17b0952f"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "附录1"
+            },
+            {
+              "role": "style_only",
+              "text": "（另起一页，小四号黑体）"
+            }
+          ],
+          "reason": "附录1 is a template example for an individual appendix heading starting on a new page. The trailing （另起一页，小四号黑体） is a layout+style instruction (start on a new page, small 4 size, 黑体) describing how each appendix item should be laid out and styled.",
+          "source_entry_id": "source-entry-a3dcaf6d25b787ff8ff9b43d"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": "（附录内容的字体字号参照正文的格式要求）"
+            }
+          ],
+          "reason": "The leading …… is an example placeholder indicating content goes here. The trailing parenthetical （附录内容的字体字号参照正文的格式要求） is a style requirement stating that the appendix body font and size should follow the main text format. The unit_heading_candidate cue reflects that this line heads the body-format specification block; it is template specification, not content.",
+          "source_entry_id": "source-entry-ce1fdd1d3d61385afc728547"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-baff4f366e19bcf4bd10e60b"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-ea8c55234a3be3c6c7dd0d83"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-5324e1f5126459b791012d92"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-17f6271fb61a9ef5efb5950e"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-949f8a0104dfb3bd092ba4d6"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-50b84730e3a7062a28c21874"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-2e67b3e3f3360e2fc2f2e09d"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-54ed74749af6fdd90db79b2c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-66ad5609657e0221be44e8d1"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-3af3dabf5c04965a6a8912a7"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-fb506c2e8801f84714743cdf"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-92fabaacc7f053ad145dd2b5"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty paragraph carrying no visible text; serves as layout spacing within the appendix template block.",
+          "source_entry_id": "source-entry-945dabb40ad2465c4f53114c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Final empty paragraph closing the unit; carries no visible text and acts as trailing layout spacing.",
+          "source_entry_id": "source-entry-8cb317548ea15adc31403474"
+        }
+      ],
+      "summary": "Completed post-unit semantic judgment for unit-appendix batch 10/10. The unit is the Appendix section. Entry 1 carries the canonical \"附录\" section heading (fixed_label) followed by its parenthetical font style annotation \"(小三号黑体)\" (style_only). Entries 2-4 are template example lines showing the format of individual appendix items (\"附录1……\", \"附录2……\", \"……\") paired with the parenthetical \"(小四号宋体)\" style note in entry 2; these example bodies are cleanup, the parenthetical is style_only. Entries 6-7 carry additional format specifications: \"(另起一页，小四号黑体)\" and \"(附录内容的字体字号参照正文的格式要求)\" — each prefix is cleanup, each parenthetical is style_only. Entries 5 and 8-21 are empty paragraphs representing blank layout (style_only). No field bindings used: \"附录\" is the fixed canonical section name (not student-specific), the \"附录1/2……\" patterns are template examples rather than real fill positions, and appendix.body would be carried by the content area outside this candidate's entries."
+    }
+  ],
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "ledger_digest": "a3f43a4f7ce5dc6263e3d361d53258b69721a15c1f492add7a22924503f1cbed",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "6d131383f4e4cba421041cd161af071c7163b6e50da2b2c32dc7fa51ceeb8ec8",
+  "source_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+  "unit_projection_digest": "42c183a401be2120483ebf171b7304438cb02a1afa16361ef3b860b8dbe59971"
+}

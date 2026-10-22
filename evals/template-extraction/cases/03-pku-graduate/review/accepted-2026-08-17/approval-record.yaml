@@ -1,0 +1,32 @@
+schema_version: docfit-template-extraction-gold-approval/v1
+case_id: 03-pku-graduate
+approved_by: xpw
+approved_at: '2026-08-18T13:20:00+08:00'
+approval_conclusion: approved_gold_pair_with_post_approval_comment_coverage_fix
+approval_note: user_reported_comment_coverage_gap; coverage_comments_completed_pending_manual_recheck
+reviewed_word:
+  path: review/accepted-2026-08-17/reviewed-final-template.gold.docx
+  sha256: 4e4454bf925c640cc80eaec626c9ab3512ee5a38ee5601c2d481f7a9769bbc50
+  relation_to_gold_template: byte_identical_snapshot_after_coverage_review
+  word_comments:
+    review_status: coverage_completed_pending_manual_recheck
+    authors:
+      - Codex Gold Review
+      - Codex Gold Coverage Review
+    object_review_comment_count: 42
+    coverage_comment_count: 117
+    total_comment_count: 159
+    visible_body_blocks: 116
+    header_footer_visible_blocks: 10
+    scope: slots_regions_styles_logical_pages_and_all_visible_body_blocks_plus_header_footer_summary
+gold_pair:
+  template:
+    path: gold/final-template.gold.docx
+    sha256: 4e4454bf925c640cc80eaec626c9ab3512ee5a38ee5601c2d481f7a9769bbc50
+  contract:
+    path: gold/fill-contract.gold.yaml
+    sha256: 5dcff35b423bdea13cac73b869c5b451695cad8f5d89b34f6eed8e344645390f
+retention:
+  keep_reviewed_word_snapshot: true
+  keep_gold_pair: true
+  purpose: future_issue_triage_and_gold_optimization_baseline

@@ -1,0 +1,84 @@
+{
+  "baseline": {
+    "root": "temp/phase1-quality-gate-real-replay-20260827-162008-after-order/baseline-valid-accepted",
+    "selected": "work/.docfit/post-unit-materialization/candidate-0001.docx",
+    "candidate_files": [
+      "work/.docfit/post-unit-materialization/candidate-0001.docx"
+    ],
+    "passed": true
+  },
+  "cases": [
+    {
+      "root": "temp/phase1-quality-gate-real-replay-20260827-162008-after-order/slot-missing-field",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_slot_field_missing"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-004-cn-title-author"
+      ],
+      "case": "slot-missing-field",
+      "mutated_judgment_id": "J-paper-body-004-cn-title-author",
+      "passed": true
+    },
+    {
+      "root": "temp/phase1-quality-gate-real-replay-20260827-162008-after-order/body-missing-structure",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_body_structure_semantics_missing"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-017-body-track-a"
+      ],
+      "case": "body-missing-structure",
+      "mutated_judgment_id": "J-paper-body-017-body-track-a",
+      "passed": true
+    },
+    {
+      "root": "temp/phase1-quality-gate-real-replay-20260827-162008-after-order/invalid-direct-intent",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_intent_invalid"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-019a-references-heading"
+      ],
+      "case": "invalid-direct-intent",
+      "mutated_judgment_id": "J-paper-body-019a-references-heading",
+      "passed": true
+    },
+    {
+      "root": "temp/phase1-quality-gate-real-replay-20260827-162008-after-order/local-unresolved",
+      "failure_code": "template_materialization_readiness_incomplete",
+      "failure_status": "needs_input",
+      "receipt_exists": true,
+      "candidate_files": [],
+      "receipt_status": "needs_input",
+      "has_agent_revision_packet": true,
+      "affected_codes": [
+        "materialization_semantic_judgment_unresolved"
+      ],
+      "affected_judgment_ids": [
+        "J-paper-body-020a-acknowledgement-heading"
+      ],
+      "case": "local-unresolved",
+      "mutated_judgment_id": "J-paper-body-020a-acknowledgement-heading",
+      "passed": true
+    }
+  ]
+}

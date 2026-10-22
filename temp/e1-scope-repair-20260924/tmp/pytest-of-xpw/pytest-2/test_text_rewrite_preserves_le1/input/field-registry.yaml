@@ -1,0 +1,26 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: body.chapters
+    label: 正文章节集合
+    content_type: section
+  - field_id: body.heading.outline1
+    label: 章标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.heading.outline2
+    label: 一级节标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.heading.outline3
+    label: 二级节标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.paragraph
+    label: 正文段落
+    content_type: rich_text
+    parent_field_id: body.chapters
+  - field_id: body.numbered_list_item
+    label: 数字列表项
+    content_type: rich_text
+    parent_field_id: body.chapters

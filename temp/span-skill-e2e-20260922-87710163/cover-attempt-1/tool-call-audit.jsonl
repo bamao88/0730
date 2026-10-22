@@ -1,0 +1,5 @@
+{"duration_ms": 15, "input": {"focus": "document_map", "schema_version": "docfit_evidence_input_v1"}, "result": {"focus": "document_map", "status": "ok"}, "tool": "docfit_evidence"}
+{"duration_ms": 9, "input": {"focus": "document_map", "offset": 20, "schema_version": "docfit_evidence_input_v1"}, "result": {"focus": "document_map", "status": "ok"}, "tool": "docfit_evidence"}
+{"duration_ms": 132, "input": {"focus": "unit_evidence_packet", "schema_version": "docfit_evidence_input_v1", "unit_id": "unit-1-cover-format-spec"}, "result": {"focus": "unit_evidence_packet", "status": "ok"}, "tool": "docfit_evidence"}
+{"duration_ms": 160, "input": {"focus": "unit_evidence_packet", "schema_version": "docfit_evidence_input_v1", "unit_id": "unit-2-cover"}, "result": {"focus": "unit_evidence_packet", "status": "ok"}, "tool": "docfit_evidence"}
+{"duration_ms": 171, "input": {"focus": "unit_evidence_packet", "schema_version": "docfit_evidence_input_v1", "unit_id": "unit-2-cover"}, "result": {"focus": "unit_evidence_packet", "status": "ok"}, "tool": "docfit_evidence"}

@@ -1,0 +1,299 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.191246b64c1cce22
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 191246b64c1cce2228f5dbd82778769217291e2c4aff935a0aaac58e4c8e0f9e
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 1fc02c98dc1bd16c10519c041f0f4d7c1f8e419d1772413bddbc0fea34169582
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+  field_id: author.cohort_class
+  style_role_id: style.slot.ac7baacfe500c8d727197765
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+  span_ref: reading_range_id=unit-001:range-whole-unit;part_index=5
+  field_id: author.cohort_class
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.ac7baacfe500c8d727197765
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 年级、专业及班级复合信息
+  provenance:
+    source: harness_resolved_span
+    source_judgment_ref: semantic_judgments[0]
+    part_index: 5
+    span_ref: reading_range_id=unit-001:range-whole-unit;part_index=5
+    slot_ref: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+    field_vocabulary_digest: 7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4
+    reading_block_id: unit-001:block-0006
+  style_contract_ref:
+    style_contract_id: style.slot.ac7baacfe500c8d727197765
+    contract_digest: 3e9d96c98724aef082277747d8ab920bdc35468874b44323bdebc72617b3b62b
+styles:
+- style_contract_id: style.slot.ac7baacfe500c8d727197765
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.line_spacing_pt: 32.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 宋体
+    run.font_complex_script: 宋体
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 15.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 3e9d96c98724aef082277747d8ab920bdc35468874b44323bdebc72617b3b62b
+  label: author.cohort_class @ reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+    field_id: author.cohort_class
+    locator:
+      type: content_control_tag
+      value: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 609fe750d1f919dbcf802ecced82c437812a56de5442b18e3e7a4c57415de742
+provenance:
+  source_sha256: a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73
+  body_structure_count: 0
+  agent_owned_semantics: true
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: warning
+      severity: warning
+      blocking: false
+      evidence:
+        source:
+          passed: false
+          code: officecli_failed
+          origin: engine
+          detail: OfficeCLI rejected the operation or returned a backend error.
+        final:
+          passed: false
+          code: officecli_failed
+          origin: engine
+          detail: OfficeCLI rejected the operation or returned a backend error.
+        new_officecli_regression: UNKNOWN
+      suggested_action: Repair source-inherited OpenXML validation warnings when strict schema acceptance is required.
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 1
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73
+    final_sha256: 191246b64c1cce2228f5dbd82778769217291e2c4aff935a0aaac58e4c8e0f9e
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 3
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 191246b64c1cce2228f5dbd82778769217291e2c4aff935a0aaac58e4c8e0f9e
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 609fe750d1f919dbcf802ecced82c437812a56de5442b18e3e7a4c57415de742
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 609fe750d1f919dbcf802ecced82c437812a56de5442b18e3e7a4c57415de742
+      occurrences:
+      - occurrence_id: template-slot:reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+        locator:
+          type: content_control_tag
+          value: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.ac7baacfe500c8d727197765
+          contract_digest: 3e9d96c98724aef082277747d8ab920bdc35468874b44323bdebc72617b3b62b
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+        style_contract_id: style.slot.ac7baacfe500c8d727197765
+        contract_digest: 3e9d96c98724aef082277747d8ab920bdc35468874b44323bdebc72617b3b62b
+        locator:
+          type: content_control_tag
+          value: reading_range_id=unit-001:range-whole-unit;part_index=5;field_id=author.cohort_class
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: false
+    source:
+      passed: false
+      code: officecli_failed
+      origin: engine
+      detail: OfficeCLI rejected the operation or returned a backend error.
+    final:
+      passed: false
+      code: officecli_failed
+      origin: engine
+      detail: OfficeCLI rejected the operation or returned a backend error.
+    new_officecli_regression: UNKNOWN

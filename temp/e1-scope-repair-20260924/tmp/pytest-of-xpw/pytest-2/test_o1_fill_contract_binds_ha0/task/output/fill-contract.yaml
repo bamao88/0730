@@ -1,0 +1,259 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.d864ccdb976963a1
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: d864ccdb976963a15e8123dedc73d1462e6eae5cb57d78a47d26fbda977ab65b
+field_registry_ref:
+  registry_id: docfit.test.fields
+  registry_version: 0.1.0
+  sha256: 0c046d39ac49a9f6063d158f10cfefaa0ff7edf80083411f9975a4c49fc64df9
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
+school_observation_set_digest: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+school_style_candidates:
+- style_role_id: style.slot
+known_school_style_gaps: []
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd;field_id=thesis.title.zh
+  span_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+  field_id: thesis.title.zh
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd;field_id=thesis.title.zh
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  provenance:
+    field_id: thesis.title.zh
+    span_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+    slot_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd;field_id=thesis.title.zh
+    source_entry_id: source-entry-u-all-block-0001
+    source_snapshot_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+    source_inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+    expected_source_content: ×××
+    word_fragments: &id001
+    - object_id: obj-title
+      locator: /body/p[1]
+      text: ×××
+      source_text_start: 5
+      source_text_end: 8
+      object_text_start: 5
+      object_text_end: 8
+      object_ref:
+        document_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+        object_id: obj-title
+        expected_fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    accepted_span: &id002
+      span_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      scope:
+        source_entry_id: source-entry-u-all-block-0001
+      judgment_index: 0
+      part_index: 1
+      role: fill_slot
+      text: ×××
+      source_entry_id: source-entry-u-all-block-0001
+      text_start: 5
+      text_end: 8
+      extent:
+        kind: text
+        start: 5
+        end: 8
+      expected_source_content: ×××
+      source_snapshot_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      source_inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+      word_fragments: *id001
+      covered_object_ids:
+      - obj-title
+      field_id: thesis.title.zh
+      slot_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd;field_id=thesis.title.zh
+    accepted_result: &id003
+      source_judgment_ref: semantic_judgments[0]
+      part_index: 1
+      semantic_judgments_sha256: 17db742836fbdf86bc3d16091f9102fb3d9c529cfc72acd7ae5f08bd5ad2f4da
+      field_vocabulary_digest: 74a82b7652650d4e27de6577656bdfaa3c35401ec81050693c651d06e064bdd5
+    actual_result: &id004
+      outcome: applied
+      candidate_before_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      candidate_after_sha256: d864ccdb976963a15e8123dedc73d1462e6eae5cb57d78a47d26fbda977ab65b
+      operation_sha256: e6aad209ad5f53344115af55e317044eaedf007eeba3d964d4cf3de05044cae4
+      mutation_receipt_sha256: 9050e499aceb88829633ae7fb16179e054fb31187dd9c7cd355ea6d38b1277cf
+  style_contract_ref:
+    style_contract_id: style.slot.9467af2dc2cb424810d54673
+    contract_digest: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+styles:
+- style_contract_id: style.slot.9467af2dc2cb424810d54673
+  contract_digest: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  effective_properties:
+    paragraph.alignment: center
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+style_contract_set_digest: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+provenance:
+  source_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+    template_sha256: d864ccdb976963a15e8123dedc73d1462e6eae5cb57d78a47d26fbda977ab65b
+    source_inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+    unit_projection_digest: 5baeb7d62f666c8a6508d10af287ac2622f5ad2d027b003c839a472b434f495f
+    source_partition:
+      document_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      canonical_source_inventory:
+        schema_version: docfit-canonical-source-inventory/v1
+        source_snapshot_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+        entry_count: 1
+        source_entries:
+        - source_entry_id: source-entry-u-all-block-0001
+          text: 论文题目：×××
+          entry_type: text
+          source_order:
+            block: 1
+            inline: 0
+          extent:
+            kind: text
+            start: 0
+            end: 8
+          provenance:
+          - object_id: obj-title
+            locator: /body/p[1]
+            text_span:
+            - 0
+            - 8
+            object_ref:
+              document_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+              object_id: obj-title
+              expected_fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+            fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+      source_entries:
+      - source_entry_id: source-entry-u-all-block-0001
+        text: 论文题目：×××
+        entry_type: text
+        source_order:
+          block: 1
+          inline: 0
+        extent:
+          kind: text
+          start: 0
+          end: 8
+        provenance:
+        - object_id: obj-title
+          locator: /body/p[1]
+          text_span:
+          - 0
+          - 8
+          object_ref:
+            document_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+            object_id: obj-title
+            expected_fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+          fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      unit_boundary_proof:
+        schema_version: docfit-unit-boundary-proof/v2
+        status: ok
+        checkpoint: unit-boundary
+        source_hash: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+        source_inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+        unit_projection_digest: 5baeb7d62f666c8a6508d10af287ac2622f5ad2d027b003c839a472b434f495f
+        units:
+        - unit_id: u-all
+          unit_name: source
+          start_boundary:
+            source_entry_id: source-entry-u-all-block-0001
+            edge: start
+          end_boundary:
+            source_entry_id: source-entry-u-all-block-0001
+            edge: end
+        resolved_units:
+        - unit_id: u-all
+          unit_name: source
+          start_boundary:
+            source_entry_id: source-entry-u-all-block-0001
+            edge: start
+          end_boundary:
+            source_entry_id: source-entry-u-all-block-0001
+            edge: end
+          source_spans:
+          - source_entry_id: source-entry-u-all-block-0001
+            extent:
+              kind: text
+              start: 0
+              end: 8
+            text: 论文题目：×××
+            word_fragments:
+            - object_id: obj-title
+              locator: /body/p[1]
+              text: 论文题目：×××
+              source_text_start: 0
+              source_text_end: 8
+              object_text_start: 0
+              object_text_end: 8
+              object_ref:
+                document_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+                object_id: obj-title
+                expected_fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+              fingerprint: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+          covered_object_ids:
+          - obj-title
+          start_locator: /body/p[1]
+          end_locator: /body/p[1]
+      unit_projection_digest: 5baeb7d62f666c8a6508d10af287ac2622f5ad2d027b003c839a472b434f495f
+    semantic_judgments_sha256: 17db742836fbdf86bc3d16091f9102fb3d9c529cfc72acd7ae5f08bd5ad2f4da
+    field_vocabulary_digest: 74a82b7652650d4e27de6577656bdfaa3c35401ec81050693c651d06e064bdd5
+    field_registry_ref:
+      registry_id: docfit.test.fields
+      registry_version: 0.1.0
+      sha256: 0c046d39ac49a9f6063d158f10cfefaa0ff7edf80083411f9975a4c49fc64df9
+    materialization_receipt_sha256: 4635ebf891add5b9b5a3e573db665db5770879efb4d75d7f972851b7fff44ab3
+    slots:
+    - field_id: thesis.title.zh
+      span_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      slot_ref: source_entry_id=source-entry-u-all-block-0001;extent=text[5:8];source_snapshot_sha256=67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd;field_id=thesis.title.zh
+      source_entry_id: source-entry-u-all-block-0001
+      source_snapshot_sha256: 67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd
+      source_inventory_digest: 4d8128fd5f89f74308ca96e5edb35fe2142d9a42b1f35650429fd37e48fd112a
+      expected_source_content: ×××
+      word_fragments: *id001
+      accepted_span: *id002
+      accepted_result: *id003
+      actual_result: *id004
+  materialization_digest: 5de8acbd38023ca964e5b47a61e15f5a68dbe77a41aff368c0c64f13dce4ea07
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    final_sha256: d864ccdb976963a15e8123dedc73d1462e6eae5cb57d78a47d26fbda977ab65b
+    status: ok
+  final_visual_review:
+    document_sha256: d864ccdb976963a15e8123dedc73d1462e6eae5cb57d78a47d26fbda977ab65b
+    render_ref: render:v2:0000000000000000000000000000000000000000000000000000000000000000
+    reviewed_pages:
+    - 1
+    findings: []
+  style_capture:
+    status: passed
+  school_style_observation:
+    status: passed
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: OfficeCLI OpenXML validation passed.

@@ -1,0 +1,40 @@
+{
+  "verification_level": "natural E2E Agent revision in fresh full-school run; overall run still incomplete",
+  "runtime_commit": "03a3519",
+  "batch_id": "semantic-batch-0004-7c6f988c",
+  "rejected_entry_count": 25,
+  "failure": "literal backslash escape submitted instead of source tab",
+  "repair_request_contains_character_differences": true,
+  "accepted_after_one_revision": true,
+  "events": {
+    "14": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000014.json",
+      "sha256": "32652e34e43c4f798049e84c6907376f58b97ea772990189d932dbb3fbfec0d4"
+    },
+    "15": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000015.json",
+      "sha256": "454182d2b16c547365931324e0f42c1649ff478b996f019d718e5f3508f7b3bd"
+    },
+    "17": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000017.json",
+      "sha256": "8bb404aa537c5aaf02d74a19127b9940874b5b5059a81f0aab3ccd222b8dabe0"
+    },
+    "18": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000018.json",
+      "sha256": "ab186a954af92b5ec9d5110afbe0776771ea8f8e72024c976136e4ef26a26e64"
+    },
+    "19": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000019.json",
+      "sha256": "38f86cc628439b6a0ad44a0736c0bba1ca9c96614d64a7b80b4429e7ff225259"
+    },
+    "20": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000020.json",
+      "sha256": "a9294759faf0bf0f4026993d435812e66632305854445d187eca5ac8868f3910"
+    },
+    "21": {
+      "path": "temp/harness-repair-20260923/phase5-three-schools/njau-precise-feedback-task/work/.docfit/harness/semantic-revisions/00000021.json",
+      "sha256": "379470ed737479e27717aed3f94bb242a9bf57d9e780ec4b1f40b3cac1a58e26"
+    }
+  },
+  "product_acceptance": false
+}

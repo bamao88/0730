@@ -1,0 +1,37 @@
+{
+  "code_commit": "11acec74158d30b76857a7867cc95d5fe4ae1a5b",
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "failure": {
+    "schema_version": 1,
+    "status": "error",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "agent",
+      "code": "template_agent_no_progress_timeout",
+      "retryable": true,
+      "message": "The Agent stream did not produce a tool call or structured result within 180 seconds.",
+      "suggested_actions": [
+        "inspect_template_agent_execution_trace",
+        "resume_or_rerun_with_existing_task_root"
+      ]
+    }
+  },
+  "query_count": 1,
+  "tool_uses": [
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence"
+  ],
+  "sdk_result_count": 0,
+  "diagnostics_archive": "temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-retry-task/work/.docfit/unit-boundary-executions/f496cd4d75c245e083378bf1e80e2525.json",
+  "verification_level": "E2E attempt stopped in unit-boundary; not successful generation",
+  "suspected_engineering_contributor": "Unit loop lacks partial-message streaming and does not recognize generation progress, unlike post-unit loop. This run did not preserve raw stream deltas, so exact causal attribution remains unproven.",
+  "product_acceptance": false
+}

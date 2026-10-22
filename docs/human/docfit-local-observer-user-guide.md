@@ -348,5 +348,6 @@ http://127.0.0.1:43123/
 ## 9. 相关文档
 
 - [本地运行观测设计](../docfit-local-observability-design.md)：数据来源、隐私、安全、关联和验收合同。
-- [DocFit 设计文档索引](../docfit-00-index.md)：长期架构基线和文档入口。
+- [DocFit 文档入口](../README.md)：文档路由和维护规则。
+- [DocFit 架构](../../ARCHITECTURE.md)：长期架构基线。
 - [非研发背景的 DocFit 开发概念说明](non-technical-development-guide.md)：常见工程术语的普通语言解释。

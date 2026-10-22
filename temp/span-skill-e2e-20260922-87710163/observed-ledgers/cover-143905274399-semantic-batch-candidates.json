@@ -1,0 +1,30 @@
+{
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-f5d7bf64",
+      "candidate_digest": "dade1b062b8d779c171572079dc6d183a4de3ffa9c2ecf583f2d35fe97e8fd27",
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。     "
+            }
+          ],
+          "reason": "整段为学校封面格式规范正文，含 (1) 附件编号与节标题「附件1  封面基本格式：」、(2) 行距/上下页边距/左右页边距/居中对齐要求、(3) “□” 符号含义解释、(4) 论文与设计在标题中取舍的规则。全文属于学校权威固定说明，不是填写位置、样例值或可清理注释，没有可绑定的字段；按 Style Contract 边界规则，统一以 fixed_label 保留以维持其作为封面格式约束的唯一依据。段内各句责任一致（均为学校固定规范），不分段；末尾 5 个 U+0020 半角空格随同原文一并保留。",
+          "source_entry_id": "source-entry-8ad4a2af5e47c8b049a468a2"
+        }
+      ],
+      "summary": "Judged 1 source entry for unit-1-cover-format-spec: official school cover-format specification text retained as fixed_label."
+    }
+  ],
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "ledger_digest": "469ce1860fa43b550c8a4a18a374f3631f48dd8d9bc497e0337cebabbcaceb60",
+  "manifest_digest": "05e4c26b0b729f77d622adf328d4d62e95ca18ea0524a46088f5b4931d16e2f0",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "5ffb2cf4dbc0a61959f7dc00e602563b539a01d83c9c9fbe291a7f6c50ecdd6a",
+  "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "unit_projection_digest": "bd214c4d95f6fef6f3b51b81f058dd3e92c882f941660f97b27c1c72c40a7ab4"
+}

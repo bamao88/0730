@@ -12,6 +12,7 @@ from docfit.styles.materialization import materialize_style_contracts
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W14_NS = "http://schemas.microsoft.com/office/word/2010/wordml"
+MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 W = f"{{{W_NS}}}"
 
 
@@ -61,6 +62,22 @@ def _style() -> dict[str, Any]:
         "run.vertical_position": "baseline",
         "run.character_spacing_pt": 0.0,
     }
+    value: dict[str, Any] = {
+        "style_contract_id": "style.body.paragraph",
+        "application_scope": "paragraph",
+        "owned_properties": sorted(properties),
+        "effective_properties": properties,
+        "override_policy": {
+            "managed_direct_formatting": "clear_conflicts",
+            "unmanaged_properties": "preserve",
+        },
+        "dependencies": [],
+    }
+    value["contract_digest"] = style_contract_digest(value)
+    return value
+
+
+def _style_with_properties(properties: dict[str, Any]) -> dict[str, Any]:
     value: dict[str, Any] = {
         "style_contract_id": "style.body.paragraph",
         "application_scope": "paragraph",
@@ -158,3 +175,242 @@ def test_materialization_rejects_two_contracts_for_one_occurrence(tmp_path: Path
             contracts=contracts,
             occurrence_manifest=manifest,
         )
+
+
+def test_materialization_inserts_property_children_in_schema_order(tmp_path: Path) -> None:
+    source = tmp_path / "source.docx"
+    output = tmp_path / "output.docx"
+    _write_occurrences(source, 1)
+    style = _style()
+    contracts = _contracts(style)
+    style_ref = {
+        "style_contract_id": style["style_contract_id"],
+        "contract_digest": style["contract_digest"],
+    }
+
+    materialize_style_contracts(
+        input_docx=source,
+        output_docx=output,
+        contracts=contracts,
+        occurrence_manifest={
+            "occurrences": [
+                {
+                    "occurrence_id": "body-1",
+                    "locator": "/body/p[@paraId=00000001]",
+                    "style_contract_ref": style_ref,
+                }
+            ]
+        },
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        document = ET.fromstring(archive.read("word/document.xml"))
+    paragraph_properties = next(document.iter(f"{W}pPr"))
+    run_properties = next(document.iter(f"{W}rPr"))
+    paragraph_names = [child.tag.rsplit("}", 1)[-1] for child in list(paragraph_properties)]
+    run_names = [child.tag.rsplit("}", 1)[-1] for child in list(run_properties)]
+    assert paragraph_names.index("keepNext") < paragraph_names.index("spacing")
+    assert paragraph_names.index("spacing") < paragraph_names.index("ind")
+    assert paragraph_names.index("ind") < paragraph_names.index("jc")
+    assert run_names.index("b") < run_names.index("color")
+    assert run_names.index("color") < run_names.index("sz")
+    assert run_names.index("szCs") < run_names.index("vertAlign")
+
+
+def test_line_value_materialization_clears_stale_exact_line_rule(tmp_path: Path) -> None:
+    source = tmp_path / "source.docx"
+    output = tmp_path / "output.docx"
+    document = f'''<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+      <w:body>
+        <w:p w14:paraId="00000001">
+          <w:pPr><w:spacing w:line="240" w:lineRule="exact"/></w:pPr>
+          <w:r><w:t>Occurrence</w:t></w:r>
+        </w:p>
+        <w:sectPr/>
+      </w:body>
+    </w:document>'''
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", document)
+    style = _style_with_properties({"paragraph.line_value": 1.3})
+    contracts = _contracts(style)
+    style_ref = {
+        "style_contract_id": style["style_contract_id"],
+        "contract_digest": style["contract_digest"],
+    }
+    manifest = {
+        "occurrences": [
+            {
+                "occurrence_id": "body-1",
+                "locator": "/body/p[@paraId=00000001]",
+                "style_contract_ref": style_ref,
+            }
+        ]
+    }
+
+    materialize_style_contracts(
+        input_docx=source,
+        output_docx=output,
+        contracts=contracts,
+        occurrence_manifest=manifest,
+    )
+    validation = StyleContractValidator(contracts).validate(output, manifest)
+
+    with zipfile.ZipFile(output) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    spacing = document_root.find(f".//{W}spacing")
+    assert spacing is not None
+    assert spacing.get(f"{W}line") == "312"
+    assert spacing.get(f"{W}lineRule") == "auto"
+    assert validation.status == "passed"
+
+
+def test_materialization_preserves_ignorable_namespace_declarations(tmp_path: Path) -> None:
+    source = tmp_path / "source.docx"
+    output = tmp_path / "output.docx"
+    document = f'''<w:document
+      xmlns:w="{W_NS}"
+      xmlns:w14="{W14_NS}"
+      xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+      xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+      xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+      xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+      xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du"
+      xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+      xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock"
+      xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+      xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+      xmlns:mc="{MC_NS}"
+      mc:Ignorable="w14 w15 w16 w16cex w16cid w16du w16sdtdh w16sdtfl w16se wp14">
+      <w:body>
+        <w:p w14:paraId="00000001">
+          <w:pPr><w:jc w:val="right"/></w:pPr>
+          <w:r><w:t>Occurrence</w:t></w:r>
+        </w:p>
+        <w:sectPr/>
+      </w:body>
+    </w:document>'''
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", document)
+    style = _style()
+    contracts = _contracts(style)
+    style_ref = {
+        "style_contract_id": style["style_contract_id"],
+        "contract_digest": style["contract_digest"],
+    }
+
+    materialize_style_contracts(
+        input_docx=source,
+        output_docx=output,
+        contracts=contracts,
+        occurrence_manifest={
+            "occurrences": [
+                {
+                    "occurrence_id": "body-1",
+                    "locator": "/body/p[@paraId=00000001]",
+                    "style_contract_ref": style_ref,
+                }
+            ]
+        },
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        raw_document = archive.read("word/document.xml").decode()
+        document_root = ET.fromstring(raw_document)
+    assert (
+        document_root.get(f"{{{MC_NS}}}Ignorable")
+        == "w14 w15 w16 w16cex w16cid w16du w16sdtdh w16sdtfl w16se wp14"
+    )
+    for prefix in (
+        "w14",
+        "w15",
+        "w16",
+        "w16cex",
+        "w16cid",
+        "w16du",
+        "w16sdtdh",
+        "w16sdtfl",
+        "w16se",
+        "wp14",
+    ):
+        assert f"xmlns:{prefix}=" in raw_document
+
+
+def test_materialization_applies_cell_contract_to_every_table_cell(tmp_path: Path) -> None:
+    source = tmp_path / "source.docx"
+    output = tmp_path / "output.docx"
+    document = f'''<w:document xmlns:w="{W_NS}" xmlns:w14="{W14_NS}">
+      <w:body>
+        <w:tbl>
+          <w:tr>
+            <w:tc><w:p w14:paraId="00000001"><w:r><w:t>A</w:t></w:r></w:p></w:tc>
+            <w:tc><w:p w14:paraId="00000002"><w:r><w:t>B</w:t></w:r></w:p></w:tc>
+          </w:tr>
+          <w:tr>
+            <w:tc><w:p w14:paraId="00000003"><w:r><w:t>C</w:t></w:r></w:p></w:tc>
+            <w:tc><w:p w14:paraId="00000004"><w:r><w:t>D</w:t></w:r></w:p></w:tc>
+          </w:tr>
+        </w:tbl>
+      </w:body>
+    </w:document>'''
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("word/document.xml", document)
+    properties = {
+        "cell.vertical_alignment": "center",
+        "cell.padding_mm.top": 0.0,
+        "cell.padding_mm.bottom": 0.0,
+        "cell.padding_mm.left": 0.0,
+        "cell.padding_mm.right": 0.0,
+        "cell.text_wrap": False,
+    }
+    style = {
+        "style_contract_id": "style.table.body",
+        "application_scope": "table",
+        "owned_properties": sorted(properties),
+        "effective_properties": properties,
+        "override_policy": {
+            "managed_direct_formatting": "clear_conflicts",
+            "unmanaged_properties": "preserve",
+        },
+        "dependencies": [],
+    }
+    style["contract_digest"] = style_contract_digest(style)
+    contracts = _contracts(style)
+    style_ref = {
+        "style_contract_id": style["style_contract_id"],
+        "contract_digest": style["contract_digest"],
+    }
+    manifest = {
+        "occurrences": [
+            {
+                "occurrence_id": "table-1",
+                "locator": "/body/tbl[1]",
+                "style_contract_ref": style_ref,
+            }
+        ]
+    }
+
+    result = materialize_style_contracts(
+        input_docx=source,
+        output_docx=output,
+        contracts=contracts,
+        occurrence_manifest=manifest,
+    )
+    validation = StyleContractValidator(contracts).validate(output, manifest)
+
+    assert result["occurrences"][0]["cell_count"] == 4
+    assert validation.status == "passed"
+    with zipfile.ZipFile(output) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
+    cells = document_root.findall(f".//{W}tc")
+    assert len(cells) == 4
+    for cell in cells:
+        cell_properties = cell.find(f"{W}tcPr")
+        assert cell_properties is not None
+        assert cell_properties.find(f"{W}vAlign").get(f"{W}val") == "center"
+        assert cell_properties.find(f"{W}noWrap") is not None
+        margins = cell_properties.find(f"{W}tcMar")
+        assert margins is not None
+        assert {
+            child.tag.rsplit("}", 1)[-1]: child.get(f"{W}w")
+            for child in list(margins)
+        } == {"top": "0", "left": "0", "bottom": "0", "right": "0"}

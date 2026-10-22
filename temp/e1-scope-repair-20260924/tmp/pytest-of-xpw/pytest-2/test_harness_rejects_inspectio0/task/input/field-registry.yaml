@@ -1,0 +1,6 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: author.name.zh
+    label: 作者中文姓名
+    content_type: text

@@ -1,0 +1,42 @@
+{
+  "candidate_recorded": 9,
+  "event_chain_and_candidate_ancestry_validated": true,
+  "event_range": [
+    1,
+    9
+  ],
+  "failure_code": "ordered_part_text_mismatch",
+  "fault_injection": false,
+  "first_difference": "U+0022 submitted instead of U+201C",
+  "full_school_e2e": false,
+  "initial_response": 3,
+  "judgment_count": 23,
+  "local_acceptance": 8,
+  "local_rejection": 5,
+  "natural_failure": true,
+  "observed_with_code_commit": "19950176f2ed1a76bbad3341de06134f5f75fcf7",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/object-inventory.json": "bbb8d26ba28af981438fcc8c1ba020dbd32aa86c84ea6591d5777e0c46610a2c",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-batch-manifest.json": "3e18b518d352607aedee82b4becafc9fc2a4c847ee40e8b48bef13f9251baa54",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000001.json": "da98d1a6dc7bac98396f00891c45db79c4b4fd13636f89eb10e6e55416db9a45",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000002.json": "c1bf2e5e6d65df520360eb32eeff0b585185c6c5b514e514cd2d360e3589a1bc",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000003.json": "88469fcbf28d15eb7440fe77da99c863f32f8e06865b3abcb333058d148c02a3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000004.json": "479c9f57f4ccad34033d37cf26fd76ae1ec55af769ee35bc12f03e226d116dfc",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000005.json": "78b2cd08e439cebed615c400e8c2868bc868025545e1a56b157ee38578eaf32c",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000006.json": "7eb8c0526fd95c02f85d55ad78b24e0160c42f60998b72a90ee2648c0ab74fd5",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000007.json": "feba370c391c0fdf2e49250b177dc6571fa475a2dc66e94c81cf38b6235abdec",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000008.json": "5cbbd2ea5533f07c2f853c6633c996dee48de3a232696615b07555c883867b68",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/harness/semantic-revisions/00000009.json": "94f0f6dee4612afc92fd3bc0b722f6396d7ea7e3772685262578b3d5ab9d7933",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task/work/.docfit/unit-boundary-checkpoint.json": "493c776e10e72014df5afd8c10eafdaf6875a3191d37e3adf825a4daa662c180"
+  },
+  "original_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task",
+  "original_unchanged": true,
+  "product_acceptance": false,
+  "revised_response": 7,
+  "revision_request": 6,
+  "role_unchanged": "cleanup",
+  "runtime_commit": "9c211c1",
+  "verification_level": "E2E agent loop slice: natural local feedback and revision; full school run ongoing"
+}

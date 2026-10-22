@@ -1,0 +1,231 @@
+{
+  "source_inventory_digest": "f20ccdb3171542f81b4af764d04eb558075a6da1812e2014fe9ed7c400654f7c",
+  "unit_projection_digest": "363e95e738e7ff7e8cd9542bb3df2d9523fa711458e3f6e6ceb63cc74b39e30b",
+  "document_sha256": "100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+  "field_id_vocabulary": {
+    "schema_version": "docfit_pre_input_field_vocabulary_v1",
+    "registry": {
+      "registry_id": "test",
+      "registry_version": "1",
+      "sha256": "0c9adfeb2311a45c18078821bf11f5719c31c4e5979889c0561c268066a48264"
+    },
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline4",
+      "body.paragraph",
+      "body.table",
+      "body.equation"
+    ],
+    "field_count": 7,
+    "fields": [
+      {
+        "field_id": "thesis.title.zh",
+        "label": "中文题目",
+        "content_type": "text",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": [
+            "fill_slot"
+          ]
+        }
+      },
+      {
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "content_type": "section",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": []
+        }
+      },
+      {
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.heading.outline4",
+        "label": "四级标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.table",
+        "label": "表格",
+        "content_type": "table",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.equation",
+        "label": "公式",
+        "content_type": "equation",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      }
+    ],
+    "digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99"
+  },
+  "field_vocabulary_digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-0",
+      "parts": [
+        {
+          "role": "fill_slot",
+          "text": "KeepValue",
+          "field_id": "thesis.title.zh"
+        }
+      ],
+      "resolved_spans": [
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[0:9];source_snapshot_sha256=100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "fill_slot",
+          "text": "KeepValue",
+          "source_entry_id": "source-entry-0",
+          "text_start": 0,
+          "text_end": 9,
+          "extent": {
+            "kind": "text",
+            "start": 0,
+            "end": 9
+          },
+          "expected_source_content": "KeepValue",
+          "source_snapshot_sha256": "100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+          "source_inventory_digest": "f20ccdb3171542f81b4af764d04eb558075a6da1812e2014fe9ed7c400654f7c",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]/sdt[1]",
+              "text": "KeepValue",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+                "expected_fingerprint": "074b0edde6c8571117ae259e69042f1fe5abd9d5aa737dbdaaf8607427dc592f"
+              },
+              "fingerprint": "074b0edde6c8571117ae259e69042f1fe5abd9d5aa737dbdaaf8607427dc592f"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ],
+          "field_id": "thesis.title.zh",
+          "slot_ref": "source_entry_id=source-entry-0;extent=text[0:9];source_snapshot_sha256=100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814;field_id=thesis.title.zh"
+        }
+      ]
+    }
+  ],
+  "semantic_judgments_sha256": "07dd7328fb4d87f731c50f67f026f66035f292679aa19019dd60aa905cda8288",
+  "resolved_spans": [
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[0:9];source_snapshot_sha256=100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 0,
+      "role": "fill_slot",
+      "text": "KeepValue",
+      "source_entry_id": "source-entry-0",
+      "text_start": 0,
+      "text_end": 9,
+      "extent": {
+        "kind": "text",
+        "start": 0,
+        "end": 9
+      },
+      "expected_source_content": "KeepValue",
+      "source_snapshot_sha256": "100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+      "source_inventory_digest": "f20ccdb3171542f81b4af764d04eb558075a6da1812e2014fe9ed7c400654f7c",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]/sdt[1]",
+          "text": "KeepValue",
+          "source_text_start": 0,
+          "source_text_end": 9,
+          "object_text_start": 0,
+          "object_text_end": 9,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814",
+            "expected_fingerprint": "074b0edde6c8571117ae259e69042f1fe5abd9d5aa737dbdaaf8607427dc592f"
+          },
+          "fingerprint": "074b0edde6c8571117ae259e69042f1fe5abd9d5aa737dbdaaf8607427dc592f"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ],
+      "field_id": "thesis.title.zh",
+      "slot_ref": "source_entry_id=source-entry-0;extent=text[0:9];source_snapshot_sha256=100aca1c292946276d3347875ccd353c4387be3c73ad3687ca3f8511e58ab814;field_id=thesis.title.zh"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "purpose": "Offline diagnostic of text-splitting support using current real inventory and reviewer-authored parts. Not Agent output; not full replay, publication or product acceptance.",
+  "cases": [
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "original": "湖 南 农 业 大 学（一号华文行楷加粗）",
+      "probe_parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ],
+      "text_reconstructed_exactly": true,
+      "resolved_span_count": 2,
+      "resolver_feedback": null
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "original": "毕业论文（设计）中文题目 （小二黑体加粗）",
+      "probe_parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": " （小二黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "text_reconstructed_exactly": true,
+      "resolved_span_count": 2,
+      "resolver_feedback": null
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "original": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）",
+      "probe_parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ],
+      "text_reconstructed_exactly": true,
+      "resolved_span_count": 2,
+      "resolver_feedback": null
+    }
+  ]
+}

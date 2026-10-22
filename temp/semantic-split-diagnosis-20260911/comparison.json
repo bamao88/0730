@@ -1,0 +1,798 @@
+{
+  "verification_level": "Real post-unit E2E agent loops resumed from the same validated unit-boundary proof, with final DOCX and fill-contract; before/example/example-repeat also rendered and visually inspected. Product acceptance failed.",
+  "scope": "Five diagnostic runs of one real cover case; final identical version tested twice. Offline case checks are review criteria, never supplied to runtime or used as semantic gates.",
+  "runs": {
+    "before": {
+      "events": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/before/events.jsonl",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "□",
+            "thesis.title.en": "□",
+            "author.name.zh": "：",
+            "author.student_id": "：",
+            "author.cohort_class": "：",
+            "advisor.name.zh": "：",
+            "advisor.title": "□",
+            "author.department": "：",
+            "submission.date": "："
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "：",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "style_only"
+            },
+            {
+              "text": "（三号黑体加粗）：（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": false,
+            "english_title_on_original_title_text": false,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": false,
+            "cohort_class_excludes_label": false
+          }
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "□",
+            "thesis.title.en": "□",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "□",
+            "author.department": "××××学院（学院名用全称）",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名（三号黑体加粗）：（三号楷体加粗）",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": false,
+            "english_title_on_original_title_text": false,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        },
+        {
+          "query_index": 5,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "□",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名（三号黑体加粗）：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        }
+      ],
+      "host_feedback_types": [
+        "ordered_semantic_parts",
+        "span_resolution"
+      ],
+      "reference_reads": [],
+      "sdt_count": 9,
+      "paragraphs": [
+        "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "",
+        "     湖 南 农 业 大 学",
+        "全日制普通本科生毕业论文(设计)",
+        "",
+        "",
+        "【中文论文题目】（小二黑体加粗）",
+        "【英文论文题目】（四号Times New Roman加粗，大写）",
+        "",
+        "",
+        "",
+        "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】（三号楷体加粗）",
+        "□□□□□□学□□号：【学号】",
+        "□□□□□□年级专业及班级：【年级、专业及班级复合信息】",
+        "□□□□□□指导老师及职称：【导师中文姓名】【导师职称】教授",
+        "□□□□□□学□□院：【院系】（学院名用全称）",
+        "",
+        "",
+        "",
+        "湖南·长沙",
+        "提交日期：【提交年月】",
+        ""
+      ],
+      "artifact": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/before/task/output/final-template.docx",
+      "render": {
+        "cache_hit": false,
+        "checks": [
+          {
+            "name": "libreoffice_pdf",
+            "result": "ok"
+          },
+          {
+            "name": "render_integrity",
+            "result": "ok"
+          }
+        ],
+        "document_sha256": "d1f2e82cdab325b39e692ac1d24e549e87250cdc0de1a09b09f54212c30ee838",
+        "failure": null,
+        "fidelity": "approximate",
+        "image_paths": [
+          "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/before/task/.docfit/evidence/renders/87407cf630e365dab2e9938a971f8f763889ded75432e3209628b36f4cdc707a/views/contact-0001-0002-503e570745b2cfc69de6fd7a592834a6bbbf5e3141273fd4a32ccf96b0b5a375.png"
+        ],
+        "overview": {
+          "covered_pages": [
+            1,
+            2
+          ],
+          "evidence_ref": "visual:v2:503e570745b2cfc69de6fd7a592834a6bbbf5e3141273fd4a32ccf96b0b5a375",
+          "has_more": false
+        },
+        "page_count": 2,
+        "render_ref": "render:v2:87407cf630e365dab2e9938a971f8f763889ded75432e3209628b36f4cdc707a",
+        "renderer": {
+          "container_image": "docfit-libreoffice-visual:25.2.3.2",
+          "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+          "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+          "locale": "zh_CN.UTF-8",
+          "name": "libreoffice",
+          "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}",
+          "version": "LibreOffice 25.2.3.2 520(Build:2)"
+        },
+        "schema_version": 2,
+        "status": "ok",
+        "warnings": [
+          {
+            "code": "approximate_render",
+            "kind": "fidelity",
+            "message": "LibreOffice visual evidence is approximate, not Word pixel parity."
+          }
+        ]
+      }
+    },
+    "after": {
+      "events": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/after/events.jsonl",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "style_only"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": true,
+            "name_label_style_note_separated": true,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□",
+              "role": "style_only"
+            },
+            {
+              "text": "学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": true,
+            "name_label_style_note_separated": true,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        }
+      ],
+      "host_feedback_types": [
+        "span_resolution"
+      ],
+      "reference_reads": [],
+      "sdt_count": 9,
+      "paragraphs": [
+        "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "",
+        "     湖 南 农 业 大 学",
+        "全日制普通本科生毕业论文(设计)",
+        "",
+        "",
+        "【中文论文题目】（小二黑体加粗）",
+        "【英文论文题目】（四号Times New Roman加粗，大写）",
+        "",
+        "",
+        "",
+        "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】（三号楷体加粗）",
+        "□□□□□□学□□号：【学号】",
+        "□□□□□□年级专业及班级：【年级、专业及班级复合信息】",
+        "□□□□□□指导老师及职称：【导师中文姓名】□【导师职称】",
+        "□□□□□□学□□院：【院系】",
+        "",
+        "",
+        "",
+        "湖南·长沙",
+        "提交日期：【提交年月】",
+        ""
+      ],
+      "artifact": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/after/task/output/final-template.docx",
+      "render": null
+    },
+    "after-final": {
+      "events": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/after-final/events.jsonl",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "fields": {
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "：20××××××××××",
+            "author.cohort_class": "：20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "□教授",
+            "author.department": "：××××学院",
+            "submission.date": "：20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名（三号黑体加粗）",
+              "role": "fixed_label"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": false,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": false,
+            "cohort_class_excludes_label": false
+          }
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "fields": {
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "□教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名（三号黑体加粗）：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": false,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        },
+        {
+          "query_index": 5,
+          "status": "complete",
+          "fields": {
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "□教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名（三号黑体加粗）：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "（三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": false,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": false,
+            "name_label_style_note_separated": false,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        }
+      ],
+      "host_feedback_types": [
+        "ordered_semantic_parts",
+        "span_resolution"
+      ],
+      "reference_reads": [],
+      "sdt_count": 8,
+      "paragraphs": [
+        "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "",
+        "     湖 南 农 业 大 学",
+        "全日制普通本科生毕业论文(设计)",
+        "",
+        "",
+        "          毕业论文（设计）中文题目",
+        "【英文论文题目】（四号Times New Roman加粗，大写）",
+        "",
+        "",
+        "",
+        "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】（三号楷体加粗）",
+        "□□□□□□学□□号：【学号】",
+        "□□□□□□年级专业及班级：【年级、专业及班级复合信息】",
+        "□□□□□□指导老师及职称：【导师中文姓名】【导师职称】",
+        "□□□□□□学□□院：【院系】（学院名用全称）",
+        "",
+        "",
+        "",
+        "湖南·长沙",
+        "提交日期：【提交年月】",
+        ""
+      ],
+      "artifact": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/after-final/task/output/final-template.docx",
+      "render": null
+    },
+    "example": {
+      "events": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example/events.jsonl",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "20××××××××××",
+            "author.cohort_class": "20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": " （三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": true,
+            "name_label_style_note_separated": true,
+            "student_id_excludes_label": true,
+            "cohort_class_excludes_label": true
+          }
+        }
+      ],
+      "host_feedback_types": [],
+      "reference_reads": [],
+      "sdt_count": 9,
+      "paragraphs": [
+        "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "",
+        "     湖 南 农 业 大 学",
+        "全日制普通本科生毕业论文(设计)",
+        "",
+        "",
+        "【中文论文题目】 （小二黑体加粗）",
+        "【英文论文题目】（四号Times New Roman加粗，大写）",
+        "",
+        "",
+        "",
+        "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】 （三号楷体加粗）",
+        "□□□□□□学□□号：【学号】",
+        "□□□□□□年级专业及班级：【年级、专业及班级复合信息】",
+        "□□□□□□指导老师及职称：【导师中文姓名】□【导师职称】",
+        "□□□□□□学□□院：【院系】 （学院名用全称）",
+        "",
+        "",
+        "",
+        "湖南·长沙",
+        "提交日期：【提交年月】",
+        ""
+      ],
+      "artifact": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example/task/output/final-template.docx",
+      "render": {
+        "cache_hit": false,
+        "checks": [
+          {
+            "name": "libreoffice_pdf",
+            "result": "ok"
+          },
+          {
+            "name": "render_integrity",
+            "result": "ok"
+          }
+        ],
+        "document_sha256": "dab705b7b0626bd6005a20d2d590b741e8b59bc04812ed3dcc98562c787f6e59",
+        "failure": null,
+        "fidelity": "approximate",
+        "image_paths": [
+          "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example/task/.docfit/evidence/renders/f984a6370cdcbe50db7b746bb03f83ff62c7d928f6872c8f6672aa1a703fd000/views/contact-0001-0002-9314fffe89e1c9a66e1f96dde9981a362800107fd717247f3483d7223172a24b.png"
+        ],
+        "overview": {
+          "covered_pages": [
+            1,
+            2
+          ],
+          "evidence_ref": "visual:v2:9314fffe89e1c9a66e1f96dde9981a362800107fd717247f3483d7223172a24b",
+          "has_more": false
+        },
+        "page_count": 2,
+        "render_ref": "render:v2:f984a6370cdcbe50db7b746bb03f83ff62c7d928f6872c8f6672aa1a703fd000",
+        "renderer": {
+          "container_image": "docfit-libreoffice-visual:25.2.3.2",
+          "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+          "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+          "locale": "zh_CN.UTF-8",
+          "name": "libreoffice",
+          "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}",
+          "version": "LibreOffice 25.2.3.2 520(Build:2)"
+        },
+        "schema_version": 2,
+        "status": "ok",
+        "warnings": [
+          {
+            "code": "approximate_render",
+            "kind": "fidelity",
+            "message": "LibreOffice visual evidence is approximate, not Word pixel parity."
+          }
+        ]
+      }
+    },
+    "example-repeat": {
+      "events": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/events.jsonl",
+      "rounds": [
+        {
+          "query_index": 3,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "□□□□□□学□□号：20××××××××××",
+            "author.cohort_class": "□□□□□□年级专业及班级：20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": " （三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": true,
+            "name_label_style_note_separated": true,
+            "student_id_excludes_label": false,
+            "cohort_class_excludes_label": false
+          }
+        },
+        {
+          "query_index": 4,
+          "status": "complete",
+          "fields": {
+            "thesis.title.zh": "毕业论文（设计）中文题目",
+            "thesis.title.en": "TITLE OF GRADUATION PAPER",
+            "author.name.zh": "×××（或×□×）",
+            "author.student_id": "□□□□□□学□□号：20××××××××××",
+            "author.cohort_class": "□□□□□□年级专业及班级：20××级×××（×）班",
+            "advisor.name.zh": "×××",
+            "advisor.title": "教授",
+            "author.department": "××××学院",
+            "submission.date": "20××年××月"
+          },
+          "name_parts": [
+            {
+              "text": "□□□□□□学生姓名",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（三号黑体加粗）",
+              "role": "style_only"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "×××（或×□×）",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": " （三号楷体加粗）",
+              "role": "style_only"
+            }
+          ],
+          "case_review": {
+            "chinese_title_on_original_title_text": true,
+            "english_title_on_original_title_text": true,
+            "advisor_title_on_example_value_only": true,
+            "name_label_style_note_separated": true,
+            "student_id_excludes_label": false,
+            "cohort_class_excludes_label": false
+          }
+        }
+      ],
+      "host_feedback_types": [
+        "span_resolution"
+      ],
+      "reference_reads": [],
+      "sdt_count": 9,
+      "paragraphs": [
+        "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+        "",
+        "     湖 南 农 业 大 学",
+        "全日制普通本科生毕业论文(设计)",
+        "",
+        "",
+        "【中文论文题目】 （小二黑体加粗）",
+        "【英文论文题目】（四号Times New Roman加粗，大写）",
+        "",
+        "",
+        "",
+        "□□□□□□学生姓名（三号黑体加粗）：【作者中文姓名】 （三号楷体加粗）",
+        "【学号】",
+        "【年级、专业及班级复合信息】",
+        "□□□□□□指导老师及职称：【导师中文姓名】□【导师职称】",
+        "□□□□□□学□□院：【院系】 （学院名用全称）",
+        "",
+        "",
+        "",
+        "湖南·长沙",
+        "提交日期：【提交年月】",
+        ""
+      ],
+      "artifact": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/task/output/final-template.docx",
+      "render": {
+        "cache_hit": false,
+        "checks": [
+          {
+            "name": "libreoffice_pdf",
+            "result": "ok"
+          },
+          {
+            "name": "render_integrity",
+            "result": "ok"
+          }
+        ],
+        "document_sha256": "407c1e560169cfda72b5e22acd28cf8eb43d6ccb528f49c903a2531f359455d0",
+        "failure": null,
+        "fidelity": "approximate",
+        "image_paths": [
+          "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/semantic-split-diagnosis-20260911/example-repeat/task/.docfit/evidence/renders/248e4d23f2ce0b4feb01c8bd17f231b3df245e74c6165b6e1d0df1f4990f527e/views/contact-0001-0002-a225423923b172516caf0164acc4224b5a56d082ad8dc0ed4e19f3e3e23fb1df.png"
+        ],
+        "overview": {
+          "covered_pages": [
+            1,
+            2
+          ],
+          "evidence_ref": "visual:v2:a225423923b172516caf0164acc4224b5a56d082ad8dc0ed4e19f3e3e23fb1df",
+          "has_more": false
+        },
+        "page_count": 2,
+        "render_ref": "render:v2:248e4d23f2ce0b4feb01c8bd17f231b3df245e74c6165b6e1d0df1f4990f527e",
+        "renderer": {
+          "container_image": "docfit-libreoffice-visual:25.2.3.2",
+          "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+          "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+          "locale": "zh_CN.UTF-8",
+          "name": "libreoffice",
+          "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}",
+          "version": "LibreOffice 25.2.3.2 520(Build:2)"
+        },
+        "schema_version": 2,
+        "status": "ok",
+        "warnings": [
+          {
+            "code": "approximate_render",
+            "kind": "fidelity",
+            "message": "LibreOffice visual evidence is approximate, not Word pixel parity."
+          }
+        ]
+      }
+    }
+  },
+  "conclusions": [
+    "Errors originate before revision feedback; coverage checking does not forbid adjacent semantic splits.",
+    "All five observed post-unit runs loaded the main Skill but made no Reference Read call.",
+    "Final two runs both recognize Chinese/English title, professor title value and embedded name-label style note.",
+    "Second final run replaces whole student-ID and cohort-class lines, removing their fixed labels; overall semantic reliability remains unproven.",
+    "Slot materialization preserves style_only text and long Registry-label placeholders; both final renders still occupy two pages."
+  ]
+}

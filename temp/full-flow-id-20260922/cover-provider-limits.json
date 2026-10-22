@@ -1,0 +1,19 @@
+{
+  "status": "validation_incomplete",
+  "reason": "supervisor stopped only this SDK subprocess after two max-token responses without usable revision",
+  "session_id": "1175b572-b063-4b70-8538-ae56db2d6705",
+  "limits": [
+    {
+      "timestamp": "2026-09-22T13:01:22.612Z",
+      "stop_reason": "max_tokens",
+      "output_tokens": 32000,
+      "visible_text_blocks": 0
+    },
+    {
+      "timestamp": "2026-09-22T13:07:45.977Z",
+      "stop_reason": "max_tokens",
+      "output_tokens": 32000,
+      "visible_text_blocks": 0
+    }
+  ]
+}

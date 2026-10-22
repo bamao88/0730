@@ -1,0 +1,54 @@
+{
+  "schema_version": "docfit-span-skill-e2e-attempt-history/v1",
+  "verification_purpose": "Real Agent loop after Skill-only changes; no mock, Gold injection, manual judgment repair, or runtime source changes.",
+  "commands": {
+    "build_cover": "uv run --frozen python evals/fixtures/template-extraction/minimal-units-0820/build_input_package.py --units 01-cover --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-package --print-command",
+    "build_body": "uv run --frozen python evals/fixtures/template-extraction/minimal-units-0820/build_input_package.py --units 04-paper-body --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package --print-command",
+    "cover": "PATH=\"$PWD/temp/id-closure-20260911/bin:$PATH\" uv run --frozen docfit prepare-template --school-template '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-package/input/school-template.docx' --school-requirements '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-package/input/school-requirements.pdf' --field-registry '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-package/input/field-registry.yaml' --output '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task' > '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover.log' 2>&1",
+    "body": "PATH=\"$PWD/temp/id-closure-20260911/bin:$PATH\" uv run --frozen docfit prepare-template --school-template '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/school-template.docx' --school-requirements '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/school-requirements.pdf' --field-registry '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/field-registry.yaml' --output '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task' > '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body.log' 2>&1",
+    "body_resume": "PATH=\"$PWD/temp/id-closure-20260911/bin:$PATH\" uv run --frozen docfit prepare-template --school-template '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/school-template.docx' --school-requirements '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/school-requirements.pdf' --field-registry '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-package/input/field-registry.yaml' --from unit-boundary --output '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task' > '/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-resume-from-boundary.log' 2>&1"
+  },
+  "attempts": [
+    {
+      "case": "cover",
+      "attempt": "fresh",
+      "exit_code": 2,
+      "status": "failed",
+      "evidence_dir": "cover-attempt-1",
+      "failure_code": "semantic_batch_result_invalid"
+    },
+    {
+      "case": "body",
+      "attempt": "fresh",
+      "exit_code": 2,
+      "status": "failed",
+      "evidence_dir": "body-attempt-1",
+      "failure_code": "template_agent_no_progress_timeout"
+    },
+    {
+      "case": "body",
+      "attempt": "bare_rerun_interrupted",
+      "exit_code": 130,
+      "status": "interrupted",
+      "evidence_dir": "body-interrupted-retry",
+      "note": "Incorrect recovery command stopped; accepted boundary proof remained byte-identical. Not counted as success."
+    },
+    {
+      "case": "body",
+      "attempt": "explicit_resume_from_unit_boundary",
+      "status": "failed",
+      "log": "body-resume-from-boundary.log",
+      "note": "Reuses only this experiment's accepted fresh boundary proof and persisted candidates; no historical proof substitution.",
+      "exit_code": 2,
+      "evidence_dir": "body-resume-final",
+      "failure": {
+        "code": "semantic_batch_candidate_failed",
+        "message": "An exact-text revision changed a previously accepted semantic responsibility.",
+        "origin": "harness",
+        "retryable": true,
+        "status": "needs_input",
+        "suggested_actions": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "verification_level": "E2E agent loop (post-unit only)",
+  "case": "cover logical-unit package",
+  "code_commit": "00267feb6d6957d11723358edb87bb17f66d2efd",
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "report": {
+    "artifact_path": null,
+    "backend": "minimax",
+    "client_count": 4,
+    "counts": {
+      "checkpoint": "post-unit",
+      "covered_object_count": 124,
+      "judgment_count": 28,
+      "object_count": 144,
+      "reading_block_count": 16
+    },
+    "duration_api_ms": 906000,
+    "duration_ms": 589594,
+    "fill_contract_path": null,
+    "num_turns": 24,
+    "session_count": 4,
+    "session_id": "89ee6e00-b037-43b5-b06d-a10a961a1d10",
+    "skills_loaded": [
+      "docfit-school-extract"
+    ],
+    "status": "checkpointed",
+    "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task",
+    "template_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+    "tool_uses": [
+      "Skill",
+      "Read",
+      "mcp__docfit__docfit_evidence",
+      "mcp__docfit__docfit_evidence",
+      "Read",
+      "StructuredOutput",
+      "Skill",
+      "mcp__docfit__docfit_evidence",
+      "StructuredOutput",
+      "Skill",
+      "mcp__docfit__docfit_evidence",
+      "StructuredOutput",
+      "StructuredOutput",
+      "StructuredOutput",
+      "Skill",
+      "mcp__docfit__docfit_evidence",
+      "StructuredOutput",
+      "Skill",
+      "mcp__docfit__docfit_evidence",
+      "StructuredOutput",
+      "StructuredOutput"
+    ],
+    "wall_duration_ms": 665343
+  },
+  "event_counts": {
+    "request": 5,
+    "response": 5,
+    "candidate_recorded": 4,
+    "local_rejected": 1,
+    "global_review": 2
+  },
+  "initial_global_blocker_codes": {
+    "ordered_part_text_mismatch": 8,
+    "ordered_part_text_gap": 8,
+    "ordered_part_empty_for_text_entry": 2
+  },
+  "natural_revision_requests": 2,
+  "final_global_feedback": null,
+  "publication_verified": false,
+  "product_acceptance": false,
+  "evidence_mode": "runtime",
+  "fault_injection": false,
+  "gold_read": false
+}

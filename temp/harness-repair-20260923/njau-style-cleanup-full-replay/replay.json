@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-09-24T05:16:50.079496+00:00",
+  "verification_level": "real replay: full materializer with original unmodified NJAU candidate, not fresh Agent output or publication",
+  "base_code": "6afff71",
+  "change": "style_only plus cleanup dispatch to exact text removal preserving paragraph",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/object-inventory.json": "80134d845d8ac06033397a6b4c37c0feb0f9a85742df50f5b8041b02a0a6b9d3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/work/.docfit/harness/semantic-judgments.json": "86ede60b6ca288f7927a3069f2cd9584d1ec390b20f6390131971a4c638a3a5b",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-field-role-shape-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "status": "materialized",
+  "candidate_sha256": "48f08a294bb2c5cad73ef12fdefd06d5c1a1d0f5e369f759d7657f09af6c09e4",
+  "result_summary": {
+    "status": "ok",
+    "operation_count": 24,
+    "cleanup_count": 55,
+    "receipt_count": 193
+  },
+  "original_unchanged": true,
+  "validated_commit": "ffbc7c1"
+}

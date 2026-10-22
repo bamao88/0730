@@ -1,7 +1,7 @@
 schema_version: docfit-content-field-registry/v0.2
 registry_id: docfit.thesis.content_fields
 registry_version: 0.5.0
-revision: 2026-08-13.1
+revision: 2026-09-11.1
 status: accepted
 scope: cross_stage_thesis_content_semantics
 open_world: true
@@ -221,7 +221,7 @@ fields:
     trim_outer_whitespace: true
 - field_id: thesis.title.en
   label: 英文论文题目
-  meaning: 英文摘要页顶部使用的完整英文题名。
+  meaning: 论文的完整英文题名。
   content_type: text
   cardinality: one
   language: en

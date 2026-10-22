@@ -1,0 +1,68 @@
+{
+  "njau-undergraduate": {
+    "default_resume_exit_code": 2,
+    "failure": {
+      "origin": "harness",
+      "code": "semantic_revision_no_progress",
+      "retryable": false,
+      "message": "Repeated unchanged failure for source-entry-d0f3e033b5b55eb67a9224da: source_text_partition.",
+      "suggested_actions": [
+        "Inspect the saved judgments, feedback and budget evidence."
+      ]
+    },
+    "old_evidence_changed": [],
+    "events_before": {
+      "budget_policy": 1,
+      "request": 18,
+      "response": 18,
+      "local_review": 16,
+      "candidate_recorded": 8,
+      "local_rejected": 10,
+      "run_failed": 1
+    },
+    "events_after": {
+      "budget_policy": 1,
+      "request": 18,
+      "response": 18,
+      "local_review": 16,
+      "candidate_recorded": 8,
+      "local_rejected": 10,
+      "run_failed": 2
+    },
+    "no_additional_semantic_requests": true,
+    "unit_checkpoint_unchanged": true,
+    "product_acceptance": false
+  },
+  "hunau-undergraduate-streaming": {
+    "default_resume_exit_code": 2,
+    "failure": {
+      "origin": "harness",
+      "code": "semantic_revision_no_progress",
+      "retryable": false,
+      "message": "Repeated unchanged failure for source-entry-9c3b8ddd48c088f666c01ff7: source_text_partition.",
+      "suggested_actions": [
+        "Inspect the saved judgments, feedback and budget evidence."
+      ]
+    },
+    "old_evidence_changed": [],
+    "events_before": {
+      "budget_policy": 1,
+      "request": 4,
+      "response": 4,
+      "local_review": 4,
+      "local_rejected": 4,
+      "run_failed": 1
+    },
+    "events_after": {
+      "budget_policy": 1,
+      "request": 4,
+      "response": 4,
+      "local_review": 4,
+      "local_rejected": 4,
+      "run_failed": 2
+    },
+    "no_additional_semantic_requests": true,
+    "unit_checkpoint_unchanged": true,
+    "product_acceptance": false
+  }
+}

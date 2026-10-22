@@ -1,0 +1,21 @@
+{
+  "binding": {
+    "evidence_mode": "replay",
+    "historical_tasks": [
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task"
+    ],
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+  },
+  "created_at": "2026-09-24T07:10:51.023604+00:00",
+  "data": {
+    "feedback": null,
+    "response_sequence": 5
+  },
+  "event_digest": "c2b8d1799b65c106898af981195239438dd1beca19f08dd0d1ceb6cc85d285c7",
+  "kind": "review",
+  "previous_event_digest": "4d4510eb0c5efe0d6f34fcc21cc8c115007b27b8acd5c803e1a484786c6afff2",
+  "run_id": "f88d204e6ac746e7a830e34d9d7cf14a",
+  "schema_version": "docfit-unit-boundary-revision/v1",
+  "sequence": 6
+}

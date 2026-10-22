@@ -5,11 +5,13 @@ from __future__ import annotations
 import json
 import math
 import re
+import shutil
+import tempfile
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from docfit.tools.inspection import inspect_document
+from docfit.tools.inspection import inspect_document_snapshot
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import (
     JsonObject,
@@ -50,7 +52,7 @@ class VisualEvidenceService:
         renderer: LibreOfficeRenderer | None = None,
         pdf: PdfBackend | None = None,
         office: OfficeCliAdapter | None = None,
-        semantic_selector: str = "paragraph, table, picture",
+        semantic_selector: str = "paragraph, table, picture, shape",
     ) -> None:
         self.task_root = task_root.resolve(strict=True)
         self.store = EvidenceStore(self.task_root)
@@ -83,6 +85,7 @@ class VisualEvidenceService:
         renderer = self.renderer.environment()
         identity: JsonObject = {
             "document_sha256": document_hash,
+            "semantic_selector": self.semantic_selector,
             "renderer": {
                 "name": renderer.name,
                 "version": renderer.version,
@@ -322,6 +325,7 @@ class VisualEvidenceService:
             text = f"{text[:119]}…"
         value: JsonObject = {
             "object_ref": item.object_ref,
+            "locator": item.locator,
             "type": item.kind,
             "text": text,
         }
@@ -373,7 +377,18 @@ class VisualEvidenceService:
         temporary = self.store.temporary_render(reference)
         try:
             pdf = temporary / "document.pdf"
-            self.renderer.render(document, pdf)
+            with tempfile.TemporaryDirectory(prefix="docfit-render-input-") as snapshot_name:
+                snapshot = Path(snapshot_name) / document.name
+                shutil.copyfile(document, snapshot)
+                snapshot.chmod(0o600)
+                self.renderer.render(snapshot, pdf)
+            if sha256_file(document) != document_hash:
+                raise ToolFailure(
+                    status="needs_input",
+                    origin="document",
+                    code="source_changed",
+                    message="The DOCX changed while LibreOffice evidence was being created.",
+                )
             index = self.pdf.build_text_index(pdf)
             page_count = index.get("page_count")
             if not isinstance(page_count, int) or page_count < 1:
@@ -383,7 +398,7 @@ class VisualEvidenceService:
                     code="render_page_count_invalid",
                     message="LibreOffice produced no readable PDF pages.",
                 )
-            inspection = inspect_document(
+            inspection = inspect_document_snapshot(
                 document,
                 self.office,
                 selector=self.semantic_selector,

@@ -1,0 +1,336 @@
+{
+  "hunau-accepted-proof-resume": {
+    "freeze_runtime_and_skill_until_terminal": false,
+    "kind": "explicit accepted unit proof reuse; not fresh full E2E",
+    "runtime_commit": "3adad8f",
+    "runtime_worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction",
+    "session_id": 96948,
+    "terminal_failure": "semantic_revision_no_progress"
+  },
+  "hunau-boundary-codec": {
+    "code_commit": "6678851",
+    "failure": "template_agent_api_error",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "hunau-boundary-codec-manifest.json",
+    "product_acceptance": false,
+    "session_id": 59375,
+    "terminal_exit_code": 2,
+    "verification_level": "fresh full-school E2E attempt"
+  },
+  "hunau-cell-interfaces": {
+    "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+    "frozen_hashes_reverified": true,
+    "latest_revision_event": 54,
+    "manifest": "temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-manifest.json",
+    "observed_at": "2026-09-24T07:35:18.624919+00:00",
+    "recorded_candidate_batches": 9,
+    "runtime_and_skill_frozen": false,
+    "runtime_commit": "9c211c1",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-cell-interfaces/template-extraction",
+    "session_id": 1720,
+    "status": "terminal",
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task",
+    "unit_boundary_status": "ok",
+    "unit_harness_feedback_attempts": 0,
+    "unit_sdk_query_count": 1,
+    "exit_code": 2,
+    "verified_file_count": 139,
+    "event_counts": {
+      "budget_policy": 1,
+      "request": 14,
+      "response": 13,
+      "local_review": 12,
+      "local_rejected": 4,
+      "candidate_recorded": 9,
+      "run_failed": 1
+    },
+    "failure": {
+      "code": "semantic_query_time_budget_exhausted",
+      "message": "The semantic stage exceeded its remaining saved time allowance.",
+      "origin": "harness",
+      "retryable": false,
+      "status": "error",
+      "suggested_actions": []
+    },
+    "product_acceptance": false
+  },
+  "hunau-field-role-shape": {
+    "code_commit": "4bde3e0",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "hunau-field-role-shape-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "4bde3e0",
+    "session_id": 91742,
+    "terminal_exit_code": 2,
+    "terminal_failure": "template_materialization_execution_unsupported",
+    "verification_level": "fresh complete-school E2E attempt"
+  },
+  "hunau-shared-transport": {
+    "freeze_runtime_and_skill_until_terminal": false,
+    "kind": "accepted unit proof reuse; not fresh full E2E",
+    "runtime_commit": "ae1cb9f",
+    "runtime_worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction",
+    "session_id": 26152,
+    "terminal_exit_code": 2
+  },
+  "hunau-undergraduate": {
+    "failure": "unit_checkpoint_result_invalid",
+    "session_id": 81579,
+    "terminal_exit_code": 2
+  },
+  "hunau-undergraduate-retry": {
+    "code_commit": "11acec7",
+    "failure": "template_agent_no_progress_timeout",
+    "session_id": 75221,
+    "terminal_exit_code": 2,
+    "worktree": "/Users/xpw/.codex/worktrees/template-harness-diagnostics/template-extraction"
+  },
+  "hunau-undergraduate-revision-contract": {
+    "code_commit": "3adad8f",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "runtime_worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction",
+    "session_id": 44100,
+    "terminal_exit_code": 2,
+    "terminal_failure": "unit_checkpoint_result_invalid with native SDK api_error"
+  },
+  "hunau-undergraduate-streaming": {
+    "code_commit": "bb836c8",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "handle_missing_on_recheck": true,
+    "session_id": 58673,
+    "terminal_failure": "semantic_revision_no_progress",
+    "worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction"
+  },
+  "hunau-whole-entry": {
+    "code_commit": "896b63f",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "hunau-whole-entry-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "6c72804",
+    "session_id": 84081,
+    "terminal_exit_code": 2,
+    "terminal_failure": "semantic_query_time_budget_exhausted",
+    "verification_level": "fresh full-school E2E attempt"
+  },
+  "njau-body-interface": {
+    "code_commit": "6afff71",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "njau-body-interface-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "cbefb17",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction",
+    "session_id": 52301,
+    "terminal_exit_code": 2,
+    "terminal_failure": "final_visual_review_required",
+    "verification_level": "fresh complete-school E2E attempt with isolated coalesced body interfaces"
+  },
+  "njau-boundary-codec": {
+    "code_commit": "6678851",
+    "failure": "template_agent_needs_input",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "njau-boundary-codec-manifest.json",
+    "product_acceptance": false,
+    "session_id": 59804,
+    "terminal_exit_code": 2,
+    "verification_level": "fresh full-school E2E attempt"
+  },
+  "njau-boundary-diagnostics": {
+    "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+    "frozen_hashes_reverified": true,
+    "latest_revision_event": 83,
+    "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-manifest.json",
+    "observed_at": "2026-09-24T07:35:18.667279+00:00",
+    "recorded_candidate_batches": 15,
+    "runtime_and_skill_frozen": false,
+    "runtime_commit": "37c26bd",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-boundary-diagnostics/template-extraction",
+    "session_id": 2782,
+    "status": "terminal",
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+    "unit_boundary_status": "ok",
+    "unit_harness_feedback_attempts": 0,
+    "unit_sdk_query_count": 1,
+    "exit_code": 2,
+    "verified_file_count": 139,
+    "event_counts": {
+      "budget_policy": 1,
+      "request": 21,
+      "response": 21,
+      "local_review": 17,
+      "local_rejected": 6,
+      "candidate_recorded": 15,
+      "global_review_failed": 1,
+      "run_failed": 1
+    },
+    "failure": {
+      "code": "template_materialization_execution_unsupported",
+      "message": "Accepted semantic review is not materializable: materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers.",
+      "origin": "tool",
+      "retryable": false,
+      "status": "error",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "product_acceptance": false
+  },
+  "njau-field-role-shape": {
+    "code_commit": "4bde3e0",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "njau-field-role-shape-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "4bde3e0",
+    "session_id": 93517,
+    "terminal_exit_code": 2,
+    "terminal_failure": "template_materialization_execution_unsupported",
+    "verification_level": "fresh complete-school E2E attempt"
+  },
+  "njau-layout-evidence": {
+    "confirmed_by": "write_stdin returned exit code 2",
+    "exit_code": 2,
+    "failure": "unit_boundary_checkpoint_failed",
+    "frozen_hashes_reverified": true,
+    "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-manifest.json",
+    "observed_at": "2026-09-24T06:28:29.479859+00:00",
+    "runtime_and_skill_frozen": false,
+    "runtime_commit": "aa5f42d",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-layout-evidence/template-extraction",
+    "session_id": 51598,
+    "status": "terminal",
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task"
+  },
+  "njau-precise-feedback": {
+    "freeze_runtime_and_skill_until_terminal": false,
+    "kind": "fresh full-school E2E attempt",
+    "runtime_commit": "03a3519",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/template-harness-diagnostics/template-extraction",
+    "session_id": 91610,
+    "terminal_exit_code": 2
+  },
+  "njau-undergraduate": {
+    "handle_missing_on_recheck": true,
+    "session_id": 30358,
+    "terminal_failure": "semantic_revision_no_progress"
+  },
+  "njau-undergraduate-revision-contract": {
+    "code_commit": "3adad8f",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "runtime_worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction",
+    "session_id": 88397,
+    "terminal_failure": "semantic_revision_no_progress"
+  },
+  "njau-whole-entry": {
+    "code_commit": "896b63f",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "njau-whole-entry-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "6c72804",
+    "session_id": 6092,
+    "terminal_exit_code": 2,
+    "terminal_failure": "template_materialization_execution_unsupported",
+    "verification_level": "fresh full-school E2E attempt"
+  },
+  "note": "Only PKU source-structure session 38646 is live, on frozen aefe343. HUNAU 1720 and NJAU 2782 are terminal exit 2. Do not restart on observation timeout.",
+  "old_phase2_body": {
+    "failure": "template_agent_backends_exhausted (template_agent_timeout)",
+    "session_id": 42800,
+    "terminal_exit_code": 2
+  },
+  "pku-boundary-codec": {
+    "code_commit": "6678851",
+    "failure": "template_agent_api_error",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "pku-boundary-codec-manifest.json",
+    "product_acceptance": false,
+    "session_id": 23356,
+    "terminal_exit_code": 2,
+    "verification_level": "fresh full-school E2E attempt",
+    "worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction"
+  },
+  "pku-boundary-codec-retry": {
+    "code_commit": "6678851",
+    "failure": "semantic_problem_budget_exhausted",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "pku-boundary-codec-retry-manifest.json",
+    "product_acceptance": false,
+    "session_id": 98886,
+    "terminal_exit_code": 2,
+    "verification_level": "fresh full-school E2E retry after terminal API failure"
+  },
+  "pku-field-role-shape": {
+    "code_commit": "4bde3e0",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "pku-field-role-shape-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "4bde3e0",
+    "session_id": 9028,
+    "terminal_exit_code": 2,
+    "terminal_failure": "template_materialization_execution_unsupported",
+    "verification_level": "fresh complete-school E2E attempt"
+  },
+  "pku-fixed-budget-resume": {
+    "exit_code": 2,
+    "no_new_queries": true,
+    "session_id": 26310
+  },
+  "pku-graduate": {
+    "handle_missing_on_recheck": true,
+    "session_id": 67787,
+    "terminal_failure": "semantic_query_time_budget_exhausted"
+  },
+  "pku-graduate-revision-contract": {
+    "code_commit": "3adad8f",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "runtime_worktree": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction",
+    "session_id": 95839,
+    "terminal_failure": "semantic_revision_no_progress"
+  },
+  "pku-precise-feedback": {
+    "freeze_runtime_and_skill_until_terminal": false,
+    "kind": "fresh full-school E2E attempt",
+    "runtime_commit": "03a3519",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/template-harness-diagnostics/template-extraction",
+    "session_id": 39959,
+    "terminal_exit_code": 2,
+    "terminal_failure": "semantic_revision_no_progress"
+  },
+  "pku-whole-entry": {
+    "code_commit": "6eee0b1",
+    "freeze_runtime_and_skill_until_terminal": false,
+    "manifest": "pku-whole-entry-manifest.json",
+    "product_acceptance": false,
+    "runtime_commit": "6c72804",
+    "session_id": 79102,
+    "terminal_exit_code": 2,
+    "terminal_failure": "semantic_query_time_budget_exhausted",
+    "verification_level": "fresh full-school E2E attempt"
+  },
+  "pku-source-structure": {
+    "observed_at": "2026-09-24T07:45:02.949617+00:00",
+    "confirmed_by": "write_stdin returned running for session 38646 in this turn",
+    "status": "running",
+    "session_id": 38646,
+    "runtime_commit": "aefe343",
+    "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-source-structure/template-extraction",
+    "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task",
+    "manifest": "temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-manifest.json",
+    "runtime_and_skill_frozen": true,
+    "frozen_hashes_reverified": true,
+    "product_acceptance": false,
+    "unit_boundary_status": "ok",
+    "unit_count": 17,
+    "unit_sdk_query_count": 1,
+    "unit_harness_feedback_attempts": 0,
+    "latest_revision_event": 13,
+    "recorded_candidate_events": 2,
+    "event_counts": {
+      "budget_policy": 1,
+      "request": 4,
+      "response": 3,
+      "local_rejected": 1,
+      "local_review": 2,
+      "candidate_recorded": 2
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "observed_at": "2026-09-24T07:45:02.949617+00:00",
+  "confirmed_by": "write_stdin returned running for session 38646 in this turn",
+  "status": "running",
+  "session_id": 38646,
+  "runtime_commit": "aefe343",
+  "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-source-structure/template-extraction",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task",
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-manifest.json",
+  "runtime_and_skill_frozen": true,
+  "frozen_hashes_reverified": true,
+  "product_acceptance": false,
+  "unit_boundary_status": "ok",
+  "unit_count": 17,
+  "unit_sdk_query_count": 1,
+  "unit_harness_feedback_attempts": 0,
+  "latest_revision_event": 13,
+  "recorded_candidate_events": 2,
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 4,
+    "response": 3,
+    "local_rejected": 1,
+    "local_review": 2,
+    "candidate_recorded": 2
+  }
+}

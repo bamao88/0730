@@ -1,0 +1,222 @@
+{
+  "observed_at": "2026-09-24T06:30:10.657097+00:00",
+  "session_id": 51598,
+  "exit_code": 2,
+  "verification_level": "fresh complete-school E2E attempt; stopped at unit boundary, no post-unit Agent judgment",
+  "failure_code": "unit_boundary_checkpoint_failed",
+  "feedback": {
+    "blockers": [
+      {
+        "code": "unit_source_partition_invalid",
+        "message": "Units must form an ordered nonempty partition without gaps/overlaps."
+      }
+    ],
+    "checks": [
+      {
+        "name": "unit_source_partition_invalid",
+        "result": "needs_input"
+      }
+    ],
+    "failure": {
+      "code": "unit_source_partition_invalid",
+      "message": "Units must form an ordered nonempty partition without gaps/overlaps.",
+      "origin": "request",
+      "retryable": true,
+      "suggested_actions": [
+        "Revise source-entry boundary points to partition all entries."
+      ]
+    },
+    "feedback": {
+      "mechanical": true,
+      "semantic_authority": false,
+      "source_hash": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+      "type": "unit_coverage"
+    },
+    "schema_version": "mechanical_feedback_v1",
+    "status": "needs_input",
+    "warnings": []
+  },
+  "sdk_query_count": 3,
+  "harness_feedback_attempts": 3,
+  "last_unit_count": 15,
+  "adjacent_units_sharing_included_entry_count": 14,
+  "adjacent_unit_candidates": [
+    {
+      "left_unit": "cover-page",
+      "right_unit": "originality-declaration",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+      }
+    },
+    {
+      "left_unit": "originality-declaration",
+      "right_unit": "authorization-declaration",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+      }
+    },
+    {
+      "left_unit": "authorization-declaration",
+      "right_unit": "table-of-contents",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+      }
+    },
+    {
+      "left_unit": "table-of-contents",
+      "right_unit": "chinese-abstract",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+      }
+    },
+    {
+      "left_unit": "chinese-abstract",
+      "right_unit": "english-abstract",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+      }
+    },
+    {
+      "left_unit": "english-abstract",
+      "right_unit": "chapter-1-literature-review",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+      }
+    },
+    {
+      "left_unit": "chapter-1-literature-review",
+      "right_unit": "main-body-chapter",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+      }
+    },
+    {
+      "left_unit": "main-body-chapter",
+      "right_unit": "conclusion-and-outlook",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+      }
+    },
+    {
+      "left_unit": "conclusion-and-outlook",
+      "right_unit": "references",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+      }
+    },
+    {
+      "left_unit": "references",
+      "right_unit": "appendix",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+      }
+    },
+    {
+      "left_unit": "appendix",
+      "right_unit": "academic-achievements",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+      }
+    },
+    {
+      "left_unit": "academic-achievements",
+      "right_unit": "acknowledgements",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+      }
+    },
+    {
+      "left_unit": "acknowledgements",
+      "right_unit": "page-header-footer",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+      }
+    },
+    {
+      "left_unit": "page-header-footer",
+      "right_unit": "template-specification-text-box",
+      "left_end": {
+        "edge": "end",
+        "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+      },
+      "right_start": {
+        "edge": "start",
+        "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+      }
+    }
+  ],
+  "checkpoint_sha256": "845fc22cd3ebbfb4144b533c2f6a8a91894b239cac11fb48241ec622544814a3",
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "output_files": [],
+  "product_acceptance": false,
+  "next_probe": "Replay last candidate through source partition validation; improve exact overlap/gap feedback if only generic reason is emitted, preserving Agent boundary authority."
+}

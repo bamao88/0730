@@ -1,0 +1,23 @@
+{
+  "affected_codes": [
+    "materialization_structure_variant_id_missing",
+    "materialization_structure_variant_strategy_missing",
+    "materialization_structure_variant_id_missing",
+    "materialization_structure_variant_strategy_missing"
+  ],
+  "affected_judgment_ids": [
+    "J-0016",
+    "J-0016",
+    "J-0018",
+    "J-0018"
+  ],
+  "candidate_files": [],
+  "failure_code": "template_materialization_readiness_incomplete",
+  "failure_status": "needs_input",
+  "has_agent_revision_packet": true,
+  "passed": true,
+  "receipt_exists": true,
+  "receipt_status": "needs_input",
+  "root": "temp/phase7-quality-gate-real-e2e-output-replay-20260827-170621/missing-body-variant-from-real-agent",
+  "status": "tool_failure"
+}

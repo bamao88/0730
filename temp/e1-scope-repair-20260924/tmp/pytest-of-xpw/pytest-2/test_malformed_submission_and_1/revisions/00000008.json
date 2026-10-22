@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-24T09:28:47.169489+00:00",
+  "data": {
+    "base_candidate_sequence": 0,
+    "base_ledger_digest": "917fa4902582119a878709a44f076e0ac99722d8500b3d8fbd025d611e6641ed",
+    "batch_id": "semantic-batch-0001-5aef39ce",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "request"
+  },
+  "event_digest": "0f85cc4d081e7510a15c4ace6e4958d2a34032bc50c6fd489b28ada39f95e3df",
+  "evidence_mode": "runtime",
+  "kind": "request",
+  "manifest_digest": "969c54bca51006c313805f64344016302389dd5d36a1d27d5f7dbd670a9a82ff",
+  "previous_event_digest": "46d9ef6a1ff3a305a6846c756a59d76f6a3f96819b20280cc62e0f2d0881e4fe",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 8
+}

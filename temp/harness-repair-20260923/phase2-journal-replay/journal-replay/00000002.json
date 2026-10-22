@@ -1,0 +1,42 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 1,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "   "
+            }
+          ],
+          "reason": "Entry text is exactly three U+0020 spaces; it sits at block-0001 (14pt Normal) immediately before the format-notes paragraph and carries no label or value. Semantically it serves as paragraph/layout spacing that must remain in front of the unit-format-notes body, hence style_only rather than fixed_label. No field binds because it is spacing, not a value position.",
+          "source_entry_id": "source-entry-015688bdacef4006d2277542"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+            }
+          ],
+          "reason": "This single 9pt Normal run is the entire body of unit-format-notes. It states body-text line spacing (固定值22磅), notes that figures/tables may adjust it, gives top/bottom and left/right page margins (2.54 cm / 2.6 cm), and explains that \"□\" denotes a space equal to one full-width character (two standard characters). The unit's purpose is precisely to record these school format rules, so the whole sentence is school template instructional content that must remain in the clean template as fixed_label. There is no Registry field whose meaning matches \"body format rule description\", and the sentence contains no fillable value position (no fill_slot), so no field_id is bound. Splitting at unit-context boundaries: this entry is one continuous sentence ending at the entry's trailing boundary, so a single part suffices.",
+          "source_entry_id": "source-entry-aa77e7afa8c743aa48cba17b"
+        }
+      ],
+      "status": "complete",
+      "summary": "Batch 1 of 10 for unit-format-notes. Judged the two assigned source entries: (1) the leading 3-space whitespace run (block-0001, 14pt Normal) acts as paragraph/layout spacing before the format notes and is preserved under style_only; (2) the format instruction sentence \"正文基本格式：行距固定值22磅...表示占1个字宽（即2个字符）的空格。\" (block-0002, 9pt Normal) is the entire unit-format-notes body — it documents body-text line spacing, page margins, and the meaning of the \"□\" spacing symbol, and is retained as fixed_label content of the unit. No field binds to either part: there is no Registry field whose meaning matches this school-level format rule documentation, and the text contains no fillable value position. Parts split at every unit-context boundary and there is one judgment per listed source entry, in manifest order."
+    }
+  },
+  "event_digest": "9eac023ffe7f39def3b22a82f44d9bdaea6e6dfea5d6313b85ff9b8754b55db5",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "442934f84d6047c662bbf9f02d8a3da2ef2740247979f87c6fe97c7b28d89485",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 2
+}

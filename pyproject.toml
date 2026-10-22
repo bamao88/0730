@@ -35,6 +35,7 @@ packages = ["src/docfit"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+norecursedirs = ["manual-diagnostics"]
 markers = [
   "live: requires local credentials and invokes the live Claude Agent SDK",
 ]

@@ -1,0 +1,182 @@
+{
+  "accepted_field_vocabulary_digest": "7dd6c3682923b6de07da9f1c80941f9c363fa71b50a43a41bea28645ac037cc4",
+  "accepted_resolved_spans": [
+    {
+      "covered_object_ids": [
+        "obj-e778b0eb4df66bede19f7b09"
+      ],
+      "judgment_index": 0,
+      "part_index": 0,
+      "reading_block_id": "u-cover:block-0001",
+      "role": "fixed_label",
+      "scope": {
+        "reading_block_id": "u-cover:block-0001"
+      },
+      "span_ref": "reading_block_id=u-cover:block-0001;part_index=0",
+      "text": "论文题目：",
+      "text_end": 5,
+      "text_start": 0
+    },
+    {
+      "covered_object_ids": [
+        "obj-6d5a234700e3a723820daa96"
+      ],
+      "field_id": "thesis.title.zh",
+      "judgment_index": 0,
+      "part_index": 1,
+      "reading_block_id": "u-cover:block-0001",
+      "role": "fill_slot",
+      "scope": {
+        "reading_block_id": "u-cover:block-0001"
+      },
+      "slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=thesis.title.zh",
+      "span_ref": "reading_block_id=u-cover:block-0001;part_index=1",
+      "text": "玉米生长研究",
+      "text_end": 11,
+      "text_start": 5
+    }
+  ],
+  "accepted_review_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b/work/.docfit/harness/semantic-judgments.json",
+  "accepted_semantic_judgment_count": 1,
+  "agent_output_source": "/Volumes/ExtSSD2601/Docfit-worktrees/agent-output-contract-verify-head.FNwjKZ/temp/agent-output-contract-verify-20260904-142708/run/work/.docfit/agent-output.json",
+  "candidate_docx": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b/work/.docfit/post-unit-materialization/candidate-0001.docx",
+  "checkpoint_locator": "/body/p[@paraId=COVER001]",
+  "inventory_document_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670",
+  "inventory_object_count": 3,
+  "inventory_reading_block_count": 1,
+  "inventory_status": "ok",
+  "materialization_mutation_receipts": [
+    {
+      "action": "materialize_slot",
+      "affected_blocks": [
+        "u-cover:block-0001"
+      ],
+      "after_text_by_block": {
+        "u-cover:block-0001": "论文题目：【中文论文题目】"
+      },
+      "before_text_by_block": {
+        "u-cover:block-0001": "论文题目：玉米生长研究"
+      },
+      "field_ids": [
+        "thesis.title.zh"
+      ],
+      "handler": "slots",
+      "intent_refs": [
+        "intent-0001-aeaed905"
+      ],
+      "operation": {
+        "action": "materialize_slot",
+        "block_id": "u-cover:block-0001",
+        "field_id": "thesis.title.zh",
+        "judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "part_index": 1,
+        "slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=thesis.title.zh",
+        "span_ref": "reading_block_id=u-cover:block-0001;part_index=1"
+      },
+      "receipt_type": "mutation",
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-cover:block-0001"
+        }
+      ],
+      "slot_refs": [
+        "reading_block_id=u-cover:block-0001;part_index=1;field_id=thesis.title.zh"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "span_refs": [
+        "reading_block_id=u-cover:block-0001;part_index=1"
+      ]
+    }
+  ],
+  "materialization_operations": [
+    {
+      "action": "materialize_slot",
+      "block_id": "u-cover:block-0001",
+      "field_id": "thesis.title.zh",
+      "judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "part_index": 1,
+      "slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=thesis.title.zh",
+      "span_ref": "reading_block_id=u-cover:block-0001;part_index=1"
+    }
+  ],
+  "materialization_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b/work/.docfit/post-unit-materialization/materialization.json",
+  "materialization_status": "ok",
+  "publishability": {
+    "failure": null,
+    "school_content_control_count": 0,
+    "slot_count": 1,
+    "slots": [
+      {
+        "field_id": "thesis.title.zh",
+        "slot_ref": "reading_block_id=u-cover:block-0001;part_index=1;field_id=thesis.title.zh",
+        "span_ref": "reading_block_id=u-cover:block-0001;part_index=1"
+      }
+    ],
+    "status": "ok"
+  },
+  "reading_blocks": [
+    {
+      "block_id": "u-cover:block-0001",
+      "covered_object_ids": [
+        "obj-565ee5823c906b3b8c283e6c",
+        "obj-e778b0eb4df66bede19f7b09",
+        "obj-6d5a234700e3a723820daa96"
+      ],
+      "object_text_spans": [
+        {
+          "object_id": "obj-e778b0eb4df66bede19f7b09",
+          "text": "论文题目：",
+          "text_end": 5,
+          "text_start": 0
+        },
+        {
+          "object_id": "obj-6d5a234700e3a723820daa96",
+          "text": "玉米生长研究",
+          "text_end": 11,
+          "text_start": 5
+        }
+      ],
+      "order": 1,
+      "range_id": "u-cover:range-0001",
+      "text": "论文题目：玉米生长研究",
+      "unit_id": "u-cover",
+      "unit_name": "封面",
+      "unit_range_id": "u-cover:range-whole-unit"
+    }
+  ],
+  "run": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b",
+  "semantic_result": {
+    "checks": [
+      {
+        "name": "semantic_judgment_coverage",
+        "result": "ok"
+      }
+    ],
+    "failure": null,
+    "harness_state": {
+      "all_objects_have_semantic_coverage": true,
+      "all_objects_have_semantic_judgment": true,
+      "covered_object_count": 3,
+      "empty_judgment_object_ids": [],
+      "missing_semantic_judgment_object_ids": [],
+      "object_count": 3,
+      "object_inventory_submitted": true,
+      "overlap_object_ids": [],
+      "uncovered_judgment_refs": [],
+      "unknown_judgment_object_ids": []
+    },
+    "schema_version": 2,
+    "semantic_judgments_path": "work/.docfit/harness/semantic-judgments.json",
+    "status": "ok",
+    "warnings": []
+  },
+  "semantic_status": "ok",
+  "source_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670"
+}

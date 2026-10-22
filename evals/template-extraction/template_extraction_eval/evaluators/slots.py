@@ -97,12 +97,12 @@ def _prerequisite_failure(
     message: str,
 ) -> AssertionResult:
     return AssertionResult(
-        assertion_id=f"{slot.slot_id}.{dimension}",
+        assertion_id=f"{slot.slot_ref}.{dimension}",
         view=View.SLOT,
         dimension=dimension,
         status=AssertionStatus.FAIL,
         required=slot.required,
-        slot_id=slot.slot_id,
+        slot_ref=slot.slot_ref,
         gold_locator=slot.locator,
         message=message,
         failure_code=(
@@ -122,11 +122,11 @@ def evaluate_slots(
     eval_config: EvalConfig,
 ) -> tuple[AssertionResult, ...]:
     assertions: list[AssertionResult] = []
-    gold_ids = {slot.slot_id for slot in gold_contract.slots}
-    actual_ids = {slot.slot_id for slot in actual_contract.slots}
+    gold_ids = {slot.slot_ref for slot in gold_contract.slots}
+    actual_ids = {slot.slot_ref for slot in actual_contract.slots}
 
     for extra_id in sorted(actual_ids - gold_ids):
-        extra_slot = next(slot for slot in actual_contract.slots if slot.slot_id == extra_id)
+        extra_slot = next(slot for slot in actual_contract.slots if slot.slot_ref == extra_id)
         assertions.append(
             AssertionResult(
                 assertion_id=f"{extra_id}.inventory.extra",
@@ -135,7 +135,7 @@ def evaluate_slots(
                 status=AssertionStatus.FAIL,
                 required=True,
                 actual=extra_id,
-                slot_id=extra_id,
+                slot_ref=extra_id,
                 actual_locator=extra_slot.locator,
                 message="Actual contains a slot not declared by Gold",
                 failure_code="extra_slot",
@@ -163,14 +163,14 @@ def evaluate_slots(
         if alignment.status is AlignmentStatus.MISSING:
             assertions.append(
                 AssertionResult(
-                    assertion_id=f"{gold_slot.slot_id}.inventory",
+                    assertion_id=f"{gold_slot.slot_ref}.inventory",
                     view=View.SLOT,
                     dimension="slot.inventory",
                     status=AssertionStatus.FAIL,
                     required=gold_slot.required,
-                    expected=gold_slot.slot_id,
+                    expected=gold_slot.slot_ref,
                     actual=None,
-                    slot_id=gold_slot.slot_id,
+                    slot_ref=gold_slot.slot_ref,
                     gold_locator=gold_slot.locator,
                     actual_locator=(
                         None if alignment.actual_slot is None else alignment.actual_slot.locator
@@ -201,12 +201,12 @@ def evaluate_slots(
         if alignment.status is AlignmentStatus.AMBIGUOUS:
             assertions.append(
                 AssertionResult(
-                    assertion_id=f"{gold_slot.slot_id}.inventory",
+                    assertion_id=f"{gold_slot.slot_ref}.inventory",
                     view=View.SLOT,
                     dimension="slot.inventory",
                     status=AssertionStatus.FAIL,
                     required=gold_slot.required,
-                    slot_id=gold_slot.slot_id,
+                    slot_ref=gold_slot.slot_ref,
                     gold_locator=gold_slot.locator,
                     message=alignment.detail or "slot marker is ambiguous",
                     failure_code="template_contract_marker_mismatch",
@@ -232,14 +232,14 @@ def evaluate_slots(
             raise AssertionError("matched slot alignment must include contracts and controls")
         assertions.append(
             AssertionResult(
-                assertion_id=f"{gold_slot.slot_id}.inventory",
+                assertion_id=f"{gold_slot.slot_ref}.inventory",
                 view=View.SLOT,
                 dimension="slot.inventory",
                 status=AssertionStatus.PASS,
                 required=gold_slot.required,
-                expected=gold_slot.slot_id,
-                actual=actual_slot.slot_id,
-                slot_id=gold_slot.slot_id,
+                expected=gold_slot.slot_ref,
+                actual=actual_slot.slot_ref,
+                slot_ref=gold_slot.slot_ref,
                 gold_locator=gold_slot.locator,
                 actual_locator=actual_slot.locator,
                 message="slot exists exactly once in contract and template",
@@ -255,14 +255,14 @@ def evaluate_slots(
         )
         assertions.append(
             AssertionResult(
-                assertion_id=f"{gold_slot.slot_id}.location",
+                assertion_id=f"{gold_slot.slot_ref}.location",
                 view=View.SLOT,
                 dimension="slot.location_boundary",
                 status=location_status,
                 required=gold_slot.required,
                 expected=expected_location,
                 actual=actual_location,
-                slot_id=gold_slot.slot_id,
+                slot_ref=gold_slot.slot_ref,
                 gold_locator=gold_slot.locator,
                 actual_locator=actual_slot.locator,
                 message=(
@@ -286,14 +286,14 @@ def evaluate_slots(
         )
         assertions.append(
             AssertionResult(
-                assertion_id=f"{gold_slot.slot_id}.boundary",
+                assertion_id=f"{gold_slot.slot_ref}.boundary",
                 view=View.SLOT,
                 dimension="slot.location_boundary",
                 status=boundary_status,
                 required=gold_slot.required,
                 expected=expected_boundary,
                 actual=actual_boundary,
-                slot_id=gold_slot.slot_id,
+                slot_ref=gold_slot.slot_ref,
                 gold_locator=gold_slot.locator,
                 actual_locator=actual_slot.locator,
                 message=(
@@ -320,7 +320,7 @@ def evaluate_slots(
         field_status = AssertionStatus.PASS if field_matches else AssertionStatus.FAIL
         assertions.append(
             AssertionResult(
-                assertion_id=f"{gold_slot.slot_id}.field_id",
+                assertion_id=f"{gold_slot.slot_ref}.field_id",
                 view=View.SLOT,
                 dimension="slot.field_mapping",
                 status=field_status,
@@ -330,7 +330,7 @@ def evaluate_slots(
                     "contract_field_id": actual_slot.field_id,
                     "marker_alias": actual_control.alias,
                 },
-                slot_id=gold_slot.slot_id,
+                slot_ref=gold_slot.slot_ref,
                 gold_locator=gold_slot.locator,
                 actual_locator=actual_slot.locator,
                 message=(
@@ -370,14 +370,14 @@ def evaluate_slots(
         )
         assertions.append(
             AssertionResult(
-                assertion_id=f"{gold_slot.slot_id}.value_style",
+                assertion_id=f"{gold_slot.slot_ref}.value_style",
                 view=View.SLOT,
                 dimension="slot.value_style",
                 status=value_style_status,
                 required=gold_slot.required,
                 expected=gold_slot.expected_value_style,
                 actual=actual_slot.expected_value_style,
-                slot_id=gold_slot.slot_id,
+                slot_ref=gold_slot.slot_ref,
                 gold_locator=gold_slot.locator,
                 actual_locator=actual_slot.locator,
                 message=(

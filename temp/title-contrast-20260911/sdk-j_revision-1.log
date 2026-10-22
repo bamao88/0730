@@ -1,0 +1,1 @@
+{"run": "sdk-j_revision-1", "rounds": 2, "fields": ["thesis.title.zh", "thesis.title.en", "author.name.zh", "author.student_id", "author.cohort_class", "advisor.name.zh", "advisor.title", "author.department", "submission.date"], "native_review": "accepted"}

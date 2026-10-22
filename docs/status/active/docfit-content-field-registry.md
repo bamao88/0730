@@ -25,7 +25,7 @@
 - Completed slices: 责任与非目标、未注册字段、命名/语言/版本政策、v0.1/v0.2 快照、v0.3 pilot、
   Student 002 Accepted Extraction/Placement 候选、产品核对表与图像证据、图像—题注反向配对修正、
   显式编号项列表分类与相邻上下文证据、图表题注去自动编号规范值、Eval 消费者迁移、
-  00–06 与专项设计漂移同步；Student 001/003 源对象盘点、v0.4、Extraction Gold、审阅图片、
+  当前架构入口与专项设计漂移同步；Student 001/003 源对象盘点、v0.4、Extraction Gold、审阅图片、
   产品验收记录和内容顺序合同已物化
 - Next slice: 以 accepted Extraction Gold 独立准备 Student 001/003 Filling
 - Next proof: Filling 的模板绑定、placement、预期事实和独立 Human 结论

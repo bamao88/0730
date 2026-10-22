@@ -184,7 +184,7 @@ class ObservationClosureSummary:
 @dataclass(frozen=True, slots=True)
 class FieldStyleObservation:
     field_id: str
-    slot_id: str
+    slot_ref: str
     style_role_id: str
     style_role_type: str
     profile_ref: JsonObject
@@ -197,7 +197,7 @@ class FieldStyleObservation:
         cls,
         *,
         field_id: str,
-        slot_id: str,
+        slot_ref: str,
         style_role_id: str,
         profile: StylePropertyProfile,
         properties: Sequence[PropertyObservation],
@@ -208,7 +208,7 @@ class FieldStyleObservation:
             extra = sorted(set(paths) - set(profile.property_paths))
             raise _failure(
                 "style_observation_property_closure_invalid",
-                f"{slot_id} does not match its fixed profile property list; "
+                f"{slot_ref} does not match its fixed profile property list; "
                 f"missing={missing}, extra={extra}.",
             )
         closure = aggregate_observation_closure(profile, properties)
@@ -216,7 +216,7 @@ class FieldStyleObservation:
         payload: JsonObject = {
             "schema_version": OBSERVATION_SCHEMA_VERSION,
             "field_id": field_id,
-            "slot_id": slot_id,
+            "slot_ref": slot_ref,
             "style_role_id": style_role_id,
             "style_role_type": profile.role_type,
             "property_profile_ref": profile_ref,
@@ -225,7 +225,7 @@ class FieldStyleObservation:
         }
         return cls(
             field_id=field_id,
-            slot_id=slot_id,
+            slot_ref=slot_ref,
             style_role_id=style_role_id,
             style_role_type=profile.role_type,
             profile_ref=profile_ref,
@@ -238,7 +238,7 @@ class FieldStyleObservation:
         return {
             "schema_version": OBSERVATION_SCHEMA_VERSION,
             "field_id": self.field_id,
-            "slot_id": self.slot_id,
+            "slot_ref": self.slot_ref,
             "style_role_id": self.style_role_id,
             "style_role_type": self.style_role_type,
             "property_profile_ref": dict(self.profile_ref),
@@ -310,7 +310,7 @@ def aggregate_observation_closure(
 def observe_effective_style(
     *,
     field_id: str,
-    slot_id: str,
+    slot_ref: str,
     style_role_id: str,
     profile: StylePropertyProfile,
     resolved: EffectiveStyleResult,
@@ -402,7 +402,7 @@ def observe_effective_style(
         )
     return FieldStyleObservation.build(
         field_id=field_id,
-        slot_id=slot_id,
+        slot_ref=slot_ref,
         style_role_id=style_role_id,
         profile=profile,
         properties=observations,
@@ -499,9 +499,9 @@ class FieldStyleObservationSet:
         observations: Sequence[FieldStyleObservation],
     ) -> FieldStyleObservationSet:
         normalized = tuple(
-            sorted(observations, key=lambda item: (item.slot_id, item.style_role_id))
+            sorted(observations, key=lambda item: (item.slot_ref, item.style_role_id))
         )
-        identities = {(item.slot_id, item.style_role_id) for item in normalized}
+        identities = {(item.slot_ref, item.style_role_id) for item in normalized}
         if len(identities) != len(normalized):
             raise _failure(
                 "style_observation_duplicate",
@@ -513,7 +513,7 @@ class FieldStyleObservationSet:
             "profile_registry_digest": profile_registry_digest,
             "observations": [
                 {
-                    "slot_id": item.slot_id,
+                    "slot_ref": item.slot_ref,
                     "style_role_id": item.style_role_id,
                     "observation_digest": item.observation_digest,
                 }

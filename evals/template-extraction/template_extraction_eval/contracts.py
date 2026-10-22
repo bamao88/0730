@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections.abc import Mapping
 from enum import StrEnum
 from pathlib import Path
@@ -166,6 +167,7 @@ def _locator(value: dict[str, Any]) -> Locator:
         part=str(value["part"]),
         expected_match_count=int(value["expected_match_count"]),
         value=None if value.get("value") is None else str(value["value"]),
+        match_mode=_optional_str(value, "match_mode"),
         section_index=_optional_int(value, "section_index"),
         paragraph_index=_optional_int(value, "paragraph_index"),
         table_index=_optional_int(value, "table_index"),
@@ -337,10 +339,10 @@ def _require_style_reference_closure(
         if slot.style_contract_ref is None:
             _raise(
                 InputErrorCode.CONTRACT_MISMATCH,
-                f"v2 slot {slot.slot_id} has no style contract reference",
+                f"v2 slot {slot.slot_ref} has no style contract reference",
                 path,
             )
-        require_reference(slot.style_contract_ref, f"slot {slot.slot_id}")
+        require_reference(slot.style_contract_ref, f"slot {slot.slot_ref}")
     for style in styles:
         for dependency in style.dependencies:
             require_reference(dependency, f"style {style.style_contract_id}")
@@ -367,28 +369,75 @@ def _require_style_reference_closure(
         visit(style_id)
 
 
-def _legacy_slot_style(
+def _reject_retired_fill_contract_version(value: Mapping[str, Any], path: Path) -> None:
+    if value.get("schema_version") == FILL_CONTRACT_V1:
+        _raise(
+            InputErrorCode.CONTRACT_MISMATCH,
+            "fill contract v1 is retired; Eval only accepts "
+            "docfit-template-fill-contract/v2",
+            path,
+        )
+
+
+def _style_for_slot(
     value: dict[str, Any],
-    legacy_styles: Mapping[str, EffectiveStyle],
+    styles_by_id: Mapping[str, StyleContract],
     *,
     path: Path,
 ) -> EffectiveStyle:
-    inline = cast(dict[str, Any] | None, value.get("expected_value_style"))
-    if inline is not None:
-        return cast(EffectiveStyle, _style(inline))
-    style_id = _optional_str(value, "style_id")
-    if style_id is not None and style_id in legacy_styles:
-        return legacy_styles[style_id]
+    raw_ref = value.get("style_contract_ref")
+    if not isinstance(raw_ref, dict):
+        _raise(
+            InputErrorCode.CONTRACT_MISMATCH,
+            f"v2 slot {value['slot_ref']} has no style_contract_ref",
+            path,
+        )
+    style_id = str(raw_ref["style_contract_id"])
+    style = styles_by_id.get(style_id)
+    if style is not None:
+        return style.effective_style
     _raise(
         InputErrorCode.CONTRACT_MISMATCH,
-        f"legacy slot {value['slot_id']} cannot resolve style {style_id}",
+        f"slot {value['slot_ref']} references missing style {style_id}",
         path,
     )
+
+
+def _field_id_from_slot_ref(slot_ref: str, *, path: Path) -> str:
+    matched = re.fullmatch(
+        r"source_entry_id=(source-entry-[^;]+);"
+        r"extent=(whole_entry|text\[([0-9]+):([0-9]+)\]);"
+        r"source_snapshot_sha256=([0-9a-f]{64});"
+        r"field_id=([a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+)",
+        slot_ref,
+    )
+    if matched is None:
+        _raise(
+            InputErrorCode.CONTRACT_MISMATCH,
+            f"slot_ref {slot_ref!r} is not a canonical SourceSpan slot reference",
+            path,
+        )
+    assert matched is not None
+    start, end = matched.group(3), matched.group(4)
+    if start is not None and end is not None and int(end) <= int(start):
+        _raise(
+            InputErrorCode.CONTRACT_MISMATCH,
+            f"slot_ref {slot_ref!r} has an invalid text extent",
+            path,
+        )
+    return matched.group(6)
 
 
 def _load_fill_contract_value(value: dict[str, Any], contract_path: Path) -> FillContract:
     registry_ref = cast(dict[str, Any], value["field_registry_ref"])
     schema_version = str(value["schema_version"])
+    if schema_version != FILL_CONTRACT_V2:
+        _raise(
+            InputErrorCode.CONTRACT_MISMATCH,
+            "Eval fill contract loader only accepts "
+            "docfit-template-fill-contract/v2",
+            contract_path,
+        )
     regions = tuple(
         RegionContract(
             region_id=str(item["region_id"]),
@@ -409,88 +458,70 @@ def _load_fill_contract_value(value: dict[str, Any], contract_path: Path) -> Fil
     )
     styles: tuple[StyleContract, ...] = ()
     styles_by_id: dict[str, StyleContract] = {}
-    legacy_styles: dict[str, EffectiveStyle] = {}
-    if schema_version == FILL_CONTRACT_V1:
-        legacy_style_values = cast(list[dict[str, Any]], value.get("styles", []))
-        _require_unique(
-            [str(item["style_id"]) for item in legacy_style_values],
-            "legacy style_id",
-            contract_path,
-        )
-        legacy_styles = {
-            str(item["style_id"]): cast(
-                EffectiveStyle,
-                _style(cast(dict[str, Any], item["effective_properties"])),
-            )
-            for item in legacy_style_values
-        }
-    if schema_version == FILL_CONTRACT_V2:
-        style_values = cast(list[dict[str, Any]], value["styles"])
-        styles = tuple(
-            StyleContract(
-                style_contract_id=str(item["style_contract_id"]),
-                contract_digest=str(item["contract_digest"]),
-                owned_properties=tuple(str(path) for path in item["owned_properties"]),
-                effective_properties=dict(
-                    cast(dict[str, Any], item["effective_properties"])
+    style_values = cast(list[dict[str, Any]], value["styles"])
+    styles = tuple(
+        StyleContract(
+            style_contract_id=str(item["style_contract_id"]),
+            contract_digest=str(item["contract_digest"]),
+            owned_properties=tuple(str(path) for path in item["owned_properties"]),
+            effective_properties=dict(cast(dict[str, Any], item["effective_properties"])),
+            application_scope=str(item["application_scope"]),
+            override_policy=StyleOverridePolicy(
+                managed_direct_formatting=str(
+                    cast(dict[str, Any], item["override_policy"])[
+                        "managed_direct_formatting"
+                    ]
                 ),
-                application_scope=str(item["application_scope"]),
-                override_policy=StyleOverridePolicy(
-                    managed_direct_formatting=str(
-                        cast(dict[str, Any], item["override_policy"])[
-                            "managed_direct_formatting"
-                        ]
-                    ),
-                    unmanaged_properties=str(
-                        cast(dict[str, Any], item["override_policy"])[
-                            "unmanaged_properties"
-                        ]
-                    ),
+                unmanaged_properties=str(
+                    cast(dict[str, Any], item["override_policy"])[
+                        "unmanaged_properties"
+                    ]
                 ),
-                dependencies=tuple(
-                    _style_contract_ref(dependency)
-                    for dependency in cast(list[dict[str, Any]], item["dependencies"])
-                ),
-                word_style_id=_optional_str(item, "word_style_id"),
-                word_style_name=_optional_str(item, "word_style_name"),
-            )
-            for item in style_values
+            ),
+            dependencies=tuple(
+                _style_contract_ref(dependency)
+                for dependency in cast(list[dict[str, Any]], item["dependencies"])
+            ),
+            word_style_id=_optional_str(item, "word_style_id"),
+            word_style_name=_optional_str(item, "word_style_name"),
         )
-        _require_unique(
-            [style.style_contract_id for style in styles],
-            "style_contract_id",
-            contract_path,
-        )
-        for raw_style, style in zip(style_values, styles, strict=True):
-            try:
-                expected_digest = compute_style_contract_digest(raw_style)
-            except ValueError as error:
-                _raise(InputErrorCode.CONTRACT_MISMATCH, str(error), contract_path)
-            if style.contract_digest != expected_digest:
-                _raise(
-                    InputErrorCode.HASH_MISMATCH,
-                    f"style {style.style_contract_id} digest mismatch: expected "
-                    f"{expected_digest}, got {style.contract_digest}",
-                    contract_path,
-                )
-            _require_owned_properties(style, path=contract_path)
-        expected_set_digest = compute_style_contract_set_digest(
-            schema_version=schema_version,
-            template_sha256=str(value["template_sha256"]),
-            styles=cast(list[Mapping[str, Any]], style_values),
-        )
-        actual_set_digest = str(value["style_contract_set_digest"])
-        if actual_set_digest != expected_set_digest:
+        for item in style_values
+    )
+    _require_unique(
+        [style.style_contract_id for style in styles],
+        "style_contract_id",
+        contract_path,
+    )
+    for raw_style, style in zip(style_values, styles, strict=True):
+        try:
+            expected_digest = compute_style_contract_digest(raw_style)
+        except ValueError as error:
+            _raise(InputErrorCode.CONTRACT_MISMATCH, str(error), contract_path)
+        if style.contract_digest != expected_digest:
             _raise(
                 InputErrorCode.HASH_MISMATCH,
-                f"style contract set digest mismatch: expected {expected_set_digest}, "
-                f"got {actual_set_digest}",
+                f"style {style.style_contract_id} digest mismatch: expected "
+                f"{expected_digest}, got {style.contract_digest}",
                 contract_path,
             )
-        styles_by_id = {style.style_contract_id: style for style in styles}
+        _require_owned_properties(style, path=contract_path)
+    expected_set_digest = compute_style_contract_set_digest(
+        schema_version=schema_version,
+        template_sha256=str(value["template_sha256"]),
+        styles=cast(list[Mapping[str, Any]], style_values),
+    )
+    actual_set_digest = str(value["style_contract_set_digest"])
+    if actual_set_digest != expected_set_digest:
+        _raise(
+            InputErrorCode.HASH_MISMATCH,
+            f"style contract set digest mismatch: expected {expected_set_digest}, "
+            f"got {actual_set_digest}",
+            contract_path,
+        )
+    styles_by_id = {style.style_contract_id: style for style in styles}
     slots = tuple(
         SlotContract(
-            slot_id=str(item["slot_id"]),
+            slot_ref=str(item["slot_ref"]),
             field_id=str(item["field_id"]),
             content_type=str(item["content_type"]),
             required=bool(item["required"]),
@@ -500,24 +531,13 @@ def _load_fill_contract_value(value: dict[str, Any], contract_path: Path) -> Fil
                 _component_locator(component)
                 for component in cast(list[dict[str, Any]], item.get("component_locators", []))
             ),
-            expected_value_style=(
-                _legacy_slot_style(item, legacy_styles, path=contract_path)
-                if schema_version == FILL_CONTRACT_V1
-                else styles_by_id[
-                    str(cast(dict[str, Any], item["style_contract_ref"])["style_contract_id"])
-                ].effective_style
-                if str(
-                    cast(dict[str, Any], item["style_contract_ref"])["style_contract_id"]
-                )
-                in styles_by_id
-                else EffectiveStyle(font={}, paragraph={}, container={}, page={})
+            expected_value_style=_style_for_slot(
+                item,
+                styles_by_id,
+                path=contract_path,
             ),
-            style_contract_ref=(
-                None
-                if schema_version == FILL_CONTRACT_V1
-                else _style_contract_ref(
-                    cast(dict[str, Any], item["style_contract_ref"])
-                )
+            style_contract_ref=_style_contract_ref(
+                cast(dict[str, Any], item["style_contract_ref"])
             ),
         )
         for item in cast(list[dict[str, Any]], value["slots"])
@@ -535,14 +555,20 @@ def _load_fill_contract_value(value: dict[str, Any], contract_path: Path) -> Fil
         )
     )
     _require_unique([region.region_id for region in regions], "region_id", contract_path)
-    _require_unique([slot.slot_id for slot in slots], "slot_id", contract_path)
+    _require_unique([slot.slot_ref for slot in slots], "slot_ref", contract_path)
     _require_unique(
         [slot.locator.value for slot in slots if slot.locator.value is not None],
         "slot locator value",
         contract_path,
     )
-    if schema_version == FILL_CONTRACT_V2:
-        _require_style_reference_closure(styles, slots, path=contract_path)
+    for slot in slots:
+        if _field_id_from_slot_ref(slot.slot_ref, path=contract_path) != slot.field_id:
+            _raise(
+                InputErrorCode.CONTRACT_MISMATCH,
+                f"slot_ref field_id does not match slot field_id for {slot.slot_ref}",
+                contract_path,
+            )
+    _require_style_reference_closure(styles, slots, path=contract_path)
     return FillContract(
         schema_version=schema_version,
         contract_id=str(value["contract_id"]),
@@ -560,29 +586,13 @@ def _load_fill_contract_value(value: dict[str, Any], contract_path: Path) -> Fil
     )
 
 
-def load_legacy_fill_contract(path: Path) -> FillContract:
-    """Read immutable v1 Gold without pretending it satisfies the v2 style contract."""
-
-    contract_path = _require_file(path)
-    value = _load_yaml(contract_path)
-    _validate_schema(value, "fill-contract.schema.json", contract_path)
-    if value.get("schema_version") != FILL_CONTRACT_V1:
-        _raise(
-            InputErrorCode.CONTRACT_MISMATCH,
-            "legacy fill contract reader only accepts docfit-template-fill-contract/v1",
-            contract_path,
-        )
-    return _load_fill_contract_value(value, contract_path)
-
-
 def load_fill_contract(path: Path) -> FillContract:
-    """Read v2 contracts, dispatching frozen v1 fixtures to the explicit legacy reader."""
+    """Read current Eval fill contracts. Retired v1 contracts fail closed."""
 
     contract_path = _require_file(path)
     value = _load_yaml(contract_path)
+    _reject_retired_fill_contract_version(value, contract_path)
     _validate_schema(value, "fill-contract.schema.json", contract_path)
-    if value.get("schema_version") == FILL_CONTRACT_V1:
-        return _load_fill_contract_value(value, contract_path)
     return _load_fill_contract_value(value, contract_path)
 
 
@@ -729,13 +739,13 @@ def _assert_contract_bindings(
         if field is None:
             _raise(
                 InputErrorCode.UNKNOWN_FIELD,
-                f"slot {slot.slot_id} references unknown field {slot.field_id}",
+                f"slot {slot.slot_ref} references unknown field {slot.field_id}",
                 contract_path,
             )
         if field.content_type != slot.content_type:
             _raise(
                 InputErrorCode.CONTRACT_MISMATCH,
-                f"slot {slot.slot_id} content_type does not match Registry field",
+                f"slot {slot.slot_ref} content_type does not match Registry field",
                 contract_path,
             )
 
@@ -878,7 +888,6 @@ __all__ = [
     "load_eval_inputs",
     "load_field_registry",
     "load_fill_contract",
-    "load_legacy_fill_contract",
     "load_scoring_config",
     "sha256_file",
     "validate_gold_truth_ready",

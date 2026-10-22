@@ -1,0 +1,81 @@
+{
+  "created_at": "2026-09-23T06:50:27.895901+00:00",
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 22,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "参考文献"
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体)"
+            }
+          ],
+          "reason": "The text '参考文献' is the section heading for the references unit — a fixed school label, not bound to any field (references.entries is for the list body, references.style_system is the citation system configuration). The trailing ' (小三号黑体)' is a parenthetical font specification (small-size-3, Hei font) describing the heading's required style, so it is style_only, not content to be filled.",
+          "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "references.entries",
+              "role": "fill_slot",
+              "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B."
+            },
+            {
+              "role": "style_only",
+              "text": "(五号宋体)"
+            }
+          ],
+          "reason": "The example '[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.' is a sample reference entry illustrating the sequential-numeric citation format the school requires; per template-text-classification, an example value can serve as a fill_slot bound to references.entries (the references list) — the student's first reference will replace this example in the same numbered-citation form. Trailing whitespace is preserved with the fill_slot since it visually trails the example content. The parenthetical '(五号宋体)' is a font specification (size-5 Song font) for the reference body text and is style_only.",
+          "source_entry_id": "source-entry-bc83b192a296aad304c5ae79"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "references.entries",
+              "role": "fill_slot",
+              "text": "……"
+            }
+          ],
+          "reason": "The Chinese ellipsis '……' in this template context represents the continuation of the references list — the place where additional numbered entries ([2], [3], ...) will be filled by the student source. Bound to references.entries (cardinality many) to capture that additional entries follow.",
+          "source_entry_id": "source-entry-68fe5f9235e778cd5b1dc18e"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（五号字空二行）"
+            }
+          ],
+          "reason": "The parenthetical '（五号字空二行）' is a typographic spacing instruction meaning 'leave two blank lines in size-5 font' after the references list. This is a style/layout obligation, not fillable content, so it is style_only.",
+          "source_entry_id": "source-entry-7abd1e1ad54e1ba2c93b070c"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": ""
+            }
+          ],
+          "reason": "This empty entry is the trailing paragraph at the end of the unit-references block; it carries no visible text but serves as the unit-end boundary marker (the unit_context's end_boundary points to this entry_id). Represented as a single empty fixed_label part per the empty-entry rule, since it is a fixed structural element without fillable content.",
+          "source_entry_id": "source-entry-4544bbf8bd8ba8737268c5cc"
+        }
+      ],
+      "status": "complete",
+      "summary": "Judged all 5 source entries in unit-references: the section heading '参考文献' is a fixed_label with its '(小三号黑体)' style annotation; the example reference '[1] 作者.论文题名[J].期刊名...' and the ellipsis '……' are both fill_slots bound to references.entries representing the reference list positions; '(五号宋体)' and '(五号字空二行)' are style_only requirements; the trailing empty paragraph is a fixed structural boundary."
+    }
+  },
+  "event_digest": "639cfbcc9bbe1c7bf2b9c34bfdbb078e2bc9d029cdb08735b8ca11955505cf66",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "41f8691c2a00c3e03b51fa6f181709330316b051b6e6673b66ffbb2b40128405",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 23
+}

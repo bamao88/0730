@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "environment",
+    "code": "visual_renderer_unavailable",
+    "retryable": false,
+    "message": "The fixed Docker LibreOffice renderer is not ready.",
+    "suggested_actions": []
+  }
+}

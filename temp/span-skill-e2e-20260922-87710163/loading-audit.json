@@ -1,0 +1,322 @@
+{
+  "scope": "Read-only independent loading/contract audit; no model calls; no private SDK transcript or hidden reasoning read; live task untouched.",
+  "created_at": "2026-09-22T23:03:20.931259+08:00",
+  "verification_level": "public E2E execution metadata + code/snapshot review; prior cover diagnostic separately real replay",
+  "source_files": {
+    "skill_snapshot": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/skill-snapshot/SKILL.md",
+      "sha256": "f127ce84e4bfd35e63149e77715d29aa0071293474a262e6be84e6d00168abde"
+    },
+    "cover_trace": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-attempt-1/template-agent-execution.json",
+      "sha256": "fc69eb90b8180cf83045338a491d5c36de1f0df68701007a69863dba9a589a85"
+    },
+    "body_attempt1_trace": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-attempt-1/template-agent-execution.json",
+      "sha256": "105e28f4f451f5f87806b81ae165dbfd5626daa3eaee179211622907e5b9ee34"
+    },
+    "cover_candidates": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-attempt-1/semantic-batch-candidates.json",
+      "sha256": "444567abff3bd5102e4b52647db3fe8c306000734f926d7cc6a5d4cb7345c315"
+    },
+    "body_abstract_snapshot": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/observed-ledgers/body-145118564135-semantic-batch-candidates.json",
+      "sha256": "cf3608c71c91a573330f70ab7eccb172fbf99148542b116bbfd40d7f21fc24b4"
+    },
+    "cover_replay": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-diagnostic/last-candidate-real-replay.json",
+      "sha256": "9759d7084c292ac7ec1c01421adba4bc49d7baf94a47dd752b09a87426551a13"
+    },
+    "body_inventory": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/object-inventory.json",
+      "sha256": "f7a2893de6e4ff32a6ef9ccfd6e52715bff1d10d119f11dba43fdc40e066b205"
+    }
+  },
+  "snapshot_matches_current_skill": true,
+  "query_tool_mapping_method": "Reconstruct from full ordered tool_uses and timing_events tool_use_count; old sdk_events are capped at latest 200.",
+  "queries": {
+    "cover_trace": [
+      {
+        "query_index": 1,
+        "stage": "unit-boundary",
+        "batch_id": null,
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "mcp__docfit__docfit_evidence",
+          "Read",
+          "Read",
+          "Read",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 2,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0001-f5d7bf64",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 3,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 4,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 5,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 6,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 7,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 8,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 9,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 10,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-f1ba7177",
+        "tools": [],
+        "status": "response_invalid"
+      }
+    ],
+    "body_attempt1_trace": [
+      {
+        "query_index": 1,
+        "stage": "unit-boundary",
+        "batch_id": null,
+        "tools": [
+          "Skill",
+          "Read",
+          "mcp__docfit__docfit_evidence",
+          "mcp__docfit__docfit_evidence",
+          "Read",
+          "mcp__docfit__docfit_evidence",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 2,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0001-30226bc4",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 3,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0002-9b2d8443",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 4,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0003-ed60bad8",
+        "tools": [
+          "Skill",
+          "mcp__docfit__docfit_evidence",
+          "StructuredOutput",
+          "StructuredOutput"
+        ],
+        "status": "response_complete"
+      },
+      {
+        "query_index": 5,
+        "stage": "post-unit",
+        "batch_id": "semantic-batch-0004-0e42901c",
+        "tools": [],
+        "status": "no_progress_timeout"
+      }
+    ]
+  },
+  "abstract_evidence": {
+    "judgment": {
+      "open_questions": [],
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "Abstract(小四号Times New Roman， 加粗)"
+        },
+        {
+          "role": "cleanup",
+          "text": ":……            (五号Times New Roman)"
+        },
+        {
+          "role": "style_only",
+          "text": "            (五号Times New Roman)"
+        }
+      ],
+      "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+      "source_entry_id": "source-entry-f0c63376279768f327365472"
+    },
+    "vocabulary_field": {
+      "cardinality": "one",
+      "content_type": "rich_text",
+      "field_id": "abstract.en",
+      "label": "英文摘要",
+      "meaning": "论文英文摘要正文。",
+      "usage_affordance": {
+        "allowed_part_roles": [
+          "fill_slot"
+        ],
+        "has_parent_field": false,
+        "requires_agent_semantic_part": true,
+        "selectable_by_agent": true,
+        "source": "pre_input_field_vocabulary"
+      },
+      "value_sources": [
+        "student_source"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "reference_loading",
+      "classification": "Observed routing noncompliance plus application context-delivery gap, not unavailable Read permission",
+      "evidence": "All completed cover post-unit queries and body attempt-1 post-unit queries have no Read calls. Snapshot SKILL line 22 explicitly requires reading relevant references. Actual per-batch prompt instructs Skill+evidence only; references are not inlined, and each batch gets a new SDK client.",
+      "citations": [
+        "skill-snapshot/SKILL.md:22",
+        "skill-snapshot/SKILL.md:76",
+        "src/docfit/app/prepare_template.py:1511",
+        "src/docfit/app/prepare_template.py:1550",
+        "src/docfit/app/prepare_template.py:1639",
+        "src/docfit/app/prepare_template.py:3799",
+        "src/docfit/app/prepare_template.py:3809",
+        "src/docfit/app/agent.py:314"
+      ],
+      "minimal_recommendation": "Make essential phase guidance actually reachable in the real batch context and verify that builder. Avoid adding a per-object/manual Read gate or another bookkeeping duty. Do not rely on old build_prepare_template_prompt preload tests."
+    },
+    {
+      "id": "whitespace_omission",
+      "classification": "Exact-text output/transport failure; general rule is already in loaded main Skill and output contract",
+      "evidence": "Saved cover candidate omits 23 ordinary U+0020 spaces in 7 entries. Main Skill line 38 explicitly preserves whitespace; real batch prompt says preserve exact source text; schema describes exact substrings and whitespace codepoint/count transport; reading packet provides leading/trailing counts.",
+      "citations": [
+        "skill-snapshot/SKILL.md:38",
+        "skill-snapshot/SKILL.md:96",
+        "src/docfit/app/prepare_template.py:183",
+        "src/docfit/app/prepare_template.py:195",
+        "src/docfit/app/prepare_template.py:205",
+        "src/docfit/app/prepare_template.py:1651",
+        "src/docfit/template/reading_packet.py:213",
+        "cover-diagnostic/last-candidate-real-replay.json"
+      ],
+      "reference_only_details": [
+        "skill-snapshot/references/object-boundary-and-layout-safety.md:49",
+        "skill-snapshot/references/object-boundary-and-layout-safety.md:54"
+      ],
+      "delivery_gap": "Detailed whitespace-only transport instruction is in the non-batch startup builder at prepare_template.py:1469 but not in build_semantic_batch_prompt. Schema remains available; cannot conclude it was absent. Interior ordinary spaces are present in text but not separately enumerated by render_sensitive_codepoints (reading_packet.py:239).",
+      "minimal_recommendation": "Audit actual structured output/transport and align generic exact-text guidance with the real batch path before adding more school-semantic prose. Retain exact-match rejection and role-preserving repairs; do not infer fields or strip source spaces."
+    },
+    {
+      "id": "abstract_reason_parts_contradiction",
+      "classification": "Agent semantic output inconsistency, not missing vocabulary or schema field",
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "evidence": "Reason claims a fill_slot binding abstract.en, while persisted parts contain no field_id and classify the ellipsis position as cleanup. The actual pre-input vocabulary contains abstract.en with allowed_part_roles=[fill_slot]. Main Skill explicitly prohibits reason substituting for missing parts.",
+      "citations": [
+        "skill-snapshot/SKILL.md:36",
+        "skill-snapshot/SKILL.md:70",
+        "skill-snapshot/SKILL.md:92",
+        "observed-ledgers/body-145118564135-semantic-batch-candidates.json:326",
+        "src/docfit/template/judgment_shape.py:448",
+        "src/docfit/template/judgment_shape.py:472"
+      ],
+      "minimal_recommendation": "Evaluate actual parts against the readable school evidence. Do not parse reason to auto-bind a field or call every cleanup-without-field a schema failure. Add an Agent-facing semantic consistency check/evaluation using this public output; main rule already exists."
+    },
+    {
+      "id": "format_instruction_fixed_label",
+      "classification": "Semantic classification error despite main-Skill general guidance; missing Reference examples may contribute but are not proven sole cause",
+      "evidence": "Cover keeps 学生姓名（三号黑体加粗）： as fixed_label; English abstract keeps Abstract(小四号Times New Roman， 加粗) as fixed_label. Main Skill says adjacent format guidance is normally separated; specific instruction-vs-visible-text examples are in the classification and style references which audited post-unit sessions did not Read.",
+      "citations": [
+        "skill-snapshot/SKILL.md:29",
+        "skill-snapshot/SKILL.md:35",
+        "skill-snapshot/SKILL.md:58",
+        "skill-snapshot/SKILL.md:61",
+        "skill-snapshot/references/template-text-classification.md:27",
+        "skill-snapshot/references/template-text-classification.md:69",
+        "skill-snapshot/references/template-text-classification.md:101",
+        "skill-snapshot/references/style-contract-boundary.md:24"
+      ],
+      "minimal_recommendation": "Ensure the existing distinction and paired examples reach the session, then evaluate role/span decisions. Do not add school-text-specific code or blanket parenthesis cleanup."
+    }
+  ],
+  "limits": [
+    "Cannot determine model internal reason for not invoking Read.",
+    "Skill ToolUse proves an invocation, not full body consumption; references are not automatically included by repository batch assembly.",
+    "Read permission events contain root-category decisions, not file paths; cannot identify exact references read during boundary.",
+    "Body resume is still active; old trace cannot prove whether later resumed batches invoked Read.",
+    "Do not infer semantic improvement from contract tests or this audit."
+  ]
+}

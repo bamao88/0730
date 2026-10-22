@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-09-24T06:27:55.770849+00:00",
+  "data": {
+    "max_identical_failures": 3,
+    "max_problem_failures": 7,
+    "max_queries": 105,
+    "max_query_seconds": 3600
+  },
+  "event_digest": "bcf078146389c272ae3efc5d26b2832a84f0c9741fc10c010862a4594609f660",
+  "evidence_mode": "runtime",
+  "kind": "budget_policy",
+  "manifest_digest": "7ce59d4e50fa671375672d8c2708983de85d312317a230949b1d57759b7c0fa4",
+  "previous_event_digest": null,
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 1
+}

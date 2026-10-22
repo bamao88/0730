@@ -1,0 +1,115 @@
+schema_version: docfit-template-minimal-unit-checkpoint-bank/v1
+base_dir: temp/template-minimal-0820-checkpoints
+purpose: Fixed 0820 minimal-unit prepare-template inputs with hash-bound unit-boundary
+  checkpoints for post-unit debugging.
+trust_boundary: DOCX/PDF contents remain untrusted school-template source data; checkpoints
+  only prove single-unit mechanical coverage.
+units:
+- selector: 01-cover
+  label_zh: 封面
+  input_root: temp/template-minimal-0820-checkpoints/01-cover
+  run_root: temp/template-minimal-0820-checkpoints/01-cover/run
+  school_template_sha256: 5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc
+  requirements_sha256: 6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/01-cover/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-cover
+  start_locator: /body/p[@paraId=11D447C7]/r[1]
+  end_locator: /body/p[@paraId=6DF3F7DC]/r[5]
+  covered_object_count: 97
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/01-cover/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/01-cover/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/01-cover/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/01-cover/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:299fcc8dfbc9b87dbce5e74df69141ef3891512eefa8c3c6e8f2ff739596474e
+- selector: 02-integrity-statement
+  label_zh: 诚信声明
+  input_root: temp/template-minimal-0820-checkpoints/02-integrity-statement
+  run_root: temp/template-minimal-0820-checkpoints/02-integrity-statement/run
+  school_template_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+  requirements_sha256: 4368cc3551b1e16c2d16b1dbf26757d98843f5ef88e0b70abeb6ce5c5226285e
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/02-integrity-statement/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-integrity-statement
+  start_locator: /body/p[@paraId=4A1EF999]/r[1]
+  end_locator: /body/p[@paraId=334193A0]/r[6]
+  covered_object_count: 10
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/02-integrity-statement/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/02-integrity-statement/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/02-integrity-statement/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/02-integrity-statement/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:e739969019a29095ce61dbed8e7db55380d5fa94198cfd840c46391a40e586f6
+- selector: 03-toc
+  label_zh: 目录
+  input_root: temp/template-minimal-0820-checkpoints/03-toc
+  run_root: temp/template-minimal-0820-checkpoints/03-toc/run
+  school_template_sha256: 8474285cfd11d397cfb3f5820d994bdada1be26129b49bf6657869d817dbca1c
+  requirements_sha256: b1b3321926481ebe0b31a0493167047352be74b26b7925383c9951e58832eabb
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/03-toc/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-toc
+  start_locator: /body/p[@paraId=3E72B657]/r[2]
+  end_locator: /body/p[@paraId=0C54D000]/r[3]
+  covered_object_count: 83
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/03-toc/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/03-toc/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/03-toc/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/03-toc/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:5f0d79f8b1e920c82ecb46a1ed825e2fc5e69dd20bfe2347af0e7c795d354ac5
+- selector: 04-paper-body
+  label_zh: 正文
+  input_root: temp/template-minimal-0820-checkpoints/04-paper-body
+  run_root: temp/template-minimal-0820-checkpoints/04-paper-body/run
+  school_template_sha256: 4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc
+  requirements_sha256: 261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/04-paper-body/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-paper-body
+  start_locator: /body/p[@paraId=4CFCB66C]/r[1]
+  end_locator: /body/p[@paraId=1B93D1F3]/r[4]
+  covered_object_count: 228
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/04-paper-body/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/04-paper-body/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/04-paper-body/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/04-paper-body/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:3ae73b67063a384cdb579d25865bb926d26a0b07751ac52a154e117e3446c0cc
+- selector: 05-design-task
+  label_zh: 毕业设计任务书
+  input_root: temp/template-minimal-0820-checkpoints/05-design-task
+  run_root: temp/template-minimal-0820-checkpoints/05-design-task/run
+  school_template_sha256: 7ffd38f9be3d867b8a71e859ed9b952043458cd3116e65191c898c8fc6032ef0
+  requirements_sha256: 4c261e6535cb9b066362774cfdd3111e929ea83714dc4dfbde77e08c5e904fcc
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/05-design-task/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-design-task
+  start_locator: /body/p[@paraId=4FD109CB]/r[1]
+  end_locator: /body/tbl[3]/tr[13]/tc[1]/p[@paraId=5D49505B]/r[7]
+  covered_object_count: 51
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/05-design-task/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/05-design-task/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/05-design-task/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/05-design-task/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:ebee06b43cf3860f850870b57a42fdcb097ff346758b277d9327633ed3cdab5e
+- selector: 06-proposal
+  label_zh: 开题报告
+  input_root: temp/template-minimal-0820-checkpoints/06-proposal
+  run_root: temp/template-minimal-0820-checkpoints/06-proposal/run
+  school_template_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+  requirements_sha256: 9ea41956722e2c11592fb2193bb84825dadd387110d5d887cf2fd72fac64e036
+  field_registry_sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  checkpoint: temp/template-minimal-0820-checkpoints/06-proposal/run/work/.docfit/unit-boundary-checkpoint.json
+  unit_id: u-proposal
+  start_locator: /body/p[@paraId=0992F12C]/r[1]
+  end_locator: /body/p[@paraId=4021B20B]/r[1]
+  covered_object_count: 25
+  resume_command: uv run docfit prepare-template --school-template /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/06-proposal/input/school-template.docx
+    --school-requirements /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/06-proposal/input/school-requirements.pdf
+    --field-registry /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/06-proposal/input/field-registry.yaml
+    --output /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/template-minimal-0820-checkpoints/06-proposal/run
+    --from unit-boundary --resume-proof work/.docfit/unit-boundary-checkpoint.json
+  render_ref: render:v2:e8bdf871216fcc20ae79ae9f745946a8f2e96e8ccec7b02f5b55228f33d444e0

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import time
 from collections.abc import Awaitable, Callable, Mapping
@@ -22,7 +23,13 @@ from claude_agent_sdk.types import (
     ToolPermissionContext,
 )
 
+from docfit.app.agent_home import prepare_agent_home
 from docfit.tools import FULL_TOOL_NAMES, MCP_SERVER_NAME, build_docfit_server
+from docfit.tools.runtime import JsonObject
+from docfit.tools.surface import (
+    DOCFIT_GENERAL_SUBAGENT_FULL_TOOL_NAMES,
+    DOCFIT_GENERAL_WRITE_FULL_TOOL_NAMES,
+)
 
 READ_ONLY_BUILTIN_TOOLS = ("Read", "Glob", "Grep")
 TRUSTED_BASIC_TOOLS = ("Bash", "Write")
@@ -40,11 +47,11 @@ FORBIDDEN_TOOLS = (
     "WebFetch",
 )
 AUTO_APPROVED_TOOL_NAMES = (*FULL_TOOL_NAMES, *TRUSTED_BASIC_TOOLS)
-SKILL_NAMES = ("docfit-school-extract", "convert-thesis")
+DOMAIN_SKILL_NAMES = ("docfit-school-extract", "convert-thesis")
+SKILL_NAMES = ("convert-thesis",)
 SUBAGENT_NAME = "docfit-unit-analyst"
 READ_ONLY_SUBAGENT_TOOLS = (
-    "mcp__docfit__docx_inspect",
-    "mcp__docfit__docx_visual_review",
+    *DOCFIT_GENERAL_SUBAGENT_FULL_TOOL_NAMES,
 )
 MAIN_AGENT_READ_POLICY = (
     "project_skill_references_read_only",
@@ -52,6 +59,7 @@ MAIN_AGENT_READ_POLICY = (
     "current_task_input_read_only",
     "current_task_work_read_only",
     "current_task_output_read_only",
+    "word_packages_through_docfit_tools_only",
     "realpath_before_authorization",
     "sensitive_outside_and_symlink_escape_denied",
 )
@@ -73,6 +81,16 @@ DIRECTORY_POLICY = (
     "outside_task_denied",
 )
 LOGGING_POLICY = "metadata_only_no_document_body"
+UNTRUSTED_SOURCE_DATA_LABEL = "untrusted_docx_source_data"
+SECURITY_CONFIG_SOURCE = "harness_config"
+PROTECTED_RUNTIME_CONFIG_KEYS = (
+    "tool_allowlist",
+    "subagent_type",
+    "reference_hints",
+    "path_roots",
+    "output_directory",
+    "publish_target",
+)
 AGENT_SDK_MAX_BUFFER_BYTES = 16 * 1024 * 1024
 AskUser = Callable[[str], Awaitable[str]]
 
@@ -89,6 +107,7 @@ _SENSITIVE_FILE_NAMES = {
     "secrets",
     "secrets.json",
 }
+_NATIVE_WORD_SUFFIXES = {".doc", ".docm", ".docx", ".dotm", ".dotx"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,6 +122,7 @@ class PermissionAuditEvent:
     option_count: int | None = None
     answered: bool | None = None
     duration_ms: float | None = None
+    input_summary: JsonObject | None = None
 
 
 PermissionAudit = Callable[[PermissionAuditEvent], None]
@@ -175,6 +195,8 @@ class ReadPathPolicy:
         if tool_name == "Read":
             if not resolved.is_file() or resolved.is_symlink():
                 return ReadPathDecision(False, "read_file_not_regular")
+            if _is_native_word_package(resolved):
+                return ReadPathDecision(False, "word_package_native_read_denied")
         elif tool_name == "Glob":
             if not resolved.is_dir():
                 return ReadPathDecision(False, "read_search_root_not_directory")
@@ -183,10 +205,14 @@ class ReadPathPolicy:
                 return ReadPathDecision(False, tree_reason)
         elif not (resolved.is_file() or resolved.is_dir()):
             return ReadPathDecision(False, "read_search_root_invalid")
+        elif resolved.is_file() and _is_native_word_package(resolved):
+            return ReadPathDecision(False, "word_package_native_read_denied")
         elif resolved.is_dir():
             tree_reason = _unsafe_search_tree_reason(resolved)
             if tree_reason is not None:
                 return ReadPathDecision(False, tree_reason)
+            if _tree_contains_native_word_package(resolved):
+                return ReadPathDecision(False, "word_package_native_read_denied")
 
         updated_input = dict(tool_input)
         updated_input[path_key] = str(resolved)
@@ -196,6 +222,31 @@ class ReadPathPolicy:
 def _path_value_is_sensitive(raw_path: str) -> bool:
     normalized = raw_path.replace("\\", "/")
     return any(_name_is_sensitive(part) for part in normalized.split("/") if part)
+
+
+def label_docx_source_text(
+    *,
+    text: str,
+    source_hash: str,
+    location: str,
+    channel: str,
+) -> JsonObject:
+    return {
+        "trust": UNTRUSTED_SOURCE_DATA_LABEL,
+        "instruction_authority": False,
+        "configuration_authority": False,
+        "source_hash": source_hash,
+        "location": location,
+        "channel": channel,
+        "text": text,
+    }
+
+
+def runtime_security_config_sources() -> JsonObject:
+    return {
+        key: SECURITY_CONFIG_SOURCE
+        for key in PROTECTED_RUNTIME_CONFIG_KEYS
+    }
 
 
 def _name_is_sensitive(name: str) -> bool:
@@ -210,6 +261,21 @@ def _name_is_sensitive(name: str) -> bool:
 
 def _path_is_sensitive(path: Path) -> bool:
     return any(_name_is_sensitive(part) for part in path.parts)
+
+
+def _is_native_word_package(path: Path) -> bool:
+    return path.suffix.casefold() in _NATIVE_WORD_SUFFIXES
+
+
+def _tree_contains_native_word_package(root: Path) -> bool:
+    try:
+        for current_root, _directory_names, file_names in os.walk(root, followlinks=False):
+            current = Path(current_root)
+            if any(_is_native_word_package(current / name) for name in file_names):
+                return True
+    except OSError:
+        return False
+    return False
 
 
 def _search_pattern_is_safe(pattern: str) -> bool:
@@ -251,13 +317,17 @@ def build_read_path_policy(
     project: Path,
     cwd: Path,
     task_root: Path | None = None,
+    skills_home: Path | None = None,
 ) -> ReadPathPolicy:
+    """Skill references are read from ``skills_home`` (the Agent home) when given."""
+
     project_path = project.expanduser().resolve(strict=False)
+    skills_path = (skills_home or project).expanduser().resolve(strict=False)
     roots: list[ReadPathRoot] = []
     project_roots = (
         (
             "project_skill_references",
-            _project_root_without_symlinks(project_path, ".claude", "skills"),
+            _project_root_without_symlinks(skills_path, ".claude", "skills"),
         ),
         (
             "product_knowledge_package",
@@ -311,7 +381,8 @@ def build_unit_analyst_definition() -> AgentDefinition:
         prompt=(
             "Analyze only the explicit scope, selected universal Knowledge modules, and "
             "task evidence in the parent prompt. You do not inherit other parent context. "
-            "Use only docx_inspect and docx_visual_review. Never render, edit, validate, "
+            "Use only docfit_evidence and the subagent-safe docfit_check checks. "
+            "Never call separate render, edit, validate, "
             "ask the user, call another Agent, or persist memory. If evidence is missing, "
             "return needs_more_evidence with evidence_requests. Return unit_analysis_v1 "
             "with status, confidence, findings, confirmed_rules, uncertainties, "
@@ -326,8 +397,11 @@ def build_unit_analyst_definition() -> AgentDefinition:
             "Agent",
             "Skill",
             "AskUserQuestion",
+            *DOCFIT_GENERAL_WRITE_FULL_TOOL_NAMES,
+            "mcp__docfit__docx_inspect",
             "mcp__docfit__docx_edit",
             "mcp__docfit__docx_render",
+            "mcp__docfit__docx_visual_review",
             "mcp__docfit__docx_validate",
         ],
         model="inherit",
@@ -460,6 +534,11 @@ def make_permission_callback(
     read_path_policy: ReadPathPolicy | None = None,
     audit: PermissionAudit | None = None,
     registered_tool_names: tuple[str, ...] = FULL_TOOL_NAMES,
+    trusted_basic_tools: tuple[str, ...] = TRUSTED_BASIC_TOOLS,
+    subagent_tool_names: tuple[str, ...] = (
+        *READ_ONLY_SUBAGENT_TOOLS,
+        *DOCFIT_GENERAL_SUBAGENT_FULL_TOOL_NAMES,
+    ),
 ) -> CanUseTool:
     def record(event: PermissionAuditEvent) -> None:
         if audit is not None:
@@ -470,6 +549,22 @@ def make_permission_callback(
         tool_input: dict[str, Any],
         context: ToolPermissionContext,
     ) -> PermissionResultAllow | PermissionResultDeny:
+        if context.agent_id == SUBAGENT_NAME and tool_name not in subagent_tool_names:
+            record(
+                PermissionAuditEvent(
+                    tool_name,
+                    "deny",
+                    SUBAGENT_NAME,
+                    context.tool_use_id,
+                    context.agent_id,
+                    "subagent_tool_denied",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
+                )
+            )
+            return PermissionResultDeny(
+                message="DocFit unit analysts may use only their configured read-only tools.",
+                interrupt=False,
+            )
         if tool_name in READ_ONLY_BUILTIN_TOOLS:
             decision = (
                 read_path_policy.authorize(tool_name, tool_input)
@@ -483,6 +578,7 @@ def make_permission_callback(
                     tool_use_id=context.tool_use_id,
                     agent_id=context.agent_id,
                     reason_code=decision.reason_code,
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             if decision.allowed:
@@ -493,7 +589,7 @@ def make_permission_callback(
                 ),
                 interrupt=False,
             )
-        if tool_name in TRUSTED_BASIC_TOOLS:
+        if tool_name in trusted_basic_tools:
             record(
                 PermissionAuditEvent(
                     tool_name,
@@ -501,6 +597,7 @@ def make_permission_callback(
                     tool_use_id=context.tool_use_id,
                     agent_id=context.agent_id,
                     reason_code="trusted_basic_tool_allowed",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             return PermissionResultAllow()
@@ -512,6 +609,7 @@ def make_permission_callback(
                     tool_use_id=context.tool_use_id,
                     agent_id=context.agent_id,
                     reason_code="registered_tool_allowed",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             return PermissionResultAllow()
@@ -526,6 +624,7 @@ def make_permission_callback(
                         context.tool_use_id,
                         context.agent_id,
                         "subagent_type_allowed",
+                        input_summary=_permission_input_summary(tool_name, tool_input),
                     )
                 )
                 return PermissionResultAllow()
@@ -538,6 +637,7 @@ def make_permission_callback(
                     context.tool_use_id,
                     context.agent_id,
                     "subagent_type_denied",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             return PermissionResultDeny(
@@ -552,6 +652,7 @@ def make_permission_callback(
                     tool_use_id=context.tool_use_id,
                     agent_id=context.agent_id,
                     reason_code="unmatched_tool_denied",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             return PermissionResultDeny(
@@ -568,6 +669,7 @@ def make_permission_callback(
                     tool_use_id=context.tool_use_id,
                     agent_id=context.agent_id,
                     reason_code="question_shape_invalid",
+                    input_summary=_permission_input_summary(tool_name, tool_input),
                 )
             )
             return PermissionResultDeny(
@@ -593,6 +695,7 @@ def make_permission_callback(
                         question_count=len(questions),
                         option_count=option_count,
                         answered=False,
+                        input_summary=_permission_input_summary(tool_name, tool_input),
                     )
                 )
                 return PermissionResultDeny(
@@ -611,6 +714,7 @@ def make_permission_callback(
                         question_count=len(questions),
                         option_count=option_count,
                         answered=False,
+                        input_summary=_permission_input_summary(tool_name, tool_input),
                     )
                 )
                 return PermissionResultDeny(
@@ -631,11 +735,103 @@ def make_permission_callback(
                 option_count=option_count,
                 answered=True,
                 duration_ms=(time.perf_counter() - started) * 1000,
+                input_summary=_permission_input_summary(tool_name, updated_input),
             )
         )
         return PermissionResultAllow(updated_input=updated_input)
 
     return can_use_tool
+
+
+def _object_ref_summary(value: Any) -> JsonObject:
+    raw = value
+    if isinstance(raw, str):
+        payload = raw.removeprefix("object_ref:")
+        try:
+            raw = json.loads(payload)
+        except json.JSONDecodeError:
+            return {"kind": "string", "length": len(value)}
+    if not isinstance(raw, Mapping):
+        return {"kind": type(value).__name__}
+    summary: JsonObject = {"kind": "object"}
+    object_ref = raw.get("object_ref") if isinstance(raw.get("object_ref"), Mapping) else raw
+    for key in ("object_id", "locator", "type"):
+        candidate = object_ref.get(key) if isinstance(object_ref, Mapping) else None
+        if isinstance(candidate, str):
+            summary[key] = candidate
+    document_hash = object_ref.get("document_sha256") if isinstance(object_ref, Mapping) else None
+    if isinstance(document_hash, str):
+        summary["document_sha256"] = document_hash
+    fingerprint = (
+        object_ref.get("expected_fingerprint") if isinstance(object_ref, Mapping) else None
+    )
+    if isinstance(fingerprint, str):
+        summary["expected_fingerprint"] = fingerprint
+    text = raw.get("text")
+    if isinstance(text, str):
+        summary["text_present"] = True
+        summary["text_length"] = len(text)
+    return summary
+
+
+def _permission_input_summary(tool_name: str, tool_input: Mapping[str, Any]) -> JsonObject:
+    """Return metadata-only input evidence for timeout/debug traces."""
+
+    if tool_name == "AskUserQuestion":
+        questions = tool_input.get("questions")
+        question_count = len(questions) if isinstance(questions, list) else None
+        option_count = (
+            sum(
+                len(question.get("options", ()))
+                for question in questions
+                if isinstance(question, Mapping) and isinstance(question.get("options"), list)
+            )
+            if isinstance(questions, list)
+            else None
+        )
+        return {
+            "question_count": question_count,
+            "option_count": option_count,
+            "has_answers": isinstance(tool_input.get("answers"), dict),
+        }
+    if tool_name == "Skill":
+        skill = tool_input.get("skill") or tool_input.get("name")
+        return {"skill": skill} if isinstance(skill, str) else {}
+    if tool_name in READ_ONLY_BUILTIN_TOOLS:
+        result: JsonObject = {}
+        for key in ("file_path", "path", "pattern", "glob"):
+            value = tool_input.get(key)
+            if isinstance(value, str):
+                result[key] = value
+        return result
+    if tool_name.startswith("mcp__docfit__"):
+        result = {}
+        for key in (
+            "schema_version",
+            "source_hash",
+            "candidate_hash",
+            "focus",
+            "check",
+            "operation",
+            "field_id",
+            "output_docx",
+            "idempotency_key",
+            "page",
+            "limit",
+            "render_ref",
+        ):
+            value = tool_input.get(key)
+            if isinstance(value, str | int):
+                result[key] = value
+        if "target_ref" in tool_input:
+            result["target_ref"] = _object_ref_summary(tool_input["target_ref"])
+        if "object_ref" in tool_input:
+            result["object_ref"] = _object_ref_summary(tool_input["object_ref"])
+        if "batch_ref" in tool_input:
+            batch_ref = tool_input["batch_ref"]
+            result["batch_ref"] = batch_ref if isinstance(batch_ref, str) else "<non-string>"
+        return result
+    return {"input_keys": sorted(str(key) for key in tool_input)}
 
 
 def build_agent_options(
@@ -651,11 +847,13 @@ def build_agent_options(
     output_format: dict[str, Any] | None = None,
     max_turns: int = 12,
 ) -> ClaudeAgentOptions:
-    root = cwd or project_root()
+    project = project_root()
+    root = cwd or prepare_agent_home(SKILL_NAMES, project=project)
     read_path_policy = build_read_path_policy(
-        project=root,
+        project=project,
         cwd=root,
         task_root=task_root,
+        skills_home=root,
     )
     configured_hooks: dict[str, list[HookMatcher]] = {
         "PreToolUse": [
@@ -685,7 +883,7 @@ def build_agent_options(
         tools=list(BUILTIN_TOOLS),
         allowed_tools=list(AUTO_APPROVED_TOOL_NAMES),
         disallowed_tools=list(FORBIDDEN_TOOLS),
-        mcp_servers={MCP_SERVER_NAME: build_docfit_server(task_root or root)},
+        mcp_servers={MCP_SERVER_NAME: build_docfit_server(task_root or project)},
         strict_mcp_config=True,
         permission_mode="default",
         can_use_tool=make_permission_callback(
@@ -707,7 +905,7 @@ def build_agent_options(
         or (
             "You are running the DocFit M1 Tool harness. The five DocFit Tools provide "
             "real, permission-bounded DOCX inspection, editing, rendering, visual evidence, "
-            "and independent validation. Use the two enabled domain Skills; path-bounded "
+            "and independent validation. Use the enabled conversion Skill; path-bounded "
             "Read, Glob, and Grep for project Skill references, product Knowledge, and the "
             "current task; trusted, auto-approved Bash and Write; the five registered "
             "DocFit MCP tools; and the type-gated read-only docfit-unit-analyst. Bash and "

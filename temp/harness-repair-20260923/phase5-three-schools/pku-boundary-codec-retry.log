@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_problem_budget_exhausted",
+    "retryable": false,
+    "message": "Revision limit reached for source-entry-b1676a7fc904cb6f7744e603: source_text_partition.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  }
+}

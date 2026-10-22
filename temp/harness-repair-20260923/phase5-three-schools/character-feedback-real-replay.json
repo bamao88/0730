@@ -1,0 +1,20 @@
+{
+  "verification_level": "real replay and Agent-visible feedback construction; not sent to live Agent",
+  "response_sha256": "04a5277611205e2265d6b791e50b4cc45426227703860379d8495a6902ea4cc7",
+  "candidate_still_rejected": true,
+  "first_difference": {
+    "expected": {
+      "character": "“",
+      "codepoint": "U+201C",
+      "end_of_text": false
+    },
+    "submitted": {
+      "character": "\"",
+      "codepoint": "U+0022",
+      "end_of_text": false
+    }
+  },
+  "mismatch_offset": 64,
+  "visible_prompt_contains_difference": true,
+  "visible_prompt": "Runtime Harness feedback:\n{\"affected\": [{\"code\": \"ordered_part_text_mismatch\", \"expected_text\": \"附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。\", \"expected_text_length\": 118, \"expected_trailing_whitespace_codepoints\": [\"U+0020 × 5\"], \"expected_trailing_whitespace_count\": 5, \"field\": \"semantic_judgments[0].parts[0]\", \"first_difference\": {\"expected\": {\"character\": \"“\", \"codepoint\": \"U+201C\", \"end_of_text\": false}, \"submitted\": {\"character\": \"\\\"\", \"codepoint\": \"U+0022\", \"end_of_text\": false}}, \"message\": \"Ordered part text must equal the source substring at the next exact offset.\", \"mismatch_offset\": 64, \"source_entry_id\": \"source-entry-2eb746e9f08a1ba6d753dcf9\", \"source_text_length\": 123, \"submitted_text\": \"附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。\\\"□\\\" 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。\", \"submitted_text_length\": 118}], \"next_step\": \"Use listed reading block or range IDs only to find context in the current unit packet; partition each named source_entries[].text exactly as source_entry_id plus ordered parts, including reported boundary whitespace. Reconsider affected roles and field choices from the readable source evidence; return needs_input if that context is insufficient.\", \"responsibility\": \"agent\", \"review\": {\"mechanical\": true, \"semantic_authority\": false, \"type\": \"mechanical_review\"}, \"status\": \"needs_input\"}\nRevise only the blocked structured output fields unless the feedback exposes a real school-semantic conflict. Do not treat this feedback as a semantic grade. Return a full structured result again."
+}

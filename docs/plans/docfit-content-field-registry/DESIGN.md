@@ -7,19 +7,19 @@
 > 新模板与后续内容运行时 clean-break 快照：`content-fields-v0.5.yaml`
 > 日期：2026-08-13
 
-## Plan Ledger
+## 计划台账
 
-- Plan status: ACTIVE
-- Session scope: content-field-registry-rd-baseline
-- Parent plan: none
-- Child plans: none
-- Last updated: 2026-08-12
-- Current slice: 保持 accepted v0.3 与 Student 002 Gold 不变；Student 001/003 已按同一合同
+- 计划状态: ACTIVE
+- 会话范围: content-field-registry-rd-baseline
+- 父计划: 无
+- 子计划: 无
+- 最近更新: 2026-08-12
+- 当前切片: 保持 accepted v0.3 与 Student 002 Gold 不变；Student 001/003 已按同一合同
   完成验收，并由 accepted v0.4 承载扩样发现的多资产语义图、可选源编号题注、结构配对、
   Word 自动列表编号和 final-visible 修订视图合同
-- Next action: 以 accepted Extraction Gold 为输入，单独准备 Student 001/003 Filling
-- Blocked on: none for Registry/Extraction；Filling 是独立工作包
-- Do not touch from this session: 学校提取 v2 设计、产品运行时、公开 Tool/CLI、M3 实施
+- 下一步: 以 accepted Extraction Gold 为输入，单独准备 Student 001/003 Filling
+- 阻塞项: Registry/Extraction 无；Filling 是独立工作包
+- 本会话不要改: 学校提取 v2 设计、产品运行时、公开 Tool/CLI、M3 实施
 
 ## 1. 设计决定
 
@@ -297,7 +297,7 @@ Student 001/003 产品文档已一起通过 Human；Student 002 继续固定绑�
 3. 替换 template-spec、alignment、manifest、logical-unit case 和 Eval 设计中的所有旧路径；
 4. 每个消费者记录 Registry ID、版本和 hash；
 5. 删除 Eval 目录中被取代的 `content-fields.yaml`，不留兼容副本；
-6. 只更新 00–06 中指向旧临时路径或与本设计直接冲突的声明；生产 cutover
+6. 只更新当前架构入口中指向旧临时路径或与本设计直接冲突的声明；生产 cutover
    时再根据当时实现原子同步完整长期合同。
 
 ## 12. 验收与停止门
@@ -335,7 +335,7 @@ Student 001/003 产品文档已一起通过 Human；Student 002 继续固定绑�
 ## 14. Unknown-unknown scout
 
 本计划不另行启动广泛 scout。跳过原因：问题已由实际 54 字段、三校 alignment、
-template-spec、Eval 设计和 00–06 交叉审查定位；当前目标是所有权拆分与合同固化，
+template-spec、Eval 设计和当前架构入口交叉审查定位；当前目标是所有权拆分与合同固化，
 不是扩大论文字段集。字段语义的未知项通过第 7 节的 unregistered 通道保留。
 
 ## 15. G1 研发基线结论

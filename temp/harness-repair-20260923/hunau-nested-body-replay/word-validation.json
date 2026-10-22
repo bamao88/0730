@@ -1,0 +1,16 @@
+{
+  "verification_level": "real Tool package validation; not visual review or product acceptance",
+  "officecli_version": "1.0.143",
+  "bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/hunau-nested-body-replay/diagnostic-cell-body-interfaces.docx": "cc4d96f68c056de3793d088deef042a2deb4a46b03506013d4235eb7dbb8a4b3"
+  },
+  "source": {
+    "passed": true,
+    "detail": "Validation passed: no errors found."
+  },
+  "candidate": {
+    "passed": true,
+    "detail": "Validation passed: no errors found."
+  }
+}

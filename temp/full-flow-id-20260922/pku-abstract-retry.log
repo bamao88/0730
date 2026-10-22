@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_batch_global_feedback_failed",
+    "retryable": true,
+    "message": "Global semantic review did not converge within its budget.",
+    "suggested_actions": []
+  }
+}

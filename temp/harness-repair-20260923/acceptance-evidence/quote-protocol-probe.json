@@ -1,0 +1,38 @@
+{
+  "verification_level": "synthetic live Unicode transport probe, not school E2E",
+  "input": {
+    "values": [
+      "“□”",
+      "他说：“保留中文引号”。",
+      "‘单引号’",
+      "ASCII \"quote\""
+    ]
+  },
+  "backend": "minimax",
+  "public_text": [
+    "{\"values\": [\"“□”\", \"他说：“保留中文引号”。\", \"‘单引号’\", \"ASCII \\\"quote\\\"\"]}"
+  ],
+  "structured_submissions": [
+    {
+      "values": [
+        "“□”",
+        "他说：“保留中文引号”。",
+        "‘单引号’",
+        "ASCII \"quote\""
+      ]
+    }
+  ],
+  "subtype": "success",
+  "is_error": false,
+  "terminal_reason": "completed",
+  "structured_output": {
+    "values": [
+      "“□”",
+      "他说：“保留中文引号”。",
+      "‘单引号’",
+      "ASCII \"quote\""
+    ]
+  },
+  "duration_seconds": 6.3,
+  "exact_match": true
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "checks": [
+    {
+      "name": "libreoffice_pdf",
+      "result": "ok"
+    },
+    {
+      "name": "render_integrity",
+      "result": "ok"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "approximate_render",
+      "kind": "fidelity",
+      "message": "LibreOffice visual evidence is approximate, not Word pixel parity."
+    }
+  ],
+  "failure": null,
+  "cache_hit": false,
+  "render_ref": "render:v2:e2f3acc2993525f45ecd01585a216a8db2a9905896f158c5cd25f0fa8670352d",
+  "document_sha256": "654e9bc00e6d4a78ea5c433544d9cf4351b44eab7b9f92b0b477568c175a33b3",
+  "page_count": 13,
+  "fidelity": "approximate",
+  "renderer": {
+    "name": "libreoffice",
+    "version": "LibreOffice 25.2.3.2 520(Build:2)",
+    "container_image": "docfit-libreoffice-visual:25.2.3.2",
+    "container_image_digest": "sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee",
+    "font_environment_digest": "841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7",
+    "locale": "zh_CN.UTF-8",
+    "pdf_export_options": "pdf:writer_pdf_Export:{\"UseLosslessCompression\":{\"type\":\"boolean\",\"value\":\"true\"},\"ReduceImageResolution\":{\"type\":\"boolean\",\"value\":\"false\"},\"ExportBookmarks\":{\"type\":\"boolean\",\"value\":\"true\"}}"
+  },
+  "overview": {
+    "evidence_ref": "visual:v2:6a811763a846c77bdedcddc5a8ed60db3e3d5fb78d0abbe7690f51057a0ebd35",
+    "covered_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "has_more": true
+  }
+}

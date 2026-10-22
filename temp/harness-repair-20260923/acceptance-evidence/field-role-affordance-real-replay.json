@@ -1,0 +1,58 @@
+{
+  "level": "real replay of unchanged actual NJAU judgments; no Agent call",
+  "input_hashes": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/object-inventory.json": "6a13ea7c12d669c410a8cf54958d285e1cd908789b4ea71a9b61f6c4dbe10d01",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/semantic-judgments.json": "e4b8a52a516db803f363db8077535043c80d6986b01ac5dacd4a0e42b7462ddc"
+  },
+  "judgment_count": 211,
+  "blockers": [
+    {
+      "field": "semantic_judgments[134].parts[0].role",
+      "field_id": "body.paragraph",
+      "source_entry_id": "source-entry-cc2f3b6c9730c06074c509df",
+      "submitted_role": "fill_slot",
+      "code": "field_role_not_in_input_vocabulary",
+      "allowed_part_roles": [
+        "body_structure"
+      ],
+      "message": "This field and role combination is not permitted by the input vocabulary. Reconsider the field and role together from the source evidence; permitted roles for this field are ['body_structure']."
+    },
+    {
+      "field": "semantic_judgments[134].parts[2].role",
+      "field_id": "body.paragraph",
+      "source_entry_id": "source-entry-cc2f3b6c9730c06074c509df",
+      "submitted_role": "fill_slot",
+      "code": "field_role_not_in_input_vocabulary",
+      "allowed_part_roles": [
+        "body_structure"
+      ],
+      "message": "This field and role combination is not permitted by the input vocabulary. Reconsider the field and role together from the source evidence; permitted roles for this field are ['body_structure']."
+    },
+    {
+      "field": "semantic_judgments[160].parts[0].role",
+      "field_id": "appendix.body",
+      "source_entry_id": "source-entry-28fd41bffbbfbd9f108d7014",
+      "submitted_role": "body_structure",
+      "code": "field_role_not_in_input_vocabulary",
+      "allowed_part_roles": [
+        "fill_slot"
+      ],
+      "message": "This field and role combination is not permitted by the input vocabulary. Reconsider the field and role together from the source evidence; permitted roles for this field are ['fill_slot']."
+    },
+    {
+      "field": "semantic_judgments[161].parts[0].role",
+      "field_id": "appendix.body",
+      "source_entry_id": "source-entry-cc676b9361a2f10e9beb09d6",
+      "submitted_role": "body_structure",
+      "code": "field_role_not_in_input_vocabulary",
+      "allowed_part_roles": [
+        "fill_slot"
+      ],
+      "message": "This field and role combination is not permitted by the input vocabulary. Reconsider the field and role together from the source evidence; permitted roles for this field are ['fill_slot']."
+    }
+  ],
+  "same_local_and_global_feedback": true,
+  "inputs_unchanged": true,
+  "execution_capability_gates_unchanged": true,
+  "product_acceptance": false
+}

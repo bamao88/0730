@@ -1,0 +1,15 @@
+{
+  "verification_level": "repository regression; mock Agent tests and deterministic integration, not school E2E or product acceptance",
+  "runtime_commit": "ae1cb9f",
+  "officecli_version": "1.0.143",
+  "officecli_sha256": "2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096",
+  "passed": 1304,
+  "failed": 1,
+  "warnings": 1,
+  "failed_test": "tests/integration/test_student_content_fill.py::test_independent_student_content_app_publishes_partial_candidate",
+  "failure": "synthetic Fill Contract v2 lacks required materialization provenance",
+  "baseline_reproduced_on": "f0bb5c4",
+  "baseline_log": "student-fill-baseline-f0bb5c4.log",
+  "runtime_validation_weakened": false,
+  "log_sha256": "e66483ee2465bf7209b4eee7ae4693ad7e751b5ce4d64d065cf10dbeabe11855"
+}

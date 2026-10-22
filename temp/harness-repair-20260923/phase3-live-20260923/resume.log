@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "canonical_source_inventory_projection_stale",
+    "retryable": true,
+    "message": "The persisted unit projections do not match the accepted units.",
+    "suggested_actions": [
+      "Restart post-unit preparation from the current source."
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-09-24T09:28:47.191934+00:00",
+  "data": {
+    "failure": {
+      "code": "interrupted"
+    },
+    "ledger_digest": "917fa4902582119a878709a44f076e0ac99722d8500b3d8fbd025d611e6641ed"
+  },
+  "event_digest": "8b7a95388a895fe16cd29fd6efb04458103291e7c06db18e6623f6b080ba61d7",
+  "evidence_mode": "runtime",
+  "kind": "run_failed",
+  "manifest_digest": "969c54bca51006c313805f64344016302389dd5d36a1d27d5f7dbd670a9a82ff",
+  "previous_event_digest": "c645c9ae1cfe77889e18b47d68184dd6cd931b5ef48675cf1a929cfd60bfff0c",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 5
+}

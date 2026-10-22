@@ -1,0 +1,128 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 4,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（小二号字空两行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note that describes how the cover should be laid out; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-0e8dfd6bd9282950de55de0b"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "thesis.title.zh",
+              "role": "fill_slot",
+              "text": "毕业论文（设计）中文题目"
+            },
+            {
+              "role": "cleanup",
+              "text": "（小二黑体，加粗，居中）"
+            }
+          ],
+          "reason": "The first segment is the prompt/placeholder for the Chinese thesis title and will be replaced by the thesis.title.zh field value; the parenthetical is a style instruction (font, weight, alignment) to be cleaned.",
+          "source_entry_id": "source-entry-e9483ae0a9e7042fd27ac0ce"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 36
+              }
+            },
+            {
+              "role": "fixed_label",
+              "text": "学□□生："
+            },
+            {
+              "field_id": "author.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            },
+            {
+              "role": "cleanup",
+              "text": "（或×□×）"
+            },
+            {
+              "role": "style_only",
+              "text": "",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 2
+              }
+            },
+            {
+              "role": "cleanup",
+              "text": "（五号宋体居中）"
+            }
+          ],
+          "reason": "Leading 36 spaces carry the centering layout requirement (style_only); the literal label '学□□生：' is fixed text; '×××' is the fill slot bound to author.name.zh; '（或×□×）' is an alternative-format authoring example that should be cleaned; the two spaces between cleanup parts are pure layout whitespace; '（五号宋体居中）' is a font/alignment instruction to be cleaned.",
+          "source_entry_id": "source-entry-df09cdb77fb41813ec986d20"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "指导老师："
+            },
+            {
+              "field_id": "advisor.name.zh",
+              "role": "fill_slot",
+              "text": "×××"
+            }
+          ],
+          "reason": "'指导老师：' is the fixed advisor label; '×××' is the placeholder for the advisor name and is bound to advisor.name.zh.",
+          "source_entry_id": "source-entry-b511494b4d9c6ab1aa0d6e50"
+        },
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "(湖南农业大学"
+            },
+            {
+              "field_id": "author.department",
+              "role": "fill_slot",
+              "text": "××××"
+            },
+            {
+              "role": "fixed_label",
+              "text": "学院，长沙 410128)"
+            }
+          ],
+          "reason": "'(湖南农业大学' is the fixed university name for this template plus the opening parenthesis; '××××' is the placeholder for the specific college within the university and is bound to author.department; '学院，长沙 410128)' is the fixed affiliation suffix and closing parenthesis.",
+          "source_entry_id": "source-entry-49da2e477eeed285d9d5663d"
+        },
+        {
+          "parts": [
+            {
+              "role": "cleanup",
+              "text": "（五号字空一行）"
+            }
+          ],
+          "reason": "Parenthetical font/spacing authoring note for the cover layout; it should not appear in the clean template.",
+          "source_entry_id": "source-entry-7860371bca78326ca68727e4"
+        }
+      ],
+      "status": "complete",
+      "summary": "Completed semantic judgment batch 2 of 10 for unit '封面（中文）'. All 6 source entries were annotated: cover-page style notes bracketing the title and student lines were marked as cleanup; the title prompt and student/advisor/college placeholders were bound to thesis.title.zh, author.name.zh, advisor.name.zh and author.department respectively; fixed labels (student/advisor markers, punctuation, university name) and the leading centering whitespace were preserved."
+    }
+  },
+  "event_digest": "191dbe2ec8d86b5fc40d22121413315eb3267bd740150e10e342382dfb1577ff",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "8ddc8d99647773988dcea38b9af111efd0ad596a72be8f7d59b0840ce8fdbc83",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 5
+}

@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-23T06:28:45.472528+00:00",
+  "data": {
+    "base_candidate_sequence": 27,
+    "base_ledger_digest": "5c23cb6c9e65647e6a7d225f297fd282bc72fd72926e2717e5b7e4ebc5fc0458",
+    "batch_id": "semantic-batch-0010-5e111e55",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=unit_evidence_packet and unit_id=unit-appendix. This is batch 10 of 10 for accepted unit '附录'. Each entry includes all unit_contexts it crosses, with exact text per unit. Judge each assigned entry once over its complete text. Ordered parts must end at each unit-context text boundary, even when adjacent roles are identical. The unit packet remains the readable context, but this candidate owns exactly the following source entries in this exact order:\n[\"source-entry-fb18deaa0a39b544ff1556ad\", \"source-entry-dc41864a396a92f024e54c1e\", \"source-entry-ad5f8a233174605371fc1bd4\", \"source-entry-077273fefe75263ca82a8b90\", \"source-entry-27ca3789b033fceb17b0952f\", \"source-entry-a3dcaf6d25b787ff8ff9b43d\", \"source-entry-ce1fdd1d3d61385afc728547\", \"source-entry-baff4f366e19bcf4bd10e60b\", \"source-entry-ea8c55234a3be3c6c7dd0d83\", \"source-entry-5324e1f5126459b791012d92\", \"source-entry-17f6271fb61a9ef5efb5950e\", \"source-entry-949f8a0104dfb3bd092ba4d6\", \"source-entry-50b84730e3a7062a28c21874\", \"source-entry-2e67b3e3f3360e2fc2f2e09d\", \"source-entry-54ed74749af6fdd90db79b2c\", \"source-entry-66ad5609657e0221be44e8d1\", \"source-entry-3af3dabf5c04965a6a8912a7\", \"source-entry-fb506c2e8801f84714743cdf\", \"source-entry-92fabaacc7f053ad145dd2b5\", \"source-entry-945dabb40ad2465c4f53114c\", \"source-entry-8cb317548ea15adc31403474\"]\nReturn status=complete with one source_entry_id + ordered parts judgment for every listed entry, in manifest order, and no judgment for any other entry. Choose field IDs only from the packet field_id_vocabulary and preserve exact source text. If the readable school evidence is insufficient, return status=needs_input and stop; do not invent an answer. This is a candidate only: Harness accepts the complete aggregated semantic set atomically after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. "
+  },
+  "event_digest": "b0da33d1daf46c6df8fea13452603b6a33ab1ea085d76076e21080a34756c7a1",
+  "evidence_mode": "replay",
+  "kind": "request",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "8bf896401f6d8fec01e782da02127e8c1272e58db1487610bc4a980a7628a168",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 28
+}

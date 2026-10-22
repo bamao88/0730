@@ -1,0 +1,60 @@
+{
+  "observed_at": "2026-09-24T03:59:40.689097+00:00",
+  "verification_level": "live process wait plus durable semantic journal observation",
+  "terminal": false,
+  "final_publication_verified": false,
+  "product_acceptance": false,
+  "runs": {
+    "pku": {
+      "session_id": 79102,
+      "confirmed_live_this_turn": true,
+      "event_counts": {
+        "budget_policy": 1,
+        "request": 16,
+        "response": 15,
+        "local_review": 12,
+        "candidate_recorded": 12,
+        "local_rejected": 3
+      },
+      "last_event": {
+        "sequence": 59,
+        "kind": "request",
+        "created_at": "2026-09-24T03:59:24.662200+00:00"
+      }
+    },
+    "hunau": {
+      "session_id": 84081,
+      "confirmed_live_this_turn": true,
+      "event_counts": {
+        "budget_policy": 1,
+        "request": 10,
+        "response": 9,
+        "local_review": 8,
+        "local_rejected": 3,
+        "candidate_recorded": 6
+      },
+      "last_event": {
+        "sequence": 37,
+        "kind": "request",
+        "created_at": "2026-09-24T03:57:54.897028+00:00"
+      }
+    },
+    "njau": {
+      "session_id": 6092,
+      "confirmed_live_this_turn": true,
+      "event_counts": {
+        "budget_policy": 1,
+        "request": 16,
+        "response": 15,
+        "local_review": 14,
+        "local_rejected": 3,
+        "candidate_recorded": 12
+      },
+      "last_event": {
+        "sequence": 61,
+        "kind": "request",
+        "created_at": "2026-09-24T03:55:21.258591+00:00"
+      }
+    }
+  }
+}

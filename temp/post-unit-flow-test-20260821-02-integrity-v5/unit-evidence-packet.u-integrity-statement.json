@@ -1,0 +1,524 @@
+{
+  "evidence": [
+    {
+      "format_hint": {
+        "alignment": "center",
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=4A1EF999]",
+      "object_id": "obj-f329a8a030a9e01681c626db",
+      "style": "Normal",
+      "text": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "alignment": "center",
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]",
+      "object_id": "obj-1b19113699ab20fd798b1beb",
+      "style": "Normal",
+      "text": "诚 信 声 明",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=1D655190]",
+      "object_id": "obj-ba2c70ae3d758a797c8f67d0",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=52F6D59B]",
+      "object_id": "obj-92550811f86ca1d404d4a169",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=626D8268]",
+      "object_id": "obj-aa6a00085bc372ef7b401f56",
+      "style": "Normal",
+      "text": "本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=1E30CD97]",
+      "object_id": "obj-b51324e6c4977069da2d2200",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=514BCC5B]",
+      "object_id": "obj-cc51c71095e837ddaa422c5b",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=63EBA93B]",
+      "object_id": "obj-c36338354c8e5cde15a66779",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=62C82508]",
+      "object_id": "obj-4dffb3d37864bcef2625bccb",
+      "style": "Normal",
+      "text": "                    毕业论文（设计）作者签名：",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]",
+      "object_id": "obj-3d90800d3624c9aa92f759a8",
+      "style": "Normal",
+      "text": "                                       年    月    日",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=75C9344B]",
+      "object_id": "obj-addec19d845823b3933ad825",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=42E812EA]",
+      "object_id": "obj-d74bb4301a4a59c109a8068b",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=5C2A639D]",
+      "object_id": "obj-27b17dd3d4aca5e7bd337b1f",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=613C583F]",
+      "object_id": "obj-035b861559241c6d1547e432",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=63125D66]",
+      "object_id": "obj-2903edaf1617c1d70dbd227d",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=5295FD34]",
+      "object_id": "obj-7a2d305a8ff3f0f89b4112d9",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=5F1F83FD]",
+      "object_id": "obj-74989b0b007de3572d8ea9e7",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=5717616B]",
+      "object_id": "obj-c732f79f8398948f9308ee58",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=37011DEA]",
+      "object_id": "obj-53a94c5aabb56da9d076c2a6",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=40E55DE5]",
+      "object_id": "obj-b3c62d7fc69c7f759f885bf4",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=3A4FE366]",
+      "object_id": "obj-6467f476438d5b0931c1dd85",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=25D3854A]",
+      "object_id": "obj-7230194d37f05387e55afe25",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=3EAD3B6E]",
+      "object_id": "obj-e9084ccc8344150c4c73d5cb",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=16CDB2BF]",
+      "object_id": "obj-b0ff116fb0745adfae89bb4b",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=6C4EFD4F]",
+      "object_id": "obj-4a21bc6d1f8fcd102ce5f539",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=2D58BB2F]",
+      "object_id": "obj-c46a4166fe61004b6432e3f2",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=4011BABD]",
+      "object_id": "obj-b029f6df35a5449202fe01a9",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "size": "9pt"
+      },
+      "locator": "/body/p[@paraId=0335B523]",
+      "object_id": "obj-dc94f03cc1c2627e40867df5",
+      "style": "Normal",
+      "text": "",
+      "type": "paragraph"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=4A1EF999]/r[1]",
+      "object_id": "obj-3912f2fa053572c9e4bef466",
+      "text": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[1]",
+      "object_id": "obj-04b885184a5a4c20462de92c",
+      "text": "诚",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[2]",
+      "object_id": "obj-425e240c3a290bdd4b519534",
+      "text": " ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[3]",
+      "object_id": "obj-0f5212cdc7e967dd48384f09",
+      "text": "信",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[4]",
+      "object_id": "obj-638a3ae225874e1a093682e6",
+      "text": " ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[5]",
+      "object_id": "obj-101cbd81f417bbf925b6e950",
+      "text": "声",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[6]",
+      "object_id": "obj-a492ac8e001fb6172d226fd6",
+      "text": " ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "font.ea": "黑体",
+        "size": "18pt"
+      },
+      "locator": "/body/p[@paraId=215A39BA]/r[7]",
+      "object_id": "obj-9e61de0e8601c5fa56ef8d4e",
+      "text": "明",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "12pt"
+      },
+      "locator": "/body/p[@paraId=626D8268]/r[1]",
+      "object_id": "obj-423c3a1dbd69ffe8448b3168",
+      "text": "本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=62C82508]/r[1]",
+      "object_id": "obj-2b732fb4d20e7ac887ab9cf6",
+      "text": "                    ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=62C82508]/r[2]",
+      "object_id": "obj-b94e9c38c6a16c791017f0e4",
+      "text": "毕业论文（设计）作者签名：",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[1]",
+      "object_id": "obj-33fc2b718f611beec8cc949f",
+      "text": "                                       ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[2]",
+      "object_id": "obj-07cf774b4fad065e55b72075",
+      "text": "年",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[3]",
+      "object_id": "obj-d41b4fb9766791a3ffb26c88",
+      "text": "    ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[4]",
+      "object_id": "obj-f83baf9ab92d8be1b42d80fc",
+      "text": "月",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[5]",
+      "object_id": "obj-bc851a9c09b7bd44236fb449",
+      "text": "    ",
+      "type": "run"
+    },
+    {
+      "format_hint": {
+        "size": "14pt"
+      },
+      "locator": "/body/p[@paraId=334193A0]/r[6]",
+      "object_id": "obj-7aebc40183d9a213e43df8e8",
+      "text": "日",
+      "type": "run"
+    }
+  ],
+  "failure": null,
+  "focus": "unit_evidence_packet",
+  "refs": {
+    "document": "input/school-template.docx",
+    "scope_ref": "/body/p[@paraId=4A1EF999]/r[1]../body/p[@paraId=334193A0]/r[6]",
+    "unit_boundary_checkpoint": "work/.docfit/unit-boundary-checkpoint.json"
+  },
+  "risks": [],
+  "schema_version": "docfit_evidence_card_v1",
+  "source_hash": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+  "status": "ok",
+  "summary": {
+    "document": {
+      "bookmarks": 0,
+      "comments": false,
+      "content_controls": 0,
+      "drawings": 0,
+      "endnotes": true,
+      "equations": 0,
+      "fields": 0,
+      "footers": 1,
+      "footnotes": true,
+      "graphic_objects": 0,
+      "headers": 1,
+      "hyperlinks": 0,
+      "images": 0,
+      "merged_cells": 0,
+      "numbering_part": false,
+      "package_parts": 16,
+      "paragraphs": 35,
+      "sections": 1,
+      "sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+      "styles_part": true,
+      "tables": 0,
+      "text_boxes": 0,
+      "tracked_deletions": 0,
+      "tracked_insertions": 0,
+      "vml_objects": 0
+    },
+    "evidence_shape": "compact_semantic_objects_without_target_ref; request object_detail only after a write target is needed",
+    "object_count": 56,
+    "object_window": {
+      "has_more": false,
+      "limit": 80,
+      "next_offset": null,
+      "offset": 0,
+      "returned": 45,
+      "total": 45
+    },
+    "post_unit_flow": "unit evidence packet for semantic judgment before Registry/style evidence",
+    "scoped_object_count": 45,
+    "unit": {
+      "covered_object_ids": [
+        "obj-3912f2fa053572c9e4bef466",
+        "obj-04b885184a5a4c20462de92c",
+        "obj-0f5212cdc7e967dd48384f09",
+        "obj-101cbd81f417bbf925b6e950",
+        "obj-9e61de0e8601c5fa56ef8d4e",
+        "obj-423c3a1dbd69ffe8448b3168",
+        "obj-b94e9c38c6a16c791017f0e4",
+        "obj-07cf774b4fad065e55b72075",
+        "obj-f83baf9ab92d8be1b42d80fc",
+        "obj-7aebc40183d9a213e43df8e8"
+      ],
+      "end_locator": "/body/p[@paraId=334193A0]/r[6]",
+      "start_locator": "/body/p[@paraId=4A1EF999]/r[1]",
+      "unit_id": "u-integrity-statement",
+      "unit_name": "诚信声明"
+    }
+  },
+  "untrusted": {
+    "configuration_authority": false,
+    "instruction_authority": false,
+    "marker": "untrusted_docx_source_data"
+  }
+}

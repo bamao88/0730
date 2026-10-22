@@ -1,0 +1,48 @@
+{
+  "artifact_path": null,
+  "backend": "minimax",
+  "client_count": 4,
+  "counts": {
+    "checkpoint": "post-unit",
+    "covered_object_count": 124,
+    "judgment_count": 28,
+    "object_count": 144,
+    "reading_block_count": 16
+  },
+  "duration_api_ms": 906000,
+  "duration_ms": 589594,
+  "fill_contract_path": null,
+  "num_turns": 24,
+  "session_count": 4,
+  "session_id": "89ee6e00-b037-43b5-b06d-a10a961a1d10",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "checkpointed",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task",
+  "template_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "tool_uses": [
+    "Skill",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 665343
+}

@@ -1,0 +1,31 @@
+{
+  "case_id": "student-001-njau-complete-debug",
+  "default_checks": [
+    "input",
+    "style",
+    "generate",
+    "quality"
+  ],
+  "description": "Student 001 content applied to the NJAU undergraduate template with debug task-input cover metadata and an accepted fill contract. This case is intended to exercise the COMPLETE final-generation path.",
+  "expected": {
+    "current_generate_status": "COMPLETE",
+    "partial_reasons": [],
+    "quality": {
+      "gold_docx": "temp/manual-gold-preparation/gold/30-cross-conversions/02-njau-undergraduate/njau-undergraduate__student-001__converted.docx",
+      "thresholds": {
+        "max_media_delta": 0,
+        "max_page_count_delta_abs": 0,
+        "max_placeholder_residue_count": 0,
+        "max_visual_changed_pixel_ratio_mean": 0.02,
+        "max_visual_changed_pixel_ratio_page": 0.08,
+        "min_full_text_similarity": 0.99,
+        "min_paragraph_sequence_similarity": 0.95
+      }
+    },
+    "school_known_gap_count": 36,
+    "school_style_candidate_count": 0,
+    "selection_case": "no_school_candidate_with_explicit_known_gaps"
+  },
+  "input_package": "temp/final-generation-e2e-inputs-20260816/student-001-njau-complete-debug",
+  "schema_version": "docfit-final-generation-eval-case/v1"
+}

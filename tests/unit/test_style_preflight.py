@@ -106,6 +106,18 @@ def _student() -> tuple[dict[str, Any], dict[str, Any]]:
     return student_content, student_inventory
 
 
+def _known_gap(profile: StylePropertyProfile) -> dict[str, Any]:
+    return {
+        "slot_id": "body.table.caption.expected",
+        "field_id": "body.table.caption",
+        "style_role_id": "style.caption.table",
+        "property_profile_ref": profile.ref().as_dict(),
+        "property_paths": list(profile.property_paths),
+        "unresolved_properties": list(profile.property_paths),
+        "reason": "school_role_representative_missing",
+    }
+
+
 def test_preflight_binds_inventory_selection_and_executable_target_before_fill() -> None:
     registry = _registry()
     student_content, student_inventory = _student()
@@ -115,6 +127,7 @@ def test_preflight_binds_inventory_selection_and_executable_target_before_fill()
         student_content=student_content,
         student_inventory=student_inventory,
         school_candidates=[],
+        school_known_gaps=[_known_gap(registry.for_role_type("caption"))],
         school_observation_set_digest="b" * 64,
         template_sha256="c" * 64,
         registry=registry,
@@ -163,6 +176,7 @@ def test_preflight_fails_before_fill_when_semantic_numbering_has_no_word_definit
             student_content=student_content,
             student_inventory=student_inventory,
             school_candidates=[],
+            school_known_gaps=[_known_gap(registry.for_role_type("caption"))],
             school_observation_set_digest="b" * 64,
             template_sha256="c" * 64,
             registry=registry,

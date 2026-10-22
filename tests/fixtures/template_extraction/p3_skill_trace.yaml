@@ -1,0 +1,12 @@
+trace_id: p3-skill-routing
+domain_question:
+  observed_issue: 固定文字、说明、示例值、填写位置难以区分
+  expected_reference: template-text-classification.md
+mechanical_question:
+  observed_issue: 当前底层账本或对象映射反馈需要机械检查。
+  expected_tool: null
+  expected_body_term: 底层账本或对象映射反馈
+feedback:
+  observed_feedback: 阶段反馈提示某个可读范围缺失或重复。
+  expected_anchor: 反馈处理
+  expected_body_term: 范围缺失、重复或冲突

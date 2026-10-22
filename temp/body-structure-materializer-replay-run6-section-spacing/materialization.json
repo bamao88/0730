@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "operation_count": 14,
+  "cleanup_count": 31,
+  "operations": [
+    {
+      "action": "materialize_structure",
+      "field_id": "body.chapters",
+      "block_id": "u-paper-body:block-0020",
+      "member_count": 9,
+      "members": [
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0020"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0021"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0022"
+        },
+        {
+          "field_id": "body.heading.outline2",
+          "block_id": "u-paper-body:block-0023"
+        },
+        {
+          "field_id": "body.heading.outline3",
+          "block_id": "u-paper-body:block-0024"
+        },
+        {
+          "field_id": "body.numbered_list_item",
+          "block_id": "u-paper-body:block-0025"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0026"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0027"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0028"
+        }
+      ],
+      "judgment_ids": [
+        "J04-body-heading-examples-both-tracks"
+      ]
+    },
+    {
+      "judgment_ids": [
+        "J09-cover-title-zh"
+      ],
+      "field_id": "thesis.title.zh",
+      "block_id": "u-paper-body:block-0003"
+    },
+    {
+      "judgment_ids": [
+        "J10-cover-student-name-zh"
+      ],
+      "field_id": "author.name.zh",
+      "block_id": "u-paper-body:block-0004"
+    },
+    {
+      "judgment_ids": [
+        "J11-cover-advisor-name-zh"
+      ],
+      "field_id": "advisor.name.zh",
+      "block_id": "u-paper-body:block-0005"
+    },
+    {
+      "judgment_ids": [
+        "J12-cover-affiliation-zh"
+      ],
+      "field_id": "author.department",
+      "block_id": "u-paper-body:block-0006"
+    },
+    {
+      "judgment_ids": [
+        "J13-chinese-abstract"
+      ],
+      "field_id": "abstract.zh",
+      "block_id": "u-paper-body:block-0008"
+    },
+    {
+      "judgment_ids": [
+        "J14-chinese-keywords"
+      ],
+      "field_id": "keywords.zh",
+      "block_id": "u-paper-body:block-0009"
+    },
+    {
+      "judgment_ids": [
+        "J15-english-title"
+      ],
+      "field_id": "thesis.title.en",
+      "block_id": "u-paper-body:block-0011"
+    },
+    {
+      "judgment_ids": [
+        "J16-english-student-name"
+      ],
+      "field_id": "author.name.en",
+      "block_id": "u-paper-body:block-0012"
+    },
+    {
+      "judgment_ids": [
+        "J17-english-advisor-name"
+      ],
+      "field_id": "advisor.name.en",
+      "block_id": "u-paper-body:block-0013"
+    },
+    {
+      "judgment_ids": [
+        "J18-english-affiliation"
+      ],
+      "field_id": "author.department.en",
+      "block_id": "u-paper-body:block-0014"
+    },
+    {
+      "judgment_ids": [
+        "J19-english-abstract"
+      ],
+      "field_id": "abstract.en",
+      "block_id": "u-paper-body:block-0016"
+    },
+    {
+      "judgment_ids": [
+        "J20-english-keywords"
+      ],
+      "field_id": "keywords.en",
+      "block_id": "u-paper-body:block-0017"
+    },
+    {
+      "judgment_ids": [
+        "J21-references-body"
+      ],
+      "field_id": "references.entries",
+      "block_id": "u-paper-body:block-0043"
+    }
+  ],
+  "cleanup": [
+    {
+      "block_id": "u-paper-body:block-0001",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0002",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0007",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0010",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0015",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0018",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0040",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0044",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0047",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0019",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0029",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0030",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0031",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0032",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0033",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0034",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0035",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0036",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0037",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0038",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0039",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0042",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0046",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0049",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0050",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0051",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0052",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0053",
+      "action": "clear_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0041",
+      "action": "strip_instruction_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0045",
+      "action": "strip_instruction_text"
+    },
+    {
+      "block_id": "u-paper-body:block-0048",
+      "action": "strip_instruction_text"
+    }
+  ]
+}

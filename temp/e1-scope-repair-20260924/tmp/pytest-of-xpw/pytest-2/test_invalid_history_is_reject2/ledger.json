@@ -1,0 +1,28 @@
+{
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "batch_id": "semantic-batch-0001-77ddf8db",
+      "candidate_digest": "5d2ca473953c3617aa89277c3a3b64cd1185a4e8fb593bc21d7dea8bcfbef7e1",
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        }
+      ],
+      "summary": "判断"
+    }
+  ],
+  "field_vocabulary_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "ledger_digest": "968047f46687c60d592e167b58bd0c4cf19f066e1d4d753b4c963cd17a57884d",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "schema_version": "docfit-semantic-batch-candidate-ledger/v1",
+  "source_inventory_digest": "f1241959bb2e3c5f38aecdafaa95639435060edbd49b29f1e2307578fb9e550c",
+  "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "unit_projection_digest": "7cf98c9dfe83b349f32f0fb3b33588cbc5c690a2660f736d96b6527bb0cfa25b"
+}

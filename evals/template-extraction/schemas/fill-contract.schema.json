@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://docfit.local/schemas/template-fill-contract-v2.json",
-  "title": "DocFit template fill contract v2 with legacy v1 read support",
+  "title": "DocFit template fill contract v2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,14 +11,13 @@
     "field_registry_ref",
     "marker_protocol",
     "regions",
-    "slots"
+    "slots",
+    "styles",
+    "style_contract_set_digest"
   ],
   "properties": {
     "schema_version": {
-      "enum": [
-        "docfit-template-fill-contract/v1",
-        "docfit-template-fill-contract/v2"
-      ]
+      "const": "docfit-template-fill-contract/v2"
     },
     "contract_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
     "artifact_role": {"const": "template_fill_contract"},
@@ -49,11 +48,11 @@
     },
     "slots": {
       "type": "array",
-      "items": {"type": "object"}
+      "items": {"$ref": "#/$defs/slotV2"}
     },
     "styles": {
       "type": "array",
-      "items": {"type": "object"}
+      "items": {"$ref": "#/$defs/styleContractV2"}
     },
     "style_contract_set_digest": {"$ref": "#/$defs/sha256"},
     "logical_pages": {
@@ -64,35 +63,6 @@
     "validation": {"type": "object"}
   },
   "allOf": [
-    {
-      "if": {
-        "required": ["schema_version"],
-        "properties": {
-          "schema_version": {"const": "docfit-template-fill-contract/v1"}
-        }
-      },
-      "then": {
-        "properties": {
-          "slots": {
-            "items": {"$ref": "#/$defs/legacySlotV1"}
-          },
-          "styles": {
-            "items": {"$ref": "#/$defs/legacyStyleV1"}
-          }
-        }
-      },
-      "else": {
-        "required": ["styles", "style_contract_set_digest"],
-        "properties": {
-          "slots": {
-            "items": {"$ref": "#/$defs/slotV2"}
-          },
-          "styles": {
-            "items": {"$ref": "#/$defs/styleContractV2"}
-          }
-        }
-      }
-    },
     {
       "if": {
         "required": ["status"],
@@ -315,57 +285,6 @@
         }
       ]
     },
-    "legacySlotV1": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["slot_id", "field_id", "content_type", "required", "locator"],
-      "properties": {
-        "slot_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
-        "owner": {"const": "slot"},
-        "field_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"},
-        "label": {"type": "string", "minLength": 1},
-        "content_type": {"enum": ["text", "rich_text", "section", "image", "table", "formula", "equation", "asset"]},
-        "required": {"type": "boolean"},
-        "cardinality": {"enum": ["one", "many", "optional"]},
-        "locator": {"$ref": "#/$defs/locator"},
-        "component_locators": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"$ref": "#/$defs/componentLocator"}
-        },
-        "fill_mode": {"type": "string", "minLength": 1},
-        "style_id": {"type": "string", "minLength": 1},
-        "placeholder_policy": {"type": "string", "minLength": 1},
-        "empty_policy": {"type": "string", "minLength": 1},
-        "mapping_status": {"type": "string", "minLength": 1},
-        "expected_value_style": {"$ref": "#/$defs/effectiveStyle"},
-        "value_contract": {"type": "object"},
-        "layout_contract": {"type": "object"},
-        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}},
-        "notes": {"type": "string"}
-      },
-      "anyOf": [
-        {"required": ["expected_value_style"]},
-        {"required": ["style_id"]}
-      ]
-    },
-    "legacyStyleV1": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["style_id", "effective_properties"],
-      "properties": {
-        "style_id": {"type": "string", "minLength": 1},
-        "label": {"type": "string", "minLength": 1},
-        "applies_to": {
-          "type": "array",
-          "items": {"type": "string", "minLength": 1}
-        },
-        "word_style_id": {"type": ["string", "null"]},
-        "word_style_name": {"type": ["string", "null"]},
-        "effective_properties": {"type": "object"},
-        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/evidenceRef"}}
-      }
-    },
     "styleContractRef": {
       "type": "object",
       "additionalProperties": false,
@@ -382,7 +301,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "slot_id",
+        "slot_ref",
         "field_id",
         "content_type",
         "required",
@@ -390,7 +309,10 @@
         "style_contract_ref"
       ],
       "properties": {
-        "slot_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "slot_ref": {
+          "type": "string",
+          "pattern": "^source_entry_id=source-entry-[^;]+;extent=(whole_entry|text\\[[0-9]+:[0-9]+\\]);source_snapshot_sha256=[0-9a-f]{64};field_id=[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+        },
         "owner": {"const": "slot"},
         "field_id": {
           "type": "string",

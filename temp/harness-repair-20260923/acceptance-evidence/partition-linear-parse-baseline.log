@@ -1,0 +1,88 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_partition_entry_parsing_scales_linearly[8] ________________
+
+entry_count = 8
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ae7a840>
+
+    @pytest.mark.parametrize("entry_count", [8, 32])
+    def test_partition_entry_parsing_scales_linearly(entry_count, monkeypatch):
+        canonical = build_canonical_source_inventory(
+            source_snapshot_sha256="a" * 64,
+            inspected_objects=[
+                {
+                    "type": "paragraph", "text": f"text {index}",
+                    "locator": f"/body/p[{index + 1}]",
+                    "object_ref": {"object_id": f"p{index}", "document_sha256": "a" * 64},
+                }
+                for index in range(entry_count)
+            ],
+        )
+        calls = 0
+        original = CanonicalSourceEntry.from_json
+    
+        def counted(cls, value):
+            nonlocal calls
+            calls += 1
+            return original(value)
+    
+        monkeypatch.setattr(CanonicalSourceEntry, "from_json", classmethod(counted))
+        resolved = resolve_unit_partition(canonical, [{
+            "unit_id": "all", "unit_name": "All",
+            "start_boundary": {"source_entry_id": canonical.source_entries[0].source_entry_id,
+                               "edge": "start"},
+            "end_boundary": {"source_entry_id": canonical.source_entries[-1].source_entry_id,
+                             "edge": "end"},
+        }])
+        assert len(resolved[0]["source_spans"]) == entry_count
+        # An operation-count bound avoids timing noise while rejecting the former
+        # repeated full-inventory parsing for each individual source entry.
+>       assert calls <= 4 * entry_count
+E       assert 192 <= (4 * 8)
+
+tests/contract/test_full_flow_source_identity.py:162: AssertionError
+_______________ test_partition_entry_parsing_scales_linearly[32] _______________
+
+entry_count = 32
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b21a210>
+
+    @pytest.mark.parametrize("entry_count", [8, 32])
+    def test_partition_entry_parsing_scales_linearly(entry_count, monkeypatch):
+        canonical = build_canonical_source_inventory(
+            source_snapshot_sha256="a" * 64,
+            inspected_objects=[
+                {
+                    "type": "paragraph", "text": f"text {index}",
+                    "locator": f"/body/p[{index + 1}]",
+                    "object_ref": {"object_id": f"p{index}", "document_sha256": "a" * 64},
+                }
+                for index in range(entry_count)
+            ],
+        )
+        calls = 0
+        original = CanonicalSourceEntry.from_json
+    
+        def counted(cls, value):
+            nonlocal calls
+            calls += 1
+            return original(value)
+    
+        monkeypatch.setattr(CanonicalSourceEntry, "from_json", classmethod(counted))
+        resolved = resolve_unit_partition(canonical, [{
+            "unit_id": "all", "unit_name": "All",
+            "start_boundary": {"source_entry_id": canonical.source_entries[0].source_entry_id,
+                               "edge": "start"},
+            "end_boundary": {"source_entry_id": canonical.source_entries[-1].source_entry_id,
+                             "edge": "end"},
+        }])
+        assert len(resolved[0]["source_spans"]) == entry_count
+        # An operation-count bound avoids timing noise while rejecting the former
+        # repeated full-inventory parsing for each individual source entry.
+>       assert calls <= 4 * entry_count
+E       assert 3072 <= (4 * 32)
+
+tests/contract/test_full_flow_source_identity.py:162: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_full_flow_source_identity.py::test_partition_entry_parsing_scales_linearly[8]
+FAILED tests/contract/test_full_flow_source_identity.py::test_partition_entry_parsing_scales_linearly[32]
+2 failed, 23 deselected in 0.52s

@@ -1,0 +1,407 @@
+{
+  "verification_level": "real replay of source evidence; no Agent call or publication",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/unit-boundary-checkpoint.json": "15d6cb6055c814323048fb75ed97ff37fb83303970f472b532bbf150f433d986",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/object-inventory.json": "40c620ee998fe19dbc3cca0bd857389b0ba37401d3176757d2dea5a91ecbbbb1",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/prepare-template-task.json": "6276d066f3bf7307fbd66fb9f14eb9a0364aac19eb60bd4eb70759186f1691c3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/semantic-judgments.json": "07e413e62229e515a37563015ebbaa6d20fadb8ff3f2a2353a5d0a330dad3005"
+  },
+  "original_unchanged": true,
+  "canonical_identity_text_and_partition_unchanged": true,
+  "source_entry_count": 211,
+  "entries_with_layout_facts": 12,
+  "unavailable_entry_count": 0,
+  "new_post_unit_inventory_seconds": 0.10742850000679027,
+  "document_map_entries_compared": 211,
+  "entries": [
+    {
+      "source_entry_id": "source-entry-335f8eb120670b7623e5127e",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 22,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-e0e18dea05cb2d70c6a0f22e",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 45,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-03-authorization-declaration",
+          "unit_name": "使用授权声明",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d61b576a99a97a931a69ccbb"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-649dd3749a47a5761775fa79",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 74,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-04-toc",
+          "unit_name": "目录",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d61b576a99a97a931a69ccbb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-9a17584bc062268316b8fb05",
+      "text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 84,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "centered_heading_candidate"
+      ],
+      "layout_facts": [
+        "The containing paragraph includes an explicit page break."
+      ],
+      "style_summary": {
+        "alignment": "center",
+        "size": "16pt",
+        "font.ea": "黑体",
+        "font.latin": "宋体",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-06-en-abstract",
+          "unit_name": "英文摘要",
+          "text": "TITLE（论文英文题目，三号Times New Roman，加粗，全部采用大写字母）",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-55a4f85f8669b531410595d1"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-b29f36b0b400e9175833a48d",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 93,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-06-en-abstract",
+          "unit_name": "英文摘要",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-55a4f85f8669b531410595d1"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 107,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph includes an explicit page break.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-07-chapter1-review",
+          "unit_name": "第一章 文献综述",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-55a4f85f8669b531410595d1"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-ca2a622fd08073ca971957db"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-34afcd1548097266d6aa4324",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 129,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-08-body-chapter-sample",
+          "unit_name": "正文章节样例",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-ca2a622fd08073ca971957db"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-302f1a067a3158c7f59204fa",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 136,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph includes an explicit page break.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-09-conclusion",
+          "unit_name": "结论与展望",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-6f8f9c29379b81a944e30bfd",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 158,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-10-references",
+          "unit_name": "参考文献",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-cc676b9361a2f10e9beb09d6",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 162,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-11-appendix",
+          "unit_name": "附录",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-c4ef108b4ef54c767eee8eaa",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 166,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings.",
+        "The containing paragraph has no visible text."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-12-academic-achievements",
+          "unit_name": "相关的学术成果目录",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+      "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）",
+      "text_length": 189,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "shape",
+      "source_order": {
+        "block": 211,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "instruction_or_sample_candidate",
+        "carrier_or_layout_candidate"
+      ],
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings."
+      ],
+      "unit_contexts": [
+        {
+          "unit_id": "unit-13-acknowledgments",
+          "unit_name": "致谢",
+          "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          }
+        }
+      ]
+    }
+  ],
+  "product_acceptance": false
+}

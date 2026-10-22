@@ -1,0 +1,284 @@
+{
+  "updated_at": "2026-09-24T06:06:28.638174+00:00",
+  "goal_complete": false,
+  "code_status": {
+    "main_runtime": "aa5f42d329e829038c003b014f1b546e191fc7f0",
+    "phase3": "f0bb5c4",
+    "phase4": "bcdc3d8",
+    "diagnostics_and_validation": "fc1acca; ported",
+    "isolated_api_failure_ownership": "198d70a; ported",
+    "isolated_precise_feedback": "551430c + 03a3519 ported as ea77a44 + 2a70e5e",
+    "isolated_whitespace_schema": "f41f470 + 1a23d1d ported as 21b3a9d + 3dc09b6",
+    "isolated_boundary_revision_context": "fc41c9d ported as 33612b1",
+    "isolated_whitespace_alphabet": "4162e52 ported as d2ddb9e",
+    "whole_entry_declaration": "b05a50c ported as 0c1ff83; 6c72804 clarifies text-only whitespace instructions",
+    "isolated_partition_validation": {
+      "commit": "524d82e",
+      "worktree": "/Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction",
+      "merged_to_main": true,
+      "live_tasks_use_patch": true,
+      "main_commit": "7c71949"
+    },
+    "isolated_body_interfaces": {
+      "runtime_commit": "cbefb17",
+      "publication_test_commit": "6afff71",
+      "merged_to_main": true,
+      "worktree": "/Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction",
+      "live_task": null,
+      "session_id": 52301,
+      "runtime_and_skill_frozen": false,
+      "main_commit": "9a4b28c",
+      "publication_main_commit": "ac6abfa",
+      "terminal_task": "njau-body-interface-task"
+    },
+    "mixed_style_cleanup": "77a2119",
+    "explicit_layout_breaks": "0e1f774",
+    "source_layout_evidence": "aa5f42d329e829038c003b014f1b546e191fc7f0"
+  },
+  "requirements": [
+    {
+      "phase": 0,
+      "requirement": "frozen inputs and reproduction contracts",
+      "state": "evidenced",
+      "evidence": "docs/status/active/template-harness-repair-20260923.md"
+    },
+    {
+      "phase": 1,
+      "requirement": "no semantic auto-expansion or frozen role; execution failures retain judgments",
+      "state": "contract_and_real_replay_evidenced",
+      "evidence": "temp/harness-repair-20260923/phase1-replay/replay.json"
+    },
+    {
+      "phase": 2,
+      "requirement": "complete context, version journal, natural Agent revision",
+      "state": "contract_replay_and_natural_post_unit_loop_evidenced",
+      "evidence": "temp/harness-repair-20260923/phase2-live-20260923/cover-verification.json",
+      "latest_evidence": "phase5-three-schools/pku-field-role-natural-revision.json; real unchanged feedback and complete prior submission, revised response accepted before next batch"
+    },
+    {
+      "phase": 3,
+      "requirement": "early batch checks, bounded no-progress stop, reliable recovery",
+      "state": "early natural local rejection/revision/acceptance, persisted no-progress stop and exhausted-budget resume evidenced; complete-school successful generation not achieved",
+      "evidence": [
+        "temp/harness-repair-20260923/phase5-three-schools/no-progress-default-resume-verification.json",
+        "temp/harness-repair-20260923/phase5-three-schools/pku-fixed-budget-resume-verification.json",
+        "temp/harness-repair-20260923/phase5-three-schools/pku-field-role-natural-revision.json"
+      ]
+    },
+    {
+      "phase": 4,
+      "requirement": "actual all-page review, current candidate binding, fail-closed publication",
+      "state": "contract_and_real_blocked_completion_evidenced; positive_full_completion_missing",
+      "evidence": "temp/harness-repair-20260923/phase4-cover-completion/verification.json",
+      "latest_evidence": "phase5-three-schools/njau-body-interface-task/work/.docfit/final-visual-review/visual-verification.json"
+    },
+    {
+      "phase": 5,
+      "requirement": "three full school E2Es and product acceptance",
+      "state": "all started full-school attempts terminal; PKU/HUNAU execution blockers, NJAU actual visual review blocked; no publication or product acceptance",
+      "evidence": "temp/harness-repair-20260923/phase5-three-schools/"
+    }
+  ],
+  "validation_levels": {
+    "logic_contract": {
+      "code_commit": "6eee0b1",
+      "tests": 906,
+      "seconds": 24.46,
+      "log": "temp/harness-repair-20260923/acceptance-evidence/whole-entry-main-verified-contract.log",
+      "note": "Historical 6eee0b1 baseline; later runtime contract evidence appears below."
+    },
+    "real_replay": "see per-phase evidence; not equivalent to complete E2E",
+    "e2e_agent_loop": "Fresh isolated NJAU cbefb17 completed 13 batches and materialization; stopped at actual final review, review now blocked. Other three-school field-role-shape runs all terminal. No publication.",
+    "product_acceptance": "not achieved",
+    "repository_regression": {
+      "initial_result": "1298 passed / 4 failed / 1 warning",
+      "default_officecli": "1.0.144 (not locked)",
+      "related_fixes": "3 related failures addressed; locked OfficeCLI targeted group 11 passed",
+      "remaining_baseline_failure": "student-content fill test lacks materialization provenance; reproduced at clean f0bb5c4 with locked OfficeCLI",
+      "all_passed": false,
+      "latest_locked_run": {
+        "verification_level": "repository regression; mock Agent tests and deterministic integration, not school E2E or product acceptance",
+        "runtime_commit": "ae1cb9f",
+        "officecli_version": "1.0.143",
+        "officecli_sha256": "2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096",
+        "passed": 1304,
+        "failed": 1,
+        "warnings": 1,
+        "failed_test": "tests/integration/test_student_content_fill.py::test_independent_student_content_app_publishes_partial_candidate",
+        "failure": "synthetic Fill Contract v2 lacks required materialization provenance",
+        "baseline_reproduced_on": "f0bb5c4",
+        "baseline_log": "student-fill-baseline-f0bb5c4.log",
+        "runtime_validation_weakened": false,
+        "log_sha256": "e66483ee2465bf7209b4eee7ae4693ad7e751b5ce4d64d065cf10dbeabe11855"
+      }
+    },
+    "isolated_logic_contract": {
+      "runtime_commit": "03a3519",
+      "tests": 844,
+      "log": "character-feedback-contract.log",
+      "mypy_source_files": 123,
+      "ruff": "passed"
+    },
+    "isolated_schema_contract": {
+      "tests": 852,
+      "code_commit": "f41f470",
+      "log": "conditional-whitespace-contract.log",
+      "native_sdk_probe": "conditional-whitespace-schema-probe.json",
+      "real_candidate_schema_replay": "../phase5-three-schools/conditional-whitespace-real-replay.json"
+    },
+    "isolated_boundary_count_contract": {
+      "code_commit": "1a23d1d",
+      "tests": 11,
+      "scope": "actual initial and repair SDK request contracts plus whitespace schema group, mock SDK",
+      "mypy_source_files": 123,
+      "ruff": "passed"
+    },
+    "boundary_codec_live_probe": "Synthetic native SDK: one pre-example failure split a slot; after explicit same-part example, one success preserved exact parts. No reliability or school-E2E claim.",
+    "boundary_codec_real_replay": {
+      "report": "temp/harness-repair-20260923/acceptance-evidence/part-boundary-real-replay.json",
+      "source_valid_judgments": 14,
+      "converted_parts": 15,
+      "resolved_slots_unchanged": 11,
+      "excluded_original_invalid_entries": 2,
+      "scope": "recorded real candidate slices, not new Agent output or full-school acceptance"
+    },
+    "materialization_integration": {
+      "runtime": "6678851",
+      "tests": 50,
+      "seconds": 136.27,
+      "verification_level": "deterministic integration with fixture/constructed judgments, not natural Agent E2E",
+      "log": "temp/harness-repair-20260923/acceptance-evidence/boundary-codec-materialization-integration.log"
+    },
+    "whole_entry_docx_integration": {
+      "commit": "9a031b3",
+      "tests": 2,
+      "seconds": 0.82,
+      "verification_level": "logic/contract, constructed DOCX integration",
+      "log": "temp/harness-repair-20260923/acceptance-evidence/whole-entry-docx-integration-final.log"
+    },
+    "whole_entry_real_replay": "Native protocol probe output against actual PKU inventory, exact source/slot preserved; not independent semantic judgment or complete school run.",
+    "partition_validation_performance": {
+      "logic_contract": "912 passed in 21.38s; targeted 61 passed; new complexity tests fail old source; relevant Ruff and source mypy passed",
+      "real_replay": "All three real canonical inventories and accepted unit proof mappings match exactly; reading packets and monitored input files unchanged",
+      "profiled_pku_packet_seconds_before": 90.12022816699755,
+      "profiled_pku_packet_seconds_after": 0.7617921249984647,
+      "not_e2e_speedup_claim": true,
+      "live_tool_observation": "acceptance-evidence/live-evidence-tool-timing.json; observed per-tool time, not matched whole-E2E speedup"
+    },
+    "natural_purpose_revision": {
+      "level": "E2E agent loop local revision",
+      "evidence": "phase5-three-schools/njau-whole-entry-body-revision.json",
+      "observation": "After exact-text rejection, natural revision changed 3 parts to 5 and punctuation from body_structure to fixed_label; rechecked and accepted.",
+      "semantic_correctness_proven": false,
+      "product_acceptance": false
+    },
+    "body_interface_contract": {
+      "runtime_commit": "cbefb17",
+      "full_contract": "954 passed before final two added downgrade tests",
+      "final_focused_publication_contract": "11 passed",
+      "officecli_materialization_subset": "9 passed, 43 deselected",
+      "formal_publication_path": "6afff71: 2 passed in 4.82s, constructed DOCX + real OfficeCLI + synthetic visual evidence; logic/contract only",
+      "real_tool_replay": "body-interface-replay/replay.json: 17 source spans -> 8 physical interfaces; other 167 paragraphs unchanged",
+      "fresh_agent_e2e": "njau-body-interface-task running; no result yet"
+    },
+    "natural_field_role_revision": {
+      "level": "E2E agent loop local natural revision",
+      "evidence": "phase5-three-schools/pku-field-role-natural-revision.json",
+      "semantic_correctness_proven": false,
+      "product_acceptance": false
+    },
+    "latest_logic_contract": {
+      "runtime_commit": "0e1f774",
+      "tests": 971,
+      "seconds": 20.72,
+      "mypy_source_files": 125,
+      "note": "tests/contract only; prior full-repository baseline failure remains"
+    },
+    "latest_publication_integration": {
+      "tests": 2,
+      "seconds": 4.31,
+      "constructed_docx": true,
+      "synthetic_visual_review": true,
+      "real_officecli": "1.0.143",
+      "product_acceptance": false
+    },
+    "source_layout_evidence": {
+      "runtime_commit": "aa5f42d329e829038c003b014f1b546e191fc7f0",
+      "verification_level": "real replay of source layout evidence; no Agent invocation",
+      "runtime_files": {
+        "src/docfit/template/source_layout.py": "1c801188fbba0456a3c818cd490e8c970aa231057815b1affc3fdfe1aaacd77d",
+        "src/docfit/template/reading_packet.py": "4c87ff371784277df2a470baffc9262cfc1a9a9570f059aa1c850245c37f10fd",
+        "src/docfit/app/prepare_template.py": "0898aa78b9de2cfffd984001e39509ba766f67511a1314380e67a6929317ad5e",
+        "src/docfit/tools/service.py": "51a8b34e8c46cdf833e8051a2e0205b88663dbd0ce4e0dfe72c74774a57a2245"
+      },
+      "receipts": {
+        "njau": {
+          "path": "temp/harness-repair-20260923/source-layout-replay/njau/replay.json",
+          "sha256": "8b891110b0bf848137c01bea0d9b7865d0aba4043a3bc315bbbe2812feee85ba",
+          "source_entry_count": 211,
+          "entries_with_layout_facts": 12,
+          "unavailable_entry_count": 0
+        },
+        "pku": {
+          "path": "temp/harness-repair-20260923/source-layout-replay/pku/replay.json",
+          "sha256": "6809efb574a31f6701919d1fad02857f8d3e2293de17656bb10ea673b3067a08",
+          "source_entry_count": 525,
+          "entries_with_layout_facts": 16,
+          "unavailable_entry_count": 0
+        },
+        "hunau": {
+          "path": "temp/harness-repair-20260923/source-layout-replay/hunau/replay.json",
+          "sha256": "e2a7e4c79e749f4b12c9cba0c36141d256099a5afac595651e7ad683405a371b",
+          "source_entry_count": 599,
+          "entries_with_layout_facts": 0,
+          "unavailable_entry_count": 0
+        }
+      },
+      "original_bindings_reverified": true,
+      "logic_contract": {
+        "passed": 975,
+        "seconds": 19.32,
+        "mypy_source_files": 126,
+        "ruff": "passed"
+      },
+      "e2e_agent_loop": "not run for source-layout supplement",
+      "product_acceptance": false
+    }
+  },
+  "known_product_blockers": [
+    "Actual cover review found compressed vertical spacing and remaining formatting instructions; positive complete final-page review still missing.",
+    "No current successful complete-school publication or human product signoff.",
+    "Current PKU fails on 85 nested table interfaces plus 4 paragraph/image carrier conflicts; all judgments preserved, no semantic retry for execution errors.",
+    "Adjacent body interface repair is isolated and awaiting fresh NJAU E2E outcome; shape cleanup and early field-role checks already merged.",
+    "Model exact-text and semantic reliability remain separate from deterministic contract success; individual repaired examples are not a reliability guarantee."
+  ],
+  "field_role_and_shape_repairs": {
+    "runtime_commit": "4bde3e0",
+    "performance_commit": "7c71949",
+    "field_role_commit": "79c0382",
+    "shape_cleanup_commit": "4bde3e0",
+    "logic_contract": "932 passed; relevant Ruff/mypy passed",
+    "docx_integration": "9 passed, 43 deselected; existing real-source replays plus constructed DOCX cases, not Agent E2E",
+    "shape_tool_replay": "../shape-cleanup-replay/replay.json",
+    "remaining": "isolated body coalescence full E2E; composite table/image execution capability; positive final publication and product acceptance",
+    "three_school_new_runs": "PKU terminal; main HUNAU/NJAU live; isolated patched NJAU live"
+  },
+  "audit_scope": "Evidence index refresh, not a claim that every plan requirement or product acceptance is complete.",
+  "previous_index_sha256": "edc7aa020396a300dd464c163b239e7e72db81b9a9243b79e3e1bf67e77f52e7",
+  "latest_evidence_file_hashes": {
+    "phase5-three-schools/pku-field-role-natural-revision.json": "bea2d6b99062e9716e4d2575d1004b1c5fa21a5849e24e39947ad4c760a70797",
+    "phase5-three-schools/pku-field-role-shape-verification.json": "a0bd5569673f031a3e28d47a47dbb21d29b6ecd616d38f3c7c3b435d02e6e8ad",
+    "phase5-three-schools/pku-field-role-shape-blocker-replay.json": "890863e1ccf349c42a6982de67c39379e5b32f8a58dfdfa58888a2afd1bdeda9",
+    "acceptance-evidence/body-interface-validation.json": "b56d96e37dd486f1e62d9a880f1b8565799e399fab8df30950969e4f7f738af7",
+    "body-interface-replay/replay.json": "777f81da2c8ac4dfde95bc12a418e3c36b1ac17ee9321a89792c17bb39246eef",
+    "shape-cleanup-replay/replay.json": "b6965984ce3f9263d346228700df42702f8b9d9ce2721db3ba7fa7447a765552",
+    "acceptance-evidence/live-evidence-tool-timing.json": "44efb79c7da4f6d9a94b690d8a35ff797b847222ae916a93d14462cabfe5a5f8"
+  },
+  "latest_layout_evidence": {
+    "positive_tool_slice": "njau-layout-title-tool-slice/replay.json",
+    "full_old_judgments_blocked": "njau-layout-break-final-replay/replay.json",
+    "full_new_judgments_blocked": "njau-body-interface-current-replay/replay.json",
+    "intermediate_visual_replay": "njau-layout-break-full-replay/visual-verification.json",
+    "remaining": "empty break-only carrier insertion side lacks mapping; school semantic issues and table capabilities remain"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "failure": {
+    "code": "template_artifact_provenance_invalid",
+    "message": "Fill Contract v2 requires current, digest-bound materialization provenance.",
+    "origin": "postcondition"
+  },
+  "privacy": "report_contains_metadata_and_paths_only",
+  "schema_version": "docfit-student-content-fill-report/v1",
+  "source_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25",
+  "status": "NEEDS_INPUT",
+  "template_sha256": "b6090d9c2b810628c50a08767c66437536de28e8f5c2f81460b508fa00e88a4b"
+}

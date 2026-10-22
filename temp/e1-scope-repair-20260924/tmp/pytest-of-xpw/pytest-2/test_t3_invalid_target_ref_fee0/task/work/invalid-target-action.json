@@ -1,0 +1,1 @@
+{"field_registry": "input/field-registry.json", "operations": [{"action": "clear_content", "target_ref": "object_ref:not-valid-base64"}]}

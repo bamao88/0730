@@ -1,0 +1,313 @@
+{
+  "real_replay": {
+    "body_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task",
+    "table_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live",
+    "original_body_judgments": 71,
+    "original_range_blockers": [
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[16].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-f0c63376279768f327365472",
+        "expected_text": "",
+        "submitted_text": "            (五号Times New Roman)",
+        "source_text_length": 68,
+        "expected_text_length": 0,
+        "submitted_text_length": 31,
+        "mismatch_offset": 68,
+        "text_start": 68,
+        "text_end": 99
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[17]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+        "text_start": 30,
+        "text_end": 32,
+        "uncovered_text": "  ",
+        "source_text_length": 32,
+        "covered_text_length": 30,
+        "uncovered_text_length": 2,
+        "uncovered_whitespace_codepoints": [
+          "U+0020 × 2"
+        ]
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[20].parts[3]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "source_text_length": 31
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[20].parts[4]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "expected_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标",
+        "submitted_text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "expected_text_length": 25,
+        "submitted_text_length": 25,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 29
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[20]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "text_start": 4,
+        "text_end": 31,
+        "uncovered_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "covered_text_length": 4,
+        "uncovered_text_length": 27
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[21].parts[2]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "source_text_length": 43
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[21].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "expected_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roma",
+        "submitted_text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "expected_text_length": 37,
+        "submitted_text_length": 37,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 41
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[21]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "text_start": 4,
+        "text_end": 43,
+        "uncovered_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "covered_text_length": 4,
+        "uncovered_text_length": 39
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[41].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "expected_text": " (小三号黑体",
+        "submitted_text": "(小三号黑体)",
+        "source_text_length": 12,
+        "expected_text_length": 7,
+        "submitted_text_length": 7,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 4,
+        "text_end": 11
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[41]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "text_start": 4,
+        "text_end": 12,
+        "uncovered_text": " (小三号黑体)",
+        "source_text_length": 12,
+        "covered_text_length": 4,
+        "uncovered_text_length": 8
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[42].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "expected_text": "      ",
+        "submitted_text": "(五号宋体)",
+        "source_text_length": 47,
+        "expected_text_length": 6,
+        "submitted_text_length": 6,
+        "mismatch_offset": 34,
+        "expected_leading_whitespace_count": 7,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 7"
+        ],
+        "text_start": 34,
+        "text_end": 40
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[42]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "text_start": 34,
+        "text_end": 47,
+        "uncovered_text": "       (五号宋体)",
+        "source_text_length": 47,
+        "covered_text_length": 34,
+        "uncovered_text_length": 13
+      }
+    ],
+    "body_candidate_unchanged": true,
+    "table_feedback": {
+      "schema_version": 1,
+      "status": "error",
+      "recovery": {
+        "kind": "execution_unsupported",
+        "owner": "tool",
+        "action": "stop"
+      },
+      "feedback": {
+        "type": "materialization_readiness",
+        "mechanical": true,
+        "semantic_authority": false,
+        "agent_action": null
+      },
+      "checks": [
+        {
+          "name": "materialization_readiness",
+          "result": "error"
+        }
+      ],
+      "blockers": [
+        {
+          "code": "materialization_slot_carrier_unsupported",
+          "missing_requirement": "one_exact_paragraph_carrier_for_slot",
+          "why_it_blocks_execution": "The source object has no single paragraph carrier for a fill slot. Whole tables and other non-paragraph objects cannot use an arbitrary child. The execution layer must support this accepted scope before proceeding.",
+          "message": "The source object has no single paragraph carrier for a fill slot. Whole tables and other non-paragraph objects cannot use an arbitrary child. The execution layer must support this accepted scope before proceeding.",
+          "source_entry_id": "source-entry-e793d6f1c0b80818f04a76a4",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet"
+        },
+        {
+          "code": "materialization_slot_carrier_unsupported",
+          "missing_requirement": "one_exact_paragraph_carrier_for_slot",
+          "why_it_blocks_execution": "The source object has no single paragraph carrier for a fill slot. Whole tables and other non-paragraph objects cannot use an arbitrary child. The execution layer must support this accepted scope before proceeding.",
+          "message": "The source object has no single paragraph carrier for a fill slot. Whole tables and other non-paragraph objects cannot use an arbitrary child. The execution layer must support this accepted scope before proceeding.",
+          "source_entry_id": "source-entry-1d5fdd84278716ae4c066143",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet"
+        }
+      ],
+      "failure": {
+        "origin": "tool",
+        "code": "template_materialization_execution_unsupported",
+        "retryable": false,
+        "message": "Accepted semantic review is not materializable: materialization_slot_carrier_unsupported, materialization_slot_carrier_unsupported.",
+        "suggested_actions": [
+          "Preserve the semantic judgments; repair the reported execution or system issue.",
+          "Do not retry semantic judgment or run materialization handlers for this failure."
+        ]
+      },
+      "warnings": []
+    },
+    "table_failure": {
+      "origin": "tool",
+      "code": "template_materialization_execution_unsupported",
+      "retryable": false,
+      "message": "Accepted semantic review is not materializable: materialization_slot_carrier_unsupported, materialization_slot_carrier_unsupported.",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "table_judgments_unchanged": true,
+    "candidate_written": false,
+    "input_and_task_hashes": {
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/input/school-template.docx": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/input/school-requirements.pdf": "261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/template-agent-execution.json": "f6157e2aa21c943b367215fe78df8d08a7d80745fcfe2c276f5e680aee4baa15",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/prepare-template-task.json": "2440977dcfaafdf021be84b57fe6eb8e953b24e0e5f5048e870c260ae5dc324c",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/unit-boundary-checkpoint.json": "a141feebbb06ceb79275c22e8762f735ba7af3d3bd8f7652cc2486aa55e0c86b",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/initial-source-inventory.json": "e37dfc345f4858a2f659a4a9ad83a2ce8ce0e4ed8b019223fc15f90a730a48b0",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-manifest.json": "f5f1960bc23275a0adeaf92afab3058c5bec2f661f1595250c8685524b1ecf59",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-candidates.json": "a534bce5ad37f6bb5a729a1e9360d12841ea4c5403ec2b3d3e4fc65116877ec6",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/object-inventory.json": "f7a2893de6e4ff32a6ef9ccfd6e52715bff1d10d119f11dba43fdc40e066b205",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/input/school-template.docx": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/template-agent-execution.json": "976e9a237c8ad7c8e9aeb8c62c4eac2cb39b67816236fbe407526c982966ffb5",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/prepare-template-task.json": "ddeb4d27e96a427de8043eb44b0a101c6e7f60c22e96b3730727c72d0242c2bc",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/unit-boundary-checkpoint.json": "9323370e34cdd965c10e1cd34d6d48a1132224dfe5d47dd828f508c2b7f1d292",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/initial-source-inventory.json": "2c62d9c118e474436846be32a69ce53037d494c2e4e419f0be4dfebd6296212c",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/semantic-batch-manifest.json": "7c160d9abcbfa664f7646cb17e34d721b47fa5361b7ba1dc28f27ffef543b775",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/semantic-batch-candidates.json": "0782864c51847fe9c470c0e74f264ec5486ba924831099de07aee2eefce14118",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/object-inventory.json": "628c4213cfac0c8dd802567103e68ba31369ad0ace01bfd4368173be76cfba22",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/pku-cover-live/work/.docfit/harness/semantic-judgments.json": "29fcfe4b400395eed5a91e93d88d9e467c34a38ff7a69e0443643497db81e1fa"
+    }
+  },
+  "injected_revision_contract_check": {
+    "not_agent_generated": true,
+    "entry_id": "source-entry-f0c63376279768f327365472",
+    "before": {
+      "open_questions": [],
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "Abstract(小四号Times New Roman， 加粗)"
+        },
+        {
+          "role": "cleanup",
+          "text": ":……            (五号Times New Roman)"
+        },
+        {
+          "role": "style_only",
+          "text": "            (五号Times New Roman)"
+        }
+      ],
+      "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+      "source_entry_id": "source-entry-f0c63376279768f327365472"
+    },
+    "after": {
+      "open_questions": [],
+      "parts": [
+        {
+          "role": "cleanup",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "Abstract(小四号Times New Roman， 加粗)"
+        },
+        {
+          "role": "cleanup",
+          "text": ":……            (五号Times New Roman)"
+        },
+        {
+          "role": "style_only",
+          "text": "            (五号Times New Roman)"
+        }
+      ],
+      "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+      "source_entry_id": "source-entry-f0c63376279768f327365472"
+    },
+    "candidate_revision_accepted": true,
+    "remaining_range_blockers": 12
+  },
+  "e2e_agent_loop": false,
+  "product_acceptance": false
+}

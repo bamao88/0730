@@ -1,0 +1,80 @@
+{
+  "base_commit": "79e95ff3d15a9734801bac13e02d9b9650472033",
+  "agent_files": {
+    ".claude/skills/docfit-school-extract/SKILL.md": "ca45d0bdc2e888385fa430cd818d75e6992313bcd37245cec41e7e83a91e60df",
+    "src/docfit/app/prepare_template.py": "35bf84cfa4d4caf32abcf45414f41f63e3ac5d951cf618aa70a35bec244370d5",
+    ".claude/skills/docfit-school-extract/references/body-structure.md": "fdc47b991614f8436b1ad32709b3f95ab0da162848520da7e176e6858fd0c9b5",
+    ".claude/skills/docfit-school-extract/references/collections-and-optional-sections.md": "0d25fcc65bbb4383233ccf8ce77dcfe51d1e1a236885ed8d68a009b295ed0c41",
+    ".claude/skills/docfit-school-extract/references/completion-and-visual-review.md": "eb0f7ae322b64c93f74a1331574acb380f1ac3095ca6d87b331f21824cc5ff9a",
+    ".claude/skills/docfit-school-extract/references/generated-content-and-toc.md": "bd5d3eab1d53f546c1cdc2b6f50c9aad2f9fae7373466d47dcf8c0c33f7a032f",
+    ".claude/skills/docfit-school-extract/references/judgment-context-and-conflicts.md": "593aa16f5a5df126be537810c4c0547bf99b29d50e6e54bca3e9c21cc20546af",
+    ".claude/skills/docfit-school-extract/references/object-boundary-and-layout-safety.md": "a1721aa27cee097d2386d0bc3e0aaea74c7f84e927b2811123c88c0148c034d5",
+    ".claude/skills/docfit-school-extract/references/registry-interface-binding.md": "a29935ede9bb411a4a977ecc8da6fa957b1217ae66fbffffc11e87e0255c5f2a",
+    ".claude/skills/docfit-school-extract/references/style-contract-boundary.md": "c02f43e3065080c5a4ee0f2c843f36629f9f32589b536c6ec07bf22128003f42",
+    ".claude/skills/docfit-school-extract/references/template-text-classification.md": "6229e533c04c38895be7c9901a78e6b9598991a6c12d8a6aaafb3d554434d6a3",
+    ".claude/skills/docfit-school-extract/references/unit-boundary.md": "146c36d50e4404dab31412bc3e26e487e8be7208deb93b6a837f9f36835ad154"
+  },
+  "registry_source": "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml",
+  "registry_changes": [
+    {
+      "path": "/fields/14/meaning",
+      "before": "英文摘要页顶部使用的完整英文题名。",
+      "after": "论文的完整英文题名。"
+    },
+    {
+      "path": "/revision",
+      "before": "2026-08-13.1",
+      "after": "2026-09-11.1"
+    }
+  ],
+  "old_registry_sha256": "6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17",
+  "new_registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+  "template_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "requirements_sha256": "6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975",
+  "backend": "minimax",
+  "model": "MiniMax-M3",
+  "proof": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/skill-effect-e32bcf9-20260911-121504/cover-e2e/work/.docfit/unit-boundary-checkpoint.json",
+  "scope": "New task roots; reuse only valid template-bound unit boundary, not old post-unit checkpoint. Registry meaning and revision corrected; Skill and binding reference preserve responsibility when a field is missing. No schema/Harness/feedback/materializer changes.",
+  "final_file_check": {
+    "agent_file_drift": [
+      "src/docfit/app/prepare_template.py"
+    ],
+    "registry_matches_snapshot": true
+  },
+  "verification": {
+    "logic_contract": {
+      "passed": 53,
+      "command": "uv run pytest -q tests/unit/test_field_registry_v2.py tests/contract/test_template_field_id_contract_loop.py tests/contract/test_skill_contract.py tests/contract/test_agent_boundary_guardrails.py",
+      "timing": "completed before later unrelated workspace source edits"
+    },
+    "skill_quick_validate": "passed",
+    "diff_check": "passed for three changed files",
+    "real_agent_loop_scope": "two fresh task roots, real post-unit Agent loop from existing unit-boundary proof; not a full prepare rerun",
+    "run_1": {
+      "final_slots": 9,
+      "title_zh": true,
+      "title_en": true,
+      "post_unit_results": 2,
+      "sdk_structured_attempts": 2,
+      "sdk_schema_errors": 0,
+      "render_pages": 2,
+      "render_method": "DocFit render CLI"
+    },
+    "run_2": {
+      "final_slots": 7,
+      "title_zh": false,
+      "title_en": false,
+      "post_unit_results": 1,
+      "sdk_structured_attempts": 3,
+      "sdk_schema_errors": 2,
+      "render_pages": 2,
+      "render_method": "existing LibreOfficeRenderer and PdfBackend directly on final artifact"
+    },
+    "product_acceptance": "failed: run-2 lacks both title slots; both renders retain name style notes and span two pages"
+  },
+  "workspace_limitations": [
+    "Other worktree edits changed source_entries.py after Agent runs; run-2 render CLI import failed because tools.service still imports normalize_source_entries_from_objects. Render completed by directly invoking existing visual adapter without modifying source.",
+    "Final file check detects prepare_template.py differs from recorded input-time hash. Skill/References and Registry still match recorded snapshots. Current checkout is not claimed to reproduce the tested runtime exactly."
+  ],
+  "change_commit": "f9881005007b890ebe8cb970da5c878a5bfd0fc0"
+}

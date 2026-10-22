@@ -16,6 +16,12 @@ from docfit.app.student_content_fill import (
     StudentContentExtractionRequest,
     StudentContentFillRequest,
     StudentExtractionExecution,
+    _block_text_object_missing,
+    _has_unaccounted_source_complex_objects,
+    _normalize_text,
+    _normalize_text_without_generated_object_refs,
+    _selected_scalar_content_ids,
+    _semantic_block_text_values_by_object,
     run_student_content_extraction,
     run_student_content_fill,
 )
@@ -24,8 +30,161 @@ from docfit.styles import StyleContractSet, style_contract_digest
 from docfit.tools.inspection import inspect_document
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.runtime import ToolFailure, sha256_file
+from docfit.tools.word_xml import serialize_word_xml
+from docfit.visual.renderer import DEFAULT_IMAGE
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+
+def _visual_renderer_ready() -> bool:
+    executable = shutil.which("docker")
+    if executable is None:
+        return False
+    completed = subprocess.run(
+        [executable, "inspect", "--type=image", DEFAULT_IMAGE],
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False,
+    )
+    return completed.returncode == 0
+
+
+def test_source_complex_unmapped_respects_student_content_coverage() -> None:
+    content_audit = {
+        "source_complex_objects": {"drawings": 2, "equations": 0, "tables": 1},
+        "selected_source_complex_objects": {"drawings": 0, "equations": 0, "tables": 0},
+    }
+
+    assert (
+        _has_unaccounted_source_complex_objects(
+            content_audit=content_audit,
+            source_coverage={"all_source_objects_accounted_for": True},
+        )
+        is False
+    )
+    assert (
+        _has_unaccounted_source_complex_objects(
+            content_audit=content_audit,
+            source_coverage={"all_source_objects_accounted_for": False},
+        )
+        is True
+    )
+
+
+def test_content_audit_uses_semantic_text_for_block_transport_carriers() -> None:
+    selected_block_ids = {"obj-image-carrier", "obj-caption", "obj-heading"}
+    placement = {
+        "operations": [
+            {
+                "action": "replace_block_content_control",
+                "source_object_ids": ["obj-image-carrier", "obj-caption", "obj-heading"],
+                "source_content_items": [
+                    {
+                        "classification_status": "classified",
+                        "field_id": "body.heading.outline2",
+                        "physical_type": "text",
+                        "transport_source_object_id": "obj-heading",
+                        "value": "1.1 Source section",
+                    },
+                    {
+                        "classification_status": "classified",
+                        "physical_type": "image",
+                        "transport_source_object_id": "obj-image-carrier",
+                        "value": None,
+                    },
+                    {
+                        "classification_status": "classified",
+                        "physical_type": "text",
+                        "transport_source_object_id": "obj-image-carrier",
+                        "source_object_ids": ["obj-caption"],
+                        "value": "PCR validation of mutants",
+                    },
+                ],
+            }
+        ]
+    }
+
+    semantic_text = _semantic_block_text_values_by_object(
+        placement=placement,
+        selected_block_ids=selected_block_ids,
+        approved_text_replacements=(),
+    )
+
+    assert semantic_text == {
+        "obj-caption": ["PCR validation of mutants"],
+        "obj-heading": ["Source section"],
+        "obj-image-carrier": ["PCR validation of mutants"],
+    }
+    assert (
+        _block_text_object_missing(
+            object_id="obj-heading",
+            raw_text="1.1 Source section",
+            final_text=_normalize_text("2.3 Source section"),
+            final_text_without_object_refs=_normalize_text_without_generated_object_refs(
+                "2.3 Source section"
+            ),
+            semantic_text_by_block_object=semantic_text,
+            approved_text_replacements=(),
+        )
+        is False
+    )
+    assert (
+        _block_text_object_missing(
+            object_id="obj-image-carrier",
+            raw_text="Figure 3-6 PCR validation of mutants",
+            final_text=_normalize_text("Fig. 1-1 PCR validation of mutants"),
+            final_text_without_object_refs=_normalize_text_without_generated_object_refs(
+                "Fig. 1-1 PCR validation of mutants"
+            ),
+            semantic_text_by_block_object=semantic_text,
+            approved_text_replacements=(),
+        )
+        is False
+    )
+    assert (
+        _block_text_object_missing(
+            object_id="obj-raw",
+            raw_text="Completely absent paragraph",
+            final_text=_normalize_text("Fig. 1-1 PCR validation of mutants"),
+            final_text_without_object_refs=_normalize_text_without_generated_object_refs(
+                "Fig. 1-1 PCR validation of mutants"
+            ),
+            semantic_text_by_block_object=semantic_text,
+            approved_text_replacements=(),
+        )
+        is True
+    )
+    assert _normalize_text_without_generated_object_refs("结果见图5-3、表1-1。") == _normalize_text(
+        "结果见、。"
+    )
+    assert _normalize_text_without_generated_object_refs(
+        "如图4可以看出，从表3- 1中可知。"
+    ) == _normalize_text("如可以看出，从中可知。")
+    assert _normalize_text_without_generated_object_refs(
+        "如图3-3-1可以看出，从表3-1- 1中可知。"
+    ) == _normalize_text("如可以看出，从中可知。")
+
+
+def test_content_audit_checks_only_selected_scalar_content() -> None:
+    placement = {
+        "operations": [
+            {
+                "action": "replace_text_content_control",
+                "source_content_items": [
+                    {"content_id": "selected-title", "field_id": "thesis.title.zh"},
+                ],
+            },
+            {
+                "action": "replace_block_content_control",
+                "source_content_items": [
+                    {"content_id": "body", "field_id": "body.paragraph"},
+                ],
+            },
+        ]
+    }
+
+    assert _selected_scalar_content_ids(placement) == {"selected-title"}
 
 
 def _style(
@@ -66,9 +225,7 @@ def _style_ref(style: dict[str, object]) -> dict[str, object]:
     }
 
 
-def _bind_placement_styles(
-    placement: dict[str, object], contracts: StyleContractSet
-) -> None:
+def _bind_placement_styles(placement: dict[str, object], contracts: StyleContractSet) -> None:
     placement["contract"] = {"style_contract_set_digest": contracts.digest}
 
 
@@ -123,11 +280,7 @@ def _wrap_paragraphs_as_controls(path: Path, tags: tuple[str, ...]) -> None:
         content = ET.SubElement(control, f"{{{W_NS}}}sdtContent")
         content.append(paragraph)
         body.insert(index, control)
-    parts["word/document.xml"] = ET.tostring(
-        document,
-        encoding="utf-8",
-        xml_declaration=True,
-    )
+    parts["word/document.xml"] = serialize_word_xml(document)
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for name, value in parts.items():
             archive.writestr(name, value)
@@ -153,11 +306,7 @@ def _set_content_control_color(path: Path, tag: str, color: str) -> None:
         break
     else:
         raise AssertionError(f"Missing synthetic content-control tag: {tag}")
-    parts["word/document.xml"] = ET.tostring(
-        document,
-        encoding="utf-8",
-        xml_declaration=True,
-    )
+    parts["word/document.xml"] = serialize_word_xml(document)
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for name, value in parts.items():
             archive.writestr(name, value)
@@ -192,7 +341,7 @@ def _add_numbering_to_first_paragraph(path: Path) -> None:
     level.set(f"{{{W_NS}}}val", "0")
     number_id = ET.SubElement(numbering_properties, f"{{{W_NS}}}numId")
     number_id.set(f"{{{W_NS}}}val", "7")
-    parts["word/document.xml"] = ET.tostring(document, encoding="utf-8", xml_declaration=True)
+    parts["word/document.xml"] = serialize_word_xml(document)
     parts["word/numbering.xml"] = f"""<?xml version="1.0" encoding="UTF-8"?>
 <w:numbering xmlns:w="{W_NS}">
  <w:abstractNum w:abstractNumId="3">
@@ -284,12 +433,22 @@ def test_fill_template_replaces_text_and_block_control_without_mutating_inputs(
         "operations": [
             {
                 "action": "replace_text_content_control",
+                "slot_ref": (
+                    "source_entry_id=source-entry-title;extent=text[0:5];"
+                    "source_snapshot_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    "aaaaaaaaaaaaaaaa;field_id=thesis.title.en"
+                ),
                 "tag": "docfit.cover.title_en",
                 "value": "Verified title",
                 "style_contract_ref": _style_ref(title_style),
             },
             {
                 "action": "replace_block_content_control",
+                "slot_ref": (
+                    "source_entry_id=source-entry-body;extent=text[0:5];"
+                    "source_snapshot_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    "aaaaaaaaaaaaaaaa;field_id=body.paragraph"
+                ),
                 "field_id": "body.ordered_items",
                 "tag": "docfit.body.chapter_title",
                 "source_locators": [source_paragraph.locator],
@@ -378,6 +537,11 @@ def test_fill_creates_numbering_infrastructure_when_template_has_none(
         "operations": [
             {
                 "action": "replace_block_content_control",
+                "slot_ref": (
+                    "source_entry_id=source-entry-body;extent=text[0:5];"
+                    "source_snapshot_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    "aaaaaaaaaaaaaaaa;field_id=body.paragraph"
+                ),
                 "field_id": "body.ordered_items",
                 "tag": "docfit.body.chapter_title",
                 "source_locators": [paragraph.locator],
@@ -399,6 +563,60 @@ def test_fill_creates_numbering_infrastructure_when_template_has_none(
         assert "word/numbering.xml" in archive.namelist()
         relationships = ET.fromstring(archive.read("word/_rels/document.xml.rels"))
     assert any(item.get("Type", "").endswith("/numbering") for item in relationships)
+    assert office.validate(output)["passed"] is True
+
+
+def test_fill_preserves_numbering_schema_order_when_template_already_has_numbering(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "student.docx"
+    template = tmp_path / "template.docx"
+    output = tmp_path / "candidate.docx"
+    _make_docx(source, "Numbered student paragraph")
+    _add_numbering_to_first_paragraph(source)
+    _make_docx(template, "BODY PLACEHOLDER")
+    _wrap_paragraphs_as_controls(template, ("docfit.body.chapter_title",))
+    office = OfficeCliAdapter()
+    paragraph = next(
+        item for item in inspect_document(source, office).objects if item.kind == "paragraph"
+    )
+    body_style = _style("style.body.chapter_body")
+    contracts = _style_contracts(template, body_style)
+    placement = {
+        "status": "PARTIAL",
+        "source_sha256": sha256_file(source),
+        "template_sha256": sha256_file(template),
+        "operations": [
+            {
+                "action": "replace_block_content_control",
+                "slot_ref": (
+                    "source_entry_id=source-entry-body;extent=text[0:5];"
+                    "source_snapshot_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    "aaaaaaaaaaaaaaaa;field_id=body.paragraph"
+                ),
+                "field_id": "body.ordered_items",
+                "tag": "docfit.body.chapter_title",
+                "source_locators": [paragraph.locator],
+                "remove_tags_after_fill": [],
+                "style_contract_ref": _style_ref(body_style),
+            }
+        ],
+    }
+    _bind_placement_styles(placement, contracts)
+
+    fill_template(
+        source_docx=source,
+        template_docx=template,
+        placement=placement,
+        style_contracts=contracts,
+        output_docx=output,
+    )
+
+    with zipfile.ZipFile(output) as archive:
+        numbering = ET.fromstring(archive.read("word/numbering.xml"))
+    child_names = [child.tag.rsplit("}", 1)[-1] for child in list(numbering)]
+    first_num = child_names.index("num")
+    assert "abstractNum" not in child_names[first_num:]
     assert office.validate(output)["passed"] is True
 
 
@@ -425,6 +643,10 @@ def test_fill_template_rejects_stale_source_snapshot(tmp_path: Path) -> None:
     assert failure.value.code == "fill_source_stale"
 
 
+@pytest.mark.skipif(
+    not _visual_renderer_ready(),
+    reason="Student-content fill integration requires the fixed Docker LibreOffice renderer",
+)
 def test_independent_student_content_app_publishes_partial_candidate(
     tmp_path: Path,
 ) -> None:
@@ -515,7 +737,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
                 "style_contract_set_digest": contracts.digest,
                 "slots": [
                     {
-                        "slot_id": "slot.title",
+                        "slot_ref": "slot.title",
                         "field_id": "thesis.title.en",
                         "required": True,
                         "style_contract_ref": _style_ref(title_style),
@@ -525,7 +747,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
                         },
                     },
                     {
-                        "slot_id": "slot.body",
+                        "slot_ref": "slot.body",
                         "field_id": "body.heading.outline1",
                         "required": True,
                         "style_contract_ref": _style_ref(chapter_title_style),
@@ -535,7 +757,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
                         },
                     },
                     {
-                        "slot_id": "slot.body.text",
+                        "slot_ref": "slot.body.text",
                         "field_id": "body.paragraph",
                         "required": True,
                         "style_contract_ref": _style_ref(body_style),
@@ -561,20 +783,16 @@ def test_independent_student_content_app_publishes_partial_candidate(
         assert prepared.source_docx.is_relative_to(prepared.task_root)
         items = prepared.inventory["content_items"]
         title_id = next(
-            item["source_content_id"]
-            for item in items
-            if item["observed_text"] == "Verified title"
+            item["source_content_id"] for item in items if item["observed_text"] == "Verified title"
         )
         body_id = next(
             item["source_content_id"]
             for item in items
             if item["observed_text"] == "Student body paragraph"
         )
-        assert schema["properties"]["annotations"]["items"]["properties"][
-            "source_content_id"
-        ]["enum"] == [
-            item["source_content_id"] for item in items
-        ]
+        assert schema["properties"]["annotations"]["items"]["properties"]["source_content_id"][
+            "enum"
+        ] == [item["source_content_id"] for item in items]
         return StudentExtractionExecution(
             structured_output={
                 "schema_version": 3,
@@ -634,8 +852,7 @@ def test_independent_student_content_app_publishes_partial_candidate(
     assert report["style_occurrence_counts"]["unresolved"] == 0
     assert Path(report["style_audit"]).is_file()
     assert (
-        _content_control_color(Path(report["candidate_docx"]), "docfit.cover.title_en")
-        == "000000"
+        _content_control_color(Path(report["candidate_docx"]), "docfit.cover.title_en") == "000000"
     )
     assert report["missing_required_count"] == 1
     assert "required_slots_missing" in report["partial_reasons"]
@@ -680,14 +897,16 @@ def test_extraction_module_runs_without_template_or_fill_contract(tmp_path: Path
         annotations = []
         for item in prepared.inventory["content_items"]:
             title = item["observed_text"] == "Verified title"
-            annotations.append({
-                "source_content_id": item["source_content_id"],
-                "classification_status": "classified",
-                "field_id": "thesis.title.en" if title else "body.paragraph",
-                "value": "Verified title" if title else None,
-                "confidence": 1.0,
-                "note": "Synthetic exact annotation.",
-            })
+            annotations.append(
+                {
+                    "source_content_id": item["source_content_id"],
+                    "classification_status": "classified",
+                    "field_id": "thesis.title.en" if title else "body.paragraph",
+                    "value": "Verified title" if title else None,
+                    "confidence": 1.0,
+                    "note": "Synthetic exact annotation.",
+                }
+            )
         return StudentExtractionExecution(
             structured_output={
                 "schema_version": 3,

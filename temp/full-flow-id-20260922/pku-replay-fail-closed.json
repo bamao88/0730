@@ -1,0 +1,7 @@
+{
+  "status": "rejected_before_write",
+  "exception": "ToolFailure",
+  "message": "Accepted semantic review is not materializable: materialization_slot_carrier_unsupported, materialization_slot_carrier_unsupported.",
+  "candidate_exists": false,
+  "level": "real replay of current rejected judgments; not successful materialization"
+}

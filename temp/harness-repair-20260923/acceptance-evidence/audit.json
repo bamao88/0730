@@ -1,0 +1,739 @@
+{
+  "audit_scope": "Evidence index refresh, not a claim that every plan requirement or product acceptance is complete.",
+  "boundary_host_failure_ownership": {
+    "commit": "19950176f2ed1a76bbad3341de06134f5f75fcf7",
+    "natural_occurrence_not_proven": true,
+    "real_input_injection_only": true,
+    "verification": "temp/harness-repair-20260923/njau-boundary-host-failure-replay/verification.json"
+  },
+  "code_status": {
+    "boundary_host_failure_ownership": "19950176f2ed1a76bbad3341de06134f5f75fcf7",
+    "diagnostics_and_validation": "fc1acca; ported",
+    "execution_diagnostics": "04ff044fb88f76aae16c2d39faa618f1371a72e2",
+    "explicit_layout_breaks": "0e1f774",
+    "initial_source_order": "7df1192",
+    "isolated_api_failure_ownership": "198d70a; ported",
+    "isolated_body_interfaces": {
+      "live_task": null,
+      "main_commit": "9a4b28c",
+      "merged_to_main": true,
+      "publication_main_commit": "ac6abfa",
+      "publication_test_commit": "6afff71",
+      "runtime_and_skill_frozen": false,
+      "runtime_commit": "cbefb17",
+      "session_id": 52301,
+      "terminal_task": "njau-body-interface-task",
+      "worktree": "/Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction"
+    },
+    "isolated_boundary_revision_context": "fc41c9d ported as 33612b1",
+    "isolated_partition_validation": {
+      "commit": "524d82e",
+      "live_tasks_use_patch": true,
+      "main_commit": "7c71949",
+      "merged_to_main": true,
+      "worktree": "/Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction"
+    },
+    "isolated_precise_feedback": "551430c + 03a3519 ported as ea77a44 + 2a70e5e",
+    "isolated_whitespace_alphabet": "4162e52 ported as d2ddb9e",
+    "isolated_whitespace_schema": "f41f470 + 1a23d1d ported as 21b3a9d + 3dc09b6",
+    "main_runtime": "04ff044fb88f76aae16c2d39faa618f1371a72e2",
+    "mixed_style_cleanup": "77a2119",
+    "nested_cell_body_text": "9c211c1f2fac1e1d0009bcfccc8c1565fd80b745",
+    "phase3": "f0bb5c4",
+    "phase4": "bcdc3d8",
+    "physical_containment_context": "aefe34389f2c74f214595f3f4865cecfa32196cb",
+    "source_layout_evidence": "aa5f42d329e829038c003b014f1b546e191fc7f0",
+    "unit_boundary_diagnostics": "37c26bd863f3ebd2e1d54ca9e7d280b36edb1843",
+    "unit_boundary_revision_journal": "f7c93702f4a7b8b039693f2aa6bb359593bfe8e3",
+    "whole_entry_declaration": "b05a50c ported as 0c1ff83; 6c72804 clarifies text-only whitespace instructions"
+  },
+  "execution_diagnostics": {
+    "cleanup_conflicts": 2,
+    "commit": "04ff044fb88f76aae16c2d39faa618f1371a72e2",
+    "old_summary_only_displayed_first_five": true,
+    "outside_supported_body_carriers": 7,
+    "real_replay": "temp/harness-repair-20260923/njau-execution-diagnostics-replay/verification.json",
+    "semantic_and_product_issues_not_resolved": true,
+    "total_blockers": 9
+  },
+  "field_role_and_shape_repairs": {
+    "docx_integration": "9 passed, 43 deselected; existing real-source replays plus constructed DOCX cases, not Agent E2E",
+    "field_role_commit": "79c0382",
+    "logic_contract": "932 passed; relevant Ruff/mypy passed",
+    "performance_commit": "7c71949",
+    "remaining": "isolated body coalescence full E2E; composite table/image execution capability; positive final publication and product acceptance",
+    "runtime_commit": "4bde3e0",
+    "shape_cleanup_commit": "4bde3e0",
+    "shape_tool_replay": "../shape-cleanup-replay/replay.json",
+    "three_school_new_runs": "PKU terminal; main HUNAU/NJAU live; isolated patched NJAU live"
+  },
+  "goal_complete": false,
+  "known_product_blockers": [
+    "No current successful complete-school publication or human product signoff; prior actual page problems remain.",
+    "Original PKU 85 nested body.table and 4 paragraph/image carrier conflicts remain blocked. Input order/containment repaired; actual new semantic judgments pending.",
+    "NJAU terminal: 7 footer digits knowingly bound to body.paragraph with an unprovided PAGE-field conversion assumption, plus 2 cleanup/retention conflicts. Diagnostic reporting repaired, judgments not changed.",
+    "HUNAU cell-interface full-school attempt exhausted saved semantic time budget after 9 recorded candidate events; no final candidate.",
+    "Full source ordering/containment and new boundary journal need fresh Agent evidence; context size and model reliability unproven."
+  ],
+  "latest_evidence_file_hashes": {
+    "acceptance-evidence/body-interface-validation.json": "b56d96e37dd486f1e62d9a880f1b8565799e399fab8df30950969e4f7f738af7",
+    "acceptance-evidence/live-evidence-tool-timing.json": "44efb79c7da4f6d9a94b690d8a35ff797b847222ae916a93d14462cabfe5a5f8",
+    "body-interface-replay/replay.json": "777f81da2c8ac4dfde95bc12a418e3c36b1ac17ee9321a89792c17bb39246eef",
+    "njau-execution-diagnostics-replay/verification.json": "2f280401f107a1892d1efb60e93b72a52c9c7815c1dea56e5e1727a8ae6b817a",
+    "phase5-three-schools/hunau-cell-interfaces-manifest.json": "4a0d5b937bc018d2e3e480debe2597ab146b2012aa889aa2fedde037ff889e5e",
+    "phase5-three-schools/hunau-cell-interfaces-observation.json": "92081d807d21f492bf709529f7ef3a971924bfbebf48a49021e9d17c9ad39d0e",
+    "phase5-three-schools/njau-boundary-diagnostics-manifest.json": "fb78062f5e14b052690897469d12e9bb6b24ab8906b003dd0aaa978685f1a575",
+    "phase5-three-schools/njau-boundary-diagnostics-observation.json": "2fb4f155e6b828ce38eb84d83d7ae6ada3898f8d7173ab34662d5490b177485f",
+    "phase5-three-schools/pku-field-role-natural-revision.json": "bea2d6b99062e9716e4d2575d1004b1c5fa21a5849e24e39947ad4c760a70797",
+    "phase5-three-schools/pku-field-role-shape-blocker-replay.json": "890863e1ccf349c42a6982de67c39379e5b32f8a58dfdfa58888a2afd1bdeda9",
+    "phase5-three-schools/pku-field-role-shape-verification.json": "a0bd5569673f031a3e28d47a47dbb21d29b6ecd616d38f3c7c3b435d02e6e8ad",
+    "phase5-three-schools/pku-source-structure-manifest.json": "2de72942612c71f65e8feb6c53aec4f560835aab610b99c8b745157798239519",
+    "phase5-three-schools/pku-source-structure-observation.json": "f1bcb430ebdbf4a8131b4d430763102ae65915135dd9efe2cab2ce095cda36df",
+    "pku-natural-boundary-journal/verification.json": "2e0262bf3a2bd703bb465405ce57559fc58c40707d5f25fece7197c9db1c362c",
+    "shape-cleanup-replay/replay.json": "b6965984ce3f9263d346228700df42702f8b9d9ce2721db3ba7fa7447a765552",
+    "source-document-order-verified/hunau/verification.json": "8d6900f45d59ed4f30634457fc202d3c5a1d81c7d985d720e1a43ac04b482c04",
+    "source-document-order-verified/njau/verification.json": "994ef1bd9bb632148d9b2d01b95ffb0cfc1640d507fe621e236a784f6ac75307",
+    "source-document-order-verified/pku/verification.json": "aee8ae36a67d5d42f43edbfc6d42e11669f1848039215ed6e4e7c3e8d208cd41",
+    "source-structure-replay/hunau/verification.json": "210145acea7513cd40f4224ef95b60c5b2af60eac9d753b64d9007f9b13d7e23",
+    "source-structure-replay/njau/verification.json": "8477ff0e2dced4a871fde3fcb3cd442ebf2eccafbf7b2725beff8f845b44b38d",
+    "source-structure-replay/pku/verification.json": "bc86366568fb696948b3c4e99a09021fc5eff5e76f3cf81f0d3e764f105dc191",
+    "temp/harness-repair-20260923/hunau-cell-interfaces-natural-revision/verification.json": "2846904ac26bd2a413cf48d5a831fc32b66259750d9a7d25c224a7545e880624",
+    "temp/harness-repair-20260923/njau-boundary-host-failure-replay/verification.json": "0fdd147ae96233e3cc31b8ccf3a907ad1e8aeffb9b5536874dcff216291c106f",
+    "temp/harness-repair-20260923/njau-boundary-journal-replay/verification.json": "ac3172e4e27467272075280955b6c789b9e5add986048edae24c986d92cfe6a2"
+  },
+  "latest_layout_evidence": {
+    "full_new_judgments_blocked": "njau-body-interface-current-replay/replay.json",
+    "full_old_judgments_blocked": "njau-layout-break-final-replay/replay.json",
+    "intermediate_visual_replay": "njau-layout-break-full-replay/visual-verification.json",
+    "positive_tool_slice": "njau-layout-title-tool-slice/replay.json",
+    "remaining": "empty break-only carrier insertion side lacks mapping; school semantic issues and table capabilities remain"
+  },
+  "latest_terminal_runs": [
+    {
+      "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+      "event_counts": {
+        "budget_policy": 1,
+        "candidate_recorded": 9,
+        "local_rejected": 4,
+        "local_review": 12,
+        "request": 14,
+        "response": 13,
+        "run_failed": 1
+      },
+      "exit_code": 2,
+      "failure": {
+        "code": "semantic_query_time_budget_exhausted",
+        "message": "The semantic stage exceeded its remaining saved time allowance.",
+        "origin": "harness",
+        "retryable": false,
+        "status": "error",
+        "suggested_actions": []
+      },
+      "frozen_hashes_reverified": true,
+      "latest_revision_event": 54,
+      "manifest": "temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-manifest.json",
+      "observed_at": "2026-09-24T07:35:18.624919+00:00",
+      "product_acceptance": false,
+      "recorded_candidate_batches": 9,
+      "runtime_and_skill_frozen": false,
+      "runtime_commit": "9c211c1",
+      "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-cell-interfaces/template-extraction",
+      "session_id": 1720,
+      "status": "terminal",
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-cell-interfaces-task",
+      "unit_boundary_status": "ok",
+      "unit_harness_feedback_attempts": 0,
+      "unit_sdk_query_count": 1,
+      "verified_file_count": 139
+    },
+    {
+      "confirmed_by": "write_stdin returned exit_code=2 in this turn",
+      "event_counts": {
+        "budget_policy": 1,
+        "candidate_recorded": 15,
+        "global_review_failed": 1,
+        "local_rejected": 6,
+        "local_review": 17,
+        "request": 21,
+        "response": 21,
+        "run_failed": 1
+      },
+      "exit_code": 2,
+      "failure": {
+        "code": "template_materialization_execution_unsupported",
+        "message": "Accepted semantic review is not materializable: materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers, materialization_body_structure_member_crosses_carriers.",
+        "origin": "tool",
+        "retryable": false,
+        "status": "error",
+        "suggested_actions": [
+          "Preserve the semantic judgments; repair the reported execution or system issue.",
+          "Do not retry semantic judgment or run materialization handlers for this failure."
+        ]
+      },
+      "frozen_hashes_reverified": true,
+      "latest_revision_event": 83,
+      "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-manifest.json",
+      "observed_at": "2026-09-24T07:35:18.667279+00:00",
+      "product_acceptance": false,
+      "recorded_candidate_batches": 15,
+      "runtime_and_skill_frozen": false,
+      "runtime_commit": "37c26bd",
+      "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-boundary-diagnostics/template-extraction",
+      "session_id": 2782,
+      "status": "terminal",
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+      "unit_boundary_status": "ok",
+      "unit_harness_feedback_attempts": 0,
+      "unit_sdk_query_count": 1,
+      "verified_file_count": 139
+    }
+  ],
+  "live_runs": [
+    {
+      "confirmed_by": "write_stdin returned running for session 38646 in this turn",
+      "event_counts": {
+        "budget_policy": 1,
+        "candidate_recorded": 2,
+        "local_rejected": 1,
+        "local_review": 2,
+        "request": 4,
+        "response": 3
+      },
+      "frozen_hashes_reverified": true,
+      "latest_revision_event": 13,
+      "manifest": "temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-manifest.json",
+      "observed_at": "2026-09-24T07:45:02.949617+00:00",
+      "product_acceptance": false,
+      "recorded_candidate_events": 2,
+      "runtime_and_skill_frozen": true,
+      "runtime_commit": "aefe343",
+      "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-source-structure/template-extraction",
+      "session_id": 38646,
+      "status": "running",
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-source-structure-task",
+      "unit_boundary_status": "ok",
+      "unit_count": 17,
+      "unit_harness_feedback_attempts": 0,
+      "unit_sdk_query_count": 1
+    }
+  ],
+  "natural_local_revision": {
+    "full_school_e2e": false,
+    "runtime_commit": "9c211c1",
+    "verification": "temp/harness-repair-20260923/hunau-cell-interfaces-natural-revision/verification.json"
+  },
+  "pending_boundary_journal_gap": {
+    "commit": "f7c93702f4a7b8b039693f2aa6bb359593bfe8e3",
+    "historical_missing_rounds_not_reconstructed": true,
+    "natural_verification": "temp/harness-repair-20260923/pku-natural-boundary-journal/verification.json",
+    "status": "Actual new PKU first-proposal boundary journal and checkpoint validated; no natural boundary revision/recovery observed in this run.",
+    "verification": "temp/harness-repair-20260923/njau-boundary-journal-replay/verification.json"
+  },
+  "physical_containment_context": {
+    "commit": "aefe34389f2c74f214595f3f4865cecfa32196cb",
+    "e2e_validated": false,
+    "entries": 1335,
+    "identity_text_partition_unchanged": true,
+    "relationships": 595,
+    "risk": "Additional full related text increases context volume; true Agent semantic effect and cost remain unverified.",
+    "verification": "source-structure-replay/{pku,hunau,njau}/verification.json"
+  },
+  "previous_index_sha256": "be7c458df7264166687c10ab7401730d53feaef62f2318045368f61e821d711b",
+  "requirements": [
+    {
+      "evidence": "docs/status/active/template-harness-repair-20260923.md",
+      "phase": 0,
+      "requirement": "frozen inputs and reproduction contracts",
+      "state": "evidenced"
+    },
+    {
+      "evidence": "temp/harness-repair-20260923/phase1-replay/replay.json",
+      "phase": 1,
+      "requirement": "no semantic auto-expansion or frozen role; execution failures retain judgments",
+      "state": "contract_and_real_replay_evidenced"
+    },
+    {
+      "evidence": "temp/harness-repair-20260923/phase2-live-20260923/cover-verification.json",
+      "latest_evidence": "phase5-three-schools/pku-field-role-natural-revision.json; real unchanged feedback and complete prior submission, revised response accepted before next batch",
+      "phase": 2,
+      "remaining": "Source ordering and physical containment now repaired in code and real replay; new Agent effects pending.",
+      "requirement": "complete context, version journal, natural Agent revision",
+      "state": "contract_replay_and_natural_post_unit_loop_evidenced"
+    },
+    {
+      "evidence": [
+        "temp/harness-repair-20260923/phase5-three-schools/no-progress-default-resume-verification.json",
+        "temp/harness-repair-20260923/phase5-three-schools/pku-fixed-budget-resume-verification.json",
+        "temp/harness-repair-20260923/phase5-three-schools/pku-field-role-natural-revision.json"
+      ],
+      "phase": 3,
+      "requirement": "early batch checks, bounded no-progress stop, reliable recovery",
+      "state": "early natural local rejection/revision/acceptance, persisted no-progress stop and exhausted-budget resume evidenced; complete-school successful generation not achieved"
+    },
+    {
+      "evidence": "temp/harness-repair-20260923/phase4-cover-completion/verification.json",
+      "latest_evidence": "phase5-three-schools/njau-body-interface-task/work/.docfit/final-visual-review/visual-verification.json",
+      "phase": 4,
+      "requirement": "actual all-page review, current candidate binding, fail-closed publication",
+      "state": "contract_and_real_blocked_completion_evidenced; positive_full_completion_missing"
+    },
+    {
+      "evidence": "temp/harness-repair-20260923/phase5-three-schools/",
+      "phase": 5,
+      "requirement": "three full school E2Es and product acceptance",
+      "state": "PKU aefe343 live: first proposal accepted into 17 units, post-unit judging. Old NJAU has 9 blockers (7 footer bindings + 2 cleanup conflicts); HUNAU budget exhausted. No full-school product acceptance."
+    }
+  ],
+  "source_document_order": {
+    "actual_fresh_officecli_preparation": "source-document-order-prepare/{pku,hunau,njau}/",
+    "commit": "7df1192",
+    "e2e_validated": false,
+    "entries": 1335,
+    "new_task_identity_changes": 1176,
+    "old_tasks_unchanged": true,
+    "verification": "source-document-order-verified/{pku,hunau,njau}/verification.json"
+  },
+  "updated_at": "2026-09-24T07:46:13.814006+00:00",
+  "validation_levels": {
+    "body_interface_contract": {
+      "final_focused_publication_contract": "11 passed",
+      "formal_publication_path": "6afff71: 2 passed in 4.82s, constructed DOCX + real OfficeCLI + synthetic visual evidence; logic/contract only",
+      "fresh_agent_e2e": "njau-body-interface-task running; no result yet",
+      "full_contract": "954 passed before final two added downgrade tests",
+      "officecli_materialization_subset": "9 passed, 43 deselected",
+      "real_tool_replay": "body-interface-replay/replay.json: 17 source spans -> 8 physical interfaces; other 167 paragraphs unchanged",
+      "runtime_commit": "cbefb17"
+    },
+    "boundary_codec_live_probe": "Synthetic native SDK: one pre-example failure split a slot; after explicit same-part example, one success preserved exact parts. No reliability or school-E2E claim.",
+    "boundary_codec_real_replay": {
+      "converted_parts": 15,
+      "excluded_original_invalid_entries": 2,
+      "report": "temp/harness-repair-20260923/acceptance-evidence/part-boundary-real-replay.json",
+      "resolved_slots_unchanged": 11,
+      "scope": "recorded real candidate slices, not new Agent output or full-school acceptance",
+      "source_valid_judgments": 14
+    },
+    "e2e_agent_loop": "Old HUNAU/NJAU terminal; new PKU source order/containment full-school run live on aefe343. No successful complete-school E2E.",
+    "isolated_boundary_count_contract": {
+      "code_commit": "1a23d1d",
+      "mypy_source_files": 123,
+      "ruff": "passed",
+      "scope": "actual initial and repair SDK request contracts plus whitespace schema group, mock SDK",
+      "tests": 11
+    },
+    "isolated_logic_contract": {
+      "log": "character-feedback-contract.log",
+      "mypy_source_files": 123,
+      "ruff": "passed",
+      "runtime_commit": "03a3519",
+      "tests": 844
+    },
+    "isolated_schema_contract": {
+      "code_commit": "f41f470",
+      "log": "conditional-whitespace-contract.log",
+      "native_sdk_probe": "conditional-whitespace-schema-probe.json",
+      "real_candidate_schema_replay": "../phase5-three-schools/conditional-whitespace-real-replay.json",
+      "tests": 852
+    },
+    "latest_logic_contract": "1017 passed / 22.93s; related Ruff and mypy 129 source files passed",
+    "latest_publication_integration": {
+      "constructed_docx": true,
+      "product_acceptance": false,
+      "real_officecli": "1.0.143",
+      "seconds": 4.31,
+      "synthetic_visual_review": true,
+      "tests": 2
+    },
+    "logic_contract": {
+      "code_commit": "6eee0b1",
+      "log": "temp/harness-repair-20260923/acceptance-evidence/whole-entry-main-verified-contract.log",
+      "note": "Historical 6eee0b1 baseline; later runtime contract evidence appears below.",
+      "seconds": 24.46,
+      "tests": 906
+    },
+    "materialization_integration": {
+      "log": "temp/harness-repair-20260923/acceptance-evidence/boundary-codec-materialization-integration.log",
+      "runtime": "6678851",
+      "seconds": 136.27,
+      "tests": 50,
+      "verification_level": "deterministic integration with fixture/constructed judgments, not natural Agent E2E"
+    },
+    "natural_field_role_revision": {
+      "evidence": "phase5-three-schools/pku-field-role-natural-revision.json",
+      "level": "E2E agent loop local natural revision",
+      "product_acceptance": false,
+      "semantic_correctness_proven": false
+    },
+    "natural_purpose_revision": {
+      "evidence": "phase5-three-schools/njau-whole-entry-body-revision.json",
+      "level": "E2E agent loop local revision",
+      "observation": "After exact-text rejection, natural revision changed 3 parts to 5 and punctuation from body_structure to fixed_label; rechecked and accepted.",
+      "product_acceptance": false,
+      "semantic_correctness_proven": false
+    },
+    "nested_cell_body_text": {
+      "logic_contract": {
+        "mypy_source_files": 126,
+        "passed": 979,
+        "ruff": "passed",
+        "seconds": 22.47
+      },
+      "product_acceptance": false,
+      "publication_handoff_group": {
+        "constructed_docx": true,
+        "formal_publication_tests": 4,
+        "passed": 16,
+        "seconds": 8.55,
+        "synthetic_visual_evidence": true
+      },
+      "replay": {
+        "interfaces": 76,
+        "path": "temp/harness-repair-20260923/hunau-nested-body-replay/replay.json",
+        "protected_paragraphs": 508,
+        "remaining_full_readiness_blockers": 1,
+        "remaining_recovery": "semantic_revision",
+        "sha256": "847a864a11f219871701d339818646dc096cfe3580338acf0c25220a531d7af6"
+      },
+      "runtime_commit": "9c211c1f2fac1e1d0009bcfccc8c1565fd80b745",
+      "runtime_files": {
+        "src/docfit/template/materialization/body_interfaces.py": "fc8cdf04599dce20db2207f83c4aca6689617fca53e550f42402d9e5f246c7b2",
+        "src/docfit/template/materialization/handlers/body_structure.py": "eadb23ab8fac81abc2218ff68b16024828d3d659ca1144e653332f5fd5dafcd7",
+        "src/docfit/template/materialization/readiness.py": "c0cbe445f0821809c2bd7f88d3484116530805021846585e800bb840864db71c",
+        "src/docfit/template/materialization/runtime.py": "d0bf21292cf31dc0bea28c916fd89644368d0ff3085f47252dcfdb5047411b48"
+      },
+      "verification_level": "real Tool slice and package validation; not whole-school E2E or product acceptance",
+      "word_validation": {
+        "path": "temp/harness-repair-20260923/hunau-nested-body-replay/word-validation.json",
+        "sha256": "fab4bccfa6925e1d63a8ed65abb19a6f5e881f2f23ab518202a8a85fbf5d71de"
+      }
+    },
+    "njau_source_layout_e2e_attempt": {
+      "adjacent_unit_candidates": [
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          },
+          "left_unit": "cover-page",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          },
+          "right_unit": "originality-declaration"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+          },
+          "left_unit": "originality-declaration",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+          },
+          "right_unit": "authorization-declaration"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+          },
+          "left_unit": "authorization-declaration",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+          },
+          "right_unit": "table-of-contents"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          },
+          "left_unit": "table-of-contents",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          },
+          "right_unit": "chinese-abstract"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "left_unit": "chinese-abstract",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "right_unit": "english-abstract"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+          },
+          "left_unit": "english-abstract",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+          },
+          "right_unit": "chapter-1-literature-review"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+          },
+          "left_unit": "chapter-1-literature-review",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+          },
+          "right_unit": "main-body-chapter"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          },
+          "left_unit": "main-body-chapter",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          },
+          "right_unit": "conclusion-and-outlook"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          },
+          "left_unit": "conclusion-and-outlook",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          },
+          "right_unit": "references"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          },
+          "left_unit": "references",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          },
+          "right_unit": "appendix"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          },
+          "left_unit": "appendix",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          },
+          "right_unit": "academic-achievements"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "left_unit": "academic-achievements",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "right_unit": "acknowledgements"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+          },
+          "left_unit": "acknowledgements",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+          },
+          "right_unit": "page-header-footer"
+        },
+        {
+          "left_end": {
+            "edge": "end",
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+          },
+          "left_unit": "page-header-footer",
+          "right_start": {
+            "edge": "start",
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+          },
+          "right_unit": "template-specification-text-box"
+        }
+      ],
+      "adjacent_units_sharing_included_entry_count": 14,
+      "checkpoint_sha256": "845fc22cd3ebbfb4144b533c2f6a8a91894b239cac11fb48241ec622544814a3",
+      "exit_code": 2,
+      "failure_code": "unit_boundary_checkpoint_failed",
+      "feedback": {
+        "blockers": [
+          {
+            "code": "unit_source_partition_invalid",
+            "message": "Units must form an ordered nonempty partition without gaps/overlaps."
+          }
+        ],
+        "checks": [
+          {
+            "name": "unit_source_partition_invalid",
+            "result": "needs_input"
+          }
+        ],
+        "failure": {
+          "code": "unit_source_partition_invalid",
+          "message": "Units must form an ordered nonempty partition without gaps/overlaps.",
+          "origin": "request",
+          "retryable": true,
+          "suggested_actions": [
+            "Revise source-entry boundary points to partition all entries."
+          ]
+        },
+        "feedback": {
+          "mechanical": true,
+          "semantic_authority": false,
+          "source_hash": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+          "type": "unit_coverage"
+        },
+        "schema_version": "mechanical_feedback_v1",
+        "status": "needs_input",
+        "warnings": []
+      },
+      "frozen_hash_mismatches": {
+        "inputs": [],
+        "runtime_source": [],
+        "skill": []
+      },
+      "harness_feedback_attempts": 3,
+      "last_unit_count": 15,
+      "next_probe": "Replay last candidate through source partition validation; improve exact overlap/gap feedback if only generic reason is emitted, preserving Agent boundary authority.",
+      "observed_at": "2026-09-24T06:30:10.657097+00:00",
+      "output_files": [],
+      "product_acceptance": false,
+      "sdk_query_count": 3,
+      "session_id": 51598,
+      "verification_level": "fresh complete-school E2E attempt; stopped at unit boundary, no post-unit Agent judgment"
+    },
+    "partition_validation_performance": {
+      "live_tool_observation": "acceptance-evidence/live-evidence-tool-timing.json; observed per-tool time, not matched whole-E2E speedup",
+      "logic_contract": "912 passed in 21.38s; targeted 61 passed; new complexity tests fail old source; relevant Ruff and source mypy passed",
+      "not_e2e_speedup_claim": true,
+      "profiled_pku_packet_seconds_after": 0.7617921249984647,
+      "profiled_pku_packet_seconds_before": 90.12022816699755,
+      "real_replay": "All three real canonical inventories and accepted unit proof mappings match exactly; reading packets and monitored input files unchanged"
+    },
+    "product_acceptance": "not achieved",
+    "real_replay": "see per-phase evidence; not equivalent to complete E2E",
+    "repository_regression": {
+      "all_passed": false,
+      "default_officecli": "1.0.144 (not locked)",
+      "initial_result": "1298 passed / 4 failed / 1 warning",
+      "latest_locked_run": {
+        "baseline_log": "student-fill-baseline-f0bb5c4.log",
+        "baseline_reproduced_on": "f0bb5c4",
+        "failed": 1,
+        "failed_test": "tests/integration/test_student_content_fill.py::test_independent_student_content_app_publishes_partial_candidate",
+        "failure": "synthetic Fill Contract v2 lacks required materialization provenance",
+        "log_sha256": "e66483ee2465bf7209b4eee7ae4693ad7e751b5ce4d64d065cf10dbeabe11855",
+        "officecli_sha256": "2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096",
+        "officecli_version": "1.0.143",
+        "passed": 1304,
+        "runtime_commit": "ae1cb9f",
+        "runtime_validation_weakened": false,
+        "verification_level": "repository regression; mock Agent tests and deterministic integration, not school E2E or product acceptance",
+        "warnings": 1
+      },
+      "related_fixes": "3 related failures addressed; locked OfficeCLI targeted group 11 passed",
+      "remaining_baseline_failure": "student-content fill test lacks materialization provenance; reproduced at clean f0bb5c4 with locked OfficeCLI"
+    },
+    "source_layout_evidence": {
+      "e2e_agent_loop": "not run for source-layout supplement",
+      "logic_contract": {
+        "mypy_source_files": 126,
+        "passed": 975,
+        "ruff": "passed",
+        "seconds": 19.32
+      },
+      "original_bindings_reverified": true,
+      "product_acceptance": false,
+      "receipts": {
+        "hunau": {
+          "entries_with_layout_facts": 0,
+          "path": "temp/harness-repair-20260923/source-layout-replay/hunau/replay.json",
+          "sha256": "e2a7e4c79e749f4b12c9cba0c36141d256099a5afac595651e7ad683405a371b",
+          "source_entry_count": 599,
+          "unavailable_entry_count": 0
+        },
+        "njau": {
+          "entries_with_layout_facts": 12,
+          "path": "temp/harness-repair-20260923/source-layout-replay/njau/replay.json",
+          "sha256": "8b891110b0bf848137c01bea0d9b7865d0aba4043a3bc315bbbe2812feee85ba",
+          "source_entry_count": 211,
+          "unavailable_entry_count": 0
+        },
+        "pku": {
+          "entries_with_layout_facts": 16,
+          "path": "temp/harness-repair-20260923/source-layout-replay/pku/replay.json",
+          "sha256": "6809efb574a31f6701919d1fad02857f8d3e2293de17656bb10ea673b3067a08",
+          "source_entry_count": 525,
+          "unavailable_entry_count": 0
+        }
+      },
+      "runtime_commit": "aa5f42d329e829038c003b014f1b546e191fc7f0",
+      "runtime_files": {
+        "src/docfit/app/prepare_template.py": "0898aa78b9de2cfffd984001e39509ba766f67511a1314380e67a6929317ad5e",
+        "src/docfit/template/reading_packet.py": "4c87ff371784277df2a470baffc9262cfc1a9a9570f059aa1c850245c37f10fd",
+        "src/docfit/template/source_layout.py": "1c801188fbba0456a3c818cd490e8c970aa231057815b1affc3fdfe1aaacd77d",
+        "src/docfit/tools/service.py": "51a8b34e8c46cdf833e8051a2e0205b88663dbd0ce4e0dfe72c74774a57a2245"
+      },
+      "verification_level": "real replay of source layout evidence; no Agent invocation"
+    },
+    "unit_boundary_diagnostics": {
+      "logic_contract": {
+        "mypy_source_files": 126,
+        "passed": 985,
+        "ruff": "passed",
+        "seconds": 19.36
+      },
+      "product_acceptance": false,
+      "replay": {
+        "diagnostic_counts": {
+          "unit_boundary_overlap": 11,
+          "unit_boundary_point_invalid": 2
+        },
+        "path": "temp/harness-repair-20260923/njau-boundary-diagnostic-replay-verified/replay.json",
+        "sha256": "6bf692c5f4a9f49436f1c82c930ba143c316924ab991d4b0b1742686f164ec01"
+      },
+      "runtime_commit": "37c26bd863f3ebd2e1d54ca9e7d280b36edb1843",
+      "runtime_files": {
+        "src/docfit/app/prepare_template.py": "2af27cec212e8cab346d57f9603a36ab565deaf5b6d9edba5b541bfea6a63ea8",
+        "src/docfit/template/unit_source.py": "24a124b006f8a0ca75afd29aeb63ef561b470fa3c3bd8a680d639ff6f04ce64a",
+        "src/docfit/tools/service.py": "e852f05e6dddec4fb000f7b977f1a5ed7881e74150ba94b6d75992f6280937b7"
+      },
+      "verification_level": "real rejected-candidate replay; new complete-school loop separately pending"
+    },
+    "whole_entry_docx_integration": {
+      "commit": "9a031b3",
+      "log": "temp/harness-repair-20260923/acceptance-evidence/whole-entry-docx-integration-final.log",
+      "seconds": 0.82,
+      "tests": 2,
+      "verification_level": "logic/contract, constructed DOCX integration"
+    },
+    "whole_entry_real_replay": "Native protocol probe output against actual PKU inventory, exact source/slot preserved; not independent semantic judgment or complete school run."
+  }
+}

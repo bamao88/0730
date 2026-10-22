@@ -1,0 +1,239 @@
+........................................................................ [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 16%]
+........................................................................ [ 22%]
+........................................................................ [ 27%]
+........................................................................ [ 33%]
+........................................................................ [ 38%]
+........................................................................ [ 44%]
+........................................................................ [ 49%]
+........................................................................ [ 55%]
+........................................................................ [ 60%]
+........................................................................ [ 66%]
+...........F............................................................ [ 71%]
+........................................................................ [ 77%]
+........................................................................ [ 82%]
+........................................................................ [ 88%]
+........................................................................ [ 93%]
+........................................................................ [ 99%]
+.........                                                                [100%]
+=================================== FAILURES ===================================
+_______ test_independent_student_content_app_publishes_partial_candidate _______
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-116/test_independent_student_conte0')
+
+    @pytest.mark.skipif(
+        not _visual_renderer_ready(),
+        reason="Student-content fill integration requires the fixed Docker LibreOffice renderer",
+    )
+    def test_independent_student_content_app_publishes_partial_candidate(
+        tmp_path: Path,
+    ) -> None:
+        source = tmp_path / "student.docx"
+        template = tmp_path / "template.docx"
+        registry_path = tmp_path / "registry.yaml"
+        contract_path = tmp_path / "fill-contract.yaml"
+        output = tmp_path / "output"
+        _make_docx(source, "Verified title", "Student body paragraph")
+        _make_docx(
+            template,
+            "TITLE PLACEHOLDER",
+            "BODY TITLE PLACEHOLDER",
+            "BODY TEXT PLACEHOLDER",
+        )
+        _wrap_paragraphs_as_controls(
+            template,
+            (
+                "docfit.cover.title_en",
+                "docfit.body.chapter_title",
+                "docfit.body.chapter_body",
+            ),
+        )
+        registry_path.write_text(
+            yaml.safe_dump(
+                {
+                    "registry_id": "docfit.thesis.content_fields",
+                    "registry_version": "0.1.0",
+                    "fields": [
+                        {
+                            "field_id": "thesis.title.en",
+                            "label": "English title",
+                            "meaning": "The student's English thesis title.",
+                            "content_type": "text",
+                        },
+                        {
+                            "field_id": "body.heading.outline1",
+                            "label": "Level-one body heading",
+                            "meaning": "A first-level heading in the thesis body.",
+                            "content_type": "text",
+                        },
+                        {
+                            "field_id": "body.paragraph",
+                            "label": "Body paragraph",
+                            "meaning": "A normal paragraph in the thesis body.",
+                            "content_type": "rich_text",
+                        },
+                    ],
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+        registry = {
+            "path": "registry.yaml",
+            "registry_id": "docfit.thesis.content_fields",
+            "registry_version": "0.1.0",
+            "sha256": sha256_file(registry_path),
+        }
+        title_style = _style(
+            "style.cover.title",
+            {"run.color": "000000", "run.font_size_pt": 12.0},
+        )
+        chapter_title_style = _style(
+            "style.body.chapter_title",
+            {"paragraph.alignment": "left", "run.color": "000000"},
+        )
+        body_style = _style(
+            "style.body.chapter_body",
+            {
+                "paragraph.alignment": "left",
+                "run.color": "000000",
+                "run.font_size_pt": 12.0,
+            },
+        )
+        contracts = _style_contracts(template, title_style, chapter_title_style, body_style)
+        contract_path.write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": "docfit-template-fill-contract/v2",
+                    "contract_id": "synthetic",
+                    "status": "candidate_pending_human_acceptance",
+                    "revision": "1",
+                    "template_sha256": sha256_file(template),
+                    "field_registry_ref": registry,
+                    "regions": [],
+                    "styles": [title_style, chapter_title_style, body_style],
+                    "style_contract_set_digest": contracts.digest,
+                    "slots": [
+                        {
+                            "slot_ref": "slot.title",
+                            "field_id": "thesis.title.en",
+                            "required": True,
+                            "style_contract_ref": _style_ref(title_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.cover.title_en",
+                            },
+                        },
+                        {
+                            "slot_ref": "slot.body",
+                            "field_id": "body.heading.outline1",
+                            "required": True,
+                            "style_contract_ref": _style_ref(chapter_title_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.body.chapter_title",
+                            },
+                        },
+                        {
+                            "slot_ref": "slot.body.text",
+                            "field_id": "body.paragraph",
+                            "required": True,
+                            "style_contract_ref": _style_ref(body_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.body.chapter_body",
+                            },
+                        },
+                    ],
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+    
+        async def fake_runner(prompt, prepared, schema, transcripts):
+            del transcripts
+            assert prepared.source_sha256 in prompt
+            assert '"schema_version": 3' in prompt
+            assert "ordered_source_content_items" in prompt
+            assert "Do not return any source_order" in prompt
+            assert str(template.resolve()) not in prompt
+            assert prepared.source_docx.is_relative_to(prepared.task_root)
+            items = prepared.inventory["content_items"]
+            title_id = next(
+                item["source_content_id"]
+                for item in items
+                if item["observed_text"] == "Verified title"
+            )
+            body_id = next(
+                item["source_content_id"]
+                for item in items
+                if item["observed_text"] == "Student body paragraph"
+            )
+            assert schema["properties"]["annotations"]["items"]["properties"][
+                "source_content_id"
+            ]["enum"] == [
+                item["source_content_id"] for item in items
+            ]
+            return StudentExtractionExecution(
+                structured_output={
+                    "schema_version": 3,
+                    "annotations": [
+                        {
+                            "source_content_id": title_id,
+                            "classification_status": "classified",
+                            "field_id": "thesis.title.en",
+                            "value": "Verified title",
+                            "confidence": 1.0,
+                            "note": "Synthetic exact title.",
+                        },
+                        {
+                            "source_content_id": body_id,
+                            "classification_status": "classified",
+                            "field_id": "body.paragraph",
+                            "value": None,
+                            "confidence": 1.0,
+                            "note": "Synthetic body.",
+                        },
+                    ],
+                    "relations": [],
+                    "summary": "Synthetic extraction.",
+                    "uncertainties": [],
+                },
+                backend="synthetic",
+                session_id="synthetic-session",
+                tool_uses=(),
+                skills_loaded=(),
+            )
+    
+        report = asyncio.run(
+            run_student_content_fill(
+                StudentContentFillRequest(
+                    source,
+                    template,
+                    contract_path,
+                    registry_path,
+                    output,
+                ),
+                runner=fake_runner,
+            )
+        )
+    
+>       assert report["status"] == "PARTIAL", report
+E       AssertionError: {'schema_version': 'docfit-student-content-fill-report/v1', 'status': 'NEEDS_INPUT', 'failure': {'origin': 'postcondit...aterialization provenance.'}, 'source_sha256': 'f013b461e11f8fd6a3c8af67226dcbd67c7be51ffa5d93650a9650924428bf76', ...}
+E       assert 'NEEDS_INPUT' == 'PARTIAL'
+E         
+E         - PARTIAL
+E         + NEEDS_INPUT
+
+tests/integration/test_student_content_fill.py:649: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_m2_convert.py:13
+  /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/tests/integration/test_m2_convert.py:13: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_student_content_fill.py::test_independent_student_content_app_publishes_partial_candidate
+1 failed, 1304 passed, 1 warning in 296.97s (0:04:56)

@@ -92,6 +92,24 @@ def _registry(tmp_path: Path) -> FieldRegistrySnapshot:
                         "content_type": "text",
                     },
                     {
+                        "field_id": "body.heading.level1",
+                        "label": "Chapter heading",
+                        "meaning": "A first-level body heading.",
+                        "content_type": "text",
+                    },
+                    {
+                        "field_id": "body.heading.level2",
+                        "label": "Section heading",
+                        "meaning": "A second-level body heading.",
+                        "content_type": "text",
+                    },
+                    {
+                        "field_id": "body.heading.level3",
+                        "label": "Subsection heading",
+                        "meaning": "A third-level body heading.",
+                        "content_type": "text",
+                    },
+                    {
                         "field_id": "body.paragraph",
                         "label": "Body paragraph",
                         "meaning": "A paragraph in the thesis body.",
@@ -395,6 +413,48 @@ def test_postprocessing_normalizes_only_isolated_numbered_heading_outlier(
     assert all(
         item["parent_content_id"] == section_id for item in model["items"][1:]
     )
+
+
+def test_postprocessing_binds_legacy_level_heading_hierarchy(tmp_path: Path) -> None:
+    inspection = Inspection(
+        "a" * 64,
+        (
+            _object("obj-chapter", "/body/p[@paraId=00000001]", "第一章 文献综述"),
+            _object("obj-section", "/body/p[@paraId=00000002]", "1.研究背景"),
+            _object("obj-subsection", "/body/p[@paraId=00000003]", "1.1污染现状"),
+            _object("obj-body", "/body/p[@paraId=00000004]", "Body text"),
+        ),
+        {"paragraphs": 4},
+        (),
+        (),
+        {},
+    )
+    inventory = build_student_inventory(inspection)
+    ids = [item["source_content_id"] for item in inventory["content_items"]]
+    payload = {
+        "schema_version": 3,
+        "annotations": [
+            _annotation(ids[0], "body.heading.level1"),
+            _annotation(ids[1], "body.heading.level2"),
+            _annotation(ids[2], "body.heading.level3"),
+            _annotation(ids[3], "body.paragraph"),
+        ],
+        "relations": [],
+        "summary": "Synthetic semantic annotations.",
+        "uncertainties": [],
+    }
+
+    model = validate_extraction(
+        payload,
+        inventory=inventory,
+        registry=_registry(tmp_path),
+    )
+
+    chapter, section, subsection, body = model["items"]
+    assert chapter["parent_content_id"] is None
+    assert section["parent_content_id"] == chapter["content_id"]
+    assert subsection["parent_content_id"] == section["content_id"]
+    assert body["parent_content_id"] == subsection["content_id"]
 
 
 def test_postprocessing_materializes_all_consecutive_figure_caption_relations(

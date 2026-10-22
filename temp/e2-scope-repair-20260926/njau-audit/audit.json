@@ -1,0 +1,2941 @@
+{
+  "real_task": {
+    "level": "real replay: original judgments through planning/readiness/target resolution",
+    "source_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+    "input_hashes": {
+      "input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+      "input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+      "work/.docfit/unit-boundary-checkpoint.json": "69f00900af7d4b50dc3498b699065cd43d91f4690853878b46374ede1fc745ab",
+      "work/.docfit/harness/object-inventory.json": "701fbce573e3cf5ece213e00afd245a46b5cddd9a004dafbbd238e2d92b3421f",
+      "work/.docfit/harness/semantic-judgments.json": "5a29f6c049f9c0ba8b6e1fa47a20d5f09a93c6dc6ae38c9d08b36b2a3abe1a8d",
+      "work/.docfit/post-unit-materialization/materialization.json": "025a46fffa154cdcb73c8ce07b6a8d652456abbf917ffc864257abbdd571a882"
+    },
+    "judgment_count": 211,
+    "conflicts": [
+      {
+        "carrier": "/body/tbl[1]",
+        "intents": [
+          {
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[0]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Carries top-of-cover vertical spacing, no visible text or fill responsibility.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[1]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[1]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Provides vertical space before the centered school title.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[2]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+            "intent_type": "keep_fixed_content",
+            "judgment_refs": [
+              "semantic_judgments[2]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "本科生毕业论文（设计）"
+              }
+            ],
+            "reason": "Centered 36pt 华文中宋 school heading. Identifies the cover's formal document type; the whole phrase is fixed template content and must be preserved verbatim.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[3]/r[1]",
+                "text": "本科生毕业论文（设计）"
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[3]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing between title block and the form fields below.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[4]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[4]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing within the form area.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[5]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[5]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing within the form area.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[6]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[6]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing before the 题 目 field line.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[7]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[7]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "题    目:"
+              },
+              {
+                "field_id": "thesis.title.zh",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "Mixed responsibility: the label \"题    目:\" (label with internal spaces for visual spacing) is fixed, and the trailing 36 ASCII spaces form the inline fill area for the Chinese thesis title (thesis.title.zh).",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/r[1]",
+                "text": "题  "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/r[3]",
+                "text": " 目:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/r[4]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[8]"
+            ],
+            "parts": [
+              {
+                "field_id": "thesis.title.zh",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "All-whitespace continuation line for the thesis title. Single whitespace-only fill_slot for thesis.title.zh: text=\"\" and whitespace.codepoint/count=36 cover the source's 36-char text portion (the documented text substring). Same role/field_id as the title fill area on the line above; lets a long title wrap onto this second line.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[9]/r[1]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[9]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "姓    名:"
+              },
+              {
+                "field_id": "author.name.zh",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "Mixed responsibility: \"姓    名:\" is the fixed label and the 36 trailing ASCII spaces are the fill area for the Chinese author name (author.name.zh).",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]/r[1]",
+                "text": "姓 "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]/r[3]",
+                "text": "  名:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]/r[4]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-17e2679377abb766980c7640",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[10]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "学    号:"
+              },
+              {
+                "field_id": "author.student_id",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "Mixed responsibility: \"学    号:\" is the fixed label and the 36 trailing ASCII spaces are the fill area for the student ID (author.student_id).",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]/r[1]",
+                "text": "学 "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]/r[3]",
+                "text": "  号:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]/r[4]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[11]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "学    院:"
+              },
+              {
+                "field_id": "author.department",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "Mixed responsibility: \"学    院:\" is the fixed label and the 36 trailing ASCII spaces are the fill area for the department (author.department).",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]/r[1]",
+                "text": "学  "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]/r[3]",
+                "text": " 院:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]/r[4]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[12]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "专    业:"
+              },
+              {
+                "field_id": "author.major",
+                "role": "fill_slot",
+                "text": "                                    "
+              }
+            ],
+            "reason": "Mixed responsibility: \"专    业:\" is the fixed label and the 36 trailing ASCII spaces are the fill area for the major (author.major).",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]/r[1]",
+                "text": "专 "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]/r[3]",
+                "text": "  业:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]/r[4]",
+                "text": "                                    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[13]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "指导教师:"
+              },
+              {
+                "field_id": "advisor.name.zh",
+                "role": "fill_slot",
+                "text": "                 "
+              },
+              {
+                "role": "fixed_label",
+                "text": "职称"
+              },
+              {
+                "field_id": "advisor.title",
+                "role": "fill_slot",
+                "text": "               "
+              }
+            ],
+            "reason": "Two label/fill pairs on the same line: \"指导教师:\" fixed label + 17 spaces fill for advisor.name.zh, then \"职称\" fixed label + 15 spaces fill for advisor.title. Each label stays; each fill slot is independent.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[1]",
+                "text": "指导教师:"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[2]",
+                "text": "                 "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[3]",
+                "text": "职称"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[4]",
+                "text": "          "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[5]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/r[6]",
+                "text": "    "
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[14]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing between the advisor row and the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[15]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[15]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing between the advisor row and the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[16]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[16]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing between the advisor row and the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[17]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[17]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing between the advisor row and the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[18]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+            "intent_type": "materialize_slot",
+            "judgment_refs": [
+              "semantic_judgments[18]"
+            ],
+            "parts": [
+              {
+                "role": "fixed_label",
+                "text": "20"
+              },
+              {
+                "field_id": "submission.date",
+                "role": "fill_slot",
+                "text": "   "
+              },
+              {
+                "role": "fixed_label",
+                "text": "年"
+              },
+              {
+                "field_id": "submission.date",
+                "role": "fill_slot",
+                "text": "   "
+              },
+              {
+                "role": "fixed_label",
+                "text": "月"
+              },
+              {
+                "field_id": "submission.date",
+                "role": "fill_slot",
+                "text": "   "
+              },
+              {
+                "role": "fixed_label",
+                "text": "日"
+              }
+            ],
+            "reason": "Centered date template. The literal \"20\" is the year-century prefix that stays (fixed_label); the three unit labels 年/月/日 are fixed; the three runs of 3 ASCII spaces each are the year-suffix, month, and day fill slots, all bound to submission.date. Splitting the labels from the fill slots keeps unit labels intact after the date value is filled in.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[1]",
+                "text": "20"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[1]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[2]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[3]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[3]",
+                "text": "年"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[4]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[5]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[6]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[6]",
+                "text": "月"
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[7]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[8]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[9]",
+                "text": " "
+              },
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[19]/r[10]",
+                "text": "日"
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[19]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing below the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[20]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+            "intent_type": "transfer_style_only",
+            "judgment_refs": [
+              "semantic_judgments[20]"
+            ],
+            "parts": [
+              {
+                "role": "style_only",
+                "text": ""
+              }
+            ],
+            "reason": "Empty paragraph, blank_layout_candidate. Vertical spacing below the date row.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]/tr[1]/tc[1]/p[21]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "intent_type": "delete_block",
+            "judgment_refs": [
+              "semantic_judgments[207]"
+            ],
+            "parts": [
+              {
+                "role": "cleanup",
+                "text": ""
+              }
+            ],
+            "reason": "Empty table with text_length=0; layout_context lists it as blank_layout_candidate/carrier_or_layout_candidate within the 本科生毕业论文（设计）规范化要求 unit. The unit is a sample formatting-instruction section, and the unit's own shape text instructs students to delete the text box and surrounding sample layout after reading. This carrier table is therefore part of the sample region to clean.",
+            "fragments": [
+              {
+                "locator": "/body/tbl[1]",
+                "extent": {
+                  "kind": "whole_entry"
+                },
+                "text": ""
+              }
+            ],
+            "execution_carrier_kind": "table",
+            "exact_targets_are_execution_target": true,
+            "carrier_visible_text": "本科生毕业论文（设计）题    目:                                                                        姓    名:                                    学    号:                                    学    院:                                    专    业:                                    指导教师:                 职称               20   年   月   日"
+          }
+        ]
+      }
+    ],
+    "plan_conflicts": [
+      {
+        "unsupported_ref": "plan-unsupported-0001-cleanup-conflict-01",
+        "source_judgment_refs": [
+          "semantic_judgments[0]",
+          "semantic_judgments[1]",
+          "semantic_judgments[2]",
+          "semantic_judgments[3]",
+          "semantic_judgments[4]",
+          "semantic_judgments[5]",
+          "semantic_judgments[6]",
+          "semantic_judgments[7]",
+          "semantic_judgments[8]",
+          "semantic_judgments[9]",
+          "semantic_judgments[10]",
+          "semantic_judgments[11]",
+          "semantic_judgments[12]",
+          "semantic_judgments[13]",
+          "semantic_judgments[14]",
+          "semantic_judgments[15]",
+          "semantic_judgments[16]",
+          "semantic_judgments[17]",
+          "semantic_judgments[18]",
+          "semantic_judgments[19]",
+          "semantic_judgments[20]",
+          "semantic_judgments[207]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2e2fe0ca346b5188bc2ecac2"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-fc0591d9c1444238d6d0645a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9d54f57faf3b5f30eebbf24c"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b931deacba2856fb3ce7c86b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-5be6ccc670222a702226ff2d"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b0fe7d8a79dff391219369f1"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-1b7591ef0f1788232ed9d779"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-68fc05ff1056dc3037b2c719"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-813dfb5f49ef0a4256d95183"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-17e2679377abb766980c7640"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-e3bea420b4e548d802e2e1b9"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-c5535b8a8362f4863822c436"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b666f200010b20ffe84b61c6"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-d22a3b57b4a4a59adc635195"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9dccf7eda8a43cc44a31673b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b4f650846b8a5d913b18ccb4"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-8a0d7c7d63dd0b97052d545a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2f0225f0c653a4a3a6043d0b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-0fdf4dee659c659815e69556"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-ec6aeef44153c681924e8a3f"
+          }
+        ],
+        "reason_code": "materialization_semantic_scope_conflict",
+        "message": "The selected content is assigned incompatible purposes: removal overlaps content to retain or fill, or filling ranges overlap. Revise the related source entries so each affected range has one consistent purpose. Removing a whole container also removes its contents.",
+        "missing_requirements": [
+          "consistent_source_scope_purposes"
+        ],
+        "payload": {
+          "intent_refs": [
+            "intent-0001-aeaed905",
+            "intent-0002-ec6b6c16",
+            "intent-0003-58fa79b2",
+            "intent-0004-92cad7aa",
+            "intent-0005-3bff767f",
+            "intent-0006-286d1975",
+            "intent-0007-126f754b",
+            "intent-0008-f5199970",
+            "intent-0009-ee112e78",
+            "intent-0010-cd6fa7a1",
+            "intent-0011-1f204ea5",
+            "intent-0012-982ca47a",
+            "intent-0013-b2bad25e",
+            "intent-0014-e1280725",
+            "intent-0015-b2fccd52",
+            "intent-0016-05aadfe5",
+            "intent-0017-b82523f4",
+            "intent-0018-2abc2204",
+            "intent-0019-8988ab81",
+            "intent-0020-4e5337d9",
+            "intent-0021-78ae64f4",
+            "intent-0208-b3d47cb5"
+          ]
+        }
+      }
+    ],
+    "feedback": {
+      "schema_version": 1,
+      "status": "error",
+      "recovery": {
+        "kind": "execution_unsupported",
+        "owner": "tool",
+        "action": "stop"
+      },
+      "feedback": {
+        "type": "materialization_readiness",
+        "mechanical": true,
+        "semantic_authority": false,
+        "agent_action": null
+      },
+      "checks": [
+        {
+          "name": "materialization_readiness",
+          "result": "error"
+        }
+      ],
+      "blockers": [
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-3efd73cae8a512c5ce83a203",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-dcf5576c2bfd65495729d26a",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-cdb14f8b3309a8bf179fa46e",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-105fd29ce0a9556e332a14b8",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-d6167ae87cab94b809baef51",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-28e56cb18de09bc75b058829",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_body_structure_carrier_unsupported",
+          "missing_requirement": "one_visible_carrier_per_body_member",
+          "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+          "source_entry_id": "source-entry-eff74536b46d98e710787702",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "field_id": "body.paragraph",
+          "supported_carrier_count": 0,
+          "recovery": {
+            "kind": "execution_unsupported",
+            "owner": "tool",
+            "action": "stop"
+          }
+        },
+        {
+          "code": "materialization_semantic_scope_conflict",
+          "missing_requirement": "consistent_source_scope_purposes",
+          "why_it_blocks_execution": "The selected content is assigned incompatible purposes: removal overlaps content to retain or fill, or filling ranges overlap. Revise the related source entries so each affected range has one consistent purpose. Removing a whole container also removes its contents.",
+          "message": "The selected content is assigned incompatible purposes: removal overlaps content to retain or fill, or filling ranges overlap. Revise the related source entries so each affected range has one consistent purpose. Removing a whole container also removes its contents.",
+          "needed_context": "unit_evidence_packet",
+          "evidence_focus": "unit_evidence_packet",
+          "source_judgment_ref": "semantic_judgments[0]",
+          "source_entry_ids": [
+            "source-entry-852593250a6b8daea9640fcb",
+            "source-entry-2e2fe0ca346b5188bc2ecac2",
+            "source-entry-fc0591d9c1444238d6d0645a",
+            "source-entry-9d54f57faf3b5f30eebbf24c",
+            "source-entry-b931deacba2856fb3ce7c86b",
+            "source-entry-5be6ccc670222a702226ff2d",
+            "source-entry-b0fe7d8a79dff391219369f1",
+            "source-entry-1b7591ef0f1788232ed9d779",
+            "source-entry-68fc05ff1056dc3037b2c719",
+            "source-entry-813dfb5f49ef0a4256d95183",
+            "source-entry-17e2679377abb766980c7640",
+            "source-entry-e3bea420b4e548d802e2e1b9",
+            "source-entry-24ac9b719646d00ae5b2dd7f",
+            "source-entry-c5535b8a8362f4863822c436",
+            "source-entry-b666f200010b20ffe84b61c6",
+            "source-entry-d22a3b57b4a4a59adc635195",
+            "source-entry-9dccf7eda8a43cc44a31673b",
+            "source-entry-b4f650846b8a5d913b18ccb4",
+            "source-entry-8a0d7c7d63dd0b97052d545a",
+            "source-entry-2f0225f0c653a4a3a6043d0b",
+            "source-entry-0fdf4dee659c659815e69556",
+            "source-entry-ec6aeef44153c681924e8a3f"
+          ],
+          "source_entries": [
+            {
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+              "entry_type": "text",
+              "text": "本科生毕业论文（设计）"
+            },
+            {
+              "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+              "entry_type": "text",
+              "text": "题    目:                                    "
+            },
+            {
+              "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+              "entry_type": "text",
+              "text": "                                    "
+            },
+            {
+              "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+              "entry_type": "text",
+              "text": "姓    名:                                    "
+            },
+            {
+              "source_entry_id": "source-entry-17e2679377abb766980c7640",
+              "entry_type": "text",
+              "text": "学    号:                                    "
+            },
+            {
+              "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+              "entry_type": "text",
+              "text": "学    院:                                    "
+            },
+            {
+              "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+              "entry_type": "text",
+              "text": "专    业:                                    "
+            },
+            {
+              "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+              "entry_type": "text",
+              "text": "指导教师:                 职称               "
+            },
+            {
+              "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+              "entry_type": "text",
+              "text": "20   年   月   日"
+            },
+            {
+              "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+              "entry_type": "text",
+              "text": ""
+            },
+            {
+              "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+              "entry_type": "table",
+              "text": ""
+            }
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-2e2fe0ca346b5188bc2ecac2"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-fc0591d9c1444238d6d0645a"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-9d54f57faf3b5f30eebbf24c"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-b931deacba2856fb3ce7c86b"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-5be6ccc670222a702226ff2d"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-b0fe7d8a79dff391219369f1"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-1b7591ef0f1788232ed9d779"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-68fc05ff1056dc3037b2c719"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-813dfb5f49ef0a4256d95183"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-17e2679377abb766980c7640"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-e3bea420b4e548d802e2e1b9"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-c5535b8a8362f4863822c436"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-b666f200010b20ffe84b61c6"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-d22a3b57b4a4a59adc635195"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-9dccf7eda8a43cc44a31673b"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-b4f650846b8a5d913b18ccb4"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-8a0d7c7d63dd0b97052d545a"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-2f0225f0c653a4a3a6043d0b"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-0fdf4dee659c659815e69556"
+            },
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-ec6aeef44153c681924e8a3f"
+            }
+          ],
+          "recovery": {
+            "kind": "semantic_revision",
+            "owner": "agent",
+            "action": "revise"
+          }
+        }
+      ],
+      "failure": {
+        "origin": "tool",
+        "code": "template_materialization_execution_unsupported",
+        "retryable": false,
+        "message": "Accepted semantic review is not materializable (8 blockers): materialization_body_structure_carrier_unsupported (7), materialization_semantic_scope_conflict (1).",
+        "suggested_actions": [
+          "Preserve the semantic judgments; repair the reported execution or system issue.",
+          "Do not retry semantic judgment or run materialization handlers for this failure."
+        ]
+      },
+      "warnings": []
+    },
+    "plan_conflict_count": 1,
+    "emitted_conflict_count": 1,
+    "omitted_conflict_source_entries": [],
+    "emitted_blocker_counts": {
+      "materialization_body_structure_carrier_unsupported": 7,
+      "materialization_semantic_scope_conflict": 1
+    },
+    "original_packet_rows": [
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+        "source_order": {
+          "block": 1,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+        "source_order": {
+          "block": 2,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 11,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "semantic_cues": [
+          "centered_heading_candidate"
+        ],
+        "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+        "source_order": {
+          "block": 3,
+          "inline": 0
+        },
+        "style_summary": {
+          "alignment": "center",
+          "font.ea": "华文中宋",
+          "font.latin": "华文中宋",
+          "size": "36pt",
+          "style": "Normal"
+        },
+        "text": "本科生毕业论文（设计）",
+        "text_length": 11,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "本科生毕业论文（设计）",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+        "source_order": {
+          "block": 4,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+        "source_order": {
+          "block": 5,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+        "source_order": {
+          "block": 6,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+        "source_order": {
+          "block": 7,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 43,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+        "source_order": {
+          "block": 8,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "题    目:                                    ",
+        "text_length": 43,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "题    目:                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 36,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "leading_whitespace_count": 36,
+        "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+        "source_order": {
+          "block": 9,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "                                    ",
+        "text_length": 36,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 43,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+        "source_order": {
+          "block": 10,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "姓    名:                                    ",
+        "text_length": 43,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "姓    名:                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 43,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-17e2679377abb766980c7640",
+        "source_order": {
+          "block": 11,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "学    号:                                    ",
+        "text_length": 43,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "学    号:                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 43,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+        "source_order": {
+          "block": 12,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "学    院:                                    ",
+        "text_length": 43,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "学    院:                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 43,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+        "source_order": {
+          "block": 13,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "专    业:                                    ",
+        "text_length": 43,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 36"
+        ],
+        "trailing_whitespace_count": 36,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "专    业:                                    ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 39,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+        "source_order": {
+          "block": 14,
+          "inline": 0
+        },
+        "style_summary": {
+          "font.ea": "黑体",
+          "font.latin": "黑体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "指导教师:                 职称               ",
+        "text_length": 39,
+        "trailing_whitespace_codepoints": [
+          "U+0020 × 15"
+        ],
+        "trailing_whitespace_count": 15,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "指导教师:                 职称               ",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+        "source_order": {
+          "block": 15,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+        "source_order": {
+          "block": 16,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+        "source_order": {
+          "block": 17,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+        "source_order": {
+          "block": 18,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "end": 14,
+          "kind": "text",
+          "start": 0
+        },
+        "leading_whitespace_count": 0,
+        "semantic_cues": [
+          "centered_heading_candidate",
+          "date_area_candidate",
+          "field_slot_candidate"
+        ],
+        "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+        "source_order": {
+          "block": 19,
+          "inline": 0
+        },
+        "style_summary": {
+          "alignment": "center",
+          "font.latin": "宋体",
+          "size": "16pt",
+          "style": "Normal"
+        },
+        "text": "20   年   月   日",
+        "text_length": 14,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "20   年   月   日",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+        "source_order": {
+          "block": 20,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-cover",
+        "entry_type": "text",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+        "source_order": {
+          "block": 21,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "text": "",
+            "unit_id": "unit-cover",
+            "unit_name": "封面（学校标题与学生基础信息）"
+          }
+        ]
+      },
+      {
+        "unit_id": "unit-spec-instructions",
+        "entry_type": "table",
+        "extent": {
+          "kind": "whole_entry"
+        },
+        "leading_whitespace_count": 0,
+        "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+        "source_order": {
+          "block": 208,
+          "inline": 0
+        },
+        "text": "",
+        "text_length": 0,
+        "trailing_whitespace_count": 0,
+        "unit_contexts": [
+          {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+            },
+            "text": "",
+            "unit_id": "unit-spec-instructions",
+            "unit_name": "本科生毕业论文（设计）规范化要求"
+          }
+        ]
+      }
+    ],
+    "generated_field_ids": [
+      "generated.toc",
+      "generated.list_of_figures",
+      "generated.list_of_tables"
+    ],
+    "original_task_unchanged": true,
+    "materialization_run": false,
+    "agent_called": false,
+    "published": false
+  },
+  "constructed_probes": [
+    {
+      "level": "logic/contract: constructed DOCX, authored judgments, real materializer",
+      "mode": "fixed",
+      "readiness_feedback": null,
+      "result_status": "ok",
+      "shapes_before": 2,
+      "shapes_after": 2,
+      "first_run_text_after": "same",
+      "cleanup_count": 1,
+      "policy_receipts": [
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "style_only",
+          "intent_ref": "intent-0001-aeaed905",
+          "source_judgment_refs": [
+            "semantic_judgments[0]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-0"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-0"
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "style_only",
+              "text": "",
+              "source_entry_id": "source-entry-0",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "expected_source_content": "",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-0",
+                  "locator": "/body/p[1]",
+                  "text": "",
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "object_ref": {
+                    "object_id": "obj-0",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                  },
+                  "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-0"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]",
+              "text": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+              },
+              "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0003-58fa79b2",
+          "source_judgment_refs": [
+            "semantic_judgments[2]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-2"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-2"
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-2",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-2",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-2",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                  },
+                  "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-2"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-2",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-2",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+              },
+              "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0004-92cad7aa",
+          "source_judgment_refs": [
+            "semantic_judgments[3]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-3"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-3"
+              },
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-3",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-3",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-3",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                  },
+                  "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-3"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-3",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-3",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+              },
+              "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        }
+      ],
+      "package_validation": "ok",
+      "source_unchanged": true,
+      "judgments_unchanged": true,
+      "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/e2-scope-repair-20260926/njau-audit/fixed/diagnostic.docx",
+      "agent_called": false,
+      "published": false,
+      "product_acceptance": false
+    },
+    {
+      "level": "logic/contract: constructed DOCX, authored judgments, real materializer",
+      "mode": "manual",
+      "readiness_feedback": null,
+      "result_status": "ok",
+      "shapes_before": 2,
+      "shapes_after": 2,
+      "first_run_text_after": "same",
+      "cleanup_count": 1,
+      "policy_receipts": [
+        {
+          "action": "keep_manual_table_cell",
+          "handler": "table_manual_cells",
+          "intent_ref": "intent-0002-ec6b6c16",
+          "source_judgment_refs": [
+            "semantic_judgments[1]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-1"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-1;extent=text[0:4];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+            "source_entry_id=source-entry-1;extent=text[4:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-1;extent=text[0:4];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-1"
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "manual_region",
+              "text": "same",
+              "source_entry_id": "source-entry-1",
+              "text_start": 0,
+              "text_end": 4,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 4
+              },
+              "expected_source_content": "same",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-1",
+                  "locator": "/body/p[1]/r[1]",
+                  "text": "same",
+                  "source_text_start": 0,
+                  "source_text_end": 4,
+                  "object_text_start": 0,
+                  "object_text_end": 4,
+                  "object_ref": {
+                    "object_id": "obj-1",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+                  },
+                  "fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-1"
+              ]
+            },
+            {
+              "span_ref": "source_entry_id=source-entry-1;extent=text[4:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-1"
+              },
+              "judgment_index": 1,
+              "part_index": 1,
+              "role": "cleanup",
+              "text": " text",
+              "source_entry_id": "source-entry-1",
+              "text_start": 4,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 4,
+                "end": 9
+              },
+              "expected_source_content": " text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-1",
+                  "locator": "/body/p[1]/r[1]",
+                  "text": " text",
+                  "source_text_start": 4,
+                  "source_text_end": 9,
+                  "object_text_start": 4,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-1",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+                  },
+                  "fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-1"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-1",
+              "locator": "/body/p[1]/r[1]",
+              "text": "same",
+              "source_text_start": 0,
+              "source_text_end": 4,
+              "object_text_start": 0,
+              "object_text_end": 4,
+              "object_ref": {
+                "object_id": "obj-1",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+              },
+              "fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+            },
+            {
+              "object_id": "obj-1",
+              "locator": "/body/p[1]/r[1]",
+              "text": " text",
+              "source_text_start": 4,
+              "source_text_end": 9,
+              "object_text_start": 4,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-1",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+              },
+              "fingerprint": "dc1fb60e8362cd460952e7c20f5a622dd09821077834da843d1187ec9a3accda"
+            }
+          ],
+          "mutation": "exact_text_cleanup",
+          "policy": "keep_as_single_manual_carrier",
+          "reason": "Manual table/cell scope is preserved as one school form area.",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "style_only",
+          "intent_ref": "intent-0001-aeaed905",
+          "source_judgment_refs": [
+            "semantic_judgments[0]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-0"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-0"
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "style_only",
+              "text": "",
+              "source_entry_id": "source-entry-0",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "expected_source_content": "",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-0",
+                  "locator": "/body/p[1]",
+                  "text": "",
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "object_ref": {
+                    "object_id": "obj-0",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                  },
+                  "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-0"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]",
+              "text": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+              },
+              "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0003-58fa79b2",
+          "source_judgment_refs": [
+            "semantic_judgments[2]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-2"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-2"
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-2",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-2",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-2",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                  },
+                  "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-2"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-2",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-2",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+              },
+              "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0004-92cad7aa",
+          "source_judgment_refs": [
+            "semantic_judgments[3]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-3"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-3"
+              },
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-3",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-3",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-3",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                  },
+                  "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-3"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-3",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-3",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+              },
+              "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        }
+      ],
+      "package_validation": "ok",
+      "source_unchanged": true,
+      "judgments_unchanged": true,
+      "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/e2-scope-repair-20260926/njau-audit/manual/diagnostic.docx",
+      "agent_called": false,
+      "published": false,
+      "product_acceptance": false
+    },
+    {
+      "level": "logic/contract: constructed DOCX, authored judgments, real materializer",
+      "mode": "slot",
+      "readiness_feedback": null,
+      "result_status": "ok",
+      "shapes_before": 2,
+      "shapes_after": 2,
+      "first_run_text_after": "same",
+      "cleanup_count": 0,
+      "policy_receipts": [
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "style_only",
+          "intent_ref": "intent-0001-aeaed905",
+          "source_judgment_refs": [
+            "semantic_judgments[0]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-0"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-0;extent=whole_entry;source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-0"
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "style_only",
+              "text": "",
+              "source_entry_id": "source-entry-0",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "expected_source_content": "",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-0",
+                  "locator": "/body/p[1]",
+                  "text": "",
+                  "extent": {
+                    "kind": "whole_entry"
+                  },
+                  "object_ref": {
+                    "object_id": "obj-0",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                  },
+                  "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-0"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]",
+              "text": "",
+              "extent": {
+                "kind": "whole_entry"
+              },
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+              },
+              "fingerprint": "e86f8697eb175fffadc447cdcee11af0e1bb18cdca24c72313a29d253ee5a6d4"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0003-58fa79b2",
+          "source_judgment_refs": [
+            "semantic_judgments[2]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-2"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-2;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-2"
+              },
+              "judgment_index": 2,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-2",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-2",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-2",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                  },
+                  "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-2"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-2",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[1]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-2",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+              },
+              "fingerprint": "2ad1c872b48d20ddf48c9cabee7efc2dbc2adbd772f0548f9999b20533886856"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        },
+        {
+          "action": "preserve_exact_fragments",
+          "handler": "fixed_content",
+          "intent_ref": "intent-0004-92cad7aa",
+          "source_judgment_refs": [
+            "semantic_judgments[3]"
+          ],
+          "scope_refs": [
+            {
+              "kind": "source_entry",
+              "ref_id": "source-entry-3"
+            }
+          ],
+          "span_refs": [
+            "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c"
+          ],
+          "resolved_spans": [
+            {
+              "span_ref": "source_entry_id=source-entry-3;extent=text[0:9];source_snapshot_sha256=496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "scope": {
+                "source_entry_id": "source-entry-3"
+              },
+              "judgment_index": 3,
+              "part_index": 0,
+              "role": "fixed_label",
+              "text": "same text",
+              "source_entry_id": "source-entry-3",
+              "text_start": 0,
+              "text_end": 9,
+              "extent": {
+                "kind": "text",
+                "start": 0,
+                "end": 9
+              },
+              "expected_source_content": "same text",
+              "source_snapshot_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+              "source_inventory_digest": "c0f9798a2d6df4c79335c3b3e036da78295bf62e8a5e98aca732e3a84d11fd67",
+              "word_fragments": [
+                {
+                  "object_id": "obj-3",
+                  "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+                  "text": "same text",
+                  "source_text_start": 0,
+                  "source_text_end": 9,
+                  "object_text_start": 0,
+                  "object_text_end": 9,
+                  "object_ref": {
+                    "object_id": "obj-3",
+                    "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                    "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                  },
+                  "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+                }
+              ],
+              "covered_object_ids": [
+                "obj-3"
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "object_id": "obj-3",
+              "locator": "/body/p[1]/r[2]/pict[1]/shape[2]",
+              "text": "same text",
+              "source_text_start": 0,
+              "source_text_end": 9,
+              "object_text_start": 0,
+              "object_text_end": 9,
+              "object_ref": {
+                "object_id": "obj-3",
+                "document_sha256": "496b8b4c35bfceb57b7688a78bf117c0aa913b91bf4291a8acfa756f2439cc6c",
+                "expected_fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+              },
+              "fingerprint": "13c717df9ac95f0e3243c8cf2e98b3b6483363117728f8b7ec0cd19a9d07bce1"
+            }
+          ],
+          "mutation": "none",
+          "actual_result": "preserved",
+          "effect_verified": true
+        }
+      ],
+      "package_validation": "ok",
+      "source_unchanged": true,
+      "judgments_unchanged": true,
+      "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/e2-scope-repair-20260926/njau-audit/slot/diagnostic.docx",
+      "agent_called": false,
+      "published": false,
+      "product_acceptance": false
+    }
+  ],
+  "product_acceptance": false
+}

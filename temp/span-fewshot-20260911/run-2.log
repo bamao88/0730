@@ -1,0 +1,39 @@
+{
+  "artifact_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-fewshot-20260911/run-2/task/output/final-template.docx",
+  "backend": "minimax",
+  "client_count": 1,
+  "counts": {
+    "gap": 9,
+    "manual": 0,
+    "remove": 0,
+    "slot": 9,
+    "unresolved": 79
+  },
+  "duration_api_ms": 71127,
+  "duration_ms": 25444,
+  "fill_contract_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-fewshot-20260911/run-2/task/output/fill-contract.yaml",
+  "num_turns": 2,
+  "session_count": 1,
+  "session_id": "559ae253-1983-45ae-8bd7-4538e7b92104",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "built",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-fewshot-20260911/run-2/task",
+  "template_sha256": "51ec97e6b9266fedb3448026f66592cc1faea38011434a3ec280d11e190baba2",
+  "tool_uses": [
+    "Skill",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 75869
+}

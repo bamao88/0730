@@ -1,0 +1,5448 @@
+{
+  "schema_version": 1,
+  "operation_count": 15,
+  "cleanup_count": 39,
+  "operations": [
+    {
+      "action": "materialize_structure",
+      "field_id": "body.chapters",
+      "block_id": "u-paper-body:block-0020",
+      "member_count": 8,
+      "members": [
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0020"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0021"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0022"
+        },
+        {
+          "field_id": "body.heading.outline2",
+          "block_id": "u-paper-body:block-0023"
+        },
+        {
+          "field_id": "body.heading.outline3",
+          "block_id": "u-paper-body:block-0024"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0025"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0027"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0028"
+        }
+      ],
+      "variant_id": "body.chapters.agriculture_science_engineering",
+      "variant_role": "primary",
+      "judgment_ids": [
+        "jd-016"
+      ]
+    },
+    {
+      "judgment_ids": [
+        "jd-003"
+      ],
+      "field_id": "thesis.title.zh",
+      "block_id": "u-paper-body:block-0003"
+    },
+    {
+      "judgment_ids": [
+        "jd-004"
+      ],
+      "field_id": "author.name.zh",
+      "block_id": "u-paper-body:block-0004",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-005"
+      ],
+      "field_id": "advisor.name.zh",
+      "block_id": "u-paper-body:block-0005",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-006"
+      ],
+      "field_id": "author.department",
+      "block_id": "u-paper-body:block-0006"
+    },
+    {
+      "judgment_ids": [
+        "jd-007"
+      ],
+      "field_id": "abstract.zh",
+      "block_id": "u-paper-body:block-0008",
+      "semantic_part_index": 4
+    },
+    {
+      "judgment_ids": [
+        "jd-008"
+      ],
+      "field_id": "keywords.zh",
+      "block_id": "u-paper-body:block-0009",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-009"
+      ],
+      "field_id": "thesis.title.en",
+      "block_id": "u-paper-body:block-0011"
+    },
+    {
+      "judgment_ids": [
+        "jd-010"
+      ],
+      "field_id": "author.name.en",
+      "block_id": "u-paper-body:block-0012",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-011"
+      ],
+      "field_id": "advisor.name.en",
+      "block_id": "u-paper-body:block-0013",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-012"
+      ],
+      "field_id": "author.department.en",
+      "block_id": "u-paper-body:block-0014"
+    },
+    {
+      "judgment_ids": [
+        "jd-013"
+      ],
+      "field_id": "abstract.en",
+      "block_id": "u-paper-body:block-0016",
+      "semantic_part_index": 4
+    },
+    {
+      "judgment_ids": [
+        "jd-014"
+      ],
+      "field_id": "keywords.en",
+      "block_id": "u-paper-body:block-0017",
+      "semantic_part_index": 2
+    },
+    {
+      "judgment_ids": [
+        "jd-020"
+      ],
+      "field_id": "references.entries",
+      "block_id": "u-paper-body:block-0042"
+    },
+    {
+      "judgment_ids": [
+        "jd-023"
+      ],
+      "field_id": "acknowledgement.body",
+      "block_id": "u-paper-body:block-0046"
+    }
+  ],
+  "cleanup": [
+    {
+      "block_id": "u-paper-body:block-0030",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0031",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0032",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0033",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0034",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0035",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0038",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0039",
+      "action": "remove_alternate_body_structure",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0001",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-001"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0002",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0007",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0010",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0015",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0018",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0040",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0044",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0047",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-002"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0019",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-015"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0029",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-015"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0030",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0031",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0032",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0033",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0034",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0035",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0038",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0039",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-017"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0026",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-018"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0036",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-018"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0037",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-018"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0043",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-021"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0049",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-025"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0050",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-025"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0051",
+      "action": "clear_text",
+      "judgment_ids": [
+        "jd-026"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0041",
+      "action": "strip_instruction_text",
+      "judgment_ids": [
+        "jd-019"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0045",
+      "action": "strip_instruction_text",
+      "judgment_ids": [
+        "jd-022"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0048",
+      "action": "strip_instruction_text",
+      "judgment_ids": [
+        "jd-024"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0052",
+      "action": "remove_hint",
+      "judgment_ids": [
+        "jd-027"
+      ]
+    },
+    {
+      "block_id": "u-paper-body:block-0053",
+      "action": "strip_instruction_text",
+      "judgment_ids": [
+        "jd-028"
+      ]
+    }
+  ],
+  "policy_receipts": [],
+  "mutation_receipts": [
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0016-9eaf405a"
+      ],
+      "source_judgment_ids": [
+        "jd-016"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0020"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0021"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0022"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0023"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0024"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0025"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0027"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0028"
+        }
+      ],
+      "field_ids": [
+        "body.chapters",
+        "body.heading.outline1",
+        "body.paragraph",
+        "body.heading.outline2",
+        "body.heading.outline3"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0020",
+        "u-paper-body:block-0021",
+        "u-paper-body:block-0022",
+        "u-paper-body:block-0023",
+        "u-paper-body:block-0024",
+        "u-paper-body:block-0025",
+        "u-paper-body:block-0027",
+        "u-paper-body:block-0028"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0020": "1□前言 （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "u-paper-body:block-0021": "□□…… （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "u-paper-body:block-0022": "2□××××",
+        "u-paper-body:block-0023": "2.1□×××××（二级标题四号黑体，顶格书写序数，空一格写标题）",
+        "u-paper-body:block-0024": "2.1.1□×××××（三级标题小四号黑体，顶格书写序数，空一格写标题）",
+        "u-paper-body:block-0025": "□□（1）……[1]。（一般不设四级标题，如确属需要，第四层次不单独占行书写）",
+        "u-paper-body:block-0027": "5□结论",
+        "u-paper-body:block-0028": "□□……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0020": "【章标题】",
+        "u-paper-body:block-0021": "【正文段落】",
+        "u-paper-body:block-0022": "【章标题】",
+        "u-paper-body:block-0023": "【一级节标题】",
+        "u-paper-body:block-0024": "【二级节标题】",
+        "u-paper-body:block-0025": "【正文段落】",
+        "u-paper-body:block-0027": "【章标题】",
+        "u-paper-body:block-0028": "【正文段落】"
+      },
+      "operation": {
+        "action": "materialize_structure",
+        "field_id": "body.chapters",
+        "block_id": "u-paper-body:block-0020",
+        "member_count": 8,
+        "members": [
+          {
+            "field_id": "body.heading.outline1",
+            "block_id": "u-paper-body:block-0020"
+          },
+          {
+            "field_id": "body.paragraph",
+            "block_id": "u-paper-body:block-0021"
+          },
+          {
+            "field_id": "body.heading.outline1",
+            "block_id": "u-paper-body:block-0022"
+          },
+          {
+            "field_id": "body.heading.outline2",
+            "block_id": "u-paper-body:block-0023"
+          },
+          {
+            "field_id": "body.heading.outline3",
+            "block_id": "u-paper-body:block-0024"
+          },
+          {
+            "field_id": "body.paragraph",
+            "block_id": "u-paper-body:block-0025"
+          },
+          {
+            "field_id": "body.heading.outline1",
+            "block_id": "u-paper-body:block-0027"
+          },
+          {
+            "field_id": "body.paragraph",
+            "block_id": "u-paper-body:block-0028"
+          }
+        ],
+        "variant_id": "body.chapters.agriculture_science_engineering",
+        "variant_role": "primary",
+        "judgment_ids": [
+          "jd-016"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0003-3ea585eb"
+      ],
+      "source_judgment_ids": [
+        "jd-003"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0003"
+        }
+      ],
+      "field_ids": [
+        "thesis.title.zh"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0003"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0003": "毕业论文（设计）中文题目（小二黑体，加粗，居中）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0003": "【中文题目】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-003"
+        ],
+        "field_id": "thesis.title.zh",
+        "block_id": "u-paper-body:block-0003"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0004-916e2ce5"
+      ],
+      "source_judgment_ids": [
+        "jd-004"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0004"
+        }
+      ],
+      "field_ids": [
+        "author.name.zh"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0004"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0004": "学□□生：×××（或×□×） （五号宋体居中）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0004": "学□□生：【姓名】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-004"
+        ],
+        "field_id": "author.name.zh",
+        "block_id": "u-paper-body:block-0004",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0005-adfb5ec6"
+      ],
+      "source_judgment_ids": [
+        "jd-005"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0005"
+        }
+      ],
+      "field_ids": [
+        "advisor.name.zh"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0005"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0005": "指导老师：×××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0005": "指导老师：【导师姓名】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-005"
+        ],
+        "field_id": "advisor.name.zh",
+        "block_id": "u-paper-body:block-0005",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0006-f32112e4"
+      ],
+      "source_judgment_ids": [
+        "jd-006"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0006"
+        }
+      ],
+      "field_ids": [
+        "author.department"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0006"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0006": "(湖南农业大学××××学院，长沙 410128)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0006": "(湖南农业大学【学院】，长沙 410128)"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-006"
+        ],
+        "field_id": "author.department",
+        "block_id": "u-paper-body:block-0006"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0007-7ac53c53"
+      ],
+      "source_judgment_ids": [
+        "jd-007"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0008"
+        }
+      ],
+      "field_ids": [
+        "abstract.zh"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0008"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0008": "□□摘□要（小四黑体）：…… （五号宋体）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0008": "□□摘□要：【中文摘要】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-007"
+        ],
+        "field_id": "abstract.zh",
+        "block_id": "u-paper-body:block-0008",
+        "semantic_part_index": 4
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0008-89bd55a0"
+      ],
+      "source_judgment_ids": [
+        "jd-008"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0009"
+        }
+      ],
+      "field_ids": [
+        "keywords.zh"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0009"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0009": "□□关键词：×××；×××；×××；×××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0009": "□□关键词：【中文关键词】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-008"
+        ],
+        "field_id": "keywords.zh",
+        "block_id": "u-paper-body:block-0009",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0009-67f8775c"
+      ],
+      "source_judgment_ids": [
+        "jd-009"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0011"
+        }
+      ],
+      "field_ids": [
+        "thesis.title.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0011"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0011": "Title of Graduation Paper （四号Times New Roman，加粗，居中）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0011": "【英文题目】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-009"
+        ],
+        "field_id": "thesis.title.en",
+        "block_id": "u-paper-body:block-0011"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0010-e9a9dd6a"
+      ],
+      "source_judgment_ids": [
+        "jd-010"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0012"
+        }
+      ],
+      "field_ids": [
+        "author.name.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0012"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0012": "Student:××× （五号Times New Roman，居中）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0012": "Student:【作者英文姓名】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-010"
+        ],
+        "field_id": "author.name.en",
+        "block_id": "u-paper-body:block-0012",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0011-afd7d6d1"
+      ],
+      "source_judgment_ids": [
+        "jd-011"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0013"
+        }
+      ],
+      "field_ids": [
+        "advisor.name.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0013"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0013": "Tutor:××××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0013": "Tutor:【导师英文姓名】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-011"
+        ],
+        "field_id": "advisor.name.en",
+        "block_id": "u-paper-body:block-0013",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0012-4ffb0dbd"
+      ],
+      "source_judgment_ids": [
+        "jd-012"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0014"
+        }
+      ],
+      "field_ids": [
+        "author.department.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0014"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0014": "(College of×××××××, Hunan Agricultural University, Changsha 410128, China)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0014": "(College of【院系英文名称】, Hunan Agricultural University, Changsha 410128, China)"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-012"
+        ],
+        "field_id": "author.department.en",
+        "block_id": "u-paper-body:block-0014"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0013-40aae250"
+      ],
+      "source_judgment_ids": [
+        "jd-013"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0016"
+        }
+      ],
+      "field_ids": [
+        "abstract.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0016"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0016": "□□Abstract(小四号Times New Roman， 加粗):…… (五号Times New Roman)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0016": "□□Abstract:【英文摘要】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-013"
+        ],
+        "field_id": "abstract.en",
+        "block_id": "u-paper-body:block-0016",
+        "semantic_part_index": 4
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0014-fa784614"
+      ],
+      "source_judgment_ids": [
+        "jd-014"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0017"
+        }
+      ],
+      "field_ids": [
+        "keywords.en"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0017"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0017": "□□Key words: ×××； ×××；×××； ×××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0017": "□□Key words: 【英文关键词】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-014"
+        ],
+        "field_id": "keywords.en",
+        "block_id": "u-paper-body:block-0017",
+        "semantic_part_index": 2
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0020-60cee9ee"
+      ],
+      "source_judgment_ids": [
+        "jd-020"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0042"
+        }
+      ],
+      "field_ids": [
+        "references.entries"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0042"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0042": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. (五号宋体)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0042": "【参考文献条目】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-020"
+        ],
+        "field_id": "references.entries",
+        "block_id": "u-paper-body:block-0042"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "materialize_slot",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0023-0f71c840"
+      ],
+      "source_judgment_ids": [
+        "jd-023"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0046"
+        }
+      ],
+      "field_ids": [
+        "acknowledgement.body"
+      ],
+      "affected_blocks": [
+        "u-paper-body:block-0046"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0046": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 (小四号宋体)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0046": "【致谢】"
+      },
+      "operation": {
+        "judgment_ids": [
+          "jd-023"
+        ],
+        "field_id": "acknowledgement.body",
+        "block_id": "u-paper-body:block-0046"
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0030"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0030": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0030": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0030",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0031"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0031": "一、×××××（一级标题小三号黑体，顶格书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0031": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0031",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0032"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0032": "二、×××××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0032": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0032",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0033"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0033": "（一）×××××（二级标题四号黑体，顶格书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0033": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0033",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0034"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0034": "□□1、×××××（三级标题小四号黑体）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0034": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0034",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0035"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0035": "□□（1）……[1]。（四级标题不单独占行书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0035": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0035",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0038"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0038": "五、结束语"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0038": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0038",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_alternate_body_structure",
+      "handler": "body_structure",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0039"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0039": "□□……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0039": ""
+      },
+      "safety_checks": [
+        "explicit_alternate_body_structure"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0039",
+        "action": "remove_alternate_body_structure",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0001-d917492e"
+      ],
+      "source_judgment_ids": [
+        "jd-001"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0001"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0001"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0001": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0001": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0001",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-001"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0002"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0002": "（小二号字空两行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0002": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0002",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0007"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0007": "（五号字空一行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0007": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0007",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0010"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0010": "（五号字空一行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0010": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0010",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0015"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0015": "（五号字空一行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0015": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0015",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0018"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0018": "（五号字空一行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0018": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0018",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0040"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0040": "（小四号字空一行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0040": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0040",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0044"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0044": "（五号字空二行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0044": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0044",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0002-94877360"
+      ],
+      "source_judgment_ids": [
+        "jd-002"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0002"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0007"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0010"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0015"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0018"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0040"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0044"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0047"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0047"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0047": "（小四号字空二行）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0047": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0047",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-002"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0015-3840a245"
+      ],
+      "source_judgment_ids": [
+        "jd-015"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0019"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0029"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0019"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0019": "（以下农理工科类用）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0019": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0019",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-015"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0015-3840a245"
+      ],
+      "source_judgment_ids": [
+        "jd-015"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0019"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0029"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0029"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0029": "（以下文法经管类用）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0029": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0029",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-015"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0030"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0030": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0030": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0030",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0031"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0031": "一、×××××（一级标题小三号黑体，顶格书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0031": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0031",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0032"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0032": "二、×××××"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0032": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0032",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0033"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0033": "（一）×××××（二级标题四号黑体，顶格书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0033": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0033",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0034"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0034": "□□1、×××××（三级标题小四号黑体）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0034": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0034",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0035"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0035": "□□（1）……[1]。（四级标题不单独占行书写）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0035": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0035",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0038"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0038": "五、结束语"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0038": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0038",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0017-65d38387"
+      ],
+      "source_judgment_ids": [
+        "jd-017"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0030"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0031"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0032"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0033"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0034"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0035"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0038"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0039"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0039"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0039": "□□……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0039": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0039",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-017"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0018-31452d84"
+      ],
+      "source_judgment_ids": [
+        "jd-018"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0026"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0036"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0037"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0026"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0026": "……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0026": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0026",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-018"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0018-31452d84"
+      ],
+      "source_judgment_ids": [
+        "jd-018"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0026"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0036"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0037"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0036"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0036": "……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0036": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0036",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-018"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0018-31452d84"
+      ],
+      "source_judgment_ids": [
+        "jd-018"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0026"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0036"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0037"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0037"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0037": "……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0037": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0037",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-018"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0021-c4818cee"
+      ],
+      "source_judgment_ids": [
+        "jd-021"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0043"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0043"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0043": "……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0043": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0043",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-021"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0025-53c92731"
+      ],
+      "source_judgment_ids": [
+        "jd-025"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0049"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0050"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0049"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0049": "附录1……（小四号宋体）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0049": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0049",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-025"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0025-53c92731"
+      ],
+      "source_judgment_ids": [
+        "jd-025"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0049"
+        },
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0050"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0050"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0050": "附录2……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0050": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0050",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-025"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "clear_text",
+      "handler": "cleanup",
+      "intent_ids": [
+        "intent-0026-caddb66b"
+      ],
+      "source_judgment_ids": [
+        "jd-026"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0051"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0051"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0051": "……"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0051": ""
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0051",
+        "action": "clear_text",
+        "judgment_ids": [
+          "jd-026"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "strip_instruction_text",
+      "handler": "fixed_content",
+      "intent_ids": [
+        "intent-0019-f9bf75ff"
+      ],
+      "source_judgment_ids": [
+        "jd-019"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0041"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0041"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0041": "参考文献 (小三号黑体)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0041": "参考文献"
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0041",
+        "action": "strip_instruction_text",
+        "judgment_ids": [
+          "jd-019"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "strip_instruction_text",
+      "handler": "fixed_content",
+      "intent_ids": [
+        "intent-0022-88e95d88"
+      ],
+      "source_judgment_ids": [
+        "jd-022"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0045"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0045"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0045": "致□□谢 (小三号黑体，居中)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0045": "            致□□谢"
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0045",
+        "action": "strip_instruction_text",
+        "judgment_ids": [
+          "jd-022"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "strip_instruction_text",
+      "handler": "fixed_content",
+      "intent_ids": [
+        "intent-0024-3c7d3322"
+      ],
+      "source_judgment_ids": [
+        "jd-024"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0048"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0048"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0048": "附录(小三号黑体)"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0048": "附录"
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0048",
+        "action": "strip_instruction_text",
+        "judgment_ids": [
+          "jd-024"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "remove_hint",
+      "handler": "slots",
+      "intent_ids": [
+        "intent-0027-dd84e4d0"
+      ],
+      "source_judgment_ids": [
+        "jd-027"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0052"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0052"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0052": "附录1（另起一页，小四号黑体）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0052": ""
+      },
+      "safety_checks": [
+        "slot_handler_checked_hint_without_field"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0052",
+        "action": "remove_hint",
+        "judgment_ids": [
+          "jd-027"
+        ]
+      }
+    },
+    {
+      "receipt_type": "mutation",
+      "action": "strip_instruction_text",
+      "handler": "fixed_content",
+      "intent_ids": [
+        "intent-0028-ebcd8411"
+      ],
+      "source_judgment_ids": [
+        "jd-028"
+      ],
+      "scope_refs": [
+        {
+          "kind": "reading_block",
+          "ref_id": "u-paper-body:block-0053"
+        }
+      ],
+      "field_ids": [],
+      "affected_blocks": [
+        "u-paper-body:block-0053"
+      ],
+      "before_text_by_block": {
+        "u-paper-body:block-0053": "……（附录内容的字体字号参照正文的格式要求）"
+      },
+      "after_text_by_block": {
+        "u-paper-body:block-0053": "……"
+      },
+      "safety_checks": [
+        "plan_validator_checked_cleanup_scope"
+      ],
+      "operation": {
+        "block_id": "u-paper-body:block-0053",
+        "action": "strip_instruction_text",
+        "judgment_ids": [
+          "jd-028"
+        ]
+      }
+    }
+  ],
+  "receipt_count": 54,
+  "write": {
+    "schema_version": 1,
+    "status": "ok",
+    "executor": "ooxml_executor",
+    "output_docx": "temp/phase13-inline-semantic-parts-real-replay-20260828/candidate-semantic-parts.docx",
+    "output_sha256": "6eae6e8ca79e3e3dd5beebeb42dfae2bba83825c942df008dadd830794613eb1",
+    "package_validation": "ok"
+  },
+  "shadow_intent_plan": {
+    "schema_version": 1,
+    "plan_id": "materialization-plan-4c241d46725f",
+    "ready": true,
+    "intent_count": 28,
+    "context_count": 28,
+    "command_count": 0,
+    "unsupported_count": 0,
+    "intents": [
+      {
+        "intent_id": "intent-0001-d917492e",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-001"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0001"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "format_instruction",
+          "clean_template_treatment": "delete",
+          "style_obligation": "Section page setup must carry top/bottom margin 2.54cm and left/right margin 2.6cm; body paragraph style must carry exact line spacing 22pt (adjustable only where figures/tables require). The □ convention resolves to one full character width (two characters) and is the basis for the 2-character indents and label gaps used throughout this unit.",
+          "cleanup_reason": "Template authoring instruction with no student fill responsibility; keeping the sentence would leave tutorial text in a clean fillable template."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0002-94877360",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-002"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0002"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0007"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0010"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0015"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0018"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0040"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0044"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0047"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "format_instruction",
+          "clean_template_treatment": "delete",
+          "style_obligation": "block-0002: two blank lines at 小二号 before the Chinese title. block-0007, block-0010, block-0015, block-0018: one blank line at 五号 (before 摘要 face, before the English title, before the English abstract, before the body). block-0040: one blank line at 小四号 before 参考文献. block-0044: two blank lines at 五号 before 致谢. block-0047: two blank lines at 小四号 before 附录.",
+          "cleanup_reason": "Parenthetical layout instructions are author-facing and must not remain visible in a fillable template."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0003-3ea585eb",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-003"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0003"
+          }
+        ],
+        "field_ids": [
+          "thesis.title.zh"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot must carry 小二号 (18pt) 黑体, bold, centered — transferred from the deleted annotation and matching the observed effective format.",
+          "cleanup_reason": "The trailing （小二黑体，加粗，居中）is a format instruction whose rule moves to the slot style.",
+          "field_ids": [
+            "thesis.title.zh"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0004-916e2ce5",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-004"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0004"
+          }
+        ],
+        "field_ids": [
+          "author.name.zh"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered. Label typography 学□□生 keeps the one-character-width gap. Name rendering rule from （或×□×）: a two-character name is typeset with a one-character-width gap between the two characters so its width matches three-character names.",
+          "cleanup_reason": "（或×□×）and （五号宋体居中）are format instructions; their rules move to the slot's rendering and style obligation.",
+          "field_ids": [
+            "author.name.zh"
+          ],
+          "semantic_parts": [
+            {
+              "text": "学□□生：",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "×××（或×□×）",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "author.name.zh"
+            },
+            {
+              "text": " （五号宋体居中）",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0005-adfb5ec6",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-005"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0005"
+          }
+        ],
+        "field_ids": [
+          "advisor.name.zh"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered, inheriting the same author-line format that block-0004's annotation establishes for this signature group.",
+          "cleanup_reason": "No format annotation inside this block; only the placeholder value is replaced.",
+          "field_ids": [
+            "advisor.name.zh"
+          ],
+          "semantic_parts": [
+            {
+              "text": "指导老师：",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "×××",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "advisor.name.zh"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0006-f32112e4",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-006"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0006"
+          }
+        ],
+        "field_ids": [
+          "author.department"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered, inline within the fixed affiliation skeleton.",
+          "cleanup_reason": "No format annotation in this block.",
+          "field_ids": [
+            "author.department"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0007-7ac53c53",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-007"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0008"
+          }
+        ],
+        "field_ids": [
+          "abstract.zh"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Label 摘要 renders 小四号 黑体 and keeps its one-character-width internal gap (摘□要); the abstract value renders 五号 宋体; the paragraph keeps the leading □□ two-character indent.",
+          "cleanup_reason": "（小四黑体）and （五号宋体）are format instructions whose rules move to the label and slot styles.",
+          "field_ids": [
+            "abstract.zh"
+          ],
+          "semantic_parts": [
+            {
+              "text": "□□摘□要",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "（小四黑体）",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            },
+            {
+              "text": "：",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "……",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "abstract.zh"
+            },
+            {
+              "text": " （五号宋体）",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0008-89bd55a0",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-008"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0009"
+          }
+        ],
+        "field_ids": [
+          "keywords.zh"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Label 关键词 renders 小四号 黑体, value renders 五号 宋体, paragraph keeps the leading □□ two-character indent; the full-width semicolon ；remains the school's keyword separator.",
+          "cleanup_reason": "Example keyword placeholders are replaced by the slot; the separator convention is preserved.",
+          "field_ids": [
+            "keywords.zh"
+          ],
+          "semantic_parts": [
+            {
+              "text": "□□关键词：",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "×××；×××；×××；×××",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "keywords.zh"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0009-67f8775c",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-009"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0011"
+          }
+        ],
+        "field_ids": [
+          "thesis.title.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 四号 (14pt) Times New Roman, bold, centered.",
+          "cleanup_reason": "（四号Times New Roman，加粗，居中）is a format instruction whose rule moves to the slot style.",
+          "field_ids": [
+            "thesis.title.en"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0010-e9a9dd6a",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-010"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0012"
+          }
+        ],
+        "field_ids": [
+          "author.name.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered.",
+          "cleanup_reason": "（五号Times New Roman，居中）is a format instruction whose rule moves to the slot style.",
+          "field_ids": [
+            "author.name.en"
+          ],
+          "semantic_parts": [
+            {
+              "text": "Student:",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "×××",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "author.name.en"
+            },
+            {
+              "text": " （五号Times New Roman，居中）",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0011-afd7d6d1",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-011"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0013"
+          }
+        ],
+        "field_ids": [
+          "advisor.name.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered, matching the English author line.",
+          "cleanup_reason": "No format annotation in this block.",
+          "field_ids": [
+            "advisor.name.en"
+          ],
+          "semantic_parts": [
+            {
+              "text": "Tutor:",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "××××",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "advisor.name.en"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0012-4ffb0dbd",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-012"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0014"
+          }
+        ],
+        "field_ids": [
+          "author.department.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered, inline within the fixed English affiliation skeleton.",
+          "cleanup_reason": "No format annotation in this block.",
+          "field_ids": [
+            "author.department.en"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0013-40aae250",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-013"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0016"
+          }
+        ],
+        "field_ids": [
+          "abstract.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Label Abstract renders 小四号 Times New Roman bold; the abstract value renders 五号 Times New Roman; the paragraph keeps the leading □□ two-character indent.",
+          "cleanup_reason": "(小四号Times New Roman， 加粗) and (五号Times New Roman) are format instructions whose rules move to the label and slot styles.",
+          "field_ids": [
+            "abstract.en"
+          ],
+          "semantic_parts": [
+            {
+              "text": "□□Abstract",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "(小四号Times New Roman， 加粗)",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            },
+            {
+              "text": ":",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "……",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "abstract.en"
+            },
+            {
+              "text": " (五号Times New Roman)",
+              "semantic_role": "format_instruction",
+              "clean_template_treatment": "delete"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0014-fa784614",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-014"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0017"
+          }
+        ],
+        "field_ids": [
+          "keywords.en"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Label renders 小四号 Times New Roman bold, value renders 五号 Times New Roman, paragraph keeps the leading □□ two-character indent, and the full-width semicolon ；remains the separator this school uses even in the English list. Preserve the observed label casing Key words: rather than normalizing it to KEY WORDS.",
+          "cleanup_reason": "Example keyword placeholders are replaced by the slot.",
+          "field_ids": [
+            "keywords.en"
+          ],
+          "semantic_parts": [
+            {
+              "text": "□□Key words: ",
+              "semantic_role": "fixed_content",
+              "clean_template_treatment": "keep"
+            },
+            {
+              "text": "×××； ×××；×××； ×××",
+              "semantic_role": "fill_slot",
+              "clean_template_treatment": "convert_to_field_slot",
+              "registry_field": "keywords.en"
+            }
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0015-3840a245",
+        "intent_type": "delete_block",
+        "source_judgment_ids": [
+          "jd-015"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0019"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0029"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "conditional_content",
+          "clean_template_treatment": "delete",
+          "cleanup_reason": "Bracketed applicability notes are template guidance; leaving them visible would imply the student must keep both body structures."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0016-9eaf405a",
+        "intent_type": "materialize_body_structure",
+        "source_judgment_ids": [
+          "jd-016"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0020"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0021"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0022"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0023"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0024"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0025"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0027"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0028"
+          }
+        ],
+        "field_ids": [
+          "body.chapters",
+          "body.heading.outline1",
+          "body.paragraph",
+          "body.heading.outline2",
+          "body.heading.outline3"
+        ],
+        "payload": {
+          "semantic_role": "body_representative",
+          "clean_template_treatment": "transfer_style_to_slot",
+          "output_effect": "The clean template exposes exactly one fillable body chapter structure with three heading levels and a body paragraph carrier; the sample chapter numbers 1/2/5 demonstrate repetition and do not become required example chapters.",
+          "style_obligation": "outline1: 小三号 黑体, ordinal typed flush at the left margin, one character-width gap before the title text. outline2: 四号 黑体, same flush-ordinal plus one-gap rule. outline3: 小四号 黑体, same flush-ordinal plus one-gap rule. body.paragraph: Chinese text 小四号 宋体 and Western text 小四号 Times New Roman, with a □□ two-character first-line indent. A fourth level is normally not used; when needed, （1） runs inline inside a paragraph and must never become a standalone heading level.",
+          "cleanup_reason": "Specimen titles (前言, ××××, 结论) are example values; the reusable capability, not the sample wording, is what the template must keep.",
+          "structure_ref": "body.chapters",
+          "members": [
+            "body.heading.outline1",
+            "body.paragraph",
+            "body.heading.outline1",
+            "body.heading.outline2",
+            "body.heading.outline3",
+            "body.paragraph",
+            "body.heading.outline1",
+            "body.paragraph"
+          ],
+          "member_bindings": [
+            {
+              "block_id": "u-paper-body:block-0020",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0021",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0022",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0023",
+              "member_field_id": "body.heading.outline2",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0024",
+              "member_field_id": "body.heading.outline3",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0025",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0027",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            },
+            {
+              "block_id": "u-paper-body:block-0028",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-016"
+              ],
+              "variant_id": "body.chapters.agriculture_science_engineering",
+              "variant_role": "primary",
+              "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+            }
+          ],
+          "variant_id": "body.chapters.agriculture_science_engineering",
+          "variant_role": "primary",
+          "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "output_effect",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0017-65d38387",
+        "intent_type": "materialize_body_structure",
+        "source_judgment_ids": [
+          "jd-017"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0030"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0031"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0032"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0033"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0034"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0035"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0038"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0039"
+          }
+        ],
+        "field_ids": [
+          "body.chapters",
+          "body.paragraph",
+          "body.heading.outline1",
+          "body.heading.outline2",
+          "body.heading.outline3"
+        ],
+        "payload": {
+          "semantic_role": "body_representative",
+          "clean_template_treatment": "delete",
+          "style_obligation": "If this variant is selected: outline1 小三号 黑体 flush left with 一、 style ordinals; outline2 四号 黑体 flush left with （一） ordinals; outline3 小四号 黑体 with 1、 ordinals; body.paragraph Chinese 小四号 宋体 / Western 小四号 Times New Roman with □□ two-character first-line indent; the fourth level （1） stays inline and never becomes a standalone heading.",
+          "cleanup_reason": "Duplicate body specimen for a non-selected discipline track; its hierarchy survives as this variant's member map rather than as visible sample text.",
+          "structure_ref": "body.chapters",
+          "members": [
+            "body.paragraph",
+            "body.heading.outline1",
+            "body.heading.outline1",
+            "body.heading.outline2",
+            "body.heading.outline3",
+            "body.paragraph",
+            "body.heading.outline1",
+            "body.paragraph"
+          ],
+          "member_bindings": [
+            {
+              "block_id": "u-paper-body:block-0030",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0031",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0032",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0033",
+              "member_field_id": "body.heading.outline2",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0034",
+              "member_field_id": "body.heading.outline3",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0035",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0038",
+              "member_field_id": "body.heading.outline1",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            },
+            {
+              "block_id": "u-paper-body:block-0039",
+              "member_field_id": "body.paragraph",
+              "source_judgment_ids": [
+                "jd-017"
+              ],
+              "variant_id": "body.chapters.humanities_law_economics_management",
+              "variant_role": "alternate",
+              "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+            }
+          ],
+          "variant_id": "body.chapters.humanities_law_economics_management",
+          "variant_role": "alternate",
+          "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0018-31452d84",
+        "intent_type": "delete_block",
+        "source_judgment_ids": [
+          "jd-018"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0026"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0036"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0037"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "author_instruction",
+          "clean_template_treatment": "delete",
+          "cleanup_reason": "Ellipsis-only paragraphs would appear as stray content in a clean fillable template."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0019-f9bf75ff",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-019"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0041"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "fixed_content",
+          "clean_template_treatment": "keep",
+          "style_obligation": "Heading renders 小三号 黑体, flush at the left margin as observed. No Registry binding — a fixed section heading is not a student field.",
+          "cleanup_reason": "(小三号黑体) is a format instruction whose rule moves to the heading style; the heading text itself stays."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0020-60cee9ee",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-020"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0042"
+          }
+        ],
+        "field_ids": [
+          "references.entries"
+        ],
+        "payload": {
+          "semantic_role": "example_value",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Entries render 五号 宋体 with bracketed sequence numbers [1], [2], … . The school citation pattern 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. must be carried as the reference format rule, including the [J] document-type marker and full-width punctuation.",
+          "cleanup_reason": "The sample author/journal wording is an example value replaced by the slot; (五号宋体) is a format instruction whose rule moves to the entry style.",
+          "field_ids": [
+            "references.entries"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0021-c4818cee",
+        "intent_type": "delete_block",
+        "source_judgment_ids": [
+          "jd-021"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0043"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "author_instruction",
+          "clean_template_treatment": "delete",
+          "cleanup_reason": "Ellipsis-only paragraph would remain as stray content in a clean template."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0022-88e95d88",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-022"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0045"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "fixed_content",
+          "clean_template_treatment": "keep",
+          "style_obligation": "Heading renders 小三号 黑体, centered, and preserves the 致□□谢 layout — two character-width gaps between 致 and 谢 per the unit's □ convention. No Registry binding.",
+          "cleanup_reason": "(小三号黑体，居中) is a format instruction whose rule moves to the heading style."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0023-0f71c840",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-023"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0046"
+          }
+        ],
+        "field_ids": [
+          "acknowledgement.body"
+        ],
+        "payload": {
+          "semantic_role": "example_value",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 小四号 宋体 with the school's body first-line indent as shown in the specimen.",
+          "cleanup_reason": "The ×××老师 sample sentence is an example value replaced by the slot; (小四号宋体) is a format instruction whose rule moves to the slot style.",
+          "field_ids": [
+            "acknowledgement.body"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0024-3c7d3322",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-024"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0048"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "fixed_content",
+          "clean_template_treatment": "keep",
+          "style_obligation": "Heading renders 小三号 黑体, flush at the left margin as observed. No Registry binding.",
+          "cleanup_reason": "(小三号黑体) is a format instruction whose rule moves to the heading style."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0025-53c92731",
+        "intent_type": "delete_block",
+        "source_judgment_ids": [
+          "jd-025"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0049"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0050"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "example_value",
+          "clean_template_treatment": "delete",
+          "cleanup_reason": "Duplicate appendix specimen; the naming and multiplicity rules survive on the retained appendix interface."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0026-caddb66b",
+        "intent_type": "delete_block",
+        "source_judgment_ids": [
+          "jd-026"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0051"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "author_instruction",
+          "clean_template_treatment": "delete",
+          "cleanup_reason": "Ellipsis-only paragraph would remain as stray content in a clean template."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0027-dd84e4d0",
+        "intent_type": "materialize_slot",
+        "source_judgment_ids": [
+          "jd-027"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0052"
+          }
+        ],
+        "field_ids": [
+          "appendix.title"
+        ],
+        "payload": {
+          "semantic_role": "fill_slot",
+          "clean_template_treatment": "convert_to_field_slot",
+          "style_obligation": "Slot renders 小四号 黑体, flush left, and must carry page-break-before so that each appendix starts on a new page per （另起一页）. The 附录N ordinal convention shown by the school is part of the appendix title pattern.",
+          "cleanup_reason": "（另起一页，小四号黑体）is a format instruction whose page-break and font rules move to the slot's layout and style obligations.",
+          "field_ids": [
+            "appendix.title"
+          ]
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      },
+      {
+        "intent_id": "intent-0028-ebcd8411",
+        "intent_type": "transfer_style_only",
+        "source_judgment_ids": [
+          "jd-028"
+        ],
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0053"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "semantic_role": "layout_carrier",
+          "clean_template_treatment": "keep",
+          "style_obligation": "Appendix content inherits the body format requirements recorded in jd-001 and jd-016: Chinese 小四号 宋体 and Western 小四号 Times New Roman, exact 22pt line spacing, □□ two-character first-line indent. Appendix content must not define an independent font scheme.",
+          "cleanup_reason": "The …… placeholder and the parenthetical format note are removed; the paragraph itself is retained empty as the appendix content style carrier so the school's format-inheritance rule keeps a real bearer."
+        },
+        "classification_basis": [
+          "semantic_role",
+          "clean_template_treatment",
+          "style_obligation",
+          "cleanup_reason"
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "context_id": "context-0001-0d19f397",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0001"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0001",
+              "range_id": "u-paper-body:range-0001",
+              "unit_id": "u-paper-body",
+              "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+            }
+          ],
+          "object_type_counts": {
+            "run": 15
+          },
+          "intent_id": "intent-0001-d917492e",
+          "intent_type": "transfer_style_only"
+        }
+      },
+      {
+        "context_id": "context-0002-e1b5f760",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0002"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0007"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0010"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0015"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0018"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0040"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0044"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0047"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0002",
+              "range_id": "u-paper-body:range-0002",
+              "unit_id": "u-paper-body",
+              "text": "（小二号字空两行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0007",
+              "range_id": "u-paper-body:range-0007",
+              "unit_id": "u-paper-body",
+              "text": "（五号字空一行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0010",
+              "range_id": "u-paper-body:range-0010",
+              "unit_id": "u-paper-body",
+              "text": "（五号字空一行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0015",
+              "range_id": "u-paper-body:range-0015",
+              "unit_id": "u-paper-body",
+              "text": "（五号字空一行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0018",
+              "range_id": "u-paper-body:range-0018",
+              "unit_id": "u-paper-body",
+              "text": "（五号字空一行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0040",
+              "range_id": "u-paper-body:range-0040",
+              "unit_id": "u-paper-body",
+              "text": "（小四号字空一行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0044",
+              "range_id": "u-paper-body:range-0044",
+              "unit_id": "u-paper-body",
+              "text": "（五号字空二行）"
+            },
+            {
+              "block_id": "u-paper-body:block-0047",
+              "range_id": "u-paper-body:range-0047",
+              "unit_id": "u-paper-body",
+              "text": "（小四号字空二行）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 27
+          },
+          "intent_id": "intent-0002-94877360",
+          "intent_type": "transfer_style_only"
+        }
+      },
+      {
+        "context_id": "context-0003-301f3b94",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0003"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0003",
+              "range_id": "u-paper-body:range-0003",
+              "unit_id": "u-paper-body",
+              "text": "毕业论文（设计）中文题目（小二黑体，加粗，居中）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 2
+          },
+          "intent_id": "intent-0003-3ea585eb",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0004-384e8173",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0004"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0004",
+              "range_id": "u-paper-body:range-0004",
+              "unit_id": "u-paper-body",
+              "text": "学□□生：×××（或×□×） （五号宋体居中）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 8
+          },
+          "intent_id": "intent-0004-916e2ce5",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0005-cb41498d",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0005"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0005",
+              "range_id": "u-paper-body:range-0005",
+              "unit_id": "u-paper-body",
+              "text": "指导老师：×××"
+            }
+          ],
+          "object_type_counts": {
+            "run": 2
+          },
+          "intent_id": "intent-0005-adfb5ec6",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0006-6f9f0d50",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0006"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0006",
+              "range_id": "u-paper-body:range-0006",
+              "unit_id": "u-paper-body",
+              "text": "(湖南农业大学××××学院，长沙 410128)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 6
+          },
+          "intent_id": "intent-0006-f32112e4",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0007-0693547d",
+        "kind": "paragraph_indent",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0008"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0008",
+              "range_id": "u-paper-body:range-0008",
+              "unit_id": "u-paper-body",
+              "text": "□□摘□要（小四黑体）：…… （五号宋体）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 8
+          },
+          "intent_id": "intent-0007-7ac53c53",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0008-a029c286",
+        "kind": "paragraph_indent",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0009"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0009",
+              "range_id": "u-paper-body:range-0009",
+              "unit_id": "u-paper-body",
+              "text": "□□关键词：×××；×××；×××；×××"
+            }
+          ],
+          "object_type_counts": {
+            "run": 10
+          },
+          "intent_id": "intent-0008-89bd55a0",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0009-8a17456f",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0011"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0011",
+              "range_id": "u-paper-body:range-0011",
+              "unit_id": "u-paper-body",
+              "text": "Title of Graduation Paper （四号Times New Roman，加粗，居中）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 5
+          },
+          "intent_id": "intent-0009-67f8775c",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0010-c05b1b2a",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0012"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0012",
+              "range_id": "u-paper-body:range-0012",
+              "unit_id": "u-paper-body",
+              "text": "Student:××× （五号Times New Roman，居中）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 5
+          },
+          "intent_id": "intent-0010-e9a9dd6a",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0011-a613ce5a",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0013"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0013",
+              "range_id": "u-paper-body:range-0013",
+              "unit_id": "u-paper-body",
+              "text": "Tutor:××××"
+            }
+          ],
+          "object_type_counts": {
+            "run": 2
+          },
+          "intent_id": "intent-0011-afd7d6d1",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0012-a72d8fee",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0014"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0014",
+              "range_id": "u-paper-body:range-0014",
+              "unit_id": "u-paper-body",
+              "text": "(College of×××××××, Hunan Agricultural University, Changsha 410128, China)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 1
+          },
+          "intent_id": "intent-0012-4ffb0dbd",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0013-c552a416",
+        "kind": "paragraph_indent",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0016"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0016",
+              "range_id": "u-paper-body:range-0016",
+              "unit_id": "u-paper-body",
+              "text": "□□Abstract(小四号Times New Roman， 加粗):…… (五号Times New Roman)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 12
+          },
+          "intent_id": "intent-0013-40aae250",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0014-9130caaf",
+        "kind": "paragraph_indent",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0017"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0017",
+              "range_id": "u-paper-body:range-0017",
+              "unit_id": "u-paper-body",
+              "text": "□□Key words: ×××； ×××；×××； ×××"
+            }
+          ],
+          "object_type_counts": {
+            "run": 8
+          },
+          "intent_id": "intent-0014-fa784614",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0015-7fcce866",
+        "kind": "instruction_note",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0019"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0029"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0019",
+              "range_id": "u-paper-body:range-0019",
+              "unit_id": "u-paper-body",
+              "text": "（以下农理工科类用）"
+            },
+            {
+              "block_id": "u-paper-body:block-0029",
+              "range_id": "u-paper-body:range-0029",
+              "unit_id": "u-paper-body",
+              "text": "（以下文法经管类用）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 2
+          },
+          "intent_id": "intent-0015-3840a245",
+          "intent_type": "delete_block"
+        }
+      },
+      {
+        "context_id": "context-0016-6cce3860",
+        "kind": "body_structure",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0020"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0021"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0022"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0023"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0024"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0025"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0027"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0028"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0020",
+              "range_id": "u-paper-body:range-0020",
+              "unit_id": "u-paper-body",
+              "text": "1□前言 （一级标题小三号黑体，顶格书写序数，空一格写标题）"
+            },
+            {
+              "block_id": "u-paper-body:block-0021",
+              "range_id": "u-paper-body:range-0021",
+              "unit_id": "u-paper-body",
+              "text": "□□…… （正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+            },
+            {
+              "block_id": "u-paper-body:block-0022",
+              "range_id": "u-paper-body:range-0022",
+              "unit_id": "u-paper-body",
+              "text": "2□××××"
+            },
+            {
+              "block_id": "u-paper-body:block-0023",
+              "range_id": "u-paper-body:range-0023",
+              "unit_id": "u-paper-body",
+              "text": "2.1□×××××（二级标题四号黑体，顶格书写序数，空一格写标题）"
+            },
+            {
+              "block_id": "u-paper-body:block-0024",
+              "range_id": "u-paper-body:range-0024",
+              "unit_id": "u-paper-body",
+              "text": "2.1.1□×××××（三级标题小四号黑体，顶格书写序数，空一格写标题）"
+            },
+            {
+              "block_id": "u-paper-body:block-0025",
+              "range_id": "u-paper-body:range-0025",
+              "unit_id": "u-paper-body",
+              "text": "□□（1）……[1]。（一般不设四级标题，如确属需要，第四层次不单独占行书写）"
+            },
+            {
+              "block_id": "u-paper-body:block-0027",
+              "range_id": "u-paper-body:range-0027",
+              "unit_id": "u-paper-body",
+              "text": "5□结论"
+            },
+            {
+              "block_id": "u-paper-body:block-0028",
+              "range_id": "u-paper-body:range-0028",
+              "unit_id": "u-paper-body",
+              "text": "□□……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 31
+          },
+          "intent_id": "intent-0016-9eaf405a",
+          "intent_type": "materialize_body_structure"
+        }
+      },
+      {
+        "context_id": "context-0017-cca48e6d",
+        "kind": "body_structure",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0030"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0031"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0032"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0033"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0034"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0035"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0038"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0039"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0030",
+              "range_id": "u-paper-body:range-0030",
+              "unit_id": "u-paper-body",
+              "text": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+            },
+            {
+              "block_id": "u-paper-body:block-0031",
+              "range_id": "u-paper-body:range-0031",
+              "unit_id": "u-paper-body",
+              "text": "一、×××××（一级标题小三号黑体，顶格书写）"
+            },
+            {
+              "block_id": "u-paper-body:block-0032",
+              "range_id": "u-paper-body:range-0032",
+              "unit_id": "u-paper-body",
+              "text": "二、×××××"
+            },
+            {
+              "block_id": "u-paper-body:block-0033",
+              "range_id": "u-paper-body:range-0033",
+              "unit_id": "u-paper-body",
+              "text": "（一）×××××（二级标题四号黑体，顶格书写）"
+            },
+            {
+              "block_id": "u-paper-body:block-0034",
+              "range_id": "u-paper-body:range-0034",
+              "unit_id": "u-paper-body",
+              "text": "□□1、×××××（三级标题小四号黑体）"
+            },
+            {
+              "block_id": "u-paper-body:block-0035",
+              "range_id": "u-paper-body:range-0035",
+              "unit_id": "u-paper-body",
+              "text": "□□（1）……[1]。（四级标题不单独占行书写）"
+            },
+            {
+              "block_id": "u-paper-body:block-0038",
+              "range_id": "u-paper-body:range-0038",
+              "unit_id": "u-paper-body",
+              "text": "五、结束语"
+            },
+            {
+              "block_id": "u-paper-body:block-0039",
+              "range_id": "u-paper-body:range-0039",
+              "unit_id": "u-paper-body",
+              "text": "□□……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 30
+          },
+          "intent_id": "intent-0017-65d38387",
+          "intent_type": "materialize_body_structure"
+        }
+      },
+      {
+        "context_id": "context-0018-2ac42093",
+        "kind": "instruction_note",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0026"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0036"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0037"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0026",
+              "range_id": "u-paper-body:range-0026",
+              "unit_id": "u-paper-body",
+              "text": "……"
+            },
+            {
+              "block_id": "u-paper-body:block-0036",
+              "range_id": "u-paper-body:range-0036",
+              "unit_id": "u-paper-body",
+              "text": "……"
+            },
+            {
+              "block_id": "u-paper-body:block-0037",
+              "range_id": "u-paper-body:range-0037",
+              "unit_id": "u-paper-body",
+              "text": "……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 3
+          },
+          "intent_id": "intent-0018-31452d84",
+          "intent_type": "delete_block"
+        }
+      },
+      {
+        "context_id": "context-0019-95b50539",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0041"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0041",
+              "range_id": "u-paper-body:range-0041",
+              "unit_id": "u-paper-body",
+              "text": "参考文献 (小三号黑体)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 4
+          },
+          "intent_id": "intent-0019-f9bf75ff",
+          "intent_type": "transfer_style_only"
+        }
+      },
+      {
+        "context_id": "context-0020-b49e270b",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0042"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0042",
+              "range_id": "u-paper-body:range-0042",
+              "unit_id": "u-paper-body",
+              "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. (五号宋体)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 13
+          },
+          "intent_id": "intent-0020-60cee9ee",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0021-0837961b",
+        "kind": "instruction_note",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0043"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0043",
+              "range_id": "u-paper-body:range-0043",
+              "unit_id": "u-paper-body",
+              "text": "……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 1
+          },
+          "intent_id": "intent-0021-c4818cee",
+          "intent_type": "delete_block"
+        }
+      },
+      {
+        "context_id": "context-0022-072be229",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0045"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0045",
+              "range_id": "u-paper-body:range-0045",
+              "unit_id": "u-paper-body",
+              "text": "致□□谢 (小三号黑体，居中)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 6
+          },
+          "intent_id": "intent-0022-88e95d88",
+          "intent_type": "transfer_style_only"
+        }
+      },
+      {
+        "context_id": "context-0023-bff412f7",
+        "kind": "sample_value",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0046"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0046",
+              "range_id": "u-paper-body:range-0046",
+              "unit_id": "u-paper-body",
+              "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 (小四号宋体)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 8
+          },
+          "intent_id": "intent-0023-0f71c840",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0024-1705a348",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0048"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0048",
+              "range_id": "u-paper-body:range-0048",
+              "unit_id": "u-paper-body",
+              "text": "附录(小三号黑体)"
+            }
+          ],
+          "object_type_counts": {
+            "run": 4
+          },
+          "intent_id": "intent-0024-3c7d3322",
+          "intent_type": "transfer_style_only"
+        }
+      },
+      {
+        "context_id": "context-0025-44d255b2",
+        "kind": "cleanup_block",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0049"
+          },
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0050"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0049",
+              "range_id": "u-paper-body:range-0049",
+              "unit_id": "u-paper-body",
+              "text": "附录1……（小四号宋体）"
+            },
+            {
+              "block_id": "u-paper-body:block-0050",
+              "range_id": "u-paper-body:range-0050",
+              "unit_id": "u-paper-body",
+              "text": "附录2……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 5
+          },
+          "intent_id": "intent-0025-53c92731",
+          "intent_type": "delete_block"
+        }
+      },
+      {
+        "context_id": "context-0026-130d1b10",
+        "kind": "instruction_note",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0051"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0051",
+              "range_id": "u-paper-body:range-0051",
+              "unit_id": "u-paper-body",
+              "text": "……"
+            }
+          ],
+          "object_type_counts": {
+            "run": 1
+          },
+          "intent_id": "intent-0026-caddb66b",
+          "intent_type": "delete_block"
+        }
+      },
+      {
+        "context_id": "context-0027-dacaebae",
+        "kind": "field_slot",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0052"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0052",
+              "range_id": "u-paper-body:range-0052",
+              "unit_id": "u-paper-body",
+              "text": "附录1（另起一页，小四号黑体）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 5
+          },
+          "intent_id": "intent-0027-dd84e4d0",
+          "intent_type": "materialize_slot"
+        }
+      },
+      {
+        "context_id": "context-0028-5e6bff8d",
+        "kind": "style_only",
+        "scope_refs": [
+          {
+            "kind": "reading_block",
+            "ref_id": "u-paper-body:block-0053"
+          }
+        ],
+        "facts": {
+          "reading_blocks": [
+            {
+              "block_id": "u-paper-body:block-0053",
+              "range_id": "u-paper-body:range-0053",
+              "unit_id": "u-paper-body",
+              "text": "……（附录内容的字体字号参照正文的格式要求）"
+            }
+          ],
+          "object_type_counts": {
+            "run": 4
+          },
+          "intent_id": "intent-0028-ebcd8411",
+          "intent_type": "transfer_style_only"
+        }
+      }
+    ],
+    "commands": [],
+    "unsupported": [],
+    "source_review_digest": "4c241d46725f22417b396c118c7cacbb8481cfea63aba4e0a1ca0f72d9db2ca0"
+  }
+}

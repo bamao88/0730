@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "template_agent_backends_exhausted",
+    "retryable": true,
+    "message": "No configured backend completed the main template Agent loop: template_agent_timeout",
+    "suggested_actions": []
+  }
+}

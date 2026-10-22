@@ -1,0 +1,19 @@
+{
+  "runtime_commit": "66788517de79070b157d2a83a81eaaf06ed270cf",
+  "verification_level": "fresh full-school E2E attempt; no reused proof, judgments or budgets",
+  "exit_code": 2,
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "failure": {
+    "origin": "environment",
+    "code": "template_agent_api_error",
+    "retryable": true,
+    "message": "The model API request failed; no semantic revision was requested. Inspect the saved SDK diagnostics.",
+    "suggested_actions": []
+  },
+  "product_acceptance": false,
+  "published_outputs": []
+}

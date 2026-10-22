@@ -44,7 +44,7 @@ jobs:
           test -s .tmp/visual-renderer-smoke/document.pdf
 
       - name: Lint
-        run: uv run ruff check .
+        run: uv run ruff check src tests
 
       - name: Type-check
         run: uv run mypy src

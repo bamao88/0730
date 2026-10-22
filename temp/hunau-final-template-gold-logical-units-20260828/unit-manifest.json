@@ -1,0 +1,131 @@
+{
+  "schema": "docfit-gold-logical-unit-split/v1",
+  "school_id": "hunau-undergraduate",
+  "source_gold": "evals/template-extraction/cases/01-hunau-undergraduate/gold/final-template.gold.docx",
+  "source_gold_sha256": "1a64c68e3afefcc30aa800c390be752b71c2201b754b5136a13c0f3919b3d3c2",
+  "output_directory": "temp/hunau-final-template-gold-logical-units-20260828",
+  "unit_count": 10,
+  "split_basis": "top-level word/document.xml body block ranges from the accepted full final-template.gold.docx",
+  "units": [
+    {
+      "sequence": 1,
+      "unit_id": "cover",
+      "title": "封面",
+      "filename": "01-cover.docx",
+      "source_gold_block_start": 0,
+      "source_gold_block_end": 19,
+      "top_level_block_count": 20,
+      "first_anchor": "湖 南 农 业 大 学",
+      "last_anchor": "提交日期：【20XX年XX月】",
+      "sha256": "6470ca299f1044fa9d7345262a3b47665dc01d022505b2b372a6e91c522c1fb8"
+    },
+    {
+      "sequence": 2,
+      "unit_id": "integrity_statement",
+      "title": "诚信声明",
+      "filename": "02-integrity-statement.docx",
+      "source_gold_block_start": 20,
+      "source_gold_block_end": 31,
+      "top_level_block_count": 12,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "年    月    日",
+      "sha256": "7dc9ca354233201b06671ab35b1ddd12b0e7867b5b61888f75cdcd8c46aff58d"
+    },
+    {
+      "sequence": 3,
+      "unit_id": "toc",
+      "title": "目录",
+      "filename": "03-toc.docx",
+      "source_gold_block_start": 32,
+      "source_gold_block_end": 42,
+      "top_level_block_count": 11,
+      "first_anchor": "目  录",
+      "last_anchor": "附录4",
+      "sha256": "066b817f70350a515fe4d33b3801b8793f34959505893e578a4313eb1b507f3c"
+    },
+    {
+      "sequence": 4,
+      "unit_id": "paper_body",
+      "title": "论文正文模板（含题名、双语摘要、正文、参考文献、致谢、附录）",
+      "filename": "04-paper-body.docx",
+      "source_gold_block_start": 43,
+      "source_gold_block_end": 69,
+      "top_level_block_count": 27,
+      "first_anchor": "【毕业论文（设计）中文题目】",
+      "last_anchor": "【附录内容】",
+      "sha256": "61e3cce2cbe12a8e9a366398c69c30f25968021509ec458808b3b7db68e38138"
+    },
+    {
+      "sequence": 5,
+      "unit_id": "design_task",
+      "title": "毕业设计任务书",
+      "filename": "05-design-task.docx",
+      "source_gold_block_start": 70,
+      "source_gold_block_end": 126,
+      "top_level_block_count": 57,
+      "first_anchor": "湖南农业大学全日制普通本科生",
+      "last_anchor": "主要中文参考资料与外文资料工作进度安排起止日期主要工作内容要求完成日期：20    年    月    日        指导教师签名：                        批准日期：20    年    月    日            教学基层组织负责人签名：                  接受任务日期：20    年    月    日        学生本人签名：",
+      "sha256": "fb813b5e7365070387658d0d88cb67e879025e83b2e16d7a7721604c9a6968d1"
+    },
+    {
+      "sequence": 6,
+      "unit_id": "proposal",
+      "title": "开题报告",
+      "filename": "06-proposal.docx",
+      "source_gold_block_start": 127,
+      "source_gold_block_end": 136,
+      "top_level_block_count": 10,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文",
+      "last_anchor": "3.此表可从毕业论文管理系统填写打印或教务处网站下载中心下载填写打印。",
+      "sha256": "fcd36689e868dab328d4e746ffa37b90ea52cfc0b832ea896ce92daedd357625"
+    },
+    {
+      "sequence": 7,
+      "unit_id": "proposal_record",
+      "title": "开题论证记录表",
+      "filename": "07-proposal-record.docx",
+      "source_gold_block_start": 137,
+      "source_gold_block_end": 142,
+      "top_level_block_count": 6,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "注：此表可从毕业论文管理系统或教务处网站下载中心下载。记录、签名栏必须用黑色笔手工填写。",
+      "sha256": "61ceafe6714f66a234cb1715bae9596298b674f045b34aea36dcd4b660e24900"
+    },
+    {
+      "sequence": 8,
+      "unit_id": "defense_record",
+      "title": "答辩记录表",
+      "filename": "08-defense-record.docx",
+      "source_gold_block_start": 143,
+      "source_gold_block_end": 147,
+      "top_level_block_count": 5,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "注：此表可从毕业论文管理系统或教务处网站下载中心下载。记录、签名栏必须用黑色笔手工填写。",
+      "sha256": "a84b8a550e45c3d00f499cd3279562bfb2289216f687ca1a12c40181c0f15ee7"
+    },
+    {
+      "sequence": 9,
+      "unit_id": "topic_change_approval",
+      "title": "题目变更审批表",
+      "filename": "09-topic-change-approval.docx",
+      "source_gold_block_start": 148,
+      "source_gold_block_end": 154,
+      "top_level_block_count": 7,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "2.此表可从毕业论文管理系统或教务处网站下载中心下载。",
+      "sha256": "86b890c22b1d652793e036a74965a5f1c0653cb5deac7f44e0c382de99858e07"
+    },
+    {
+      "sequence": 10,
+      "unit_id": "grade_form",
+      "title": "成绩评定表",
+      "filename": "10-grade-form.docx",
+      "source_gold_block_start": 155,
+      "source_gold_block_end": 160,
+      "top_level_block_count": 6,
+      "first_anchor": "湖南农业大学全日制普通本科生毕业论文（设计）",
+      "last_anchor": "注：1.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。2.各专业学生的整体成绩应符合正态分布，要求优秀比例控制在15%以内，良好、中等和及格的比例控制在75%左右，不及格的比例在10%以下；系（专业）答辩委员会对毕业论文（设计）的答辩小组建议成绩进行审查，对评定等级为优秀或不及格以及答辩评分中有争议的论文（设计）要进行重点审核，最终确定成绩，并向学生公布；五级记分制：优秀（90～100分）、良好（80～89分）、中等（70～79分）、及格（60～69分）和不及格（60分以下）。3. 此表可从毕业论文管理系统或教务处网站下载中心下载。",
+      "sha256": "e39e3d6bb7e01af5dc7e2b3eb5211ee5c77efbe44da386c48edac3e30e2527a2"
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "candidate_docx": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b/work/.docfit/post-unit-materialization/candidate-0001.docx",
+  "host_validation": {
+    "checks": [
+      {
+        "blocking": false,
+        "evidence": "Independent ZIP/XML reopen passed.",
+        "name": "docx_opens",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "final": {
+            "code": "officecli_failed",
+            "detail": "OfficeCLI rejected the operation or returned a backend error.",
+            "origin": "engine",
+            "passed": false
+          },
+          "new_officecli_regression": "UNKNOWN",
+          "source": {
+            "code": "officecli_failed",
+            "detail": "OfficeCLI rejected the operation or returned a backend error.",
+            "origin": "engine",
+            "passed": false
+          }
+        },
+        "name": "officecli_openxml",
+        "result": "warning",
+        "severity": "warning",
+        "suggested_action": "Repair source-inherited OpenXML validation warnings when strict schema acceptance is required."
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "source_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670"
+        },
+        "name": "source_unchanged",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "missing_object_count": 1
+        },
+        "name": "content_preservation",
+        "result": "issue",
+        "severity": "warning",
+        "suggested_action": "Review intended replacements against source content."
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "placeholder_occurrences": 0
+        },
+        "name": "placeholder_scan",
+        "result": "ok",
+        "severity": "info",
+        "suggested_action": null
+      },
+      {
+        "blocking": false,
+        "evidence": {
+          "all_final_pages_reviewed": false,
+          "blocking_findings": 0,
+          "current_visual_snapshot": false,
+          "missing_pages": [],
+          "page_count": null,
+          "reviewed_pages": [],
+          "unexpected_pages": []
+        },
+        "feedback": {
+          "agent_action": "Render the exact final candidate, review every final page, repair blocking findings, and validate again.",
+          "mechanical": true,
+          "semantic_authority": false,
+          "type": "completion"
+        },
+        "name": "visual_review_coverage",
+        "result": "warning",
+        "severity": "warning",
+        "suggested_action": "Render the current final DOCX and review every final page."
+      }
+    ],
+    "failure": null,
+    "final_sha256": "4468c2c4e1a713c67dd6516af08b92cf805d8a2fb1d830cf2475b6998981ad0c",
+    "knowledge_version": null,
+    "provider": {
+      "environment": {
+        "architecture": "arm64",
+        "platform": "Darwin"
+      },
+      "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+      "expected_version": "1.0.143",
+      "license": "Apache-2.0",
+      "name": "officecli",
+      "version": "1.0.144",
+      "version_locked": false
+    },
+    "schema_version": 1,
+    "source_sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670",
+    "status": "ok",
+    "summary": {
+      "errors": 0,
+      "issues": 1,
+      "warnings": 3
+    },
+    "task_rule_evidence": [],
+    "warnings": [
+      {
+        "code": "verification_gap",
+        "kind": "visual_review",
+        "message": "Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete."
+      }
+    ]
+  },
+  "publication": {
+    "artifact_path": "output/final-template.docx",
+    "checks": [
+      {
+        "name": "source_unchanged",
+        "result": "ok",
+        "sha256": "4fb79dd1ab63072044ab70a0af23fe66ed01405af724776d2cdd51626ba9b670"
+      },
+      {
+        "name": "registry_bound",
+        "registry_id": "docfit.thesis.content_fields",
+        "registry_version": "0.5.0",
+        "result": "ok",
+        "sha256": "6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17"
+      },
+      {
+        "name": "validation_bound",
+        "result": "ok"
+      },
+      {
+        "name": "visual_review_bound",
+        "result": "ok"
+      },
+      {
+        "name": "package_reopens",
+        "result": "ok"
+      },
+      {
+        "name": "fill_contract_hash_matches_word",
+        "result": "ok"
+      }
+    ],
+    "counts": {
+      "gap": 1,
+      "manual": 0,
+      "remove": 0,
+      "slot": 1,
+      "unresolved": 14
+    },
+    "fill_contract_path": "output/fill-contract.yaml",
+    "published": true,
+    "schema_version": 1,
+    "status": "ok",
+    "template_sha256": "4468c2c4e1a713c67dd6516af08b92cf805d8a2fb1d830cf2475b6998981ad0c"
+  },
+  "run": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-mapping-slice-20260904-1515b",
+  "visual_review": {
+    "document_sha256": "4468c2c4e1a713c67dd6516af08b92cf805d8a2fb1d830cf2475b6998981ad0c",
+    "findings": [],
+    "origin": "harness",
+    "reviewed_pages": [],
+    "schema_version": 1,
+    "status": "host_review_not_requested"
+  }
+}

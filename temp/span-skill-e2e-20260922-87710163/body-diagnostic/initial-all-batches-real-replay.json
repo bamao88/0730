@@ -1,0 +1,828 @@
+{
+  "verification_level": "real replay",
+  "snapshot_label": "10批初始候选快照；不是最终恢复结果",
+  "snapshot_capture": {
+    "snapshot_label": "10批初始候选快照；不是最终恢复结果",
+    "captured_at": "2026-09-22T23:11:47.922695+08:00",
+    "sources": {
+      "candidate": {
+        "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-candidates.json",
+        "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-candidate.json",
+        "sha256": "06798e5be41d6c6bcbf257724c95c378037fc7141b12a9e0e3870d15876100f6"
+      },
+      "inventory": {
+        "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/object-inventory.json",
+        "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-inventory.json",
+        "sha256": "f7a2893de6e4ff32a6ef9ccfd6e52715bff1d10d119f11dba43fdc40e066b205"
+      },
+      "manifest": {
+        "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-manifest.json",
+        "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-manifest.json",
+        "sha256": "f5f1960bc23275a0adeaf92afab3058c5bec2f661f1595250c8685524b1ecf59"
+      },
+      "checkpoint": {
+        "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/unit-boundary-checkpoint.json",
+        "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-checkpoint.json",
+        "sha256": "a141feebbb06ceb79275c22e8762f735ba7af3d3bd8f7652cc2486aa55e0c86b"
+      }
+    },
+    "candidate_count": 10,
+    "batch_count": 10
+  },
+  "reviewed_at": "2026-09-22T23:12:54.432127+08:00",
+  "purpose": "Frozen 10-batch candidate diagnostic using native pure decode/schema/span/coverage functions, stopping at first failing layer. Not final resumed output or product acceptance.",
+  "checks": [
+    {
+      "name": "persisted_manifest_and_ledger_bindings",
+      "status": "ok"
+    },
+    {
+      "name": "all_batches_aggregated",
+      "status": "ok",
+      "batch_count": 10
+    },
+    {
+      "name": "whitespace_transport",
+      "status": "ok"
+    },
+    {
+      "name": "schema_role_field_vocabulary",
+      "status": "ok"
+    },
+    {
+      "name": "exact_source_span_resolution",
+      "status": "needs_input"
+    }
+  ],
+  "summary": {
+    "batch_count": 10,
+    "judgment_count": 71,
+    "part_count": 142,
+    "blocker_count": 19,
+    "blocker_codes": {
+      "ordered_part_empty_for_text_entry": 3,
+      "ordered_part_text_mismatch": 8,
+      "ordered_part_text_gap": 8
+    },
+    "affected_source_entry_count": 9,
+    "text_mismatch_entry_count": 9,
+    "net_whitespace_deficits_summed_per_entry": {
+      "U+0020": 30
+    },
+    "net_whitespace_surpluses_summed_per_entry": {
+      "U+0020": 14
+    },
+    "roles": {
+      "style_only": 71,
+      "fixed_label": 19,
+      "cleanup": 18,
+      "fill_slot": 14,
+      "body_structure": 20
+    },
+    "field_part_count": 34,
+    "distinct_fields": 18,
+    "field_counts": {
+      "thesis.title.zh": 1,
+      "author.name.zh": 1,
+      "advisor.name.zh": 1,
+      "author.department": 1,
+      "abstract.zh": 1,
+      "keywords.zh": 1,
+      "thesis.title.en": 1,
+      "author.name.en": 1,
+      "advisor.name.en": 1,
+      "author.department.en": 1,
+      "keywords.en": 1,
+      "body.heading.outline1": 6,
+      "body.paragraph": 9,
+      "body.heading.outline2": 2,
+      "body.heading.outline3": 2,
+      "body.heading.outline4": 1,
+      "references.entries": 2,
+      "acknowledgement.body": 1
+    },
+    "vocabulary_role_mismatch_count": 0,
+    "bare_empty_parts_inside_nonempty_entries": [
+      {
+        "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f",
+        "part_index": 5,
+        "role": "style_only"
+      },
+      {
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "part_index": 3,
+        "role": "style_only"
+      },
+      {
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "part_index": 2,
+        "role": "style_only"
+      }
+    ]
+  },
+  "feedback": {
+    "schema_version": 2,
+    "status": "needs_input",
+    "feedback": {
+      "type": "span_resolution",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": "Revise ordered semantic parts so their text segments partition the named source entry's exact text in order, including any boundary whitespace reported by the current unit packet."
+    },
+    "checks": [
+      {
+        "name": "ordered_span_resolution",
+        "result": "needs_input"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[8].parts[5]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f",
+        "source_text_length": 33
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[8].parts[6]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f",
+        "expected_text": "      ",
+        "submitted_text": "（五号宋体）",
+        "source_text_length": 33,
+        "expected_text_length": 6,
+        "submitted_text_length": 6,
+        "mismatch_offset": 14,
+        "expected_leading_whitespace_count": 13,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 13"
+        ],
+        "text_start": 14,
+        "text_end": 20
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[8]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f",
+        "text_start": 14,
+        "text_end": 33,
+        "uncovered_text": "             （五号宋体）",
+        "source_text_length": 33,
+        "covered_text_length": 14,
+        "uncovered_text_length": 19
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[11].parts[2]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-514625a8c75c1c716bf2e944",
+        "expected_text": " （四号Times New Roman，加粗，居中",
+        "submitted_text": "（四号Times New Roman，加粗，居中）",
+        "source_text_length": 72,
+        "expected_text_length": 25,
+        "submitted_text_length": 25,
+        "mismatch_offset": 46,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 46,
+        "text_end": 71
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[11]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-514625a8c75c1c716bf2e944",
+        "text_start": 46,
+        "text_end": 72,
+        "uncovered_text": " （四号Times New Roman，加粗，居中）",
+        "source_text_length": 72,
+        "covered_text_length": 46,
+        "uncovered_text_length": 26
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[12].parts[2]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-9c9018b8a780488067d932a6",
+        "expected_text": "  （五号Times New Roman，居",
+        "submitted_text": "（五号Times New Roman，居中）",
+        "source_text_length": 35,
+        "expected_text_length": 22,
+        "submitted_text_length": 22,
+        "mismatch_offset": 11,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 11,
+        "text_end": 33
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[12]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-9c9018b8a780488067d932a6",
+        "text_start": 11,
+        "text_end": 35,
+        "uncovered_text": "  （五号Times New Roman，居中）",
+        "source_text_length": 35,
+        "covered_text_length": 11,
+        "uncovered_text_length": 24
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[16].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-f0c63376279768f327365472",
+        "expected_text": "",
+        "submitted_text": "            (五号Times New Roman)",
+        "source_text_length": 68,
+        "expected_text_length": 0,
+        "submitted_text_length": 31,
+        "mismatch_offset": 68,
+        "text_start": 68,
+        "text_end": 99
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[17]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+        "text_start": 30,
+        "text_end": 32,
+        "uncovered_text": "  ",
+        "source_text_length": 32,
+        "covered_text_length": 30,
+        "uncovered_text_length": 2,
+        "uncovered_whitespace_codepoints": [
+          "U+0020 × 2"
+        ]
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[20].parts[3]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "source_text_length": 31
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[20].parts[4]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "expected_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标",
+        "submitted_text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "expected_text_length": 25,
+        "submitted_text_length": 25,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 29
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[20]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "text_start": 4,
+        "text_end": 31,
+        "uncovered_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "covered_text_length": 4,
+        "uncovered_text_length": 27
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[21].parts[2]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "source_text_length": 43
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[21].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "expected_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roma",
+        "submitted_text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "expected_text_length": 37,
+        "submitted_text_length": 37,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 41
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[21]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "text_start": 4,
+        "text_end": 43,
+        "uncovered_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "covered_text_length": 4,
+        "uncovered_text_length": 39
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[41].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "expected_text": " (小三号黑体",
+        "submitted_text": "(小三号黑体)",
+        "source_text_length": 12,
+        "expected_text_length": 7,
+        "submitted_text_length": 7,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 4,
+        "text_end": 11
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[41]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "text_start": 4,
+        "text_end": 12,
+        "uncovered_text": " (小三号黑体)",
+        "source_text_length": 12,
+        "covered_text_length": 4,
+        "uncovered_text_length": 8
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[42].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "expected_text": "      ",
+        "submitted_text": "(五号宋体)",
+        "source_text_length": 47,
+        "expected_text_length": 6,
+        "submitted_text_length": 6,
+        "mismatch_offset": 34,
+        "expected_leading_whitespace_count": 7,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 7"
+        ],
+        "text_start": 34,
+        "text_end": 40
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[42]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "text_start": 34,
+        "text_end": 47,
+        "uncovered_text": "       (五号宋体)",
+        "source_text_length": 47,
+        "covered_text_length": 34,
+        "uncovered_text_length": 13
+      }
+    ],
+    "failure": {
+      "origin": "request",
+      "code": "template_ordered_span_resolution_incomplete",
+      "retryable": true,
+      "message": "Harness could not resolve ordered semantic parts to scoped spans.",
+      "suggested_actions": [
+        "split_parts_against_exact_source_entry_text"
+      ]
+    },
+    "warnings": []
+  },
+  "text_differences": [
+    {
+      "source_entry_id": "source-entry-2ad80198c69fc3f56cd3545f",
+      "batch_id": "semantic-batch-0003-ed60bad8",
+      "expected_text": "□□摘□要（小四黑体）：……             （五号宋体）",
+      "submitted_text": "□□摘□要（小四黑体）：……（五号宋体）",
+      "expected_length": 33,
+      "submitted_length": 20,
+      "net_whitespace_deficit": {
+        "U+0020": 13
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "摘□要"
+        },
+        {
+          "role": "style_only",
+          "text": "（小四黑体）"
+        },
+        {
+          "role": "fixed_label",
+          "text": "："
+        },
+        {
+          "field_id": "abstract.zh",
+          "role": "fill_slot",
+          "text": "……"
+        },
+        {
+          "role": "style_only",
+          "text": ""
+        },
+        {
+          "role": "style_only",
+          "text": "（五号宋体）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            14,
+            27
+          ],
+          "submitted_range": [
+            14,
+            14
+          ],
+          "expected": "             ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-514625a8c75c1c716bf2e944",
+      "batch_id": "semantic-batch-0004-0e42901c",
+      "expected_text": "                     Title of Graduation Paper （四号Times New Roman，加粗，居中）",
+      "submitted_text": "                     Title of Graduation Paper（四号Times New Roman，加粗，居中）",
+      "expected_length": 72,
+      "submitted_length": 71,
+      "net_whitespace_deficit": {
+        "U+0020": 1
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "                     "
+        },
+        {
+          "field_id": "thesis.title.en",
+          "role": "fill_slot",
+          "text": "Title of Graduation Paper"
+        },
+        {
+          "role": "style_only",
+          "text": "（四号Times New Roman，加粗，居中）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            46,
+            47
+          ],
+          "submitted_range": [
+            46,
+            46
+          ],
+          "expected": " ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-9c9018b8a780488067d932a6",
+      "batch_id": "semantic-batch-0004-0e42901c",
+      "expected_text": "Student:×××  （五号Times New Roman，居中）",
+      "submitted_text": "Student:×××（五号Times New Roman，居中）",
+      "expected_length": 35,
+      "submitted_length": 33,
+      "net_whitespace_deficit": {
+        "U+0020": 2
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "Student:"
+        },
+        {
+          "field_id": "author.name.en",
+          "role": "fill_slot",
+          "text": "×××"
+        },
+        {
+          "role": "style_only",
+          "text": "（五号Times New Roman，居中）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            11,
+            13
+          ],
+          "submitted_range": [
+            11,
+            11
+          ],
+          "expected": "  ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "expected_text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)",
+      "submitted_text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)            (五号Times New Roman)",
+      "expected_length": 68,
+      "submitted_length": 99,
+      "net_whitespace_deficit": {},
+      "net_whitespace_surplus": {
+        "U+0020": 14
+      },
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "Abstract(小四号Times New Roman， 加粗)"
+        },
+        {
+          "role": "cleanup",
+          "text": ":……            (五号Times New Roman)"
+        },
+        {
+          "role": "style_only",
+          "text": "            (五号Times New Roman)"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "insert",
+          "expected_range": [
+            68,
+            68
+          ],
+          "submitted_range": [
+            68,
+            99
+          ],
+          "expected": "",
+          "submitted": "            (五号Times New Roman)"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+      "batch_id": "semantic-batch-0005-a60cf289",
+      "expected_text": "□□Key words: ×××； ×××；×××； ×××  ",
+      "submitted_text": "□□Key words: ×××； ×××；×××； ×××",
+      "expected_length": 32,
+      "submitted_length": 30,
+      "net_whitespace_deficit": {
+        "U+0020": 2
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "Key words: "
+        },
+        {
+          "field_id": "keywords.en",
+          "role": "fill_slot",
+          "text": "×××； ×××；×××； ×××"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            30,
+            32
+          ],
+          "submitted_range": [
+            30,
+            30
+          ],
+          "expected": "  ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "batch_id": "semantic-batch-0006-088414fc",
+      "expected_text": "1□前言  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "submitted_text": "1□前言（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "expected_length": 31,
+      "submitted_length": 29,
+      "net_whitespace_deficit": {
+        "U+0020": 2
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "1"
+        },
+        {
+          "role": "style_only",
+          "text": "□"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "role": "body_structure",
+          "text": "前言"
+        },
+        {
+          "role": "style_only",
+          "text": ""
+        },
+        {
+          "role": "cleanup",
+          "text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            4,
+            6
+          ],
+          "submitted_range": [
+            4,
+            4
+          ],
+          "expected": "  ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "batch_id": "semantic-batch-0006-088414fc",
+      "expected_text": "□□……  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "submitted_text": "□□……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "expected_length": 43,
+      "submitted_length": 41,
+      "net_whitespace_deficit": {
+        "U+0020": 2
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□"
+        },
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "……"
+        },
+        {
+          "role": "style_only",
+          "text": ""
+        },
+        {
+          "role": "cleanup",
+          "text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            4,
+            6
+          ],
+          "submitted_range": [
+            4,
+            4
+          ],
+          "expected": "  ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+      "batch_id": "semantic-batch-0008-6d8e2d11",
+      "expected_text": "参考文献 (小三号黑体)",
+      "submitted_text": "参考文献(小三号黑体)",
+      "expected_length": 12,
+      "submitted_length": 11,
+      "net_whitespace_deficit": {
+        "U+0020": 1
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "参考文献"
+        },
+        {
+          "role": "style_only",
+          "text": "(小三号黑体)"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            4,
+            5
+          ],
+          "submitted_range": [
+            4,
+            4
+          ],
+          "expected": " ",
+          "submitted": ""
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+      "batch_id": "semantic-batch-0008-6d8e2d11",
+      "expected_text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.       (五号宋体)",
+      "submitted_text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.(五号宋体)",
+      "expected_length": 47,
+      "submitted_length": 40,
+      "net_whitespace_deficit": {
+        "U+0020": 7
+      },
+      "net_whitespace_surplus": {},
+      "parts": [
+        {
+          "field_id": "references.entries",
+          "role": "fill_slot",
+          "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B."
+        },
+        {
+          "role": "style_only",
+          "text": "(五号宋体)"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            34,
+            41
+          ],
+          "submitted_range": [
+            34,
+            34
+          ],
+          "expected": "       ",
+          "submitted": ""
+        }
+      ]
+    }
+  ],
+  "field_role_issues_observation_only": [],
+  "live_task_modified": false,
+  "not_run": [
+    "model",
+    "stateful Harness submission",
+    "materialization readiness",
+    "DOCX materialization",
+    "publication",
+    "product acceptance"
+  ],
+  "limits": [
+    "Input captured after the tenth candidate was observed; the live loop may already have begun global review. This report names the exact captured hash and does not assert that no runtime repair preceded capture.",
+    "Field presence and allowed roles are structural observations, not school-semantic correctness.",
+    "Persisted empty text does not distinguish model authorship from an upstream structured-output conversion."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "artifact_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/integrity-live/output/final-template.docx",
+  "backend": "minimax",
+  "client_count": 1,
+  "counts": {
+    "gap": 0,
+    "manual": 1,
+    "remove": 0,
+    "slot": 0,
+    "unresolved": 0
+  },
+  "duration_api_ms": 71187,
+  "duration_ms": 71302,
+  "fill_contract_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/integrity-live/output/fill-contract.yaml",
+  "num_turns": 5,
+  "session_count": 1,
+  "session_id": "2e5ea576-2686-49ea-afc1-b88a7e930bea",
+  "skills_loaded": [
+    "docfit-school-extract"
+  ],
+  "status": "built",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/full-flow-id-20260922/integrity-live",
+  "template_sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+  "tool_uses": [
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "mcp__docfit__docfit_evidence",
+    "Read",
+    "StructuredOutput",
+    "Skill",
+    "mcp__docfit__docfit_evidence",
+    "StructuredOutput"
+  ],
+  "wall_duration_ms": 128392
+}

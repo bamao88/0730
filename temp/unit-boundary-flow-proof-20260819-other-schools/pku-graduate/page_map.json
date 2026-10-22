@@ -1,0 +1,1767 @@
+{
+  "case_id": "pku-graduate",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/manual-gold-preparation/gold/00-inputs/schools/pku-graduate__source-template.docx",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/unit-boundary-flow-proof-20260819-other-schools/pku-graduate",
+  "source_hash": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+  "render_ref": "render:v2:c1c7a664fc07b37f72dafb9a302c7bcae09554b948d9375ac2303152d0a6abdb",
+  "semantic_selector": "paragraph, table, picture, shape",
+  "page_count": 39,
+  "pages": [
+    {
+      "page": 1,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=124C8F1F]",
+          "type": "paragraph",
+          "text": "博士研究生学位论文"
+        },
+        {
+          "locator": "/body/p[@paraId=1E1B41C6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[1]/p[@paraId=16B71489]",
+          "type": "paragraph",
+          "text": "题目："
+        },
+        {
+          "locator": "/body/tbl[1]/tr[1]/tc[2]/p[@paraId=089B89D0]",
+          "type": "paragraph",
+          "text": "学位论文模板的使用"
+        },
+        {
+          "locator": "/body/tbl[1]/tr[2]/tc[1]/p[@paraId=4CA64AEC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[2]/tc[2]/p[@paraId=22951C6C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[3]/tc[1]/p[@paraId=202897DD]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[1]/tr[3]/tc[2]/p[@paraId=5056B5FA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=62E7E023]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=1A29B870]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[1]/tc[1]/p[@paraId=4D954E65]",
+          "type": "paragraph",
+          "text": "姓    名："
+        },
+        {
+          "locator": "/body/tbl[2]/tr[1]/tc[2]/p[@paraId=73ED4AE3]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[2]/tc[1]/p[@paraId=5C8290CE]",
+          "type": "paragraph",
+          "text": "学    号："
+        },
+        {
+          "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=17FA23A7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[3]/tc[1]/p[@paraId=2EA4FE59]",
+          "type": "paragraph",
+          "text": "院    系："
+        },
+        {
+          "locator": "/body/tbl[2]/tr[3]/tc[2]/p[@paraId=0ABE580E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[4]/tc[1]/p[@paraId=3EDF8960]",
+          "type": "paragraph",
+          "text": "专    业："
+        },
+        {
+          "locator": "/body/tbl[2]/tr[4]/tc[2]/p[@paraId=20A5F8F3]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[5]/tc[1]/p[@paraId=7BCA9B59]",
+          "type": "paragraph",
+          "text": "研究方向："
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[2]/tr[6]/tc[1]/p[@paraId=0AF63B3E]",
+          "type": "paragraph",
+          "text": "导师姓名："
+        },
+        {
+          "locator": "/body/tbl[2]/tr[6]/tc[2]/p[@paraId=234B7AF0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3040A251]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3466D2A3]",
+          "type": "paragraph",
+          "text": " 学术学位     专业学位"
+        },
+        {
+          "locator": "/body/p[@paraId=1FED35B6]",
+          "type": "paragraph",
+          "text": "二〇  年 月"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=5CF147F8]",
+          "type": "paragraph",
+          "text": "版权声明"
+        },
+        {
+          "locator": "/body/p[@paraId=2DE50D1E]",
+          "type": "paragraph",
+          "text": "任何收存和保管本论文各种版本的单位和个人，未经本论文作者同意，不得将本论文转借他人，亦不得随意复制、抄录、拍照或以任何方式传播。否则，引起有碍作者著作权之问题，将可能承担法律责任。"
+        },
+        {
+          "locator": "/body/p[@paraId=05A2A89A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=093B9B16]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=35ADE725]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=0F101DDD]",
+          "type": "paragraph",
+          "text": "在正式提交图书馆的论文版本中，需将此页与原创性声明页替换为带有二维码的版本，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=5898ED75]",
+          "type": "paragraph",
+          "text": "研究生院网站上的毕业论文模板功能有严重欠缺，本模板旨在补足研究生院模板欠缺的功能。力求只需填写内容，无需在排版与格式上耗费过多精力。"
+        },
+        {
+          "locator": "/body/p[@paraId=736FA1F9]",
+          "type": "paragraph",
+          "text": "如有问题，请联系xelmirage@pku.edu.cn"
+        },
+        {
+          "locator": "/body/p[@paraId=7FB641C5]",
+          "type": "paragraph",
+          "text": "或前往https://github.com/xelmirage/pku_thesis_docx提交问题。"
+        },
+        {
+          "locator": "/body/p[@paraId=7549EC38]",
+          "type": "paragraph",
+          "text": "欢迎提交pull request"
+        },
+        {
+          "locator": "/body/p[@paraId=1DBE2250]",
+          "type": "paragraph",
+          "text": "2022年4月之后的修改来自某位匿名网友。一些看起来多余的细节和奇怪的域代码是为了照顾微软Word糟糕的设计，文件里有具体描述。"
+        },
+        {
+          "locator": "/body/p[@paraId=03C4EAE2]",
+          "type": "paragraph",
+          "text": "摘要、目录、图表目录、参考文献、附录、致谢等节的标题用了与章标题不同的样式“正文前标题”“正文后标题”，在生成目录时占用了第9级目录的样式，以避免Word悬挂缩进的格式bug。"
+        },
+        {
+          "locator": "/body/p[@paraId=4E568471]",
+          "type": "paragraph",
+          "text": "目录是根据样式建立的（而不是根据大纲级别）。如果不想在目录中显示正文之前的内容，可以在生成目录后手动删除。更正规的做法是：选中整个目录，点击引用-目录-自定义目录-选项，把“正文前标题”样式后面的9删掉。"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=12A7A2BB]",
+          "type": "paragraph",
+          "text": "本模板使用Word 2021制作。经过大致测试，与其他Word版本兼容性良好。WPS有一些缩进和对齐的细节与Word显示不一样，整体可用。"
+        },
+        {
+          "locator": "/body/p[@paraId=6557F5A5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=256B560A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=500CC0C8]",
+          "type": "paragraph",
+          "text": "关键词：城乡规划；建筑材料；建筑；电力；冶金；石油；煤炭；交通"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=2D66457F]",
+          "type": "paragraph",
+          "text": "English Title of Your Thesis"
+        },
+        {
+          "locator": "/body/p[@paraId=4784D30E]",
+          "type": "paragraph",
+          "text": "Your Name"
+        },
+        {
+          "locator": "/body/p[@paraId=71320FCA]",
+          "type": "paragraph",
+          "text": "Directed by Professor Your Professor"
+        },
+        {
+          "locator": "/body/p[@paraId=4DF3AFBD]",
+          "type": "paragraph",
+          "text": "ABSTRACT"
+        },
+        {
+          "locator": "/body/p[@paraId=5BA1284E]",
+          "type": "paragraph",
+          "text": "Your English Abstract Here."
+        },
+        {
+          "locator": "/body/p[@paraId=5AE8DFB6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=76FEC00C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5FBDEE07]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=7A1E5F5C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=74017BFD]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3E113B67]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=6D87356B]",
+          "type": "paragraph",
+          "text": "KEY WORDS: Your; English; Keywords; Here"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=69DE31C4]",
+          "type": "paragraph",
+          "text": "目录"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=60DEFAFC]",
+          "type": "paragraph",
+          "text": "摘要\tI"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=654F8C88]",
+          "type": "paragraph",
+          "text": "ABSTRACT\tII"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=37CF2854]",
+          "type": "paragraph",
+          "text": "目录\tIII"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=214B0013]",
+          "type": "paragraph",
+          "text": "图目录\tV"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=554E9F69]",
+          "type": "paragraph",
+          "text": "表目录\tVI"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=44465610]",
+          "type": "paragraph",
+          "text": "第一章\t研究背景\t1"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=59607243]",
+          "type": "paragraph",
+          "text": "1.1\t准备工作\t1"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=640C54FF]",
+          "type": "paragraph",
+          "text": "1.2\t章节标题\t2"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=4825A09D]",
+          "type": "paragraph",
+          "text": "1.3\t子标题\t4"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=668F890A]",
+          "type": "paragraph",
+          "text": "1.3.1 三级标题示例\t4"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=2B8934F4]",
+          "type": "paragraph",
+          "text": "1.3.2 要点强调示例\t4"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=49C132D5]",
+          "type": "paragraph",
+          "text": "1.3.3 引文示例\t4"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=13C7E614]",
+          "type": "paragraph",
+          "text": "第二章\t插图、公式与表格\t6"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=76D258CA]",
+          "type": "paragraph",
+          "text": "2.1\t插图\t6"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=7EA5412E]",
+          "type": "paragraph",
+          "text": "2.2\t公式\t7"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=24C26F09]",
+          "type": "paragraph",
+          "text": "2.3\t表格\t7"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=522A6058]",
+          "type": "paragraph",
+          "text": "2.4\t关于自动编号的注意事项\t8"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3EBEF306]",
+          "type": "paragraph",
+          "text": "2.4.1 自动编号出现汉字的修复\t9"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3E7E0BF7]",
+          "type": "paragraph",
+          "text": "2.4.2 自动编号在新一章没有从1开始的修复\t9"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=049DD3F5]",
+          "type": "paragraph",
+          "text": "2.4.3 图表编号和图表目录的更新\t10"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=35D90D96]",
+          "type": "paragraph",
+          "text": "第三章\t其他注意事项\t11"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=62EAF414]",
+          "type": "paragraph",
+          "text": "3.1\t请随时注意核对格式\t11"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=6AA29322]",
+          "type": "paragraph",
+          "text": "3.2\t排查错误引用项\t11"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=79F36075]",
+          "type": "paragraph",
+          "text": "3.3\t论文打印装订时的注意事项\t11"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=08C851EF]",
+          "type": "paragraph",
+          "text": "3.4\t保存为PDF格式的注意事项\t12"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=07FBE0D2]",
+          "type": "paragraph",
+          "text": "3.5\t插入横向页面\t13"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=64EC8518]",
+          "type": "paragraph",
+          "text": "第四章\t其他, 而且这里顺便试试看如果标题实在太长的话目录的排版是不是还看得过去\t14"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=60BADB62]",
+          "type": "paragraph",
+          "text": "4.1\t参考文献\t14"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=7B7F2D7E]",
+          "type": "paragraph",
+          "text": "4.2\t进一步讨论，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去\t14"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=59013461]",
+          "type": "paragraph",
+          "text": "4.2.1 三级标题示例，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去\t14"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=1E4365F3]",
+          "type": "paragraph",
+          "text": "第五章\t结论与讨论\t15"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=1AAAE6A8]",
+          "type": "paragraph",
+          "text": "5.1\t结论\t15"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=295F8A88]",
+          "type": "paragraph",
+          "text": "5.2\t展望\t15"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=51525288]",
+          "type": "paragraph",
+          "text": "参考文献\t16"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=5E34FE0D]",
+          "type": "paragraph",
+          "text": "附录A  博士期间工作成果\t17"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=32031FFA]",
+          "type": "paragraph",
+          "text": "致谢\t18"
+        },
+        {
+          "locator": "/body/sdt[@sdtId=209852935]/p[@paraId=3CEE78D6]",
+          "type": "paragraph",
+          "text": "北京大学学位论文原创性声明和使用授权说明\t20"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=53C64667]",
+          "type": "paragraph",
+          "text": "图目录"
+        },
+        {
+          "locator": "/body/p[@paraId=18D3CD67]",
+          "type": "paragraph",
+          "text": "图 1.1\t建立图、表题注标签\t1"
+        },
+        {
+          "locator": "/body/p[@paraId=107BB333]",
+          "type": "paragraph",
+          "text": "图 1.2\t保存“构建基块”到你的电脑\t2"
+        },
+        {
+          "locator": "/body/p[@paraId=749669A4]",
+          "type": "paragraph",
+          "text": "图 1.3\t使用下一页分隔符来划分章节\t2"
+        },
+        {
+          "locator": "/body/p[@paraId=495FA8AC]",
+          "type": "paragraph",
+          "text": "图 1.4\t插入域\t3"
+        },
+        {
+          "locator": "/body/p[@paraId=75D69E21]",
+          "type": "paragraph",
+          "text": "图 1.5\t调整页眉标题\t3"
+        },
+        {
+          "locator": "/body/p[@paraId=457D5B6A]",
+          "type": "paragraph",
+          "text": "图 2.1\t这是插图的示例，而且这里顺便试试看如果图题太长的话图表目录的排版是不是还看得过去\t6"
+        },
+        {
+          "locator": "/body/p[@paraId=7528BC0F]",
+          "type": "paragraph",
+          "text": "图 2.2\t打开交叉引用对话框\t6"
+        },
+        {
+          "locator": "/body/p[@paraId=36C38163]",
+          "type": "paragraph",
+          "text": "图 2.3\t复制公式时应选择的范围\t7"
+        },
+        {
+          "locator": "/body/p[@paraId=05478936]",
+          "type": "paragraph",
+          "text": "图 2.4\t手动添加跨页的“续表”\t8"
+        },
+        {
+          "locator": "/body/p[@paraId=246792B8]",
+          "type": "paragraph",
+          "text": "图 2.5\t修复自动编号的阿拉伯数字形式\t9"
+        },
+        {
+          "locator": "/body/p[@paraId=347455DD]",
+          "type": "paragraph",
+          "text": "图 2.6\t修复图表、公式自动编号的按章更新\t10"
+        },
+        {
+          "locator": "/body/p[@paraId=6E0EE1E3]",
+          "type": "paragraph",
+          "text": "图 3.1\t错误引用项示例\t11"
+        },
+        {
+          "locator": "/body/p[@paraId=4BFCC32A]",
+          "type": "paragraph",
+          "text": "图 3.2\t保存为PDF的建议方法\t12"
+        },
+        {
+          "locator": "/body/p[@paraId=3AD80C48]",
+          "type": "paragraph",
+          "text": "图 3.3\t使用下一页分隔符来划分章节\t13"
+        },
+        {
+          "locator": "/header[5]/p[@paraId=21E21116]",
+          "type": "paragraph",
+          "text": "图目录"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=7797E62B]",
+          "type": "paragraph",
+          "text": "表目录"
+        },
+        {
+          "locator": "/body/p[@paraId=1E913A5C]",
+          "type": "paragraph",
+          "text": "表2.1\t数据指标\t7"
+        },
+        {
+          "locator": "/body/p[@paraId=4478A8E6]",
+          "type": "paragraph",
+          "text": "表2.2\t另一些数据指标，而且这里顺便试试看如果表题太长的话图表目录的排版是不是还看得过去\t8"
+        },
+        {
+          "locator": "/body/p[@paraId=63F45259]",
+          "type": "paragraph",
+          "text": "表4.1\t测试数据\t14"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=2A52083D]",
+          "type": "paragraph",
+          "text": "准备工作"
+        },
+        {
+          "locator": "/body/p[@paraId=47989FF4]",
+          "type": "paragraph",
+          "text": "使用本模板的最佳实践是在模板上直接动笔。如果你的论文已经写了一些，不方便这样写，那么建议先把从本章标题到本自然段结束的部分完整复制粘贴到你的论文里，再删掉（这样才能保证标题自动编号的正确），然后使用格式刷把本模板的格式复制到你的论文中。"
+        },
+        {
+          "locator": "/body/p[@paraId=01ED2D58]",
+          "type": "paragraph",
+          "text": "请把这个模板备份一份，一旦出问题，可以从备份里复制粘贴原来的部分。而且该模板中也包含了一些意外和bug的解决方法备查。"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=03A3226D]",
+          "type": "paragraph",
+          "text": "图 1.1\t建立图、表题注标签"
+        },
+        {
+          "locator": "/body/p[@paraId=621E7C17]",
+          "type": "paragraph",
+          "text": "如果你对Word不太熟悉，那么请跳过以下进阶操作，直接看1.2 章节标题。"
+        },
+        {
+          "locator": "/body/p[@paraId=0421C4A2]",
+          "type": "paragraph",
+          "text": "选中整个目录（从“目录”两个字直到目录最后一行），然后点击：插入-文档部件-将所选内容保存到本机的文档部件库，如下设置后确定："
+        },
+        {
+          "locator": "/body/p[@paraId=4589F4F7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3BB4D4A6]",
+          "type": "paragraph",
+          "text": "图 1.2\t保存“构建基块”到你的电脑"
+        },
+        {
+          "locator": "/body/p[@paraId=78E5A544]",
+          "type": "paragraph",
+          "text": "同样，把图目录、表目录都分别保存为构建基块，以备随时使用。类似地，还可以把图题、表题、公式保存为自动图文集。"
+        },
+        {
+          "locator": "/body/p[@paraId=4589F4F7]/r[1]",
+          "type": "picture",
+          "text": "图片 5"
+        }
+      ]
+    },
+    {
+      "page": 14,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0F527DE1]",
+          "type": "paragraph",
+          "text": "章节标题"
+        },
+        {
+          "locator": "/body/p[@paraId=6D4F7FE3]",
+          "type": "paragraph",
+          "text": "不建议自行新建章节标题。如需增加章节，请使用“布局”菜单，在最后一章结尾处插入一个“下一页”分隔符（不建议使用“分页符”，可能有兼容性问题），然后完整复制粘贴某一章的标题至分隔符后："
+        },
+        {
+          "locator": "/body/p[@paraId=44574E40]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=25DD4EC6]",
+          "type": "paragraph",
+          "text": "图 1.3\t使用下一页分隔符来划分章节"
+        },
+        {
+          "locator": "/body/p[@paraId=6DBECF37]",
+          "type": "paragraph",
+          "text": "实际上，按照GB/T 7713.1-2006学位论文编写规则（国家推荐标准）和CY/T 35-2001科技文献的章节编号方法（新闻出版行业推荐标准），章节都应该使用阿拉伯数字编号。但二者都不是强制标准，而且多年来常见的用法都是“第一章”和…"
+        },
+        {
+          "locator": "/body/p[@paraId=44574E40]/r[1]",
+          "type": "picture",
+          "text": "图片 3"
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=5E8E283D]",
+          "type": "paragraph",
+          "text": "按学校的模板，奇数页页眉是章节编号+名称，偶数页页眉是“北京大学博士学位论文”。如果奇数页页眉未与章节名称与编号同步，请双击奇数页页眉，在上方工具栏选中“链接到前一节”。如果还是不行，请按照如下步骤操作："
+        },
+        {
+          "locator": "/body/p[@paraId=6A916A20]",
+          "type": "paragraph",
+          "text": "双击奇数页页眉"
+        },
+        {
+          "locator": "/body/p[@paraId=0F353758]",
+          "type": "paragraph",
+          "text": "删除页眉已有内容"
+        },
+        {
+          "locator": "/body/p[@paraId=004FEAD0]",
+          "type": "paragraph",
+          "text": "插入→文档部件→域"
+        },
+        {
+          "locator": "/body/p[@paraId=454EF83C]",
+          "type": "paragraph",
+          "text": "在域名处选择StyleRef，样式名选择标题1，右侧选项勾选“插入段落编号”，点击“确定”；再同样插入一次域，但不勾选“插入段落编号”："
+        },
+        {
+          "locator": "/body/p[@paraId=0C35BDB2]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=28155C7B]",
+          "type": "paragraph",
+          "text": "图 1.4\t插入域"
+        },
+        {
+          "locator": "/body/p[@paraId=1FD50583]",
+          "type": "paragraph",
+          "text": "此时页眉处插入了章序号和标题："
+        },
+        {
+          "locator": "/body/p[@paraId=0C35BDB2]/r[1]",
+          "type": "picture",
+          "text": "图片 8"
+        }
+      ]
+    },
+    {
+      "page": 16,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=2F6213BF]",
+          "type": "paragraph",
+          "text": "正文前后的摘要、参考文献等部分的页眉如果丢失，只需在上述第4步选择样式时分别选择“PKU正文前标题”或“PKU正文尾标题”，只插入不带段落编号的即可。"
+        },
+        {
+          "locator": "/body/p[@paraId=0381E009]",
+          "type": "paragraph",
+          "text": "子标题"
+        },
+        {
+          "locator": "/body/p[@paraId=7541A14F]",
+          "type": "paragraph",
+          "text": "这是一个二级标题示例。"
+        },
+        {
+          "locator": "/body/p[@paraId=18FFAB6F]",
+          "type": "paragraph",
+          "text": "三级标题示例"
+        },
+        {
+          "locator": "/body/p[@paraId=7552E1FB]",
+          "type": "paragraph",
+          "text": "这是一个三级标题示例。学校的示例使用了介于四号和小四号之间的13磅字体，本模板与之保持一致。"
+        },
+        {
+          "locator": "/body/p[@paraId=0C7C8F2B]",
+          "type": "paragraph",
+          "text": "四级标题示例"
+        },
+        {
+          "locator": "/body/p[@paraId=2A6EB1EF]",
+          "type": "paragraph",
+          "text": "四级及以下标题不会显示在目录里。如果需要显示，可以调整目录级别。一般不建议使用四级、五级标题，四级以下的层次建议使用数字编号，例如："
+        },
+        {
+          "locator": "/body/p[@paraId=73ACDAAA]",
+          "type": "paragraph",
+          "text": "这是一个数字编号，样式已定义为“PKU列表正文”"
+        }
+      ]
+    },
+    {
+      "page": 17,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=494D987B]",
+          "type": "paragraph",
+          "text": "正文。正文的样式已单独定义为“PKU正文”。"
+        },
+        {
+          "locator": "/body/p[@paraId=40DF6FBD]",
+          "type": "paragraph",
+          "text": "另一个数字编号"
+        },
+        {
+          "locator": "/body/p[@paraId=44294548]",
+          "type": "paragraph",
+          "text": "正文。"
+        },
+        {
+          "locator": "/body/p[@paraId=51E2A537]",
+          "type": "paragraph",
+          "text": "正文。"
+        },
+        {
+          "locator": "/body/p[@paraId=673C4FCA]",
+          "type": "paragraph",
+          "text": "要点强调示例"
+        },
+        {
+          "locator": "/body/p[@paraId=51C96F0E]",
+          "type": "paragraph",
+          "text": "文中需要加粗的要点部分定义了“PKU要点”样式，例如：首先，本文定义了指标；其次，本文收集了数据；最后，本文分析了结果。不建议直接加粗，否则修改正文样式时可能会取消加粗。"
+        },
+        {
+          "locator": "/body/p[@paraId=7E7A2158]",
+          "type": "paragraph",
+          "text": "引文示例"
+        },
+        {
+          "locator": "/body/p[@paraId=31C393DD]",
+          "type": "paragraph",
+          "text": "按照CY/T 122-2015学术出版规范-引文，短小的引文使用“行中引”，直接以引号表示；独立成段的引文为“提行引”，不加引号，段落整体左缩进两格，字体字号宜与正文有所区别，例如："
+        },
+        {
+          "locator": "/body/p[@paraId=370C6019]",
+          "type": "paragraph",
+          "text": "王安石在回答这道手诏的奏章中，仍然坚持其“天变不足畏”的观点，说道："
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=6AE75965]",
+          "type": "paragraph",
+          "text": "“提行引”的样式已定义为“PKU提行引”。"
+        }
+      ]
+    },
+    {
+      "page": 19,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=70FFFB17]",
+          "type": "paragraph",
+          "text": "插图、公式与表格"
+        },
+        {
+          "locator": "/body/p[@paraId=67C704A5]",
+          "type": "paragraph",
+          "text": "插图"
+        },
+        {
+          "locator": "/body/p[@paraId=39AA691F]",
+          "type": "paragraph",
+          "text": "图片所在行定义了“PKU图”样式，可保证图和图题不分页。典型的插图如下："
+        },
+        {
+          "locator": "/body/p[@paraId=750B1A8A]",
+          "type": "paragraph",
+          "text": "插图标题的样式为“PKU图题”，包含域代码。插入新配图时，建议复制现有图片标题至新配图处。如果图的编号没有自动更新，请选中图号，按F9。图的编号后建议按键盘上的Tab键输入一个制表符，这样目录排版时比较整齐。"
+        }
+      ]
+    },
+    {
+      "page": 20,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0275DE5F]",
+          "type": "paragraph",
+          "text": "公式"
+        },
+        {
+          "locator": "/body/tbl[3]/tr[1]/tc[3]/p[@paraId=675E2E45]",
+          "type": "paragraph",
+          "text": "(2.1)"
+        },
+        {
+          "locator": "/body/p[@paraId=314A8551]",
+          "type": "paragraph",
+          "text": "公式由于存在编号并且要求公式居中、编号右对齐，使用表格实现（网上用Tab实现的方式在交叉引用时容易出问题）。建议直接复制文档内现有公式。但注意要包括最外层的表格（如下图）。"
+        }
+      ]
+    },
+    {
+      "page": 21,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=252A29F9]",
+          "type": "paragraph",
+          "text": "如果公示太长，建议在等号处换行。如果难以实现，尽量在加减号等符号处换行。"
+        },
+        {
+          "locator": "/body/p[@paraId=7BE5B013]",
+          "type": "paragraph",
+          "text": "表格"
+        },
+        {
+          "locator": "/body/p[@paraId=3F870C70]",
+          "type": "paragraph",
+          "text": "表2.1\t数据指标"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[1]/p[@paraId=0631DD7E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[2]/p[@paraId=420AEB83]",
+          "type": "paragraph",
+          "text": "A"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[3]/p[@paraId=37F9D808]",
+          "type": "paragraph",
+          "text": "B"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[4]/p[@paraId=06E183C6]",
+          "type": "paragraph",
+          "text": "C"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[5]/p[@paraId=148906BE]",
+          "type": "paragraph",
+          "text": "D"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[6]/p[@paraId=67D46942]",
+          "type": "paragraph",
+          "text": "E"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[7]/p[@paraId=5AD6F8B1]",
+          "type": "paragraph",
+          "text": "F"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[8]/p[@paraId=040F97D7]",
+          "type": "paragraph",
+          "text": "G"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[9]/p[@paraId=6540B80B]",
+          "type": "paragraph",
+          "text": "H"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=291B3A13]",
+          "type": "paragraph",
+          "text": "1"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[2]/p[@paraId=148FBD40]",
+          "type": "paragraph",
+          "text": "2.52"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[6]/p[@paraId=71C83EEA]",
+          "type": "paragraph",
+          "text": "2.48"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[7]/p[@paraId=2A227E43]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[8]/p[@paraId=08528F82]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[9]/p[@paraId=6258266C]",
+          "type": "paragraph",
+          "text": "2.36"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[1]/p[@paraId=2B9095C4]",
+          "type": "paragraph",
+          "text": "2"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[6]/p[@paraId=1C7E0CD7]",
+          "type": "paragraph",
+          "text": "2.48"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[7]/p[@paraId=2ABF4303]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[8]/p[@paraId=067A98B2]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[9]/p[@paraId=28408689]",
+          "type": "paragraph",
+          "text": "2.36"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[1]/p[@paraId=5C84B9C5]",
+          "type": "paragraph",
+          "text": "3"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[2]/p[@paraId=6AD7AFC1]",
+          "type": "paragraph",
+          "text": "2.52"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[6]/p[@paraId=79A6AB0C]",
+          "type": "paragraph",
+          "text": "2.48"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[7]/p[@paraId=09FCD83C]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[8]/p[@paraId=4400266D]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[9]/p[@paraId=54CEF904]",
+          "type": "paragraph",
+          "text": "2.36"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[1]/p[@paraId=6A88F650]",
+          "type": "paragraph",
+          "text": "4"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[5]/p[@paraId=1E6FDCA2]",
+          "type": "paragraph",
+          "text": "0.85"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[6]/p[@paraId=446FEB33]",
+          "type": "paragraph",
+          "text": "0.90"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[7]/p[@paraId=149ECDC9]",
+          "type": "paragraph",
+          "text": "0.86"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[3]/tc[2]/p[@paraId=447CA02C]",
+          "type": "paragraph",
+          "text": "2.52"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[3]/tc[6]/p[@paraId=5B95F5F0]",
+          "type": "paragraph",
+          "text": "2.48"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[3]/tc[7]/p[@paraId=2308DB3F]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[3]/tc[8]/p[@paraId=25CFB84F]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[3]/tc[9]/p[@paraId=2CDE7FEC]",
+          "type": "paragraph",
+          "text": "2.36"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[2]/p[@paraId=23D896A4]",
+          "type": "paragraph",
+          "text": "2.52"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[6]/p[@paraId=16071FA9]",
+          "type": "paragraph",
+          "text": "2.48"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[7]/p[@paraId=2A5653FD]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[8]/p[@paraId=4CE0D039]",
+          "type": "paragraph",
+          "text": "2.21"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[9]/p[@paraId=67A10733]",
+          "type": "paragraph",
+          "text": "2.36"
+        }
+      ]
+    },
+    {
+      "page": 22,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=34953DFE]",
+          "type": "paragraph",
+          "text": "本模板已新建“PKU三线表”作为插入表格的默认样式。三线表并非强制要求，如果表格复杂，可以添加辅助线，常见者如分层表头，但全文风格宜一致。"
+        },
+        {
+          "locator": "/body/p[@paraId=04BF2904]/r[1]/AlternateContent[1]/Fallback[1]/pict[1]/shape[1]",
+          "type": "shape",
+          "text": "续表"
+        }
+      ]
+    },
+    {
+      "page": 23,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=2AFF0A16]",
+          "type": "paragraph",
+          "text": "表2.2\t另一些数据指标，而且这里顺便试试看如果表题太长的话图表目录的排版是不是还看得过去"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[1]/tc[1]/p[@paraId=47BE21C9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[1]/tc[2]/p[@paraId=6422F21C]",
+          "type": "paragraph",
+          "text": "Stage 1 (>7.1 μm)"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[4]/tc[13]/p[@paraId=54CAF699]",
+          "type": "paragraph",
+          "text": "0.88"
+        },
+        {
+          "locator": "/body/p[@paraId=05C42AE1]",
+          "type": "paragraph",
+          "text": "注：图表尾注已定义为“PKU图表注”样式。按CYT170-2019，建议表注在表格左墙线后1-2格。建议表格与页面同宽。"
+        },
+        {
+          "locator": "/body/p[@paraId=6C8CE521]",
+          "type": "paragraph",
+          "text": "关于自动编号的注意事项"
+        },
+        {
+          "locator": "/body/p[@paraId=6575B5BF]",
+          "type": "paragraph",
+          "text": "微软Word编号对中文数字的支持不好，而国内的惯例是“第一章”和“1.1”混用。本模板插图、公式、表格的自动编号使用域代码实现从汉字“一”到阿拉伯数字“1”的转换，同时为了保证仍然可以“交叉引用”，用了SEQ域。所以请不要使用“插入题注”…"
+        },
+        {
+          "locator": "/body/p[@paraId=547337BB]",
+          "type": "paragraph",
+          "text": "自动编号出现汉字的修复"
+        }
+      ]
+    },
+    {
+      "page": 24,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=69C12DDC]",
+          "type": "paragraph",
+          "text": "自动编号在新一章没有从1开始的修复"
+        },
+        {
+          "locator": "/body/p[@paraId=057590B8]",
+          "type": "paragraph",
+          "text": "如果图表公式的编号在新的一章后没有从1开始，图1.2后变成了图2.3（而不是图2.1），那么："
+        },
+        {
+          "locator": "/body/p[@paraId=5D9F072B]",
+          "type": "paragraph",
+          "text": "按Alt-F9，此时全文的域代码都会显示出来。按Ctrl-H调出替换对话框，假设你需要修正的是“图”的编号，查找内容是SEQ空格图空格\\*空格ARABIC："
+        }
+      ]
+    },
+    {
+      "page": 25,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0519DA18]",
+          "type": "paragraph",
+          "text": "点击“全部替换”，然后按Alt-F9，即可修复。同理，修复表、公式的编号只需把“查找内容”中的“图”字换成“表”或“公式”。"
+        },
+        {
+          "locator": "/body/p[@paraId=7E5BB433]",
+          "type": "paragraph",
+          "text": "图表编号和图表目录的更新"
+        },
+        {
+          "locator": "/body/p[@paraId=707117C1]",
+          "type": "paragraph",
+          "text": "增加图表、公式后，建议选中编号项，按F9更新域，编号就会自动更新。更新图表目录时，建议按Ctrl-A选中全文，按F9更新域，“更新整个目录”，然后选中全文再重复一次，以保证图表目录获取最新的编号。"
+        }
+      ]
+    },
+    {
+      "page": 26,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0106490A]",
+          "type": "paragraph",
+          "text": "请随时注意核对格式"
+        },
+        {
+          "locator": "/body/p[@paraId=692CC6B8]",
+          "type": "paragraph",
+          "text": "理论上本模板可提供正确的论文格式，但为确保万无一失，在论文写作过程中与协作完成后请务必注意核对格式的正确性，避免在编辑过程中可能遇到的意外。"
+        },
+        {
+          "locator": "/body/p[@paraId=1CC38B10]",
+          "type": "paragraph",
+          "text": "排查错误引用项"
+        },
+        {
+          "locator": "/body/p[@paraId=44BAAB7A]",
+          "type": "paragraph",
+          "text": "论文打印装订时的注意事项"
+        },
+        {
+          "locator": "/body/p[@paraId=557E2487]",
+          "type": "paragraph",
+          "text": "博士论文在向图书馆提交纸质论文时，需要在论文中附加各种材料，顺序为："
+        }
+      ]
+    },
+    {
+      "page": 27,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=6C3FB43F]",
+          "type": "paragraph",
+          "text": "在正式提交图书馆的论文版本中，版权声明页与原创性声明页应带有二维码，带有二维码的此二页应当从个人门户→研究生院业务→打印学位审批材料页面下载。"
+        },
+        {
+          "locator": "/body/p[@paraId=48D5A50A]",
+          "type": "paragraph",
+          "text": "另外论文封面书脊处需要依次打印：论文标题+年份+学号，可在打印论文时要求打印店处理，学校周围经常打印学位论文的打印店对此应该都有经验。注意：去打印店时，请带PDF文件去，以免Word或WPS等格式存在兼容性问题。"
+        },
+        {
+          "locator": "/body/p[@paraId=2BEBA4E2]",
+          "type": "paragraph",
+          "text": "保存为PDF格式的注意事项"
+        },
+        {
+          "locator": "/body/p[@paraId=38702EF6]",
+          "type": "paragraph",
+          "text": "Word保存成PDF可以有多种途径，但常规的做法都有各种问题，例如使用菜单栏里的Acrobat“创建PDF”，如果要保留文档结构（阅读PDF时的章节书签），它可能会花十几个小时才能保存完毕。这个bug在多年前就已经有人和Adobe反馈过，…"
+        },
+        {
+          "locator": "/body/p[@paraId=1502064C]",
+          "type": "paragraph",
+          "text": "经过测试，截至2024年5月，以下方法具有最好的兼容性，而且可以保存书签："
+        },
+        {
+          "locator": "/body/p[@paraId=55EA937D]",
+          "type": "paragraph",
+          "text": "点击“文件”，“另存为”，选择保存的位置；"
+        },
+        {
+          "locator": "/body/p[@paraId=210832B0]",
+          "type": "paragraph",
+          "text": "在弹出的对话框中，把“保存类型”选为pdf；"
+        },
+        {
+          "locator": "/body/p[@paraId=7A8ACE8C]",
+          "type": "paragraph",
+          "text": "按下图设置，然后保存。"
+        },
+        {
+          "locator": "/footnote[4]/p[@paraId=314DFF3B]",
+          "type": "paragraph",
+          "text": " 参与实名评审的博士论文需要附加此页，参与匿名评审的博士论文无需附加此页，以实际教务要求为准。"
+        }
+      ]
+    },
+    {
+      "page": 28,
+      "truncated": false,
+      "objects": []
+    },
+    {
+      "page": 29,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=1B55EAB2]",
+          "type": "paragraph",
+          "text": "插入横向页面"
+        },
+        {
+          "locator": "/body/p[@paraId=18BE0EA6]",
+          "type": "paragraph",
+          "text": "论文有时需要插入一个横向页面，例如很大的表格。此时请在打算放置横向页面开始之前的行尾插入一个“下一页”分节符，并在横向页面的最后也插入一个“下一页”分节符，菜单位置如下："
+        }
+      ]
+    },
+    {
+      "page": 30,
+      "truncated": false,
+      "objects": []
+    },
+    {
+      "page": 31,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=28453D60]",
+          "type": "paragraph",
+          "text": "其他, 而且这里顺便试试看如果标题实在太长的话目录的排版是不是还看得过去"
+        },
+        {
+          "locator": "/body/p[@paraId=1E1C93B8]",
+          "type": "paragraph",
+          "text": "参考文献"
+        },
+        {
+          "locator": "/body/p[@paraId=495BBC01]",
+          "type": "paragraph",
+          "text": "参考文献的管理建议依托参考文献管理软件，例如Endnote、Refman或NoteExpress等。“顺序编码制”和“著者-出版年制”二者只能选择一种，不能混用。具体参见GB/T 7714。建议使用文献管理软件来插入参考文献，常用的软件通…"
+        },
+        {
+          "locator": "/body/p[@paraId=13D62DC0]",
+          "type": "paragraph",
+          "text": "进一步讨论，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去"
+        },
+        {
+          "locator": "/body/p[@paraId=6A79048D]",
+          "type": "paragraph",
+          "text": "这是一个二级标题示例。"
+        },
+        {
+          "locator": "/body/p[@paraId=1AA5D321]",
+          "type": "paragraph",
+          "text": "三级标题示例，而且这里顺便试试看如果标题太长的话目录的排版是不是还看得过去"
+        },
+        {
+          "locator": "/body/p[@paraId=66A14B30]",
+          "type": "paragraph",
+          "text": "这是一个三级标题示例。"
+        }
+      ]
+    },
+    {
+      "page": 32,
+      "truncated": false,
+      "objects": []
+    },
+    {
+      "page": 33,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=32AD6216]",
+          "type": "paragraph",
+          "text": "结论与讨论"
+        },
+        {
+          "locator": "/body/p[@paraId=4098A66E]",
+          "type": "paragraph",
+          "text": "结论"
+        },
+        {
+          "locator": "/body/p[@paraId=3B35ABE5]",
+          "type": "paragraph",
+          "text": "跟微软较劲是个麻烦事，建议学校还是尽量使用国标吧。"
+        },
+        {
+          "locator": "/body/p[@paraId=75D4FA8D]",
+          "type": "paragraph",
+          "text": "展望"
+        }
+      ]
+    },
+    {
+      "page": 34,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=3B89DBB8]",
+          "type": "paragraph",
+          "text": "[1]\t张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+        },
+        {
+          "locator": "/body/p[@paraId=67024E1C]",
+          "type": "paragraph",
+          "text": "[2]\tDOWLER L. The research university's dilemma: resource sharing and research in a transinstitutional environment[J]. …"
+        },
+        {
+          "locator": "/body/p[@paraId=3C84494E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=056F7996]",
+          "type": "paragraph",
+          "text": "张志奇 2021. 猪场母猪的产后护理技术. 今日畜牧兽医 [J], 37: 62."
+        },
+        {
+          "locator": "/body/p[@paraId=5C5D8EAA]",
+          "type": "paragraph",
+          "text": "DOWLER L, 1995. The research university's dilemma: resource sharing and research in a transinstitutional environment[J]…"
+        },
+        {
+          "locator": "/body/p[@paraId=4D2FE881]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=2919BEEA]",
+          "type": "paragraph",
+          "text": "注：以上分别为“顺序编码制”和“著者-出版年制”的示例，二者只能选择一种，不能混用。具体参见GB/T 7714。建议使用文献管理软件来插入参考文献，常用的软件通常都预置了GB/T 7714 author-year 和 GB/T 7714 …"
+        },
+        {
+          "locator": "/body/p[@paraId=19547B4B]",
+          "type": "paragraph",
+          "text": "\t如果参考文献软件自动加入的引文目录没有出现在这个位置，可以把生成的引文目录直接剪切粘贴到这个位置（不要选“只保留文本”！），后面软件就会自动在这个位置更新"
+        }
+      ]
+    },
+    {
+      "page": 35,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0D319C89]",
+          "type": "paragraph",
+          "text": "附录A  博士期间工作成果"
+        },
+        {
+          "locator": "/body/p[@paraId=2FBC3ABA]",
+          "type": "paragraph",
+          "text": "期刊论文"
+        },
+        {
+          "locator": "/body/p[@paraId=1E037328]",
+          "type": "paragraph",
+          "text": "[1]\t期刊论文1"
+        },
+        {
+          "locator": "/body/p[@paraId=62E47D09]",
+          "type": "paragraph",
+          "text": "会议论文"
+        },
+        {
+          "locator": "/body/p[@paraId=6290A6E6]",
+          "type": "paragraph",
+          "text": "[1]\t会议论文1"
+        },
+        {
+          "locator": "/body/p[@paraId=434EF269]",
+          "type": "paragraph",
+          "text": "参与项目"
+        },
+        {
+          "locator": "/body/p[@paraId=4BD94F68]",
+          "type": "paragraph",
+          "text": "[1]\t项目1\t\t\t\t\t863计划子课题"
+        },
+        {
+          "locator": "/body/p[@paraId=754AF888]",
+          "type": "paragraph",
+          "text": "获得专利与软件著作权"
+        },
+        {
+          "locator": "/body/p[@paraId=01BCF9A5]",
+          "type": "paragraph",
+          "text": "[1]\t专利1\t\t\t\t\t专利"
+        },
+        {
+          "locator": "/body/p[@paraId=0BA61877]",
+          "type": "paragraph",
+          "text": "[2]\t著作权1\t\t\t\t软件著作权"
+        }
+      ]
+    },
+    {
+      "page": 36,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0F363817]",
+          "type": "paragraph",
+          "text": "致谢"
+        },
+        {
+          "locator": "/body/p[@paraId=70685273]",
+          "type": "paragraph",
+          "text": "感谢铁岭TV。"
+        },
+        {
+          "locator": "/body/p[@paraId=287A2DEF]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=34E82034]",
+          "type": "paragraph",
+          "text": "changelog:"
+        },
+        {
+          "locator": "/body/p[@paraId=0E988DF0]",
+          "type": "paragraph",
+          "text": "2021.1.15：补充注意事项与细节修改"
+        },
+        {
+          "locator": "/body/p[@paraId=47A5DC5C]",
+          "type": "paragraph",
+          "text": "2021.1.19：完善公式部分说明"
+        },
+        {
+          "locator": "/body/p[@paraId=4103A1EB]",
+          "type": "paragraph",
+          "text": "2021.2.24：更改表2-1的域代码，从而修正表格编号在新章节没有重新开始编号的问题"
+        },
+        {
+          "locator": "/body/p[@paraId=54C9E7AB]",
+          "type": "paragraph",
+          "text": "2022.3.16：题注的章节与编号之间分隔改为“.”；结尾添加changelog"
+        },
+        {
+          "locator": "/body/p[@paraId=1D7A48D7]",
+          "type": "paragraph",
+          "text": "2022.4.3：参照Aqr的经验重做了章编号，图表及公式的使用得到简化。详见第一章的说明。重排了目录格式。末尾补充了原创性声明和使用授权说明。正文样式修改为1.3倍行距，对文内公式和小图片的兼容性好于固定20磅。段前段后增加0.5行间距…"
+        },
+        {
+          "locator": "/body/p[@paraId=6E56F2B4]",
+          "type": "paragraph",
+          "text": "2022.4.5：图表格式优化，增加图表目录。目录重新排版，让太长的题目看起来整齐些。"
+        },
+        {
+          "locator": "/header[4]/p[@paraId=3112F1AF]",
+          "type": "paragraph",
+          "text": "致谢"
+        }
+      ]
+    },
+    {
+      "page": 37,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=7DE72E4B]",
+          "type": "paragraph",
+          "text": "2022.4.6：章标题用域实现了自动编号。"
+        },
+        {
+          "locator": "/body/p[@paraId=5026DADD]",
+          "type": "paragraph",
+          "text": "2022.4.7：推翻了之前两种自动编号思路（都太复杂），不再使用隐藏字体、自定义序列等容易引起误操作的方法，改用域代码实现了章标题与图表公式编号的中英文混编。重新定义了正文前后的摘要、参考文献等标题。目录排版美化。页眉页脚使用链接。"
+        },
+        {
+          "locator": "/body/p[@paraId=008B935E]",
+          "type": "paragraph",
+          "text": "2022.4.8：发现部分Word版本的兼容性问题，在开头增加了解决方法。"
+        },
+        {
+          "locator": "/body/p[@paraId=46ADE021]",
+          "type": "paragraph",
+          "text": "2022.4.9：重新梳理了样式。补充了自动编号出错的补救方法。"
+        },
+        {
+          "locator": "/body/p[@paraId=6DEBE1C8]",
+          "type": "paragraph",
+          "text": "2022.4.10：修改了表格样式。增加提行引样式。增加横向页面的操作说明。"
+        },
+        {
+          "locator": "/body/p[@paraId=3125B1D2]",
+          "type": "paragraph",
+          "text": "2022.4.11：增加了图题、表题的操作说明。"
+        },
+        {
+          "locator": "/body/p[@paraId=49109C9A]",
+          "type": "paragraph",
+          "text": "2022.6.13：细节修改，增加了参考文献示例。"
+        },
+        {
+          "locator": "/body/p[@paraId=64247A01]",
+          "type": "paragraph",
+          "text": "2023.5.1：增加图表尾注。"
+        },
+        {
+          "locator": "/body/p[@paraId=1A0B608C]",
+          "type": "paragraph",
+          "text": "2024.1.1：封面页单独成页。增加表格重复标题行说明。增加“要点”样式。"
+        },
+        {
+          "locator": "/body/p[@paraId=32541CC0]",
+          "type": "paragraph",
+          "text": "2024.5.6：增加了保存为PDF的注意事项。"
+        },
+        {
+          "locator": "/body/p[@paraId=7BE1C1EA]",
+          "type": "paragraph",
+          "text": "2024.6.27：更换新版论文封面。"
+        },
+        {
+          "locator": "/body/p[@paraId=71ED359F]",
+          "type": "paragraph",
+          "text": "2024.7.22：样式统一命名。补充章节标题自动编号、续表的操作说明。"
+        }
+      ]
+    },
+    {
+      "page": 38,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0174700E]",
+          "type": "paragraph",
+          "text": "北京大学学位论文原创性声明和使用授权说明"
+        },
+        {
+          "locator": "/body/p[@paraId=6AFB8673]",
+          "type": "paragraph",
+          "text": "原创性声明"
+        },
+        {
+          "locator": "/body/p[@paraId=4E61E0EA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=1BFE4F0C]",
+          "type": "paragraph",
+          "text": "本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品或成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本声…"
+        },
+        {
+          "locator": "/body/p[@paraId=5DDBD585]",
+          "type": "paragraph",
+          "text": "学位论文使用授权说明"
+        },
+        {
+          "locator": "/body/p[@paraId=559B3EA9]",
+          "type": "paragraph",
+          "text": "（必须装订在提交学校图书馆的印刷本）"
+        },
+        {
+          "locator": "/body/p[@paraId=3FBFB016]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=37D31BE7]",
+          "type": "paragraph",
+          "text": "本人完全了解北京大学关于收集、保存、使用学位论文的规定，即："
+        },
+        {
+          "locator": "/body/p[@paraId=38E23393]",
+          "type": "paragraph",
+          "text": "按照学校要求提交学位论文的印刷本和电子版本；"
+        }
+      ]
+    },
+    {
+      "page": 39,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=58E17341]",
+          "type": "paragraph",
+          "text": "学校有权保存学位论文的印刷本和电子版，并提供目录检索与阅览服务，在校园网上提供服务；"
+        },
+        {
+          "locator": "/body/p[@paraId=5C0F712F]",
+          "type": "paragraph",
+          "text": "学校可以采用影印、缩印、数字化或其它复制手段保存论文；"
+        },
+        {
+          "locator": "/body/p[@paraId=5775F97B]",
+          "type": "paragraph",
+          "text": "因某种特殊原因需要延迟发布学位论文电子版，授权学校□一年/□两年/□三年以后，在校园网上全文发布。"
+        },
+        {
+          "locator": "/body/p[@paraId=63F0C29E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=2667068F]",
+          "type": "paragraph",
+          "text": "（保密论文在解密后遵守此规定）"
+        },
+        {
+          "locator": "/body/p[@paraId=5A992830]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5A898E67]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=40A797B3]",
+          "type": "paragraph",
+          "text": "论文作者签名：                导师签名：                  "
+        }
+      ]
+    }
+  ]
+}

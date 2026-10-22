@@ -1,0 +1,77 @@
+{
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 25,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "            "
+            },
+            {
+              "role": "fixed_label",
+              "text": "致□□谢"
+            },
+            {
+              "role": "style_only",
+              "text": "  "
+            },
+            {
+              "role": "style_only",
+              "text": "(小三号黑体，居中)"
+            }
+          ],
+          "reason": "致谢 is the fixed section title for the acknowledgments unit. The internal □□ glyphs function as visual spacing inside the heading and stay with the fixed label. The 12 leading ASCII spaces and the 2 inner spaces are layout whitespace; '(小三号黑体，居中)' is the designer style requirement (small-3 Hei, centered) and must be preserved as style_only so the host can apply the heading formatting.",
+          "source_entry_id": "source-entry-e22945551ec47c442d2a7763"
+        },
+        {
+          "parts": [
+            {
+              "field_id": "acknowledgement.body",
+              "role": "fill_slot",
+              "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 "
+            },
+            {
+              "role": "style_only",
+              "text": "(小四号宋体) "
+            }
+          ],
+          "reason": "Example body sentence (with ××× as advisor-name placeholder and 省略号+句号) is template example text that will be replaced wholesale by student-authored acknowledgments; it binds to acknowledgement.body (the only content_type=rich_text field for acknowledgments). Trailing '(小四号宋体)' (plus trailing space) is the style requirement (small-4 Song) for the body paragraph and is preserved as style_only.",
+          "source_entry_id": "source-entry-81eccf507eafa44c86e0bd16"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（小四号字空二行）"
+            }
+          ],
+          "reason": "'（小四号字空二行）' (full-width parentheses) is a layout instruction specifying two blank lines using 小四号 size after the acknowledgments section; it carries a spacing/format requirement rather than visible content and is preserved as style_only. The 'centered_heading_candidate' cue does not apply to this entry.",
+          "source_entry_id": "source-entry-9b10bd4022408814a4bbab1c"
+        },
+        {
+          "parts": [
+            {
+              "role": "style_only",
+              "text": ""
+            }
+          ],
+          "reason": "Empty trailing entry whose extent equals the whole entry; it marks the end_boundary of the unit and carries no semantic content, so a single empty part with style_only role is appropriate.",
+          "source_entry_id": "source-entry-84a2948ae46182d411e6f89b"
+        }
+      ],
+      "status": "complete",
+      "summary": "Analyzed 4 source entries for unit-acknowledgments (致谢). Section heading '致□□谢' is fixed label with style notes; example body text maps to acknowledgement.body fill_slot; layout instruction '（小四号字空二行）' is style_only; trailing empty entry marks end of unit."
+    }
+  },
+  "event_digest": "5aa25316f8a540260f1197314b944d196de96e6139805a145b547ec1971ed242",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "ade00f61c23e54a3e76aa38a7b18079ecb589aa10fd03057c4c561c11d481bc4",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 26
+}

@@ -1,0 +1,64 @@
+Traceback (most recent call last):
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/anyio/streams/memory.py", line 118, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/anyio/streams/memory.py", line 113, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/app/prepare_template.py", line 4520, in run_prepare_template
+    execution = await run_template_agent(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/app/prepare_template.py", line 4168, in run_template_agent
+    return await _run_backend(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/app/prepare_template.py", line 4047, in _run_backend
+    unit_boundary_checkpoint = await _run_unit_boundary_checkpoint(
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/app/prepare_template.py", line 3487, in _run_unit_boundary_checkpoint
+    message = await asyncio.wait_for(
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/claude_agent_sdk/client.py", line 607, in receive_response
+    async for message in self.receive_messages():
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/claude_agent_sdk/client.py", line 282, in receive_messages
+    async for data in self._query.receive_messages():
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/claude_agent_sdk/_internal/query.py", line 953, in receive_messages
+    async for message in self._message_receive:
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/anyio/abc/_streams.py", line 35, in __anext__
+    return await self.receive()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/anyio/streams/memory.py", line 126, in receive
+    await receive_event.wait()
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1866, in wait
+    await self._event.wait()
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/locks.py", line 212, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/.venv/bin/docfit", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/app/cli.py", line 361, in main
+    report = asyncio.run(run_prepare_template(prepare_request))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/asyncio/runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt

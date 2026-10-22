@@ -1,0 +1,1 @@
+{"arm": "e_brief", "run": "sdk-e_brief-1", "is_error": false, "fields": ["author.name.zh", "author.student_id", "author.cohort_class", "advisor.name.zh", "advisor.title", "author.department", "submission.date"]}

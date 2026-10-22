@@ -1,0 +1,573 @@
+..........F.F........................................................... [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 16%]
+........................................................................ [ 22%]
+........................................................................ [ 27%]
+........................................................................ [ 33%]
+........................................................................ [ 38%]
+........................................................................ [ 44%]
+........................................................................ [ 49%]
+........................................................................ [ 55%]
+........................................................................ [ 60%]
+...................................................................F.... [ 66%]
+........F............................................................... [ 71%]
+........................................................................ [ 77%]
+........................................................................ [ 82%]
+........................................................................ [ 88%]
+........................................................................ [ 94%]
+........................................................................ [ 99%]
+......                                                                   [100%]
+=================================== FAILURES ===================================
+_________ test_clean_source_may_be_selected_without_forcing_docx_edit __________
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a03bef0>
+
+    def test_clean_source_may_be_selected_without_forcing_docx_edit(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        prepared = prepare_template_task(_request(tmp_path))
+        _persist_accepted_source_noop_semantics(prepared)
+        monkeypatch.setattr(
+            "docfit.app.prepare_template.DocFitToolService.validate",
+            lambda _service, _args: {"status": "ok", "checks": []},
+        )
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._source_noop_publishability",
+            lambda _prepared: {"status": "ok", "failure": None},
+        )
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._semantic_coverage_feedback",
+            lambda _prepared, _output: None,
+        )
+        execution = TemplateAgentExecution(
+            structured_output={
+                "status": "complete",
+                "summary": "The immutable source already satisfies the result.",
+                "semantic_judgments": _agent_semantic_judgments_for_source(prepared),
+            },
+            tool_uses=(
+                "Skill",
+                "mcp__docfit__docfit_evidence",
+            ),
+            skills_loaded=("docfit-school-extract",),
+            session_id="session-test",
+            backend="test",
+            num_turns=1,
+            duration_ms=1,
+            duration_api_ms=1,
+        )
+    
+>       candidate, _review, validation = _validate_agent_completion(prepared, execution)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/agent/school_extract_v2/test_agent_first_prepare_template.py:312: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/docfit/app/prepare_template.py:4464: in _validate_agent_completion
+    visual_review, validation = _validate_host_candidate(prepared, candidate)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/docfit/app/prepare_template.py:2178: in _validate_host_candidate
+    visual_review = require_final_visual_review(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+task_root = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0/prepared-task')
+source_docx = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0/prepared-task/input/school-template.docx')
+candidate_docx = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0/prepared-task/input/school-template.docx')
+visual = <docfit.visual.service.VisualEvidenceService object at 0x109fa4c50>
+
+    def require_final_visual_review(
+        *,
+        task_root: Path,
+        source_docx: Path,
+        candidate_docx: Path,
+        visual: VisualEvidenceService | None = None,
+    ) -> JsonObject:
+        """Prepare all evidence before requiring a human/external review, then resume.
+    
+        No runtime semantic Agent is asked to invent a visual-review receipt. The
+        default has no automatic visual reviewer; this method never fabricates one.
+        """
+        visual = visual or VisualEvidenceService(task_root)
+        source_hash, candidate_hash = sha256_file(source_docx), sha256_file(candidate_docx)
+        source_render, _ = visual.render({"input_docx": str(source_docx), "overview": False})
+        candidate_render, _ = visual.render({"input_docx": str(candidate_docx), "overview": False})
+        identity = {
+            "source_document_sha256": source_hash,
+            "document_sha256": candidate_hash,
+            "source_render_ref": source_render["render_ref"],
+            "render_ref": candidate_render["render_ref"],
+        }
+        directory = task_root / "work/.docfit/final-visual-review" / sha256_json(identity)
+        directory.mkdir(parents=True, exist_ok=True)
+        receipt = directory / "review.json"
+        candidate_pages = _page_evidence(visual, candidate_render)
+        packet = {
+            "schema_version": "docfit-final-visual-review-request/v1",
+            **identity,
+            "source_pages": _page_evidence(visual, source_render),
+            "candidate_pages": candidate_pages,
+            "review_path": str(receipt.relative_to(task_root)),
+            "criteria": list(CRITERIA),
+            "instructions": (
+                "Inspect every final page against the source and intended semantic changes. "
+                "Check missing or unintended blank pages, pagination, overflow, overlap, "
+                "text direction, "
+                "tables, formulas and protected layout. Record actual per-page observations. "
+                "LibreOffice is approximate; unresolved Word-rendering ambiguity "
+                "requires further review. "
+                "This review does not sign off the product."
+            ),
+            "accepted_semantics_path": "work/.docfit/harness/semantic-judgments.json",
+            "review_template": {
+                "schema_version": REVIEW_SCHEMA,
+                **identity,
+                "status": "pending",
+                "reviewer": {"kind": "human", "name": "", "reviewed_at": ""},
+                "pages": [
+                    {
+                        "page": row["page"],
+                        "evidence_ref": row["evidence_ref"],
+                        "checks": {key: {"status": "pending", "observation": ""} for key in CRITERIA},
+                    }
+                    for row in candidate_pages
+                ],
+                "findings": [],
+            },
+        }
+        atomic_write_json(directory / "request.json", packet)
+        atomic_write_json(
+            task_root / "work/.docfit/final-visual-review/current.json",
+            {
+                **identity,
+                "request_path": str((directory / "request.json").relative_to(task_root)),
+                "review_path": str(receipt.relative_to(task_root)),
+            },
+        )
+        if not receipt.is_file():
+>           raise _stop(
+                "final_visual_review_required",
+                (
+                    f"Final-page images are ready. Review {directory / 'request.json'} "
+                    f"and save actual conclusions to {receipt}."
+                ),
+                pending=True,
+            )
+E           docfit.tools.runtime.ToolFailure: Final-page images are ready. Review /private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0/prepared-task/work/.docfit/final-visual-review/1cbebc41d3b5b809af32d50e3711a91b8140490544deec4b59d6c8d08def6ec9/request.json and save actual conclusions to /private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_clean_source_may_be_selec0/prepared-task/work/.docfit/final-visual-review/1cbebc41d3b5b809af32d50e3711a91b8140490544deec4b59d6c8d08def6ec9/review.json.
+
+src/docfit/template/final_visual_review.py:251: ToolFailure
+______________ test_batch_candidate_rejects_legacy_judgment_shape ______________
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_batch_candidate_rejects_l0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109ffdb50>
+
+    def test_batch_candidate_rejects_legacy_judgment_shape(
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        prepared = prepare_template_task(_request(tmp_path))
+        backend = _backend()
+        config = tmp_path / "config"
+        config.mkdir()
+        queries: list[str] = []
+        client_count = 0
+    
+        class FakeClient:
+            def __init__(self, *, options: object) -> None:
+                nonlocal client_count
+                client_count += 1
+                self.options = options
+    
+            async def __aenter__(self) -> FakeClient:
+                return self
+    
+            async def __aexit__(self, *_: object) -> None:
+                return None
+    
+            async def query(self, prompt: str) -> None:
+                queries.append(prompt)
+    
+            async def receive_response(self):
+                yield AssistantMessage(
+                    content=[
+                        ToolUseBlock("skill-1", "Skill", {"skill": "docfit-school-extract"}),
+                        ToolUseBlock(
+                            "evidence-1",
+                            "mcp__docfit__docfit_evidence",
+                            {
+                                "schema_version": "docfit_evidence_input_v1",
+                                "focus": "unit_evidence_packet",
+                                "unit_id": "u-all",
+                            },
+                        ),
+                    ],
+                    model="synthetic-model",
+                    message_id=f"message-{len(queries)}",
+                    session_id="session-r1",
+                )
+                yield ResultMessage(
+                    subtype="success",
+                    duration_ms=10,
+                    duration_api_ms=8,
+                    is_error=False,
+                    num_turns=len(queries),
+                    session_id="session-r1",
+                    result="{}",
+                    structured_output={
+                        "status": "complete",
+                        "summary": "semantic judgments complete",
+                        "semantic_judgments": [{"judgment": "fixed_content"}],
+                    },
+                    uuid=f"result-{len(queries)}",
+                )
+    
+        monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", FakeClient)
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._source_noop_publishability",
+            lambda _prepared: {"status": "ok", "failure": None},
+        )
+        monkeypatch.setattr(
+            "docfit.app.prepare_template._materialization_readiness_feedback_for_complete_output",
+            lambda _prepared: None,
+        )
+    
+        with pytest.raises(ToolFailure) as caught:
+            asyncio.run(
+                _run_backend(
+                    prepared,
+                    backend,
+                    config,
+                    existing_unit_boundary_checkpoint=_unit_checkpoint(prepared),
+                )
+            )
+    
+>       assert caught.value.code == "semantic_batch_candidate_failed"
+E       AssertionError: assert 'semantic_rev...n_no_progress' == 'semantic_bat...didate_failed'
+E         
+E         - semantic_batch_candidate_failed
+E         + semantic_revision_no_progress
+
+tests/agent/school_extract_v2/test_agent_first_prepare_template.py:428: AssertionError
+______ test_stateless_template_publication_binds_word_contract_and_review ______
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_stateless_template_public0')
+
+    def test_stateless_template_publication_binds_word_contract_and_review(
+        tmp_path: Path,
+    ) -> None:
+        (tmp_path / "input").mkdir()
+        (tmp_path / "work").mkdir()
+        (tmp_path / "output").mkdir()
+        source = tmp_path / "input/school-template.docx"
+        candidate = tmp_path / "work/candidate.docx"
+        registry = tmp_path / "input/field-registry.yaml"
+        _make_template(source)
+        # The generic integration fixture deliberately references a missing Title
+        # style.  Publication tests objective style evidence, so use the defined
+        # Normal style for this focused artifact test.
+        with zipfile.ZipFile(source, "r") as archive:
+            infos = archive.infolist()
+            parts = {info.filename: archive.read(info.filename) for info in infos}
+        parts["word/document.xml"] = parts["word/document.xml"].replace(
+            b'<w:pStyle w:val="Title" />', b'<w:pStyle w:val="Normal" />'
+        )
+        with zipfile.ZipFile(source, "w") as archive:
+            for info in infos:
+                archive.writestr(info, parts[info.filename])
+        shutil.copyfile(
+            Path(__file__).resolve().parents[2]
+            / "docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml",
+            registry,
+        )
+        service = DocFitToolService(task_root=tmp_path, office=OfficeCliAdapter())
+        source_hash = sha256_file(source)
+        inspected = service.inspect({"input_docx": str(source)})
+        service.edit(
+            {
+                "input_docx": str(source),
+                "output_docx": str(candidate),
+                "field_registry": str(registry),
+                "operations": [
+                    {
+                        "action": "materialize_slot",
+                        "target_ref": _ref(inspected, "学校封面"),
+                        "field_id": "thesis.title.zh",
+                        "slot_ref": _slot_ref("thesis.title.zh", source_hash),
+                    }
+                ],
+            }
+        )
+        candidate_hash = sha256_file(candidate)
+        _write_template_slot_provenance(
+            tmp_path,
+            field_id="thesis.title.zh",
+            source_sha256=source_hash,
+            registry=registry,
+            candidate=candidate,
+            inspected=inspected,
+        )
+    
+>       receipt = publish_template_artifact(
+            task_root=tmp_path,
+            source_docx=source,
+            candidate_docx=candidate,
+            field_registry=registry,
+            validation={"final_sha256": candidate_hash, "status": "ok"},
+            visual_review={
+                "document_sha256": candidate_hash,
+                "render_ref": "render:v2:" + "0" * 64,
+                "reviewed_pages": [1],
+                "findings": [],
+            },
+            office=OfficeCliAdapter(),
+        )
+
+tests/integration/test_m1_tools.py:648: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/docfit/template/artifact.py:1402: in publish_template_artifact
+    validate_final_visual_review(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+review = {'document_sha256': '139e45653189291c442941347fa7c58196277eb9f0083ecd1a43a48ab2440c65', 'render_ref': 'render:v2:0000000000000000000000000000000000000000000000000000000000000000', 'reviewed_pages': [1], 'findings': []}
+candidate_hash = '139e45653189291c442941347fa7c58196277eb9f0083ecd1a43a48ab2440c65'
+source_hash = 'fcdeef0b7202d1892931806090545320a3ebb3ff792bdc48a62cbb5c8dfa1649'
+store = <docfit.visual.evidence.EvidenceStore object at 0x10a0fb620>
+
+    def validate_final_visual_review(
+        review: JsonObject,
+        *,
+        candidate_hash: str,
+        source_hash: str,
+        store: EvidenceStore,
+    ) -> None:
+        """Require a verdict, page observations and intact current render evidence.
+    
+        This validates the review contract, not whether a person or external visual
+        reviewer's conclusions are true. Product signoff remains a separate decision.
+        """
+        if review.get("schema_version") != REVIEW_SCHEMA:
+>           raise _stop("final_visual_review_missing", "A final-page review record is required.")
+E           docfit.tools.runtime.ToolFailure: A final-page review record is required.
+
+src/docfit/template/final_visual_review.py:55: ToolFailure
+_______ test_independent_student_content_app_publishes_partial_candidate _______
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-104/test_independent_student_conte0')
+
+    @pytest.mark.skipif(
+        not _visual_renderer_ready(),
+        reason="Student-content fill integration requires the fixed Docker LibreOffice renderer",
+    )
+    def test_independent_student_content_app_publishes_partial_candidate(
+        tmp_path: Path,
+    ) -> None:
+        source = tmp_path / "student.docx"
+        template = tmp_path / "template.docx"
+        registry_path = tmp_path / "registry.yaml"
+        contract_path = tmp_path / "fill-contract.yaml"
+        output = tmp_path / "output"
+        _make_docx(source, "Verified title", "Student body paragraph")
+        _make_docx(
+            template,
+            "TITLE PLACEHOLDER",
+            "BODY TITLE PLACEHOLDER",
+            "BODY TEXT PLACEHOLDER",
+        )
+        _wrap_paragraphs_as_controls(
+            template,
+            (
+                "docfit.cover.title_en",
+                "docfit.body.chapter_title",
+                "docfit.body.chapter_body",
+            ),
+        )
+        registry_path.write_text(
+            yaml.safe_dump(
+                {
+                    "registry_id": "docfit.thesis.content_fields",
+                    "registry_version": "0.1.0",
+                    "fields": [
+                        {
+                            "field_id": "thesis.title.en",
+                            "label": "English title",
+                            "meaning": "The student's English thesis title.",
+                            "content_type": "text",
+                        },
+                        {
+                            "field_id": "body.heading.outline1",
+                            "label": "Level-one body heading",
+                            "meaning": "A first-level heading in the thesis body.",
+                            "content_type": "text",
+                        },
+                        {
+                            "field_id": "body.paragraph",
+                            "label": "Body paragraph",
+                            "meaning": "A normal paragraph in the thesis body.",
+                            "content_type": "rich_text",
+                        },
+                    ],
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+        registry = {
+            "path": "registry.yaml",
+            "registry_id": "docfit.thesis.content_fields",
+            "registry_version": "0.1.0",
+            "sha256": sha256_file(registry_path),
+        }
+        title_style = _style(
+            "style.cover.title",
+            {"run.color": "000000", "run.font_size_pt": 12.0},
+        )
+        chapter_title_style = _style(
+            "style.body.chapter_title",
+            {"paragraph.alignment": "left", "run.color": "000000"},
+        )
+        body_style = _style(
+            "style.body.chapter_body",
+            {
+                "paragraph.alignment": "left",
+                "run.color": "000000",
+                "run.font_size_pt": 12.0,
+            },
+        )
+        contracts = _style_contracts(template, title_style, chapter_title_style, body_style)
+        contract_path.write_text(
+            yaml.safe_dump(
+                {
+                    "schema_version": "docfit-template-fill-contract/v2",
+                    "contract_id": "synthetic",
+                    "status": "candidate_pending_human_acceptance",
+                    "revision": "1",
+                    "template_sha256": sha256_file(template),
+                    "field_registry_ref": registry,
+                    "regions": [],
+                    "styles": [title_style, chapter_title_style, body_style],
+                    "style_contract_set_digest": contracts.digest,
+                    "slots": [
+                        {
+                            "slot_ref": "slot.title",
+                            "field_id": "thesis.title.en",
+                            "required": True,
+                            "style_contract_ref": _style_ref(title_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.cover.title_en",
+                            },
+                        },
+                        {
+                            "slot_ref": "slot.body",
+                            "field_id": "body.heading.outline1",
+                            "required": True,
+                            "style_contract_ref": _style_ref(chapter_title_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.body.chapter_title",
+                            },
+                        },
+                        {
+                            "slot_ref": "slot.body.text",
+                            "field_id": "body.paragraph",
+                            "required": True,
+                            "style_contract_ref": _style_ref(body_style),
+                            "locator": {
+                                "type": "content_control_tag",
+                                "value": "docfit.body.chapter_body",
+                            },
+                        },
+                    ],
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+    
+        async def fake_runner(prompt, prepared, schema, transcripts):
+            del transcripts
+            assert prepared.source_sha256 in prompt
+            assert '"schema_version": 3' in prompt
+            assert "ordered_source_content_items" in prompt
+            assert "Do not return any source_order" in prompt
+            assert str(template.resolve()) not in prompt
+            assert prepared.source_docx.is_relative_to(prepared.task_root)
+            items = prepared.inventory["content_items"]
+            title_id = next(
+                item["source_content_id"]
+                for item in items
+                if item["observed_text"] == "Verified title"
+            )
+            body_id = next(
+                item["source_content_id"]
+                for item in items
+                if item["observed_text"] == "Student body paragraph"
+            )
+            assert schema["properties"]["annotations"]["items"]["properties"][
+                "source_content_id"
+            ]["enum"] == [
+                item["source_content_id"] for item in items
+            ]
+            return StudentExtractionExecution(
+                structured_output={
+                    "schema_version": 3,
+                    "annotations": [
+                        {
+                            "source_content_id": title_id,
+                            "classification_status": "classified",
+                            "field_id": "thesis.title.en",
+                            "value": "Verified title",
+                            "confidence": 1.0,
+                            "note": "Synthetic exact title.",
+                        },
+                        {
+                            "source_content_id": body_id,
+                            "classification_status": "classified",
+                            "field_id": "body.paragraph",
+                            "value": None,
+                            "confidence": 1.0,
+                            "note": "Synthetic body.",
+                        },
+                    ],
+                    "relations": [],
+                    "summary": "Synthetic extraction.",
+                    "uncertainties": [],
+                },
+                backend="synthetic",
+                session_id="synthetic-session",
+                tool_uses=(),
+                skills_loaded=(),
+            )
+    
+        report = asyncio.run(
+            run_student_content_fill(
+                StudentContentFillRequest(
+                    source,
+                    template,
+                    contract_path,
+                    registry_path,
+                    output,
+                ),
+                runner=fake_runner,
+            )
+        )
+    
+>       assert report["status"] == "PARTIAL", report
+E       AssertionError: {'schema_version': 'docfit-student-content-fill-report/v1', 'status': 'NEEDS_INPUT', 'failure': {'origin': 'postcondit...aterialization provenance.'}, 'source_sha256': '480fcd30553d861fc3c988df21edf54cd3847296128270cd9229ebfef2d46abe', ...}
+E       assert 'NEEDS_INPUT' == 'PARTIAL'
+E         
+E         - PARTIAL
+E         + NEEDS_INPUT
+
+tests/integration/test_student_content_fill.py:649: AssertionError
+=============================== warnings summary ===============================
+tests/integration/test_m2_convert.py:13
+  /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/tests/integration/test_m2_convert.py:13: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/agent/school_extract_v2/test_agent_first_prepare_template.py::test_clean_source_may_be_selected_without_forcing_docx_edit
+FAILED tests/agent/school_extract_v2/test_agent_first_prepare_template.py::test_batch_candidate_rejects_legacy_judgment_shape
+FAILED tests/integration/test_m1_tools.py::test_stateless_template_publication_binds_word_contract_and_review
+FAILED tests/integration/test_student_content_fill.py::test_independent_student_content_app_publishes_partial_candidate
+4 failed, 1298 passed, 1 warning in 288.04s (0:04:48)

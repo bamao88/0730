@@ -1,0 +1,104 @@
+{
+  "verification_level": "real unchanged Agent output validated against revised schema; not SDK retry or repaired E2E",
+  "input": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-boundary-codec-task/work/.docfit/harness/semantic-revisions/00000003.json",
+  "sha256": "9d1f24129c8532a207e362a1be89e527065113557ffa04231b60f4459c49166f",
+  "errors": [
+    {
+      "path": [
+        "semantic_judgments",
+        11,
+        "parts",
+        0,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        12,
+        "parts",
+        0,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        12,
+        "parts",
+        2,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        13,
+        "parts",
+        0,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        14,
+        "parts",
+        0,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        14,
+        "parts",
+        3,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        15,
+        "parts",
+        0,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    },
+    {
+      "path": [
+        "semantic_judgments",
+        15,
+        "parts",
+        2,
+        "whitespace",
+        "codepoint"
+      ],
+      "validator": "enum",
+      "submitted": "U+25A1"
+    }
+  ],
+  "behavior": "Visible box glyph is rejected as whitespace transport; its semantic role remains an Agent decision."
+}

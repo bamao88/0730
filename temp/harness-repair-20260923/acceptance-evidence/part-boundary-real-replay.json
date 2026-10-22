@@ -1,0 +1,196 @@
+{
+  "verification_level": "real replay of source-valid recorded candidate entries with boundary whitespace; deterministic representation conversion, not new Agent output or whole-school acceptance",
+  "schools": [
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-graduate-task",
+      "judgment_count": 6,
+      "changed_parts": [
+        {
+          "source_entry_id": "source-entry-91edd75e5a4b20fddaa987b2",
+          "part_index": 0,
+          "role": "fixed_label",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-a1435e36e93adea845a4222b",
+          "part_index": 0,
+          "role": "fixed_label",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-75097fa031e0178fd1302ce1",
+          "part_index": 0,
+          "role": "generated_content",
+          "field_id": "body.figure.caption"
+        },
+        {
+          "source_entry_id": "source-entry-47349973994b42967e8964b9",
+          "part_index": 0,
+          "role": "generated_content",
+          "field_id": "body.figure.caption"
+        },
+        {
+          "source_entry_id": "source-entry-05e906297b2c79b9fc31a802",
+          "part_index": 0,
+          "role": "generated_content",
+          "field_id": "body.figure.caption"
+        },
+        {
+          "source_entry_id": "source-entry-80539a2f794872df04c8697e",
+          "part_index": 0,
+          "role": "generated_content",
+          "field_id": "body.table.caption"
+        }
+      ],
+      "excluded_invalid_original_entries": [],
+      "span_count": 12,
+      "slot_count": 6,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-graduate-task/work/.docfit/harness/object-inventory.json": "2b0332b6c18f54dfb6d02053931357ddd47a0ab5379f3783584a4ce08db5f269",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-graduate-task/work/.docfit/harness/semantic-revisions/00000091.json": "fca9b8e828abca7a141f7fe49724e057b7011eadf5b831ccd80a7ec48bfdf702",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-graduate-task/input/school-template.docx": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375"
+      }
+    },
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/body-task",
+      "judgment_count": 3,
+      "changed_parts": [
+        {
+          "source_entry_id": "source-entry-df09cdb77fb41813ec986d20",
+          "part_index": 4,
+          "role": "style_only",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-f0c63376279768f327365472",
+          "part_index": 6,
+          "role": "style_only",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-81eccf507eafa44c86e0bd16",
+          "part_index": 1,
+          "role": "style_only",
+          "field_id": null
+        }
+      ],
+      "excluded_invalid_original_entries": [
+        {
+          "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+          "blockers": [
+            {
+              "code": "ordered_part_text_gap",
+              "field": "semantic_judgments[0]",
+              "message": "Ordered parts must cover the complete source entry without omissions.",
+              "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+              "text_start": 31,
+              "text_end": 32,
+              "uncovered_text": " ",
+              "source_text_length": 32,
+              "covered_text_length": 31,
+              "uncovered_text_length": 1,
+              "uncovered_whitespace_codepoints": [
+                "U+0020"
+              ]
+            }
+          ]
+        },
+        {
+          "source_entry_id": "source-entry-e22945551ec47c442d2a7763",
+          "blockers": [
+            {
+              "code": "ordered_part_text_mismatch",
+              "field": "semantic_judgments[0].parts[3]",
+              "message": "Ordered part text must equal the source substring at the next exact offset.",
+              "source_entry_id": "source-entry-e22945551ec47c442d2a7763",
+              "expected_text": " (小三号黑体，居中",
+              "submitted_text": "(小三号黑体，居中)",
+              "source_text_length": 28,
+              "expected_text_length": 10,
+              "submitted_text_length": 10,
+              "mismatch_offset": 17,
+              "first_difference": {
+                "expected": {
+                  "character": " ",
+                  "codepoint": "U+0020",
+                  "end_of_text": false
+                },
+                "submitted": {
+                  "character": "(",
+                  "codepoint": "U+0028",
+                  "end_of_text": false
+                }
+              },
+              "expected_leading_whitespace_count": 1,
+              "expected_leading_whitespace_codepoints": [
+                "U+0020"
+              ],
+              "text_start": 17,
+              "text_end": 27
+            }
+          ]
+        }
+      ],
+      "span_count": 14,
+      "slot_count": 3,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/body-task/work/.docfit/harness/object-inventory.json": "215ff788a2dd150667d13a727d716d5678c321900592ddb2a0672966aefbb24c",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/body-task/work/.docfit/harness/semantic-revisions/00000084.json": "1df04eacaf15807ee2b9413c7224ee5073d137ad6e77c58e74527c96c69e3152",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/body-task/input/school-template.docx": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc"
+      }
+    },
+    {
+      "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task",
+      "judgment_count": 5,
+      "changed_parts": [
+        {
+          "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620",
+          "part_index": 0,
+          "role": "fixed_label",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+          "part_index": 0,
+          "role": "fixed_label",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+          "part_index": 1,
+          "role": "cleanup",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-4085024389c4c34a9ddd141e",
+          "part_index": 2,
+          "role": "cleanup",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-409b074a4b1a5f6d6462a74f",
+          "part_index": 2,
+          "role": "cleanup",
+          "field_id": null
+        },
+        {
+          "source_entry_id": "source-entry-7037639ea0acd6749ed9baa3",
+          "part_index": 1,
+          "role": "cleanup",
+          "field_id": null
+        }
+      ],
+      "excluded_invalid_original_entries": [],
+      "span_count": 12,
+      "slot_count": 2,
+      "exact_judgments_and_resolved_spans_equal": true,
+      "inputs": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task/work/.docfit/harness/object-inventory.json": "a72e8a66552c8fdfa5914d8f31843a3984f30ab6af3cd58aa0eddf915d4f2236",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task/work/.docfit/harness/semantic-revisions/00000016.json": "d2229436e41ab9b06187d42359eac97ebffa8a09510c86a9ddb5e1457f9e6080",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase2-live-20260923/cover-task/input/school-template.docx": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc"
+      }
+    }
+  ]
+}

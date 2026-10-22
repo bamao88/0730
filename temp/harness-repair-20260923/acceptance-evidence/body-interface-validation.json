@@ -1,0 +1,60 @@
+{
+  "verified_at": "2026-09-24T04:52:30.037125+00:00",
+  "isolated_commit": "cbefb17",
+  "not_in_live_runtime": "4bde3e0",
+  "contract_full": "954 passed in 18.06s, before two additional downgrade cases",
+  "publication_focused_final": "11 passed in 0.31s, includes independently persisted operation/receipt tampering and two downgrade cases",
+  "integration": "9 passed, 43 deselected in 3.36s",
+  "real_replay": "../body-interface-replay/replay.json",
+  "runtime_e2e_for_body_coalescence": false,
+  "live_runs": {
+    "pku": {
+      "counts": {
+        "budget_policy": 1,
+        "request": 17,
+        "response": 16,
+        "local_review": 14,
+        "candidate_recorded": 13,
+        "local_rejected": 3
+      },
+      "frozen_hash_checks": {
+        "inputs": true,
+        "runtime_source": true,
+        "skill": true
+      },
+      "product_acceptance": false
+    },
+    "hunau": {
+      "counts": {
+        "budget_policy": 1,
+        "request": 8,
+        "response": 7,
+        "local_review": 7,
+        "candidate_recorded": 4,
+        "local_rejected": 3
+      },
+      "frozen_hash_checks": {
+        "inputs": true,
+        "runtime_source": true,
+        "skill": true
+      },
+      "product_acceptance": false
+    },
+    "njau": {
+      "counts": {
+        "budget_policy": 1,
+        "request": 8,
+        "response": 7,
+        "local_review": 7,
+        "candidate_recorded": 5,
+        "local_rejected": 2
+      },
+      "frozen_hash_checks": {
+        "inputs": true,
+        "runtime_source": true,
+        "skill": true
+      },
+      "product_acceptance": false
+    }
+  }
+}

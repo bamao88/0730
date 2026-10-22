@@ -1,0 +1,28 @@
+{
+  "block_span_covered_object_count": 228,
+  "block_span_has_text_field": false,
+  "block_span_status": "ok",
+  "block_span_stored_block_ids": 53,
+  "checkpoint_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/phase15-postunit-transaction-real-subtype-20260828-192210/work/.docfit/unit-boundary-checkpoint.json",
+  "checkpoint_status": "ok",
+  "checkpoint_unit_count": 1,
+  "first_block_id": "u-paper-body:block-0001",
+  "last_block_id": "u-paper-body:block-0053",
+  "last_block_text": "……（附录内容的字体字号参照正文的格式要求）",
+  "negative_failure_code": "template_semantic_judgment_coverage_incomplete",
+  "negative_missing_reading_block_ids": [
+    "u-paper-body:block-0053"
+  ],
+  "negative_missing_reading_block_texts": [
+    "……（附录内容的字体字号参照正文的格式要求）"
+  ],
+  "negative_status": "needs_input",
+  "object_count": 228,
+  "range_span_covered_object_count": 228,
+  "range_span_has_text_field": false,
+  "range_span_status": "ok",
+  "range_span_stored_block_ids": 53,
+  "reading_block_count": 53,
+  "run_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/phase16-idfirst-real-replay-after-part-rules-20260829-202704",
+  "source_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/phase15-postunit-transaction-real-subtype-20260828-192210"
+}

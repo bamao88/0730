@@ -1,0 +1,1672 @@
+{
+  "editable_source_entry_ids": [
+    "source-entry-f0c63376279768f327365472"
+  ],
+  "source_entries": [
+    {
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)",
+      "text_length": 68,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 17,
+        "inline": 0
+      },
+      "style_summary": {
+        "alignment": "left",
+        "size": "12pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-f35c3f86700250c36a1034ae"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-f0c63376279768f327365472"
+          },
+          "text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)",
+          "unit_id": "unit-abstract-english",
+          "unit_name": "摘要（英文）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+      "text": "□□Key words: ×××； ×××；×××； ×××  ",
+      "text_length": 32,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 2,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 2"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 18,
+        "inline": 0
+      },
+      "style_summary": {
+        "alignment": "left",
+        "size": "12pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-f35c3f86700250c36a1034ae"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-f0c63376279768f327365472"
+          },
+          "text": "□□Key words: ×××； ×××；×××； ×××  ",
+          "unit_id": "unit-abstract-english",
+          "unit_name": "摘要（英文）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-f35c3f86700250c36a1034ae",
+      "text": "（五号字空一行）",
+      "text_length": 8,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 19,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "centered_heading_candidate"
+      ],
+      "style_summary": {
+        "alignment": "center",
+        "size": "14pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-f35c3f86700250c36a1034ae"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-f0c63376279768f327365472"
+          },
+          "text": "（五号字空一行）",
+          "unit_id": "unit-abstract-english",
+          "unit_name": "摘要（英文）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-858d67683f6dcc5b457eea40",
+      "text": "（以下农理工科类用）",
+      "text_length": 10,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 20,
+        "inline": 0
+      },
+      "style_summary": {
+        "size": "12pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d262983d771a6a30b0a9320b"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-858d67683f6dcc5b457eea40"
+          },
+          "text": "（以下农理工科类用）",
+          "unit_id": "unit-body-agri-science-eng",
+          "unit_name": "正文（农理工科类）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "text": "1□前言  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+      "text_length": 31,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 21,
+        "inline": 0
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "size": "15pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d262983d771a6a30b0a9320b"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-858d67683f6dcc5b457eea40"
+          },
+          "text": "1□前言  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+          "unit_id": "unit-body-agri-science-eng",
+          "unit_name": "正文（农理工科类）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "text": "□□……  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 22,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "unit_heading_candidate"
+      ],
+      "style_summary": {
+        "alignment": "left",
+        "size": "12pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d262983d771a6a30b0a9320b"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-858d67683f6dcc5b457eea40"
+          },
+          "text": "□□……  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+          "unit_id": "unit-body-agri-science-eng",
+          "unit_name": "正文（农理工科类）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-7c3e626fe5c6677d3e3d997f",
+      "text": "2□××××",
+      "text_length": 6,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 23,
+        "inline": 0
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "size": "15pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d262983d771a6a30b0a9320b"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-858d67683f6dcc5b457eea40"
+          },
+          "text": "2□××××",
+          "unit_id": "unit-body-agri-science-eng",
+          "unit_name": "正文（农理工科类）"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+      "text": "参考文献 (小三号黑体)",
+      "text_length": 12,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 42,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "unit_heading_candidate"
+      ],
+      "style_summary": {
+        "alignment": "left",
+        "font.ea": "黑体",
+        "size": "15pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-4544bbf8bd8ba8737268c5cc"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be"
+          },
+          "text": "参考文献 (小三号黑体)",
+          "unit_id": "unit-references",
+          "unit_name": "参考文献"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+      "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.       (五号宋体)",
+      "text_length": 47,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 43,
+        "inline": 0
+      },
+      "style_summary": {
+        "size": "9pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-4544bbf8bd8ba8737268c5cc"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be"
+          },
+          "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.       (五号宋体)",
+          "unit_id": "unit-references",
+          "unit_name": "参考文献"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-68fe5f9235e778cd5b1dc18e",
+      "text": "……",
+      "text_length": 2,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 44,
+        "inline": 0
+      },
+      "style_summary": {
+        "alignment": "left",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-4544bbf8bd8ba8737268c5cc"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be"
+          },
+          "text": "……",
+          "unit_id": "unit-references",
+          "unit_name": "参考文献"
+        }
+      ]
+    }
+  ],
+  "previous_judgments": [
+    {
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "reason": "Re-reading the entry as '□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)' with Abstract as the unit title (small-four Times New Roman bold). The two □ are leading spacing symbols only; they preserve indentation requirement, do not enter final content. 'Abstract(小四号Times New Roman， 加粗)' is the fixed English abstract heading: 'Abstract' is the fixed label and the parenthetical '小四号Times New Roman， 加粗' is the format obligation for that heading; together they form one fixed_label preserving the required font/size/bold requirement on Abstract. After the colon, '……' is the placeholder indicating the position where the English abstract body is to be inserted; it occupies the value slot for the abstract content, and the surrounding spaces are part of the original layout. The trailing '(五号Times New Roman)' on the same line specifies the font/size obligation for the abstract body that follows. Within this single source entry, the colon ':……' sequence is best interpreted as the explicit value-position prompt for the English abstract body: there is no separate independent label, and the placeholder text itself occupies the final value position, so the colon-prefix and the '……' form a continuous fill_slot binding abstract.en, while the trailing format note describes the obligation on that fill_slot rather than entering the final body text. Restating the entry as a sequence of consecutive substrings, the first is the two spacing glyphs, the second is the Abstract heading with its inline font/size/bold format note (both fixed heading and its styling requirement, kept as fixed_label together since the parenthetical is not a separate fillable position), the third is the colon-plus-ellipsis placeholder occupying the English abstract value position with the embedded multiple-space layout run, and the fourth is the trailing font/size note '(五号Times New Roman)' as a separate style_only obligation that applies to the abstract body fill. This preserves the fixed heading label, binds abstract.en to the ellipsis value position, and keeps both font obligations (heading 小四号Times New Roman 加粗, body 五号Times New Roman) intact for the host. The final template therefore reads 'Abstract' as a fixed bold small-four Times New Roman heading followed by the student's English abstract body set in five-point Times New Roman, with the leading □ symbols not entering the final text.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "□□",
+          "role": "style_only"
+        },
+        {
+          "text": "Abstract(小四号Times New Roman， 加粗)",
+          "role": "fixed_label"
+        },
+        {
+          "text": ":……            (五号Times New Roman)",
+          "role": "cleanup"
+        },
+        {
+          "text": "            (五号Times New Roman)",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+      "reason": "Re-reading the entry as '□□Key words: ×××； ×××；×××； ×××  ' with the two □ as leading spacing symbols that only carry indentation. 'Key words:' together with the colon is the fixed English-keywords label. The four '×××' tokens joined by Chinese semicolons '；' form one continuous value-position example block occupying the keywords value slot: there is no separate independent label and the example text itself sits where the real keywords will appear, so the whole semicolon-joined example block binds to keywords.en as a single fill_slot whose complete value contains the same number of separated keywords. The two trailing U+0020 spaces are ordinary post-line whitespace belonging to the keywords block rather than a separate obligation. After replacement with a normal English keyword list of the same shape the line reads 'Key words: kw1; kw2; kw3; kw4' with the original 'Key words:' label preserved.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "□□",
+          "role": "style_only"
+        },
+        {
+          "text": "Key words: ",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××； ×××；×××； ×××",
+          "role": "fill_slot",
+          "field_id": "keywords.en"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-f35c3f86700250c36a1034ae",
+      "reason": "The centered short text '（五号字空一行）' is a vertical-spacing instruction: '五号字空一行' means leave one blank line at five-point size after the keywords block. The whole parenthetical is a layout obligation rather than a heading, fixed label or fillable value, so the entire entry is a single style_only part. No field binding is appropriate. The instruction applies to the spacing that follows the English abstract unit (after the keywords line), and the requirement itself must remain in effect even though the literal text does not appear in the final body content.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "（五号字空一行）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-858d67683f6dcc5b457eea40",
+      "reason": "Template authoring note marking which category the following body template applies to. The unit is already named 正文（农理工科类）, so this marker is redundant and should not appear in the clean template.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "（以下农理工科类用）",
+          "role": "cleanup"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+      "reason": "Level 1 heading example. The literal \"1\" in the source is a placeholder for auto-numbering generated by the Heading 1 numbering mechanism (consistent with body.heading.outline1's \"使用模板Heading 1编号\"), so it is style_only; the whitespace separator is style_only; the title text 前言 is bound to body.heading.outline1 (allowed_part_roles: body_structure); parenthetical cleanup is a template authoring note about level 1 heading formatting (font 小三号黑体, top-aligned ordinal, space before title) which should be captured by host style, not appear as visible content.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "1",
+          "role": "style_only"
+        },
+        {
+          "text": "□",
+          "role": "style_only"
+        },
+        {
+          "text": "前言",
+          "role": "body_structure",
+          "field_id": "body.heading.outline1"
+        },
+        {
+          "text": "",
+          "role": "style_only"
+        },
+        {
+          "text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+          "role": "cleanup"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+      "reason": "Body paragraph placeholder example. Leading whitespace is style_only indent; ellipsis placeholder marks the body paragraph structural position bound to body.paragraph; parenthetical is template authoring note about body text font (中文 小四号宋体, 英文 小四号Times New Roman) which should be captured by host style.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "□□",
+          "role": "style_only"
+        },
+        {
+          "text": "……",
+          "role": "body_structure",
+          "field_id": "body.paragraph"
+        },
+        {
+          "text": "",
+          "role": "style_only"
+        },
+        {
+          "text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+          "role": "cleanup"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-7c3e626fe5c6677d3e3d997f",
+      "reason": "Level 1 heading placeholder example. Chapter number 2 is a placeholder for Heading 1 auto-numbering (style_only, per body.heading.outline1's \"使用模板Heading 1编号\" semantics); whitespace separator is style_only; placeholder title ×××× is bound to body.heading.outline1 (body_structure role per field's allowed_part_roles) to be replaced by the actual chapter title from student content.",
+      "open_questions": [],
+      "parts": [
+        {
+          "text": "2",
+          "role": "style_only"
+        },
+        {
+          "text": "□",
+          "role": "style_only"
+        },
+        {
+          "text": "××××",
+          "role": "body_structure",
+          "field_id": "body.heading.outline1"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+      "reason": "The text '参考文献' is the section heading for the references unit — a fixed school label, not bound to any field (references.entries is for the list body, references.style_system is the citation system configuration). The trailing ' (小三号黑体)' is a parenthetical font specification (small-size-3, Hei font) describing the heading's required style, so it is style_only, not content to be filled.",
+      "parts": [
+        {
+          "text": "参考文献",
+          "role": "fixed_label"
+        },
+        {
+          "text": "(小三号黑体)",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+      "reason": "The example '[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.' is a sample reference entry illustrating the sequential-numeric citation format the school requires; per template-text-classification, an example value can serve as a fill_slot bound to references.entries (the references list) — the student's first reference will replace this example in the same numbered-citation form. Trailing whitespace is preserved with the fill_slot since it visually trails the example content. The parenthetical '(五号宋体)' is a font specification (size-5 Song font) for the reference body text and is style_only.",
+      "parts": [
+        {
+          "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.",
+          "role": "fill_slot",
+          "field_id": "references.entries"
+        },
+        {
+          "text": "(五号宋体)",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-68fe5f9235e778cd5b1dc18e",
+      "reason": "The Chinese ellipsis '……' in this template context represents the continuation of the references list — the place where additional numbered entries ([2], [3], ...) will be filled by the student source. Bound to references.entries (cardinality many) to capture that additional entries follow.",
+      "parts": [
+        {
+          "text": "……",
+          "role": "fill_slot",
+          "field_id": "references.entries"
+        }
+      ]
+    }
+  ],
+  "context_units": [
+    {
+      "unit": {
+        "unit_id": "unit-abstract-english",
+        "unit_name": "摘要（英文）"
+      },
+      "layout_context": []
+    },
+    {
+      "unit": {
+        "unit_id": "unit-body-agri-science-eng",
+        "unit_name": "正文（农理工科类）"
+      },
+      "layout_context": []
+    },
+    {
+      "unit": {
+        "unit_id": "unit-references",
+        "unit_name": "参考文献"
+      },
+      "layout_context": [
+        {
+          "order": 5,
+          "semantic_cues": [
+            "blank_layout_candidate"
+          ]
+        }
+      ]
+    }
+  ],
+  "field_id_vocabulary": {
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "author.name.zh",
+      "author.student_id",
+      "author.department",
+      "author.major",
+      "author.research_direction",
+      "advisor.name.zh",
+      "degree.type",
+      "submission.date",
+      "review.mode",
+      "reviewer.list",
+      "submission.copyright_qr_page",
+      "abstract.zh",
+      "keywords.zh",
+      "thesis.title.en",
+      "author.name.en",
+      "advisor.name.en",
+      "abstract.en",
+      "keywords.en",
+      "generated.toc",
+      "generated.list_of_figures",
+      "generated.list_of_tables",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline2",
+      "body.heading.outline3",
+      "body.heading.outline4",
+      "body.heading.outline5",
+      "body.paragraph",
+      "body.numbered_list_item",
+      "body.inline_emphasis",
+      "body.inline_quote",
+      "body.block_quote",
+      "body.figure",
+      "body.figure.caption",
+      "body.equation",
+      "body.table",
+      "body.table.caption",
+      "body.table.note",
+      "body.landscape_block",
+      "references.entries",
+      "references.style_system",
+      "achievements.journal_articles",
+      "achievements.conference_papers",
+      "achievements.projects",
+      "achievements.intellectual_property",
+      "acknowledgement.body",
+      "submission.declaration_qr_page",
+      "advisor.title",
+      "author.cohort_class",
+      "author.department.en",
+      "appendix.title",
+      "appendix.body",
+      "achievements.entries"
+    ],
+    "digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+    "field_count": 54,
+    "fields": [
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "thesis.title.zh",
+        "label": "中文论文题目",
+        "meaning": "学位论文在封面和中文语境中使用的完整题名。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.name.zh",
+        "label": "作者中文姓名",
+        "meaning": "学位申请人在中文封面中使用的姓名。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.student_id",
+        "label": "学号",
+        "meaning": "学位申请人的校内学号。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.department",
+        "label": "院系",
+        "meaning": "学位申请人所属院、系或培养单位名称。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.major",
+        "label": "专业",
+        "meaning": "学位申请人的专业名称。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.research_direction",
+        "label": "研究方向",
+        "meaning": "学位申请人的研究方向。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "advisor.name.zh",
+        "label": "导师中文姓名",
+        "meaning": "论文指导教师在中文封面中使用的姓名；职称不应在无来源时自动补写。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "degree.type",
+        "label": "学位类型",
+        "meaning": "封面复选项中的学术学位或专业学位。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "submission.date",
+        "label": "提交年月",
+        "meaning": "封面显示的论文提交或定稿年月。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "review.mode",
+        "label": "评审模式",
+        "meaning": "决定是否保留实名评审专家名单条件页的任务配置字段。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "reviewer.list",
+        "label": "实名评审专家名单",
+        "meaning": "实名评审时插入封面后的专家名单内容。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "submission.copyright_qr_page",
+        "label": "带二维码版权声明页",
+        "meaning": "从个人门户取得并用于正式图书馆提交的整页版权声明。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "external_asset"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "rich_text",
+        "field_id": "abstract.zh",
+        "label": "中文摘要",
+        "meaning": "论文中文摘要正文。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "keywords.zh",
+        "label": "中文关键词",
+        "meaning": "中文摘要页的关键词集合。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "thesis.title.en",
+        "label": "英文论文题目",
+        "meaning": "论文的完整英文题名。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.name.en",
+        "label": "作者英文姓名",
+        "meaning": "英文摘要页使用的作者姓名。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "advisor.name.en",
+        "label": "导师英文姓名",
+        "meaning": "Directed by Professor 后填写的导师英文姓名。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "rich_text",
+        "field_id": "abstract.en",
+        "label": "英文摘要",
+        "meaning": "论文英文摘要正文。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "keywords.en",
+        "label": "英文关键词",
+        "meaning": "英文摘要页的关键词集合。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "section",
+        "field_id": "generated.toc",
+        "label": "目录",
+        "meaning": "根据模板既有目录域和最终标题结构生成的目录。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "generated_content"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "system_generated"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "generated.list_of_figures",
+        "label": "图目录",
+        "meaning": "根据最终图题域生成的图目录。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "generated_content"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "system_generated"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "generated.list_of_tables",
+        "label": "表目录",
+        "meaning": "根据最终表题域生成的表目录。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "generated_content"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "system_generated"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "section",
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "meaning": "论文全部普通纵向正文章节及其内部结构。",
+        "usage_affordance": {
+          "allowed_part_roles": [],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "meaning": "正文章标题；使用模板 Heading 1 编号与页眉机制。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.heading.outline2",
+        "label": "一级节标题",
+        "meaning": "章内第一层节标题。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.heading.outline3",
+        "label": "二级节标题",
+        "meaning": "章内第二层节标题；属于目录范围。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.heading.outline4",
+        "label": "三级节标题",
+        "meaning": "章内第三层节标题；模板说明其通常不进入目录。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.heading.outline5",
+        "label": "四级节标题",
+        "meaning": "章内第四层节标题；模板说明其通常不进入目录。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "meaning": "普通正文段落流。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "body.numbered_list_item",
+        "label": "数字列表项",
+        "meaning": "使用模板数字列表机制的正文列表项。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "body.inline_emphasis",
+        "label": "行内要点",
+        "meaning": "应用 PKU要点字符样式的行内强调内容。",
+        "parent_field_id": "body.paragraph",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "body.inline_quote",
+        "label": "行中引",
+        "meaning": "保留在普通正文段落中的短引文。",
+        "parent_field_id": "body.paragraph",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "body.block_quote",
+        "label": "提行引",
+        "meaning": "独立成段且不加引号的长引文。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "image",
+        "field_id": "body.figure",
+        "label": "插图",
+        "meaning": "正文中由同一组题注共同描述的语义插图；可由一个或多个源图片资产组成。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.figure.caption",
+        "label": "图题",
+        "meaning": "描述父级图或表的题注正文；源中可位于对象前后，目标位置和编号由模板决定。",
+        "parent_field_id": "body.figure",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "equation",
+        "field_id": "body.equation",
+        "label": "公式",
+        "meaning": "正文公式对象。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "table",
+        "field_id": "body.table",
+        "label": "表格",
+        "meaning": "正文表格对象；可包含重复表头。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "text",
+        "field_id": "body.table.caption",
+        "label": "表题",
+        "meaning": "描述父级图或表的题注正文；源中可位于对象前后，目标位置和编号由模板决定。",
+        "parent_field_id": "body.table",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "rich_text",
+        "field_id": "body.table.note",
+        "label": "图表注",
+        "meaning": "表格或图片所需的注释段落。",
+        "parent_field_id": "body.table",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "body.landscape_block",
+        "label": "横向宽表或大图分节",
+        "meaning": "需要横向 A4 页面时使用的独立几何分节内容。",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "body_structure"
+          ],
+          "has_parent_field": true,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "references.entries",
+        "label": "参考文献条目",
+        "meaning": "论文参考文献列表。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "references.style_system",
+        "label": "参考文献著录体系",
+        "meaning": "决定全文采用顺序编码制或著者—出版年制的任务配置字段。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "task_input",
+          "human_confirmed"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "achievements.journal_articles",
+        "label": "期刊论文成果",
+        "meaning": "博士期间发表或录用的期刊论文条目。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "achievements.conference_papers",
+        "label": "会议论文成果",
+        "meaning": "博士期间的会议论文条目。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "achievements.projects",
+        "label": "参与项目",
+        "meaning": "博士期间参与的科研项目条目。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "achievements.intellectual_property",
+        "label": "专利与软件著作权",
+        "meaning": "博士期间获得的专利或软件著作权条目。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "rich_text",
+        "field_id": "acknowledgement.body",
+        "label": "致谢",
+        "meaning": "论文致谢正文。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "submission.declaration_qr_page",
+        "label": "带二维码原创性声明与授权页",
+        "meaning": "从个人门户取得并用于正式提交的整页原创性声明与使用授权说明。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "external_asset"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "text",
+        "field_id": "advisor.title",
+        "label": "导师职称",
+        "meaning": "指导教师在学校模板要求单独填写的职称。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "one",
+        "content_type": "text",
+        "field_id": "author.cohort_class",
+        "label": "年级、专业及班级复合信息",
+        "meaning": "学校封面将年级、专业和班级合并为一个填写值时使用的复合字段。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "text",
+        "field_id": "author.department.en",
+        "label": "院系英文名称",
+        "meaning": "英文摘要或英文封面中使用的院、系或培养单位英文名称。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source",
+          "task_input"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "text",
+        "field_id": "appendix.title",
+        "label": "附录标题",
+        "meaning": "附录页或附录章节的标题。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "optional",
+        "content_type": "section",
+        "field_id": "appendix.body",
+        "label": "附录内容",
+        "meaning": "一个或多个附录的结构化内容。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      },
+      {
+        "cardinality": "many",
+        "content_type": "rich_text",
+        "field_id": "achievements.entries",
+        "label": "未细分的相关学术成果",
+        "meaning": "模板只提供一个综合成果区域、尚未可靠拆为成果子类时使用的条目集合。",
+        "usage_affordance": {
+          "allowed_part_roles": [
+            "fill_slot"
+          ],
+          "has_parent_field": false,
+          "requires_agent_semantic_part": true,
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary"
+        },
+        "value_sources": [
+          "student_source"
+        ]
+      }
+    ],
+    "registry": {
+      "registry_id": "docfit.thesis.content_fields",
+      "registry_version": "0.5.0",
+      "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+    },
+    "schema_version": "docfit_pre_input_field_vocabulary_v1"
+  }
+}

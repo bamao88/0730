@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-24T09:28:47.248188+00:00",
+  "data": {
+    "is_error": true,
+    "request_id": 1,
+    "result_text": "SDK error",
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        }
+      ],
+      "status": "complete",
+      "summary": "判断"
+    }
+  },
+  "event_digest": "cd159b24a82a095a795a2b437a3190c94491aced9f6f611d246f6573b3968c4d",
+  "evidence_mode": "runtime",
+  "kind": "response",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "previous_event_digest": "b89095444209e393c66254a66b86d730583bddcb6b59d3e5fae0e4da323d7a17",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 2
+}

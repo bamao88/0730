@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_batch_candidate_failed",
+    "retryable": true,
+    "message": "An exact-text revision changed a previously accepted semantic responsibility.",
+    "suggested_actions": []
+  }
+}

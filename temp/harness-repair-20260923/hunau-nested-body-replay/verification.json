@@ -1,0 +1,36 @@
+{
+  "runtime_commit": "9c211c1f2fac1e1d0009bcfccc8c1565fd80b745",
+  "verification_level": "real Tool slice and package validation; not whole-school E2E or product acceptance",
+  "runtime_files": {
+    "src/docfit/template/materialization/body_interfaces.py": "fc8cdf04599dce20db2207f83c4aca6689617fca53e550f42402d9e5f246c7b2",
+    "src/docfit/template/materialization/readiness.py": "c0cbe445f0821809c2bd7f88d3484116530805021846585e800bb840864db71c",
+    "src/docfit/template/materialization/runtime.py": "d0bf21292cf31dc0bea28c916fd89644368d0ff3085f47252dcfdb5047411b48",
+    "src/docfit/template/materialization/handlers/body_structure.py": "eadb23ab8fac81abc2218ff68b16024828d3d659ca1144e653332f5fd5dafcd7"
+  },
+  "replay": {
+    "path": "temp/harness-repair-20260923/hunau-nested-body-replay/replay.json",
+    "sha256": "847a864a11f219871701d339818646dc096cfe3580338acf0c25220a531d7af6",
+    "interfaces": 76,
+    "protected_paragraphs": 508,
+    "remaining_full_readiness_blockers": 1,
+    "remaining_recovery": "semantic_revision"
+  },
+  "word_validation": {
+    "path": "temp/harness-repair-20260923/hunau-nested-body-replay/word-validation.json",
+    "sha256": "fab4bccfa6925e1d63a8ed65abb19a6f5e881f2f23ab518202a8a85fbf5d71de"
+  },
+  "logic_contract": {
+    "passed": 979,
+    "seconds": 22.47,
+    "mypy_source_files": 126,
+    "ruff": "passed"
+  },
+  "publication_handoff_group": {
+    "passed": 16,
+    "seconds": 8.55,
+    "formal_publication_tests": 4,
+    "constructed_docx": true,
+    "synthetic_visual_evidence": true
+  },
+  "product_acceptance": false
+}

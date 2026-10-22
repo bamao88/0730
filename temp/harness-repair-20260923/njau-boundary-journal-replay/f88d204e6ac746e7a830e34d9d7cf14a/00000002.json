@@ -1,0 +1,469 @@
+{
+  "binding": {
+    "evidence_mode": "replay",
+    "historical_tasks": [
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+      "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task"
+    ],
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e"
+  },
+  "created_at": "2026-09-24T07:10:50.975679+00:00",
+  "data": {
+    "diff": {
+      "fields": [
+        {
+          "after": "complete",
+          "after_present": true,
+          "before": null,
+          "before_present": false,
+          "field": "status"
+        },
+        {
+          "after": "Revised unit boundaries anchoring each unit's end on the next unit's start entry. Cover end advanced to block 24 to absorb previously missing block 23. Spec-textbox end anchored on block 211 (final entry) so the closing shape/text-box stays inside the last unit and the partition covers blocks 1-211 end-to-end with no gaps and no overlaps.",
+          "after_present": true,
+          "before": null,
+          "before_present": false,
+          "field": "summary"
+        }
+      ],
+      "units": [
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+            },
+            "unit_id": "cover-page",
+            "unit_name": "封面 (本科生毕业论文（设计）首页)"
+          },
+          "before": null,
+          "index": 0
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+            },
+            "unit_id": "originality-declaration",
+            "unit_name": "原创性声明"
+          },
+          "before": null,
+          "index": 1
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+            },
+            "unit_id": "authorization-declaration",
+            "unit_name": "使用授权声明"
+          },
+          "before": null,
+          "index": 2
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+            },
+            "unit_id": "table-of-contents",
+            "unit_name": "目录"
+          },
+          "before": null,
+          "index": 3
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+            },
+            "unit_id": "chinese-abstract",
+            "unit_name": "摘要 (中文摘要与关键词)"
+          },
+          "before": null,
+          "index": 4
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+            },
+            "unit_id": "english-abstract",
+            "unit_name": "ABSTRACT (英文摘要与关键词)"
+          },
+          "before": null,
+          "index": 5
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+            },
+            "unit_id": "chapter-1-literature-review",
+            "unit_name": "第一章 文献综述"
+          },
+          "before": null,
+          "index": 6
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+            },
+            "unit_id": "main-body-chapter",
+            "unit_name": "第X章 正文章节 (材料与方法/结果与分析等)"
+          },
+          "before": null,
+          "index": 7
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+            },
+            "unit_id": "conclusion-and-outlook",
+            "unit_name": "第X章 结论与展望"
+          },
+          "before": null,
+          "index": 8
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+            },
+            "unit_id": "references",
+            "unit_name": "参考文献"
+          },
+          "before": null,
+          "index": 9
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+            },
+            "unit_id": "appendix",
+            "unit_name": "附录"
+          },
+          "before": null,
+          "index": 10
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+            },
+            "unit_id": "academic-achievements",
+            "unit_name": "相关的学术成果目录"
+          },
+          "before": null,
+          "index": 11
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+            },
+            "unit_id": "acknowledgements",
+            "unit_name": "致谢"
+          },
+          "before": null,
+          "index": 12
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+            },
+            "unit_id": "page-header-footer",
+            "unit_name": "页眉页脚 (学校页眉文字与页码)"
+          },
+          "before": null,
+          "index": 13
+        },
+        {
+          "after": {
+            "end_boundary": {
+              "edge": "end",
+              "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+            },
+            "start_boundary": {
+              "edge": "start",
+              "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+            },
+            "unit_id": "template-specification-text-box",
+            "unit_name": "本科生毕业论文（设计）规范化要求说明文本框"
+          },
+          "before": null,
+          "index": 14
+        }
+      ]
+    },
+    "historical_proposal_only": true,
+    "previous_response_sequence": null,
+    "request_sequence": 1,
+    "source_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+    "structured_output": {
+      "status": "complete",
+      "summary": "Revised unit boundaries anchoring each unit's end on the next unit's start entry. Cover end advanced to block 24 to absorb previously missing block 23. Spec-textbox end anchored on block 211 (final entry) so the closing shape/text-box stays inside the last unit and the partition covers blocks 1-211 end-to-end with no gaps and no overlaps.",
+      "units": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "unit_id": "cover-page",
+          "unit_name": "封面 (本科生毕业论文（设计）首页)"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          },
+          "unit_id": "originality-declaration",
+          "unit_name": "原创性声明"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-2f3ad824a185502178a0d33a"
+          },
+          "unit_id": "authorization-declaration",
+          "unit_name": "使用授权声明"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d61b576a99a97a931a97ccbb"
+          },
+          "unit_id": "table-of-contents",
+          "unit_name": "目录"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          },
+          "unit_id": "chinese-abstract",
+          "unit_name": "摘要 (中文摘要与关键词)"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9a17584bc062268316b8fb05"
+          },
+          "unit_id": "english-abstract",
+          "unit_name": "ABSTRACT (英文摘要与关键词)"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-b29f36b0b400e9175833a48d"
+          },
+          "unit_id": "chapter-1-literature-review",
+          "unit_name": "第一章 文献综述"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a7ee0fa29188ed4e6471c4f"
+          },
+          "unit_id": "main-body-chapter",
+          "unit_name": "第X章 正文章节 (材料与方法/结果与分析等)"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d0f3e033b5b55eb67a9224da"
+          },
+          "unit_id": "conclusion-and-outlook",
+          "unit_name": "第X章 结论与展望"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-1919c9230321596eadb114b3"
+          },
+          "unit_id": "references",
+          "unit_name": "参考文献"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-9d0033633d338f39b3eabb85"
+          },
+          "unit_id": "appendix",
+          "unit_name": "附录"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-cc8ddd81f1512b3aa5ed474a"
+          },
+          "unit_id": "academic-achievements",
+          "unit_name": "相关的学术成果目录"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "unit_id": "acknowledgements",
+          "unit_name": "致谢"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-3e4555c05a12774e5fdb7aca"
+          },
+          "unit_id": "page-header-footer",
+          "unit_name": "页眉页脚 (学校页眉文字与页码)"
+        },
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f"
+          },
+          "unit_id": "template-specification-text-box",
+          "unit_name": "本科生毕业论文（设计）规范化要求说明文本框"
+        }
+      ]
+    }
+  },
+  "event_digest": "7da864ce5903559addbd6d3498cd47d2c97f5684ee5611dc3c7c98e54e266166",
+  "kind": "response",
+  "previous_event_digest": "940f8a8f50ad3849badd9a5aca9e4c078abdde0e289eee0712d2d8bcf4b32f4f",
+  "run_id": "f88d204e6ac746e7a830e34d9d7cf14a",
+  "schema_version": "docfit-unit-boundary-revision/v1",
+  "sequence": 2
+}

@@ -1,0 +1,4 @@
+case=02-njau-undergraduate status=failed exit_code=2 ended_at=2026-08-16T10:33:05Z final_template_exists=no fill_contract_exists=no task=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed/02-njau-undergraduate/task
+case=01-hunau-undergraduate status=failed exit_code=2 ended_at=2026-08-16T10:34:03Z final_template_exists=no fill_contract_exists=no task=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed/01-hunau-undergraduate/task
+case=03-pku-graduate status=timeout exit_code=124 ended_at=2026-08-16T10:43:38Z final_template_exists=no fill_contract_exists=no task=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed/03-pku-graduate/task
+run_root=temp/e2e-template-extraction-20260816-180338-three-cases-timeboxed

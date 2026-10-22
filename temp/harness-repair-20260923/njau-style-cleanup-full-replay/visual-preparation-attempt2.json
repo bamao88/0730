@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "application",
+    "code": "final_visual_review_required",
+    "retryable": true,
+    "message": "Final-page images are ready. Review /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/njau-style-cleanup-full-replay/work/.docfit/final-visual-review/b32dc30b06bde83e6ebe911c7f4c561778390047bf45a390763cfa07dcee5064/request.json and save actual conclusions to /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/njau-style-cleanup-full-replay/work/.docfit/final-visual-review/b32dc30b06bde83e6ebe911c7f4c561778390047bf45a390763cfa07dcee5064/review.json.",
+    "suggested_actions": [
+      "Review the saved final-page evidence and record actual observations before resuming.",
+      "Do not change school semantic judgments to bypass the final visual review."
+    ]
+  }
+}

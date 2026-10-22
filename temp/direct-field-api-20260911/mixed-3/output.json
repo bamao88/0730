@@ -1,0 +1,162 @@
+{
+  "items": [
+    {
+      "n": 3,
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fixed_label"
+        },
+        {
+          "text": " ",
+          "role": "spacer"
+        },
+        {
+          "text": "（小二黑体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "semantic": "英文标题"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "学生姓名",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "style_only"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "semantic": "学生姓名"
+        },
+        {
+          "text": " ",
+          "role": "spacer"
+        },
+        {
+          "text": "（三号楷体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "学□□号",
+          "role": "fill_slot",
+          "semantic": "学号（格式如20××××××××××）"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "semantic": "学号（格式如20××××××××××）"
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "年级专业及班级",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "semantic": "年级、专业及班级，如20××级×××（×）班"
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "指导老师及职称",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××□教授",
+          "role": "fill_slot",
+          "semantic": "指导老师姓名及职称，如×××□教授"
+        }
+      ]
+    }
+  ]
+}

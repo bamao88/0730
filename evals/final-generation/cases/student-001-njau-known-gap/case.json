@@ -1,0 +1,25 @@
+{
+  "case_id": "student-001-njau-known-gap",
+  "default_checks": [
+    "input",
+    "style",
+    "generate"
+  ],
+  "description": "Student 001 content applied to the NJAU undergraduate template. The template package has no complete school style candidates and publishes explicit known school style gaps, so preset fallback can be tested with evidence.",
+  "expected": {
+    "candidate_sha256": "de8bf425f64490c48692edc389648e8a860e5a06b4cd7166083660654594b51c",
+    "current_generate_status": "PARTIAL",
+    "page_count": 35,
+    "partial_reasons": [
+      "template_fill_contract_not_human_accepted",
+      "required_slots_missing",
+      "body_style_roles_missing",
+      "generated_regions_not_materialized"
+    ],
+    "school_known_gap_count": 36,
+    "school_style_candidate_count": 0,
+    "selection_case": "no_school_candidate_with_explicit_known_gaps"
+  },
+  "input_package": "temp/final-generation-e2e-inputs-20260816/student-001-njau-known-gap",
+  "schema_version": "docfit-final-generation-eval-case/v1"
+}

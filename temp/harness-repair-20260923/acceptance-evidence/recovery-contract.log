@@ -1,0 +1,83 @@
+.....FF................................................................. [ 57%]
+.....................................................                    [100%]
+=================================== FAILURES ===================================
+_ test_revision_feedback_separates_error_locations_from_submission_scope[False] _
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-101/test_revision_feedback_separat0')
+scoped = False
+
+    @pytest.mark.parametrize("scoped", [False, True])
+    def test_revision_feedback_separates_error_locations_from_submission_scope(
+        tmp_path: Path, scoped: bool
+    ) -> None:
+        prepared = _prepared(tmp_path)
+        checkpoint = _unit_checkpoint(prepared)
+        state = _ensure_semantic_batch_state(
+            prepared, checkpoint,
+            _semantic_batch_inventory_with_count(prepared, checkpoint, count=3),
+        )
+        batch = state.manifest.batches[0]
+        affected = batch.source_entry_ids[1]
+        prompt = build_semantic_batch_prompt(
+            manifest=state.manifest,
+            batch=batch,
+            feedback={
+                "status": "needs_input",
+                "blockers": [{"code": "ordered_part_text_gap", "source_entry_id": affected}],
+            },
+            editable_source_entry_ids=(affected,) if scoped else None,
+        )
+        packet = json.loads(prompt.split("Harness candidate feedback:\n", 1)[1].splitlines()[0])
+        assert [row["source_entry_id"] for row in packet["affected"]] == [affected]
+        assert packet["submission_scope"] == {
+            "source_entry_ids": [affected] if scoped else list(batch.source_entry_ids),
+            "mode": "scoped_revision" if scoped else "full_batch",
+        }
+        if scoped:
+            assert "preserves judgments outside" in packet["next_step"]
+        else:
+>           assert "including entries without reported errors" in packet["next_step"]
+E           AssertionError: assert 'including entries without reported errors' in 'Stop this revision. Preserve the judgments while engineering repairs the problem.'
+
+tests/contract/test_prepare_template_runtime.py:533: AssertionError
+_ test_revision_feedback_separates_error_locations_from_submission_scope[True] _
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-101/test_revision_feedback_separat1')
+scoped = True
+
+    @pytest.mark.parametrize("scoped", [False, True])
+    def test_revision_feedback_separates_error_locations_from_submission_scope(
+        tmp_path: Path, scoped: bool
+    ) -> None:
+        prepared = _prepared(tmp_path)
+        checkpoint = _unit_checkpoint(prepared)
+        state = _ensure_semantic_batch_state(
+            prepared, checkpoint,
+            _semantic_batch_inventory_with_count(prepared, checkpoint, count=3),
+        )
+        batch = state.manifest.batches[0]
+        affected = batch.source_entry_ids[1]
+        prompt = build_semantic_batch_prompt(
+            manifest=state.manifest,
+            batch=batch,
+            feedback={
+                "status": "needs_input",
+                "blockers": [{"code": "ordered_part_text_gap", "source_entry_id": affected}],
+            },
+            editable_source_entry_ids=(affected,) if scoped else None,
+        )
+        packet = json.loads(prompt.split("Harness candidate feedback:\n", 1)[1].splitlines()[0])
+        assert [row["source_entry_id"] for row in packet["affected"]] == [affected]
+        assert packet["submission_scope"] == {
+            "source_entry_ids": [affected] if scoped else list(batch.source_entry_ids),
+            "mode": "scoped_revision" if scoped else "full_batch",
+        }
+        if scoped:
+>           assert "preserves judgments outside" in packet["next_step"]
+E           AssertionError: assert 'preserves judgments outside' in 'Stop this revision. Preserve the judgments while engineering repairs the problem.'
+
+tests/contract/test_prepare_template_runtime.py:531: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_prepare_template_runtime.py::test_revision_feedback_separates_error_locations_from_submission_scope[False]
+FAILED tests/contract/test_prepare_template_runtime.py::test_revision_feedback_separates_error_locations_from_submission_scope[True]
+2 failed, 123 passed in 19.80s

@@ -1,0 +1,2480 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.c769de55e3279c09
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: f571451876b6b324b1406dbf94b4e60ecb952d65df62c156a026014f2615f3b9
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.31e971f603c38fe20d1edc85
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.9a46c20c499f7cfc0d654dc7
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+  field_id: body.heading.outline1
+  style_role_id: style.slot.6fb618d5346798e76cb6a709
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.5825c18f63e7c45f6aeb3ce5
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.7a63d339ea8e118a7bb8b735
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.2283601f0e5cd1c5470c9a37
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.d0c38ad853a18d7a52b6a704
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.a4821c48d2ede8f7e2166cba
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.0c700193f6dd28b9ba66b25f
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.fda3597160ea3c376f44842f
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+- slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.867b087af6a980534c1d7232
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+  span_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: body.heading.outline1
+  content_type: text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.6fb618d5346798e76cb6a709
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 章标题
+  provenance:
+    field_id: body.heading.outline1
+    span_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+    source_entry_id: source-entry-389c01a68f3c7901a015e324
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: 参考文献
+    word_fragments: &id001
+    - fingerprint: 6aedc1db9b9cde44a7c93e4b9009b18fa705670155ba5b10eacda2743517563a
+      locator: /body/p[1]/r[1]
+      object_id: obj-72563ee9665bda9899b1e2f7
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 6aedc1db9b9cde44a7c93e4b9009b18fa705670155ba5b10eacda2743517563a
+        object_id: obj-72563ee9665bda9899b1e2f7
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 4
+      source_text_start: 0
+      text: 参考文献
+    accepted_span: &id012
+      covered_object_ids:
+      - obj-72563ee9665bda9899b1e2f7
+      expected_source_content: 参考文献
+      extent:
+        end: 4
+        kind: text
+        start: 0
+      field_id: body.heading.outline1
+      judgment_index: 0
+      part_index: 0
+      role: body_structure
+      scope:
+        source_entry_id: source-entry-389c01a68f3c7901a015e324
+      slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+      source_entry_id: source-entry-389c01a68f3c7901a015e324
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: 参考文献
+      text_end: 4
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id013
+      source_judgment_ref: semantic_judgments[0]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id014
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: e7c0ce2597d79a2485d0a272963959694cfbe457247d2df0239b972c3030a000
+      mutation_receipt_sha256: ad7e59884ba32470a5342527a82ea04b2684fa19333da12cbf956fa31c6fa06c
+  style_contract_ref:
+    style_contract_id: style.slot.6fb618d5346798e76cb6a709
+    contract_digest: 92f851f454303e6671accf4f9566e28241df44990ae0be0fb9025cccaa62ef04
+- slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.31e971f603c38fe20d1edc85
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-076432871330104e56f69261
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+    word_fragments: &id002
+    - fingerprint: 03e32fa2669c5f8dbaa1f540a98ffa1f3f0085346833912761ee252634a81eef
+      locator: /body/p[7]/r[1]
+      object_id: obj-f5946e7f4726854e8fab30c5
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 03e32fa2669c5f8dbaa1f540a98ffa1f3f0085346833912761ee252634a81eef
+        object_id: obj-f5946e7f4726854e8fab30c5
+      object_text_end: 52
+      object_text_start: 0
+      source_text_end: 52
+      source_text_start: 0
+      text: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+    accepted_span: &id015
+      covered_object_ids:
+      - obj-f5946e7f4726854e8fab30c5
+      expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      extent:
+        end: 52
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 6
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-076432871330104e56f69261
+      slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-076432871330104e56f69261
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      text_end: 52
+      text_start: 0
+      word_fragments: *id002
+    accepted_result: &id016
+      source_judgment_ref: semantic_judgments[6]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id017
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 2f5b3e4eadd2c4a32b8078963d47be2026be18a5c352e890a5cf04ba82a4d553
+      mutation_receipt_sha256: 4bcb2502af9e1434ed29d4ed5db1430a9cd29949ba98b49f5c9d009164072f9b
+  style_contract_ref:
+    style_contract_id: style.slot.31e971f603c38fe20d1edc85
+    contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+- slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.9a46c20c499f7cfc0d654dc7
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-0ae0e1a017f9ac6e6d634030
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.'
+    word_fragments: &id003
+    - fingerprint: d81064ee7e9d75b0dfec8b9f823c48c9e03509330b4a21033587d35a2fce1499
+      locator: /body/p[8]/r[1]
+      object_id: obj-2b718c66d83d274afd8ecc0c
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: d81064ee7e9d75b0dfec8b9f823c48c9e03509330b4a21033587d35a2fce1499
+        object_id: obj-2b718c66d83d274afd8ecc0c
+      object_text_end: 119
+      object_text_start: 0
+      source_text_end: 119
+      source_text_start: 0
+      text: '[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.'
+    accepted_span: &id018
+      covered_object_ids:
+      - obj-2b718c66d83d274afd8ecc0c
+      expected_source_content: '[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.'
+      extent:
+        end: 119
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 7
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-0ae0e1a017f9ac6e6d634030
+      slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-0ae0e1a017f9ac6e6d634030
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.'
+      text_end: 119
+      text_start: 0
+      word_fragments: *id003
+    accepted_result: &id019
+      source_judgment_ref: semantic_judgments[7]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id020
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: a256e6711c983513cb5e1f35dca6a4e9083d6082ebf034c4664df274116ec54c
+      mutation_receipt_sha256: 27836a844cd497fbd94b895ea16883408178d86bda561f8a1a21f14e4d790af6
+  style_contract_ref:
+    style_contract_id: style.slot.9a46c20c499f7cfc0d654dc7
+    contract_digest: a2a1010495f0c374c7933ecd7aae32837bff5b4a9d5c5840619d95754b4e1b65
+- slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.867b087af6a980534c1d7232
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-d956ed835b52ffc9dc4019b9
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.'
+    word_fragments: &id004
+    - fingerprint: 293b832757a86ffee1519065e0b8883474abc44116624d5dd275af7cb2f5ccb0
+      locator: /body/p[10]/r[1]
+      object_id: obj-9a1e65405a5f9955d524817e
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 293b832757a86ffee1519065e0b8883474abc44116624d5dd275af7cb2f5ccb0
+        object_id: obj-9a1e65405a5f9955d524817e
+      object_text_end: 51
+      object_text_start: 0
+      source_text_end: 51
+      source_text_start: 0
+      text: '[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.'
+    accepted_span: &id021
+      covered_object_ids:
+      - obj-9a1e65405a5f9955d524817e
+      expected_source_content: '[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.'
+      extent:
+        end: 51
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 9
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-d956ed835b52ffc9dc4019b9
+      slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-d956ed835b52ffc9dc4019b9
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.'
+      text_end: 51
+      text_start: 0
+      word_fragments: *id004
+    accepted_result: &id022
+      source_judgment_ref: semantic_judgments[9]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id023
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 9391467f1155bf5cb4ba2bdb1a5028f5e45a0670375003b3d1abee408cd6cffc
+      mutation_receipt_sha256: 202fb164b6abca7344da5f09dc3a55e2951c61ced16543ae5af86ab31ec7ef12
+  style_contract_ref:
+    style_contract_id: style.slot.867b087af6a980534c1d7232
+    contract_digest: 82d0ff4955f64d31bec7dd6398b3dd6d2153dc28d206ba101b5d476da707fdc0
+- slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.2283601f0e5cd1c5470c9a37
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-7d11c976ad7a02c854ff7239
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.'
+    word_fragments: &id005
+    - fingerprint: 33df1ebbc9f8dc9e155956306956ed3eab11f1374036f62bc88e904ffbe65a14
+      locator: /body/p[11]/r[1]
+      object_id: obj-ea9b92e802c7fa258b9beba3
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 33df1ebbc9f8dc9e155956306956ed3eab11f1374036f62bc88e904ffbe65a14
+        object_id: obj-ea9b92e802c7fa258b9beba3
+      object_text_end: 164
+      object_text_start: 0
+      source_text_end: 164
+      source_text_start: 0
+      text: '[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.'
+    accepted_span: &id024
+      covered_object_ids:
+      - obj-ea9b92e802c7fa258b9beba3
+      expected_source_content: '[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.'
+      extent:
+        end: 164
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 10
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-7d11c976ad7a02c854ff7239
+      slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-7d11c976ad7a02c854ff7239
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.'
+      text_end: 164
+      text_start: 0
+      word_fragments: *id005
+    accepted_result: &id025
+      source_judgment_ref: semantic_judgments[10]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id026
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: a84851cf3126a3e6c4cb9880704b0ca3e79e43fd6909685d9ebc4072839a3b40
+      mutation_receipt_sha256: 6ad48a272474471f0a8ad92999c23628782ee9bca2d0d5876f7be1149e221946
+  style_contract_ref:
+    style_contract_id: style.slot.2283601f0e5cd1c5470c9a37
+    contract_digest: c403fb1cc5b8eb6826fcaa607b92c5fd800dd1f20573a89f875cf095cf51eedc
+- slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.fda3597160ea3c376f44842f
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-cbfd29f5db1d9115a1c729d9
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.'
+    word_fragments: &id006
+    - fingerprint: 4968c4273116900f33e93ed13d3192679484a14239697d4c1490b00ca517339a
+      locator: /body/p[13]/r[1]
+      object_id: obj-903f260b73638e91f88d523f
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 4968c4273116900f33e93ed13d3192679484a14239697d4c1490b00ca517339a
+        object_id: obj-903f260b73638e91f88d523f
+      object_text_end: 52
+      object_text_start: 0
+      source_text_end: 52
+      source_text_start: 0
+      text: '[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.'
+    accepted_span: &id027
+      covered_object_ids:
+      - obj-903f260b73638e91f88d523f
+      expected_source_content: '[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.'
+      extent:
+        end: 52
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 12
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-cbfd29f5db1d9115a1c729d9
+      slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-cbfd29f5db1d9115a1c729d9
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.'
+      text_end: 52
+      text_start: 0
+      word_fragments: *id006
+    accepted_result: &id028
+      source_judgment_ref: semantic_judgments[12]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id029
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: b3565facdcd70007e6fd5119460cbf78b3971c91f39b6268891a71e2a1b45d7b
+      mutation_receipt_sha256: ece5a22ba7bafe45f2abb88168e61410f1f705e67507ec012a5d290e0faed1e7
+  style_contract_ref:
+    style_contract_id: style.slot.fda3597160ea3c376f44842f
+    contract_digest: 970047138ddeceb6604ab0de14828a7df99e4e6c22b27a4526003f7a54f5843b
+- slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.7a63d339ea8e118a7bb8b735
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-4e484a2617374f68ee9b099b
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.'
+    word_fragments: &id007
+    - fingerprint: 21b23cd3f70ff74398e0ba43aeb58faf7c8caa124f30b840515561eba1337aae
+      locator: /body/p[14]/r[1]
+      object_id: obj-0f0481d384c7dbace674ae85
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 21b23cd3f70ff74398e0ba43aeb58faf7c8caa124f30b840515561eba1337aae
+        object_id: obj-0f0481d384c7dbace674ae85
+      object_text_end: 153
+      object_text_start: 0
+      source_text_end: 153
+      source_text_start: 0
+      text: '[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.'
+    accepted_span: &id030
+      covered_object_ids:
+      - obj-0f0481d384c7dbace674ae85
+      expected_source_content: '[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.'
+      extent:
+        end: 153
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 13
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-4e484a2617374f68ee9b099b
+      slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-4e484a2617374f68ee9b099b
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.'
+      text_end: 153
+      text_start: 0
+      word_fragments: *id007
+    accepted_result: &id031
+      source_judgment_ref: semantic_judgments[13]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id032
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 5cc43fdb53ec750d66c80feb50f246a047a6ca4ebf2e7099377978b02ad878b1
+      mutation_receipt_sha256: e383250136b05b9adcdf6b5c2907d45485f50aec3a577f2a8adce2dca8405649
+  style_contract_ref:
+    style_contract_id: style.slot.7a63d339ea8e118a7bb8b735
+    contract_digest: 3f7b409a361098244a57763e6e5a32605bf5e1100bc9ff483eefbba9682d522e
+- slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.5825c18f63e7c45f6aeb3ce5
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-4b9c98fcb87318ed20328e60
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997.'
+    word_fragments: &id008
+    - fingerprint: 7b9941902081d1c617a4d8971e9f9c88c3e9943f373b209a811bfdc7b8dfe60c
+      locator: /body/p[16]/r[1]
+      object_id: obj-2a4c1009fe17a1148b7b087f
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 7b9941902081d1c617a4d8971e9f9c88c3e9943f373b209a811bfdc7b8dfe60c
+        object_id: obj-2a4c1009fe17a1148b7b087f
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 3
+      source_text_start: 0
+      text: '[1]'
+    - fingerprint: 434c079c3e6404aaa8c27c6a777c25cf08e378b32aeb78f2629fa7464e715243
+      locator: /body/p[16]/r[2]
+      object_id: obj-8593ee9d2c324234a39e611d
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 434c079c3e6404aaa8c27c6a777c25cf08e378b32aeb78f2629fa7464e715243
+        object_id: obj-8593ee9d2c324234a39e611d
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 6
+      source_text_start: 3
+      text: 冯西桥
+    - fingerprint: dae2b644f700b91f202ee545c525dfa192182f945b49367c5852ef01e00188e6
+      locator: /body/p[16]/r[3]
+      object_id: obj-4ac37641328ff4574a2ccf69
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: dae2b644f700b91f202ee545c525dfa192182f945b49367c5852ef01e00188e6
+        object_id: obj-4ac37641328ff4574a2ccf69
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 6
+      text: .
+    - fingerprint: 646a1825dec10c48e69285dd3fb6c3a0395eee449ec6f0fb850a2de2c0348dea
+      locator: /body/p[16]/r[4]
+      object_id: obj-ff81a244eab5a06f617accdc
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 646a1825dec10c48e69285dd3fb6c3a0395eee449ec6f0fb850a2de2c0348dea
+        object_id: obj-ff81a244eab5a06f617accdc
+      object_text_end: 14
+      object_text_start: 0
+      source_text_end: 21
+      source_text_start: 7
+      text: 核反应堆压力管道与压力容器的
+    - fingerprint: 7d7fa6242bc94bbb1be30e5b769b586ecea1e54d4684de1fb8016e24bbf5c3e6
+      locator: /body/p[16]/r[5]
+      object_id: obj-80bed8361928f7e184ef9dee
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 7d7fa6242bc94bbb1be30e5b769b586ecea1e54d4684de1fb8016e24bbf5c3e6
+        object_id: obj-80bed8361928f7e184ef9dee
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 24
+      source_text_start: 21
+      text: LBB
+    - fingerprint: 1f30ad114c0e1427fa1793ec75bed6f2b4de2fcee721eb74480cad573579cd01
+      locator: /body/p[16]/r[6]
+      object_id: obj-efe1457e656b35a074fe93ce
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 1f30ad114c0e1427fa1793ec75bed6f2b4de2fcee721eb74480cad573579cd01
+        object_id: obj-efe1457e656b35a074fe93ce
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 27
+      source_text_start: 24
+      text: 分析［
+    - fingerprint: 66b7b8343c363ad0597e231d7d16d822e4fc63d4f3b59b6171454add23b5317f
+      locator: /body/p[16]/r[7]
+      object_id: obj-51995c739ab4360aa824757b
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 66b7b8343c363ad0597e231d7d16d822e4fc63d4f3b59b6171454add23b5317f
+        object_id: obj-51995c739ab4360aa824757b
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 28
+      source_text_start: 27
+      text: R
+    - fingerprint: a3e41f1590e39429e0dfd653b27e2cbd6a4c3f2935fb0814eb1c0518a4f4534c
+      locator: /body/p[16]/r[8]
+      object_id: obj-b112cf933dd7a3235f502020
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: a3e41f1590e39429e0dfd653b27e2cbd6a4c3f2935fb0814eb1c0518a4f4534c
+        object_id: obj-b112cf933dd7a3235f502020
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 29
+      source_text_start: 28
+      text: ］
+    - fingerprint: 1bea4dfa7bc7f10c462eed85623a3ccd9198f8ff2374bc703b758217048eaf3b
+      locator: /body/p[16]/r[9]
+      object_id: obj-07e569060fdbf7b0987451ab
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 1bea4dfa7bc7f10c462eed85623a3ccd9198f8ff2374bc703b758217048eaf3b
+        object_id: obj-07e569060fdbf7b0987451ab
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 30
+      source_text_start: 29
+      text: .
+    - fingerprint: cee794c0cbb5c4526e91e8c326bb23f5fd991eef5de0ce5445989fbb7fd27113
+      locator: /body/p[16]/r[10]
+      object_id: obj-8ca194ec3c68d0b8a8f5b283
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: cee794c0cbb5c4526e91e8c326bb23f5fd991eef5de0ce5445989fbb7fd27113
+        object_id: obj-8ca194ec3c68d0b8a8f5b283
+      object_text_end: 17
+      object_text_start: 0
+      source_text_end: 47
+      source_text_start: 30
+      text: 北京：清华大学核能技术设计研究院，
+    - fingerprint: 7637faaecd13d3866d29a619dc9e2222f14a8344c45d1b6d9f568cfa6cc1f0c9
+      locator: /body/p[16]/r[11]
+      object_id: obj-c22edf89f1dc446b0b3e8a46
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 7637faaecd13d3866d29a619dc9e2222f14a8344c45d1b6d9f568cfa6cc1f0c9
+        object_id: obj-c22edf89f1dc446b0b3e8a46
+      object_text_end: 5
+      object_text_start: 0
+      source_text_end: 52
+      source_text_start: 47
+      text: '1997.'
+    accepted_span: &id033
+      covered_object_ids:
+      - obj-2a4c1009fe17a1148b7b087f
+      - obj-8593ee9d2c324234a39e611d
+      - obj-4ac37641328ff4574a2ccf69
+      - obj-ff81a244eab5a06f617accdc
+      - obj-80bed8361928f7e184ef9dee
+      - obj-efe1457e656b35a074fe93ce
+      - obj-51995c739ab4360aa824757b
+      - obj-b112cf933dd7a3235f502020
+      - obj-07e569060fdbf7b0987451ab
+      - obj-8ca194ec3c68d0b8a8f5b283
+      - obj-c22edf89f1dc446b0b3e8a46
+      expected_source_content: '[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997.'
+      extent:
+        end: 52
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 15
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-4b9c98fcb87318ed20328e60
+      slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-4b9c98fcb87318ed20328e60
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997.'
+      text_end: 52
+      text_start: 0
+      word_fragments: *id008
+    accepted_result: &id034
+      source_judgment_ref: semantic_judgments[15]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id035
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 87f093b370404e3952d0af348d9b2b1b8a2476135400a45700e08405963b987c
+      mutation_receipt_sha256: 588fbff63ca9262f5bb9b43558634173c72c82b132f88b2a7e53ff35eb9a4922
+  style_contract_ref:
+    style_contract_id: style.slot.5825c18f63e7c45f6aeb3ce5
+    contract_digest: 81731366591f629af2202d1d1fbc73e6794eeb03baf71991cdcd2d563d2c7391
+- slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.d0c38ad853a18d7a52b6a704
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-a85ccaf92ba2f718c06d3766
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.'
+    word_fragments: &id009
+    - fingerprint: e5c497244cc17e87f1e478e161688a5d61e6426b889c199f1cc19748284b18ea
+      locator: /body/p[17]/r[1]
+      object_id: obj-5482e1cc7343ca7771dba89b
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: e5c497244cc17e87f1e478e161688a5d61e6426b889c199f1cc19748284b18ea
+        object_id: obj-5482e1cc7343ca7771dba89b
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 1
+      source_text_start: 0
+      text: '['
+    - fingerprint: 4c22adaa3fa7a265a3425bf8924306ef1233773e604da613e65f07f56a7115d8
+      locator: /body/p[17]/r[2]
+      object_id: obj-6b4172e77d24575f4f1636ac
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 4c22adaa3fa7a265a3425bf8924306ef1233773e604da613e65f07f56a7115d8
+        object_id: obj-6b4172e77d24575f4f1636ac
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 2
+      source_text_start: 1
+      text: '2'
+    - fingerprint: 55f88c82db5b4954b6ae7a0549ea8c725423af1d1e3452f3aff46ff4082c0d6b
+      locator: /body/p[17]/r[3]
+      object_id: obj-c543a5053db3b14cd807346b
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 55f88c82db5b4954b6ae7a0549ea8c725423af1d1e3452f3aff46ff4082c0d6b
+        object_id: obj-c543a5053db3b14cd807346b
+      object_text_end: 122
+      object_text_start: 0
+      source_text_end: 124
+      source_text_start: 2
+      text: '] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.'
+    accepted_span: &id036
+      covered_object_ids:
+      - obj-5482e1cc7343ca7771dba89b
+      - obj-6b4172e77d24575f4f1636ac
+      - obj-c543a5053db3b14cd807346b
+      expected_source_content: '[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.'
+      extent:
+        end: 124
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 16
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-a85ccaf92ba2f718c06d3766
+      slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-a85ccaf92ba2f718c06d3766
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.'
+      text_end: 124
+      text_start: 0
+      word_fragments: *id009
+    accepted_result: &id037
+      source_judgment_ref: semantic_judgments[16]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id038
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 62baafaacd51f5e960871e1ef2a38ecabbc0887f8eb071864d43108f25defb17
+      mutation_receipt_sha256: b80b81a18792d7f0106af5ba33d57d09b3cb0dd526f216391bff4c76e55b5dcb
+  style_contract_ref:
+    style_contract_id: style.slot.d0c38ad853a18d7a52b6a704
+    contract_digest: cebd6b7ef1271d4ae3f4268de6acc8a3ed2ba38d9d0c02e47f765e94f034f390
+- slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.a4821c48d2ede8f7e2166cba
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-bd256c4ca3c9cc8040282a0f
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.'
+    word_fragments: &id010
+    - fingerprint: 358c4ed9de7fdb7adf69b0da31118a2ff47f8cf65294ec20763e69d8db94e334
+      locator: /body/p[19]/r[1]
+      object_id: obj-8ea374fee7dc2e9e8a72c550
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 358c4ed9de7fdb7adf69b0da31118a2ff47f8cf65294ec20763e69d8db94e334
+        object_id: obj-8ea374fee7dc2e9e8a72c550
+      object_text_end: 55
+      object_text_start: 0
+      source_text_end: 55
+      source_text_start: 0
+      text: '[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.'
+    accepted_span: &id039
+      covered_object_ids:
+      - obj-8ea374fee7dc2e9e8a72c550
+      expected_source_content: '[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.'
+      extent:
+        end: 55
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 18
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-bd256c4ca3c9cc8040282a0f
+      slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-bd256c4ca3c9cc8040282a0f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.'
+      text_end: 55
+      text_start: 0
+      word_fragments: *id010
+    accepted_result: &id040
+      source_judgment_ref: semantic_judgments[18]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id041
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 9de4052434518b66985df890a8626d65aa2ca6652a02b92ab3dc4c89170e2259
+      mutation_receipt_sha256: 6ead792c54ca4b2041f743c2748c8fa2faff8f87b38e1553945b39da4079f48b
+  style_contract_ref:
+    style_contract_id: style.slot.a4821c48d2ede8f7e2166cba
+    contract_digest: 1931db1b79f688ff848d14f3948d783a38f173ca0cb5b9dea87ea5fd4572b9a3
+- slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.0c700193f6dd28b9ba66b25f
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-bd746d48092e5c2e564323e5
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.'
+    word_fragments: &id011
+    - fingerprint: c1e6894313701da2d3b05e0908f3cc9bb2a2dbc241b5f41c27025d3c449fee9a
+      locator: /body/p[20]/r[1]
+      object_id: obj-d35c5a77e36eda93533c1108
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: c1e6894313701da2d3b05e0908f3cc9bb2a2dbc241b5f41c27025d3c449fee9a
+        object_id: obj-d35c5a77e36eda93533c1108
+      object_text_end: 101
+      object_text_start: 0
+      source_text_end: 101
+      source_text_start: 0
+      text: '[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.'
+    accepted_span: &id042
+      covered_object_ids:
+      - obj-d35c5a77e36eda93533c1108
+      expected_source_content: '[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.'
+      extent:
+        end: 101
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 19
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-bd746d48092e5c2e564323e5
+      slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-bd746d48092e5c2e564323e5
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.'
+      text_end: 101
+      text_start: 0
+      word_fragments: *id011
+    accepted_result: &id043
+      source_judgment_ref: semantic_judgments[19]
+      part_index: 0
+      semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id044
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+      operation_sha256: 110b41ab8c9424b3b9eb241f78febfb60557f241ff09eaceadc7063fa8eff44f
+      mutation_receipt_sha256: 41cb9716efac5a7792fa83a210965993911f2912af5ac7fa12f6b346f7abefc0
+  style_contract_ref:
+    style_contract_id: style.slot.0c700193f6dd28b9ba66b25f
+    contract_digest: c2abff2d98c4e03ab0ae8f0e36935e05fc7d021f1392674bcf2b8fe130c555e2
+styles:
+- style_contract_id: style.slot.0c700193f6dd28b9ba66b25f
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: c2abff2d98c4e03ab0ae8f0e36935e05fc7d021f1392674bcf2b8fe130c555e2
+  label: references.entries @ source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.2283601f0e5cd1c5470c9a37
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: c403fb1cc5b8eb6826fcaa607b92c5fd800dd1f20573a89f875cf095cf51eedc
+  label: references.entries @ source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.31e971f603c38fe20d1edc85
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+  label: references.entries @ source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.5825c18f63e7c45f6aeb3ce5
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 81731366591f629af2202d1d1fbc73e6794eeb03baf71991cdcd2d563d2c7391
+  label: references.entries @ source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.6fb618d5346798e76cb6a709
+  application_scope: text
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.keep_together
+  - paragraph.keep_with_next
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.outline_level
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: center
+    paragraph.keep_together: true
+    paragraph.keep_with_next: true
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.line_value: 1.5
+    paragraph.outline_level: 0
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 18.0
+    paragraph.space_before_pt: 24.0
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: 黑体
+    run.font_complex_script: Times New Roman
+    run.font_east_asia: 黑体
+    run.font_hansi: 黑体
+    run.font_size_pt: 16.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 92f851f454303e6671accf4f9566e28241df44990ae0be0fb9025cccaa62ef04
+  label: body.heading.outline1 @ source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+    field_id: body.heading.outline1
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.7a63d339ea8e118a7bb8b735
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 3f7b409a361098244a57763e6e5a32605bf5e1100bc9ff483eefbba9682d522e
+  label: references.entries @ source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.867b087af6a980534c1d7232
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 82d0ff4955f64d31bec7dd6398b3dd6d2153dc28d206ba101b5d476da707fdc0
+  label: references.entries @ source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.9a46c20c499f7cfc0d654dc7
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: a2a1010495f0c374c7933ecd7aae32837bff5b4a9d5c5840619d95754b4e1b65
+  label: references.entries @ source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.a4821c48d2ede8f7e2166cba
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 1931db1b79f688ff848d14f3948d783a38f173ca0cb5b9dea87ea5fd4572b9a3
+  label: references.entries @ source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.d0c38ad853a18d7a52b6a704
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: cebd6b7ef1271d4ae3f4268de6acc8a3ed2ba38d9d0c02e47f765e94f034f390
+  label: references.entries @ source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+- style_contract_id: style.slot.fda3597160ea3c376f44842f
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 970047138ddeceb6604ab0de14828a7df99e4e6c22b27a4526003f7a54f5843b
+  label: references.entries @ source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 5f75affd516d851ade905258cd4a8b0a0dca7d11550f6ae27535df32f501807a
+provenance:
+  source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    template_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    semantic_judgments_sha256: f930f54670bd9b31eb8f7f9ea2ed14cb0e9dbf965b827b0f957460f0c5a14ee4
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 586d81e7a8c57596632ed7114d807acdcd0fe2d07dff2fa15e6085b3f3fa9911
+    slots:
+    - field_id: body.heading.outline1
+      span_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+      source_entry_id: source-entry-389c01a68f3c7901a015e324
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: 参考文献
+      word_fragments: *id001
+      accepted_span: *id012
+      accepted_result: *id013
+      actual_result: *id014
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-076432871330104e56f69261
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      word_fragments: *id002
+      accepted_span: *id015
+      accepted_result: *id016
+      actual_result: *id017
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-0ae0e1a017f9ac6e6d634030
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[2] CRAWFPRD W, GORMAN M. Future libraries: dreams, madness, & reality[M]. Chicago: American Library Association, 1995.'
+      word_fragments: *id003
+      accepted_span: *id018
+      accepted_result: *id019
+      actual_result: *id020
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-d956ed835b52ffc9dc4019b9
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1] 李炳穆. 理想的图书馆员和信息专家的素质与形象[J]. 图书情报工作，2000(2):5-8.'
+      word_fragments: *id004
+      accepted_span: *id021
+      accepted_result: *id022
+      actual_result: *id023
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-7d11c976ad7a02c854ff7239
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[2] DES MARAIS D J, STRAUSS H, SUMMONS R E, et al. Carbon isotope evidence for the stepwise oxidation of the Proterozoic environment [J]. Nature, 1992, 359:605-609.'
+      word_fragments: *id005
+      accepted_span: *id024
+      accepted_result: *id025
+      actual_result: *id026
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-cbfd29f5db1d9115a1c729d9
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1] 中国力学学会. 第3届全国实验流体力学学术会议论文集[C]. 天津: [出版者不详],1990.'
+      word_fragments: *id006
+      accepted_span: *id027
+      accepted_result: *id028
+      actual_result: *id029
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-4e484a2617374f68ee9b099b
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[2] ROSENTHALL E M. Proceedings of the Fifth Canadian Mathematical Congress, University of Montreal, 1961[C]. Toronto: University of Toronto Press, 1963.'
+      word_fragments: *id007
+      accepted_span: *id030
+      accepted_result: *id031
+      actual_result: *id032
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-4b9c98fcb87318ed20328e60
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1]冯西桥.核反应堆压力管道与压力容器的LBB分析［R］.北京：清华大学核能技术设计研究院，1997.'
+      word_fragments: *id008
+      accepted_span: *id033
+      accepted_result: *id034
+      actual_result: *id035
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-a85ccaf92ba2f718c06d3766
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[2] World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.'
+      word_fragments: *id009
+      accepted_span: *id036
+      accepted_result: *id037
+      actual_result: *id038
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-bd256c4ca3c9cc8040282a0f
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1] 张志祥. 间断动力系统的随机扰动及其在守恒律方程中的应用[D]. 北京: 北京大学数学学院，1998.'
+      word_fragments: *id010
+      accepted_span: *id039
+      accepted_result: *id040
+      actual_result: *id041
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-bd746d48092e5c2e564323e5
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[2] CALMS R B. Infrared spectroscopic studies on solid oxygen[D]. Berkeley:Univ. of California. 1965.'
+      word_fragments: *id011
+      accepted_span: *id042
+      accepted_result: *id043
+      actual_result: *id044
+  materialization_digest: 5beddce5667a1999af94d80bdefa0e307a3ae14e17ad4e722e4e1078d3c66163
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 11
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    final_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: c769de55e3279c09bcd9279b62bd595f8534e13000ac5cea5f7db7fda3840d78
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 5f75affd516d851ade905258cd4a8b0a0dca7d11550f6ae27535df32f501807a
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 5f75affd516d851ade905258cd4a8b0a0dca7d11550f6ae27535df32f501807a
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.6fb618d5346798e76cb6a709
+          contract_digest: 92f851f454303e6671accf4f9566e28241df44990ae0be0fb9025cccaa62ef04
+      - occurrence_id: template-slot:source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.31e971f603c38fe20d1edc85
+          contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+      - occurrence_id: template-slot:source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.9a46c20c499f7cfc0d654dc7
+          contract_digest: a2a1010495f0c374c7933ecd7aae32837bff5b4a9d5c5840619d95754b4e1b65
+      - occurrence_id: template-slot:source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.867b087af6a980534c1d7232
+          contract_digest: 82d0ff4955f64d31bec7dd6398b3dd6d2153dc28d206ba101b5d476da707fdc0
+      - occurrence_id: template-slot:source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.2283601f0e5cd1c5470c9a37
+          contract_digest: c403fb1cc5b8eb6826fcaa607b92c5fd800dd1f20573a89f875cf095cf51eedc
+      - occurrence_id: template-slot:source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.fda3597160ea3c376f44842f
+          contract_digest: 970047138ddeceb6604ab0de14828a7df99e4e6c22b27a4526003f7a54f5843b
+      - occurrence_id: template-slot:source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.7a63d339ea8e118a7bb8b735
+          contract_digest: 3f7b409a361098244a57763e6e5a32605bf5e1100bc9ff483eefbba9682d522e
+      - occurrence_id: template-slot:source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.5825c18f63e7c45f6aeb3ce5
+          contract_digest: 81731366591f629af2202d1d1fbc73e6794eeb03baf71991cdcd2d563d2c7391
+      - occurrence_id: template-slot:source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.d0c38ad853a18d7a52b6a704
+          contract_digest: cebd6b7ef1271d4ae3f4268de6acc8a3ed2ba38d9d0c02e47f765e94f034f390
+      - occurrence_id: template-slot:source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.a4821c48d2ede8f7e2166cba
+          contract_digest: 1931db1b79f688ff848d14f3948d783a38f173ca0cb5b9dea87ea5fd4572b9a3
+      - occurrence_id: template-slot:source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.0c700193f6dd28b9ba66b25f
+          contract_digest: c2abff2d98c4e03ab0ae8f0e36935e05fc7d021f1392674bcf2b8fe130c555e2
+    validation:
+      status: passed
+      counts:
+        passed: 11
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+        style_contract_id: style.slot.6fb618d5346798e76cb6a709
+        contract_digest: 92f851f454303e6671accf4f9566e28241df44990ae0be0fb9025cccaa62ef04
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-389c01a68f3c7901a015e324;extent=text[0:4];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=body.heading.outline1
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.31e971f603c38fe20d1edc85
+        contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.9a46c20c499f7cfc0d654dc7
+        contract_digest: a2a1010495f0c374c7933ecd7aae32837bff5b4a9d5c5840619d95754b4e1b65
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-0ae0e1a017f9ac6e6d634030;extent=text[0:119];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.867b087af6a980534c1d7232
+        contract_digest: 82d0ff4955f64d31bec7dd6398b3dd6d2153dc28d206ba101b5d476da707fdc0
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-d956ed835b52ffc9dc4019b9;extent=text[0:51];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.2283601f0e5cd1c5470c9a37
+        contract_digest: c403fb1cc5b8eb6826fcaa607b92c5fd800dd1f20573a89f875cf095cf51eedc
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7d11c976ad7a02c854ff7239;extent=text[0:164];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.fda3597160ea3c376f44842f
+        contract_digest: 970047138ddeceb6604ab0de14828a7df99e4e6c22b27a4526003f7a54f5843b
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-cbfd29f5db1d9115a1c729d9;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.7a63d339ea8e118a7bb8b735
+        contract_digest: 3f7b409a361098244a57763e6e5a32605bf5e1100bc9ff483eefbba9682d522e
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-4e484a2617374f68ee9b099b;extent=text[0:153];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.5825c18f63e7c45f6aeb3ce5
+        contract_digest: 81731366591f629af2202d1d1fbc73e6794eeb03baf71991cdcd2d563d2c7391
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-4b9c98fcb87318ed20328e60;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.d0c38ad853a18d7a52b6a704
+        contract_digest: cebd6b7ef1271d4ae3f4268de6acc8a3ed2ba38d9d0c02e47f765e94f034f390
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-a85ccaf92ba2f718c06d3766;extent=text[0:124];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.a4821c48d2ede8f7e2166cba
+        contract_digest: 1931db1b79f688ff848d14f3948d783a38f173ca0cb5b9dea87ea5fd4572b9a3
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-bd256c4ca3c9cc8040282a0f;extent=text[0:55];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      - occurrence_id: template-slot:source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.0c700193f6dd28b9ba66b25f
+        contract_digest: c2abff2d98c4e03ab0ae8f0e36935e05fc7d021f1392674bcf2b8fe130c555e2
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-bd746d48092e5c2e564323e5;extent=text[0:101];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

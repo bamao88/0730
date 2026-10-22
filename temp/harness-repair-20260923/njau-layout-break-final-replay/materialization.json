@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "failure": {
+    "code": "materialization_layout_break_mapping_unsupported",
+    "origin": "tool",
+    "message": "Text replacement cannot map an internal or nested layout break safely."
+  }
+}

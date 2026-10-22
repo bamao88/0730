@@ -1,0 +1,42 @@
+{
+  "runtime_commit": "aa5f42d329e829038c003b014f1b546e191fc7f0",
+  "verification_level": "real replay of source layout evidence; no Agent invocation",
+  "runtime_files": {
+    "src/docfit/template/source_layout.py": "1c801188fbba0456a3c818cd490e8c970aa231057815b1affc3fdfe1aaacd77d",
+    "src/docfit/template/reading_packet.py": "4c87ff371784277df2a470baffc9262cfc1a9a9570f059aa1c850245c37f10fd",
+    "src/docfit/app/prepare_template.py": "0898aa78b9de2cfffd984001e39509ba766f67511a1314380e67a6929317ad5e",
+    "src/docfit/tools/service.py": "51a8b34e8c46cdf833e8051a2e0205b88663dbd0ce4e0dfe72c74774a57a2245"
+  },
+  "receipts": {
+    "njau": {
+      "path": "temp/harness-repair-20260923/source-layout-replay/njau/replay.json",
+      "sha256": "8b891110b0bf848137c01bea0d9b7865d0aba4043a3bc315bbbe2812feee85ba",
+      "source_entry_count": 211,
+      "entries_with_layout_facts": 12,
+      "unavailable_entry_count": 0
+    },
+    "pku": {
+      "path": "temp/harness-repair-20260923/source-layout-replay/pku/replay.json",
+      "sha256": "6809efb574a31f6701919d1fad02857f8d3e2293de17656bb10ea673b3067a08",
+      "source_entry_count": 525,
+      "entries_with_layout_facts": 16,
+      "unavailable_entry_count": 0
+    },
+    "hunau": {
+      "path": "temp/harness-repair-20260923/source-layout-replay/hunau/replay.json",
+      "sha256": "e2a7e4c79e749f4b12c9cba0c36141d256099a5afac595651e7ad683405a371b",
+      "source_entry_count": 599,
+      "entries_with_layout_facts": 0,
+      "unavailable_entry_count": 0
+    }
+  },
+  "original_bindings_reverified": true,
+  "logic_contract": {
+    "passed": 975,
+    "seconds": 19.32,
+    "mypy_source_files": 126,
+    "ruff": "passed"
+  },
+  "e2e_agent_loop": "not run for source-layout supplement",
+  "product_acceptance": false
+}

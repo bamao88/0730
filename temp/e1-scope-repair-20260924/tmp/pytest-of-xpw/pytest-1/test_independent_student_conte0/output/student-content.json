@@ -1,0 +1,114 @@
+{
+  "field_results": [
+    {
+      "content_ids": [
+        "student-content-36087c01f20b53e55d652099"
+      ],
+      "field_id": "body.paragraph",
+      "item_count": 1,
+      "status": "extracted"
+    },
+    {
+      "content_ids": [
+        "student-content-bc2470c63e815b7a9c7940c1"
+      ],
+      "field_id": "thesis.title.en",
+      "item_count": 1,
+      "status": "extracted"
+    }
+  ],
+  "items": [
+    {
+      "classification_status": "classified",
+      "confidence": 1.0,
+      "content_id": "student-content-bc2470c63e815b7a9c7940c1",
+      "content_ref": {
+        "source_locators": [
+          "/body/p[@paraId=00100000]"
+        ],
+        "source_object_ids": [
+          "obj-f1752ea7069808539d2e5bb0"
+        ],
+        "student_document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25"
+      },
+      "content_type": "text",
+      "field_id": "thesis.title.en",
+      "note": "Synthetic exact title.",
+      "parent_content_id": null,
+      "physical_type": "text",
+      "source_content_id": "source-content-14c4a933bdf283bb3c051fc0",
+      "source_locators": [
+        "/body/p[@paraId=00100000]"
+      ],
+      "source_object_ids": [
+        "obj-f1752ea7069808539d2e5bb0"
+      ],
+      "source_order": {
+        "block": 1,
+        "inline": 0
+      },
+      "transport_source_locator": "/body/p[@paraId=00100000]",
+      "transport_source_object_id": "obj-f1752ea7069808539d2e5bb0",
+      "value": "Verified title"
+    },
+    {
+      "classification_status": "classified",
+      "confidence": 1.0,
+      "content_id": "student-content-36087c01f20b53e55d652099",
+      "content_ref": {
+        "source_locators": [
+          "/body/p[@paraId=00100002]"
+        ],
+        "source_object_ids": [
+          "obj-35c94c6aca56c746fb3bd708"
+        ],
+        "student_document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25"
+      },
+      "content_type": "rich_text",
+      "field_id": "body.paragraph",
+      "note": "Synthetic body.",
+      "parent_content_id": null,
+      "physical_type": "text",
+      "source_content_id": "source-content-2ba010bbbee0cf845e9663f0",
+      "source_locators": [
+        "/body/p[@paraId=00100002]"
+      ],
+      "source_object_ids": [
+        "obj-35c94c6aca56c746fb3bd708"
+      ],
+      "source_order": {
+        "block": 2,
+        "inline": 0
+      },
+      "transport_source_locator": "/body/p[@paraId=00100002]",
+      "transport_source_object_id": "obj-35c94c6aca56c746fb3bd708",
+      "value": "Student body paragraph"
+    }
+  ],
+  "privacy": "task_local_contains_student_content",
+  "registry": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.1.0",
+    "sha256": "db50342aaa52fcb299a35ac1bdfd07dd16b15962788471c1a7615e837f9181b1"
+  },
+  "relations": [],
+  "schema_version": "docfit-student-content-model/v2",
+  "source_coverage": {
+    "all_source_objects_accounted_for": true,
+    "content_item_classifications": {
+      "classified": 2
+    },
+    "covered_dependency_object_ids": [],
+    "layout_only_source_object_ids": [],
+    "mapped_source_object_ids": [
+      "obj-35c94c6aca56c746fb3bd708",
+      "obj-f1752ea7069808539d2e5bb0"
+    ],
+    "source_object_count": 2,
+    "unsupported_source_object_ids": []
+  },
+  "source_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25",
+  "status": "READY",
+  "summary": "Batch 1/1: Synthetic extraction.",
+  "uncertainties": []
+}

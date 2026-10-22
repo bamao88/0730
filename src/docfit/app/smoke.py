@@ -405,7 +405,7 @@ async def run_subagent_smoke(backend: AgentBackend) -> SmokeReport:
             {"input_docx": str(document), "overview": False}, separators=(",", ":")
         )
         prompt = (
-            "This is the DocFit P1 Subagent gate. Load the docfit-school-extract Skill, "
+            "This is the DocFit P1 Subagent gate. Load the convert-thesis Skill, "
             "then call mcp__docfit__docx_render exactly once with this JSON object and no "
             f"other fields: {render_args}. If and only if the render status is ok, call "
             "Agent with subagent_type "

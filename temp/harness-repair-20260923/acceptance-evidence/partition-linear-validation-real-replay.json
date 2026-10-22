@@ -1,0 +1,56 @@
+{
+  "level": "real replay of deterministic initial inventory, accepted unit proof and persisted reading packet; no Agent call",
+  "runtime_source_sha256": "8237e6d09e3e5f3cb75915cc3df53759e331d1d47d32cb4fbcd33db902a3a1f6",
+  "runs": {
+    "pku": {
+      "units": 12,
+      "source_entries": 525,
+      "word_range_projection_exactly_matches_accepted_proof": true,
+      "reading_packet_unchanged": true,
+      "input_files_unchanged": true,
+      "hashes": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/input/school-template.docx": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/initial-source-inventory.json": "d1f4609dc3968d8fff5420141c1964e571178ebb941db51da2ee294b5288a778",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/unit-boundary-checkpoint.json": "2c05738f5a6d4e1dc1f176c89825df685b88a31d7a0c296ed6ec445fa269074a",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/object-inventory.json": "4ff4438ba727e4b4a96f43e4d37956dc1bae0d289d8166a784fbf2029a9f2d55"
+      },
+      "unit_proof_validation_seconds": 0.04073591699852841,
+      "profiled_reading_packet_seconds": 0.7617921249984647
+    },
+    "hunau": {
+      "units": 13,
+      "source_entries": 599,
+      "word_range_projection_exactly_matches_accepted_proof": true,
+      "reading_packet_unchanged": true,
+      "input_files_unchanged": true,
+      "hashes": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-task/work/.docfit/initial-source-inventory.json": "b0fbf5cd4b9eb6370e8cf517328f0e112155e727a82c9526e8136183e8a91b9b",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-task/work/.docfit/unit-boundary-checkpoint.json": "5b7d5683527b44272d06a6401cdf29ce5888d2c30bd3925e840be40cc93370f7",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-task/work/.docfit/harness/object-inventory.json": "8cf7ed3f206a040f4a8360d9d8600adbfbd2d3590a9a40fd20d922689b0b134e"
+      },
+      "unit_proof_validation_seconds": 0.024072374995739665,
+      "profiled_reading_packet_seconds": 0.34565916700375965
+    },
+    "njau": {
+      "units": 13,
+      "source_entries": 211,
+      "word_range_projection_exactly_matches_accepted_proof": true,
+      "reading_packet_unchanged": true,
+      "input_files_unchanged": true,
+      "hashes": {
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/unit-boundary-checkpoint.json": "b509923523f96e937ed2eaffb0987cc78d955a22d9698ea5b9b67526e4bbfc70",
+        "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-whole-entry-task/work/.docfit/harness/object-inventory.json": "6a13ea7c12d669c410a8cf54958d285e1cd908789b4ea71a9b61f6c4dbe10d01"
+      },
+      "unit_proof_validation_seconds": 0.015527292001934256,
+      "profiled_reading_packet_seconds": 0.2068708329970832
+    }
+  },
+  "limitations": [
+    "Current live tasks still use the old frozen runtime.",
+    "Timings are observations, include profiling overhead and concurrent work; not a full E2E speedup claim.",
+    "No semantic judgments, output identities or Word ranges changed."
+  ]
+}

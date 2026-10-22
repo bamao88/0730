@@ -1,0 +1,12 @@
+{
+  "verification_level": "real request delivery; response and repair success not established",
+  "request_event": "temp/harness-repair-20260923/phase5-three-schools/hunau-shared-transport-task/work/.docfit/harness/semantic-revisions/00000002.json",
+  "request_event_sha256": "92f5e3043fcae23863423c9b420bbb6b2e327185be4cb871915a30aab9507580",
+  "prompt_sha256": "da9e379e6d953cf00f23b43a4ce3a6cf7c250e654a7c56e7261511016bf2c409",
+  "required_instructions": {
+    "For any part made only of whitespace": true,
+    "including a whitespace part inside an entry": true,
+    "merely describing it in reason does not cover it": true
+  },
+  "editable_entry_count": 23
+}

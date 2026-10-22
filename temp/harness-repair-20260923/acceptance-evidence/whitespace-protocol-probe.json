@@ -1,0 +1,84 @@
+{
+  "verification_level": "synthetic live structured-output protocol probe; not school E2E",
+  "input": {
+    "values": [
+      "  A  ",
+      " B",
+      "C ",
+      "   ",
+      "D E",
+      "\u00a0F\u00a0",
+      "\tG\t"
+    ]
+  },
+  "query_count": 1,
+  "backend": "minimax",
+  "visible_messages": [
+    "{\"values\": [\"  A  \", \" B\", \"C \", \"   \", \"D E\", \"\\u00a0F\\u00a0\", \"\\tG\\t\"]}"
+  ],
+  "text_deltas": [
+    "{\"",
+    "values",
+    "\":",
+    " [\"",
+    " ",
+    " A",
+    " ",
+    " \",",
+    " \"",
+    " B",
+    "\",",
+    " \"",
+    "C",
+    " \",",
+    " \"",
+    "  ",
+    " \",",
+    " \"",
+    "D",
+    " E",
+    "\",",
+    " \"\\",
+    "u",
+    "00",
+    "a",
+    "0",
+    "F",
+    "\\u",
+    "00",
+    "a",
+    "0",
+    "\",",
+    " \"\\",
+    "t",
+    "G",
+    "\\t",
+    "\"]",
+    "}"
+  ],
+  "structured_tool_inputs": [
+    {
+      "values": [
+        "  A  \"\n\" B",
+        "C ",
+        "   \"\n\"D E\"\n\"\u00a0F\u00a0\"\n\"\tG\t\""
+      ]
+    }
+  ],
+  "result": {
+    "is_error": false,
+    "subtype": "success",
+    "terminal_reason": "completed",
+    "api_error_status": null,
+    "structured_output": {
+      "values": [
+        "  A  \"\n\" B",
+        "C ",
+        "   \"\n\"D E\"\n\"\u00a0F\u00a0\"\n\"\tG\t\""
+      ]
+    },
+    "visible_result": "{\"values\":[\"  A  \\\"\\n\\\" B\",\"C \",\"   \\\"\\n\\\"D E\\\"\\n\\\"\u00a0F\u00a0\\\"\\n\\\"\\tG\\t\\\"\"]}"
+  },
+  "wall_seconds": 4.836335665997467,
+  "exact_match": false
+}

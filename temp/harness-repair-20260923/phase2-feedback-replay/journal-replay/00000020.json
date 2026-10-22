@@ -1,0 +1,197 @@
+{
+  "created_at": "2026-09-23T06:28:45.456901+00:00",
+  "data": {
+    "historical_source": "frozen candidate ledger",
+    "is_error": false,
+    "request_id": 19,
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "role": "fixed_label",
+              "text": "（导入语）"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            },
+            {
+              "role": "style_only",
+              "text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"（导入语）\" is the literal intro-section label students keep. \"……\" is a body paragraph sample bound to body.paragraph. The trailing parenthetical is a style specification note for body text fonts.",
+          "source_entry_id": "source-entry-e190b04a11e55c8a8e6aa5ec"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "一、×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（一级标题小三号黑体，顶格书写）"
+            }
+          ],
+          "reason": "\"一、×××××\" is a level-1 chapter heading sample bound to body.heading.outline1. The parenthetical is the style specification for level-1 headings (15pt 黑体, flush left).",
+          "source_entry_id": "source-entry-d73245363c9e52fb291d036d"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "二、×××××"
+            }
+          ],
+          "reason": "\"二、×××××\" is another level-1 chapter heading sample bound to body.heading.outline1, showing the numbered chapter pattern continues.",
+          "source_entry_id": "source-entry-0dd04c32ebb4b94194ac9742"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline2",
+              "role": "body_structure",
+              "text": "（一）×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（二级标题四号黑体，顶格书写）"
+            }
+          ],
+          "reason": "\"（一）×××××\" is a level-2 section heading sample bound to body.heading.outline2. The parenthetical is the style specification for level-2 headings (14pt 黑体, flush left).",
+          "source_entry_id": "source-entry-4b7d6c274cfc11f8469c21ea"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.heading.outline3",
+              "role": "body_structure",
+              "text": "1、×××××"
+            },
+            {
+              "role": "style_only",
+              "text": "（三级标题小四号黑体）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"1、×××××\" is a level-3 subsection heading sample bound to body.heading.outline3. The parenthetical is the style specification for level-3 headings (12pt 黑体).",
+          "source_entry_id": "source-entry-8604275707e5876f28e5328c"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.heading.outline4",
+              "role": "body_structure",
+              "text": "（1）"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……[1]。"
+            },
+            {
+              "role": "style_only",
+              "text": "（四级标题不单独占行书写）"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"（1）\" is the inline level-4 heading sample bound to body.heading.outline4. \"……[1]。\" is the body text sample with a citation reference, bound to body.paragraph. The parenthetical is the layout specification that level-4 headings do not occupy their own line.",
+          "source_entry_id": "source-entry-7ea6a5525cb5350f7459b141"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "\"……\" is a body paragraph continuation sample bound to body.paragraph, showing ordinary body text following the heading structure.",
+          "source_entry_id": "source-entry-029d1e73922cb977024762d2"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "\"……\" is another body paragraph continuation sample bound to body.paragraph, showing additional body content.",
+          "source_entry_id": "source-entry-fe45e587043a4e3b847c336f"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "field_id": "body.heading.outline1",
+              "role": "body_structure",
+              "text": "五、结束语"
+            }
+          ],
+          "reason": "\"五、结束语\" is the level-1 chapter heading \"结束语\" (Conclusion) bound to body.heading.outline1. The literal \"结束语\" is the standard conclusion chapter title used in this template.",
+          "source_entry_id": "source-entry-466233315738633254f9ddcd"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "□□"
+            },
+            {
+              "field_id": "body.paragraph",
+              "role": "body_structure",
+              "text": "……"
+            }
+          ],
+          "reason": "Leading □□ is typographic spacing. \"……\" is a body paragraph sample bound to body.paragraph, representing the content following the conclusion heading.",
+          "source_entry_id": "source-entry-e73a30e93d3e432cebfc478b"
+        },
+        {
+          "open_questions": [],
+          "parts": [
+            {
+              "role": "style_only",
+              "text": "（小四号字空一行）"
+            }
+          ],
+          "reason": "\"（小四号字空一行）\" is a layout specification note indicating a blank line should be left after the body content. This is purely a style/layout instruction, not fillable content.",
+          "source_entry_id": "source-entry-e3661836c32afde5fc237b0e"
+        }
+      ],
+      "status": "complete",
+      "summary": "Judged 11 source entries in manifest order for unit 正文（文法经管类）. Split each entry by responsibility: leading □□ as style_only spacing, numbered heading samples (一、二、五、 一级标题；（一） 二级标题；1、 三级标题；（1） 四级标题) as body_structure bound to body.heading.outlineN, \"导入语\"/\"结束语\" headings preserved as fixed labels, \"……\" body paragraph samples bound to body.paragraph, and parenthetical style specifications (字体字号、顶格书写、空一行) as style_only notes."
+    }
+  },
+  "event_digest": "2a80f90be96d7d1ef7e852cf40756fe15c849c369849c75284c92c8bba677d13",
+  "evidence_mode": "replay",
+  "kind": "response",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "f12aa6f763405c692ce924becb700db3bfb1e9805bd2540de1a7b529e7163562",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 20
+}

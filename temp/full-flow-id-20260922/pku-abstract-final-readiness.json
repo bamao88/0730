@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "feedback": {
+    "type": "materialization_readiness",
+    "mechanical": true,
+    "semantic_authority": false,
+    "agent_action": "Revise semantic_judgments to use source_entry_id, ordered parts, and field_id values from the pre-input field vocabulary. Do not proceed to DOCX materialization until Harness-resolved spans are present."
+  },
+  "checks": [
+    {
+      "name": "materialization_readiness",
+      "result": "needs_input"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "materialization_body_structure_member_crosses_carriers",
+      "missing_requirement": "one_visible_carrier_per_body_member",
+      "why_it_blocks_execution": "One body_structure member does not resolve to exactly one visible top-level body object. Revise the affected source entry to one real body member, or use a non-field role when it only describes part of a composite object.",
+      "message": "One body_structure member does not resolve to exactly one visible top-level body object. Revise the affected source entry to one real body member, or use a non-field role when it only describes part of a composite object.",
+      "source_entry_id": "source-entry-71f352c9ee7a9854dd06e08e",
+      "needed_context": "unit_evidence_packet",
+      "evidence_focus": "unit_evidence_packet",
+      "field_id": "body.heading.outline1"
+    }
+  ],
+  "failure": {
+    "origin": "harness",
+    "code": "template_materialization_readiness_incomplete",
+    "retryable": true,
+    "message": "Accepted semantic_judgments are not ready for deterministic materialization.",
+    "suggested_actions": [
+      "return_to_agent_with_materialization_readiness_feedback",
+      "revise_semantic_judgments_for_source_entry_id_ordered_parts_field_id_and_span_ref"
+    ]
+  },
+  "warnings": []
+}

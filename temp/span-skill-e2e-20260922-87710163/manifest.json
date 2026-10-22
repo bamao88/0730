@@ -1,0 +1,59 @@
+{
+  "started_at": "2026-09-22T14:35:46.565247+00:00",
+  "code_commit": "e32e76e5c12ab902950d80f3bb5a4e5264ead6e3",
+  "dirty_paths": [
+    ".claude/skills/docfit-school-extract/references/template-text-classification.md",
+    "tests/contract/test_skill_contract.py"
+  ],
+  "skill_sha256": {
+    ".claude/skills/docfit-school-extract/SKILL.md": "f127ce84e4bfd35e63149e77715d29aa0071293474a262e6be84e6d00168abde",
+    ".claude/skills/docfit-school-extract/references/body-structure.md": "23c5eac6c987b468beffded69b727ebb257190cfa7ec9fcceafd9ceacccdf89c",
+    ".claude/skills/docfit-school-extract/references/collections-and-optional-sections.md": "8579fe5e2e6330f801f34898b60e7921035a97e4fc108932a2de51722cdf4701",
+    ".claude/skills/docfit-school-extract/references/completion-and-visual-review.md": "eb0f7ae322b64c93f74a1331574acb380f1ac3095ca6d87b331f21824cc5ff9a",
+    ".claude/skills/docfit-school-extract/references/generated-content-and-toc.md": "bd5d3eab1d53f546c1cdc2b6f50c9aad2f9fae7373466d47dcf8c0c33f7a032f",
+    ".claude/skills/docfit-school-extract/references/judgment-context-and-conflicts.md": "8d7b5070462e8790c2b67a31d308dcf029b099a1d7d3fed56115d8850b1215eb",
+    ".claude/skills/docfit-school-extract/references/object-boundary-and-layout-safety.md": "3436659982bbd8d3803b4f08f6ae4d22d2c4f3e1f4e611c862e5d05ade473885",
+    ".claude/skills/docfit-school-extract/references/registry-interface-binding.md": "239e52090eaee2528fa14f26e556bbf6f9f5aa85222e4b9e2706d8466ff0fc0b",
+    ".claude/skills/docfit-school-extract/references/style-contract-boundary.md": "6b1cc3e5af7d2773cf3172711ea1a6f4fa158bdad919ba361ca9b9d8b2b45b39",
+    ".claude/skills/docfit-school-extract/references/template-text-classification.md": "434e4cc31d650377efe9958ae2e870b889987ab21d6e1e1ab9b41a74e2a0bc77",
+    ".claude/skills/docfit-school-extract/references/unit-boundary.md": "450e6c0fcdeda65f18d0ea96d1319ca58c4053429bddf47149cf27777b3376cd"
+  },
+  "backends": [
+    {
+      "name": "minimax",
+      "model": "MiniMax-M3"
+    }
+  ],
+  "runtime": {
+    "thinking": "adaptive",
+    "effort": "low",
+    "timeout_seconds": 3600,
+    "no_progress_seconds": 180
+  },
+  "officecli": {
+    "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/bin/officecli",
+    "sha256": "2f158d46f9b6c5eb0dfe4eb02038114001e17acc47b67347417c56dcf9659096"
+  },
+  "cases": {
+    "cover": {
+      "input_sha256": {
+        "field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+        "school-requirements.pdf": "6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975",
+        "school-template.docx": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+        "selected-units.yaml": "1afb21f6613b2a7d089b08a22c00d6df8874a53174b1b042f598fda97bfe6fbd"
+      },
+      "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task",
+      "fresh_from_start": true
+    },
+    "body": {
+      "input_sha256": {
+        "field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+        "school-requirements.pdf": "261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10",
+        "school-template.docx": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+        "selected-units.yaml": "07d931aaffb306d4d4469d84d236fe0435d7e4b86258d63140feb9d77ee454be"
+      },
+      "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task",
+      "fresh_from_start": true
+    }
+  }
+}

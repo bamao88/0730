@@ -23,7 +23,7 @@ docfit_agent_SDK/
 │       ├── pyproject.toml                               # [已实现] Eval 独立依赖、测试和静态检查配置
 │       ├── uv.lock                                      # [已实现] Eval 独立锁文件，不改变产品依赖
 │       ├── run_eval.py                                  # [已实现] 独立 CLI；PASS=0，质量非 PASS=2，输入错误=3
-│       ├── materialize_candidate_cases.py               # [已实现] 三校 candidate 准备器；拒绝覆盖 accepted
+│       ├── materialize_candidate_cases.py               # [已实现] 候选准备器；拒绝覆盖 accepted
 │       │
 │       ├── template_extraction_eval/                    # [已实现] Eval 自有运行代码，与 src/docfit 物理解耦
 │       │   ├── __init__.py                              # [新增] Eval 包公共入口
@@ -64,20 +64,20 @@ docfit_agent_SDK/
 │       │
 │       ├── cases/
 │       │   ├── 01-hunau-undergraduate/
-│       │   │   ├── case.yaml                            # [候选] 湖南农大；expected_verdict=INPUT_ERROR
+│       │   │   ├── case.yaml                            # [accepted] 湖南农大；expected_verdict=PASS
 │       │   │   └── gold/
-│       │   │       ├── template.docx                    # [候选] 最终路径不代表已验收 Gold
-│       │   │       └── fill-contract.yaml               # [候选] 等待字段/样式/protected/remove 人审
+│       │   │       ├── final-template.gold.docx         # [accepted] Word 模板提取 Gold，含原生批注 Review
+│       │   │       └── fill-contract.gold.yaml          # [accepted] 填写契约 Gold
 │       │   ├── 02-njau-undergraduate/
-│       │   │   ├── case.yaml                            # [候选] 南京农大；expected_verdict=INPUT_ERROR
+│       │   │   ├── case.yaml                            # [accepted] 南京农大；expected_verdict=PASS
 │       │   │   └── gold/
-│       │   │       ├── template.docx                    # [候选] 有待裁决 validation finding
-│       │   │       └── fill-contract.yaml               # [候选] 等待 Human signoff
+│       │   │       ├── final-template.gold.docx         # [accepted] Word 模板提取 Gold，含原生批注 Review
+│       │   │       └── fill-contract.gold.yaml          # [accepted] 填写契约 Gold
 │       │   └── 03-pku-graduate/
-│       │       ├── case.yaml                            # [候选] 北京大学；expected_verdict=INPUT_ERROR
+│       │       ├── case.yaml                            # [accepted] 北京大学；expected_verdict=PASS
 │       │       └── gold/
-│       │           ├── template.docx                    # [候选] 机器检查不继承历史 Human signoff
-│       │           └── fill-contract.yaml               # [候选] 等待 Human signoff
+│       │           ├── final-template.gold.docx         # [accepted] Word 模板提取 Gold，含原生批注 Review
+│       │           └── fill-contract.gold.yaml          # [accepted] 填写契约 Gold
 │
 │       ├── tests/                                       # [已实现] Eval 自有 99-case suite，不进产品 tests
 │       │   ├── unit/
@@ -87,7 +87,7 @@ docfit_agent_SDK/
 │       │   │   ├── test_alignment.py                    # [新增] ID、定位器、锚点和 AMBIGUOUS
 │       │   │   ├── test_scoring.py                      # [新增] 权重、F1、覆盖率和硬失败
 │       │   │   ├── test_reporting.py                    # [新增] JSON/Markdown 同源和稳定排序
-│       │   │   ├── test_case_materializer.py            # [新增] 三校候选物化与防覆盖
+│       │   │   ├── test_case_materializer.py            # [新增] 候选物化与 accepted 防覆盖
 │       │   │   ├── test_sample_builder.py               # [新增] 样本完整、确定性和 schema 有效
 │       │   │   ├── facts/
 │       │   │   │   ├── test_reader.py                   # [新增] parts、story、关系和坏包
@@ -103,7 +103,7 @@ docfit_agent_SDK/
 │       │   ├── contract/
 │       │   │   ├── test_eval_contract.py                # [新增] 独立环境、schema 和评分合同
 │       │   │   ├── test_cli.py                          # [新增] 四种 CLI 退出语义
-│       │   │   └── test_candidate_gate.py               # [新增] 三校 candidate 均拒绝评分
+│       │   │   └── test_candidate_gate.py               # [新增] accepted gate 与 mismatch 拒绝
 │       │   └── integration/
 │       │       └── test_runner.py                        # [新增] 最小 Actual—Gold 全链路和确定性
 │       │
@@ -136,21 +136,22 @@ Registry 负责；Eval 只固定引用，不拥有或重写字段目录。Temp �
 来源，正式接入后不能继续成为 Eval 的隐式依赖。
 
 最新用户决定进一步区分“最终目录位置”和“Gold 验收状态”：三校可以先按最终
-`cases/<case-id>/gold/` 结构物化，但只要 `case_status/gold_review/fill-contract.status`
-仍为 candidate，比较器就必须把该 case 作为输入失败，不得计入 Gold 通过率。路径名本身
-不是 Human acceptance 证据；从 candidate 改为 accepted 仍必须满足 PLAN 的 Human
-readiness、hash 和验证门。Temp 只作为显式、hash 绑定的准备来源，不进入 Eval 运行路径。
+`cases/<case-id>/gold/` 结构物化，但只有 `case_status/gold_review/fill-contract.status`
+均为 accepted 后，比较器才允许计入 Gold 通过率。路径名本身不是 Human acceptance 证据；
+从 candidate 改为 accepted 必须满足 PLAN 的 Human readiness、hash 和验证门。Temp 只作为
+显式、hash 绑定的准备来源，不进入 Eval 运行路径。
 
-2026-08-13 的产品确认进一步固定 W6 目标：当前三校 case 绑定的 v0.1 及旧槽形态只是
-历史 candidate 证据，不得原地只改状态晋升。Gold 准备侧须按 accepted Registry v0.5 clean break
-重建模板和填写契约，再以规则组 + 例外表完成 Human 核对；Eval 仍只消费重建后的
-版本化产物，不参与重建。
+2026-08-17 三校 case 已按 accepted Registry v0.5 clean break 完成验收并冻结。2026-08-18
+三个原始 Word Gold 文件已用 Word 原生批注补齐全覆盖 Review：HUNAU 227 条、NJAU 96 条、
+PKU 159 条。对象级批注按字段槽、处理区域、逻辑页和已接受样式缺口分别记录字段、处理动作、
+样式和人工确认结论；覆盖批注覆盖正文所有可见内容块，并用总览批注说明页眉/页脚保留策略。
+三校自比较均为 `PASS / 100.0`。
 
 同日进一步确认：当前是准确度测试阶段，来源是否官方只作为 provenance 和冲突裁决信息，不是
 Gold 资格门或评分维度。每个学校的产品提取结果只有两份主文件——可填写 Word 与指导填写的
 契约——并按同一 Word hash 原子绑定。Eval case 可额外保存 `case.yaml`、Registry 引用和 reviewer
-记录作为数据集元数据；这些不是第三份产品交付物，也不改变 `gold/template.docx +
-gold/fill-contract.yaml` 这对核心 Truth。
+记录作为数据集元数据；这些不是第三份产品交付物，也不改变
+`gold/final-template.gold.docx + gold/fill-contract.gold.yaml` 这对核心 Truth。
 
 这项隔离有意允许 Eval 拥有自己的只读 OOXML 事实分析实现。它会增加少量重复代码，
 但避免产品解析器和质量裁判共享同一实现缺陷，从而使 Actual—Gold 结论具备独立性。
@@ -829,8 +830,9 @@ OfficeCLI 结果做旁证，但正式 verdict 只来自本 Eval 的版本化事�
 
 ## 13. 当前代码现状审计
 
-结论：仓库已经完成独立环境、schema、评分配置、S00–S13 合成 fixture 和三校 candidate
-case 数据包的第一批合同资产，但尚没有符合本文完整定义的模板提取静态 E2E 评分器。
+结论：仓库已经完成独立环境、schema、评分配置、S00–S13 合成 fixture、模板提取静态
+E2E 评分器和三校 accepted Gold 数据包。后续主要差距是把 accepted case 纳入 CI/case
+inventory，并为每校补齐正式反例回归。
 
 | 能力 / 代码 | 当前状态 | 当前能做什么 | 与本文目标的差距 |
 |---|---|---|---|
@@ -840,10 +842,10 @@ case 数据包的第一批合同资产，但尚没有符合本文完整定义的
 | `src/docfit/adapters/officecli.py` | 已有产品代码，本模块不导入 | OfficeCLI 进程与结果适配 | 不属于独立 Eval 运行依赖 |
 | `src/docfit/evals/runner.py` | 已有旧 core Eval | 运行当前 core conversion 确定性检查 | 不被新模块导入；是否迁出产品代码属于独立切换决策 |
 | `evals/template-extraction/schemas/**`、`config/**`、`fixtures/**` | W0/G1 已实现 | 独立 schema、100 分配置和 S00–S13 确定性合成数据 | 只证明能力合同与样本，不证明评分器或学校 Gold 正确性 |
-| `evals/template-extraction/materialize_candidate_cases.py` | 已实现 | 把三校 Temp 候选显式投影到最终 case 目录，绑定 Registry/template/contract hash 并校验 `alias/tag/field_id` 闭包 | 只生成 `candidate_pending_human_acceptance`，拒绝覆盖 accepted case，不执行 Gold 晋升 |
-| `evals/template-extraction/cases/01-*`、`02-*`、`03-*` | candidate 数据包已物化 | 提供 `case.yaml + gold/template.docx + gold/fill-contract.yaml` 的稳定目录和字段槽合同 | `expected_verdict: INPUT_ERROR`；尚缺 Human signoff、完整 protected/remove Truth 和两校 validation 裁决 |
+| `evals/template-extraction/materialize_candidate_cases.py` | 已实现 | 把 Temp 候选显式投影到最终 case 目录，绑定 Registry/template/contract hash 并校验 `alias/tag/field_id` 闭包 | 只用于候选准备；拒绝覆盖 accepted case，不执行 Gold 晋升 |
+| `evals/template-extraction/cases/01-*`、`02-*`、`03-*` | accepted Gold 数据包已冻结 | 提供 `case.yaml + gold/final-template.gold.docx + gold/fill-contract.gold.yaml` 的稳定目录和字段槽合同 | `expected_verdict: PASS`；Word 原生批注 Review 与自比较 PASS 已记录 |
 | `temp/manual-gold-preparation/eval-template-truth-candidates/build_candidates.py` | 候选资产生成器 | 构建候选模板、填写契约，并包含局部 `effective_style` 读取逻辑 | 它生成产物，不对 Actual—Gold 做完整比较或评分；局部逻辑尚不是共享评测能力 |
-| Content Field Registry v0.1/v0.5、候选 `template-spec.yaml` 和三校模板资产 | v0.1 历史 candidate + v0.5 现行产品合同 | v0.1 供已物化 case 重放；v0.5 定义 W6 重建目标 | 必须生成新 candidate/hash 并独立 Human 验收；不得把 v0.1 case 直接改名或改状态 |
+| Content Field Registry v0.1/v0.5、候选 `template-spec.yaml` 和三校模板资产 | v0.1 历史 candidate + v0.5 accepted Gold | v0.1 仅作历史证据；v0.5 绑定三校 accepted case | 后续候选准备不得覆盖 accepted case |
 | StructuralLocator | 缺失 | — | 需要新增统一稳定定位能力 |
 | 完整 EffectiveStyleAnalyzer | 缺失 | — | 现有局部逻辑需评估后再决定复用或重构 |
 | StructuredObjectAnalyzer | 缺失 | — | 需要覆盖图片、公式、域、书签和合并关系 |

@@ -1,0 +1,14 @@
+{
+  "verification_level": "live post-unit first response and actual revision request; batch not yet accepted",
+  "response_event_sha256": "04a5277611205e2265d6b791e50b4cc45426227703860379d8495a6902ea4cc7",
+  "public_assistant_text_blocks": 0,
+  "judgment_count": 23,
+  "rejected_source_entry_ids": [
+    "source-entry-2eb746e9f08a1ba6d753dcf9"
+  ],
+  "blocker_count": 3,
+  "first_difference": "Chinese curly quotation marks replaced by ASCII quotation marks",
+  "prior_repeated_name_entry_currently_rejected": false,
+  "revision_request_saved": true,
+  "product_acceptance": false
+}

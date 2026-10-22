@@ -1,0 +1,1239 @@
+{
+  "verification_level": "real replay of source context; no Agent call or publication",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/unit-boundary-checkpoint.json": "15d6cb6055c814323048fb75ed97ff37fb83303970f472b532bbf150f433d986",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/object-inventory.json": "40c620ee998fe19dbc3cca0bd857389b0ba37401d3176757d2dea5a91ecbbbb1",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/semantic-judgments.json": "07e413e62229e515a37563015ebbaa6d20fadb8ff3f2a2353a5d0a330dad3005"
+  },
+  "original_unchanged": true,
+  "canonical_identity_text_and_partition_unchanged": true,
+  "source_entry_count": 211,
+  "entries_with_containment_context": 26,
+  "containment_relations": 26,
+  "unavailable_entries": 0,
+  "document_map_entries_compared": 211,
+  "entries": [
+    {
+      "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 1,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": [
+          {
+            "source_entry_id": "source-entry-779d09452b5c02ad0b871941",
+            "entry_type": "picture",
+            "text": ""
+          }
+        ]
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 2,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": [
+          {
+            "source_entry_id": "source-entry-741bd7ca7aa2e4c4e09bec91",
+            "entry_type": "picture",
+            "text": ""
+          }
+        ]
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+      "text": "本科生毕业论文（设计）",
+      "text_length": 11,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 3,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "centered_heading_candidate"
+      ],
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "alignment": "center",
+        "font.ea": "华文中宋",
+        "font.latin": "华文中宋",
+        "size": "36pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "本科生毕业论文（设计）",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 4,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 5,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 6,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 7,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+      "text": "题    目:                                    ",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 36,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 8,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "题    目:                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+      "text": "                                    ",
+      "text_length": 36,
+      "leading_whitespace_count": 36,
+      "trailing_whitespace_count": 36,
+      "leading_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 9,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+      "text": "姓    名:                                    ",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 36,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 10,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "姓    名:                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-17e2679377abb766980c7640",
+      "text": "学    号:                                    ",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 36,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 11,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "学    号:                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+      "text": "学    院:                                    ",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 36,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 12,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "学    院:                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+      "text": "专    业:                                    ",
+      "text_length": 43,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 36,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 36"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 13,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "专    业:                                    ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+      "text": "指导教师:                 职称               ",
+      "text_length": 39,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 15,
+      "trailing_whitespace_codepoints": [
+        "U+0020 × 15"
+      ],
+      "entry_type": "text",
+      "source_order": {
+        "block": 14,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "font.ea": "黑体",
+        "font.latin": "黑体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "指导教师:                 职称               ",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 15,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 16,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 17,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 18,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+      "text": "20   年   月   日",
+      "text_length": 14,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 19,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "centered_heading_candidate",
+        "date_area_candidate",
+        "field_slot_candidate"
+      ],
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "style_summary": {
+        "alignment": "center",
+        "font.latin": "宋体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "20   年   月   日",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 20,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 21,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-01-cover",
+          "unit_name": "封面",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-151a0c02019beb848d0fc2ca"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-649dd3749a47a5761775fa79",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "text",
+      "source_order": {
+        "block": 74,
+        "inline": 0
+      },
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings."
+      ],
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [],
+        "descendant_entries": [
+          {
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+            "entry_type": "shape",
+            "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）"
+          }
+        ]
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-04-toc",
+          "unit_name": "目录",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-d61b576a99a97a931a69ccbb"
+          },
+          "end_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-5a2b828ff4b9d7a81ca61041"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "table",
+      "source_order": {
+        "block": 208,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [],
+        "descendant_entries": [
+          {
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-fc0591d9c1444238d6d0645a",
+            "entry_type": "text",
+            "text": "本科生毕业论文（设计）"
+          },
+          {
+            "source_entry_id": "source-entry-9d54f57faf3b5f30eebbf24c",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b931deacba2856fb3ce7c86b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-5be6ccc670222a702226ff2d",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b0fe7d8a79dff391219369f1",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-1b7591ef0f1788232ed9d779",
+            "entry_type": "text",
+            "text": "题    目:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-68fc05ff1056dc3037b2c719",
+            "entry_type": "text",
+            "text": "                                    "
+          },
+          {
+            "source_entry_id": "source-entry-813dfb5f49ef0a4256d95183",
+            "entry_type": "text",
+            "text": "姓    名:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-17e2679377abb766980c7640",
+            "entry_type": "text",
+            "text": "学    号:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-e3bea420b4e548d802e2e1b9",
+            "entry_type": "text",
+            "text": "学    院:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-24ac9b719646d00ae5b2dd7f",
+            "entry_type": "text",
+            "text": "专    业:                                    "
+          },
+          {
+            "source_entry_id": "source-entry-c5535b8a8362f4863822c436",
+            "entry_type": "text",
+            "text": "指导教师:                 职称               "
+          },
+          {
+            "source_entry_id": "source-entry-b666f200010b20ffe84b61c6",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-d22a3b57b4a4a59adc635195",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-9dccf7eda8a43cc44a31673b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-b4f650846b8a5d913b18ccb4",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-8a0d7c7d63dd0b97052d545a",
+            "entry_type": "text",
+            "text": "20   年   月   日"
+          },
+          {
+            "source_entry_id": "source-entry-2f0225f0c653a4a3a6043d0b",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-0fdf4dee659c659815e69556",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-779d09452b5c02ad0b871941",
+            "entry_type": "picture",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-741bd7ca7aa2e4c4e09bec91",
+            "entry_type": "picture",
+            "text": ""
+          }
+        ]
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-13-acknowledgments",
+          "unit_name": "致谢",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-779d09452b5c02ad0b871941",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "picture",
+      "source_order": {
+        "block": 209,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-852593250a6b8daea9640fcb",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-13-acknowledgments",
+          "unit_name": "致谢",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-741bd7ca7aa2e4c4e09bec91",
+      "text": "",
+      "text_length": 0,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "picture",
+      "source_order": {
+        "block": 210,
+        "inline": 0
+      },
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-2e2fe0ca346b5188bc2ecac2",
+            "entry_type": "text",
+            "text": ""
+          },
+          {
+            "source_entry_id": "source-entry-ec6aeef44153c681924e8a3f",
+            "entry_type": "table",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-13-acknowledgments",
+          "unit_name": "致谢",
+          "text": "",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          }
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd",
+      "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）",
+      "text_length": 189,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "entry_type": "shape",
+      "source_order": {
+        "block": 211,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "instruction_or_sample_candidate",
+        "carrier_or_layout_candidate"
+      ],
+      "layout_facts": [
+        "The containing paragraph carries section boundary settings."
+      ],
+      "structure_context": {
+        "reading_note": "These are physical containment relationships between source entries. This entry's own text is separate from descendant text; empty own text does not imply an empty container. Related entries are context only, not additional text to submit for this entry or permission to revise those entries. Containment alone does not determine a role or field.",
+        "ancestor_entries": [
+          {
+            "source_entry_id": "source-entry-649dd3749a47a5761775fa79",
+            "entry_type": "text",
+            "text": ""
+          }
+        ],
+        "descendant_entries": []
+      },
+      "unit_contexts": [
+        {
+          "unit_id": "unit-13-acknowledgments",
+          "unit_name": "致谢",
+          "text": "本科生毕业论文（设计）规范化要求（说明：本表供农理工科专业学生用，所有红色、蓝色文字仅供参考，学生在写作论文时请保留字体、字号，改写或删除掉文字，黑色文字请保留。毕业论文（设计）采用A4纸张打印，四周页边距为2 cm，装订线位置居左0.5 cm，页眉和页脚为5 mm。为保证打印效果，学生在打印前，请将全文字体的颜色统一设置成黑色。以上说明参阅后请自行删除，包括本文本框！！！）",
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-aafb36ce0102c361f941480b"
+          },
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-21b46b7c6b3d4d6775f287dd"
+          }
+        }
+      ]
+    }
+  ],
+  "product_acceptance": false,
+  "runtime_commit": "aefe34389f2c74f214595f3f4865cecfa32196cb"
+}

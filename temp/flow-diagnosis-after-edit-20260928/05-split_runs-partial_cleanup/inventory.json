@@ -1,0 +1,279 @@
+{
+  "document_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+  "source_entries": [
+    {
+      "source_entry_id": "source-entry-0",
+      "text": "KeepValue",
+      "entry_type": "text",
+      "source_order": {
+        "block": 1,
+        "inline": 0
+      },
+      "extent": {
+        "kind": "text",
+        "start": 0,
+        "end": 9
+      },
+      "provenance": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]",
+          "text_span": [
+            0,
+            9
+          ],
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+            "expected_fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+          },
+          "fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "object_id": "obj-0",
+      "type": "text",
+      "locator": "/body/p[1]",
+      "object_ref": {
+        "object_id": "obj-0",
+        "document_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+        "expected_fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+      },
+      "source_entry_id": "source-entry-0"
+    }
+  ],
+  "field_id_vocabulary": {
+    "schema_version": "docfit_pre_input_field_vocabulary_v1",
+    "registry": {
+      "registry_id": "test",
+      "registry_version": "1",
+      "sha256": "0c9adfeb2311a45c18078821bf11f5719c31c4e5979889c0561c268066a48264"
+    },
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline4",
+      "body.paragraph",
+      "body.table",
+      "body.equation"
+    ],
+    "field_count": 7,
+    "fields": [
+      {
+        "field_id": "thesis.title.zh",
+        "label": "中文题目",
+        "content_type": "text",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": [
+            "fill_slot"
+          ]
+        }
+      },
+      {
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "content_type": "section",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": []
+        }
+      },
+      {
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.heading.outline4",
+        "label": "四级标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.table",
+        "label": "表格",
+        "content_type": "table",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.equation",
+        "label": "公式",
+        "content_type": "equation",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      }
+    ],
+    "digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99"
+  },
+  "field_vocabulary_digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99",
+  "canonical_source_inventory": {
+    "schema_version": "docfit-canonical-source-inventory/v1",
+    "source_snapshot_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+    "entry_count": 1,
+    "source_entries": [
+      {
+        "source_entry_id": "source-entry-0",
+        "text": "KeepValue",
+        "entry_type": "text",
+        "source_order": {
+          "block": 1,
+          "inline": 0
+        },
+        "extent": {
+          "kind": "text",
+          "start": 0,
+          "end": 9
+        },
+        "provenance": [
+          {
+            "object_id": "obj-0",
+            "locator": "/body/p[1]",
+            "text_span": [
+              0,
+              9
+            ],
+            "object_ref": {
+              "object_id": "obj-0",
+              "document_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+              "expected_fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+            },
+            "fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+          }
+        ]
+      }
+    ],
+    "inventory_digest": "1d7692658007e1574911c7d99cc582547560cbcab78aa41dd90998b18696e9a4"
+  },
+  "unit_boundary_proof": {
+    "schema_version": "docfit-unit-boundary-proof/v2",
+    "status": "ok",
+    "checkpoint": "unit-boundary",
+    "source_hash": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+    "source_inventory_digest": "1d7692658007e1574911c7d99cc582547560cbcab78aa41dd90998b18696e9a4",
+    "unit_projection_digest": "fe849e946df3d5e8ea08312759009920c54d4315dcaec05ec3cfea47d563bc8f",
+    "units": [
+      {
+        "unit_id": "u-all",
+        "unit_name": "source",
+        "start_boundary": {
+          "source_entry_id": "source-entry-0",
+          "edge": "start"
+        },
+        "end_boundary": {
+          "source_entry_id": "source-entry-0",
+          "edge": "end"
+        }
+      }
+    ],
+    "resolved_units": [
+      {
+        "unit_id": "u-all",
+        "unit_name": "source",
+        "start_boundary": {
+          "source_entry_id": "source-entry-0",
+          "edge": "start"
+        },
+        "end_boundary": {
+          "source_entry_id": "source-entry-0",
+          "edge": "end"
+        },
+        "source_spans": [
+          {
+            "source_entry_id": "source-entry-0",
+            "extent": {
+              "kind": "text",
+              "start": 0,
+              "end": 9
+            },
+            "text": "KeepValue",
+            "word_fragments": [
+              {
+                "object_id": "obj-0",
+                "locator": "/body/p[1]",
+                "text": "KeepValue",
+                "source_text_start": 0,
+                "source_text_end": 9,
+                "object_text_start": 0,
+                "object_text_end": 9,
+                "object_ref": {
+                  "object_id": "obj-0",
+                  "document_sha256": "34df12328762acff02a4156589f19ea854c3fd4566f623a7d2e5daa18e7556ca",
+                  "expected_fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+                },
+                "fingerprint": "348df5f149f34b9e728d02c24ec27e3beffb69d1bf4d88ee81e1f9261d389f4b"
+              }
+            ]
+          }
+        ],
+        "covered_object_ids": [
+          "obj-0"
+        ],
+        "start_locator": "/body/p[1]",
+        "end_locator": "/body/p[1]"
+      }
+    ]
+  },
+  "unit_projection_digest": "fe849e946df3d5e8ea08312759009920c54d4315dcaec05ec3cfea47d563bc8f"
+}

@@ -1,0 +1,9 @@
+registry_id: test.registry
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: 中文论文题目
+    meaning: 学位论文封面中的中文题名。
+    content_type: text
+    value_sources:
+      - student_source

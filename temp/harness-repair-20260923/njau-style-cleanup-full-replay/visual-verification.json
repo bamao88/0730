@@ -1,0 +1,110 @@
+{
+  "verification_level": "real full materialization replay and actual all-page visual review; no fresh Agent loop or product acceptance",
+  "source_pages_viewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "candidate_pages_viewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "review_status": "blocked",
+  "review_sha256": "8511115d76ca7c7f3e8dafc20d4b3c1306a8254410181e7b5950188764544d71",
+  "review_path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/njau-style-cleanup-full-replay/work/.docfit/final-visual-review/b32dc30b06bde83e6ebe911c7f4c561778390047bf45a390763cfa07dcee5064/review.json",
+  "findings": [
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 5,
+      "source_pages": [
+        5,
+        6
+      ],
+      "owner": "needs_attribution",
+      "message": "中英文摘要合并到同一页，丢失原有独立英文摘要页与罗马页码II；需检查分页载体和删除/重写操作。"
+    },
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 6,
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_pages": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "owner": "needs_attribution",
+      "message": "正文至致谢页底部不再显示原有阿拉伯页码；需核对原始判断、页脚字段和执行操作，不以渲染差异直接放行。"
+    },
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 9,
+      "pages": [
+        9,
+        11
+      ],
+      "owner": "needs_attribution",
+      "message": "参考文献和学术成果目录仍保留红色编写说明，需按原始语义判断与执行结果归因。"
+    },
+    {
+      "status": "open",
+      "blocking": true,
+      "page": 12,
+      "owner": "agent",
+      "message": "原始判断把致谢样例全文列为cleanup/style_only且无字段绑定；物化后仅余标题，没有致谢正文填写接口。执行器不能擅自补字段，需语义重审。"
+    }
+  ],
+  "gate_result": {
+    "schema_version": 1,
+    "status": "error",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "application",
+      "code": "final_visual_review_not_passed",
+      "retryable": false,
+      "message": "The final visual review is pending, blocked or requires further inspection.",
+      "suggested_actions": [
+        "Review the saved final-page evidence and record actual observations before resuming.",
+        "Do not change school semantic judgments to bypass the final visual review."
+      ]
+    }
+  },
+  "published": false,
+  "fault_injection": false,
+  "gold_read": false
+}

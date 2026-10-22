@@ -233,6 +233,7 @@ class EffectiveStyleResolver:
         parents = {child: parent for parent in root.iter() for child in parent}
         paragraph = self._paragraph_for(selected, parents)
         run = self._run_for(selected, paragraph)
+        cell = self._cell_for(selected, parents)
         accumulator = _Accumulator()
         unresolved: list[str] = []
         accumulator.apply(
@@ -300,6 +301,12 @@ class EffectiveStyleResolver:
                 source_kind="run_direct",
                 source_id=locator_text,
             )
+        if cell is not None:
+            accumulator.apply(
+                _cell_properties(cell.find(f"{W}tcPr")),
+                source_kind="cell_direct",
+                source_id=locator_text,
+            )
 
         accumulator.derive("run.font_ascii", "run.font_hansi")
         accumulator.derive("run.font_hansi", "run.font_ascii")
@@ -315,6 +322,8 @@ class EffectiveStyleResolver:
         accumulator.implicit("paragraph.page_break_before", False)
         accumulator.implicit("paragraph.numbering", None)
         accumulator.implicit("paragraph.tab_stops", None)
+        if cell is not None:
+            accumulator.implicit("cell.text_wrap", True)
         properties = MappingProxyType(dict(sorted(accumulator.values.items())))
         provenance = MappingProxyType(
             {
@@ -422,6 +431,23 @@ class EffectiveStyleResolver:
                 "effective_style_locator_invalid", "A locator must be an absolute OOXML path."
             )
         part = "word/document.xml"
+        paragraph_match = re.fullmatch(
+            r"/body/p\[@paraId=(?:['\"])?([0-9A-Fa-f]+)(?:['\"])?\]",
+            locator,
+        )
+        if paragraph_match is not None:
+            para_id = paragraph_match.group(1)
+            matches = [
+                paragraph
+                for paragraph in self._root(part).iter(f"{W}p")
+                if (paragraph.get(f"{W14}paraId") or "").casefold() == para_id.casefold()
+            ]
+            if len(matches) != 1:
+                raise _failure(
+                    "effective_style_locator_not_found",
+                    f"Locator does not exist: {locator}.",
+                )
+            return part, locator, matches[0]
         selected = self._path_element(self._root(part), locator)
         return part, locator, selected
 
@@ -473,6 +499,14 @@ class EffectiveStyleResolver:
     def _paragraph_for(
         selected: ET.Element, parents: Mapping[ET.Element, ET.Element]
     ) -> ET.Element:
+        if selected.tag == f"{W}tbl":
+            paragraphs = list(selected.iter(f"{W}p"))
+            if not paragraphs:
+                raise _failure(
+                    "effective_style_paragraph_not_unique",
+                    "The table occurrence contains no paragraph.",
+                )
+            return paragraphs[0]
         current: ET.Element | None = selected
         while current is not None:
             if current.tag == f"{W}p":
@@ -494,6 +528,22 @@ class EffectiveStyleResolver:
             paragraph.iter(f"{W}r")
         )
         return runs[0] if runs else None
+
+    @staticmethod
+    def _cell_for(
+        selected: ET.Element,
+        parents: Mapping[ET.Element, ET.Element],
+    ) -> ET.Element | None:
+        if selected.tag == f"{W}tbl":
+            return next(selected.iter(f"{W}tc"), None)
+        if selected.tag == f"{W}tc":
+            return selected
+        current: ET.Element | None = selected
+        while current is not None:
+            if current.tag == f"{W}tc":
+                return current
+            current = parents.get(current)
+        return next(selected.iter(f"{W}tc"), None)
 
 
 def _on_off_attribute(element: ET.Element, name: str) -> bool:
@@ -645,4 +695,30 @@ def _paragraph_properties(properties: ET.Element | None) -> tuple[_Instruction, 
                 }
             )
         result.append(_Instruction("paragraph.tab_stops", values or None))
+    return tuple(result)
+
+
+def _cell_properties(properties: ET.Element | None) -> tuple[_Instruction, ...]:
+    if properties is None:
+        return ()
+    result: list[_Instruction] = []
+    vertical_alignment = _attribute(properties.find(f"{W}vAlign"), "val")
+    if vertical_alignment is not None:
+        result.append(_Instruction("cell.vertical_alignment", vertical_alignment))
+    margins = properties.find(f"{W}tcMar")
+    if margins is not None:
+        for tag, path in (
+            ("top", "cell.padding_mm.top"),
+            ("bottom", "cell.padding_mm.bottom"),
+            ("left", "cell.padding_mm.left"),
+            ("right", "cell.padding_mm.right"),
+        ):
+            raw = _attribute(margins.find(f"{W}{tag}"), "w")
+            if raw is not None:
+                with suppress(ValueError):
+                    result.append(_Instruction(path, int(raw) / 56.6929133858))
+    if properties.find(f"{W}noWrap") is not None:
+        result.append(_Instruction("cell.text_wrap", False))
+    else:
+        result.append(_Instruction("cell.text_wrap", True))
     return tuple(result)

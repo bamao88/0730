@@ -1,0 +1,126 @@
+contract_id: contract-1
+field_registry_ref:
+  registry_id: test
+  registry_version: '1'
+  sha256: 0a4039decffc39a17ae7df360ff3b63ae0608275ca7de4d8feeafbf3f0b061ee
+provenance:
+  materialization:
+    field_registry_ref:
+      registry_id: test
+      registry_version: '1'
+      sha256: 0a4039decffc39a17ae7df360ff3b63ae0608275ca7de4d8feeafbf3f0b061ee
+    field_vocabulary_digest: '4444444444444444444444444444444444444444444444444444444444444444'
+    materialization_receipt_sha256: '7777777777777777777777777777777777777777777777777777777777777777'
+    schema_version: docfit-template-materialization-provenance/v1
+    semantic_judgments_sha256: '3333333333333333333333333333333333333333333333333333333333333333'
+    slots: []
+    source_inventory_digest: ed426c97eabeb480eb85eafc82884e8a5ff80d8a6afaff7fbdd1270f49f23f0a
+    source_partition:
+      canonical_source_inventory:
+        entry_count: 1
+        inventory_digest: ed426c97eabeb480eb85eafc82884e8a5ff80d8a6afaff7fbdd1270f49f23f0a
+        schema_version: docfit-canonical-source-inventory/v1
+        source_entries:
+        - entry_type: text
+          extent:
+            end: 5
+            kind: text
+            start: 0
+          provenance:
+          - fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+            locator: /body/sdt[1]/p[1]/r[1]
+            object_id: object-1
+            object_ref:
+              document_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+              expected_fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+              object_id: object-1
+            text_span:
+            - 0
+            - 5
+          source_entry_id: source-entry-1
+          source_order:
+            block: 1
+            inline: 0
+          text: value
+        source_snapshot_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+      document_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+      source_entries:
+      - entry_type: text
+        extent:
+          end: 5
+          kind: text
+          start: 0
+        provenance:
+        - fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+          locator: /body/sdt[1]/p[1]/r[1]
+          object_id: object-1
+          object_ref:
+            document_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+            expected_fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+            object_id: object-1
+          text_span:
+          - 0
+          - 5
+        source_entry_id: source-entry-1
+        source_order:
+          block: 1
+          inline: 0
+        text: value
+      unit_boundary_proof:
+        checkpoint: unit-boundary
+        resolved_units:
+        - covered_object_ids:
+          - object-1
+          end_boundary: &id001
+            edge: end
+            source_entry_id: source-entry-1
+          end_locator: /body/sdt[1]/p[1]/r[1]
+          source_spans:
+          - extent:
+              end: 5
+              kind: text
+              start: 0
+            source_entry_id: source-entry-1
+            text: value
+            word_fragments:
+            - fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+              locator: /body/sdt[1]/p[1]/r[1]
+              object_id: object-1
+              object_ref:
+                document_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+                expected_fingerprint: '9999999999999999999999999999999999999999999999999999999999999999'
+                object_id: object-1
+              object_text_end: 5
+              object_text_start: 0
+              source_text_end: 5
+              source_text_start: 0
+              text: value
+          start_boundary: &id002
+            edge: start
+            source_entry_id: source-entry-1
+          start_locator: /body/sdt[1]/p[1]/r[1]
+          unit_id: u-all
+          unit_name: source
+        schema_version: docfit-unit-boundary-proof/v2
+        source_hash: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+        source_inventory_digest: ed426c97eabeb480eb85eafc82884e8a5ff80d8a6afaff7fbdd1270f49f23f0a
+        status: ok
+        unit_projection_digest: 5843609d14c026f77dc0dc178a411179a76940005732d0c889d832ffde80fb41
+        units:
+        - end_boundary: *id001
+          start_boundary: *id002
+          unit_id: u-all
+          unit_name: source
+      unit_projection_digest: 5843609d14c026f77dc0dc178a411179a76940005732d0c889d832ffde80fb41
+    source_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+    template_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc
+    unit_projection_digest: 5843609d14c026f77dc0dc178a411179a76940005732d0c889d832ffde80fb41
+  materialization_digest: 6e7b5a1d3f51faee26890b6f3dbe0f6bfc1294403271b95d3e6a9625c65955c4
+regions: []
+revision: '1'
+schema_version: docfit-template-fill-contract/v2
+slots: []
+status: accepted
+style_contract_set_digest: f94d6989febe532778502412d3300dc3e9c5e25b6ac843d561211a15f5c0a317
+styles: []
+template_sha256: 4907c9f78482c115569f25ddf1bc3c5f43cc752786e3bba730988cced8005cfc

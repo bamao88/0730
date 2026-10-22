@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/replay.py", line 23, in <module>
+    protocol=publication_slot_protocol_status(candidate)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: publication_slot_protocol_status() takes 0 positional arguments but 1 was given

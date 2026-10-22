@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,6 +32,11 @@ CAPTURE_SCHEMA_VERSION = "docfit-school-style-capture/v1"
 _PARAGRAPH_ONLY_CONTENT_TYPES = frozenset(
     {"image", "asset", "formula", "equation", "table"}
 )
+
+
+def slot_style_contract_id(slot_ref: str) -> str:
+    digest = hashlib.sha256(slot_ref.encode("utf-8")).hexdigest()[:24]
+    return f"style.slot.{digest}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,12 +90,19 @@ def capture_template_style_contracts(
     styles: list[JsonObject] = []
     occurrences: list[JsonObject] = []
     for slot in slots:
-        slot_id = slot.get("slot_id")
+        slot_ref = slot.get("slot_ref")
+        if slot.get("handling") == "non_style":
+            if not isinstance(slot_ref, str) or not slot_ref:
+                raise _failure(
+                    "style_capture_slot_invalid",
+                    "A non-style slot still requires slot_ref.",
+                )
+            continue
         field_id = slot.get("field_id")
         content_type = slot.get("content_type")
         locator = slot.get("locator")
         if (
-            not isinstance(slot_id, str)
+            not isinstance(slot_ref, str)
             or not isinstance(field_id, str)
             or not isinstance(content_type, str)
             or not isinstance(locator, Mapping)
@@ -113,12 +126,13 @@ def capture_template_style_contracts(
         if not properties:
             raise _failure(
                 "style_capture_empty",
-                f"Slot {slot_id} exposes no materializable effective style properties.",
+                f"Slot {slot_ref} exposes no materializable effective style properties.",
             )
+        style_contract_id = slot_style_contract_id(slot_ref)
         style: JsonObject = {
-            "style_contract_id": f"style.slot.{slot_id}",
-            "label": f"{field_id} @ {slot_id}",
-            "application_scope": _legacy_application_scope(content_type),
+            "style_contract_id": style_contract_id,
+            "label": f"{field_id} @ {slot_ref}",
+            "application_scope": _application_scope_from_content_type(content_type),
             "owned_properties": sorted(properties),
             "effective_properties": dict(sorted(properties.items())),
             "override_policy": {
@@ -129,7 +143,7 @@ def capture_template_style_contracts(
             "evidence_refs": [
                 {
                     "type": "template_slot_representative",
-                    "slot_id": slot_id,
+                    "slot_ref": slot_ref,
                     "field_id": field_id,
                     "locator": dict(locator),
                 }
@@ -139,10 +153,10 @@ def capture_template_style_contracts(
         styles.append(style)
         occurrences.append(
             {
-                "occurrence_id": f"template-slot:{slot_id}",
+                "occurrence_id": f"template-slot:{slot_ref}",
                 "locator": dict(locator),
                 "style_contract_ref": {
-                    "style_contract_id": style["style_contract_id"],
+                    "style_contract_id": style_contract_id,
                     "contract_digest": style["contract_digest"],
                 },
             }
@@ -183,7 +197,7 @@ def capture_template_style_contracts(
     }
 
 
-def _legacy_application_scope(content_type: str) -> str:
+def _application_scope_from_content_type(content_type: str) -> str:
     return {
         "text": "text",
         "rich_text": "block",
@@ -205,13 +219,13 @@ def capture_template_style_observations(
     observations: list[FieldStyleObservation] = []
     non_style_slots: list[str] = []
     for slot in slots:
-        slot_id = slot.get("slot_id")
+        slot_ref = slot.get("slot_ref")
         if slot.get("handling") == "non_style":
-            if not isinstance(slot_id, str) or not slot_id:
+            if not isinstance(slot_ref, str) or not slot_ref:
                 raise _failure(
-                    "style_capture_slot_invalid", "A non-style slot still requires slot_id."
+                    "style_capture_slot_invalid", "A non-style slot still requires slot_ref."
                 )
-            non_style_slots.append(slot_id)
+            non_style_slots.append(slot_ref)
             continue
         field_id = slot.get("field_id")
         style_role_id = slot.get("style_role_id")
@@ -219,8 +233,8 @@ def capture_template_style_observations(
         profile_ref = slot.get("property_profile_ref")
         locator = slot.get("locator")
         if (
-            not isinstance(slot_id, str)
-            or not slot_id
+            not isinstance(slot_ref, str)
+            or not slot_ref
             or not isinstance(field_id, str)
             or not field_id
             or not isinstance(style_role_id, str)
@@ -237,14 +251,14 @@ def capture_template_style_observations(
         if profile.role_type != style_role_type:
             raise _failure(
                 "style_capture_profile_role_mismatch",
-                f"Slot {slot_id} role type does not match its profile.",
+                f"Slot {slot_ref} role type does not match its profile.",
             )
         try:
             resolved = resolver.resolve(locator)
         except ToolFailure as error:
             observation = _failed_resolution_observation(
                 field_id=field_id,
-                slot_id=slot_id,
+                slot_ref=slot_ref,
                 style_role_id=style_role_id,
                 profile=profile,
                 reason=error.message,
@@ -252,7 +266,7 @@ def capture_template_style_observations(
         else:
             observation = observe_effective_style(
                 field_id=field_id,
-                slot_id=slot_id,
+                slot_ref=slot_ref,
                 style_role_id=style_role_id,
                 profile=profile,
                 resolved=resolved,
@@ -260,19 +274,19 @@ def capture_template_style_observations(
         observations.append(observation)
 
     observed_identities = {
-        (item.slot_id, item.style_role_id) for item in observations
+        (item.slot_ref, item.style_role_id) for item in observations
     }
     for expected in expected_roles:
         field_id = expected.get("field_id")
-        slot_id = expected.get("slot_id")
+        slot_ref = expected.get("slot_ref")
         style_role_id = expected.get("style_role_id")
         style_role_type = expected.get("style_role_type")
         profile_ref = expected.get("property_profile_ref")
         if (
             not isinstance(field_id, str)
             or not field_id
-            or not isinstance(slot_id, str)
-            or not slot_id
+            or not isinstance(slot_ref, str)
+            or not slot_ref
             or not isinstance(style_role_id, str)
             or not style_role_id
             or not isinstance(style_role_type, str)
@@ -282,7 +296,7 @@ def capture_template_style_observations(
                 "style_capture_expected_role_invalid",
                 "Every expected role requires field, slot, role, role type, and profile ref.",
             )
-        if (slot_id, style_role_id) in observed_identities:
+        if (slot_ref, style_role_id) in observed_identities:
             continue
         profile = registry.resolve(profile_ref)
         if profile.role_type != style_role_type:
@@ -293,7 +307,7 @@ def capture_template_style_observations(
         observations.append(
             _missing_role_observation(
                 field_id=field_id,
-                slot_id=slot_id,
+                slot_ref=slot_ref,
                 style_role_id=style_role_id,
                 profile=profile,
             )
@@ -337,7 +351,7 @@ def compile_school_style_contracts(
     if capture.failed_observations or not capture.school_candidates:
         return None
     styles = [
-        _legacy_contract_from_candidate(item, registry)
+        _contract_from_school_candidate(item, registry)
         for item in capture.school_candidates
     ]
     if any(item is None for item in styles):
@@ -354,7 +368,7 @@ def compile_school_style_contracts(
 def _failed_resolution_observation(
     *,
     field_id: str,
-    slot_id: str,
+    slot_ref: str,
     style_role_id: str,
     profile: StylePropertyProfile,
     reason: str,
@@ -383,7 +397,7 @@ def _failed_resolution_observation(
     ]
     return FieldStyleObservation.build(
         field_id=field_id,
-        slot_id=slot_id,
+        slot_ref=slot_ref,
         style_role_id=style_role_id,
         profile=profile,
         properties=properties,
@@ -393,7 +407,7 @@ def _failed_resolution_observation(
 def _missing_role_observation(
     *,
     field_id: str,
-    slot_id: str,
+    slot_ref: str,
     style_role_id: str,
     profile: StylePropertyProfile,
 ) -> FieldStyleObservation:
@@ -421,7 +435,7 @@ def _missing_role_observation(
     ]
     return FieldStyleObservation.build(
         field_id=field_id,
-        slot_id=slot_id,
+        slot_ref=slot_ref,
         style_role_id=style_role_id,
         profile=profile,
         properties=properties,
@@ -445,7 +459,7 @@ def _school_candidates(
                 {
                     "style_role_id": role_id,
                     "reason": "current_style_contract_seam_cannot_encode_complete_observation",
-                    "slot_ids": [item.slot_id for item in role_observations],
+                    "slot_refs": [item.slot_ref for item in role_observations],
                 }
             )
             continue
@@ -456,7 +470,7 @@ def _school_candidates(
                 {
                     "style_role_id": role_id,
                     "reason": "conflicting_complete_school_observations",
-                    "slot_ids": [item.slot_id for item in role_observations],
+                    "slot_refs": [item.slot_ref for item in role_observations],
                     "candidate_digests": sorted(digests),
                 }
             )
@@ -468,7 +482,7 @@ def _school_candidates(
         selected["evidence_refs"] = [
             {
                 "type": "school_field_style_observation",
-                "slot_id": item.slot_id,
+                "slot_ref": item.slot_ref,
                 "observation_digest": item.observation_digest,
                 "school_observation_set_digest": (
                     observation_set.school_observation_set_digest
@@ -517,7 +531,7 @@ def _candidate_from_observation(
     }
 
 
-def _legacy_contract_from_candidate(
+def _contract_from_school_candidate(
     candidate: Mapping[str, Any],
     registry: StylePropertyProfileRegistry,
 ) -> JsonObject | None:
@@ -609,7 +623,7 @@ def _gap_for_observation(observation: FieldStyleObservation) -> JsonObject:
         if item.effective_state == EffectiveState.UNRESOLVED and item.reason is not None
     }
     return {
-        "slot_id": observation.slot_id,
+        "slot_ref": observation.slot_ref,
         "field_id": observation.field_id,
         "style_role_id": observation.style_role_id,
         "property_profile_ref": dict(observation.profile_ref),
@@ -625,7 +639,7 @@ def _gap_for_observation(observation: FieldStyleObservation) -> JsonObject:
 
 def _failure_for_observation(observation: FieldStyleObservation) -> JsonObject:
     return {
-        "slot_id": observation.slot_id,
+        "slot_ref": observation.slot_ref,
         "field_id": observation.field_id,
         "style_role_id": observation.style_role_id,
         "property_profile_ref": dict(observation.profile_ref),

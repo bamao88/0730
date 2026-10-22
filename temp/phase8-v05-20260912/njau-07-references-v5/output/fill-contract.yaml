@@ -1,0 +1,352 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.424545375f8aff3b
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 71b35df5683b214ee28e615fece5aecc1d4d8703423401c0e608f0a75e250459
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.31e971f603c38fe20d1edc85
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.31e971f603c38fe20d1edc85
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    source_entry_id: source-entry-076432871330104e56f69261
+    source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+    word_fragments: &id001
+    - fingerprint: 03e32fa2669c5f8dbaa1f540a98ffa1f3f0085346833912761ee252634a81eef
+      locator: /body/p[7]/r[1]
+      object_id: obj-f5946e7f4726854e8fab30c5
+      object_ref:
+        document_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+        expected_fingerprint: 03e32fa2669c5f8dbaa1f540a98ffa1f3f0085346833912761ee252634a81eef
+        object_id: obj-f5946e7f4726854e8fab30c5
+      object_text_end: 52
+      object_text_start: 0
+      source_text_end: 52
+      source_text_start: 0
+      text: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+    accepted_span: &id002
+      covered_object_ids:
+      - obj-f5946e7f4726854e8fab30c5
+      expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      extent:
+        end: 52
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 6
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-076432871330104e56f69261
+      slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-076432871330104e56f69261
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      text: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      text_end: 52
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id003
+      source_judgment_ref: semantic_judgments[6]
+      part_index: 0
+      semantic_judgments_sha256: 41e8b190f403c484dc08f21ae14fe4397812bbfbc71b155424295e39d8eb61f0
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id004
+      outcome: applied
+      candidate_before_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      candidate_after_sha256: 424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0
+      operation_sha256: 2f5b3e4eadd2c4a32b8078963d47be2026be18a5c352e890a5cf04ba82a4d553
+      mutation_receipt_sha256: 4bcb2502af9e1434ed29d4ed5db1430a9cd29949ba98b49f5c9d009164072f9b
+  style_contract_ref:
+    style_contract_id: style.slot.31e971f603c38fe20d1edc85
+    contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+styles:
+- style_contract_id: style.slot.31e971f603c38fe20d1edc85
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_complex_script
+  - run.font_east_asia
+  - run.font_hansi
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: left
+    paragraph.line_spacing_pt: 20.0
+    paragraph.line_spacing_rule: exact
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 0.0
+    paragraph.space_before_pt: 0.0
+    paragraph.widow_control: true
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: 0000FF
+    run.font_ascii: 宋体
+    run.font_complex_script: Arial
+    run.font_east_asia: 宋体
+    run.font_hansi: 宋体
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+  label: references.entries @ source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 74d6bb561996ecd7fc33cd3e86ba1452c1ea2730821788e5a4a5a34c85dc63cd
+provenance:
+  source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    template_sha256: 424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0
+    source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+    semantic_judgments_sha256: 41e8b190f403c484dc08f21ae14fe4397812bbfbc71b155424295e39d8eb61f0
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 2e7f296902744305d22f0495bb6dd55d814754a1479eed16c6bb299b89b273a0
+    slots:
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      slot_ref: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+      source_entry_id: source-entry-076432871330104e56f69261
+      source_snapshot_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      source_inventory_digest: d8683ca8c35b9b1abb085b99ca3a545c9407477fdf8d82be2e213ba2b5786a08
+      expected_source_content: '[1] 蒋有绪，郭泉水，马娟，等. 中国森林群落分类及其群落学特征[M]. 北京: 科学出版社，1998'
+      word_fragments: *id001
+      accepted_span: *id002
+      accepted_result: *id003
+      actual_result: *id004
+  materialization_digest: 9c3b87ef39ad7c196dc94a8694a124c19ae86d10b0bd93a6c6062d5242600186
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 19
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f
+    final_sha256: 424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 74d6bb561996ecd7fc33cd3e86ba1452c1ea2730821788e5a4a5a34c85dc63cd
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 74d6bb561996ecd7fc33cd3e86ba1452c1ea2730821788e5a4a5a34c85dc63cd
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.31e971f603c38fe20d1edc85
+          contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+        style_contract_id: style.slot.31e971f603c38fe20d1edc85
+        contract_digest: 53d195e0c67411effa303b07f2260d1082f875e34e9de593bfdd7621abc42568
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-076432871330104e56f69261;extent=text[0:52];source_snapshot_sha256=61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

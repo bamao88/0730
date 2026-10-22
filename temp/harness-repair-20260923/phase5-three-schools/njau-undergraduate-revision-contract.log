@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_revision_no_progress",
+    "retryable": false,
+    "message": "Repeated unchanged failure for source-entry-ca2a622fd08073ca971957db: source_text_partition.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  }
+}

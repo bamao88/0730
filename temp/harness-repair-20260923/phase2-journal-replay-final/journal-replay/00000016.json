@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-23T06:13:47.319562+00:00",
+  "data": {
+    "base_candidate_sequence": 15,
+    "base_ledger_digest": "b930cd344077e2683f9424a5e10f737c2dee1f20a6197e254c9775892496c9c8",
+    "batch_id": "semantic-batch-0006-088414fc",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=unit_evidence_packet and unit_id=unit-body-agri-science-eng. This is batch 6 of 10 for accepted unit '正文（农理工科类）'. Each entry includes all unit_contexts it crosses, with exact text per unit. Judge each assigned entry once over its complete text. Ordered parts must end at each unit-context text boundary, even when adjacent roles are identical. The unit packet remains the readable context, but this candidate owns exactly the following source entries in this exact order:\n[\"source-entry-858d67683f6dcc5b457eea40\", \"source-entry-cd6aa8a6ec14a9028ef4059a\", \"source-entry-344bb676258ff9ee88721d53\", \"source-entry-7c3e626fe5c6677d3e3d997f\", \"source-entry-8bc31cf3301960b25fbb406a\", \"source-entry-6c79bef32b17c58ac3236380\", \"source-entry-2c43f0412405875489baeda8\", \"source-entry-b13d59f52a95aeacc201f6c5\", \"source-entry-06e0be7244ca2ef0438397e1\", \"source-entry-c31cc04aa66a920175d04e4d\", \"source-entry-d262983d771a6a30b0a9320b\"]\nReturn status=complete with one source_entry_id + ordered parts judgment for every listed entry, in manifest order, and no judgment for any other entry. Choose field IDs only from the packet field_id_vocabulary and preserve exact source text. If the readable school evidence is insufficient, return status=needs_input and stop; do not invent an answer. This is a candidate only: Harness accepts the complete aggregated semantic set atomically after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. "
+  },
+  "event_digest": "197acb62395a2d9afd9bde4c9a45f5eedf80215cb538ae2f45c7733d27d0510e",
+  "evidence_mode": "replay",
+  "kind": "request",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "e0fb1f5eed1404446572e65115533ece13561aa6ab5435d3c7610d42b95296b8",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 16
+}

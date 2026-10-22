@@ -1,0 +1,155 @@
+{
+  "verification_level": "synthetic live post-unit schema protocol probe; not school E2E",
+  "input": {
+    "status": "complete",
+    "summary": "Synthetic transport probe only.",
+    "semantic_judgments": [
+      {
+        "source_entry_id": "source-entry-probe",
+        "parts": [
+          {
+            "text": " A ",
+            "role": "fixed_label"
+          },
+          {
+            "text": " ",
+            "role": "style_only"
+          },
+          {
+            "text": "B\u00a0",
+            "role": "cleanup"
+          }
+        ],
+        "reason": "Copy the supplied characters without changing the part boundaries or roles."
+      }
+    ]
+  },
+  "query_count": 1,
+  "backend": "minimax",
+  "visible_messages": [],
+  "text_deltas": [],
+  "tool_argument_deltas": [
+    {
+      "index": 0,
+      "partial_json": "{"
+    },
+    {
+      "index": 0,
+      "partial_json": "\"status\": \""
+    },
+    {
+      "index": 0,
+      "partial_json": "complete"
+    },
+    {
+      "index": 0,
+      "partial_json": "\""
+    },
+    {
+      "index": 0,
+      "partial_json": ", \"summary\": \""
+    },
+    {
+      "index": 0,
+      "partial_json": "Synthetic"
+    },
+    {
+      "index": 0,
+      "partial_json": " transport"
+    },
+    {
+      "index": 0,
+      "partial_json": " probe"
+    },
+    {
+      "index": 0,
+      "partial_json": " only"
+    },
+    {
+      "index": 0,
+      "partial_json": "."
+    },
+    {
+      "index": 0,
+      "partial_json": "\""
+    },
+    {
+      "index": 0,
+      "partial_json": ", \"semantic_judgments\": "
+    },
+    {
+      "index": 0,
+      "partial_json": "[{\"source_entry_id\": \"source-entry-probe\", \"parts\": [{\"text\": \" A \", \"role\": \"fixed_label\"}, {\"text\": \" \", \"whitespace\": {\"codepoint\": \"U+0020\", \"count\": 1}, \"role\": \"style_only\"}, {\"text\": \"B\\\\u00a0\", \"role\": \"cleanup\"}], \"reason\": \"Copy the supplied characters without changing the part boundaries or roles.\"}]"
+    },
+    {
+      "index": 0,
+      "partial_json": "}"
+    }
+  ],
+  "structured_tool_inputs": [
+    {
+      "status": "complete",
+      "summary": "Synthetic transport probe only.",
+      "semantic_judgments": [
+        {
+          "source_entry_id": "source-entry-probe",
+          "parts": [
+            {
+              "text": " A ",
+              "role": "fixed_label"
+            },
+            {
+              "text": " ",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              },
+              "role": "style_only"
+            },
+            {
+              "text": "B\u00a0",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "Copy the supplied characters without changing the part boundaries or roles."
+        }
+      ]
+    }
+  ],
+  "result": {
+    "is_error": false,
+    "subtype": "success",
+    "terminal_reason": "completed",
+    "structured_output": {
+      "status": "complete",
+      "summary": "Synthetic transport probe only.",
+      "semantic_judgments": [
+        {
+          "source_entry_id": "source-entry-probe",
+          "parts": [
+            {
+              "text": " A ",
+              "role": "fixed_label"
+            },
+            {
+              "text": " ",
+              "whitespace": {
+                "codepoint": "U+0020",
+                "count": 1
+              },
+              "role": "style_only"
+            },
+            {
+              "text": "B\u00a0",
+              "role": "cleanup"
+            }
+          ],
+          "reason": "Copy the supplied characters without changing the part boundaries or roles."
+        }
+      ]
+    },
+    "visible_result": "{\"status\":\"complete\",\"summary\":\"Synthetic transport probe only.\",\"semantic_judgments\":[{\"source_entry_id\":\"source-entry-probe\",\"parts\":[{\"text\":\" A \",\"role\":\"fixed_label\"},{\"text\":\" \",\"whitespace\":{\"codepoint\":\"U+0020\",\"count\":1},\"role\":\"style_only\"},{\"text\":\"B\u00a0\",\"role\":\"cleanup\"}],\"reason\":\"Copy the supplied characters without changing the part boundaries or roles.\"}]}"
+  },
+  "wall_seconds": 7.7713989579933695,
+  "exact_match": false
+}

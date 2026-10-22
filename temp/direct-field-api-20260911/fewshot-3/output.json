@@ -1,0 +1,147 @@
+{
+  "items": [
+    {
+      "n": 3,
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fill_slot",
+          "semantic": "学校名称（固定为湖南农业大学）"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计）",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "semantic": "论文中文题目"
+        },
+        {
+          "text": " （小二黑体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "semantic": "论文英文题目（Times New Roman大写加粗）"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "学生姓名",
+          "role": "fill_slot",
+          "semantic": "学生真实姓名（三号黑体加粗）"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "style_only"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "semantic": "填写学生姓名（三号楷体加粗）"
+        },
+        {
+          "text": " （三号楷体加粗）",
+          "role": "style_only"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "学□□号",
+          "role": "fill_slot",
+          "semantic": "填写完整学号"
+        },
+        {
+          "text": "：20××××××××××",
+          "role": "fill_slot",
+          "semantic": "填写学号（示例格式：20开头12位）"
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "年级专业及班级",
+          "role": "fill_slot",
+          "semantic": "填写年级、专业、班级"
+        },
+        {
+          "text": "：20××级×××（×）班",
+          "role": "fill_slot",
+          "semantic": "填写具体年级、专业名称、班级方向，如20XX级XX专业（X）班"
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "spacer"
+        },
+        {
+          "text": "指导老师及职称",
+          "role": "fill_slot",
+          "semantic": "填写指导老师姓名及职称"
+        },
+        {
+          "text": "：×××□教授",
+          "role": "fill_slot",
+          "semantic": "填写指导老师姓名，如××× 教授（中间一字宽空格）"
+        }
+      ]
+    }
+  ]
+}

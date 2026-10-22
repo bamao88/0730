@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "committed": true,
+  "checks": [
+    {
+      "name": "object_refs_bound",
+      "result": "ok"
+    },
+    {
+      "name": "source_unchanged",
+      "result": "ok",
+      "sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c"
+    },
+    {
+      "name": "package_reopens",
+      "result": "ok"
+    },
+    {
+      "name": "officecli_validate",
+      "result": "ok",
+      "passed": true,
+      "detail": "Validation passed: no errors found."
+    },
+    {
+      "name": "effects_re_read",
+      "result": "ok"
+    }
+  ],
+  "warnings": [],
+  "failure": null,
+  "input_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+  "output_sha256": "654e9bc00e6d4a78ea5c433544d9cf4351b44eab7b9f92b0b477568c175a33b3",
+  "output_docx": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/manual-template-preview-local-20260818-165649/work/candidate-template.docx",
+  "operations": [
+    {
+      "index": 0,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-fd33b7f04a4b454221ccce3a",
+        "expected_fingerprint": "b094e4368535f2fd35c4066790e98763c380b7376a1f924bbc0373552f5a7d22"
+      },
+      "field_id": "thesis.title.zh",
+      "slot_id": "slot.thesis.title.zh.fd33b7f04a",
+      "result": "applied"
+    },
+    {
+      "index": 1,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-47e1bb35fa71996bdc65b536",
+        "expected_fingerprint": "2dc26d5c88906d8edd5ce6406729dc52ae52b4b6ca3b790e19efbbc86c755c39"
+      },
+      "field_id": "author.name.zh",
+      "slot_id": "slot.author.name.zh.47e1bb35fa",
+      "result": "applied"
+    },
+    {
+      "index": 2,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-5ab290afe0044ba1e00163de",
+        "expected_fingerprint": "a066c2e85df42d1e89f3203592b8bacbb9c16b0f3ed67eda96ffa40040de7908"
+      },
+      "field_id": "author.student_id",
+      "slot_id": "slot.author.student_id.5ab290afe0",
+      "result": "applied"
+    },
+    {
+      "index": 3,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-d6a384597dc539ded4ef387a",
+        "expected_fingerprint": "87050787f5f9d184222d88bcb53ed5bde72ef0fb878ea3864db1140f773f35eb"
+      },
+      "field_id": "author.department",
+      "slot_id": "slot.author.department.d6a384597d",
+      "result": "applied"
+    },
+    {
+      "index": 4,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-2559234216416f667f012d66",
+        "expected_fingerprint": "d506b46f942c10acb847da9840a5e2ca83856f76cb0c9ff82353adfcd0b48bc4"
+      },
+      "field_id": "author.major",
+      "slot_id": "slot.author.major.2559234216",
+      "result": "applied"
+    },
+    {
+      "index": 5,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-cd9e7a01aa407dcd824fd686",
+        "expected_fingerprint": "2da3c5c2d8885648db5e68b09583bdc145cf5dce9abb66e09d78872f2f559e66"
+      },
+      "field_id": "advisor.name.zh",
+      "slot_id": "slot.advisor.name.zh.cd9e7a01aa",
+      "result": "applied"
+    },
+    {
+      "index": 6,
+      "action": "materialize_slot",
+      "target_ref": {
+        "document_sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c",
+        "object_id": "obj-84657b9a75529ad4d10321de",
+        "expected_fingerprint": "b028bbaeeb5f4412b42054841622ceaf852f9d993a5c31dcf7f5c2a254aa1bb4"
+      },
+      "field_id": "advisor.title",
+      "slot_id": "slot.advisor.title.84657b9a75",
+      "result": "applied"
+    }
+  ],
+  "effects": {
+    "preserved_boundaries": [],
+    "migrated_boundaries": [],
+    "page_start_results": [],
+    "style_scope_changes": [],
+    "toc_source_levels": [],
+    "toc_suppressed_sources": []
+  },
+  "provider": {
+    "name": "officecli",
+    "version": "1.0.144",
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "environment": {
+      "platform": "Darwin",
+      "architecture": "arm64"
+    },
+    "expected_version": "1.0.143",
+    "version_locked": false,
+    "license": "Apache-2.0"
+  }
+}

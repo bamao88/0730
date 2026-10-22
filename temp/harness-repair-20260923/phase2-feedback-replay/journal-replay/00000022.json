@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-23T06:28:45.461537+00:00",
+  "data": {
+    "base_candidate_sequence": 21,
+    "base_ledger_digest": "cca8956be1488d3c3cc73452fe99248b1c2f51124f68061d89d527abf9b5717d",
+    "batch_id": "semantic-batch-0008-6d8e2d11",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=unit_evidence_packet and unit_id=unit-references. This is batch 8 of 10 for accepted unit '参考文献'. Each entry includes all unit_contexts it crosses, with exact text per unit. Judge each assigned entry once over its complete text. Ordered parts must end at each unit-context text boundary, even when adjacent roles are identical. The unit packet remains the readable context, but this candidate owns exactly the following source entries in this exact order:\n[\"source-entry-db62d6453a3105d0c9cef4be\", \"source-entry-bc83b192a296aad304c5ae79\", \"source-entry-68fe5f9235e778cd5b1dc18e\", \"source-entry-7abd1e1ad54e1ba2c93b070c\", \"source-entry-4544bbf8bd8ba8737268c5cc\"]\nReturn status=complete with one source_entry_id + ordered parts judgment for every listed entry, in manifest order, and no judgment for any other entry. Choose field IDs only from the packet field_id_vocabulary and preserve exact source text. If the readable school evidence is insufficient, return status=needs_input and stop; do not invent an answer. This is a candidate only: Harness accepts the complete aggregated semantic set atomically after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. "
+  },
+  "event_digest": "d35650df3cbe34f8f62818a1b509dd43bda7d37609a0839c8369127d05b19ae3",
+  "evidence_mode": "replay",
+  "kind": "request",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "c326febbb19799e833bdd09d03cc1ff49f494f0aca31faa11bed24c551d35387",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 22
+}

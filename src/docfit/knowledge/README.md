@@ -1,4 +1,4 @@
-# Knowledge code boundary
+# Knowledge 代码边界
 
 本目录负责产品内置通用 Knowledge Package 的数据、加载与校验代码。
 

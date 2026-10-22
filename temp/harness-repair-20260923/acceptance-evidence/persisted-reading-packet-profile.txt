@@ -1,0 +1,33 @@
+         401652466 function calls in 84.067 seconds
+
+   Ordered by: cumulative time
+   List reduced from 122 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.003    0.003   90.110   90.110 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/tools/service.py:528(_persisted_unit_reading_packet)
+        2    0.002    0.001   89.546   44.773 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/unit_source.py:174(validate_unit_proof)
+        2    0.266    0.133   89.533   44.767 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/unit_source.py:103(resolve_unit_partition)
+     1050    0.323    0.000   89.210    0.085 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_spans.py:373(resolve_source_span)
+     3155    1.148    0.000   74.781    0.024 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:278(validate_canonical_source_entries)
+  1659530    0.400    0.000   73.631    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:281(<genexpr>)
+  1656375    3.422    0.000   73.231    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:174(from_json)
+     1050    0.046    0.000   64.422    0.061 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_spans.py:702(_inventory_digest)
+  9739485    3.827    0.000   59.540    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:182(<genexpr>)
+  8083110   18.418    0.000   55.713    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:97(from_json)
+        1    0.001    0.001   46.463   46.463 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/tools/service.py:187(_post_unit_checkpoint)
+        1    0.002    0.002   43.373   43.373 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/unit_source.py:208(require_initial_binding)
+        1    0.001    0.001   43.299   43.299 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/unit_source.py:193(validate_inventory_partition)
+     1055    0.011    0.000   39.343    0.037 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:214(from_json)
+      284    0.125    0.000   17.570    0.062 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_spans.py:621(_resolve_whole_entry_span)
+  8083110    4.841    0.000   13.194    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:76(__post_init__)
+     1055    0.367    0.000   13.118    0.012 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:735(_source_inventory_digest)
+ 19481080    5.638    0.000    8.505    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:749(_non_empty_string)
+  9739485    5.026    0.000    7.487    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:755(_reject_field_keys)
+     1061    0.004    0.000    6.491    0.006 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/tools/runtime.py:88(sha256_json)
+   557025    0.520    0.000    6.351    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:193(to_json)
+     1061    0.004    0.000    6.040    0.006 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/tools/runtime.py:67(canonical_json)
+124904153    5.809    0.000    5.809    0.000 {built-in method builtins.isinstance}
+  2718282    5.774    0.000    5.774    0.000 /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/src/docfit/template/source_entries.py:129(to_json)
+  5565420    1.375    0.000    5.649    0.000 {built-in method builtins.all}
+
+

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+import shutil
+import tempfile
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,6 +18,7 @@ from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file, sha256_js
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 V_NS = "urn:schemas-microsoft-com:vml"
+MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 
 _FORMAT_ALIASES = {
     "align": "alignment",
@@ -50,8 +53,6 @@ _PUBLIC_FORMAT_KEYS = {
     "widowControl",
     "width",
 }
-
-
 @dataclass(frozen=True, slots=True)
 class InspectedObject:
     locator: str
@@ -63,7 +64,10 @@ class InspectedObject:
     resolved_style: JsonObject | None = None
 
     def public(self) -> JsonObject:
+        object_id = str(self.object_ref["object_id"])
         result: JsonObject = {
+            "object_id": object_id,
+            "locator": self.locator,
             "type": self.kind,
             "text": self.text,
             "object_ref": self.object_ref,
@@ -73,7 +77,6 @@ class InspectedObject:
         if self.format:
             result["format"] = self.format
         return result
-
 
 @dataclass(frozen=True, slots=True)
 class Inspection:
@@ -154,11 +157,14 @@ def inspect_document(
     selector: str = "paragraph, table, picture",
 ) -> Inspection:
     from docfit.styles.resolver import EffectiveStyleResolver
+    from docfit.tools.word_xml import resolve_word_locator, visible_word_text
 
     package_warnings = validate_docx_package(document)
     document_sha256 = sha256_file(document)
     raw_objects = office.query(document, selector)
     style_resolver = EffectiveStyleResolver(document)
+    with zipfile.ZipFile(document) as archive:
+        document_root = ET.fromstring(archive.read("word/document.xml"))
     objects: list[InspectedObject] = []
     counts: dict[str, int] = {}
     for raw in raw_objects:
@@ -168,6 +174,12 @@ def inspect_document(
             continue
         raw_text = raw.get("text")
         text = raw_text if isinstance(raw_text, str) else ""
+        selected = resolve_word_locator(document_root, locator)
+        if (
+            selected is not None
+            and selected.find(f".//{{{MC_NS}}}AlternateContent") is not None
+        ):
+            text = visible_word_text(selected)
         raw_style = raw.get("style")
         style = raw_style if isinstance(raw_style, str) else None
         safe_format = _safe_format(raw.get("format"))
@@ -238,6 +250,37 @@ def inspect_document(
         warnings,
         office.evidence(),
     )
+
+
+def inspect_document_snapshot(
+    document: Path,
+    office: OfficeCliAdapter,
+    *,
+    selector: str = "paragraph, table, picture",
+) -> Inspection:
+    """Inspect a private byte-for-byte copy so Office backends cannot dirty inputs."""
+
+    source_hash = sha256_file(document)
+    with tempfile.TemporaryDirectory(prefix="docfit-inspect-") as temporary_name:
+        snapshot = Path(temporary_name) / document.name
+        shutil.copyfile(document, snapshot)
+        snapshot.chmod(0o600)
+        inspection = inspect_document(snapshot, office, selector=selector)
+    if inspection.document_sha256 != source_hash:
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="inspection_snapshot_hash_mismatch",
+            message="The private inspection snapshot was not byte-identical to the source.",
+        )
+    if sha256_file(document) != source_hash:
+        raise ToolFailure(
+            status="error",
+            origin="postcondition",
+            code="inspection_source_changed",
+            message="The source document changed while its private snapshot was inspected.",
+        )
+    return inspection
 
 
 def resolve_object_ref(reference: Any, inspection: Inspection) -> InspectedObject:

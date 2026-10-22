@@ -1,0 +1,23 @@
+[
+  {
+    "input": "hunau-initial-read-proof",
+    "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "fragments": 1041,
+    "failed": [],
+    "level": "prototype package mapping against actual Word XML, no Agent/write acceptance"
+  },
+  {
+    "input": "njau-initial-read-proof",
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "fragments": 652,
+    "failed": [],
+    "level": "prototype package mapping against actual Word XML, no Agent/write acceptance"
+  },
+  {
+    "input": "pku-initial-read-proof",
+    "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+    "fragments": 1625,
+    "failed": [],
+    "level": "prototype package mapping against actual Word XML, no Agent/write acceptance"
+  }
+]

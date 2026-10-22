@@ -1,0 +1,112 @@
+{
+  "scope": "Bounded read-only contract audit against the frozen initial 10-batch snapshot; no model call, no live task mutation, no semantic repair.",
+  "created_at": "2026-09-22T23:31:32.349075+08:00",
+  "verification_level": "contract/code inspection tied to existing real-replay evidence; not another E2E run",
+  "source_entry_id": "source-entry-f0c63376279768f327365472",
+  "snapshot_sha256": "06798e5be41d6c6bcbf257724c95c378037fc7141b12a9e0e3870d15876100f6",
+  "initial_responsibility_signature": [
+    [
+      "style_only",
+      null
+    ],
+    [
+      "fixed_label",
+      null
+    ],
+    [
+      "cleanup",
+      null
+    ],
+    [
+      "style_only",
+      null
+    ]
+  ],
+  "initial_field_ids": [],
+  "initial_blockers": [
+    {
+      "code": "ordered_part_text_mismatch",
+      "field": "semantic_judgments[16].parts[3]",
+      "message": "Ordered part text must equal the source substring at the next exact offset.",
+      "source_entry_id": "source-entry-f0c63376279768f327365472",
+      "expected_text": "",
+      "submitted_text": "            (五号Times New Roman)",
+      "source_text_length": 68,
+      "expected_text_length": 0,
+      "submitted_text_length": 31,
+      "mismatch_offset": 68,
+      "text_start": 68,
+      "text_end": 99
+    }
+  ],
+  "exact_text_lock_applies": true,
+  "contract_conclusion": "For this exact-text-only feedback, role/field responsibility must stay unchanged. Changing cleanup to fill_slot or adding abstract.en changes the signature and is rejected. Text/whitespace edits may split/merge adjacent parts only while preserving the ordered deduplicated (role, field_id) signature.",
+  "lock_evidence": [
+    {
+      "file": "src/docfit/app/prepare_template.py",
+      "line": 1660,
+      "claim": "Only text_gap/text_mismatch are exact-text-only codes."
+    },
+    {
+      "file": "src/docfit/app/prepare_template.py",
+      "line": 1668,
+      "claim": "Affected entries without any other blocker code become responsibility-locked."
+    },
+    {
+      "file": "src/docfit/app/prepare_template.py",
+      "line": 1633,
+      "claim": "Revision prompt explicitly requires preserving prior role/field responsibility."
+    },
+    {
+      "file": "src/docfit/template/semantic_batches.py",
+      "line": 663,
+      "claim": "Candidate compares revised and previous responsibility signature for locked entries."
+    },
+    {
+      "file": "src/docfit/template/semantic_batches.py",
+      "line": 674,
+      "claim": "Changed signature is rejected with semantic_batch_revision_responsibility_changed."
+    },
+    {
+      "file": "src/docfit/template/semantic_batches.py",
+      "line": 735,
+      "claim": "Signature is ordered role/field pairs, merging adjacent identical pairs."
+    }
+  ],
+  "downstream_limit": {
+    "conclusion": "No checked downstream gate guarantees detecting that abstract.en should have been selected when the Agent instead classified the value text as cleanup. Mechanical closure/materialization/publication validate accepted semantics and their execution, not a school-semantic oracle. Other mechanical failures may still occur.",
+    "evidence": [
+      {
+        "file": "src/docfit/template/materialization/readiness.py",
+        "line": 392,
+        "claim": "Field-required check only runs when semantic_part_carries_field(part) is true."
+      },
+      {
+        "file": "src/docfit/template/materialization/readiness.py",
+        "line": 740,
+        "claim": "Readiness evaluates existing field parts, carriers, body members, and compiled plan."
+      },
+      {
+        "file": "src/docfit/template/artifact.py",
+        "line": 806,
+        "claim": "Publication provenance iterates submitted/resolved slots and field IDs."
+      },
+      {
+        "file": "src/docfit/template/artifact.py",
+        "line": 1450,
+        "claim": "General publication requirement is at least one registry-bound fill interface, not all semantically needed vocabulary fields."
+      },
+      {
+        "file": "src/docfit/template/judgment_shape.py",
+        "line": 448,
+        "claim": "Shape validation requires field_id for executable roles but does not infer fill_slot from reason."
+      }
+    ]
+  },
+  "not_inferred": [
+    "Why the model is currently retrying or why any particular revision fails.",
+    "Whether current live candidate still matches this frozen initial signature.",
+    "Whether a repaired candidate would pass materialization or publication.",
+    "Whether source text cleanup/fixed roles are semantically acceptable."
+  ]
+}

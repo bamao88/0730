@@ -1,0 +1,1 @@
+{"context_profile": "cover-v1", "expected_scope_ids": ["cover"], "closures": [{"schema_version": "scoped_closure_v1", "source_hash": "67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd", "closure_id": "closure-cover", "assigned_scope": {"scope_id": "cover", "object_ids": ["obj-1"]}, "status": "complete"}]}

@@ -1,0 +1,14 @@
+[
+  {
+    "case": "historical_task_without_initial_binding",
+    "result": "rejected",
+    "code": "invalid_json",
+    "message": "The referenced JSON evidence file cannot be read."
+  },
+  {
+    "case": "historical_published_package_without_initial_partition",
+    "result": "rejected",
+    "code": "template_artifact_provenance_invalid",
+    "message": "Artifact lacks its initial source partition."
+  }
+]

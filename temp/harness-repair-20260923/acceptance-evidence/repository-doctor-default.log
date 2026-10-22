@@ -1,0 +1,17 @@
+     PASS  python: Python 3.12; M0 requires 3.12.
+     PASS  claude_agent_sdk: claude-agent-sdk 0.2.128
+     PASS  configuration_files: Project metadata, lock, Python pin, and both domain Skills are present.
+     PASS  directory_permissions: Project root is readable and writable: /Volumes/ExtSSD2601/Docfit-worktrees/template-extraction
+     PASS  sdk_configuration: Skill, path-bounded Read/Glob/Grep, trusted Bash/Write, AskUserQuestion, and Agent are visible; Agent is type-gated to one read-only definition and Bash, Write, plus the five DocFit names are pre-approved; the full-tool profile loads only the conversion Skill.
+     PASS  directory_policy: The Tool boundary fixes input as read-only and work/output as writable.
+     PASS  main_agent_trusted_basic_tools: Bash and Write are visible and auto-approved for the main Agent without a DocFit path gate; the read-only unit analyst still receives neither tool.
+     PASS  main_agent_read_policy: Read, Glob, and Grep require canonical paths under project Skill references, product Knowledge, or the current task; sensitive and escaping paths are denied.
+     PASS  logging_policy: CLI and smoke receipts record metadata only, never document body content.
+     PASS  agent_environment_file: Shared Agent environment is present with mode 0600: /Users/xpw/.config/docfit/agent.env
+     PASS  agent_backend_credentials: Configured Agent backends in priority order: minimax.
+NOT_READY  agent_smoke_receipts: missing: image, ask-user, denied-tools, path-tools, subagent
+NOT_READY  officecli_backend: OfficeCLI 1.0.144; executable hash does not match the locked M1 binary.
+     PASS  libreoffice_visual_renderer: LibreOffice 25.2.3.2 520(Build:2); image sha256:64726dd726bbb36829a09dd52e6cd30d07ba46533f2861407aaab52bef8a25ee; fonts 841467b13abcc66f73692323e9889502e07c6439ebea4ae9fa101a421328dfb7.
+     PASS  pdf_visual_derivation: pdftoppm: pdftoppm version 26.08.0; pdfinfo: pdfinfo version 26.08.0; pdftotext: pdftotext version 26.08.0.
+
+Gate base: PASS (overall: NOT_READY)

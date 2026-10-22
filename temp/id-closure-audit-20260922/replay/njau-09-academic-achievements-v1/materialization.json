@@ -1,0 +1,880 @@
+{
+  "schema_version": 2,
+  "status": "ok",
+  "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+  "semantic_judgments_sha256": "b93e6aa1251fa030b1d76f88f9d0af8bdc3879cba153802720bf9ffdbd227e7b",
+  "field_vocabulary_digest": "861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594",
+  "field_registry_ref": {
+    "registry_id": "docfit.thesis.content_fields",
+    "registry_version": "0.5.0",
+    "sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+  },
+  "operation_count": 0,
+  "cleanup_count": 1,
+  "operations": [],
+  "cleanup": [
+    {
+      "action": "remove_exact_fragments",
+      "block_id": "source-entry-a644392cc79b1278321686ca",
+      "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+      "judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[9:18];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c"
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+          "locator": "/body/p[1]/r[4]",
+          "object_id": "obj-6b5203a8ef88f49f220b362e",
+          "object_ref": {
+            "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+            "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+            "object_id": "obj-6b5203a8ef88f49f220b362e"
+          },
+          "object_text_end": 9,
+          "object_text_start": 0,
+          "source_text_end": 18,
+          "source_text_start": 9,
+          "text": "（三号黑体，居中）"
+        }
+      ]
+    }
+  ],
+  "policy_receipts": [
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0002-ec6b6c16",
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-cb83839583612dbb428e8799"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-6a5b2e49c0c9b51d86ffb705",
+            "obj-48164776836df1956d46eeec"
+          ],
+          "expected_source_content": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+          "extent": {
+            "end": 61,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 1,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-cb83839583612dbb428e8799"
+          },
+          "source_entry_id": "source-entry-cb83839583612dbb428e8799",
+          "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+          "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+          "span_ref": "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+          "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+          "text_end": 61,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+              "locator": "/body/p[2]/r[1]",
+              "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+              },
+              "object_text_end": 54,
+              "object_text_start": 0,
+              "source_text_end": 54,
+              "source_text_start": 0,
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+            },
+            {
+              "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+              "locator": "/body/p[2]/r[2]",
+              "object_id": "obj-48164776836df1956d46eeec",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                "object_id": "obj-48164776836df1956d46eeec"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 61,
+              "source_text_start": 54,
+              "text": "此项非必需项。"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+          "locator": "/body/p[2]/r[1]",
+          "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+          "object_ref": {
+            "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+            "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+            "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+          },
+          "object_text_end": 54,
+          "object_text_start": 0,
+          "source_text_end": 54,
+          "source_text_start": 0,
+          "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+        },
+        {
+          "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+          "locator": "/body/p[2]/r[2]",
+          "object_id": "obj-48164776836df1956d46eeec",
+          "object_ref": {
+            "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+            "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+            "object_id": "obj-48164776836df1956d46eeec"
+          },
+          "object_text_end": 7,
+          "object_text_start": 0,
+          "source_text_end": 61,
+          "source_text_start": 54,
+          "text": "此项非必需项。"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved"
+    }
+  ],
+  "mutation_receipts": [
+    {
+      "receipt_type": "mutation",
+      "action": "remove_exact_fragments",
+      "handler": "cleanup",
+      "intent_refs": [
+        "intent-0001-aeaed905"
+      ],
+      "source_judgment_refs": [
+        "semantic_judgments[0]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-a644392cc79b1278321686ca"
+        }
+      ],
+      "field_ids": [],
+      "span_refs": [
+        "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[9:18];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c"
+      ],
+      "affected_blocks": [
+        "source-entry-a644392cc79b1278321686ca"
+      ],
+      "before_text_by_block": {
+        "source-entry-a644392cc79b1278321686ca": "相关的学术成果目录（三号黑体，居中）"
+      },
+      "after_text_by_block": {
+        "source-entry-a644392cc79b1278321686ca": "相关的学术成果目录"
+      },
+      "safety_checks": [],
+      "operation": {
+        "action": "remove_exact_fragments",
+        "block_id": "source-entry-a644392cc79b1278321686ca",
+        "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+        "judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "span_refs": [
+          "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[9:18];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c"
+        ],
+        "word_fragments": [
+          {
+            "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+            "locator": "/body/p[1]/r[4]",
+            "object_id": "obj-6b5203a8ef88f49f220b362e",
+            "object_ref": {
+              "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+              "object_id": "obj-6b5203a8ef88f49f220b362e"
+            },
+            "object_text_end": 9,
+            "object_text_start": 0,
+            "source_text_end": 18,
+            "source_text_start": 9,
+            "text": "（三号黑体，居中）"
+          }
+        ]
+      }
+    },
+    {
+      "action": "preserve_exact_fragments",
+      "handler": "fixed_content",
+      "intent_ref": "intent-0002-ec6b6c16",
+      "source_judgment_refs": [
+        "semantic_judgments[1]"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-cb83839583612dbb428e8799"
+        }
+      ],
+      "span_refs": [
+        "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c"
+      ],
+      "resolved_spans": [
+        {
+          "covered_object_ids": [
+            "obj-6a5b2e49c0c9b51d86ffb705",
+            "obj-48164776836df1956d46eeec"
+          ],
+          "expected_source_content": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+          "extent": {
+            "end": 61,
+            "kind": "text",
+            "start": 0
+          },
+          "judgment_index": 1,
+          "part_index": 0,
+          "role": "fixed_label",
+          "scope": {
+            "source_entry_id": "source-entry-cb83839583612dbb428e8799"
+          },
+          "source_entry_id": "source-entry-cb83839583612dbb428e8799",
+          "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+          "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+          "span_ref": "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+          "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+          "text_end": 61,
+          "text_start": 0,
+          "word_fragments": [
+            {
+              "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+              "locator": "/body/p[2]/r[1]",
+              "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+              },
+              "object_text_end": 54,
+              "object_text_start": 0,
+              "source_text_end": 54,
+              "source_text_start": 0,
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+            },
+            {
+              "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+              "locator": "/body/p[2]/r[2]",
+              "object_id": "obj-48164776836df1956d46eeec",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                "object_id": "obj-48164776836df1956d46eeec"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 61,
+              "source_text_start": 54,
+              "text": "此项非必需项。"
+            }
+          ]
+        }
+      ],
+      "word_fragments": [
+        {
+          "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+          "locator": "/body/p[2]/r[1]",
+          "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+          "object_ref": {
+            "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+            "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+            "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+          },
+          "object_text_end": 54,
+          "object_text_start": 0,
+          "source_text_end": 54,
+          "source_text_start": 0,
+          "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+        },
+        {
+          "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+          "locator": "/body/p[2]/r[2]",
+          "object_id": "obj-48164776836df1956d46eeec",
+          "object_ref": {
+            "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+            "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+            "object_id": "obj-48164776836df1956d46eeec"
+          },
+          "object_text_end": 7,
+          "object_text_start": 0,
+          "source_text_end": 61,
+          "source_text_start": 54,
+          "text": "此项非必需项。"
+        }
+      ],
+      "mutation": "none",
+      "actual_result": "preserved",
+      "receipt_type": "policy"
+    }
+  ],
+  "receipt_count": 2,
+  "write": {
+    "schema_version": 1,
+    "status": "ok",
+    "executor": "ooxml_executor",
+    "output_docx": "temp/id-closure-audit-20260922/replay/njau-09-academic-achievements-v1/candidate.docx",
+    "output_sha256": "1ca025366f72b638003cb5a48a3eea3ee298a5b0e1db37d00361594f6bfcdeb1",
+    "package_validation": "ok"
+  },
+  "shadow_intent_plan": {
+    "schema_version": 1,
+    "plan_ref": "materialization-plan-f5a9982199b5",
+    "ready": true,
+    "intent_count": 2,
+    "context_count": 2,
+    "command_count": 0,
+    "unsupported_count": 0,
+    "intents": [
+      {
+        "intent_ref": "intent-0001-aeaed905",
+        "intent_type": "keep_fixed_content",
+        "source_judgment_refs": [
+          "semantic_judgments[0]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-a644392cc79b1278321686ca"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "相关的学术成果目录"
+            },
+            {
+              "role": "style_only",
+              "text": "（三号黑体，居中）"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-afbcd76a6e26c7a68a12098c",
+                "obj-12302ea5f857d01282121dba",
+                "obj-0ef7914c4edad110ccb87fe7"
+              ],
+              "expected_source_content": "相关的学术成果目录",
+              "extent": {
+                "end": 9,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-a644392cc79b1278321686ca"
+              },
+              "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[0:9];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "相关的学术成果目录",
+              "text_end": 9,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-afbcd76a6e26c7a68a12098c",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+                    "object_id": "obj-afbcd76a6e26c7a68a12098c"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 0,
+                  "text": "相关的"
+                },
+                {
+                  "fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-12302ea5f857d01282121dba",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+                    "object_id": "obj-12302ea5f857d01282121dba"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 3,
+                  "text": "学术"
+                },
+                {
+                  "fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-0ef7914c4edad110ccb87fe7",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+                    "object_id": "obj-0ef7914c4edad110ccb87fe7"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 9,
+                  "source_text_start": 5,
+                  "text": "成果目录"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-6b5203a8ef88f49f220b362e"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 18,
+                "kind": "text",
+                "start": 9
+              },
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-a644392cc79b1278321686ca"
+              },
+              "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[9:18];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "（三号黑体，居中）",
+              "text_end": 18,
+              "text_start": 9,
+              "word_fragments": [
+                {
+                  "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-6b5203a8ef88f49f220b362e",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                    "object_id": "obj-6b5203a8ef88f49f220b362e"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 18,
+                  "source_text_start": 9,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      },
+      {
+        "intent_ref": "intent-0002-ec6b6c16",
+        "intent_type": "keep_fixed_content",
+        "source_judgment_refs": [
+          "semantic_judgments[1]"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-cb83839583612dbb428e8799"
+          }
+        ],
+        "field_ids": [],
+        "payload": {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。"
+            }
+          ],
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-6a5b2e49c0c9b51d86ffb705",
+                "obj-48164776836df1956d46eeec"
+              ],
+              "expected_source_content": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+              "extent": {
+                "end": 61,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-cb83839583612dbb428e8799"
+              },
+              "source_entry_id": "source-entry-cb83839583612dbb428e8799",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+              "text_end": 61,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                    "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+                  },
+                  "object_text_end": 54,
+                  "object_text_start": 0,
+                  "source_text_end": 54,
+                  "source_text_start": 0,
+                  "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+                },
+                {
+                  "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-48164776836df1956d46eeec",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                    "object_id": "obj-48164776836df1956d46eeec"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 61,
+                  "source_text_start": 54,
+                  "text": "此项非必需项。"
+                }
+              ]
+            }
+          ]
+        },
+        "classification_basis": [
+          "parts.role"
+        ]
+      }
+    ],
+    "contexts": [
+      {
+        "context_ref": "context-0001-f8ee2400",
+        "kind": "fixed_content",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-a644392cc79b1278321686ca"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0001-aeaed905",
+          "intent_type": "keep_fixed_content",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-afbcd76a6e26c7a68a12098c",
+                "obj-12302ea5f857d01282121dba",
+                "obj-0ef7914c4edad110ccb87fe7"
+              ],
+              "expected_source_content": "相关的学术成果目录",
+              "extent": {
+                "end": 9,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 0,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-a644392cc79b1278321686ca"
+              },
+              "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[0:9];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "相关的学术成果目录",
+              "text_end": 9,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+                  "locator": "/body/p[1]/r[1]",
+                  "object_id": "obj-afbcd76a6e26c7a68a12098c",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+                    "object_id": "obj-afbcd76a6e26c7a68a12098c"
+                  },
+                  "object_text_end": 3,
+                  "object_text_start": 0,
+                  "source_text_end": 3,
+                  "source_text_start": 0,
+                  "text": "相关的"
+                },
+                {
+                  "fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+                  "locator": "/body/p[1]/r[2]",
+                  "object_id": "obj-12302ea5f857d01282121dba",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+                    "object_id": "obj-12302ea5f857d01282121dba"
+                  },
+                  "object_text_end": 2,
+                  "object_text_start": 0,
+                  "source_text_end": 5,
+                  "source_text_start": 3,
+                  "text": "学术"
+                },
+                {
+                  "fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+                  "locator": "/body/p[1]/r[3]",
+                  "object_id": "obj-0ef7914c4edad110ccb87fe7",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+                    "object_id": "obj-0ef7914c4edad110ccb87fe7"
+                  },
+                  "object_text_end": 4,
+                  "object_text_start": 0,
+                  "source_text_end": 9,
+                  "source_text_start": 5,
+                  "text": "成果目录"
+                }
+              ]
+            },
+            {
+              "covered_object_ids": [
+                "obj-6b5203a8ef88f49f220b362e"
+              ],
+              "expected_source_content": "（三号黑体，居中）",
+              "extent": {
+                "end": 18,
+                "kind": "text",
+                "start": 9
+              },
+              "judgment_index": 0,
+              "part_index": 1,
+              "role": "style_only",
+              "scope": {
+                "source_entry_id": "source-entry-a644392cc79b1278321686ca"
+              },
+              "source_entry_id": "source-entry-a644392cc79b1278321686ca",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-a644392cc79b1278321686ca;extent=text[9:18];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "（三号黑体，居中）",
+              "text_end": 18,
+              "text_start": 9,
+              "word_fragments": [
+                {
+                  "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                  "locator": "/body/p[1]/r[4]",
+                  "object_id": "obj-6b5203a8ef88f49f220b362e",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                    "object_id": "obj-6b5203a8ef88f49f220b362e"
+                  },
+                  "object_text_end": 9,
+                  "object_text_start": 0,
+                  "source_text_end": 18,
+                  "source_text_start": 9,
+                  "text": "（三号黑体，居中）"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+              "locator": "/body/p[1]/r[1]",
+              "object_id": "obj-afbcd76a6e26c7a68a12098c",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "5f904bda38378c0541c02677689f5e17052cf4b7221d9e1617e4d50ced5a3024",
+                "object_id": "obj-afbcd76a6e26c7a68a12098c"
+              },
+              "object_text_end": 3,
+              "object_text_start": 0,
+              "source_text_end": 3,
+              "source_text_start": 0,
+              "text": "相关的"
+            },
+            {
+              "fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+              "locator": "/body/p[1]/r[2]",
+              "object_id": "obj-12302ea5f857d01282121dba",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "d0038f688a6b224affd62c1080e3f2be721deb5d74f6450b416598d90de29f7f",
+                "object_id": "obj-12302ea5f857d01282121dba"
+              },
+              "object_text_end": 2,
+              "object_text_start": 0,
+              "source_text_end": 5,
+              "source_text_start": 3,
+              "text": "学术"
+            },
+            {
+              "fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+              "locator": "/body/p[1]/r[3]",
+              "object_id": "obj-0ef7914c4edad110ccb87fe7",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "8cff76b7e1c14d9494e5666b937c34095995e299c0ecaa76bd2854171e889c7f",
+                "object_id": "obj-0ef7914c4edad110ccb87fe7"
+              },
+              "object_text_end": 4,
+              "object_text_start": 0,
+              "source_text_end": 9,
+              "source_text_start": 5,
+              "text": "成果目录"
+            },
+            {
+              "fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+              "locator": "/body/p[1]/r[4]",
+              "object_id": "obj-6b5203a8ef88f49f220b362e",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "36595d0731548ed359e64e6fcc38628d9ab7a74c484b30315af03e4c800752ae",
+                "object_id": "obj-6b5203a8ef88f49f220b362e"
+              },
+              "object_text_end": 9,
+              "object_text_start": 0,
+              "source_text_end": 18,
+              "source_text_start": 9,
+              "text": "（三号黑体，居中）"
+            }
+          ]
+        }
+      },
+      {
+        "context_ref": "context-0002-29710000",
+        "kind": "fixed_content",
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-cb83839583612dbb428e8799"
+          }
+        ],
+        "facts": {
+          "intent_ref": "intent-0002-ec6b6c16",
+          "intent_type": "keep_fixed_content",
+          "resolved_spans": [
+            {
+              "covered_object_ids": [
+                "obj-6a5b2e49c0c9b51d86ffb705",
+                "obj-48164776836df1956d46eeec"
+              ],
+              "expected_source_content": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+              "extent": {
+                "end": 61,
+                "kind": "text",
+                "start": 0
+              },
+              "judgment_index": 1,
+              "part_index": 0,
+              "role": "fixed_label",
+              "scope": {
+                "source_entry_id": "source-entry-cb83839583612dbb428e8799"
+              },
+              "source_entry_id": "source-entry-cb83839583612dbb428e8799",
+              "source_inventory_digest": "4129a0679c349b93cda5716a4dd0edadccb56bca9868241ead8e4169e24d046a",
+              "source_snapshot_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "span_ref": "source_entry_id=source-entry-cb83839583612dbb428e8799;extent=text[0:61];source_snapshot_sha256=7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。此项非必需项。",
+              "text_end": 61,
+              "text_start": 0,
+              "word_fragments": [
+                {
+                  "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                  "locator": "/body/p[2]/r[1]",
+                  "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                    "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+                  },
+                  "object_text_end": 54,
+                  "object_text_start": 0,
+                  "source_text_end": 54,
+                  "source_text_start": 0,
+                  "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+                },
+                {
+                  "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                  "locator": "/body/p[2]/r[2]",
+                  "object_id": "obj-48164776836df1956d46eeec",
+                  "object_ref": {
+                    "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                    "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                    "object_id": "obj-48164776836df1956d46eeec"
+                  },
+                  "object_text_end": 7,
+                  "object_text_start": 0,
+                  "source_text_end": 61,
+                  "source_text_start": 54,
+                  "text": "此项非必需项。"
+                }
+              ]
+            }
+          ],
+          "word_fragments": [
+            {
+              "fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+              "locator": "/body/p[2]/r[1]",
+              "object_id": "obj-6a5b2e49c0c9b51d86ffb705",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "fe77b6cfd5959e42d62b1b6cae19ac2b80e25465596a67120734e2a868e8f518",
+                "object_id": "obj-6a5b2e49c0c9b51d86ffb705"
+              },
+              "object_text_end": 54,
+              "object_text_start": 0,
+              "source_text_end": 54,
+              "source_text_start": 0,
+              "text": "包括本科期间发表的与毕业论文（设计）相关的已发表论文或被鉴定的技术成果、发明专利等成果，应在成果目录中列出。"
+            },
+            {
+              "fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+              "locator": "/body/p[2]/r[2]",
+              "object_id": "obj-48164776836df1956d46eeec",
+              "object_ref": {
+                "document_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+                "expected_fingerprint": "7b02629570b6e7fb63df06aa7965fd977b80655b25058ecf66a8d22c98ca4331",
+                "object_id": "obj-48164776836df1956d46eeec"
+              },
+              "object_text_end": 7,
+              "object_text_start": 0,
+              "source_text_end": 61,
+              "source_text_start": 54,
+              "text": "此项非必需项。"
+            }
+          ]
+        }
+      }
+    ],
+    "commands": [],
+    "unsupported": [],
+    "source_review_digest": "f5a9982199b5924c853382e02d63001321a9e5564eb3cf320fd7c0f3a9b2759d"
+  }
+}

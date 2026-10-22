@@ -1,0 +1,28 @@
+{
+  "snapshot_label": "10批初始候选快照；不是最终恢复结果",
+  "captured_at": "2026-09-22T23:11:47.922695+08:00",
+  "sources": {
+    "candidate": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-candidates.json",
+      "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-candidate.json",
+      "sha256": "06798e5be41d6c6bcbf257724c95c378037fc7141b12a9e0e3870d15876100f6"
+    },
+    "inventory": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/object-inventory.json",
+      "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-inventory.json",
+      "sha256": "f7a2893de6e4ff32a6ef9ccfd6e52715bff1d10d119f11dba43fdc40e066b205"
+    },
+    "manifest": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/harness/semantic-batch-manifest.json",
+      "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-manifest.json",
+      "sha256": "f5f1960bc23275a0adeaf92afab3058c5bec2f661f1595250c8685524b1ecf59"
+    },
+    "checkpoint": {
+      "path": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-task/work/.docfit/unit-boundary-checkpoint.json",
+      "snapshot": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/body-diagnostic/initial-all-batches-checkpoint.json",
+      "sha256": "a141feebbb06ceb79275c22e8762f735ba7af3d3bd8f7652cc2486aa55e0c86b"
+    }
+  },
+  "candidate_count": 10,
+  "batch_count": 10
+}

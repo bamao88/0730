@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "status": "ACCEPTED",
+  "scope": "Full-flow original-object identity engineering acceptance only; not school semantic or visual product acceptance",
+  "runtime_change_in_this_closure": false,
+  "logic_contract": {
+    "command": "uv run pytest -q tests/contract/test_full_flow_source_identity.py tests/contract/test_materialization_exact_span_execution.py",
+    "passed": 31
+  },
+  "failed_run_audit": {
+    "report": {
+      "path": "temp/full-flow-id-20260922/identity-closure/failure-audit-verified.json",
+      "sha256": "b8292c4a3637bb6c4ef03c924aa8d468482af1709ef3e78da67d515d7dc9a4d6"
+    },
+    "level": "read-only audit of real run evidence and exact source Word XML; not new E2E or product acceptance",
+    "rows": [
+      {
+        "task": "cover-live",
+        "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+        "initial": {
+          "entry_count": 28,
+          "source_sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+          "binding": "ok"
+        },
+        "accepted_partition": {
+          "unit_count": 1,
+          "span_count": 28,
+          "ids_ranges_and_projection": "ok",
+          "word_mapping": {
+            "fragments_checked": 124,
+            "errors": []
+          }
+        },
+        "candidate_ledger": {
+          "batch_count": 1,
+          "judgment_count": 28,
+          "all_ids_from_initial_inventory": true,
+          "exact_source_parts": "rejected",
+          "invalid_entry_count": 8,
+          "error_counts": {
+            "ordered_part_text_mismatch": 9,
+            "ordered_part_text_gap": 8
+          },
+          "first_error": {
+            "code": "ordered_part_text_mismatch",
+            "field": "semantic_judgments[0].parts[2]",
+            "message": "Ordered part text must equal the source substring at the next exact offset.",
+            "source_entry_id": "source-entry-8ad4a2af5e47c8b049a468a2",
+            "expected_text": "“□” 表示占1个字宽（即2个字符）的空格。",
+            "submitted_text": "\"□\" 表示占1个字宽（即2个字符）的空格。",
+            "source_text_length": 123,
+            "expected_text_length": 22,
+            "submitted_text_length": 22,
+            "mismatch_offset": 64,
+            "expected_trailing_whitespace_count": 5,
+            "expected_trailing_whitespace_codepoints": [
+              "U+0020 × 5"
+            ],
+            "text_start": 64,
+            "text_end": 86
+          },
+          "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+        },
+        "accepted_semantic_review": "not reached",
+        "farthest_checkpoint": "accepted unit partition; semantic revision incomplete",
+        "materialization": "not reached",
+        "responsibility": "Agent proposed parts omit/change exact original text; Harness rejects; provider revision returned no usable text",
+        "id_blocker": false
+      },
+      {
+        "task": "body-live",
+        "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+        "initial": {
+          "entry_count": 71,
+          "source_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+          "binding": "ok"
+        },
+        "accepted_partition": {
+          "unit_count": 10,
+          "span_count": 71,
+          "ids_ranges_and_projection": "ok",
+          "word_mapping": {
+            "fragments_checked": 260,
+            "errors": []
+          }
+        },
+        "candidate_ledger": {
+          "batch_count": 10,
+          "judgment_count": 71,
+          "all_ids_from_initial_inventory": true,
+          "exact_source_parts": "rejected",
+          "invalid_entry_count": 12,
+          "error_counts": {
+            "ordered_part_empty_for_text_entry": 10,
+            "ordered_part_text_gap": 12,
+            "ordered_part_text_mismatch": 15
+          },
+          "first_error": {
+            "code": "ordered_part_empty_for_text_entry",
+            "field": "semantic_judgments[0].parts[0]",
+            "message": "An empty part can target only a canonical empty whole-entry source entry.",
+            "source_entry_id": "source-entry-015688bdacef4006d2277542",
+            "source_text_length": 3
+          },
+          "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+        },
+        "accepted_semantic_review": "not reached",
+        "farthest_checkpoint": "accepted unit partition; semantic revision incomplete",
+        "materialization": "not reached",
+        "responsibility": "Agent proposed parts omit/change exact original text; Harness rejects; provider revision returned no usable text",
+        "id_blocker": false
+      },
+      {
+        "task": "pku-cover-live",
+        "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+        "initial": {
+          "entry_count": 58,
+          "source_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+          "binding": "ok"
+        },
+        "accepted_partition": {
+          "unit_count": 5,
+          "span_count": 58,
+          "ids_ranges_and_projection": "ok",
+          "word_mapping": {
+            "fragments_checked": 72,
+            "errors": []
+          }
+        },
+        "candidate_ledger": {
+          "batch_count": 5,
+          "judgment_count": 58,
+          "all_ids_from_initial_inventory": true,
+          "exact_source_parts": "ok",
+          "invalid_entry_count": 0,
+          "error_counts": {},
+          "first_error": null,
+          "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+        },
+        "accepted_semantic_review": {
+          "judgment_count": 58,
+          "span_count": 58,
+          "ids_and_ranges_match_initial": true,
+          "word_mapping": {
+            "fragments_checked": 72,
+            "errors": []
+          }
+        },
+        "readiness": {
+          "status": "needs_input",
+          "blockers": [
+            {
+              "code": "materialization_slot_carrier_unsupported",
+              "source_entry_id": "source-entry-e793d6f1c0b80818f04a76a4",
+              "field_id": null
+            },
+            {
+              "code": "materialization_slot_carrier_unsupported",
+              "source_entry_id": "source-entry-1d5fdd84278716ae4c066143",
+              "field_id": null
+            }
+          ]
+        },
+        "blocked_source_ranges": [
+          {
+            "source_entry_id": "source-entry-e793d6f1c0b80818f04a76a4",
+            "extent": {
+              "kind": "whole_entry"
+            },
+            "text": "",
+            "role": "fill_slot",
+            "field_id": "submission.declaration_qr_page",
+            "locators": [
+              "/body/tbl[1]"
+            ]
+          },
+          {
+            "source_entry_id": "source-entry-1d5fdd84278716ae4c066143",
+            "extent": {
+              "kind": "whole_entry"
+            },
+            "text": "",
+            "role": "fill_slot",
+            "field_id": "submission.declaration_qr_page",
+            "locators": [
+              "/body/tbl[2]"
+            ]
+          }
+        ],
+        "farthest_checkpoint": "reviewed semantic ranges; materialization readiness rejected",
+        "materialization": "not reached; no candidate DOCX",
+        "responsibility": "Agent requested an unsupported operation on the same original object; Harness refuses without replacement",
+        "id_blocker": false
+      },
+      {
+        "task": "pku-abstract-live",
+        "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+        "initial": {
+          "entry_count": 42,
+          "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+          "binding": "ok"
+        },
+        "accepted_partition": "not reached",
+        "accepted_semantic_review": "not reached",
+        "farthest_checkpoint": "initial inventory / first Agent attempt",
+        "materialization": "not reached",
+        "responsibility": "Agent/provider no-progress timeout; downstream identity unknown",
+        "id_blocker": false
+      },
+      {
+        "task": "pku-abstract-retry",
+        "level": "read-only actual task evidence and exact source Word XML; no new Agent run or write",
+        "initial": {
+          "entry_count": 42,
+          "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+          "binding": "ok"
+        },
+        "accepted_partition": {
+          "unit_count": 5,
+          "span_count": 42,
+          "ids_ranges_and_projection": "ok",
+          "word_mapping": {
+            "fragments_checked": 60,
+            "errors": []
+          }
+        },
+        "candidate_ledger": {
+          "batch_count": 5,
+          "judgment_count": 42,
+          "all_ids_from_initial_inventory": true,
+          "exact_source_parts": "rejected",
+          "invalid_entry_count": 1,
+          "error_counts": {
+            "ordered_part_empty_for_text_entry": 1,
+            "ordered_part_text_mismatch": 1,
+            "ordered_part_text_gap": 1
+          },
+          "first_error": {
+            "code": "ordered_part_empty_for_text_entry",
+            "field": "semantic_judgments[11].parts[1]",
+            "message": "An empty part can target only a canonical empty whole-entry source entry.",
+            "source_entry_id": "source-entry-78b8146eb41aec419986139d",
+            "source_text_length": 40
+          },
+          "note": "Candidate ledger is proposed Agent content; it is not necessarily the final reviewed revision."
+        },
+        "accepted_semantic_review": {
+          "judgment_count": 42,
+          "span_count": 45,
+          "ids_and_ranges_match_initial": true,
+          "word_mapping": {
+            "fragments_checked": 61,
+            "errors": []
+          }
+        },
+        "readiness": {
+          "status": "needs_input",
+          "blockers": [
+            {
+              "code": "materialization_body_structure_member_crosses_carriers",
+              "source_entry_id": "source-entry-71f352c9ee7a9854dd06e08e",
+              "field_id": "body.heading.outline1"
+            }
+          ]
+        },
+        "blocked_source_ranges": [
+          {
+            "source_entry_id": "source-entry-71f352c9ee7a9854dd06e08e",
+            "extent": {
+              "end": 10,
+              "kind": "text",
+              "start": 0
+            },
+            "text": "第三章\t其他注意事项",
+            "role": "body_structure",
+            "field_id": "body.heading.outline1",
+            "locators": [
+              "/header[7]/p[@paraId=49237ED9]/r[6]",
+              "/header[7]/p[@paraId=49237ED9]",
+              "/header[7]/p[@paraId=49237ED9]/r[14]"
+            ]
+          }
+        ],
+        "farthest_checkpoint": "reviewed semantic ranges; materialization readiness rejected",
+        "materialization": "not reached; no candidate DOCX",
+        "responsibility": "Agent requested an unsupported operation on the same original object; Harness refuses without replacement",
+        "id_blocker": false
+      },
+      {
+        "task": "njau-03-toc-v6",
+        "level": "historical post-unit identity only; cannot upgrade to initial-inventory full-flow evidence",
+        "persisted_judgments_and_resolved_ranges": "all IDs/text/ranges agree with persisted post-unit inventory",
+        "source_current": true,
+        "word_mapping": {
+          "fragments_checked": 146,
+          "errors": []
+        },
+        "responsibility": "Materialization cleanup/retain carrier conflict; whether semantic choice or overly strict carrier gate is unresolved; no observed object/range substitution",
+        "id_blocker": false
+      },
+      {
+        "task": "njau-07-references-v5",
+        "level": "historical post-unit identity only; cannot upgrade to initial-inventory full-flow evidence",
+        "persisted_judgments_and_resolved_ranges": "all IDs/text/ranges agree with persisted post-unit inventory",
+        "source_current": false,
+        "word_mapping": "unknown: exact original Word snapshot unavailable; never remap into changed source",
+        "responsibility": "Historical fixture/source snapshot unavailable; stale-source rejection is expected identity protection",
+        "id_blocker": false,
+        "evidence_gap": "Cannot certify historical original-source write identity without its exact snapshot; do not count this run as a successful replay"
+      }
+    ],
+    "new_runtime_identity_defects": [],
+    "unknown": [
+      "No writes occurred in the five failed fresh runs, so they prove no successful write identity",
+      "Legacy NJAU07 exact original snapshot is absent; its real source/write identity remains uncertified"
+    ]
+  },
+  "real_replay_and_artifact_identity": {
+    "report": {
+      "path": "temp/full-flow-id-20260922/identity-closure/njau-cover-identity.json",
+      "sha256": "d428d36fa2c6d0a5a740e9830a398229cbbe595510e1cd6e615af999543a90e0"
+    },
+    "source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+    "output_sha256": "c777a96d0730ac6b37d634f17507007c77205dd515da176e4a1260f1991c9d60",
+    "initial_inventory_digest": "8724f0648d7c164ad1d2cc4ee5f832b4f11028a86b803dcc37fd4a91e7643471",
+    "source_entry_count": 59,
+    "span_count": 67,
+    "ordinary_fill_slots": 9,
+    "body_table_slots": [
+      {
+        "source_entry_id": "source-entry-e64ca7dfe935cf56c3080379",
+        "slot_ref": "source_entry_id=source-entry-e64ca7dfe935cf56c3080379;extent=whole_entry;source_snapshot_sha256=8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268;field_id=body.table",
+        "part": "word/document.xml",
+        "table_path": "document/body[1]/tbl[1]"
+      }
+    ],
+    "inline_slot_paragraph_count": 8,
+    "non_slot_cleanup_paragraphs": [
+      {
+        "part": "word/document.xml",
+        "paragraph_path": "document/body[1]/p[1]",
+        "slot_count": 0
+      }
+    ],
+    "untouched_paragraph_count": 48,
+    "unchanged_package_part_count": 38,
+    "negative_audit": {
+      "report": {
+        "path": "temp/full-flow-id-20260922/identity-closure/independent-audit-negative.json",
+        "sha256": "82c43947b5e1e640675a644f39c0ffa3726820e3272f384144e1c10ad8c29931"
+      },
+      "checks": [
+        {
+          "case": "wrong_table_slot",
+          "rejected": true,
+          "reason": "Table slot moved to a different original object"
+        },
+        {
+          "case": "unremoved_style_text",
+          "rejected": true,
+          "reason": "('Unselected text or slot order changed within selected paragraph', 'word/document.xml', 'document/body[1]/p[1]')"
+        }
+      ]
+    }
+  },
+  "preservation_replay": {
+    "report": {
+      "path": "temp/full-flow-id-20260922/identity-closure/integrity-identity.json",
+      "sha256": "3550ab0a441e13b8d633a87ef722046925054ec96d5cb464b23d4b001abd828e"
+    },
+    "source_sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+    "output_sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+    "replay": "source_noop_preservation",
+    "slot_count": 0
+  },
+  "cross_unit_write": {
+    "report": {
+      "path": "temp/full-flow-id-20260922/identity-closure/split-write/identity-report.json",
+      "sha256": "348a57f8308882081850dfa462e504139de9715358b83a8e22da5b1ffd694b33"
+    },
+    "evidence_level": "logic/contract on real input + actual DOCX mutation",
+    "partition_origin": "test-authored mechanical split at an existing real semantic part boundary",
+    "not_claimed": [
+      "new E2E agent loop",
+      "original Agent partition real replay",
+      "product acceptance"
+    ],
+    "source_entry_id": "source-entry-d9616f4db3dd070938de96e3",
+    "source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+    "source_inventory_digest": "8724f0648d7c164ad1d2cc4ee5f832b4f11028a86b803dcc37fd4a91e7643471",
+    "split_offset": 22,
+    "unit_spans": [
+      {
+        "unit_id": "unit-cover-page-probe-left",
+        "source_entry_id": "source-entry-d9616f4db3dd070938de96e3",
+        "extent": {
+          "kind": "text",
+          "start": 0,
+          "end": 22
+        }
+      },
+      {
+        "unit_id": "unit-cover-page-probe-right",
+        "source_entry_id": "source-entry-d9616f4db3dd070938de96e3",
+        "extent": {
+          "kind": "text",
+          "start": 22,
+          "end": 39
+        }
+      }
+    ],
+    "slot_ranges": [
+      {
+        "start": 5,
+        "end": 22,
+        "field_id": "advisor.name.zh"
+      },
+      {
+        "start": 24,
+        "end": 39,
+        "field_id": "advisor.title"
+      }
+    ],
+    "original_semantic_digest": "4d637d79909630badf572cec67e7e7e939a33f155343ac97a7f4cbee5eefdcd9",
+    "derived_semantic_digest": "4d637d79909630badf572cec67e7e7e939a33f155343ac97a7f4cbee5eefdcd9",
+    "accepted_spans_identical": true,
+    "one_batch_owner": true,
+    "original_evidence_file_count_unchanged": 18,
+    "writes": [
+      {
+        "output_sha256": "c777a96d0730ac6b37d634f17507007c77205dd515da176e4a1260f1991c9d60",
+        "parts_equal_published": 39,
+        "selected_original_paragraph": [
+          {
+            "part": "word/document.xml",
+            "paragraph_path": "document/body[1]/tbl[1]/tr[1]/tc[1]/p[14]",
+            "slot_count": 2
+          }
+        ],
+        "untouched_paragraph_count": 48,
+        "untouched_package_part_count": 38
+      },
+      {
+        "output_sha256": "c777a96d0730ac6b37d634f17507007c77205dd515da176e4a1260f1991c9d60",
+        "parts_equal_published": 39,
+        "selected_original_paragraph": [
+          {
+            "part": "word/document.xml",
+            "paragraph_path": "document/body[1]/tbl[1]/tr[1]/tc[1]/p[14]",
+            "slot_count": 2
+          }
+        ],
+        "untouched_paragraph_count": 48,
+        "untouched_package_part_count": 38
+      }
+    ],
+    "retry_package_contents_identical": true
+  },
+  "e2e_agent_loop": {
+    "new_run_in_this_closure": false,
+    "existing_evidence_root": "temp/full-flow-id-20260922",
+    "write_task": "njau-cover-live",
+    "preservation_task": "integrity-live",
+    "resume_logs": [
+      "njau-cover-resume.log",
+      "integrity-resume.log"
+    ],
+    "note": "Existing fresh Agent loop and public resume evidence retained; cross-unit split is test-authored and is not a new E2E"
+  },
+  "product_acceptance": "not claimed; failed sample generation remains failed; historical missing source remains unknown",
+  "documentation_contract": {
+    "command": "uv run pytest -q tests/contract/test_source_location_documentation_contract.py tests/contract/test_documentation_contract.py",
+    "passed": 12
+  }
+}

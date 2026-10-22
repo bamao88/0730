@@ -1,0 +1,73 @@
+{
+  "checks": [
+    {
+      "name": "docx_package",
+      "result": "ok"
+    },
+    {
+      "name": "officecli_parse",
+      "result": "ok"
+    }
+  ],
+  "document": {
+    "bookmarks": 0,
+    "comments": false,
+    "content_controls": 0,
+    "drawings": 0,
+    "endnotes": false,
+    "equations": 0,
+    "fields": 0,
+    "footers": 0,
+    "footnotes": false,
+    "graphic_objects": 0,
+    "headers": 0,
+    "hyperlinks": 0,
+    "images": 0,
+    "merged_cells": 0,
+    "numbering_part": false,
+    "package_parts": 3,
+    "paragraphs": 1,
+    "sections": 1,
+    "sha256": "a0bf9e820f9ade49b9b34a5c6468d77f8050dc7b3aba2431e7daf9c5897b4964",
+    "styles_part": false,
+    "tables": 0,
+    "text_boxes": 0,
+    "tracked_deletions": 0,
+    "tracked_insertions": 0,
+    "vml_objects": 0
+  },
+  "failure": null,
+  "focus": [
+    "visible_objects",
+    "structure"
+  ],
+  "objects": [
+    {
+      "locator": "/body/p[1]",
+      "object_ref": {
+        "document_sha256": "a0bf9e820f9ade49b9b34a5c6468d77f8050dc7b3aba2431e7daf9c5897b4964",
+        "expected_fingerprint": "eb1ce96baa70d1c91a507f49ee88317e6ccdb90cb51ca1612f5b0cbe4c5f4395",
+        "object_id": "obj-d0ccb6e2cac55237cf59eaa6"
+      },
+      "style": "Normal",
+      "text": "论文题目：玉米生长研究",
+      "type": "paragraph"
+    }
+  ],
+  "provider": {
+    "environment": {
+      "architecture": "arm64",
+      "platform": "Darwin"
+    },
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "expected_version": "1.0.143",
+    "license": "Apache-2.0",
+    "name": "officecli",
+    "version": "1.0.144",
+    "version_locked": false
+  },
+  "risks": [],
+  "schema_version": 1,
+  "status": "ok",
+  "warnings": []
+}

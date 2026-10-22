@@ -1,0 +1,8 @@
+{
+  "case_id": "03-pku-graduate",
+  "case_sha256": "fb5d1dea9166c62a0339841f4c84fd0ec822702cb567e5f72d1aefe44dbacdb6",
+  "contract_sha256": "5dcff35b423bdea13cac73b869c5b451695cad8f5d89b34f6eed8e344645390f",
+  "gold_review_status": "accepted",
+  "schema_version": "docfit-template-extraction-candidate-package-receipt/v1",
+  "template_sha256": "4e4454bf925c640cc80eaec626c9ab3512ee5a38ee5601c2d481f7a9769bbc50"
+}

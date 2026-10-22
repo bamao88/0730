@@ -1,6 +1,6 @@
-schema_version: docfit-template-fill-contract/v1
+schema_version: docfit-template-fill-contract/v2
 contract_id: s02-protected-style-changed.actual
-template_sha256: e447c9f43f4f652b2769ec8e7b8aa2f4a59badc74d8fd13a2c7c3312b6a47ddf
+template_sha256: 44b8f45e97fbbcd899c43c9953d1e3593a4cba4c5d45e9289db651924210cd61
 field_registry_ref:
   registry_id: docfit.thesis.content_fields
   registry_version: 0.1.0
@@ -40,7 +40,7 @@ regions:
       margin_top_pt: 72
       margin_bottom_pt: 72
 slots:
-- slot_id: slot.cover.student_name
+- slot_ref: source_entry_id=source-entry-synthetic-docfit-cover-student-name;extent=whole_entry;source_snapshot_sha256=330ef47f9669c32211eac596ead0df88a3c19df022d5b2d94df3cbfc0a74eee4;field_id=author.name.zh
   owner: slot
   field_id: author.name.zh
   content_type: text
@@ -48,30 +48,54 @@ slots:
   cardinality: one
   locator:
     type: content_control_tag
-    value: docfit.cover.student_name
+    value: source_entry_id=source-entry-synthetic-docfit-cover-student-name;extent=whole_entry;source_snapshot_sha256=330ef47f9669c32211eac596ead0df88a3c19df022d5b2d94df3cbfc0a74eee4;field_id=author.name.zh
     story: document
     part: word/document.xml
     paragraph_index: 0
     left_anchor: 姓名：
     occurrence: 1
     expected_match_count: 1
-  expected_value_style:
-    font:
-      east_asia: 宋体
-      latin: Times New Roman
-      size_pt: 12
-      bold: false
-      italic: false
-      color: '000000'
-    paragraph:
-      alignment: null
-      line_spacing_rule: auto
-      line_spacing_pt: 12
-      space_before_pt: 0
-      space_after_pt: 0
-    container: {}
-    page:
-      page_width_pt: 595.3
-      page_height_pt: 841.9
-      margin_top_pt: 72
-      margin_bottom_pt: 72
+  style_contract_ref:
+    style_contract_id: style.slot.99c8e630834ca55eb79356b0
+    contract_digest: b5b4060f8a5c462f6e53f6876b1b59293f168cc3c904a5bfe99b0611cb6d6018
+styles:
+- style_contract_id: style.slot.99c8e630834ca55eb79356b0
+  owned_properties:
+  - page.margin_bottom_pt
+  - page.margin_top_pt
+  - page.page_height_pt
+  - page.page_width_pt
+  - paragraph.alignment
+  - paragraph.line_spacing_pt
+  - paragraph.line_spacing_rule
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - run.bold
+  - run.color
+  - run.east_asia
+  - run.font_size_pt
+  - run.italic
+  - run.latin
+  effective_properties:
+    run.east_asia: 宋体
+    run.latin: Times New Roman
+    run.font_size_pt: 12
+    run.bold: false
+    run.italic: false
+    run.color: '000000'
+    paragraph.alignment: null
+    paragraph.line_spacing_rule: auto
+    paragraph.line_spacing_pt: 12
+    paragraph.space_before_pt: 0
+    paragraph.space_after_pt: 0
+    page.page_width_pt: 595.3
+    page.page_height_pt: 841.9
+    page.margin_top_pt: 72
+    page.margin_bottom_pt: 72
+  application_scope: text
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: b5b4060f8a5c462f6e53f6876b1b59293f168cc3c904a5bfe99b0611cb6d6018
+style_contract_set_digest: 5bd122592bec368751842f90c6b0ddcb69504cb3cc3ab73b14280c5393a743fa

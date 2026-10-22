@@ -1,0 +1,16 @@
+{
+  "run": "natural-1",
+  "input_characters": 520,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 18.593,
+  "first_text_seconds": 3.773,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1,
+    "output_tokens": 1026,
+    "service_tier": "standard",
+    "cache_read_input_tokens": 446
+  },
+  "returned_model": "MiniMax-M3"
+}

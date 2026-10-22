@@ -1,0 +1,22 @@
+{
+  "verification_level": "real inventory reading-packet replay; not historical tool-response capture",
+  "packet": {
+    "source_entry_id": "source-entry-570e993fb4bda03ea1e14c7a",
+    "text": "   ",
+    "text_length": 3,
+    "leading_whitespace_count": 3,
+    "trailing_whitespace_count": 3,
+    "leading_whitespace_codepoints": [
+      "U+0020 × 3"
+    ],
+    "trailing_whitespace_codepoints": [
+      "U+0020 × 3"
+    ],
+    "entry_type": "text",
+    "source_order": {
+      "block": 81,
+      "inline": 0
+    }
+  },
+  "interpretation": "Leading/trailing counts describe the same three existing characters; the entry has three total spaces, not nine."
+}

@@ -24,6 +24,21 @@ _PRESENTATION_ROLE_FIELDS = {
     "formula": "body.equation",
     "drawing": "body.figure",
 }
+_OBJECT_ONLY_PRESENTATION_ROLES = frozenset({"drawing", "formula"})
+_PROJECTION_OWNED_TEXT_PRESENTATION_ROLES = frozenset(
+    {
+        "chapter_title",
+        "section_title",
+        "subsection_title",
+        "body",
+        "reference",
+        "figure_caption",
+        "table_caption",
+    }
+)
+_PROJECTION_OWNED_HEADING_ROLES = frozenset(
+    {"chapter_title", "section_title", "subsection_title"}
+)
 
 
 def apply_and_validate_candidate_styles(
@@ -165,6 +180,8 @@ def build_style_occurrence_manifest(
                 "style_projection_manifest_invalid",
                 "Projection occurrences require target_locator and presentation_role.",
             )
+        if presentation_role in _OBJECT_ONLY_PRESENTATION_ROLES:
+            continue
         field_id = _PRESENTATION_ROLE_FIELDS.get(presentation_role)
         if field_id is None:
             raise _failure(
@@ -172,6 +189,8 @@ def build_style_occurrence_manifest(
                 f"No Style Contract binding exists for role {presentation_role}.",
             )
         style_ref = role_refs.get(field_id)
+        if _projection_owns_text_role(presentation_role, style_ref):
+            continue
         if style_ref is None:
             raise _failure(
                 "style_presentation_role_unbound",
@@ -200,6 +219,32 @@ def build_style_occurrence_manifest(
         "style_contract_set_digest": contracts.digest,
         "occurrences": occurrences,
     }
+
+
+def _projection_owns_text_role(
+    presentation_role: str,
+    style_ref: Mapping[str, Any] | None,
+) -> bool:
+    """Do not materialize projection-owned text against debug slot fallbacks."""
+
+    if presentation_role not in _PROJECTION_OWNED_TEXT_PRESENTATION_ROLES:
+        return False
+    if style_ref is None:
+        return True
+    style_contract_id = style_ref.get("style_contract_id")
+    if presentation_role in _PROJECTION_OWNED_HEADING_ROLES:
+        return isinstance(
+            style_contract_id, str
+        ) and style_contract_id.startswith("style.slot.body.heading.")
+    if presentation_role == "body":
+        return isinstance(
+            style_contract_id, str
+        ) and style_contract_id.startswith("style.slot.body.paragraph")
+    if presentation_role == "reference":
+        return isinstance(
+            style_contract_id, str
+        ) and style_contract_id.startswith("style.slot.references.")
+    return not (isinstance(style_contract_id, str) and "caption" in style_contract_id)
 
 
 def _normalized_occurrence(

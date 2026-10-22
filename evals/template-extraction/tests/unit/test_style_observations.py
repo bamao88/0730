@@ -31,7 +31,7 @@ def _observation() -> dict[str, Any]:
     value: dict[str, Any] = {
         "schema_version": "docfit-field-style-observation/v1",
         "field_id": "body.table.caption",
-        "slot_id": "body.table.caption.missing",
+        "slot_ref": "body.table.caption.missing",
         "style_role_id": "style.caption.table",
         "style_role_type": "caption",
         "property_profile_ref": {
@@ -78,7 +78,7 @@ def _observation_set() -> dict[str, Any]:
             "profile_registry_digest": value["profile_registry_digest"],
             "observations": [
                 {
-                    "slot_id": observation["slot_id"],
+                    "slot_ref": observation["slot_ref"],
                     "style_role_id": observation["style_role_id"],
                     "observation_digest": observation["observation_digest"],
                 }
@@ -137,7 +137,7 @@ def test_independent_eval_rejects_non_closed_observations(
                 "profile_registry_digest": value["profile_registry_digest"],
                 "observations": [
                     {
-                        "slot_id": observation["slot_id"],
+                        "slot_ref": observation["slot_ref"],
                         "style_role_id": observation["style_role_id"],
                         "observation_digest": observation["observation_digest"],
                     }

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from docfit.tools.officecli import OfficeCliAdapter
 from docfit.tools.service import DocFitToolService
+from docfit.visual.renderer import DEFAULT_IMAGE
 
 SCHOOL_TEMPLATES = (
     "01-hunau-undergraduate",
@@ -14,10 +16,30 @@ SCHOOL_TEMPLATES = (
     "03-pku-graduate",
 )
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("officecli") is None,
-    reason="Three-school visual integration requires the locked OfficeCLI executable",
-)
+def _visual_renderer_ready() -> bool:
+    executable = shutil.which("docker")
+    if executable is None:
+        return False
+    completed = subprocess.run(
+        [executable, "inspect", "--type=image", DEFAULT_IMAGE],
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False,
+    )
+    return completed.returncode == 0
+
+
+pytestmark = [
+    pytest.mark.skipif(
+        shutil.which("officecli") is None,
+        reason="Three-school visual integration requires the locked OfficeCLI executable",
+    ),
+    pytest.mark.skipif(
+        not _visual_renderer_ready(),
+        reason="Three-school visual integration requires the fixed Docker LibreOffice renderer",
+    ),
+]
 
 
 @pytest.mark.parametrize("case_name", SCHOOL_TEMPLATES)
@@ -30,11 +52,12 @@ def test_real_school_template_contact_page_and_object_region(
         repository
         / "evals"
         / "template-extraction"
-        / "cases"
+        / "candidate-sources"
+        / "v0.5"
         / case_name
-        / "gold"
         / "template.docx"
     )
+    assert source.is_file()
     task_root = tmp_path / case_name
     task_root.mkdir()
     document = task_root / "template.docx"

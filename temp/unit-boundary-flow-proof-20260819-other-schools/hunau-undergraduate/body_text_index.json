@@ -1,0 +1,1633 @@
+[
+  {
+    "idx": 0,
+    "page": 1,
+    "locator": "/body/p[@paraId=11D447C7]",
+    "type": "paragraph",
+    "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。"
+  },
+  {
+    "idx": 1,
+    "page": 1,
+    "locator": "/body/p[@paraId=17D2635B]",
+    "type": "paragraph",
+    "text": "（一号华文行楷空一行）"
+  },
+  {
+    "idx": 2,
+    "page": 1,
+    "locator": "/body/p[@paraId=7D3A4729]",
+    "type": "paragraph",
+    "text": "湖 南 农 业 大 学（一号华文行楷加粗）"
+  },
+  {
+    "idx": 3,
+    "page": 1,
+    "locator": "/body/p[@paraId=3FC8FD6F]",
+    "type": "paragraph",
+    "text": "全日制普通本科生毕业论文(设计)（一号黑体加粗）"
+  },
+  {
+    "idx": 4,
+    "page": 1,
+    "locator": "/body/p[@paraId=1CAF69D0]",
+    "type": "paragraph",
+    "text": "（一号黑体空一行）"
+  },
+  {
+    "idx": 6,
+    "page": 1,
+    "locator": "/body/p[@paraId=5A9EA212]",
+    "type": "paragraph",
+    "text": "毕业论文（设计）中文题目 （小二黑体加粗）"
+  },
+  {
+    "idx": 7,
+    "page": 1,
+    "locator": "/body/p[@paraId=12BC71FF]",
+    "type": "paragraph",
+    "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）"
+  },
+  {
+    "idx": 8,
+    "page": 1,
+    "locator": "/body/p[@paraId=626DF4DD]",
+    "type": "paragraph",
+    "text": "（根据题目长短四号字空二或三行）"
+  },
+  {
+    "idx": 11,
+    "page": 1,
+    "locator": "/body/p[@paraId=51575115]",
+    "type": "paragraph",
+    "text": "□□□□□□学生姓名（三号黑体加粗）：×××（或×□×） （三号楷体加粗）"
+  },
+  {
+    "idx": 12,
+    "page": 1,
+    "locator": "/body/p[@paraId=1DCE7B4E]",
+    "type": "paragraph",
+    "text": "□□□□□□学□□号：20××××××××××"
+  },
+  {
+    "idx": 13,
+    "page": 1,
+    "locator": "/body/p[@paraId=155D2FA9]",
+    "type": "paragraph",
+    "text": "□□□□□□年级专业及班级：20××级×××（×）班"
+  },
+  {
+    "idx": 14,
+    "page": 1,
+    "locator": "/body/p[@paraId=32FA3572]",
+    "type": "paragraph",
+    "text": "□□□□□□指导老师及职称：×××□教授"
+  },
+  {
+    "idx": 15,
+    "page": 1,
+    "locator": "/body/p[@paraId=43E12217]",
+    "type": "paragraph",
+    "text": "□□□□□□学□□院：××××学院 （学院名用全称）"
+  },
+  {
+    "idx": 16,
+    "page": 1,
+    "locator": "/body/p[@paraId=2EE5B7BB]",
+    "type": "paragraph",
+    "text": "（三号字空二或三行）"
+  },
+  {
+    "idx": 19,
+    "page": 1,
+    "locator": "/body/p[@paraId=0177DA07]",
+    "type": "paragraph",
+    "text": "湖南·长沙 （小三号黑体）"
+  },
+  {
+    "idx": 20,
+    "page": 1,
+    "locator": "/body/p[@paraId=6DF3F7DC]",
+    "type": "paragraph",
+    "text": "提交日期：20××年××月"
+  },
+  {
+    "idx": 23,
+    "page": 2,
+    "locator": "/body/p[@paraId=4A1EF999]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+  },
+  {
+    "idx": 24,
+    "page": 2,
+    "locator": "/body/p[@paraId=215A39BA]",
+    "type": "paragraph",
+    "text": "诚 信 声 明"
+  },
+  {
+    "idx": 27,
+    "page": 2,
+    "locator": "/body/p[@paraId=626D8268]",
+    "type": "paragraph",
+    "text": "本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体在文中均作了明确的说明并表示了谢意。本人完全意识到本声明的法律结果由本人承担。"
+  },
+  {
+    "idx": 31,
+    "page": 2,
+    "locator": "/body/p[@paraId=62C82508]",
+    "type": "paragraph",
+    "text": "毕业论文（设计）作者签名："
+  },
+  {
+    "idx": 32,
+    "page": 2,
+    "locator": "/body/p[@paraId=334193A0]",
+    "type": "paragraph",
+    "text": "年 月 日"
+  },
+  {
+    "idx": 51,
+    "page": 3,
+    "locator": "/body/p[@paraId=3E72B657]",
+    "type": "paragraph",
+    "text": "目录基本格式：1.5倍行距；上下页边距2.54厘米，左右页边距2.6厘米；必须标明一级、二级、三级标题；分散对齐，宋体小四号字。“□” 表示占1个字宽（即2个字符）的空格。"
+  },
+  {
+    "idx": 52,
+    "page": 3,
+    "locator": "/body/p[@paraId=51C9EB0B]",
+    "type": "paragraph",
+    "text": "（空三行）"
+  },
+  {
+    "idx": 53,
+    "page": 3,
+    "locator": "/body/p[@paraId=4A4AE1C2]",
+    "type": "paragraph",
+    "text": "目□□录 (二号黑体，居中)"
+  },
+  {
+    "idx": 54,
+    "page": 3,
+    "locator": "/body/p[@paraId=35C3A45F]",
+    "type": "paragraph",
+    "text": "（空两行）"
+  },
+  {
+    "idx": 55,
+    "page": 3,
+    "locator": "/body/p[@paraId=2D85A2A2]",
+    "type": "paragraph",
+    "text": "（农、理工科类专业用）"
+  },
+  {
+    "idx": 56,
+    "page": 3,
+    "locator": "/body/p[@paraId=7ABCFDAF]",
+    "type": "paragraph",
+    "text": "□□摘要……………………………………………………………………………1"
+  },
+  {
+    "idx": 57,
+    "page": 3,
+    "locator": "/body/p[@paraId=3F5D24CD]",
+    "type": "paragraph",
+    "text": "□□关键词…………………………………………………………………………1"
+  },
+  {
+    "idx": 58,
+    "page": 3,
+    "locator": "/body/p[@paraId=73599A78]",
+    "type": "paragraph",
+    "text": "□□1前言………………………………………………………………………………1"
+  },
+  {
+    "idx": 59,
+    "page": null,
+    "locator": "/body/p[@paraId=4F87F12B]",
+    "type": "paragraph",
+    "text": "□□2一级标题……………………………………………………………………2"
+  },
+  {
+    "idx": 60,
+    "page": null,
+    "locator": "/body/p[@paraId=2D3BD6F7]",
+    "type": "paragraph",
+    "text": "□□2.1二级标题 …………………………………………………………………2"
+  },
+  {
+    "idx": 61,
+    "page": null,
+    "locator": "/body/p[@paraId=6BB27B20]",
+    "type": "paragraph",
+    "text": "□□2.1.1三级标题………………………………………………………………3"
+  },
+  {
+    "idx": 62,
+    "page": 3,
+    "locator": "/body/p[@paraId=392A59B6]",
+    "type": "paragraph",
+    "text": "□□2.2×××× ………………………………………………………………………3"
+  },
+  {
+    "idx": 63,
+    "page": 3,
+    "locator": "/body/p[@paraId=28C061ED]",
+    "type": "paragraph",
+    "text": "□□……"
+  },
+  {
+    "idx": 64,
+    "page": 3,
+    "locator": "/body/p[@paraId=77798D85]",
+    "type": "paragraph",
+    "text": "□□5结论………………………………………………………………………………8"
+  },
+  {
+    "idx": 65,
+    "page": 3,
+    "locator": "/body/p[@paraId=0D373203]",
+    "type": "paragraph",
+    "text": "□□参考文献 ………………………………………………………………………9"
+  },
+  {
+    "idx": 66,
+    "page": null,
+    "locator": "/body/p[@paraId=198658F6]",
+    "type": "paragraph",
+    "text": "□□致谢……………………………………………………………………………10"
+  },
+  {
+    "idx": 67,
+    "page": null,
+    "locator": "/body/p[@paraId=520F8DDD]",
+    "type": "paragraph",
+    "text": "□□附录（没有附录的不标注）………………………………………………………11"
+  },
+  {
+    "idx": 69,
+    "page": 3,
+    "locator": "/body/p[@paraId=69A42D24]",
+    "type": "paragraph",
+    "text": "（文科类专业用）"
+  },
+  {
+    "idx": 70,
+    "page": 3,
+    "locator": "/body/p[@paraId=5A64A567]",
+    "type": "paragraph",
+    "text": "□□摘要………………………………………………………………………………1"
+  },
+  {
+    "idx": 71,
+    "page": 3,
+    "locator": "/body/p[@paraId=622A4CC3]",
+    "type": "paragraph",
+    "text": "□□关键词……………………………………………………………………………1"
+  },
+  {
+    "idx": 72,
+    "page": 3,
+    "locator": "/body/p[@paraId=0BCFC7B5]",
+    "type": "paragraph",
+    "text": "□□一、一级标题………………………………………………………………………1"
+  },
+  {
+    "idx": 73,
+    "page": 3,
+    "locator": "/body/p[@paraId=3D2D2FB0]",
+    "type": "paragraph",
+    "text": "□□（一）二级标题………………………………………………………………2"
+  },
+  {
+    "idx": 74,
+    "page": null,
+    "locator": "/body/p[@paraId=098B50FA]",
+    "type": "paragraph",
+    "text": "□□1三级标题……………………………………………………………………2"
+  },
+  {
+    "idx": 75,
+    "page": 4,
+    "locator": "/body/p[@paraId=40AE38B9]",
+    "type": "paragraph",
+    "text": "□□2 ××××…………………………………………………………………………3"
+  },
+  {
+    "idx": 76,
+    "page": 4,
+    "locator": "/body/p[@paraId=76C2E9FE]",
+    "type": "paragraph",
+    "text": "□□……"
+  },
+  {
+    "idx": 77,
+    "page": 4,
+    "locator": "/body/p[@paraId=2E97BED8]",
+    "type": "paragraph",
+    "text": "□□五、结束语…………………………………………………………………………………8"
+  },
+  {
+    "idx": 78,
+    "page": 4,
+    "locator": "/body/p[@paraId=0E812AD4]",
+    "type": "paragraph",
+    "text": "□□参考文献 ……………………………………………………………………9"
+  },
+  {
+    "idx": 79,
+    "page": 4,
+    "locator": "/body/p[@paraId=0C54D000]",
+    "type": "paragraph",
+    "text": "□□致谢……………………………………………………………………………10"
+  },
+  {
+    "idx": 81,
+    "page": 4,
+    "locator": "/body/p[@paraId=4CFCB66C]",
+    "type": "paragraph",
+    "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+  },
+  {
+    "idx": 82,
+    "page": 4,
+    "locator": "/body/p[@paraId=15EF3A42]",
+    "type": "paragraph",
+    "text": "（小二号字空两行）"
+  },
+  {
+    "idx": 83,
+    "page": 4,
+    "locator": "/body/p[@paraId=159AB478]",
+    "type": "paragraph",
+    "text": "毕业论文（设计）中文题目（小二黑体，加粗，居中）"
+  },
+  {
+    "idx": 84,
+    "page": 4,
+    "locator": "/body/p[@paraId=6B0A25CD]",
+    "type": "paragraph",
+    "text": "学□□生：×××（或×□×） （五号宋体居中）"
+  },
+  {
+    "idx": 85,
+    "page": 4,
+    "locator": "/body/p[@paraId=7F590AE0]",
+    "type": "paragraph",
+    "text": "指导老师：×××"
+  },
+  {
+    "idx": 86,
+    "page": 4,
+    "locator": "/body/p[@paraId=160338AD]",
+    "type": "paragraph",
+    "text": "(湖南农业大学××××学院，长沙 410128)"
+  },
+  {
+    "idx": 87,
+    "page": 4,
+    "locator": "/body/p[@paraId=14A1FDB9]",
+    "type": "paragraph",
+    "text": "（五号字空一行）"
+  },
+  {
+    "idx": 88,
+    "page": 4,
+    "locator": "/body/p[@paraId=258F5084]",
+    "type": "paragraph",
+    "text": "□□摘□要（小四黑体）：…… （五号宋体）"
+  },
+  {
+    "idx": 89,
+    "page": 4,
+    "locator": "/body/p[@paraId=0610952C]",
+    "type": "paragraph",
+    "text": "□□关键词：×××；×××；×××；×××"
+  },
+  {
+    "idx": 90,
+    "page": 4,
+    "locator": "/body/p[@paraId=45377BD2]",
+    "type": "paragraph",
+    "text": "（五号字空一行）"
+  },
+  {
+    "idx": 91,
+    "page": 4,
+    "locator": "/body/p[@paraId=7C960206]",
+    "type": "paragraph",
+    "text": "Title of Graduation Paper （四号Times New Roman，加粗，居中）"
+  },
+  {
+    "idx": 92,
+    "page": 4,
+    "locator": "/body/p[@paraId=21D89F1C]",
+    "type": "paragraph",
+    "text": "Student:××× （五号Times New Roman，居中）"
+  },
+  {
+    "idx": 93,
+    "page": 4,
+    "locator": "/body/p[@paraId=0E5CC37A]",
+    "type": "paragraph",
+    "text": "Tutor:××××"
+  },
+  {
+    "idx": 94,
+    "page": 4,
+    "locator": "/body/p[@paraId=17C3CBAE]",
+    "type": "paragraph",
+    "text": "(College of×××××××, Hunan Agricultural University, Changsha 410128, China)"
+  },
+  {
+    "idx": 95,
+    "page": 4,
+    "locator": "/body/p[@paraId=4D699A11]",
+    "type": "paragraph",
+    "text": "（五号字空一行）"
+  },
+  {
+    "idx": 96,
+    "page": 4,
+    "locator": "/body/p[@paraId=67485F6E]",
+    "type": "paragraph",
+    "text": "□□Abstract(小四号Times New Roman， 加粗):…… (五号Times New Roman)"
+  },
+  {
+    "idx": 97,
+    "page": 4,
+    "locator": "/body/p[@paraId=5E81F652]",
+    "type": "paragraph",
+    "text": "□□Key words: ×××； ×××；×××； ×××"
+  },
+  {
+    "idx": 98,
+    "page": 4,
+    "locator": "/body/p[@paraId=3AD38F31]",
+    "type": "paragraph",
+    "text": "（五号字空一行）"
+  },
+  {
+    "idx": 99,
+    "page": 4,
+    "locator": "/body/p[@paraId=612917C0]",
+    "type": "paragraph",
+    "text": "（以下农理工科类用）"
+  },
+  {
+    "idx": 100,
+    "page": 4,
+    "locator": "/body/p[@paraId=00810F80]",
+    "type": "paragraph",
+    "text": "1□前言 （一级标题小三号黑体，顶格书写序数，空一格写标题）"
+  },
+  {
+    "idx": 101,
+    "page": 4,
+    "locator": "/body/p[@paraId=723C4071]",
+    "type": "paragraph",
+    "text": "□□…… （正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+  },
+  {
+    "idx": 102,
+    "page": 4,
+    "locator": "/body/p[@paraId=0C812FEF]",
+    "type": "paragraph",
+    "text": "2□××××"
+  },
+  {
+    "idx": 103,
+    "page": 4,
+    "locator": "/body/p[@paraId=53188CA9]",
+    "type": "paragraph",
+    "text": "2.1□×××××（二级标题四号黑体，顶格书写序数，空一格写标题）"
+  },
+  {
+    "idx": 104,
+    "page": 5,
+    "locator": "/body/p[@paraId=6FD90902]",
+    "type": "paragraph",
+    "text": "2.1.1□×××××（三级标题小四号黑体，顶格书写序数，空一格写标题）"
+  },
+  {
+    "idx": 105,
+    "page": 5,
+    "locator": "/body/p[@paraId=743B74DB]",
+    "type": "paragraph",
+    "text": "□□（1）……[1]。（一般不设四级标题，如确属需要，第四层次不单独占行书写）"
+  },
+  {
+    "idx": 106,
+    "page": 5,
+    "locator": "/body/p[@paraId=27FEDB63]",
+    "type": "paragraph",
+    "text": "……"
+  },
+  {
+    "idx": 107,
+    "page": 5,
+    "locator": "/body/p[@paraId=7733391B]",
+    "type": "paragraph",
+    "text": "5□结论"
+  },
+  {
+    "idx": 108,
+    "page": 5,
+    "locator": "/body/p[@paraId=0322C057]",
+    "type": "paragraph",
+    "text": "□□……"
+  },
+  {
+    "idx": 109,
+    "page": 5,
+    "locator": "/body/p[@paraId=673982EC]",
+    "type": "paragraph",
+    "text": "（以下文法经管类用）"
+  },
+  {
+    "idx": 110,
+    "page": 5,
+    "locator": "/body/p[@paraId=24609638]",
+    "type": "paragraph",
+    "text": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+  },
+  {
+    "idx": 111,
+    "page": 5,
+    "locator": "/body/p[@paraId=286F9DD7]",
+    "type": "paragraph",
+    "text": "一、×××××（一级标题小三号黑体，顶格书写）"
+  },
+  {
+    "idx": 112,
+    "page": 5,
+    "locator": "/body/p[@paraId=5D06FD1F]",
+    "type": "paragraph",
+    "text": "二、×××××"
+  },
+  {
+    "idx": 113,
+    "page": 5,
+    "locator": "/body/p[@paraId=70297B0E]",
+    "type": "paragraph",
+    "text": "（一）×××××（二级标题四号黑体，顶格书写）"
+  },
+  {
+    "idx": 114,
+    "page": 5,
+    "locator": "/body/p[@paraId=0262BE67]",
+    "type": "paragraph",
+    "text": "□□1、×××××（三级标题小四号黑体）"
+  },
+  {
+    "idx": 115,
+    "page": 5,
+    "locator": "/body/p[@paraId=212F21B4]",
+    "type": "paragraph",
+    "text": "□□（1）……[1]。（四级标题不单独占行书写）"
+  },
+  {
+    "idx": 116,
+    "page": null,
+    "locator": "/body/p[@paraId=282CB748]",
+    "type": "paragraph",
+    "text": "……"
+  },
+  {
+    "idx": 117,
+    "page": 5,
+    "locator": "/body/p[@paraId=56801B2C]",
+    "type": "paragraph",
+    "text": "……"
+  },
+  {
+    "idx": 118,
+    "page": 5,
+    "locator": "/body/p[@paraId=0B9F54E8]",
+    "type": "paragraph",
+    "text": "五、结束语"
+  },
+  {
+    "idx": 119,
+    "page": 5,
+    "locator": "/body/p[@paraId=7A890DA9]",
+    "type": "paragraph",
+    "text": "□□……"
+  },
+  {
+    "idx": 120,
+    "page": 5,
+    "locator": "/body/p[@paraId=76DE143D]",
+    "type": "paragraph",
+    "text": "（小四号字空一行）"
+  },
+  {
+    "idx": 121,
+    "page": 5,
+    "locator": "/body/p[@paraId=40BB4E23]",
+    "type": "paragraph",
+    "text": "参考文献 (小三号黑体)"
+  },
+  {
+    "idx": 122,
+    "page": 5,
+    "locator": "/body/p[@paraId=6CB176CB]",
+    "type": "paragraph",
+    "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. (五号宋体)"
+  },
+  {
+    "idx": 123,
+    "page": null,
+    "locator": "/body/p[@paraId=6F274108]",
+    "type": "paragraph",
+    "text": "……"
+  },
+  {
+    "idx": 124,
+    "page": 5,
+    "locator": "/body/p[@paraId=4FF6B057]",
+    "type": "paragraph",
+    "text": "（五号字空二行）"
+  },
+  {
+    "idx": 126,
+    "page": 5,
+    "locator": "/body/p[@paraId=028A1D17]",
+    "type": "paragraph",
+    "text": "致□□谢 (小三号黑体，居中)"
+  },
+  {
+    "idx": 127,
+    "page": 5,
+    "locator": "/body/p[@paraId=078AC012]",
+    "type": "paragraph",
+    "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 (小四号宋体)"
+  },
+  {
+    "idx": 128,
+    "page": 5,
+    "locator": "/body/p[@paraId=70F7154E]",
+    "type": "paragraph",
+    "text": "（小四号字空二行）"
+  },
+  {
+    "idx": 130,
+    "page": 5,
+    "locator": "/body/p[@paraId=640A38AE]",
+    "type": "paragraph",
+    "text": "附录(小三号黑体)"
+  },
+  {
+    "idx": 131,
+    "page": 5,
+    "locator": "/body/p[@paraId=772D57B4]",
+    "type": "paragraph",
+    "text": "附录1……（小四号宋体）"
+  },
+  {
+    "idx": 132,
+    "page": 5,
+    "locator": "/body/p[@paraId=218A9532]",
+    "type": "paragraph",
+    "text": "附录2……"
+  },
+  {
+    "idx": 133,
+    "page": 5,
+    "locator": "/body/p[@paraId=5C8A5BEE]",
+    "type": "paragraph",
+    "text": "……"
+  },
+  {
+    "idx": 135,
+    "page": 6,
+    "locator": "/body/p[@paraId=63E9CE14]",
+    "type": "paragraph",
+    "text": "附录1（另起一页，小四号黑体）"
+  },
+  {
+    "idx": 136,
+    "page": 6,
+    "locator": "/body/p[@paraId=1B93D1F3]",
+    "type": "paragraph",
+    "text": "……（附录内容的字体字号参照正文的格式要求）"
+  },
+  {
+    "idx": 146,
+    "page": 6,
+    "locator": "/body/p[@paraId=4FD109CB]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生"
+  },
+  {
+    "idx": 147,
+    "page": 6,
+    "locator": "/body/p[@paraId=21717E99]",
+    "type": "paragraph",
+    "text": "毕业设计任务书"
+  },
+  {
+    "idx": 157,
+    "page": null,
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[@paraId=5DB9E360]",
+    "type": "paragraph",
+    "text": "学生姓名"
+  },
+  {
+    "idx": 159,
+    "page": 17,
+    "locator": "/body/tbl[1]/tr[2]/tc[1]/p[@paraId=695743A5]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 161,
+    "page": 17,
+    "locator": "/body/tbl[1]/tr[3]/tc[1]/p[@paraId=705F6442]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 162,
+    "page": null,
+    "locator": "/body/tbl[1]/tr[3]/tc[2]/p[@paraId=1696339C]",
+    "type": "paragraph",
+    "text": "20 级 （ ）班"
+  },
+  {
+    "idx": 163,
+    "page": null,
+    "locator": "/body/tbl[1]/tr[4]/tc[1]/p[@paraId=02CB63AA]",
+    "type": "paragraph",
+    "text": "指导教师及职称"
+  },
+  {
+    "idx": 165,
+    "page": 7,
+    "locator": "/body/tbl[1]/tr[5]/tc[1]/p[@paraId=3495E54D]",
+    "type": "paragraph",
+    "text": "学 院"
+  },
+  {
+    "idx": 173,
+    "page": 7,
+    "locator": "/body/p[@paraId=6E57B6A1]",
+    "type": "paragraph",
+    "text": "20 年 月 日"
+  },
+  {
+    "idx": 176,
+    "page": 7,
+    "locator": "/body/p[@paraId=6D07963E]",
+    "type": "paragraph",
+    "text": "填 写 说 明"
+  },
+  {
+    "idx": 178,
+    "page": 7,
+    "locator": "/body/p[@paraId=5B5B8E15]",
+    "type": "paragraph",
+    "text": "一、毕业设计任务书是学校根据已经确定的毕业设计题目下达给学生的一种教学文件，是学生在指导教师指导下独立从事毕业设计工作的依据。此表由指导教师填写。"
+  },
+  {
+    "idx": 179,
+    "page": 7,
+    "locator": "/body/p[@paraId=62669564]",
+    "type": "paragraph",
+    "text": "二、此任务书必需针对每一位学生，不能多人共用。"
+  },
+  {
+    "idx": 180,
+    "page": 7,
+    "locator": "/body/p[@paraId=147E0E66]",
+    "type": "paragraph",
+    "text": "三、选题要恰当，任务要明确，难度要适中，份量要合理，使每个学生在规定的时限内，经过自己的努力，可以完成任务书规定的设计研究内容。"
+  },
+  {
+    "idx": 181,
+    "page": 7,
+    "locator": "/body/p[@paraId=42FB1634]",
+    "type": "paragraph",
+    "text": "四、任务书一经下达，不得随意更改。"
+  },
+  {
+    "idx": 182,
+    "page": 7,
+    "locator": "/body/p[@paraId=358F96BE]",
+    "type": "paragraph",
+    "text": "五、各栏填写基本要求。"
+  },
+  {
+    "idx": 183,
+    "page": 7,
+    "locator": "/body/p[@paraId=6096C64C]",
+    "type": "paragraph",
+    "text": "（一）毕业设计选题来源、选题性质和完成形式："
+  },
+  {
+    "idx": 184,
+    "page": 7,
+    "locator": "/body/p[@paraId=13423232]",
+    "type": "paragraph",
+    "text": "请在合适的对应选项前的“□”内打“√”，科研课题请注明课题项目和名称，项目指“国家青年基金”等。"
+  },
+  {
+    "idx": 185,
+    "page": 7,
+    "locator": "/body/p[@paraId=6D8C60CF]",
+    "type": "paragraph",
+    "text": "（二）主要内容和要求："
+  },
+  {
+    "idx": 186,
+    "page": 7,
+    "locator": "/body/p[@paraId=3D6ACB54]",
+    "type": "paragraph",
+    "text": "明确设计具体任务，设计原始条件及主要技术指标；设计方案的形成（比较与论证）；该生的侧重点；应完成的工作量，如图纸、译文及计算机应用等要求。"
+  },
+  {
+    "idx": 187,
+    "page": 7,
+    "locator": "/body/p[@paraId=45071F2C]",
+    "type": "paragraph",
+    "text": "（三）主要中文参考资料与外文资料："
+  },
+  {
+    "idx": 188,
+    "page": 7,
+    "locator": "/body/p[@paraId=3D43A3AA]",
+    "type": "paragraph",
+    "text": "在确定了毕业设计题目和明确了要求后，指导教师应给学生提供一些相关资料和相关信息，或划定参考资料的范围，指导学生收集反映当前研究进展的近1－3年参考资料和文献。外文资料是指导老师根据选题情况明确学生需要阅读或翻译成中文的外文文献。"
+  },
+  {
+    "idx": 189,
+    "page": 7,
+    "locator": "/body/p[@paraId=66EA91F0]",
+    "type": "paragraph",
+    "text": "（四）毕业设计的进度安排："
+  },
+  {
+    "idx": 190,
+    "page": 7,
+    "locator": "/body/p[@paraId=4FED9494]",
+    "type": "paragraph",
+    "text": "实习、调研、收集资料、方案制定约占总时间的20%；主体工作，包括设计、计算、绘制图纸、实验及结果分析等约占总时间的50%；撰写初稿、修改、定稿约占总时间的30%。"
+  },
+  {
+    "idx": 191,
+    "page": null,
+    "locator": "/body/p[@paraId=6869DD49]",
+    "type": "paragraph",
+    "text": "六、本表可从毕业论文管理系统填写打印或教务处网站下载中心下载填写打印，但签名栏必须相应责任人亲笔签名，且应用黑色签字笔填写。"
+  },
+  {
+    "idx": 206,
+    "page": 8,
+    "locator": "/body/tbl[2]/tr[1]/tc[1]/p[@paraId=0EE7F694]",
+    "type": "paragraph",
+    "text": "毕业设计题目"
+  },
+  {
+    "idx": 208,
+    "page": 8,
+    "locator": "/body/tbl[2]/tr[2]/tc[1]/p[@paraId=5A650D1F]",
+    "type": "paragraph",
+    "text": "选题来源"
+  },
+  {
+    "idx": 209,
+    "page": 8,
+    "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=71B54F8D]",
+    "type": "paragraph",
+    "text": "□结合科研课题 课题名称："
+  },
+  {
+    "idx": 210,
+    "page": 8,
+    "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=53B9C6A3]",
+    "type": "paragraph",
+    "text": "□生产实际或社会实际 □其他"
+  },
+  {
+    "idx": 211,
+    "page": 8,
+    "locator": "/body/tbl[2]/tr[3]/tc[1]/p[@paraId=204A9372]",
+    "type": "paragraph",
+    "text": "选题性质"
+  },
+  {
+    "idx": 212,
+    "page": null,
+    "locator": "/body/tbl[2]/tr[3]/tc[2]/p[@paraId=68074E4F]",
+    "type": "paragraph",
+    "text": "□基础研究 □应用研究 □其他"
+  },
+  {
+    "idx": 213,
+    "page": 9,
+    "locator": "/body/tbl[2]/tr[4]/tc[1]/p[@paraId=649C6A7F]",
+    "type": "paragraph",
+    "text": "主要内容和要求"
+  },
+  {
+    "idx": 214,
+    "page": 9,
+    "locator": "/body/p[@paraId=440F9385]",
+    "type": "paragraph",
+    "text": "注：此表如不够填写，可另加附页。"
+  },
+  {
+    "idx": 215,
+    "page": 9,
+    "locator": "/body/tbl[3]/tr[1]/tc[1]/p[@paraId=249B40FE]",
+    "type": "paragraph",
+    "text": "主要中文参考资料与外文资料"
+  },
+  {
+    "idx": 226,
+    "page": 10,
+    "locator": "/body/tbl[3]/tr[2]/tc[1]/p[@paraId=7049866E]",
+    "type": "paragraph",
+    "text": "工作进度安排"
+  },
+  {
+    "idx": 227,
+    "page": 10,
+    "locator": "/body/tbl[3]/tr[3]/tc[1]/p[@paraId=41383AAA]",
+    "type": "paragraph",
+    "text": "起止日期"
+  },
+  {
+    "idx": 228,
+    "page": 10,
+    "locator": "/body/tbl[3]/tr[3]/tc[2]/p[@paraId=252F503F]",
+    "type": "paragraph",
+    "text": "主要工作内容"
+  },
+  {
+    "idx": 247,
+    "page": null,
+    "locator": "/body/tbl[3]/tr[13]/tc[1]/p[@paraId=2A1BE0EB]",
+    "type": "paragraph",
+    "text": "要求完成日期：20 年 月 日 指导教师签名："
+  },
+  {
+    "idx": 248,
+    "page": null,
+    "locator": "/body/tbl[3]/tr[13]/tc[1]/p[@paraId=0A904F92]",
+    "type": "paragraph",
+    "text": "批准日期：20 年 月 日 教学基层组织负责人签名："
+  },
+  {
+    "idx": 249,
+    "page": null,
+    "locator": "/body/tbl[3]/tr[13]/tc[1]/p[@paraId=5D49505B]",
+    "type": "paragraph",
+    "text": "接受任务日期：20 年 月 日 学生本人签名："
+  },
+  {
+    "idx": 253,
+    "page": 10,
+    "locator": "/body/p[@paraId=0992F12C]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文"
+  },
+  {
+    "idx": 254,
+    "page": 10,
+    "locator": "/body/p[@paraId=653AD65C]",
+    "type": "paragraph",
+    "text": "开题报告"
+  },
+  {
+    "idx": 255,
+    "page": null,
+    "locator": "/body/p[@paraId=1D3E7C2A]",
+    "type": "paragraph",
+    "text": "学 院："
+  },
+  {
+    "idx": 256,
+    "page": 17,
+    "locator": "/body/tbl[4]/tr[1]/tc[1]/p[@paraId=012E0A96]",
+    "type": "paragraph",
+    "text": "学生姓名"
+  },
+  {
+    "idx": 258,
+    "page": 17,
+    "locator": "/body/tbl[4]/tr[1]/tc[3]/p[@paraId=129EF2B5]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 260,
+    "page": 17,
+    "locator": "/body/tbl[4]/tr[2]/tc[1]/p[@paraId=23EEB883]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 262,
+    "page": 11,
+    "locator": "/body/tbl[4]/tr[2]/tc[3]/p[@paraId=02087071]",
+    "type": "paragraph",
+    "text": "指导教师及职称"
+  },
+  {
+    "idx": 264,
+    "page": 11,
+    "locator": "/body/tbl[4]/tr[3]/tc[1]/p[@paraId=5E4DE42B]",
+    "type": "paragraph",
+    "text": "毕业论文题目"
+  },
+  {
+    "idx": 266,
+    "page": 11,
+    "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=556CEB49]",
+    "type": "paragraph",
+    "text": "文献综述（选题研究意义、国内外研究现状、主要参考文献等，不少于1000字）"
+  },
+  {
+    "idx": 298,
+    "page": 11,
+    "locator": "/body/p[@paraId=5221BAFE]",
+    "type": "paragraph",
+    "text": "注：此表如不够填写，可另加页。"
+  },
+  {
+    "idx": 299,
+    "page": 11,
+    "locator": "/body/tbl[5]/tr[1]/tc[1]/p[@paraId=730F9283]",
+    "type": "paragraph",
+    "text": "研究方案（研究目的、内容、方法、预期成果、条件保障等）"
+  },
+  {
+    "idx": 321,
+    "page": 12,
+    "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=15A71651]",
+    "type": "paragraph",
+    "text": "进程计划（各研究环节的时间安排、实施进度、完成程度等）"
+  },
+  {
+    "idx": 344,
+    "page": 12,
+    "locator": "/body/tbl[5]/tr[3]/tc[1]/p[@paraId=5AE1133B]",
+    "type": "paragraph",
+    "text": "论证小组意见:"
+  },
+  {
+    "idx": 379,
+    "page": 13,
+    "locator": "/body/tbl[5]/tr[4]/tc[1]/p[@paraId=3E0DB5EF]",
+    "type": "paragraph",
+    "text": "论证小组"
+  },
+  {
+    "idx": 384,
+    "page": 13,
+    "locator": "/body/tbl[5]/tr[5]/tc[1]/p[@paraId=6B0BC5C5]",
+    "type": "paragraph",
+    "text": "成员签名"
+  },
+  {
+    "idx": 389,
+    "page": 13,
+    "locator": "/body/tbl[5]/tr[6]/tc[1]/p[@paraId=3ADD24D2]",
+    "type": "paragraph",
+    "text": "论证地点: 论证日期:20 年 月 日"
+  },
+  {
+    "idx": 390,
+    "page": 13,
+    "locator": "/body/p[@paraId=6589F1CA]",
+    "type": "paragraph",
+    "text": "注：1.此表为做毕业论文的同学填写。"
+  },
+  {
+    "idx": 391,
+    "page": 13,
+    "locator": "/body/p[@paraId=780DAFE4]",
+    "type": "paragraph",
+    "text": "2.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。"
+  },
+  {
+    "idx": 392,
+    "page": 13,
+    "locator": "/body/p[@paraId=4021B20B]",
+    "type": "paragraph",
+    "text": "3.此表可从毕业论文管理系统填写打印或教务处网站下载中心下载填写打印。"
+  },
+  {
+    "idx": 394,
+    "page": 13,
+    "locator": "/body/p[@paraId=1D975A86]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+  },
+  {
+    "idx": 395,
+    "page": 13,
+    "locator": "/body/p[@paraId=52787B34]",
+    "type": "paragraph",
+    "text": "开题论证记录表"
+  },
+  {
+    "idx": 396,
+    "page": null,
+    "locator": "/body/p[@paraId=731B6064]",
+    "type": "paragraph",
+    "text": "学 院： 记录人："
+  },
+  {
+    "idx": 397,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[1]/tc[1]/p[@paraId=7C4DC8BF]",
+    "type": "paragraph",
+    "text": "学生姓名"
+  },
+  {
+    "idx": 399,
+    "page": 17,
+    "locator": "/body/tbl[6]/tr[1]/tc[3]/p[@paraId=63A4C877]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 401,
+    "page": 17,
+    "locator": "/body/tbl[6]/tr[2]/tc[1]/p[@paraId=6C4D272E]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 402,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[2]/tc[2]/p[@paraId=66E50306]",
+    "type": "paragraph",
+    "text": "20 级 专业（ ）班"
+  },
+  {
+    "idx": 403,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[1]/p[@paraId=16B78848]",
+    "type": "paragraph",
+    "text": "指导教师姓名"
+  },
+  {
+    "idx": 405,
+    "page": null,
+    "locator": "/body/tbl[6]/tr[3]/tc[3]/p[@paraId=3C390F79]",
+    "type": "paragraph",
+    "text": "指导教师职称"
+  },
+  {
+    "idx": 407,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[4]/tc[1]/p[@paraId=763042FB]",
+    "type": "paragraph",
+    "text": "论文（设计）题目"
+  },
+  {
+    "idx": 409,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=04FDEF3C]",
+    "type": "paragraph",
+    "text": "论证小组质疑："
+  },
+  {
+    "idx": 416,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=0520E263]",
+    "type": "paragraph",
+    "text": "学生回答简要记录："
+  },
+  {
+    "idx": 427,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[7]/tc[1]/p[@paraId=7E22F52E]",
+    "type": "paragraph",
+    "text": "论证小组"
+  },
+  {
+    "idx": 428,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[7]/tc[1]/p[@paraId=1E24E1F2]",
+    "type": "paragraph",
+    "text": "组长签名"
+  },
+  {
+    "idx": 430,
+    "page": 14,
+    "locator": "/body/tbl[6]/tr[8]/tc[1]/p[@paraId=0995EE6D]",
+    "type": "paragraph",
+    "text": "论证地点： 论证日期：20 年 月 日"
+  },
+  {
+    "idx": 431,
+    "page": null,
+    "locator": "/body/p[@paraId=103CCC99]",
+    "type": "paragraph",
+    "text": "注：此表可从毕业论文管理系统或教务处网站下载中心下载。记录、签名栏必须用黑色笔手工填写。"
+  },
+  {
+    "idx": 433,
+    "page": null,
+    "locator": "/body/p[@paraId=1AAB72AE]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+  },
+  {
+    "idx": 434,
+    "page": 15,
+    "locator": "/body/p[@paraId=3E5B394E]",
+    "type": "paragraph",
+    "text": "答 辩 记 录 表"
+  },
+  {
+    "idx": 435,
+    "page": 15,
+    "locator": "/body/p[@paraId=4CB232BD]",
+    "type": "paragraph",
+    "text": "学 院： 记录人："
+  },
+  {
+    "idx": 436,
+    "page": null,
+    "locator": "/body/tbl[7]/tr[1]/tc[1]/p[@paraId=6B51487C]",
+    "type": "paragraph",
+    "text": "学生姓名"
+  },
+  {
+    "idx": 438,
+    "page": 17,
+    "locator": "/body/tbl[7]/tr[1]/tc[3]/p[@paraId=219E9DE6]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 440,
+    "page": 17,
+    "locator": "/body/tbl[7]/tr[2]/tc[1]/p[@paraId=5EC87A34]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 441,
+    "page": null,
+    "locator": "/body/tbl[7]/tr[2]/tc[2]/p[@paraId=4C04F53B]",
+    "type": "paragraph",
+    "text": "20 级 专业（ ）班"
+  },
+  {
+    "idx": 442,
+    "page": null,
+    "locator": "/body/tbl[7]/tr[3]/tc[1]/p[@paraId=4EE70EE2]",
+    "type": "paragraph",
+    "text": "指导教师姓名"
+  },
+  {
+    "idx": 444,
+    "page": null,
+    "locator": "/body/tbl[7]/tr[3]/tc[3]/p[@paraId=67F906DB]",
+    "type": "paragraph",
+    "text": "指导教师职称"
+  },
+  {
+    "idx": 446,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[4]/tc[1]/p[@paraId=186374A8]",
+    "type": "paragraph",
+    "text": "论文（设计）题目"
+  },
+  {
+    "idx": 448,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=27F4B756]",
+    "type": "paragraph",
+    "text": "答辩小组质疑："
+  },
+  {
+    "idx": 455,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=14D2035D]",
+    "type": "paragraph",
+    "text": "学生答辩简要记录："
+  },
+  {
+    "idx": 466,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[7]/tc[1]/p[@paraId=70167FE6]",
+    "type": "paragraph",
+    "text": "答辩小组"
+  },
+  {
+    "idx": 467,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[7]/tc[1]/p[@paraId=2A357F69]",
+    "type": "paragraph",
+    "text": "成员签名"
+  },
+  {
+    "idx": 477,
+    "page": 15,
+    "locator": "/body/tbl[7]/tr[9]/tc[1]/p[@paraId=40CECAA6]",
+    "type": "paragraph",
+    "text": "答辩地点： 答辩日期：20 年 月 日"
+  },
+  {
+    "idx": 478,
+    "page": 16,
+    "locator": "/body/p[@paraId=5496CC7A]",
+    "type": "paragraph",
+    "text": "注：此表可从毕业论文管理系统或教务处网站下载中心下载。记录、签名栏必须用黑色笔手工填写。"
+  },
+  {
+    "idx": 479,
+    "page": 16,
+    "locator": "/body/p[@paraId=382F35C5]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+  },
+  {
+    "idx": 480,
+    "page": 16,
+    "locator": "/body/p[@paraId=062E8B0E]",
+    "type": "paragraph",
+    "text": "题目变更审批表"
+  },
+  {
+    "idx": 481,
+    "page": 16,
+    "locator": "/body/p[@paraId=42994C50]",
+    "type": "paragraph",
+    "text": "学 院："
+  },
+  {
+    "idx": 482,
+    "page": 17,
+    "locator": "/body/tbl[8]/tr[1]/tc[1]/p[@paraId=0E1163B2]",
+    "type": "paragraph",
+    "text": "学 生 姓 名"
+  },
+  {
+    "idx": 484,
+    "page": 17,
+    "locator": "/body/tbl[8]/tr[1]/tc[3]/p[@paraId=0EDF5772]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 486,
+    "page": 17,
+    "locator": "/body/tbl[8]/tr[2]/tc[1]/p[@paraId=0ACFEADB]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 487,
+    "page": null,
+    "locator": "/body/tbl[8]/tr[2]/tc[2]/p[@paraId=65719173]",
+    "type": "paragraph",
+    "text": "20 级 专业（ ）班"
+  },
+  {
+    "idx": 488,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[3]/tc[1]/p[@paraId=199BB6BF]",
+    "type": "paragraph",
+    "text": "变更前论文（设计）题目"
+  },
+  {
+    "idx": 490,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[4]/tc[1]/p[@paraId=0744E856]",
+    "type": "paragraph",
+    "text": "变更后论文（设计）题目"
+  },
+  {
+    "idx": 492,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[5]/tc[1]/p[@paraId=363878E0]",
+    "type": "paragraph",
+    "text": "论文（设计）题目变更原因："
+  },
+  {
+    "idx": 493,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=273E43A0]",
+    "type": "paragraph",
+    "text": "指导教师意见："
+  },
+  {
+    "idx": 497,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=1FFCC7E2]",
+    "type": "paragraph",
+    "text": "签 名： 年 月 日"
+  },
+  {
+    "idx": 498,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=1B611B25]",
+    "type": "paragraph",
+    "text": "教学基层组织意见："
+  },
+  {
+    "idx": 502,
+    "page": 16,
+    "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=47ADC84E]",
+    "type": "paragraph",
+    "text": "负责人签名： 年 月 日"
+  },
+  {
+    "idx": 504,
+    "page": 17,
+    "locator": "/body/p[@paraId=5C37C84E]",
+    "type": "paragraph",
+    "text": "注：1.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。"
+  },
+  {
+    "idx": 505,
+    "page": 17,
+    "locator": "/body/p[@paraId=630C4415]",
+    "type": "paragraph",
+    "text": "2.此表可从毕业论文管理系统或教务处网站下载中心下载。"
+  },
+  {
+    "idx": 506,
+    "page": 17,
+    "locator": "/body/p[@paraId=689CBB1C]",
+    "type": "paragraph",
+    "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+  },
+  {
+    "idx": 507,
+    "page": 17,
+    "locator": "/body/p[@paraId=5FC30713]",
+    "type": "paragraph",
+    "text": "成绩评定表"
+  },
+  {
+    "idx": 508,
+    "page": 17,
+    "locator": "/body/p[@paraId=57F33EF0]",
+    "type": "paragraph",
+    "text": "学 院："
+  },
+  {
+    "idx": 509,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[1]/tc[1]/p[@paraId=29C271A1]",
+    "type": "paragraph",
+    "text": "学生姓名"
+  },
+  {
+    "idx": 511,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[1]/tc[3]/p[@paraId=1688E38F]",
+    "type": "paragraph",
+    "text": "学 号"
+  },
+  {
+    "idx": 513,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[2]/tc[1]/p[@paraId=11C07246]",
+    "type": "paragraph",
+    "text": "年级专业及班级"
+  },
+  {
+    "idx": 515,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[2]/tc[3]/p[@paraId=78F945AE]",
+    "type": "paragraph",
+    "text": "指导教师及职称"
+  },
+  {
+    "idx": 517,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[3]/tc[1]/p[@paraId=7F510EE2]",
+    "type": "paragraph",
+    "text": "毕业论文（设计）题目"
+  },
+  {
+    "idx": 519,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=36635AEE]",
+    "type": "paragraph",
+    "text": "毕业论文（设计）摘要："
+  },
+  {
+    "idx": 531,
+    "page": 17,
+    "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=09967FF6]",
+    "type": "paragraph",
+    "text": "关键词："
+  },
+  {
+    "idx": 543,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=7E16789B]",
+    "type": "paragraph",
+    "text": "指导教师对该学生论文（设计）的评定意见：（主要包括：1、论文（设计）质量评价，2、论文（设计）不足之处，3、是否同意提交）"
+  },
+  {
+    "idx": 550,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=1BDE289D]",
+    "type": "paragraph",
+    "text": "指导老师签名："
+  },
+  {
+    "idx": 551,
+    "page": null,
+    "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=34C8CD4D]",
+    "type": "paragraph",
+    "text": "年 月 日"
+  },
+  {
+    "idx": 552,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=35688CFC]",
+    "type": "paragraph",
+    "text": "答辩小组评语："
+  },
+  {
+    "idx": 561,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=0D0FB737]",
+    "type": "paragraph",
+    "text": "答辩小组成绩（百分制）： 折合五级记分制成绩："
+  },
+  {
+    "idx": 564,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=22A416DB]",
+    "type": "paragraph",
+    "text": "组长签名："
+  },
+  {
+    "idx": 567,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=461C3474]",
+    "type": "paragraph",
+    "text": "年 月 日"
+  },
+  {
+    "idx": 568,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=19A73DC8]",
+    "type": "paragraph",
+    "text": "成"
+  },
+  {
+    "idx": 569,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=3FF9F19B]",
+    "type": "paragraph",
+    "text": "绩"
+  },
+  {
+    "idx": 570,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=72B699E0]",
+    "type": "paragraph",
+    "text": "评"
+  },
+  {
+    "idx": 571,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=623A2D05]",
+    "type": "paragraph",
+    "text": "定"
+  },
+  {
+    "idx": 572,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=6CDE0263]",
+    "type": "paragraph",
+    "text": "答辩委员会审查意见："
+  },
+  {
+    "idx": 580,
+    "page": 18,
+    "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=5E46F1D3]",
+    "type": "paragraph",
+    "text": "答辩委员会主任签名："
+  },
+  {
+    "idx": 581,
+    "page": null,
+    "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=62B823EA]",
+    "type": "paragraph",
+    "text": "年 月 日"
+  },
+  {
+    "idx": 582,
+    "page": null,
+    "locator": "/body/p[@paraId=2A7F4AB6]",
+    "type": "paragraph",
+    "text": "注：1.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。2.各专业学生的整体成绩应符合正态分布，要求优秀比例控制在15%以内，良好、中等和及格的比例控制在75%左右，不及格的比例在10%以下；系（专业）答辩委员会对毕业论文（设计）的答辩小组建议成绩进行审查，对评定等级为优秀或不及格以及答辩评分中有争议的论文（设计）要进行重点审核，最终确定成绩，并向学生公布；五级记分制：优秀（90～100分）、良好（80～89分）、中等"
+  }
+]

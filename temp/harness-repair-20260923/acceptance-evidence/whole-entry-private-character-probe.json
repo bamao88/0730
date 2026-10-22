@@ -1,0 +1,35 @@
+{
+  "verification_level": "synthetic native SDK copy diagnostic on real source text, not natural school E2E",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/object-inventory.json",
+  "source_sha256": "2352ffca31c5f02fbf232d877e28beebc6c2b473686255fd66f31308b18d3efb",
+  "expected_part": {
+    "whole_entry": true,
+    "role": "fill_slot",
+    "field_id": "degree.type"
+  },
+  "results": [
+    {
+      "source_format": "explicit whole-entry declaration over real reading packet",
+      "subtype": "success",
+      "is_error": false,
+      "output": {
+        "status": "complete",
+        "summary": "Assigned the entire source entry as a single fill_slot for the degree.type field, with no text or split parts.",
+        "semantic_judgments": [
+          {
+            "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+            "parts": [
+              {
+                "whole_entry": true,
+                "role": "fill_slot",
+                "field_id": "degree.type"
+              }
+            ],
+            "reason": "The entire entry holds one semantic responsibility: the selected degree type value (including the checkbox glyph and the two labeled options). Declaring whole_entry=true assigns degree.type to all 16 source characters, including the U+F06F and U+F0FE private-use glyphs and the interior whitespace runs."
+          }
+        ]
+      },
+      "exact_declaration": true
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}运行比较 · DocFit Observer{% endblock %}
+{% block header_actions %}<a class="button-secondary" href="/">返回运行总览</a>{% endblock %}
+{% block content %}
+<section class="hero compact comparison-hero">
+  <div>
+    <p class="eyebrow">RUN COMPARISON</p>
+    <h1>跨运行差异</h1>
+    <p class="lede">比较结果只来自脱敏事件。调用序列仅用于调查，不是 Gold，也不自动证明质量更好。</p>
+  </div>
+  <div class="hero-stat">
+    <strong class="status status-{{ comparison.comparability.status }}">{{ comparison.comparability.status }}</strong>
+    <span>{{ comparison.comparability.reason }}</span>
+  </div>
+</section>
+
+<section class="panel split-grid" aria-label="所选运行">
+  <article>
+    <p class="eyebrow">BASELINE</p>
+    <h2 class="id-wrap"><a href="/runs/{{ comparison.left.run.run_id }}">{{ comparison.left.run.run_id }}</a></h2>
+    <p>结果：<span class="status status-{{ comparison.left.run_result|lower }}">{{ comparison.left.run_result }}</span></p>
+  </article>
+  <article>
+    <p class="eyebrow">CANDIDATE</p>
+    <h2 class="id-wrap"><a href="/runs/{{ comparison.right.run.run_id }}">{{ comparison.right.run.run_id }}</a></h2>
+    <p>结果：<span class="status status-{{ comparison.right.run_result|lower }}">{{ comparison.right.run_result }}</span></p>
+  </article>
+</section>
+
+{% if comparison.comparability.performance_conclusion == 'not_allowed' %}
+<section class="panel comparison-warning" role="note">
+  <h2>不生成性能胜负结论</h2>
+  <p>输入/验证门不同或尚未证明一致。下方数据仅用于定位差异，缺失值保持 unknown。</p>
+</section>
+{% endif %}
+
+<section class="panel table-panel" aria-labelledby="conditions-title">
+  <div class="section-heading"><h2 id="conditions-title">可比性条件</h2><span class="quiet">所有条件一致且可用才是 strict</span></div>
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部可比性条件">
+    <table class="comparison-table">
+      <thead><tr><th>条件</th><th>基线</th><th>候选</th><th>判定</th></tr></thead>
+      <tbody>
+      {% for row in comparison.comparability.conditions %}
+        <tr>
+          <td>{{ row.label }}<small>{{ row.group }} · {{ row.key }}</small></td>
+          <td class="id-wrap">{{ row.left if row.left is not none else 'unknown' }}</td>
+          <td class="id-wrap">{{ row.right if row.right is not none else 'unknown' }}</td>
+          <td><span class="status status-{{ row.state }}">{{ row.state }}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel table-panel" aria-labelledby="metrics-title">
+  <div class="section-heading"><h2 id="metrics-title">运行指标</h2><span class="quiet">delta = candidate − baseline；不代表赢家</span></div>
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部运行指标">
+    <table class="comparison-table">
+      <thead><tr><th>指标</th><th>基线</th><th>候选</th><th>差值</th></tr></thead>
+      <tbody>
+      {% for row in comparison.metrics %}
+        <tr>
+          <td>{{ row.label }}<small>{{ row.key }}</small></td>
+          <td>{{ row.left if row.left is not none else 'unknown' }}<small>{{ row.left_source }}</small></td>
+          <td>{{ row.right if row.right is not none else 'unknown' }}<small>{{ row.right_source }}</small></td>
+          <td>{{ row.delta if row.delta is not none else 'unknown' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel table-panel" aria-labelledby="tools-title">
+  <div class="section-heading"><h2 id="tools-title">Tool 差异</h2><span class="quiet">未观测到的值不按 0 填充</span></div>
+  {% if comparison.tools %}
+  <div class="table-scroll" tabindex="0" aria-label="横向滚动查看全部 Tool 差异">
+    <table class="comparison-table">
+      <thead><tr><th>Tool</th><th>调用数</th><th>总耗时</th><th>平均耗时</th><th>错误</th></tr></thead>
+      <tbody>
+      {% for row in comparison.tools %}
+        <tr>
+          <td class="id-wrap">{{ row.tool_name }}</td>
+          {% for key in ['calls', 'total_duration_ms', 'average_duration_ms', 'errors'] %}
+          <td>{{ row[key].left if row[key].left is not none else 'unknown' }} → {{ row[key].right if row[key].right is not none else 'unknown' }}<small>Δ {{ row[key].delta if row[key].delta is not none else 'unknown' }}</small></td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="quiet">Tool metrics unavailable.</p>{% endif %}
+</section>
+{% endblock %}

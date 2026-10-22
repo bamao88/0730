@@ -1,6 +1,6 @@
 # DocFit Agent SDK 模块配置与共享事实层学习笔记
 
-> 文档定位：这是面向个人学习的解释性文档，用于理解当前 DocFit 代码中的 Agent 配置、运行实例和共享底层能力。它不是产品合同、架构决策记录或状态文档，不能覆盖 `docs/docfit-00-index.md` 至 `docs/docfit-06-development-roadmap.md` 中的正式约束。
+> 文档定位：这是面向个人学习的解释性文档，用于理解当前 DocFit 代码中的 Agent 配置、运行实例和共享底层能力。它不是产品合同、架构决策记录或状态文档，不能覆盖根目录 `ARCHITECTURE.md`、模块 Contract 和模块边界文档中的正式约束。
 >
 > 当前代码观察时间：2026-08-12。
 

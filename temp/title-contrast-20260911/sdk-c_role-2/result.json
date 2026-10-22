@@ -1,0 +1,279 @@
+{
+  "status": "complete",
+  "summary": "Cover unit (封面) semantic judgments for 湖南农业大学 全日制普通本科生毕业论文(设计) cover template. Sixteen source entries processed in document order: the 附件1 封面基本格式 preamble and inline parenthetical style/format notes are cleanup (template-format obligations not to enter the clean template); the university name, document type, location 湖南·长沙, and the five basic-information labels (学生姓名, 学号, 年级专业及班级, 指导老师及职称, 学院) with their leading □ spacing and the ：separator are fixed_label; the Chinese title placeholder (毕业论文（设计）中文题目), English title placeholder (TITLE OF GRADUATION PAPER), student name (×××), student ID (20××××××××××), composite grade-major-class (20××级×××（×）班), advisor name (×××), advisor title (□教授), department (××××学院), and submission date (20××年××月) are fill_slots bound to fields from the pre-input vocabulary: thesis.title.zh, thesis.title.en, author.name.zh, author.student_id, author.cohort_class, advisor.name.zh, advisor.title, author.department, submission.date. All bindings were verified against field usage_affordance.allowed_part_roles (each selected field permits fill_slot). No body_structure or generated_content parts appear in the cover; cover is a fillable terminal keep rather than a generated area. No needs_input was triggered.",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-f64716e2b627776af88239e5",
+      "parts": [
+        {
+          "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中标题中论文不要。",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "附件1 封面基本格式 段是封面之外的格式说明，不属于封面本身的内容；按 checkpoint 决定，它整体为模板格式说明，承载学校对封面排版的样式责任，由宿主在 style 阶段承接，不作为封面可见文字保留。"
+    },
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "此段为纯版式说明，提示前后空行及字体；不是封面要保留的固定文字，应清出模板。"
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "“湖 南 农 业 大 学”是学校校名，应原样保留；括号内为字体说明，由宿主以样式承接，清理原文提示。"
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "“全日制普通本科生毕业论文(设计)”为学校文档类型固定名，括号内为字体说明，应清理。"
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "纯版式说明（黑体加空行），非封面文字，清出。"
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": "（小二黑体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "“毕业论文（设计）中文题目”整体占中文题目填写位，是该位置的提示文字，填写后应被 thesis.title.zh 的真实题名整体替换；括号内为字体说明，应清出。thesis.title.zh 的 usage_affordance.allowed_part_roles 含 fill_slot。"
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "“TITLE OF GRADUATION PAPER”为英文题名位置的占位提示，填写后应被 thesis.title.en 的真实英文题名整体替换；括号为字体说明，清出。thesis.title.en 的 allowed_part_roles 含 fill_slot。"
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "纯版式说明，提示英文题名上下空行行数；清出。"
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "学生姓名",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "cleanup"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        },
+        {
+          "text": " （三号楷体加粗）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "前导 □ 占位间距与“学生姓名”均为固定标签/格式占位，保留；括号字体说明清出；中文姓名占位“×××（或×□×）”承载作者中文姓名真实值，绑定 author.name.zh（allowed_part_roles 含 fill_slot）。"
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "学□□号",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "前导 □ 与“学□□号”标签及冒号均为固定内容；学号示例占位整体替换为 author.student_id 真实值；该字段 allowed_part_roles 含 fill_slot。"
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "年级专业及班级",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "前导 □、“年级专业及班级”标签及冒号均为固定内容；年级、专业与班级在同一填写位合并，按词表复合字段 author.cohort_class（label: 年级、专业及班级复合信息）整体替换；该字段 allowed_part_roles 含 fill_slot。"
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "指导老师及职称",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "前导 □、“指导老师及职称”标签及冒号均为固定内容；导师姓名与职称在同一行但语义字段不同，必须分开：姓名位绑定 advisor.name.zh（allowed_part_roles 含 fill_slot），职称位（示例“教授”）绑定 advisor.title（allowed_part_roles 含 fill_slot），间距 □ 留在职称 part 内以保持版式贴合。"
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "学□□院",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": " （学院名用全称）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "前导 □、“学□□院”标签及冒号均为固定内容；学院示例“××××学院”承载真实院系名，绑定 author.department（allowed_part_roles 含 fill_slot）；括号“学院名用全称”为填写要求说明，清出。"
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "纯版式说明，提示信息块上下空行行数；清出。"
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        },
+        {
+          "text": " （小三号黑体）",
+          "role": "cleanup"
+        }
+      ],
+      "reason": "“湖南·长沙”为学校所在地固定文字，保留；括号为字体说明，清出。"
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "“提交日期”标签与冒号为固定内容；年月示例“20××年××月”整体替换为 submission.date 真实值；该字段 allowed_part_roles 含 fill_slot。"
+    }
+  ]
+}

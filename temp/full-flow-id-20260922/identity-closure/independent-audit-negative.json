@@ -1,0 +1,12 @@
+[
+  {
+    "case": "wrong_table_slot",
+    "rejected": true,
+    "reason": "Table slot moved to a different original object"
+  },
+  {
+    "case": "unremoved_style_text",
+    "rejected": true,
+    "reason": "('Unselected text or slot order changed within selected paragraph', 'word/document.xml', 'document/body[1]/p[1]')"
+  }
+]

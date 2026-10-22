@@ -1,0 +1,31 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: 中文题目
+    content_type: text
+  - field_id: advisor.name.zh
+    label: 导师姓名
+    content_type: text
+  - field_id: advisor.title
+    label: 导师职称
+    content_type: text
+  - field_id: body.chapters
+    label: 正文章节集合
+    content_type: section
+  - field_id: body.heading.outline1
+    label: 章标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: generated.toc
+    label: 目录
+    content_type: section
+    value_sources:
+      - system_generated
+  - field_id: body.paragraph
+    label: 正文段落
+    content_type: rich_text
+    parent_field_id: body.chapters
+  - field_id: keywords.en
+    label: 英文关键词
+    content_type: text

@@ -1,0 +1,211 @@
+{
+  "finished_at": "2026-09-22T15:39:55.462713+00:00",
+  "code_commit_at_finish": "3c42dc811d7cefe04e7395349182830f5c0c4a26",
+  "integrity": {
+    "skill": {
+      ".claude/skills/docfit-school-extract/SKILL.md": {
+        "expected": "f127ce84e4bfd35e63149e77715d29aa0071293474a262e6be84e6d00168abde",
+        "actual": "f127ce84e4bfd35e63149e77715d29aa0071293474a262e6be84e6d00168abde",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/body-structure.md": {
+        "expected": "23c5eac6c987b468beffded69b727ebb257190cfa7ec9fcceafd9ceacccdf89c",
+        "actual": "23c5eac6c987b468beffded69b727ebb257190cfa7ec9fcceafd9ceacccdf89c",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/collections-and-optional-sections.md": {
+        "expected": "8579fe5e2e6330f801f34898b60e7921035a97e4fc108932a2de51722cdf4701",
+        "actual": "8579fe5e2e6330f801f34898b60e7921035a97e4fc108932a2de51722cdf4701",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/completion-and-visual-review.md": {
+        "expected": "eb0f7ae322b64c93f74a1331574acb380f1ac3095ca6d87b331f21824cc5ff9a",
+        "actual": "eb0f7ae322b64c93f74a1331574acb380f1ac3095ca6d87b331f21824cc5ff9a",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/generated-content-and-toc.md": {
+        "expected": "bd5d3eab1d53f546c1cdc2b6f50c9aad2f9fae7373466d47dcf8c0c33f7a032f",
+        "actual": "bd5d3eab1d53f546c1cdc2b6f50c9aad2f9fae7373466d47dcf8c0c33f7a032f",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/judgment-context-and-conflicts.md": {
+        "expected": "8d7b5070462e8790c2b67a31d308dcf029b099a1d7d3fed56115d8850b1215eb",
+        "actual": "8d7b5070462e8790c2b67a31d308dcf029b099a1d7d3fed56115d8850b1215eb",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/object-boundary-and-layout-safety.md": {
+        "expected": "3436659982bbd8d3803b4f08f6ae4d22d2c4f3e1f4e611c862e5d05ade473885",
+        "actual": "3436659982bbd8d3803b4f08f6ae4d22d2c4f3e1f4e611c862e5d05ade473885",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/registry-interface-binding.md": {
+        "expected": "239e52090eaee2528fa14f26e556bbf6f9f5aa85222e4b9e2706d8466ff0fc0b",
+        "actual": "239e52090eaee2528fa14f26e556bbf6f9f5aa85222e4b9e2706d8466ff0fc0b",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/style-contract-boundary.md": {
+        "expected": "6b1cc3e5af7d2773cf3172711ea1a6f4fa158bdad919ba361ca9b9d8b2b45b39",
+        "actual": "6b1cc3e5af7d2773cf3172711ea1a6f4fa158bdad919ba361ca9b9d8b2b45b39",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/template-text-classification.md": {
+        "expected": "434e4cc31d650377efe9958ae2e870b889987ab21d6e1e1ab9b41a74e2a0bc77",
+        "actual": "434e4cc31d650377efe9958ae2e870b889987ab21d6e1e1ab9b41a74e2a0bc77",
+        "matches": true
+      },
+      ".claude/skills/docfit-school-extract/references/unit-boundary.md": {
+        "expected": "450e6c0fcdeda65f18d0ea96d1319ca58c4053429bddf47149cf27777b3376cd",
+        "actual": "450e6c0fcdeda65f18d0ea96d1319ca58c4053429bddf47149cf27777b3376cd",
+        "matches": true
+      }
+    },
+    "inputs": {
+      "cover": {
+        "field-registry.yaml": {
+          "expected": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+          "actual": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+          "matches": true
+        },
+        "school-requirements.pdf": {
+          "expected": "6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975",
+          "actual": "6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975",
+          "matches": true
+        },
+        "school-template.docx": {
+          "expected": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+          "actual": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+          "matches": true
+        },
+        "selected-units.yaml": {
+          "expected": "1afb21f6613b2a7d089b08a22c00d6df8874a53174b1b042f598fda97bfe6fbd",
+          "actual": "1afb21f6613b2a7d089b08a22c00d6df8874a53174b1b042f598fda97bfe6fbd",
+          "matches": true
+        }
+      },
+      "body": {
+        "field-registry.yaml": {
+          "expected": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+          "actual": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+          "matches": true
+        },
+        "school-requirements.pdf": {
+          "expected": "261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10",
+          "actual": "261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10",
+          "matches": true
+        },
+        "school-template.docx": {
+          "expected": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+          "actual": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+          "matches": true
+        },
+        "selected-units.yaml": {
+          "expected": "07d931aaffb306d4d4469d84d236fe0435d7e4b86258d63140feb9d77ee454be",
+          "actual": "07d931aaffb306d4d4469d84d236fe0435d7e4b86258d63140feb9d77ee454be",
+          "matches": true
+        }
+      }
+    }
+  },
+  "outcomes": {
+    "cover": {
+      "trace_status": "failed",
+      "failure": {
+        "code": "semantic_batch_result_invalid",
+        "message": "A semantic batch did not return a valid structured result.",
+        "origin": "agent",
+        "retryable": true,
+        "status": "error",
+        "suggested_actions": []
+      },
+      "sdk_query_count": 10,
+      "semantic_feedback_attempts": 7,
+      "harness_feedback_attempts": 7,
+      "wall_duration_ms": 834580,
+      "last_public_result": {
+        "elapsed_ms": 834536,
+        "has_structured_output": false,
+        "is_error": true,
+        "message_type": "ResultMessage",
+        "model_usage": {
+          "input_tokens": 68935,
+          "max_output_tokens": 32000,
+          "output_tokens": 84499
+        },
+        "query_index": 10,
+        "result_text_length": 80,
+        "stage": "post-unit",
+        "stage_query_index": 10,
+        "stop_reason": "stop_sequence",
+        "subtype": "success",
+        "terminal_reason": "api_error",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0
+        }
+      },
+      "candidate_count": 2,
+      "candidate_sha256": "444567abff3bd5102e4b52647db3fe8c306000734f926d7cc6a5d4cb7345c315",
+      "accepted_judgments_present": false,
+      "final_template_present": false,
+      "fill_contract_present": false,
+      "read_tool_count": 3
+    },
+    "body": {
+      "trace_status": "failed",
+      "failure": {
+        "code": "semantic_batch_candidate_failed",
+        "message": "An exact-text revision changed a previously accepted semantic responsibility.",
+        "origin": "harness",
+        "retryable": true,
+        "status": "needs_input",
+        "suggested_actions": []
+      },
+      "sdk_query_count": 18,
+      "semantic_feedback_attempts": 9,
+      "harness_feedback_attempts": 9,
+      "wall_duration_ms": 3054766,
+      "last_public_result": {
+        "elapsed_ms": 3054733,
+        "has_structured_output": true,
+        "is_error": false,
+        "message_type": "ResultMessage",
+        "model_usage": {
+          "input_tokens": 78931,
+          "max_output_tokens": 32000,
+          "output_tokens": 69476
+        },
+        "query_index": 18,
+        "result_text_length": 3235,
+        "stage": "post-unit",
+        "stage_query_index": 18,
+        "stop_reason": "tool_use",
+        "structured_status": "complete",
+        "subtype": "success",
+        "terminal_reason": "completed",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 84480,
+          "input_tokens": 6445,
+          "output_tokens": 4365
+        }
+      },
+      "candidate_count": 10,
+      "candidate_sha256": "a534bce5ad37f6bb5a729a1e9360d12841ea4c5403ec2b3d3e4fc65116877ec6",
+      "accepted_judgments_present": false,
+      "final_template_present": false,
+      "fill_contract_present": false,
+      "read_tool_count": 8
+    }
+  },
+  "final_snapshot_sha256": {
+    "semantic-batch-manifest.json": "f5f1960bc23275a0adeaf92afab3058c5bec2f661f1595250c8685524b1ecf59",
+    "body-resume-from-boundary.log": "4c0f5d9903e3765e2e26d112bd123e685ce145c3598b817f007938684dd59fd0",
+    "semantic-batch-candidates.json": "a534bce5ad37f6bb5a729a1e9360d12841ea4c5403ec2b3d3e4fc65116877ec6",
+    "object-inventory.json": "f7a2893de6e4ff32a6ef9ccfd6e52715bff1d10d119f11dba43fdc40e066b205",
+    "template-agent-execution.json": "f6157e2aa21c943b367215fe78df8d08a7d80745fcfe2c276f5e680aee4baa15",
+    "tool-call-audit.jsonl": "7b9f84c27dc1ed690d8af0027610c00a6fefcfafc903ef98e4af08c26e9dd189",
+    "unit-boundary-checkpoint.json": "a141feebbb06ceb79275c22e8762f735ba7af3d3bd8f7652cc2486aa55e0c86b"
+  }
+}

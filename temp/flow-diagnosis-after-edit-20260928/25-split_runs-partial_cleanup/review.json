@@ -1,0 +1,312 @@
+{
+  "source_inventory_digest": "2cdc68c0657f0c5ab4b8f56feac925fb8394a68142cfea8a03c9f82c8fa3646d",
+  "unit_projection_digest": "e9023ed66018340d3da168e4ce406616e76db7063b684418fcbddd01be910db8",
+  "document_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+  "field_id_vocabulary": {
+    "schema_version": "docfit_pre_input_field_vocabulary_v1",
+    "registry": {
+      "registry_id": "test",
+      "registry_version": "1",
+      "sha256": "0c9adfeb2311a45c18078821bf11f5719c31c4e5979889c0561c268066a48264"
+    },
+    "allowed_field_ids": [
+      "thesis.title.zh",
+      "body.chapters",
+      "body.heading.outline1",
+      "body.heading.outline4",
+      "body.paragraph",
+      "body.table",
+      "body.equation"
+    ],
+    "field_count": 7,
+    "fields": [
+      {
+        "field_id": "thesis.title.zh",
+        "label": "中文题目",
+        "content_type": "text",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": [
+            "fill_slot"
+          ]
+        }
+      },
+      {
+        "field_id": "body.chapters",
+        "label": "正文章节集合",
+        "content_type": "section",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": false,
+          "allowed_part_roles": []
+        }
+      },
+      {
+        "field_id": "body.heading.outline1",
+        "label": "章标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.heading.outline4",
+        "label": "四级标题",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.paragraph",
+        "label": "正文段落",
+        "content_type": "text",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.table",
+        "label": "表格",
+        "content_type": "table",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      },
+      {
+        "field_id": "body.equation",
+        "label": "公式",
+        "content_type": "equation",
+        "parent_field_id": "body.chapters",
+        "usage_affordance": {
+          "selectable_by_agent": true,
+          "source": "pre_input_field_vocabulary",
+          "requires_agent_semantic_part": true,
+          "has_parent_field": true,
+          "allowed_part_roles": [
+            "body_structure"
+          ]
+        }
+      }
+    ],
+    "digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99"
+  },
+  "field_vocabulary_digest": "748e0d464deeeec70920c695daafd3be004e0ce9947ce2942fb0419e6d52fd99",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-0",
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "甲乙丙丁"
+        },
+        {
+          "role": "cleanup",
+          "text": "戊己"
+        }
+      ],
+      "resolved_spans": [
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 0,
+          "role": "fixed_label",
+          "text": "甲乙丙丁",
+          "source_entry_id": "source-entry-0",
+          "text_start": 0,
+          "text_end": 4,
+          "extent": {
+            "kind": "text",
+            "start": 0,
+            "end": 4
+          },
+          "expected_source_content": "甲乙丙丁",
+          "source_snapshot_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+          "source_inventory_digest": "2cdc68c0657f0c5ab4b8f56feac925fb8394a68142cfea8a03c9f82c8fa3646d",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]",
+              "text": "甲乙丙丁",
+              "source_text_start": 0,
+              "source_text_end": 4,
+              "object_text_start": 0,
+              "object_text_end": 4,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+                "expected_fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+              },
+              "fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        },
+        {
+          "span_ref": "source_entry_id=source-entry-0;extent=text[4:6];source_snapshot_sha256=3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+          "scope": {
+            "source_entry_id": "source-entry-0"
+          },
+          "judgment_index": 0,
+          "part_index": 1,
+          "role": "cleanup",
+          "text": "戊己",
+          "source_entry_id": "source-entry-0",
+          "text_start": 4,
+          "text_end": 6,
+          "extent": {
+            "kind": "text",
+            "start": 4,
+            "end": 6
+          },
+          "expected_source_content": "戊己",
+          "source_snapshot_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+          "source_inventory_digest": "2cdc68c0657f0c5ab4b8f56feac925fb8394a68142cfea8a03c9f82c8fa3646d",
+          "word_fragments": [
+            {
+              "object_id": "obj-0",
+              "locator": "/body/p[1]",
+              "text": "戊己",
+              "source_text_start": 4,
+              "source_text_end": 6,
+              "object_text_start": 4,
+              "object_text_end": 6,
+              "object_ref": {
+                "object_id": "obj-0",
+                "document_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+                "expected_fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+              },
+              "fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+            }
+          ],
+          "covered_object_ids": [
+            "obj-0"
+          ]
+        }
+      ]
+    }
+  ],
+  "semantic_judgments_sha256": "903229153d4b1de8d9c823821260426bc4270645e64c8b2a628654fff3983a18",
+  "resolved_spans": [
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[0:4];source_snapshot_sha256=3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 0,
+      "role": "fixed_label",
+      "text": "甲乙丙丁",
+      "source_entry_id": "source-entry-0",
+      "text_start": 0,
+      "text_end": 4,
+      "extent": {
+        "kind": "text",
+        "start": 0,
+        "end": 4
+      },
+      "expected_source_content": "甲乙丙丁",
+      "source_snapshot_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+      "source_inventory_digest": "2cdc68c0657f0c5ab4b8f56feac925fb8394a68142cfea8a03c9f82c8fa3646d",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]",
+          "text": "甲乙丙丁",
+          "source_text_start": 0,
+          "source_text_end": 4,
+          "object_text_start": 0,
+          "object_text_end": 4,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+            "expected_fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+          },
+          "fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    },
+    {
+      "span_ref": "source_entry_id=source-entry-0;extent=text[4:6];source_snapshot_sha256=3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+      "scope": {
+        "source_entry_id": "source-entry-0"
+      },
+      "judgment_index": 0,
+      "part_index": 1,
+      "role": "cleanup",
+      "text": "戊己",
+      "source_entry_id": "source-entry-0",
+      "text_start": 4,
+      "text_end": 6,
+      "extent": {
+        "kind": "text",
+        "start": 4,
+        "end": 6
+      },
+      "expected_source_content": "戊己",
+      "source_snapshot_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+      "source_inventory_digest": "2cdc68c0657f0c5ab4b8f56feac925fb8394a68142cfea8a03c9f82c8fa3646d",
+      "word_fragments": [
+        {
+          "object_id": "obj-0",
+          "locator": "/body/p[1]",
+          "text": "戊己",
+          "source_text_start": 4,
+          "source_text_end": 6,
+          "object_text_start": 4,
+          "object_text_end": 6,
+          "object_ref": {
+            "object_id": "obj-0",
+            "document_sha256": "3812e2b4f1ca582afcb9f7ec843f713d51e1a9577b7cb0d9f6571ee90ffa8f6a",
+            "expected_fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+          },
+          "fingerprint": "c736730e4634e04b940da9dc294d34aabc3f56ee0b9fb3a2b5a52aa00fa00d2c"
+        }
+      ],
+      "covered_object_ids": [
+        "obj-0"
+      ]
+    }
+  ]
+}

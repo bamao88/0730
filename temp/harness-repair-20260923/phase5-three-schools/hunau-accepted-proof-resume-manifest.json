@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-09-23T13:15:50.633144+00:00",
+  "runtime_commit": "3adad8f",
+  "resume_kind": "explicit accepted unit proof reuse after native API failure; not a fresh full E2E",
+  "source_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-streaming-task",
+  "target_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-revision-contract-task",
+  "proof": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-streaming-task/work/.docfit/unit-boundary-checkpoint.json",
+  "proof_sha256": "7c96e00e41a44c17bc00c3f55aa8ef45b6f4eaedeeee09e113a4e916d8ebfaf3",
+  "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+  "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+  "original_failure_preserved": "hunau-revision-contract-verification.json",
+  "semantic_history_before_resume": false,
+  "product_acceptance": false
+}

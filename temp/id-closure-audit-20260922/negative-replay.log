@@ -1,0 +1,41 @@
+[
+  {
+    "case": "unknown_field",
+    "rejected": true,
+    "code": "template_materialization_readiness_incomplete",
+    "output_absent": true
+  },
+  {
+    "case": "retired_alias",
+    "rejected": true,
+    "code": "template_materialization_readiness_incomplete",
+    "output_absent": true
+  },
+  {
+    "case": "independent_target",
+    "rejected": true,
+    "code": "template_materialization_readiness_incomplete",
+    "output_absent": true
+  },
+  {
+    "case": "swapped_extents",
+    "rejected": true,
+    "code": "template_materialization_readiness_incomplete",
+    "output_absent": true
+  },
+  {
+    "case": "legacy_contract",
+    "rejected": true,
+    "code": "template_artifact_provenance_invalid"
+  },
+  {
+    "case": "orphan_slot",
+    "rejected": true,
+    "code": "template_artifact_provenance_invalid"
+  },
+  {
+    "case": "different_word_file",
+    "rejected": true,
+    "code": "template_artifact_provenance_invalid"
+  }
+]

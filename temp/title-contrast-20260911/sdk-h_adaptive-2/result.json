@@ -1,0 +1,251 @@
+{
+  "status": "complete",
+  "summary": "语义判断已完成。封面单元（cover）非整体终结形式（属混合说明+可填写封面），按 source_entry 逐一判断：附件1 格式前言整体作为 page-level 风格约束保留为 style_only；校名与文档类型为 fixed_label；中文/英文标题为 fill_slot（thesis.title.zh / thesis.title.en），原占位文本整体被替换；5 行基本信息按字段逐项拆分为 label + fill_slot；每行末附带的字体/字号/对齐样式说明拆出为 style_only；地点「湖南·长沙」为 fixed_label；提交日期为 fill_slot（submission.date）。所有字段均取自 field_id_vocabulary。",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-f64716e2b627776af88239e5",
+      "parts": [
+        {
+          "text": "附件1 封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。\"□\" 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块1 为格式/排版前言，包含单倍行距、页面边距、居中规则、□ 占位字符定义以及论文/设计二选一的标题规则。这些属于整页级样式与填写约束，而非封面实体内容；作为 style_only 整体保留，承载页面级样式义务（每行块自带括号样式说明可补充继承）。"
+    },
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块2 是纯格式说明（控制下一行大学名的字体与上方留行），属 style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块3 校名是学校固定标题文字，括号内容为字体样式要求（华文行楷 26pt 加粗），故拆为 fixed_label + style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块4 文档类型标题是学校固定的封面标识；括号内容为字体样式（黑体 26pt 加粗），按 style_only 拆分。注：块1 前言中\"论文/设计二选一\"规则由 student 侧自行遵循，不影响此处 fixed_label 保留。"
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块5 是空行与字体占位说明，纯格式约束，style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": " （小二黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块6 文本「毕业论文（设计）中文题目」处于中文标题的实际填写位置，看似标签，实则占据最终题名位置（依据 skill：描述字段的提示文字本身也可能占据最终值的位置），故整体作为 fill_slot，绑定 thesis.title.zh；尾部括号为样式说明，style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块7 同块6 逻辑：英文标题位置上的提示文本整体作为 fill_slot 绑定 thesis.title.en；括号样式说明 style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块8 是关于英文标题下方留行控制的纯格式说明，style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□学生姓名",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（三号黑体加粗）",
+          "role": "style_only"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        },
+        {
+          "text": " （三号楷体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块9 含标签「学生姓名」、前导对齐空格、字号样式、冒号分隔、姓名占位区以及姓名区字体样式。姓名占位「×××（或×□×）」整段处于姓名填写位置，故整体作为 fill_slot 绑定 author.name.zh；「（或×□×）」为示例替代格式但仍在填写区内，按填写责任整体保留，由宿主处理填充即可。"
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□学□□号",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "块10 「学□□号」中两个 □ 是标签内用于对齐的样式字符（与块1 中 □ 定义一致），整体作为 fixed_label；冒号为分隔符；右侧 14 位占位为学号 fill_slot，绑定 author.student_id。"
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□年级专业及班级",
+          "role": "fixed_label"
+        },
+        {
+          "text": "：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "块11 标签「年级专业及班级」后接年级+专业+班级的合并占位；按字段词表匹配复合字段 author.cohort_class（年级、专业及班级复合信息），整段作为 fill_slot；前导空格与冒号分别为对齐与分隔，fixed_label。"
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□指导老师及职称：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "块12 含导师姓名与职称两个相邻填写值。按 skill：相邻两个可变值若属于不同字段应分别表达。导师姓名「×××」绑定 advisor.name.zh；中间 □ 为样式间隔 fixed_label；「教授」是示例职称，作为 fill_slot 绑定 advisor.title（词表注明\"职称不应在无来源时自动补写\"，此处保留 fill_slot 由 student 提供实际职称）。"
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□学□□院：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": " （学院名用全称）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块13 「学□□院」中 □ 为标签对齐样式字符，fixed_label；右侧「××××学院」是院系名称填写区，绑定 author.department；尾部括号为样式/填写要求说明（学院名用全称），style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块14 是控制院系行与下方地点行之间留行的纯格式说明，style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        },
+        {
+          "text": " （小三号黑体）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "块15 地点「湖南·长沙」是学校封面固定地点文字，fixed_label；括号为字体样式说明，style_only。"
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "块16 「提交日期」为固定标签；「20××年××月」是封面提交年月填写位，绑定 submission.date。"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "case": "drop initial source entry and recompute digest with unchanged original task manifest",
+  "result": "ACCEPTED_CHANGED_INITIAL_INVENTORY",
+  "original_inventory_digest": "5ffb2cf4dbc0a61959f7dc00e602563b539a01d83c9c9fbe291a7f6c50ecdd6a",
+  "changed_inventory_digest": "5ff4433f9d6d2dbc4947fb3dea262929db679edb6b4c12bdc9b97f64dd9d0c15"
+}

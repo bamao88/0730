@@ -1,0 +1,14 @@
+{
+  "verification_level": "real response and actual revision-request inspection; repaired projection replay, not live repaired Agent loop",
+  "runtime": "6678851",
+  "isolated_fix": "fc41c9d",
+  "original_boundary_parts": 5,
+  "actual_revision_context_boundary_parts": 0,
+  "fixed_projection_boundary_parts": 5,
+  "fixed_projection_matches_raw_judgments": true,
+  "inputs": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-boundary-codec-task/work/.docfit/harness/semantic-revisions/00000003.json": "9d1f24129c8532a207e362a1be89e527065113557ffa04231b60f4459c49166f",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-boundary-codec-task/work/.docfit/harness/semantic-revisions/00000006.json": "81d7aea6ed347cd58afdec330d0c4f54458cd79c11ef90ba43104dac0696c2d3"
+  },
+  "limitation": "Original response separately contains invalid U+25A1 whitespace transport. This replay preserves, not accepts or repairs, the original judgments."
+}

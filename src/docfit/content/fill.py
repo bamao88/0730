@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 from docfit.styles import StyleContractSet
+from docfit.template.source_spans import parse_source_span_ref
 from docfit.tools.ooxml import import_content_objects, mutate_content_controls
 from docfit.tools.package import validate_docx_package
 from docfit.tools.runtime import JsonObject, ToolFailure, sha256_file
@@ -50,6 +51,7 @@ def fill_template(
     block_operations: list[JsonObject] = []
     remove_tags: list[str] = []
     occurrence_manifest: list[JsonObject] = []
+    text_occurrences: list[tuple[str, str, JsonObject]] = []
     for operation in operations:
         if not isinstance(operation, dict):
             raise _invalid("fill_operation_invalid", "A placement operation has an invalid shape.")
@@ -71,6 +73,13 @@ def fill_template(
             "style_contract_id": style_contract.style_contract_id,
             "contract_digest": style_contract.contract_digest,
         }
+        slot_ref = operation.get("slot_ref")
+        if not _is_canonical_slot_ref(slot_ref):
+            raise _invalid(
+                "fill_operation_slot_ref_invalid",
+                "Every fill operation must carry a canonical Harness SourceSpan slot_ref.",
+            )
+        assert isinstance(slot_ref, str)
         if action == "replace_text_content_control":
             tag = operation.get("tag")
             value = operation.get("value")
@@ -80,13 +89,8 @@ def fill_template(
                 )
             text_replacements[tag] = value
             text_formats[tag] = {}
-            occurrence_manifest.append(
-                {
-                    "occurrence_id": f"slot:{operation.get('slot_id', tag)}",
-                    "locator": {"type": "content_control_tag", "value": tag},
-                    "style_contract_ref": style_ref,
-                }
-            )
+            text_occurrences.append((slot_ref, tag, style_ref))
+
         elif action == "replace_block_content_control":
             normalized_operation = dict(operation)
             normalized_operation["style_contract_ref"] = style_ref
@@ -131,6 +135,25 @@ def fill_template(
             remove_body_tags=(),
             output_docx=current,
         )
+        text_target_locators = text_fill_evidence.get("text_control_target_locators", {})
+        if not isinstance(text_target_locators, dict):
+            raise _invalid(
+                "fill_text_target_locators_invalid",
+                "Text fill evidence has invalid target locators.",
+            )
+        for slot_ref, tag, style_ref in text_occurrences:
+            locator = text_target_locators.get(tag)
+            occurrence_manifest.append(
+                {
+                    "occurrence_id": f"slot:{slot_ref}",
+                    "locator": (
+                        locator
+                        if isinstance(locator, str)
+                        else {"type": "content_control_tag", "value": tag}
+                    ),
+                    "style_contract_ref": style_ref,
+                }
+            )
         block_evidence: list[JsonObject] = []
         for index, operation in enumerate(block_operations, start=1):
             tag = operation.get("tag")
@@ -163,6 +186,7 @@ def fill_template(
             )
             block_evidence.append(
                 {
+                    "slot_ref": operation.get("slot_ref"),
                     "field_id": operation.get("field_id"),
                     "tag": tag,
                     "source_object_ids": list(source_object_ids),
@@ -189,7 +213,9 @@ def fill_template(
                     target_locator = (
                         inserted.get("target_locator") if isinstance(inserted, dict) else None
                     )
-                    if isinstance(target_locator, str):
+                    if isinstance(target_locator, str) and target_locator.startswith(
+                        "/body/p[@paraId="
+                    ):
                         occurrence_manifest.append(
                             {
                                 "occurrence_id": (
@@ -239,3 +265,10 @@ def fill_template(
 
 def _invalid(code: str, message: str) -> ToolFailure:
     return ToolFailure(status="needs_input", origin="request", code=code, message=message)
+
+
+def _is_canonical_slot_ref(value: object) -> bool:
+    if not isinstance(value, str) or ";field_id=" not in value:
+        return False
+    span_ref, field_id = value.rsplit(";field_id=", 1)
+    return bool(field_id.strip()) and parse_source_span_ref(span_ref) is not None

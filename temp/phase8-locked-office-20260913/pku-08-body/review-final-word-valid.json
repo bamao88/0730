@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "document_sha256": "0ffb5b8a63b56749cd6554414d8e60b363d992f2879c6eb9bb53bbeb0dd50e42",
+  "reviewed_pages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+  "findings": [
+    {
+      "finding_id": "fixed-render-all-pages-readable",
+      "severity": "info",
+      "blocking": false,
+      "pages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      "summary": "The fixed LibreOffice render keeps all chapters, headings, body placeholders, tables, figures, headers, footers, and section transitions visible without clipping or overlap."
+    },
+    {
+      "finding_id": "libreoffice-field-layout-is-approximate",
+      "severity": "warning",
+      "blocking": false,
+      "pages": [6, 7, 12],
+      "summary": "LibreOffice lays out several automatic formula-number fields vertically. The renderer is approximate; Microsoft Word opens the exact candidate without repair and exposes the corresponding fields and table content."
+    }
+  ]
+}

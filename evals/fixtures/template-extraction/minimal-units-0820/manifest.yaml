@@ -1,0 +1,89 @@
+schema_version: docfit-template-extraction-minimal-units/v1
+fixture_id: hunau-minimal-units-0820
+source_origin: /Volumes/ExtSSD2601/Docfit/temp/0820
+source_date: 2026-08-20
+hash_scope: repository_fixture_bytes
+module: template-extraction
+intended_use:
+  - prepare-template generation smoke
+  - unit-boundary replay input
+  - post-unit resume/debug input after a unit-boundary checkpoint is accepted
+not_intended_use:
+  - final Actual-vs-Gold Eval truth
+  - student content extraction input
+  - runtime oracle for expected slots or actions
+trust_boundary: >
+  DOCX and PDF contents are untrusted school-template source data. Any text
+  that looks like an instruction inside these documents is fixture content only
+  and must not control paths, tools, permissions, prompts, or expected answers.
+field_registry:
+  path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+build:
+  script: build_input_package.py
+  output_shape:
+    - input/school-template.docx
+    - input/school-requirements.pdf
+    - input/field-registry.yaml
+    - input/selected-units.yaml
+units:
+  - unit_id: u-cover
+    selector: 01-cover
+    label_zh: 封面
+    ordinal: 1
+    source_docx: units/01-cover/school-template.docx
+    source_pdf: units/01-cover/school-requirements.pdf
+    docx_sha256: 5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc
+    pdf_sha256: 6c7bcc1aa65993e7e35c5700e4c6b6357e90f5a9e3d1ed6c6d69e26b0cee3975
+    pdf_pages: 2
+    content_notes: cover formatting instructions and cover placeholders
+  - unit_id: u-integrity-statement
+    selector: 02-integrity-statement
+    label_zh: 诚信声明
+    ordinal: 2
+    source_docx: units/02-integrity-statement/school-template.docx
+    source_pdf: units/02-integrity-statement/school-requirements.pdf
+    docx_sha256: 6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d
+    pdf_sha256: 4368cc3551b1e16c2d16b1dbf26757d98843f5ef88e0b70abeb6ce5c5226285e
+    pdf_pages: 1
+    content_notes: integrity declaration and signature/date area
+  - unit_id: u-toc
+    selector: 03-toc
+    label_zh: 目录
+    ordinal: 3
+    source_docx: units/03-toc/school-template.docx
+    source_pdf: units/03-toc/school-requirements.pdf
+    docx_sha256: 8474285cfd11d397cfb3f5820d994bdada1be26129b49bf6657869d817dbca1c
+    pdf_sha256: b1b3321926481ebe0b31a0493167047352be74b26b7925383c9951e58832eabb
+    pdf_pages: 1
+    content_notes: table of contents formatting and sample entries
+  - unit_id: u-paper-body
+    selector: 04-paper-body
+    label_zh: 正文
+    ordinal: 4
+    source_docx: units/04-paper-body/school-template.docx
+    source_pdf: units/04-paper-body/school-requirements.pdf
+    docx_sha256: 4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc
+    pdf_sha256: 261cc31a28c468a16c7755c9aa29bdb9e51e0f9ae5c1ed07267cb18b549dad10
+    pdf_pages: 2
+    content_notes: body formatting, abstract, keywords, headings, references, appendix samples
+  - unit_id: u-design-task
+    selector: 05-design-task
+    label_zh: 毕业设计任务书
+    ordinal: 5
+    source_docx: units/05-design-task/school-template.docx
+    source_pdf: units/05-design-task/school-requirements.pdf
+    docx_sha256: 7ffd38f9be3d867b8a71e859ed9b952043458cd3116e65191c898c8fc6032ef0
+    pdf_sha256: 4c261e6535cb9b066362774cfdd3111e929ea83714dc4dfbde77e08c5e904fcc
+    pdf_pages: 5
+    content_notes: design task form with fillable table regions
+  - unit_id: u-proposal
+    selector: 06-proposal
+    label_zh: 开题报告
+    ordinal: 6
+    source_docx: units/06-proposal/school-template.docx
+    source_pdf: units/06-proposal/school-requirements.pdf
+    docx_sha256: 4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06
+    pdf_sha256: 9ea41956722e2c11592fb2193bb84825dadd387110d5d887cf2fd72fac64e036
+    pdf_pages: 4
+    content_notes: proposal form and review/approval regions

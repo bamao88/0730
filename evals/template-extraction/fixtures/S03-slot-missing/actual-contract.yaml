@@ -1,4 +1,4 @@
-schema_version: docfit-template-fill-contract/v1
+schema_version: docfit-template-fill-contract/v2
 contract_id: s03-slot-missing.actual
 template_sha256: 7cb289faab04c7a602d884c053b747a6ccf1b0314b57d7ea2fc0f9f141d51828
 field_registry_ref:
@@ -40,3 +40,5 @@ regions:
       margin_top_pt: 72
       margin_bottom_pt: 72
 slots: []
+styles: []
+style_contract_set_digest: c269e68aa44c4725c115378bef3005adc69298071d9a4d71f97c5a8c29913208

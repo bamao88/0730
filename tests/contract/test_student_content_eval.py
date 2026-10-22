@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from docfit.app.cli import build_parser, main
@@ -456,3 +457,204 @@ def test_cli_fails_closed_for_a_non_gold_candidate(
     assert failure["status"] == "INPUT_ERROR"
     assert failure["failure"]["code"] == "gold_not_accepted"
     assert not output_directory.exists()
+
+
+def _saved_e2e_inventory(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
+    source = tmp_path / "student.docx"
+    registry = tmp_path / "registry.yaml"
+    gold = tmp_path / "gold"
+    inventory = tmp_path / "case-inventory.yaml"
+    source.write_bytes(b"docx")
+    registry.write_text("fields: []\n", encoding="utf-8")
+    gold.mkdir()
+    (gold / "student-content.gold.json").write_text("{}", encoding="utf-8")
+    inventory.write_text(
+        "\n".join(
+            [
+                "schema_version: docfit-student-content-extraction-case-inventory/v1",
+                "cases:",
+                "  - id: student-test",
+                f"    source: {source}",
+                f"    registry: {registry}",
+                f"    gold: {gold}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return inventory, source, registry, gold
+
+
+def test_e2e_cli_lists_cases_as_machine_readable_json(
+    tmp_path: Path,
+    capsys: Any,
+) -> None:
+    inventory, source, registry, gold = _saved_e2e_inventory(tmp_path)
+
+    assert main(
+        [
+            "student-content-e2e",
+            "--inventory",
+            str(inventory),
+            "--list-cases",
+        ]
+    ) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "OK"
+    assert payload["ai_contract"]["stdout"] == "json_only"
+    assert payload["ai_contract"]["primary_product_output"] == "student-content.json"
+    assert payload["cases"][0]["case_id"] == "student-test"
+    assert payload["cases"][0]["paths"]["source"] == str(source)
+    assert payload["cases"][0]["paths"]["field_registry"] == str(registry)
+    assert payload["cases"][0]["paths"]["gold"] == str(gold)
+    assert payload["cases"][0]["checks"]["ready_for_eval"] is True
+
+
+def test_e2e_cli_validates_inputs_without_running_extraction(
+    tmp_path: Path,
+    capsys: Any,
+    monkeypatch: Any,
+) -> None:
+    inventory, _source, _registry, _gold = _saved_e2e_inventory(tmp_path)
+    calls: dict[str, Any] = {"extraction_called": False}
+
+    async def fake_extract(_request: Any) -> dict[str, Any]:
+        calls["extraction_called"] = True
+        return {"status": "READY"}
+
+    monkeypatch.setattr(
+        "docfit.app.student_content_fill.run_student_content_extraction",
+        fake_extract,
+    )
+
+    assert main(
+        [
+            "student-content-e2e",
+            "--case",
+            "student-test",
+            "--inventory",
+            str(inventory),
+            "--validate-inputs-only",
+        ]
+    ) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "INPUT_PACKAGE_OK"
+    assert payload["input_package"]["checks"]["ready_for_eval"] is True
+    assert payload["extraction"] == {"status": "NOT_RUN"}
+    assert payload["eval"] == {"mode": "off", "status": "NOT_RUN"}
+    assert calls["extraction_called"] is False
+
+
+def test_e2e_cli_runs_extraction_without_eval_by_default(
+    tmp_path: Path,
+    capsys: Any,
+    monkeypatch: Any,
+) -> None:
+    inventory, source, registry, _gold = _saved_e2e_inventory(tmp_path)
+    output = tmp_path / "actual"
+    calls: dict[str, Any] = {"eval_called": False}
+
+    async def fake_extract(request: Any) -> dict[str, Any]:
+        calls["source_docx"] = request.source_docx
+        calls["field_registry"] = request.field_registry
+        calls["output_directory"] = request.output_directory
+        return {
+            "status": "READY",
+            "student_content": str(request.output_directory / "student-content.json"),
+        }
+
+    def fake_eval(**_kwargs: Any) -> None:
+        calls["eval_called"] = True
+
+    monkeypatch.setattr(
+        "docfit.app.student_content_fill.run_student_content_extraction",
+        fake_extract,
+    )
+    monkeypatch.setattr("docfit.evals.student_content.run_student_content_eval", fake_eval)
+
+    assert main(
+        [
+            "student-content-e2e",
+            "--case",
+            "student-test",
+            "--inventory",
+            str(inventory),
+            "--output",
+            str(output),
+        ]
+    ) == 0
+
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["status"] == "READY"
+    assert summary["ai_contract"]["stdout"] == "json_only"
+    assert summary["eval"] == {"mode": "off"}
+    assert calls["source_docx"] == source
+    assert calls["field_registry"] == registry
+    assert calls["output_directory"] == output
+    assert calls["eval_called"] is False
+
+
+def test_e2e_cli_can_select_eval_after_extraction(
+    tmp_path: Path,
+    capsys: Any,
+    monkeypatch: Any,
+) -> None:
+    inventory, _source, _registry, gold = _saved_e2e_inventory(tmp_path)
+    output = tmp_path / "actual"
+    eval_output = tmp_path / "eval"
+    calls: dict[str, Any] = {}
+
+    async def fake_extract(request: Any) -> dict[str, Any]:
+        return {
+            "status": "READY",
+            "student_content": str(request.output_directory / "student-content.json"),
+        }
+
+    def fake_eval(**kwargs: Any) -> Any:
+        calls["eval"] = kwargs
+        return SimpleNamespace(
+            report={
+                "status": "PASS",
+                "gold_id": "student-test.extraction",
+                "gold_revision": "2026-08-16.r1",
+                "blockers": [],
+            },
+            json_report=kwargs["output_directory"] / "student-content-eval-report.json",
+            markdown_report=kwargs["output_directory"] / "student-content-eval-report.md",
+            passed=True,
+        )
+
+    monkeypatch.setattr(
+        "docfit.app.student_content_fill.run_student_content_extraction",
+        fake_extract,
+    )
+    monkeypatch.setattr("docfit.evals.student_content.run_student_content_eval", fake_eval)
+
+    assert main(
+        [
+            "student-content-e2e",
+            "--case",
+            "student-test",
+            "--inventory",
+            str(inventory),
+            "--output",
+            str(output),
+            "--eval",
+            "on",
+            "--eval-output",
+            str(eval_output),
+            "--json",
+        ]
+    ) == 0
+
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["status"] == "PASS"
+    assert summary["eval"]["mode"] == "on"
+    assert summary["eval"]["status"] == "PASS"
+    assert calls["eval"] == {
+        "actual_directory": output,
+        "gold": gold,
+        "output_directory": eval_output,
+    }

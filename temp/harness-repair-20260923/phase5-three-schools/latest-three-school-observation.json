@@ -1,0 +1,52 @@
+{
+  "observed_at": "2026-09-23T13:58:23.462800+00:00",
+  "tasks": {
+    "hunau-shared-transport": {
+      "events": {
+        "budget_policy": 1,
+        "request": 6,
+        "response": 5,
+        "local_review": 5,
+        "local_rejected": 3,
+        "candidate_recorded": 2
+      },
+      "unit_proof": true,
+      "frozen_hash_mismatches": {
+        "inputs": [],
+        "runtime_source": [],
+        "skill": []
+      },
+      "outputs": [],
+      "latest_blocker_summary": [
+        {
+          "code": "ordered_part_whitespace_transport_invalid",
+          "source_entry_id": "source-entry-55bfbdb0b34ace293dccef87",
+          "first_difference": null
+        }
+      ]
+    },
+    "njau-precise-feedback": {
+      "events": {
+        "budget_policy": 1,
+        "request": 1
+      },
+      "unit_proof": true,
+      "frozen_hash_mismatches": {
+        "inputs": [],
+        "runtime_source": [],
+        "skill": []
+      },
+      "outputs": []
+    },
+    "pku-precise-feedback": {
+      "events": {},
+      "unit_proof": true,
+      "frozen_hash_mismatches": {
+        "inputs": [],
+        "runtime_source": [],
+        "skill": []
+      },
+      "outputs": []
+    }
+  }
+}

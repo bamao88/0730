@@ -1,0 +1,40 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 34%]
+........................................................................ [ 43%]
+........................................................................ [ 52%]
+.........................................................F.............. [ 60%]
+........................................................................ [ 69%]
+........................................................................ [ 78%]
+........................................................................ [ 86%]
+........................................................................ [ 95%]
+.....................................                                    [100%]
+=================================== FAILURES ===================================
+__ test_school_extract_static_routing_fixtures_point_to_available_references ___
+
+    def test_school_extract_static_routing_fixtures_point_to_available_references() -> None:
+        _, skill_body = _skill("docfit-school-extract")
+        for fixture_name, question_key in (
+            ("p1_reference_trace.yaml", None),
+            ("p3_skill_trace.yaml", "domain_question"),
+        ):
+            # These fixtures check navigation only; they do not run an Agent or
+            # demonstrate that it makes the expected semantic judgment.
+            trace = yaml.safe_load(
+                (_FIXTURES_ROOT / "template_extraction" / fixture_name).read_text(encoding="utf-8")
+            )
+            assert isinstance(trace, dict)
+            question = trace[question_key] if question_key else trace
+            expected_reference = question["expected_reference"]
+            assert f"(references/{expected_reference})" in skill_body
+            reference = _SKILLS_ROOT / "docfit-school-extract" / "references" / expected_reference
+            reference_text = reference.read_text(encoding="utf-8")
+>           assert all(term in reference_text for term in trace.get("expected_reference_terms", ()))
+E           assert False
+E            +  where False = all(<generator object test_school_extract_static_routing_fixtures_point_to_available_references.<locals>.<genexpr> at 0x109c0c380>)
+
+tests/contract/test_skill_contract.py:661: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_skill_contract.py::test_school_extract_static_routing_fixtures_point_to_available_references
+1 failed, 828 passed in 33.52s

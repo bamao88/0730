@@ -1,0 +1,645 @@
+[
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 1 sits before the centered cover heading and only contributes vertical spacing; preserved as layout structure with no semantic content.",
+    "source_entry_id": "source-entry-369d1403097c6a178b801c29"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 2 still precedes the cover heading; treated as layout spacing that the clean template must preserve.",
+    "source_entry_id": "source-entry-c97b3fcaa501e7dc186cdc26"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "本科生毕业论文（设计）"
+      }
+    ],
+    "reason": "Centered 36pt heading declares the cover page kind for every undergraduate thesis; it is university boilerplate that must remain unchanged, not a fillable title.",
+    "source_entry_id": "source-entry-44e4c5b5fae3293c2f917c72"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 4 sits between the cover heading and the 题目 row; layout-only spacing, no semantic payload.",
+    "source_entry_id": "source-entry-54a5da071b0a4d9d05395c01"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 5 continues vertical spacing toward the field rows; retained as layout-only structure.",
+    "source_entry_id": "source-entry-29ecb8971c2b642d4081568c"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 6 keeps separation before the labeled form rows; layout-only.",
+    "source_entry_id": "source-entry-ab51b17640d45037c635b172"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 7 finishes the spacing before 题目; layout-only.",
+    "source_entry_id": "source-entry-212c2c0fb7addab07b61212c"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "题    目:"
+      },
+      {
+        "field_id": "thesis.title.zh",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "Cover page form row. The leading '题    目:' is the fixed Chinese label '题目:' (with four spacing characters between 题 and 目) and stays as fixed_label. The 36 trailing U+0020 spaces are the thesis.title.zh value position and become a fill_slot bound to thesis.title.zh, preserving the original whitespace characters so the source entry is fully covered.",
+    "source_entry_id": "source-entry-91c83a7c110e7b624e906503"
+  },
+  {
+    "parts": [
+      {
+        "field_id": "thesis.title.zh",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "This source entry is a pure-whitespace continuation of the title fill slot that began on the previous row. All 36 U+0020 characters of the source text become a single fill_slot bound to thesis.title.zh, so the entire source entry is covered with no orphan whitespace.",
+    "source_entry_id": "source-entry-80298f67fa8465763bdb7e1e"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "姓    名:"
+      },
+      {
+        "field_id": "author.name.zh",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "Cover page form row. The leading '姓    名:' is the fixed Chinese label '姓名:' (four spacing characters between 姓 and 名) and stays as fixed_label. The 36 trailing U+0020 spaces are the author.name.zh value position and become a fill_slot bound to author.name.zh, preserving the original whitespace so the source entry is fully covered.",
+    "source_entry_id": "source-entry-1ca632cd5bd5ce6303226ce5"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "学    号:"
+      },
+      {
+        "field_id": "author.student_id",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "Cover page form row. The leading '学    号:' is the fixed Chinese label '学号:' (four spacing characters between 学 and 号) and stays as fixed_label. The 36 trailing U+0020 spaces are the student ID value position and become a fill_slot bound to author.student_id, preserving the original whitespace so the source entry is fully covered.",
+    "source_entry_id": "source-entry-aa58cc25fa3a9e40ad9e66f1"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "学    院:"
+      },
+      {
+        "field_id": "author.department",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "Cover page form row. The leading '学    院:' is the fixed Chinese label '学院:' (four spacing characters between 学 and 院) and stays as fixed_label. The 36 trailing U+0020 spaces are the department value position and become a fill_slot bound to author.department, preserving the original whitespace so the source entry is fully covered.",
+    "source_entry_id": "source-entry-55fe054e0e174f018751c96c"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "专    业:"
+      },
+      {
+        "field_id": "author.major",
+        "role": "fill_slot",
+        "text": "                                    "
+      }
+    ],
+    "reason": "Cover page form row. The leading '专    业:' is the fixed Chinese label '专业:' (four spacing characters between 专 and 业) and stays as fixed_label. The 36 trailing U+0020 spaces are the major value position and become a fill_slot bound to author.major, preserving the original whitespace so the source entry is fully covered.",
+    "source_entry_id": "source-entry-137ca263a43f4439d64d24e4"
+  },
+  {
+    "open_questions": [],
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "指导教师:"
+      },
+      {
+        "field_id": "advisor.name.zh",
+        "role": "fill_slot",
+        "text": "",
+        "whitespace": {
+          "codepoint": "U+0020",
+          "count": 17
+        }
+      },
+      {
+        "role": "fixed_label",
+        "text": "职称"
+      },
+      {
+        "field_id": "advisor.title",
+        "role": "fill_slot",
+        "text": "",
+        "whitespace": {
+          "codepoint": "U+0020",
+          "count": 15
+        }
+      }
+    ],
+    "reason": "Source text '指导教师:                 职称               ' (39 chars) has the layout: fixed label '指导教师:' (5 chars), then 17 U+0020 spaces that visually fill the advisor-name value position, then the fixed label '职称' (2 chars) that introduces a second value position, then 15 U+0020 spaces that visually fill the advisor-title value position. Two labels remain fixed content; the two whitespace runs are not standalone empty parts but mechanical transport for the underlying U+0020 × 17 and U+0020 × 15 codepoint runs, each carrying the semantic role of its adjacent fill area. The 17-space run carries the advisor.name.zh fill slot (between '指导教师:' label and '职称' label), and the 15-space run carries the advisor.title fill slot (after the '职称' label). Both field_ids are present in the vocabulary with allowed_part_roles including fill_slot. Together the four parts cover the entire 39-character source entry without omission or overlap.",
+    "source_entry_id": "source-entry-d9616f4db3dd070938de96e3"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 15 provides spacing between the advisor row and the date line; layout-only.",
+    "source_entry_id": "source-entry-801101ea94465e6fa111a57c"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 16 continues spacing toward the centered date; layout-only.",
+    "source_entry_id": "source-entry-49a839bf4d23cc002e1a16bb"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 17 keeps vertical rhythm above the date; layout-only.",
+    "source_entry_id": "source-entry-fe3326ab8fa4c1bdee58eb31"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty block 18 finalizes spacing before the date placeholder; layout-only.",
+    "source_entry_id": "source-entry-3e61c5a62d6258a3c401ddde"
+  },
+  {
+    "parts": [
+      {
+        "field_id": "submission.date",
+        "role": "fill_slot",
+        "text": "20   年   月   日"
+      }
+    ],
+    "reason": "The centered '20   年   月   日' is the cover submission date placeholder; inline 年/月/日 only mark the field's own format, so the continuous range binds a single submission.date interface per the rule on inline format hints within one field.",
+    "source_entry_id": "source-entry-a84ee6bd9b4a57fb688898c7"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block within the body area; provides only structural blank spacing with no visible content, label, or fillable value.",
+    "source_entry_id": "source-entry-464428a8ad02429c08a9207c"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block; layout-only blank between visible header/footer runs. No label or value to preserve.",
+    "source_entry_id": "source-entry-7dec4075e86483b258bdfcd4"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": " "
+      }
+    ],
+    "reason": "1pt Body Text Indent 2 paragraph containing a single visible space; functions as a structural spacer rather than textual content, so it carries only layout responsibility.",
+    "source_entry_id": "source-entry-a6656a8f81de73780fcd8863"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block; layout-only blank, no semantic content or fillable position.",
+    "source_entry_id": "source-entry-6f405cfa4fbc1a7221e7c57f"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block immediately preceding the page header; pure structural blank, no label or value.",
+    "source_entry_id": "source-entry-d10dc8008abd13d45298cc9a"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "南京农业大学本科毕业论文（设计）"
+      }
+    ],
+    "reason": "Page header style text identifying the document type for Nanjing Agricultural University undergraduate thesis. It is a school-fixed header label that must remain unchanged across all pages of this unit and does not correspond to any field in the vocabulary.",
+    "source_entry_id": "source-entry-bf09bccf975486c865584228"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block after the page header; layout spacer with no semantic content.",
+    "source_entry_id": "source-entry-fc6269dd3690e17b1068aa25"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block; layout-only blank between header and footer runs.",
+    "source_entry_id": "source-entry-6890e2d76bb52c68413e7f5c"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block; layout-only blank.",
+    "source_entry_id": "source-entry-168f27559ed17a7787be5d81"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block; layout-only blank preceding the centered footer page number.",
+    "source_entry_id": "source-entry-0d90c243a65d1a46865a7c80"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "5"
+      }
+    ],
+    "reason": "Centered footer style label rendering a single digit. This is the rendered value of the page footer PAGE field on its respective page; the pre-input field vocabulary exposes no page-number field, so the text is treated as the centered footer label carried by the template page setup. The host is responsible for regenerating the PAGE field on each page; the agent does not invent a field binding here.",
+    "source_entry_id": "source-entry-9d80aa1fd78db16149b35ed3"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-5b7c09c748e8a3c6aa12bb01"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-033f997ce3aa66e507a95b6c"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "4"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 4. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-dd2ac5a8604cee7c744eddb6"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-e37739b15922e67d25958107"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-17833eb128d38cf3ab211ef0"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-34844b265d305c9c1cc1ab14"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "3"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 3. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-a9e5def240d653d16ddc11af"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-d07a46fcc1674c4f48a149bb"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-5bcebb4a1099043b769132b7"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-17f178750f711de1af81ae7e"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "2"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 2. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-bb6f22101136f92cd0be820a"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-bef94345562c5aad8502ffd4"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "7"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 7. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-7ad29d81dd1560884fe42b7f"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-5b72988fa386c0c0a57e8379"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-da7489169b36973715459c20"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-54fa1fbcac024b2b84054f49"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-21dd47ace768b97e05b48984"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-0b7c0e31709fd575fdf9c852"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "1"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 1. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-04a1c393ec5224ece31e39b5"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block between page footer runs; layout-only blank.",
+    "source_entry_id": "source-entry-0c8c8cc104c2bc0de466a104"
+  },
+  {
+    "parts": [
+      {
+        "role": "fixed_label",
+        "text": "6"
+      }
+    ],
+    "reason": "Centered footer style label rendering the digit 6. Rendered PAGE field value for this page; the vocabulary has no page-number field, so the text is treated as the centered footer label carried by the page setup. Host handles PAGE field regeneration.",
+    "source_entry_id": "source-entry-6c07d8290d8605286e2c5556"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block after the last footer run and before the body table; layout-only blank.",
+    "source_entry_id": "source-entry-7bd6eca8ed03f1b1d83540c7"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block preceding the body table; layout-only blank with no fillable position.",
+    "source_entry_id": "source-entry-06b3c8034807405c2316b1eb"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block in the body trailing region; layout-only blank.",
+    "source_entry_id": "source-entry-d41d3988408e720ddc1b4826"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block in the body trailing region; layout-only blank.",
+    "source_entry_id": "source-entry-79c08f314ded2384a39c9975"
+  },
+  {
+    "parts": [
+      {
+        "role": "style_only",
+        "text": ""
+      }
+    ],
+    "reason": "Empty paragraph block immediately preceding the body table; layout-only blank with no fillable position.",
+    "source_entry_id": "source-entry-07f362687775f1d1f41d1c66"
+  },
+  {
+    "parts": [
+      {
+        "field_id": "body.table",
+        "role": "body_structure",
+        "text": ""
+      }
+    ],
+    "reason": "Body table object in the trailing body unit. No visible caption or note text in this batch; the object establishes one body.table interface per the vocabulary.",
+    "source_entry_id": "source-entry-e64ca7dfe935cf56c3080379"
+  },
+  {
+    "open_questions": [],
+    "parts": [
+      {
+        "role": "manual_region",
+        "text": ""
+      }
+    ],
+    "reason": "This is a picture source entry (block 58) that resolves inside the composite table at block 57 (source-entry-e64ca7dfe935cf56c3080379). The outer composite table is the body_structure member that would carry body.table; only the outer composite source entry supplied by the packet may carry the body field, and that entry is not in this revision scope. Per the Skill rule that internal cells, non-caption text, and drawing sub-structures only provide judgment evidence and must not repeatedly bind the same object interface, this internal picture has no separate field responsibility. It is retained as part of the composite table but is not bound to body.figure or any other field. Expressed as a non-field manual_region part because the picture is retained sub-structure content with no independent field binding.",
+    "source_entry_id": "source-entry-7c10be60e6811978ea011b34"
+  },
+  {
+    "open_questions": [],
+    "parts": [
+      {
+        "role": "manual_region",
+        "text": ""
+      }
+    ],
+    "reason": "This is a picture source entry (block 59) that resolves inside the composite table at block 57 (source-entry-e64ca7dfe935cf56c3080379), like source-entry-7c10be60e6811978ea011b34. The outer composite table carries the body.table body_structure interface and is the only source entry in the packet that may hold a body field for this composite. This internal picture has no separate field binding. It is retained as part of the composite table but expressed as a non-field manual_region part with no field_id, since it is an internal drawing sub-structure that provides judgment evidence for the composite and must not transfer the body.figure field here.",
+    "source_entry_id": "source-entry-b7b0419ddb09f2e541145ccb"
+  }
+]

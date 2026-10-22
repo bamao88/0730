@@ -1,0 +1,29 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: 中文题目
+    content_type: text
+  - field_id: body.chapters
+    label: 正文章节集合
+    content_type: section
+  - field_id: body.heading.outline1
+    label: 章标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.heading.outline4
+    label: 四级标题
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.paragraph
+    label: 正文段落
+    content_type: text
+    parent_field_id: body.chapters
+  - field_id: body.table
+    label: 表格
+    content_type: table
+    parent_field_id: body.chapters
+  - field_id: body.equation
+    label: 公式
+    content_type: equation
+    parent_field_id: body.chapters

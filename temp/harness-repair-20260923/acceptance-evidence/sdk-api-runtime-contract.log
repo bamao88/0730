@@ -1,0 +1,145 @@
+......................................................................F. [ 96%]
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision[error_during_execution-None-429-semantic] _
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-109/test_api_failure_keeps_sdk_dia1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108b47350>
+stage = 'semantic', subtype = 'error_during_execution', terminal_reason = None
+http_status = 429
+
+    @pytest.mark.parametrize("stage", ["unit", "semantic"])
+    @pytest.mark.parametrize(
+        ("subtype", "terminal_reason", "http_status"),
+        [("error_during_execution", None, 429), ("success", "api_error", None)],
+    )
+    def test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision(
+        tmp_path, monkeypatch, stage, subtype, terminal_reason, http_status
+    ):
+        prepared = _prepared(tmp_path)
+        config = tmp_path / "config"
+        config.mkdir()
+    
+        class InvalidUnitClient:
+            def __init__(self, *, options):
+                pass
+    
+            async def __aenter__(self):
+                return self
+    
+            async def __aexit__(self, *_):
+                return None
+    
+            async def query(self, prompt):
+                pass
+    
+            async def receive_response(self):
+                yield AssistantMessage(
+                    content=[ToolUseBlock("skill", "Skill", {"skill": "docfit-school-extract"})],
+                    model="synthetic-model",
+                )
+                yield ResultMessage(
+                    subtype=subtype,
+                    duration_ms=20,
+                    duration_api_ms=15,
+                    is_error=True,
+                    num_turns=2,
+                    session_id="synthetic-session",
+                    structured_output=None,
+                    result="private-result",
+                    errors=["private-error"],
+                    api_error_status=http_status,
+                    terminal_reason=terminal_reason,
+                )
+    
+        monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", InvalidUnitClient)
+        checkpoint = _unit_checkpoint(prepared) if stage == "semantic" else None
+        with pytest.raises(ToolFailure) as caught:
+            asyncio.run(_run_backend(
+                prepared, _backend(), config, existing_unit_boundary_checkpoint=checkpoint
+            ))
+        assert caught.value.code == "template_agent_api_error"
+        assert caught.value.origin == "environment"
+        archives = list((prepared.task_root / "work/.docfit/unit-boundary-executions").glob("*.json"))
+        assert len(archives) == (1 if stage == "unit" else 0)
+        trace = json.loads(
+            (prepared.task_root / "work/.docfit/template-agent-execution.json").read_text()
+        )
+        for evidence in [trace, *(json.loads(p.read_text()) for p in archives)]:
+>           assert evidence["sdk_query_count"] == 1
+E           assert 2 == 1
+
+tests/contract/test_prepare_template_runtime.py:4423: AssertionError
+_ test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision[success-api_error-None-semantic] _
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-109/test_api_failure_keeps_sdk_dia3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109050a70>
+stage = 'semantic', subtype = 'success', terminal_reason = 'api_error'
+http_status = None
+
+    @pytest.mark.parametrize("stage", ["unit", "semantic"])
+    @pytest.mark.parametrize(
+        ("subtype", "terminal_reason", "http_status"),
+        [("error_during_execution", None, 429), ("success", "api_error", None)],
+    )
+    def test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision(
+        tmp_path, monkeypatch, stage, subtype, terminal_reason, http_status
+    ):
+        prepared = _prepared(tmp_path)
+        config = tmp_path / "config"
+        config.mkdir()
+    
+        class InvalidUnitClient:
+            def __init__(self, *, options):
+                pass
+    
+            async def __aenter__(self):
+                return self
+    
+            async def __aexit__(self, *_):
+                return None
+    
+            async def query(self, prompt):
+                pass
+    
+            async def receive_response(self):
+                yield AssistantMessage(
+                    content=[ToolUseBlock("skill", "Skill", {"skill": "docfit-school-extract"})],
+                    model="synthetic-model",
+                )
+                yield ResultMessage(
+                    subtype=subtype,
+                    duration_ms=20,
+                    duration_api_ms=15,
+                    is_error=True,
+                    num_turns=2,
+                    session_id="synthetic-session",
+                    structured_output=None,
+                    result="private-result",
+                    errors=["private-error"],
+                    api_error_status=http_status,
+                    terminal_reason=terminal_reason,
+                )
+    
+        monkeypatch.setattr("docfit.app.prepare_template.ClaudeSDKClient", InvalidUnitClient)
+        checkpoint = _unit_checkpoint(prepared) if stage == "semantic" else None
+        with pytest.raises(ToolFailure) as caught:
+            asyncio.run(_run_backend(
+                prepared, _backend(), config, existing_unit_boundary_checkpoint=checkpoint
+            ))
+        assert caught.value.code == "template_agent_api_error"
+        assert caught.value.origin == "environment"
+        archives = list((prepared.task_root / "work/.docfit/unit-boundary-executions").glob("*.json"))
+        assert len(archives) == (1 if stage == "unit" else 0)
+        trace = json.loads(
+            (prepared.task_root / "work/.docfit/template-agent-execution.json").read_text()
+        )
+        for evidence in [trace, *(json.loads(p.read_text()) for p in archives)]:
+>           assert evidence["sdk_query_count"] == 1
+E           assert 2 == 1
+
+tests/contract/test_prepare_template_runtime.py:4423: AssertionError
+=========================== short test summary info ============================
+FAILED tests/contract/test_prepare_template_runtime.py::test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision[error_during_execution-None-429-semantic]
+FAILED tests/contract/test_prepare_template_runtime.py::test_api_failure_keeps_sdk_diagnostics_without_requesting_semantic_revision[success-api_error-None-semantic]
+2 failed, 73 passed in 20.64s

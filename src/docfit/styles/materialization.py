@@ -15,8 +15,29 @@ from docfit.tools.runtime import JsonObject, ToolFailure
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W14_NS = "http://schemas.microsoft.com/office/word/2010/wordml"
+MC_NS = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 W = f"{{{W_NS}}}"
 W14 = f"{{{W14_NS}}}"
+_IGNORABLE_NAMESPACES = {
+    "w14": W14_NS,
+    "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+    "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+    "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+    "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+    "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+    "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+    "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+    "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+    "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing",
+}
+
+for prefix, uri in (
+    ("w", W_NS),
+    ("w14", W14_NS),
+    ("mc", MC_NS),
+    *_IGNORABLE_NAMESPACES.items(),
+):
+    ET.register_namespace(prefix, uri)
 
 SUPPORTED_MATERIALIZED_PROPERTIES = frozenset(
     {
@@ -54,9 +75,143 @@ SUPPORTED_MATERIALIZED_PROPERTIES = frozenset(
         "paragraph.outline_level",
         "paragraph.numbering",
         "paragraph.tab_stops",
+        "cell.vertical_alignment",
+        "cell.padding_mm.top",
+        "cell.padding_mm.bottom",
+        "cell.padding_mm.left",
+        "cell.padding_mm.right",
+        "cell.text_wrap",
     }
 )
 _PARAGRAPH_PATH = re.compile(r"/body/p\[@paraId=([0-9A-Fa-f]{8})\]")
+_TABLE_PATH = re.compile(r"/body/tbl\[(\d+)\]")
+_RUN_PROPERTY_ORDER = {
+    name: index
+    for index, name in enumerate(
+        (
+            "rStyle",
+            "rFonts",
+            "b",
+            "bCs",
+            "i",
+            "iCs",
+            "caps",
+            "smallCaps",
+            "strike",
+            "dstrike",
+            "outline",
+            "shadow",
+            "emboss",
+            "imprint",
+            "noProof",
+            "snapToGrid",
+            "vanish",
+            "webHidden",
+            "color",
+            "spacing",
+            "w",
+            "kern",
+            "position",
+            "sz",
+            "szCs",
+            "highlight",
+            "u",
+            "effect",
+            "bdr",
+            "shd",
+            "fitText",
+            "vertAlign",
+            "rtl",
+            "cs",
+            "em",
+            "lang",
+            "eastAsianLayout",
+            "specVanish",
+            "oMath",
+        )
+    )
+}
+_PARAGRAPH_PROPERTY_ORDER = {
+    name: index
+    for index, name in enumerate(
+        (
+            "pStyle",
+            "keepNext",
+            "keepLines",
+            "pageBreakBefore",
+            "framePr",
+            "widowControl",
+            "numPr",
+            "suppressLineNumbers",
+            "pBdr",
+            "shd",
+            "tabs",
+            "suppressAutoHyphens",
+            "kinsoku",
+            "wordWrap",
+            "overflowPunct",
+            "topLinePunct",
+            "autoSpaceDE",
+            "autoSpaceDN",
+            "bidi",
+            "adjustRightInd",
+            "snapToGrid",
+            "spacing",
+            "ind",
+            "contextualSpacing",
+            "mirrorIndents",
+            "suppressOverlap",
+            "jc",
+            "textDirection",
+            "textAlignment",
+            "textboxTightWrap",
+            "outlineLvl",
+            "divId",
+            "cnfStyle",
+            "rPr",
+            "sectPr",
+            "pPrChange",
+        )
+    )
+}
+_NUMBERING_PROPERTY_ORDER = {
+    name: index for index, name in enumerate(("ilvl", "numId", "numberingChange", "ins"))
+}
+_TABLE_CELL_PROPERTY_ORDER = {
+    name: index
+    for index, name in enumerate(
+        (
+            "cnfStyle",
+            "tcW",
+            "gridSpan",
+            "hMerge",
+            "vMerge",
+            "tcBorders",
+            "shd",
+            "noWrap",
+            "tcMar",
+            "textDirection",
+            "tcFitText",
+            "vAlign",
+            "hideMark",
+            "headers",
+            "cellIns",
+            "cellDel",
+            "cellMerge",
+            "tcPrChange",
+        )
+    )
+}
+_TABLE_CELL_MARGIN_ORDER = {
+    name: index for index, name in enumerate(("top", "left", "bottom", "right"))
+}
+_ORDER_BY_PARENT = {
+    f"{W}rPr": _RUN_PROPERTY_ORDER,
+    f"{W}pPr": _PARAGRAPH_PROPERTY_ORDER,
+    f"{W}numPr": _NUMBERING_PROPERTY_ORDER,
+    f"{W}tcPr": _TABLE_CELL_PROPERTY_ORDER,
+    f"{W}tcMar": _TABLE_CELL_MARGIN_ORDER,
+}
 
 
 def materialize_style_contracts(
@@ -123,15 +278,18 @@ def materialize_style_contracts(
             )
         seen_ids.add(occurrence_id)
         seen_locators.add(locator_key)
-        paragraphs = _target_paragraphs(selected)
-        if len(paragraphs) != 1:
+        root = _root(parts, roots, part)
+        parents = {child: parent for parent in root.iter() for child in list(parent)}
+        paragraphs = _target_paragraphs(selected, parents)
+        if not paragraphs:
             raise _failure(
                 "style_occurrence_paragraph_not_unique",
-                f"{occurrence_id} resolved to {len(paragraphs)} paragraphs; expected one.",
+                f"{occurrence_id} resolved to 0 paragraphs; expected at least one.",
             )
         resolved_before = effective_before.resolve(locator)
         counts = _apply_contract(
-            paragraphs[0],
+            selected,
+            parents,
             contract,
             resolved_before.properties,
         )
@@ -162,7 +320,8 @@ def materialize_style_contracts(
 
 
 def _apply_contract(
-    paragraph: ET.Element,
+    selected: ET.Element,
+    parents: Mapping[ET.Element, ET.Element],
     contract: StyleContract,
     effective_before: Mapping[str, Any],
 ) -> JsonObject:
@@ -170,15 +329,18 @@ def _apply_contract(
         path for path in contract.owned_properties if path.startswith("paragraph.")
     )
     run_paths = tuple(path for path in contract.owned_properties if path.startswith("run."))
-    if paragraph_paths:
-        paragraph_properties = _properties(paragraph, "pPr")
-        _apply_paragraph_properties(
-            paragraph_properties,
-            paragraph_paths,
-            contract.effective_properties,
-            effective_before,
-        )
-    runs = list(paragraph.iter(f"{W}r"))
+    cell_paths = tuple(path for path in contract.owned_properties if path.startswith("cell."))
+    paragraphs = _target_paragraphs(selected, parents)
+    for paragraph in paragraphs:
+        if paragraph_paths:
+            paragraph_properties = _properties(paragraph, "pPr")
+            _apply_paragraph_properties(
+                paragraph_properties,
+                paragraph_paths,
+                contract.effective_properties,
+                effective_before,
+            )
+    runs = [run for paragraph in paragraphs for run in paragraph.iter(f"{W}r")]
     if run_paths and not runs:
         raise _failure(
             "style_occurrence_run_missing",
@@ -190,9 +352,19 @@ def _apply_contract(
             run_paths,
             contract.effective_properties,
         )
+    cells = _target_cells(selected, parents)
+    if cell_paths and not cells:
+        raise _failure(
+            "style_occurrence_cell_missing",
+            f"{contract.style_contract_id} owns cell properties "
+            "but the occurrence has no Word cell.",
+        )
+    for cell in cells:
+        _apply_cell_properties(_properties(cell, "tcPr"), cell_paths, contract.effective_properties)
     return {
-        "paragraph_count": 1,
+        "paragraph_count": len(paragraphs),
         "run_count": len(runs),
+        "cell_count": len(cells),
     }
 
 
@@ -244,9 +416,7 @@ def _apply_run_properties(
         encoded = "none" if value is None else _text(value, "run.underline")
         _set_value(properties, "u", encoded)
     if "run.strikethrough" in owned:
-        encoded = "1" if _boolean(
-            effective["run.strikethrough"], "run.strikethrough"
-        ) else "0"
+        encoded = "1" if _boolean(effective["run.strikethrough"], "run.strikethrough") else "0"
         _set_value(properties, "strike", encoded)
     if "run.vertical_position" in owned:
         _set_value(
@@ -255,9 +425,7 @@ def _apply_run_properties(
             _text(effective["run.vertical_position"], "run.vertical_position"),
         )
     if "run.character_spacing_pt" in owned:
-        spacing = _number(
-            effective["run.character_spacing_pt"], "run.character_spacing_pt"
-        )
+        spacing = _number(effective["run.character_spacing_pt"], "run.character_spacing_pt")
         _set_value(properties, "spacing", str(round(spacing * 20)))
 
 
@@ -302,12 +470,14 @@ def _apply_paragraph_properties(
         )
         line = str(round(spacing * 20))
         _set_attribute(properties, "spacing", "line", line)
+        if "paragraph.line_spacing_rule" not in owned:
+            _set_attribute(properties, "spacing", "lineRule", "exact")
     if line_value:
-        spacing = _positive_number(
-            effective["paragraph.line_value"], "paragraph.line_value"
-        )
+        spacing = _positive_number(effective["paragraph.line_value"], "paragraph.line_value")
         line = str(round(spacing * 240))
         _set_attribute(properties, "spacing", "line", line)
+        if "paragraph.line_spacing_rule" not in owned:
+            _set_attribute(properties, "spacing", "lineRule", "auto")
     if "paragraph.line_spacing_rule" in owned:
         _set_attribute(
             properties,
@@ -316,9 +486,11 @@ def _apply_paragraph_properties(
             _text(effective["paragraph.line_spacing_rule"], "paragraph.line_spacing_rule"),
         )
     if "paragraph.page_break_before" in owned:
-        encoded = "1" if _boolean(
-            effective["paragraph.page_break_before"], "paragraph.page_break_before"
-        ) else "0"
+        encoded = (
+            "1"
+            if _boolean(effective["paragraph.page_break_before"], "paragraph.page_break_before")
+            else "0"
+        )
         _set_value(properties, "pageBreakBefore", encoded)
     for path, tag in (
         ("paragraph.keep_with_next", "keepNext"),
@@ -346,10 +518,57 @@ def _apply_paragraph_properties(
         )
 
 
+def _apply_cell_properties(
+    properties: ET.Element,
+    owned: Sequence[str],
+    effective: Mapping[str, Any],
+) -> None:
+    if "cell.vertical_alignment" in owned:
+        _set_value(
+            properties,
+            "vAlign",
+            _text(effective["cell.vertical_alignment"], "cell.vertical_alignment"),
+        )
+    margin_paths = {
+        "cell.padding_mm.top": "top",
+        "cell.padding_mm.bottom": "bottom",
+        "cell.padding_mm.left": "left",
+        "cell.padding_mm.right": "right",
+    }
+    for path, tag in margin_paths.items():
+        if path not in owned:
+            continue
+        twips = str(round(_nonnegative_number(effective[path], path) * 56.6929133858))
+        margins = properties.find(f"{W}tcMar")
+        if margins is None:
+            margins = ET.Element(f"{W}tcMar")
+            _insert_ordered(properties, margins)
+        else:
+            _move_ordered(properties, margins)
+        margin = margins.find(f"{W}{tag}")
+        if margin is None:
+            margin = ET.Element(f"{W}{tag}")
+            _insert_ordered(margins, margin)
+        else:
+            _move_ordered(margins, margin)
+        margin.set(f"{W}type", "dxa")
+        margin.set(f"{W}w", twips)
+    if "cell.text_wrap" in owned:
+        no_wrap = properties.find(f"{W}noWrap")
+        if _boolean(effective["cell.text_wrap"], "cell.text_wrap"):
+            if no_wrap is not None:
+                properties.remove(no_wrap)
+        elif no_wrap is None:
+            _insert_ordered(properties, ET.Element(f"{W}noWrap"))
+
+
 def _apply_numbering(properties: ET.Element, value: Any) -> None:
     numbering = properties.find(f"{W}numPr")
     if numbering is None:
-        numbering = ET.SubElement(properties, f"{W}numPr")
+        numbering = ET.Element(f"{W}numPr")
+        _insert_ordered(properties, numbering)
+    else:
+        _move_ordered(properties, numbering)
     for child in list(numbering):
         if child.tag in {f"{W}ilvl", f"{W}numId"}:
             numbering.remove(child)
@@ -366,9 +585,7 @@ def _apply_numbering(properties: ET.Element, value: Any) -> None:
     if not isinstance(num_id, str | int) or isinstance(num_id, bool):
         raise _failure("style_property_invalid", "paragraph.numbering needs num_id.")
     if not isinstance(level, int) or isinstance(level, bool) or level < 0:
-        raise _failure(
-            "style_property_invalid", "paragraph.numbering level must be nonnegative."
-        )
+        raise _failure("style_property_invalid", "paragraph.numbering level must be nonnegative.")
     _set_value(numbering, "ilvl", str(level))
     _set_value(numbering, "numId", str(num_id))
 
@@ -376,7 +593,10 @@ def _apply_numbering(properties: ET.Element, value: Any) -> None:
 def _apply_tab_stops(properties: ET.Element, value: Any, existing: Any) -> None:
     tabs = properties.find(f"{W}tabs")
     if tabs is None:
-        tabs = ET.SubElement(properties, f"{W}tabs")
+        tabs = ET.Element(f"{W}tabs")
+        _insert_ordered(properties, tabs)
+    else:
+        _move_ordered(properties, tabs)
     for child in list(tabs):
         tabs.remove(child)
     if value is None:
@@ -398,9 +618,7 @@ def _apply_tab_stops(properties: ET.Element, value: Any, existing: Any) -> None:
         )
     for item in value:
         if not isinstance(item, Mapping):
-            raise _failure(
-                "style_property_invalid", "Every tab stop must be an object."
-            )
+            raise _failure("style_property_invalid", "Every tab stop must be an object.")
         position = item.get("position_twips")
         alignment = item.get("alignment")
         leader = item.get("leader", "none")
@@ -424,7 +642,10 @@ def _properties(owner: ET.Element, tag: str) -> ET.Element:
     if found is not None:
         return found
     created = ET.Element(f"{W}{tag}")
-    owner.insert(0, created)
+    if owner.tag == f"{W}tc":
+        owner.insert(0, created)
+    else:
+        owner.insert(0, created)
     return created
 
 
@@ -435,8 +656,36 @@ def _set_value(parent: ET.Element, tag: str, value: str) -> None:
 def _set_attribute(parent: ET.Element, tag: str, attribute: str, value: str) -> None:
     element = parent.find(f"{W}{tag}")
     if element is None:
-        element = ET.SubElement(parent, f"{W}{tag}")
+        element = ET.Element(f"{W}{tag}")
+        _insert_ordered(parent, element)
+    else:
+        _move_ordered(parent, element)
     element.set(f"{W}{attribute}", value)
+
+
+def _move_ordered(parent: ET.Element, child: ET.Element) -> None:
+    order = _ORDER_BY_PARENT.get(parent.tag)
+    if order is None:
+        return
+    parent.remove(child)
+    _insert_ordered(parent, child)
+
+
+def _insert_ordered(parent: ET.Element, child: ET.Element) -> None:
+    order = _ORDER_BY_PARENT.get(parent.tag)
+    if order is None:
+        parent.append(child)
+        return
+    child_rank = order.get(_local_name(child), len(order))
+    for index, existing in enumerate(list(parent)):
+        if order.get(_local_name(existing), len(order)) > child_rank:
+            parent.insert(index, child)
+            return
+    parent.append(child)
+
+
+def _local_name(element: ET.Element) -> str:
+    return element.tag.rsplit("}", 1)[-1]
 
 
 def _resolve_locator(
@@ -468,36 +717,74 @@ def _resolve_locator(
             )
         return part, matches[0], f"{part}#content_control_tag:{tag}"
     match = _PARAGRAPH_PATH.fullmatch(locator)
+    if match is not None:
+        part = "word/document.xml"
+        root = _root(parts, roots, part)
+        para_id = match.group(1).upper()
+        matches = [
+            paragraph
+            for paragraph in root.iter(f"{W}p")
+            if (paragraph.get(f"{W14}paraId") or "").upper() == para_id
+        ]
+        if len(matches) != 1:
+            raise _failure(
+                "style_locator_not_unique",
+                f"Paragraph paraId {para_id} matched {len(matches)} occurrences; expected one.",
+            )
+        return part, matches[0], f"{part}#/body/p[@paraId={para_id}]"
+    table_match = _TABLE_PATH.fullmatch(locator)
+    if table_match is not None:
+        part = "word/document.xml"
+        root = _root(parts, roots, part)
+        body = root.find(f"{W}body")
+        tables = [] if body is None else body.findall(f"{W}tbl")
+        index = int(table_match.group(1)) - 1
+        if index < 0 or index >= len(tables):
+            raise _failure(
+                "style_locator_not_unique",
+                f"Table locator {locator} matched 0 occurrences; expected one.",
+            )
+        return part, tables[index], f"{part}#/body/tbl[{index + 1}]"
     if match is None:
         raise _failure(
             "style_locator_unsupported",
-            "Style materialization currently requires a paraId paragraph locator.",
+            "Style materialization currently requires a paraId paragraph or body table locator.",
         )
-    part = "word/document.xml"
-    root = _root(parts, roots, part)
-    para_id = match.group(1).upper()
-    matches = [
-        paragraph
-        for paragraph in root.iter(f"{W}p")
-        if (paragraph.get(f"{W14}paraId") or "").upper() == para_id
-    ]
-    if len(matches) != 1:
-        raise _failure(
-            "style_locator_not_unique",
-            f"Paragraph paraId {para_id} matched {len(matches)} occurrences; expected one.",
-        )
-    return part, matches[0], f"{part}#/body/p[@paraId={para_id}]"
 
 
-def _target_paragraphs(selected: ET.Element) -> list[ET.Element]:
+def _target_paragraphs(
+    selected: ET.Element,
+    parents: Mapping[ET.Element, ET.Element],
+) -> list[ET.Element]:
     if selected.tag == f"{W}p":
         return [selected]
+    if selected.tag == f"{W}tbl":
+        return list(selected.iter(f"{W}p"))
+    current: ET.Element | None = selected
+    while current is not None:
+        if current.tag == f"{W}p":
+            return [current]
+        current = parents.get(current)
     return list(selected.iter(f"{W}p"))
 
 
-def _root(
-    parts: Mapping[str, bytes], roots: dict[str, ET.Element], part: str
-) -> ET.Element:
+def _target_cells(
+    selected: ET.Element,
+    parents: Mapping[ET.Element, ET.Element],
+) -> list[ET.Element]:
+    if selected.tag == f"{W}tbl":
+        return list(selected.iter(f"{W}tc"))
+    if selected.tag == f"{W}tc":
+        return [selected]
+    current: ET.Element | None = selected
+    while current is not None:
+        if current.tag == f"{W}tc":
+            return [current]
+        current = parents.get(current)
+    return list(selected.iter(f"{W}tc"))
+
+
+def _root(parts: Mapping[str, bytes], roots: dict[str, ET.Element], part: str) -> ET.Element:
     if part in roots:
         return roots[part]
     try:
@@ -517,7 +804,20 @@ def _read_package(path: Path) -> dict[str, bytes]:
 
 
 def _serialize(root: ET.Element) -> bytes:
-    return cast(bytes, ET.tostring(root, encoding="utf-8", xml_declaration=True))
+    payload = cast(bytes, ET.tostring(root, encoding="utf-8", xml_declaration=True))
+    ignorable = root.get(f"{{{MC_NS}}}Ignorable", "").split()
+    missing = [
+        (prefix, _IGNORABLE_NAMESPACES[prefix])
+        for prefix in ignorable
+        if prefix in _IGNORABLE_NAMESPACES and f"xmlns:{prefix}=".encode() not in payload
+    ]
+    if missing:
+        declaration_end = payload.find(b"?>")
+        root_start = payload.find(b"<", declaration_end + 2)
+        root_end = payload.find(b">", root_start)
+        declarations = b"".join(f' xmlns:{prefix}="{uri}"'.encode() for prefix, uri in missing)
+        payload = payload[:root_end] + declarations + payload[root_end:]
+    return payload
 
 
 def _write_package(path: Path, parts: Mapping[str, bytes]) -> None:

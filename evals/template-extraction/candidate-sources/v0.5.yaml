@@ -1,0 +1,107 @@
+schema_version: docfit-template-extraction-candidate-sources/v1
+sources:
+- case_id: 01-hunau-undergraduate
+  school_id: hunau-undergraduate
+  school_name: 湖南农业大学本科
+  description: 湖南农业大学本科 Registry v0.5 模板 Gold 候选文件对
+  case_status: candidate
+  expected_verdict: INPUT_ERROR
+  template:
+    path: v0.5/01-hunau-undergraduate/template.docx
+    sha256: de93e8217d54756d005649fb765463e0bb30aa5a5b35c79bc90c610f3acbdd01
+  contract:
+    path: v0.5/01-hunau-undergraduate/fill-contract.yaml
+    sha256: b7e065582ad4cd9b9bcc578a43e8b227fba496d188168e8d8a4d001d0b28f483
+  field_registry_ref:
+    path: ../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
+    id: docfit.thesis.content_fields
+    version: 0.5.0
+    sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  eval_config:
+    path: ../config/eval-config-v1.yaml
+    id: template-extraction-v1
+    version: docfit-template-extraction-eval-config/v1
+    sha256: d734e59ada4e132a9584522a8e26dd10b66f53d536f75628c50cd5ed2aa388b6
+  scoring_version: docfit-template-extraction-scoring/v1
+  gold_review:
+    status: candidate
+    reviewer: null
+    reviewed_at: null
+    blockers:
+    - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
+  permissions:
+    visibility: internal_candidate
+    student_personal_data: none_known
+    git_storage: approved
+    ci_use: approved
+    external_processing: not_required
+- case_id: 02-njau-undergraduate
+  school_id: njau-undergraduate
+  school_name: 南京农业大学本科
+  description: 南京农业大学本科 Registry v0.5 模板 Gold 候选文件对
+  case_status: candidate
+  expected_verdict: INPUT_ERROR
+  template:
+    path: v0.5/02-njau-undergraduate/template.docx
+    sha256: 767d955eef874d0cc1015faa10c4f431e983e018a47b2cc682eace82dda89e44
+  contract:
+    path: v0.5/02-njau-undergraduate/fill-contract.yaml
+    sha256: 8a9c7b8ff7d6bb4b277d0ebe11941da7bcbcfb8e2d1e19bb3411bb1baff0594c
+  field_registry_ref:
+    path: ../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
+    id: docfit.thesis.content_fields
+    version: 0.5.0
+    sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  eval_config:
+    path: ../config/eval-config-v1.yaml
+    id: template-extraction-v1
+    version: docfit-template-extraction-eval-config/v1
+    sha256: d734e59ada4e132a9584522a8e26dd10b66f53d536f75628c50cd5ed2aa388b6
+  scoring_version: docfit-template-extraction-scoring/v1
+  gold_review:
+    status: candidate
+    reviewer: null
+    reviewed_at: null
+    blockers:
+    - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
+  permissions:
+    visibility: internal_candidate
+    student_personal_data: none_known
+    git_storage: approved
+    ci_use: approved
+    external_processing: not_required
+- case_id: 03-pku-graduate
+  school_id: pku-graduate
+  school_name: 北京大学研究生
+  description: 北京大学研究生 Registry v0.5 模板 Gold 候选文件对
+  case_status: candidate
+  expected_verdict: INPUT_ERROR
+  template:
+    path: v0.5/03-pku-graduate/template.docx
+    sha256: a9f1b171c12c60a0f633d29e84818b08b2e214fa7563b70a702d15c42a84ec52
+  contract:
+    path: v0.5/03-pku-graduate/fill-contract.yaml
+    sha256: 207eee7b4bc68721009d4076e1ff27e8bba3c912b291752aa17d79afcf7a5f23
+  field_registry_ref:
+    path: ../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
+    id: docfit.thesis.content_fields
+    version: 0.5.0
+    sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  eval_config:
+    path: ../config/eval-config-v1.yaml
+    id: template-extraction-v1
+    version: docfit-template-extraction-eval-config/v1
+    sha256: d734e59ada4e132a9584522a8e26dd10b66f53d536f75628c50cd5ed2aa388b6
+  scoring_version: docfit-template-extraction-scoring/v1
+  gold_review:
+    status: candidate
+    reviewer: null
+    reviewed_at: null
+    blockers:
+    - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
+  permissions:
+    visibility: internal_candidate
+    student_personal_data: none_known
+    git_storage: approved
+    ci_use: approved
+    external_processing: not_required

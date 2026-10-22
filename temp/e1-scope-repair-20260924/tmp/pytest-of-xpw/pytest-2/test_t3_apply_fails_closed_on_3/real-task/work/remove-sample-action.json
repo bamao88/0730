@@ -1,0 +1,1 @@
+{"field_registry": "input/field-registry.json", "operations": [{"action": "clear_content", "target_ref": {"document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6", "object_id": "obj-61f35885973119d13fe3931d", "expected_fingerprint": "a450fddc129f70018fb096acaa4bb3fe6987281c7bfa9daa15108dd31cad74db"}}]}

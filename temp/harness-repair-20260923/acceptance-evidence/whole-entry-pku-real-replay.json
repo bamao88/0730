@@ -1,0 +1,128 @@
+{
+  "verification_level": "native protocol probe output replayed against real PKU inventory; not natural full-school E2E",
+  "explicit_output": [
+    {
+      "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+      "parts": [
+        {
+          "whole_entry": true,
+          "role": "fill_slot",
+          "field_id": "degree.type"
+        }
+      ],
+      "reason": "The entire entry holds one semantic responsibility: the selected degree type value (including the checkbox glyph and the two labeled options). Declaring whole_entry=true assigns degree.type to all 16 source characters, including the U+F06F and U+F0FE private-use glyphs and the interior whitespace runs."
+    }
+  ],
+  "decoded": [
+    {
+      "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+      "parts": [
+        {
+          "role": "fill_slot",
+          "field_id": "degree.type",
+          "text": " 学术学位     专业学位"
+        }
+      ],
+      "reason": "The entire entry holds one semantic responsibility: the selected degree type value (including the checkbox glyph and the two labeled options). Declaring whole_entry=true assigns degree.type to all 16 source characters, including the U+F06F and U+F0FE private-use glyphs and the interior whitespace runs."
+    }
+  ],
+  "source_characters_preserved": true,
+  "span_ref": "source_entry_id=source-entry-b1676a7fc904cb6f7744e603;extent=text[0:16];source_snapshot_sha256=e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+  "slot_ref": "source_entry_id=source-entry-b1676a7fc904cb6f7744e603;extent=text[0:16];source_snapshot_sha256=e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375;field_id=degree.type",
+  "word_fragments": [
+    {
+      "object_id": "obj-a2535bb5fb3e60817969e658",
+      "locator": "/body/p[@paraId=3466D2A3]/r[1]",
+      "text": "",
+      "source_text_start": 0,
+      "source_text_end": 1,
+      "object_text_start": 0,
+      "object_text_end": 1,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "68dda6caacab37db588b0408dbbdf7bcc2d6d597da5412845456c7ac0c3efc78",
+        "object_id": "obj-a2535bb5fb3e60817969e658"
+      },
+      "fingerprint": "68dda6caacab37db588b0408dbbdf7bcc2d6d597da5412845456c7ac0c3efc78"
+    },
+    {
+      "object_id": "obj-97dc5b965cb76dd7fc6484e5",
+      "locator": "/body/p[@paraId=3466D2A3]/r[2]",
+      "text": " 学术学位 ",
+      "source_text_start": 1,
+      "source_text_end": 7,
+      "object_text_start": 0,
+      "object_text_end": 6,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "66e5e5cfc6379fe9e07428af020397e90445a6709f4b67c906648f064451eb7d",
+        "object_id": "obj-97dc5b965cb76dd7fc6484e5"
+      },
+      "fingerprint": "66e5e5cfc6379fe9e07428af020397e90445a6709f4b67c906648f064451eb7d"
+    },
+    {
+      "object_id": "obj-f1344869a789b8bb581e2a83",
+      "locator": "/body/p[@paraId=3466D2A3]/r[3]",
+      "text": "  ",
+      "source_text_start": 7,
+      "source_text_end": 9,
+      "object_text_start": 0,
+      "object_text_end": 2,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "61f4a78d36ee852fbe0e24f3b7cdd6dfe0d57038ab0edf2672327e4623a9f672",
+        "object_id": "obj-f1344869a789b8bb581e2a83"
+      },
+      "fingerprint": "61f4a78d36ee852fbe0e24f3b7cdd6dfe0d57038ab0edf2672327e4623a9f672"
+    },
+    {
+      "object_id": "obj-485e73bcbdd9b0bec17ed1e2",
+      "locator": "/body/p[@paraId=3466D2A3]/r[4]",
+      "text": " ",
+      "source_text_start": 9,
+      "source_text_end": 10,
+      "object_text_start": 0,
+      "object_text_end": 1,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "bd1549c80d2b7926fc2d04e7e436022785625d665a7d43140113baa2244f88b3",
+        "object_id": "obj-485e73bcbdd9b0bec17ed1e2"
+      },
+      "fingerprint": "bd1549c80d2b7926fc2d04e7e436022785625d665a7d43140113baa2244f88b3"
+    },
+    {
+      "object_id": "obj-97cbe67508d631aba9ac499b",
+      "locator": "/body/p[@paraId=3466D2A3]/r[5]",
+      "text": "",
+      "source_text_start": 10,
+      "source_text_end": 11,
+      "object_text_start": 0,
+      "object_text_end": 1,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "4522ef1810333decd6eb5d36ceacadbb8c14192b375fe051285e8d53e36c281e",
+        "object_id": "obj-97cbe67508d631aba9ac499b"
+      },
+      "fingerprint": "4522ef1810333decd6eb5d36ceacadbb8c14192b375fe051285e8d53e36c281e"
+    },
+    {
+      "object_id": "obj-f36adb8b1adc3eef2728c4f6",
+      "locator": "/body/p[@paraId=3466D2A3]/r[6]",
+      "text": " 专业学位",
+      "source_text_start": 11,
+      "source_text_end": 16,
+      "object_text_start": 0,
+      "object_text_end": 5,
+      "object_ref": {
+        "document_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+        "expected_fingerprint": "bfa6367ed86e9c02d4edb541c197d94461ea63c56ebc816c78b9a214ba527411",
+        "object_id": "obj-f36adb8b1adc3eef2728c4f6"
+      },
+      "fingerprint": "bfa6367ed86e9c02d4edb541c197d94461ea63c56ebc816c78b9a214ba527411"
+    }
+  ],
+  "inputs": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/object-inventory.json": "2352ffca31c5f02fbf232d877e28beebc6c2b473686255fd66f31308b18d3efb",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/acceptance-evidence/whole-entry-private-character-probe.json": "37ed867a301fdf5ccd3feea5e2b3b6bb0a227c03aba55660e3a198bc0e4f198a"
+  }
+}

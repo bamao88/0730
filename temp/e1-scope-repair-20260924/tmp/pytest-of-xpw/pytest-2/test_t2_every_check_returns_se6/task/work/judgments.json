@@ -1,0 +1,1 @@
+{"semantic_judgments": [{"judgment_id": "j-fill-school-name", "responsibility": "fill_interface", "covered_object_ids": ["obj-1"], "registry_field": {"field_id": "school_name"}, "interface_ref": "interface:school_name", "evidence": [{"object_id": "obj-1"}]}]}

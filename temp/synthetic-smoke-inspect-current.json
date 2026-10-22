@@ -1,0 +1,164 @@
+{
+  "checks": [
+    {
+      "name": "docx_package",
+      "result": "ok"
+    },
+    {
+      "name": "officecli_parse",
+      "result": "ok"
+    }
+  ],
+  "document": {
+    "bookmarks": 0,
+    "comments": false,
+    "content_controls": 0,
+    "drawings": 1,
+    "endnotes": false,
+    "equations": 0,
+    "fields": 0,
+    "footers": 0,
+    "footnotes": false,
+    "graphic_objects": 1,
+    "headers": 0,
+    "hyperlinks": 0,
+    "images": 0,
+    "merged_cells": 0,
+    "numbering_part": true,
+    "package_parts": 12,
+    "paragraphs": 4,
+    "sections": 1,
+    "sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+    "styles_part": true,
+    "tables": 0,
+    "text_boxes": 0,
+    "tracked_deletions": 0,
+    "tracked_insertions": 0,
+    "vml_objects": 0
+  },
+  "failure": null,
+  "focus": [],
+  "objects": [
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/docDefaults",
+        "effective.font.eastAsia": "等线",
+        "effective.font.eastAsia.src": "/docDefaults",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/docDefaults",
+        "effective.size": "11pt",
+        "effective.size.src": "/docDefaults",
+        "style": "Title",
+        "styleId": "Title",
+        "styleName": "Title"
+      },
+      "locator": "/body/p[@paraId=00100000]",
+      "object_ref": {
+        "document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+        "expected_fingerprint": "535792d8a4eba27455453b76af023d0c0d0ab720fcc970366708cf046523b2a3",
+        "object_id": "obj-05af95b4f304b945f593368d"
+      },
+      "style": "Title",
+      "text": "SYNTHETIC UNIVERSITY",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/docDefaults",
+        "effective.font.eastAsia": "等线",
+        "effective.font.eastAsia.src": "/docDefaults",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/docDefaults",
+        "effective.size": "11pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/body/p[@paraId=00100002]",
+      "object_ref": {
+        "document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+        "expected_fingerprint": "dd566036d2b30c52f4f503fc401a72d0cf54dd56cab7fa763b0d231d19e17613",
+        "object_id": "obj-13165b4e7b47edaf32e5c5ce"
+      },
+      "style": "Normal",
+      "text": "NAME_SLOT",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/docDefaults",
+        "effective.font.eastAsia": "等线",
+        "effective.font.eastAsia.src": "/docDefaults",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/docDefaults",
+        "effective.size": "11pt",
+        "effective.size.src": "/docDefaults"
+      },
+      "locator": "/body/p[@paraId=00100004]",
+      "object_ref": {
+        "document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+        "expected_fingerprint": "a450fddc129f70018fb096acaa4bb3fe6987281c7bfa9daa15108dd31cad74db",
+        "object_id": "obj-61f35885973119d13fe3931d"
+      },
+      "style": "Normal",
+      "text": "INSTRUCTION_TEXT_REMOVE_BEFORE_DELIVERY",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "effective.font.ascii": "Times New Roman",
+        "effective.font.ascii.src": "/docDefaults",
+        "effective.font.eastAsia": "等线",
+        "effective.font.eastAsia.src": "/docDefaults",
+        "effective.font.hAnsi": "Times New Roman",
+        "effective.font.hAnsi.src": "/docDefaults",
+        "effective.size": "11pt",
+        "effective.size.src": "/docDefaults",
+        "style": "Heading1",
+        "styleId": "Heading1",
+        "styleName": "Heading1"
+      },
+      "locator": "/body/p[@paraId=00100006]",
+      "object_ref": {
+        "document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+        "expected_fingerprint": "1d2f219fa859079f26871d9a0baf0e1bcb924863579a137baa397b68f46e333b",
+        "object_id": "obj-b536262e9342672bca025860"
+      },
+      "style": "Heading1",
+      "text": "Heading Example",
+      "type": "paragraph"
+    },
+    {
+      "format": {
+        "height": "2.0cm",
+        "id": 1,
+        "width": "2.0cm"
+      },
+      "locator": "/body/p[@paraId=00100000]/r[2]",
+      "object_ref": {
+        "document_sha256": "08248f5066a16fccab8a8b712cd2ad5cee34e7e59fc7b7400d2747b92338e9d6",
+        "expected_fingerprint": "2d4146640524d26a94528338c4c28092d4de99aee3dbdfb3e4adb06c683c019a",
+        "object_id": "obj-931cef4633cdad63a9139a8c"
+      },
+      "text": "",
+      "type": "picture"
+    }
+  ],
+  "provider": {
+    "environment": {
+      "architecture": "arm64",
+      "platform": "Darwin"
+    },
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "expected_version": "1.0.143",
+    "license": "Apache-2.0",
+    "name": "officecli",
+    "version": "1.0.144",
+    "version_locked": false
+  },
+  "risks": [],
+  "schema_version": 1,
+  "status": "ok",
+  "warnings": []
+}

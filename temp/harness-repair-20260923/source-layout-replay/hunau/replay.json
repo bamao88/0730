@@ -1,0 +1,21 @@
+{
+  "verification_level": "real replay of source evidence; no Agent call or publication",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/input/school-template.docx": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/unit-boundary-checkpoint.json": "698e744f25fd4fa11f577a255a46bcf4ac02c139cdca3200815c80e1be0af2c5",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/initial-source-inventory.json": "b0fbf5cd4b9eb6370e8cf517328f0e112155e727a82c9526e8136183e8a91b9b",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/harness/object-inventory.json": "b93103be473748515e58ea0954a66da444e8205b84fce8e130809e957ac4db50",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/prepare-template-task.json": "04b8cd2a67cebdb6c57492ba58fd38efbf33c922bd1ef94d110b0ed87ef8fa24",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/hunau-field-role-shape-task/work/.docfit/harness/semantic-judgments.json": "05621c5e6402ec8f9e598a51d9aa7fffcfcdd3a6ff81deb5601ab7d9cb0bec9c"
+  },
+  "original_unchanged": true,
+  "canonical_identity_text_and_partition_unchanged": true,
+  "source_entry_count": 599,
+  "entries_with_layout_facts": 0,
+  "unavailable_entry_count": 0,
+  "new_post_unit_inventory_seconds": 0.27279599999747006,
+  "document_map_entries_compared": 599,
+  "entries": [],
+  "product_acceptance": false
+}

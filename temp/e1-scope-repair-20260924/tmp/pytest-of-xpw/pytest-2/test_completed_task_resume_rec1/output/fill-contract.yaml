@@ -1,0 +1,176 @@
+{
+  "validation": {
+    "final_visual_review": {
+      "document_sha256": "ba4e586d9645eeb9e880309cb85bbedde21738fc2fc5efb76fc73e3d2dede376",
+      "findings": [],
+      "pages": [
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:8b2e48348f26f9f5f8a8e15309d8c4af84174a040d584182b00453836415c05c",
+          "page": 1
+        },
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:dba3c3a6683bf5c2a2080395cf30bb83075de2fecf43ec42463b9abfdbdca7fd",
+          "page": 2
+        },
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:7059c5aa7518f704e8807c5061493fa6cbd6a737dd341afb19c40bb21b8e14ba",
+          "page": 3
+        },
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:d2b635f043d20433cb37241defafcb0cfb52102308b007bffa7b11ae284c7e25",
+          "page": 4
+        },
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:656a793dad6fb30fac40c617fd71f52354dc4a9bca38845f20576ce754da6242",
+          "page": 5
+        },
+        {
+          "checks": {
+            "content_completeness_and_pagination": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "overflow_and_overlap": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "protected_layout": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "tables_and_formulas": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            },
+            "text_direction": {
+              "observation": "Synthetic contract assertion.",
+              "status": "passed"
+            }
+          },
+          "evidence_ref": "visual:v2:d1e930f66d4f74690c05219f2d64f19005ae9a5ec1fc42c8cd20ae7d6b420394",
+          "page": 6
+        }
+      ],
+      "render_ref": "render:v2:939c5fd794a7c11642061d7438bb60ddedce40f066fc579a29f060337b98c7ac",
+      "reviewer": {
+        "kind": "external_visual_reviewer",
+        "name": "synthetic-test-fixture",
+        "reviewed_at": "2026-09-23T00:00:00+00:00"
+      },
+      "schema_version": "docfit-final-visual-review/v1",
+      "source_document_sha256": "270c0d536da1e328c882cda409fc95a131d86851b817f538836313cad3b9ed03",
+      "source_render_ref": "render:v2:9d87dbdf21356e34c2ac8765d6e6b5044cf48a3aa8689ee36620ea524eb02002",
+      "status": "passed"
+    }
+  }
+}

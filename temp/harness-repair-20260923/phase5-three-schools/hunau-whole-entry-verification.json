@@ -1,0 +1,30 @@
+{
+  "verified_at": "2026-09-24T04:29:00.426735+00:00",
+  "verification_level": "fresh complete-input E2E attempt, terminal without publication",
+  "exit_code": 2,
+  "frozen_hash_checks": {
+    "inputs": true,
+    "runtime_source": true,
+    "skill": true
+  },
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/hunau-whole-entry-manifest.json",
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 15,
+    "response": 14,
+    "local_review": 13,
+    "local_rejected": 3,
+    "candidate_recorded": 11,
+    "run_failed": 1
+  },
+  "failure": {
+    "code": "semantic_query_time_budget_exhausted",
+    "message": "The semantic stage exceeded its remaining saved time allowance.",
+    "origin": "harness",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": []
+  },
+  "published_files": [],
+  "product_acceptance": false
+}

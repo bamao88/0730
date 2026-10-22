@@ -1,0 +1,14 @@
+{
+  "session_id": 51598,
+  "status": "terminal",
+  "confirmed_by": "write_stdin returned exit code 2",
+  "observed_at": "2026-09-24T06:28:29.479859+00:00",
+  "runtime_and_skill_frozen": false,
+  "runtime_worktree": "/Users/xpw/.codex/worktrees/harness-layout-evidence/template-extraction",
+  "runtime_commit": "aa5f42d",
+  "task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task",
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-manifest.json",
+  "frozen_hashes_reverified": true,
+  "exit_code": 2,
+  "failure": "unit_boundary_checkpoint_failed"
+}

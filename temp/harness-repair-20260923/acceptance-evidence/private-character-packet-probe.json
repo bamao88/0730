@@ -1,0 +1,47 @@
+{
+  "verification_level": "synthetic native SDK copy diagnostic on real source text, not natural school E2E",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/object-inventory.json",
+  "source_sha256": "2352ffca31c5f02fbf232d877e28beebc6c2b473686255fd66f31308b18d3efb",
+  "expected_part": {
+    "text": " 学术学位     专业学位",
+    "role": "fill_slot",
+    "field_id": "degree.type"
+  },
+  "results": [
+    {
+      "source_format": "actual reading packet with text_json",
+      "subtype": "success",
+      "is_error": false,
+      "output": {
+        "status": "complete",
+        "summary": "Returned single judgment over the source entry, with one fill_slot part. The U+F06F and U+F0FE render-sensitive glyphs remain in text; the U+0020 spaces at the boundaries of the Chinese labels are encoded in leading_whitespace/trailing_whitespace, leaving text containing the glyphs and the interior Chinese/spacing.",
+        "semantic_judgments": [
+          {
+            "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+            "parts": [
+              {
+                "text": "学术学位     专业学位",
+                "leading_whitespace": [
+                  {
+                    "codepoint": "U+0020",
+                    "count": 1
+                  }
+                ],
+                "trailing_whitespace": [
+                  {
+                    "codepoint": "U+0020",
+                    "count": 1
+                  }
+                ],
+                "role": "fill_slot",
+                "field_id": "degree.type"
+              }
+            ],
+            "reason": "Single-part assignment: the source entry maps to one fill_slot bound to field_id degree.type. The source contains two render-sensitive Private Use Area glyphs, U+F06F at offset 0 and U+F0FE at offset 10, which must be preserved literally in parts[].text per the render_sensitive rule (their codepoints are not in the whitespace-transport enum, so they cannot be moved into leading_whitespace/trailing_whitespace). The U+0020 spaces immediately adjacent to those glyphs (offset 1 between U+F06F and \"学术学位\"; offset 11 between U+F0FE and \"专业学位\") are standard whitespace and are transported via leading_whitespace (count 1) and trailing_whitespace (count 1) on the same part. text therefore begins with U+F06F, contains \"学术学位\" + the four interior spaces + \"专业学位\", and ends with U+F0FE, with no leading/trailing whitespace inside text. text_json \" 学术学位     专业学位\" confirms the literal characters copied into text. The four interior spaces between the labels are preserved literally inside text (not transported) because they are interior whitespace shared with the visible Chinese content."
+          }
+        ]
+      },
+      "exact_part_preserved": false
+    }
+  ]
+}

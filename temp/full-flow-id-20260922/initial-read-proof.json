@@ -1,0 +1,77 @@
+[
+  {
+    "school": "hunau",
+    "verification_level": "real input preparation and Tool projection only; no Agent or write proof",
+    "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "initial_inventory_digest": "ce34ab643ad28a1c7a36c7fb25edb412292fb9a63237943237a943351fc2ebec",
+    "entry_count": 599,
+    "windows": [
+      {
+        "limit": 3,
+        "windows": 200,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 17,
+        "windows": 36,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 200,
+        "windows": 3,
+        "same_ordered_ids": true
+      }
+    ],
+    "source_unchanged": true
+  },
+  {
+    "school": "njau",
+    "verification_level": "real input preparation and Tool projection only; no Agent or write proof",
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "initial_inventory_digest": "1f2995dabc5660ae6f897733843023361b0afd3c8342fc8e8c52b93f56cd7679",
+    "entry_count": 211,
+    "windows": [
+      {
+        "limit": 3,
+        "windows": 71,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 17,
+        "windows": 13,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 200,
+        "windows": 2,
+        "same_ordered_ids": true
+      }
+    ],
+    "source_unchanged": true
+  },
+  {
+    "school": "pku",
+    "verification_level": "real input preparation and Tool projection only; no Agent or write proof",
+    "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+    "initial_inventory_digest": "6edf23061f90e0f0ae5541c869d1e8e1b5272702a83ed65d60a30dc91c2669fd",
+    "entry_count": 525,
+    "windows": [
+      {
+        "limit": 3,
+        "windows": 175,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 17,
+        "windows": 31,
+        "same_ordered_ids": true
+      },
+      {
+        "limit": 200,
+        "windows": 3,
+        "same_ordered_ids": true
+      }
+    ],
+    "source_unchanged": true
+  }
+]

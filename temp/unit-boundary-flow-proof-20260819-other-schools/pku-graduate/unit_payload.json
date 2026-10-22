@@ -1,0 +1,173 @@
+{
+  "render_ref": "render:v2:c1c7a664fc07b37f72dafb9a302c7bcae09554b948d9375ac2303152d0a6abdb",
+  "units": [
+    {
+      "unit_id": "cover",
+      "unit_name": "封面",
+      "start_boundary": {
+        "page": 1,
+        "region": "visual boundary",
+        "seen_text": "Logo与校名"
+      },
+      "end_boundary": {
+        "page": 2,
+        "region": "visual boundary",
+        "seen_text": "二〇 年 月"
+      }
+    },
+    {
+      "unit_id": "copyright",
+      "unit_name": "版权声明",
+      "start_boundary": {
+        "page": 3,
+        "region": "visual boundary",
+        "seen_text": "版权声明"
+      },
+      "end_boundary": {
+        "page": 3,
+        "region": "visual boundary",
+        "seen_text": "打印学位审批材料页面下载"
+      }
+    },
+    {
+      "unit_id": "abstract_cn",
+      "unit_name": "中文摘要",
+      "start_boundary": {
+        "page": 4,
+        "region": "visual boundary",
+        "seen_text": "摘要"
+      },
+      "end_boundary": {
+        "page": 5,
+        "region": "visual boundary",
+        "seen_text": "关键词：城乡规划"
+      }
+    },
+    {
+      "unit_id": "abstract_en",
+      "unit_name": "英文摘要",
+      "start_boundary": {
+        "page": 6,
+        "region": "visual boundary",
+        "seen_text": "English Title of Your Thesis"
+      },
+      "end_boundary": {
+        "page": 6,
+        "region": "visual boundary",
+        "seen_text": "KEY WORDS"
+      }
+    },
+    {
+      "unit_id": "toc",
+      "unit_name": "目录",
+      "start_boundary": {
+        "page": 7,
+        "region": "visual boundary",
+        "seen_text": "目录"
+      },
+      "end_boundary": {
+        "page": 9,
+        "region": "visual boundary",
+        "seen_text": "北京大学学位论文原创性声明和使用授权说明"
+      }
+    },
+    {
+      "unit_id": "figure_list",
+      "unit_name": "图目录",
+      "start_boundary": {
+        "page": 10,
+        "region": "visual boundary",
+        "seen_text": "图目录"
+      },
+      "end_boundary": {
+        "page": 10,
+        "region": "visual boundary",
+        "seen_text": "图 3.3 使用下一页分隔符来划分章节"
+      }
+    },
+    {
+      "unit_id": "table_list",
+      "unit_name": "表目录",
+      "start_boundary": {
+        "page": 11,
+        "region": "visual boundary",
+        "seen_text": "表目录"
+      },
+      "end_boundary": {
+        "page": 11,
+        "region": "visual boundary",
+        "seen_text": "表4.1 测试数据"
+      }
+    },
+    {
+      "unit_id": "body",
+      "unit_name": "正文",
+      "start_boundary": {
+        "page": 12,
+        "region": "visual boundary",
+        "seen_text": "研究背景"
+      },
+      "end_boundary": {
+        "page": 33,
+        "region": "visual boundary",
+        "seen_text": "展望"
+      }
+    },
+    {
+      "unit_id": "references",
+      "unit_name": "参考文献",
+      "start_boundary": {
+        "page": 34,
+        "region": "visual boundary",
+        "seen_text": "参考文献"
+      },
+      "end_boundary": {
+        "page": 34,
+        "region": "visual boundary",
+        "seen_text": "如果参考文献软件自动加入"
+      }
+    },
+    {
+      "unit_id": "appendix",
+      "unit_name": "附录",
+      "start_boundary": {
+        "page": 35,
+        "region": "visual boundary",
+        "seen_text": "附录A 博士期间工作成果"
+      },
+      "end_boundary": {
+        "page": 35,
+        "region": "visual boundary",
+        "seen_text": "[2] 著作权1 软件著作权"
+      }
+    },
+    {
+      "unit_id": "acknowledgement_changelog",
+      "unit_name": "致谢及变更记录",
+      "start_boundary": {
+        "page": 36,
+        "region": "visual boundary",
+        "seen_text": "致谢"
+      },
+      "end_boundary": {
+        "page": 37,
+        "region": "visual boundary",
+        "seen_text": "2024.7.22"
+      }
+    },
+    {
+      "unit_id": "declarations",
+      "unit_name": "原创性声明和使用授权说明",
+      "start_boundary": {
+        "page": 38,
+        "region": "visual boundary",
+        "seen_text": "北京大学学位论文原创性声明和使用授权说明"
+      },
+      "end_boundary": {
+        "page": 39,
+        "region": "visual boundary",
+        "seen_text": "日期： 年 月 日"
+      }
+    }
+  ]
+}

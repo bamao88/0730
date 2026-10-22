@@ -1,0 +1,13 @@
+{
+  "blocker_codes": [],
+  "blocker_judgment_ids": [],
+  "candidate_files": [],
+  "failure_code": "template_materialization_readiness_incomplete",
+  "failure_status": "needs_input",
+  "has_agent_revision_packet": true,
+  "passed": false,
+  "receipt_exists": true,
+  "receipt_status": "needs_input",
+  "root": "temp/phase7-quality-gate-real-e2e-output-replay-20260827-170552/missing-body-variant-from-real-agent",
+  "status": "tool_failure"
+}

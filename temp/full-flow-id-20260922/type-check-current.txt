@@ -1,0 +1,2 @@
+src/docfit/tools/service.py:2576: error: Name "_visual_render_page_count" is not defined  [name-defined]
+Found 1 error in 1 file (checked 114 source files)

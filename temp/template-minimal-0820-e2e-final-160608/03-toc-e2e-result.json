@@ -1,0 +1,22 @@
+{
+  "unit": "03-toc",
+  "status": "completed",
+  "returncode": 2,
+  "elapsed_s": 124.0,
+  "output": "temp/template-minimal-0820-e2e-final-160608/03-toc/e2e",
+  "stdout_tail": "",
+  "stderr_tail": "{\n  \"schema_version\": 1,\n  \"status\": \"needs_input\",\n  \"checks\": [],\n  \"warnings\": [],\n  \"failure\": {\n    \"origin\": \"harness\",\n    \"code\": \"template_materialization_required\",\n    \"retryable\": true,\n    \"message\": \"Harness accepted the semantic_judgments set, but deterministic post-unit materialization is required before final artifacts can be built. The source may contain school fill controls, but it has no DocFit-owned slot. content-control markers.\",\n    \"suggested_actions\": [\n      \"Implement or run Harness-owned post-unit materialization from the accepted semantic judgments.\",\n      \"Do not ask the Agent to provide candidate paths, render handles, or delivery materials.\"\n    ]\n  }\n}\n",
+  "files": [
+    "input/field-registry.yaml",
+    "input/school-requirements.pdf",
+    "input/school-template.docx",
+    "work/.docfit/harness/object-inventory.json",
+    "work/.docfit/harness/semantic-judgments.json",
+    "work/.docfit/prepare-template-task.json",
+    "work/.docfit/template-agent-execution.json",
+    "work/.docfit/tool-call-audit.jsonl",
+    "work/.docfit/unit-boundary-checkpoint.json"
+  ],
+  "has_final_docx": false,
+  "has_fill_contract": false
+}

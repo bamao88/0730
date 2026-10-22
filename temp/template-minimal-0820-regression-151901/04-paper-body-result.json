@@ -1,0 +1,17 @@
+{
+  "unit": "04-paper-body",
+  "status": "completed",
+  "returncode": 143,
+  "elapsed_s": 192.1,
+  "output": "temp/template-minimal-0820-regression-151901/04-paper-body/postunit",
+  "stdout_tail": "",
+  "stderr_tail": "",
+  "files": [
+    "input/field-registry.yaml",
+    "input/school-requirements.pdf",
+    "input/school-template.docx",
+    "work/.docfit/prepare-template-task.json",
+    "work/.docfit/tool-call-audit.jsonl",
+    "work/.docfit/unit-boundary-checkpoint.json"
+  ]
+}

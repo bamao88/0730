@@ -1,0 +1,899 @@
+{
+  "covered_object_count": 228,
+  "document_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+  "judgment_count": 28,
+  "schema_version": 2,
+  "semantic_judgments": [
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Template authoring instruction with no student fill responsibility; keeping the sentence would leave tutorial text in a clean fillable template.",
+      "covered_object_ids": [
+        "obj-7fb7437fc9fc9a482ea7fa7b",
+        "obj-12c02dbb3a196aff3eaa34e3",
+        "obj-058189ea1236aede9b8dacea",
+        "obj-b674948bd81692f5da7aa87d",
+        "obj-2f01fd8dbe7d250b92ecac41",
+        "obj-a925cfe0a62ca3b4ca842fc0",
+        "obj-1af7723d70bc5dd28936e269",
+        "obj-5bf22cd773019248531114f5",
+        "obj-7d7ac85ae5c3cc158469000b",
+        "obj-dba0bbb9321fe7e5ee4b17ed",
+        "obj-ab4f5bd998fb14e13d61c86d",
+        "obj-305342eba444fb9cb72252a2",
+        "obj-3df5e92e9374f040b79f7515",
+        "obj-f01ca75970e5f5b939bde29f",
+        "obj-08ff6dde3f1dfbf2a7c5c3bb"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0001"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0001 is the school's global body format specification note (行距固定值22磅、上下页边距2.54厘米、左右页边距2.6厘米、“□”表示占1个字宽即2个字符的空格). It is author-facing guidance, not content a student fills, so the text is removed from the clean template but every rule it states must survive as document/style setup.",
+      "judgment_id": "jd-001",
+      "reason": "Deleting a format note is only safe after its semantics are migrated; this block is the single source of the unit's line spacing, margin, and character-width conventions.",
+      "replacement_or_carrier": "Page setup + body paragraph style of the clean template; the □ convention is consumed by the indent/label-gap obligations recorded on the slot and body judgments below.",
+      "semantic_role": "format_instruction",
+      "style_obligation": "Section page setup must carry top/bottom margin 2.54cm and left/right margin 2.6cm; body paragraph style must carry exact line spacing 22pt (adjustable only where figures/tables require). The □ convention resolves to one full character width (two characters) and is the basis for the 2-character indents and label gaps used throughout this unit."
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Parenthetical layout instructions are author-facing and must not remain visible in a fillable template.",
+      "covered_object_ids": [
+        "obj-47ab6c8e19c214a0faf66d7d",
+        "obj-1ee6cefa3007998d8e7cc09c",
+        "obj-26412a123306c83fea1b79d3",
+        "obj-ffdf79251c942cd42fb0162b",
+        "obj-c1d62605cc2db234d464b052",
+        "obj-2c71405cf86d5d58d55f2152",
+        "obj-23160d22b4dcb858bba94e96",
+        "obj-69202a9d3f7e0c5c1a46f794",
+        "obj-249abd34455e4ae82566f81b",
+        "obj-09c270d6a8f04291dedf45d9",
+        "obj-54a8a561becf884ac6acdc2f",
+        "obj-a996910c6741d3df90ca8ab6",
+        "obj-a1ef217423d73c8affa83967",
+        "obj-d9a4a21be07514b7d58d2bb5",
+        "obj-7d79b403d6825168069c8367",
+        "obj-29e7414a1950435cde8d6bba",
+        "obj-804ff84cd46aa4d8b75c609a",
+        "obj-9b62b79c398feebea31691ee",
+        "obj-ab016b3f406e4c0b18bac865",
+        "obj-e482582bbfdbb9f80d92fd02",
+        "obj-35ee06083f5de1116a26c3f6",
+        "obj-44f1eb6f6ed13ea5102a9683",
+        "obj-eaf26a04a3e7c29983a33a81",
+        "obj-788b794ff4c40c1d567222c8",
+        "obj-e734f48c0cd111f7e1448b0b",
+        "obj-2f1a511dadfc5baddbf3df29",
+        "obj-909da3cc1bde683a91d8380b"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0002",
+        "u-paper-body:block-0007",
+        "u-paper-body:block-0010",
+        "u-paper-body:block-0015",
+        "u-paper-body:block-0018",
+        "u-paper-body:block-0040",
+        "u-paper-body:block-0044",
+        "u-paper-body:block-0047"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "These blocks are vertical-spacing instruction notes (（小二号字空两行）、（五号字空一行）×4、（小四号字空一行）、（五号字空二行）、（小四号字空二行）). Each note text is deleted, but the blank line(s) it prescribes must remain as layout spacing at the stated size, because they establish the school's vertical rhythm between the title block, the Chinese abstract face, the English abstract face, the body, references, acknowledgement, and appendix.",
+      "judgment_id": "jd-002",
+      "reason": "The instruction text and the spacer it describes occupy the same paragraphs, so the school's spacing rule is preserved by emptying rather than removing the paragraphs.",
+      "replacement_or_carrier": "Empty spacer paragraphs retained at each stated size and count; only the instruction text is removed.",
+      "semantic_role": "format_instruction",
+      "style_obligation": "block-0002: two blank lines at 小二号 before the Chinese title. block-0007, block-0010, block-0015, block-0018: one blank line at 五号 (before 摘要 face, before the English title, before the English abstract, before the body). block-0040: one blank line at 小四号 before 参考文献. block-0044: two blank lines at 五号 before 致谢. block-0047: two blank lines at 小四号 before 附录."
+    },
+    {
+      "bound_field_id": "thesis.title.zh",
+      "bound_field_ids": [
+        "thesis.title.zh"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "The trailing （小二黑体，加粗，居中）is a format instruction whose rule moves to the slot style.",
+      "covered_object_ids": [
+        "obj-d6e3909561edcfa3808d44be",
+        "obj-7db201bacbe915d3582e6665"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0003"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0003 (毕业论文（设计）中文题目（小二黑体，加粗，居中）) is the Chinese thesis title fill position at the head of the body. The visible words are a placeholder describing the title, not fixed school text, so the paragraph becomes the Chinese title slot and the inline format annotation is removed.",
+      "judgment_id": "jd-003",
+      "reason": "Registry thesis.title.zh (cardinality one, text, required, student_source) matches this position's meaning, content type, and language.",
+      "registry_field": "thesis.title.zh",
+      "semantic_field": "论文中文题目",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot must carry 小二号 (18pt) 黑体, bold, centered — transferred from the deleted annotation and matching the observed effective format."
+    },
+    {
+      "bound_field_id": "author.name.zh",
+      "bound_field_ids": [
+        "author.name.zh"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "（或×□×）and （五号宋体居中）are format instructions; their rules move to the slot's rendering and style obligation.",
+      "covered_object_ids": [
+        "obj-9001b54495051753d1b0cd9e",
+        "obj-9ccd81f5167ff7cca1f5780b",
+        "obj-ba80cb5a1f9c9cc9e13a50c2",
+        "obj-5a164c61543a0176e6f012c6",
+        "obj-c1f793a35729398bbd8c2cd2",
+        "obj-4fd197058118fb60ed2c27ac",
+        "obj-d0540c573f8e46cf56cf3659",
+        "obj-6d5c5dc09a538f143e46981e"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0004"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0004 (学□□生：×××（或×□×）  （五号宋体居中）) carries the fixed school label 学生 plus the author name placeholder. The label and its full-width internal gap stay as school typography; only ××× becomes the fillable value.",
+      "judgment_id": "jd-004",
+      "reason": "Registry author.name.zh (作者中文姓名, cardinality one) matches the author signature position; the label itself is fixed content and is not bound.",
+      "registry_field": "author.name.zh",
+      "semantic_field": "学生姓名（作者署名）",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered. Label typography 学□□生 keeps the one-character-width gap. Name rendering rule from （或×□×）: a two-character name is typeset with a one-character-width gap between the two characters so its width matches three-character names."
+    },
+    {
+      "bound_field_id": "advisor.name.zh",
+      "bound_field_ids": [
+        "advisor.name.zh"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "No format annotation inside this block; only the placeholder value is replaced.",
+      "covered_object_ids": [
+        "obj-c8422900485acd9a95fffe0a",
+        "obj-02983e05a80431d76279417d"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0005"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0005 (指导老师：×××) carries the fixed school label 指导老师 plus the advisor name placeholder; only ××× becomes the fillable value.",
+      "judgment_id": "jd-005",
+      "reason": "Registry advisor.name.zh matches (导师中文姓名, cardinality one). Registry explicitly warns 职称 must not be auto-added, and this position shows a name only, so no advisor.title slot is created here.",
+      "registry_field": "advisor.name.zh",
+      "semantic_field": "指导教师中文姓名",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered, inheriting the same author-line format that block-0004's annotation establishes for this signature group."
+    },
+    {
+      "bound_field_id": "author.department",
+      "bound_field_ids": [
+        "author.department"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "No format annotation in this block.",
+      "covered_object_ids": [
+        "obj-38a7f85fceb9e8b1d423e5b0",
+        "obj-ec36fe386af5369306b249d3",
+        "obj-a611106793092f42d376d377",
+        "obj-09d20fc596902f2d5e385522",
+        "obj-dc259d90d4d953627c1c0dc6",
+        "obj-f25df361471949527976850d"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0006"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0006 ((湖南农业大学××××学院，长沙 410128)) is the author affiliation line. 湖南农业大学, 长沙 410128 and the parentheses are fixed school content; only the ×××× college blank is fillable.",
+      "judgment_id": "jd-006",
+      "mechanism": "The slot carries only the college name run. Because the printed 学院 suffix belongs to the fixed skeleton, a department value that already ends in 学院 must not duplicate the suffix.",
+      "reason": "Registry author.department (院系, cardinality one) matches the college blank; the university name and city/postcode are fixed institutional content and are deliberately not bound to any field.",
+      "registry_field": "author.department",
+      "semantic_field": "学院名称（作者单位）",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) 宋体, centered, inline within the fixed affiliation skeleton."
+    },
+    {
+      "bound_field_id": "abstract.zh",
+      "bound_field_ids": [
+        "abstract.zh"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "（小四黑体）and （五号宋体）are format instructions whose rules move to the label and slot styles.",
+      "covered_object_ids": [
+        "obj-25675fc946b44119591df278",
+        "obj-d0c7a2951d65789c90f11303",
+        "obj-cd3c1d53157625663a97243f",
+        "obj-ecf6b489fd7ea72ac12d9610",
+        "obj-73ceb103dd7fe4f6025f8523",
+        "obj-486782c513ee09c32bf919b6",
+        "obj-c278966b189861bb616e7bec",
+        "obj-1852ac5a4d70b4a2da5f6920"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0008"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0008 (□□摘□要（小四黑体）：……（五号宋体）) is the Chinese abstract face: fixed label 摘要 plus the abstract body placeholder ……. The label stays, …… becomes the abstract slot.",
+      "judgment_id": "jd-007",
+      "reason": "Registry abstract.zh (rich_text, cardinality one, required) matches the abstract body responsibility; the label is fixed content and is not bound.",
+      "registry_field": "abstract.zh",
+      "semantic_field": "中文摘要正文",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Label 摘要 renders 小四号 黑体 and keeps its one-character-width internal gap (摘□要); the abstract value renders 五号 宋体; the paragraph keeps the leading □□ two-character indent."
+    },
+    {
+      "bound_field_id": "keywords.zh",
+      "bound_field_ids": [
+        "keywords.zh"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "Example keyword placeholders are replaced by the slot; the separator convention is preserved.",
+      "covered_object_ids": [
+        "obj-d5243fef4880d08f2854b75d",
+        "obj-cf789e96ac13cbf37b976c3b",
+        "obj-0b4ffb234e6ecd13f7a4d29d",
+        "obj-f6075698a02be62945c599f1",
+        "obj-3c62bed9e5b4337898d26d10",
+        "obj-1c0ffbd6de9feee63de4a6c6",
+        "obj-74b1f399be6db918ee395c53",
+        "obj-29e4d5cf8d3b774f82ea311b",
+        "obj-fc3e7581d11d23ed82376696",
+        "obj-d79f288d76e36ed718240f10"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0009"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0009 (□□关键词：×××；×××；×××；×××) is the Chinese keywords face: fixed label 关键词 plus example keyword placeholders. The whole placeholder list becomes one keywords slot.",
+      "judgment_id": "jd-008",
+      "mechanism": "Registry keywords.zh has cardinality one, so the slot carries the entire keyword list as a single value; the four ××× placeholders demonstrate the school's typical count and separator, not a fixed requirement of exactly four.",
+      "reason": "Registry keywords.zh matches, and its normalization already excludes the 关键词： label, confirming the label is fixed content outside the value.",
+      "registry_field": "keywords.zh",
+      "semantic_field": "中文关键词",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Label 关键词 renders 小四号 黑体, value renders 五号 宋体, paragraph keeps the leading □□ two-character indent; the full-width semicolon ；remains the school's keyword separator."
+    },
+    {
+      "bound_field_id": "thesis.title.en",
+      "bound_field_ids": [
+        "thesis.title.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "（四号Times New Roman，加粗，居中）is a format instruction whose rule moves to the slot style.",
+      "covered_object_ids": [
+        "obj-8dc8f2f720dadd7d43c8985b",
+        "obj-eee7759ef282ccd7ac521972",
+        "obj-5d39cec5b17f1e985aaff800",
+        "obj-78c57ab1e6499b551feeddb4",
+        "obj-a437d4d861a21cbbdad7d7dd"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0011"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0011 (Title of Graduation Paper （四号Times New Roman，加粗，居中）) is the English thesis title fill position; the visible English words are a placeholder, not fixed school text.",
+      "judgment_id": "jd-009",
+      "reason": "Registry thesis.title.en (英文论文题目, cardinality one) matches this position and language.",
+      "registry_field": "thesis.title.en",
+      "semantic_field": "论文英文题目",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 四号 (14pt) Times New Roman, bold, centered."
+    },
+    {
+      "bound_field_id": "author.name.en",
+      "bound_field_ids": [
+        "author.name.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "（五号Times New Roman，居中）is a format instruction whose rule moves to the slot style.",
+      "covered_object_ids": [
+        "obj-f6e983db7a9aeb7b39c56812",
+        "obj-0226fa421c90b1d46db1425b",
+        "obj-1207fc54ecdd9ad5065e5624",
+        "obj-97a924e97727507575a568b7",
+        "obj-3910ab8daeaca5a797450055"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0012"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0012 (Student:×××  （五号Times New Roman，居中）) carries the fixed English label Student: plus the author name placeholder.",
+      "judgment_id": "jd-010",
+      "reason": "Registry author.name.en (作者英文姓名, used on the English abstract face) matches; the Student: label is fixed content.",
+      "registry_field": "author.name.en",
+      "semantic_field": "作者英文姓名",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered."
+    },
+    {
+      "bound_field_id": "advisor.name.en",
+      "bound_field_ids": [
+        "advisor.name.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "No format annotation in this block.",
+      "covered_object_ids": [
+        "obj-69b983b0e50c249025e61f3b",
+        "obj-de2ef292ccc82308668f1221"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0013"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0013 (Tutor:××××) carries the fixed English label Tutor: plus the advisor name placeholder.",
+      "judgment_id": "jd-011",
+      "reason": "Registry advisor.name.en matches the advisor's English name responsibility at this position; the Tutor: label is fixed content.",
+      "registry_field": "advisor.name.en",
+      "semantic_field": "导师英文姓名",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered, matching the English author line."
+    },
+    {
+      "bound_field_id": "author.department.en",
+      "bound_field_ids": [
+        "author.department.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "No format annotation in this block.",
+      "covered_object_ids": [
+        "obj-a52c926a3f4a23e4e8186640"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0014"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0014 ((College of×××××××, Hunan Agricultural University, Changsha 410128, China)) is the English affiliation line. College of, Hunan Agricultural University, Changsha 410128, China and the parentheses are fixed; only the ××××××× college blank is fillable.",
+      "judgment_id": "jd-012",
+      "mechanism": "The slot carries only the college-name run after the fixed words College of, so an English department value must not repeat the College of prefix.",
+      "reason": "Registry author.department.en matches the English college blank; the university name, city, postcode, and country are fixed institutional content.",
+      "registry_field": "author.department.en",
+      "semantic_field": "院系英文名称",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 五号 (10.5pt) Times New Roman, centered, inline within the fixed English affiliation skeleton."
+    },
+    {
+      "bound_field_id": "abstract.en",
+      "bound_field_ids": [
+        "abstract.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "(小四号Times New Roman， 加粗) and (五号Times New Roman) are format instructions whose rules move to the label and slot styles.",
+      "covered_object_ids": [
+        "obj-7f89cc90997a79ebb75dae68",
+        "obj-aad4735f4c970671be50361a",
+        "obj-4cd860a4ae4a0001b624b0b7",
+        "obj-2bbe369c543012731aa3587a",
+        "obj-d0b6029cb7e0f68e569bc29d",
+        "obj-07b082210ec9e38984040361",
+        "obj-6a70b71d6b6583cd24aa3672",
+        "obj-4144d275ca5541b34b6b04fa",
+        "obj-b05b711c80bb6396c0200334",
+        "obj-ac5c3ecc46ffeb8cbd766cda",
+        "obj-332d9f97af447d34621c333b",
+        "obj-0c4c4af6cbd3a222baa6b84a"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0016"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0016 (□□Abstract(小四号Times New Roman， 加粗):……(五号Times New Roman)) is the English abstract face: fixed label Abstract plus the abstract body placeholder …….",
+      "judgment_id": "jd-013",
+      "reason": "Registry abstract.en (rich_text, cardinality one) matches the English abstract body; the label is fixed content.",
+      "registry_field": "abstract.en",
+      "semantic_field": "英文摘要正文",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Label Abstract renders 小四号 Times New Roman bold; the abstract value renders 五号 Times New Roman; the paragraph keeps the leading □□ two-character indent."
+    },
+    {
+      "bound_field_id": "keywords.en",
+      "bound_field_ids": [
+        "keywords.en"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "Example keyword placeholders are replaced by the slot.",
+      "covered_object_ids": [
+        "obj-6a71b68de694055a413545ee",
+        "obj-adadcec8edc6cff5a68463b4",
+        "obj-fbd6d8b1ec6482c18d554860",
+        "obj-ecc37fc5401eaf41e3989ddd",
+        "obj-3766212aa581131d4abfda43",
+        "obj-b2cbcb2f6a44263da670092b",
+        "obj-4b4067b57be074c04ad3a3a4",
+        "obj-8b8b08a7d0d3e271318f7788"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0017"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0017 (□□Key words: ×××； ×××；×××； ×××) is the English keywords face: fixed label Key words: plus example placeholders, bound as one keywords slot.",
+      "judgment_id": "jd-014",
+      "mechanism": "Registry keywords.en has cardinality one, so the slot carries the whole English keyword list as a single value.",
+      "reason": "Registry keywords.en matches; its normalization excludes the label, confirming Key words: is fixed content outside the value.",
+      "registry_field": "keywords.en",
+      "semantic_field": "英文关键词",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Label renders 小四号 Times New Roman bold, value renders 五号 Times New Roman, paragraph keeps the leading □□ two-character indent, and the full-width semicolon ；remains the separator this school uses even in the English list. Preserve the observed label casing Key words: rather than normalizing it to KEY WORDS."
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Bracketed applicability notes are template guidance; leaving them visible would imply the student must keep both body structures.",
+      "condition": "block-0019 governs the 农理工科类 (agriculture/science/engineering) body structure; block-0029 governs the 文法经管类 (humanities/law/economics/management) body structure. The two are mutually exclusive — a paper uses one track.",
+      "covered_object_ids": [
+        "obj-1048c702ccc4aebece4d88a4",
+        "obj-25211ef7ee2cba2543064901"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0019",
+        "u-paper-body:block-0029"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Blocks 0019 (（以下农理工科类用）) and 0029 (（以下文法经管类用）) are discipline-track selection notes: they declare that the body structure demonstrated after each note applies to one discipline family only. The note texts are deleted from the clean template, but the condition they carry is migrated onto the two body.chapters variants rather than discarded.",
+      "judgment_id": "jd-015",
+      "reason": "These notes are the only school evidence that the two numbering systems are conditional alternatives rather than a single sequence, so their rule must survive as variant conditions even though the visible text is author-facing.",
+      "replacement_or_carrier": "Migrated into jd-016 (variant_role=primary, variant_id body.chapters.agriculture_science_engineering) and jd-017 (variant_role=alternate, variant_id body.chapters.humanities_law_economics_management) as variant_condition and selection_condition.",
+      "semantic_role": "conditional_content"
+    },
+    {
+      "clean_template_treatment": "transfer_style_to_slot",
+      "cleanup_reason": "Specimen titles (前言, ××××, 结论) are example values; the reusable capability, not the sample wording, is what the template must keep.",
+      "covered_object_ids": [
+        "obj-9c75af723e49393abaadf579",
+        "obj-8e8b4c547beef157d5706376",
+        "obj-65415752601900eab105d216",
+        "obj-7f1648f53fe53d26802e5493",
+        "obj-ebb52b31207ecfef49f95599",
+        "obj-0477ce6579918409dddb7c3e",
+        "obj-e1853331f7afe9661317c7b9",
+        "obj-4dd3ace8024db9e613ca1b17",
+        "obj-b9029cb83dcc920f5bce491e",
+        "obj-6762321e7f70fdb5441c6993",
+        "obj-ef32d92b235e9fb65cd735f4",
+        "obj-b1f6ac474bd36b2dd4ef7ea3",
+        "obj-a64f1b37ab51fe6807a1d786",
+        "obj-9e6cdb7e8b22d8cbd0095dfb",
+        "obj-e5f3f06393533b7a8daf0f5e",
+        "obj-309c5ee21412f6f8001f3388",
+        "obj-a8f474588bef32a39d8d5abf",
+        "obj-8193c3466c3008dd68d4571b",
+        "obj-300914dda9099efafc806937",
+        "obj-6e891bdf481a7a5f45d9bbdf",
+        "obj-859ea8c815c14c8746127293",
+        "obj-f3a9cdc2589570cb2027dfb9",
+        "obj-7c9f68b90b037c18113b4266",
+        "obj-ea7a8a945f78b0d6fed6a764",
+        "obj-d10e36f691e35bfba61b17a8",
+        "obj-994cdab6767eb1800a1f2537",
+        "obj-df0f2b215c5eb9085a762609",
+        "obj-4a00a12f0bed6d940ff95821",
+        "obj-2048980dc20c8dbdc96f0390",
+        "obj-e8a2c7226cafb82af396eb35",
+        "obj-db864dd89596b4643c54b93f"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0020",
+        "u-paper-body:block-0021",
+        "u-paper-body:block-0022",
+        "u-paper-body:block-0023",
+        "u-paper-body:block-0024",
+        "u-paper-body:block-0025",
+        "u-paper-body:block-0027",
+        "u-paper-body:block-0028"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Blocks 0020-0025, 0027, 0028 are the 农理工科类 body representative structure and become the one reusable body interface of the clean template. Decimal numbering expresses the hierarchy: 1 前言, 2 ××××, 5 结论 are chapter titles; 2.1 is the next level down; 2.1.1 is the level below that; the □□-indented paragraphs (including the one carrying the [1] citation) are ordinary body paragraphs. Style capability is transferred to the slot structure and the specimen wording is not kept as content.",
+      "judgment_id": "jd-016",
+      "members": [
+        "body.heading.outline1",
+        "body.paragraph",
+        "body.heading.outline1",
+        "body.heading.outline2",
+        "body.heading.outline3",
+        "body.paragraph",
+        "body.heading.outline1",
+        "body.paragraph"
+      ],
+      "output_effect": "The clean template exposes exactly one fillable body chapter structure with three heading levels and a body paragraph carrier; the sample chapter numbers 1/2/5 demonstrate repetition and do not become required example chapters.",
+      "reason": "Members come from one structurally continuous school body block in true document order, so each retained heading level and the paragraph carrier each have a real style bearer from this school's own material.",
+      "selection_condition": "Chosen as primary because this track is presented first in both the template and the requirements document, its decimal hierarchy maps directly onto the registered outline1/outline2/outline3 numbering mechanism, and the issuing school is an agricultural university whose dominant disciplines fall in this track.",
+      "semantic_role": "body_representative",
+      "structure_ref": "body.chapters",
+      "style_obligation": "outline1: 小三号 黑体, ordinal typed flush at the left margin, one character-width gap before the title text. outline2: 四号 黑体, same flush-ordinal plus one-gap rule. outline3: 小四号 黑体, same flush-ordinal plus one-gap rule. body.paragraph: Chinese text 小四号 宋体 and Western text 小四号 Times New Roman, with a □□ two-character first-line indent. A fourth level is normally not used; when needed, （1） runs inline inside a paragraph and must never become a standalone heading level.",
+      "variant_condition": "Applies when the paper belongs to 农理工科类, per the deleted note in block-0019.",
+      "variant_id": "body.chapters.agriculture_science_engineering",
+      "variant_role": "primary"
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Duplicate body specimen for a non-selected discipline track; its hierarchy survives as this variant's member map rather than as visible sample text.",
+      "covered_object_ids": [
+        "obj-04923293b4484d3dddb075e4",
+        "obj-0b9facc9c252dc8f61f3f98b",
+        "obj-6dea84a6c04cef5afae1b783",
+        "obj-33dea2aa8ac40f32940e1480",
+        "obj-b4b9e0c1318590ab11098068",
+        "obj-b5d5a208e05f25ed2a50b474",
+        "obj-287df9e55cb1192c537651da",
+        "obj-68a406918a8081cf444f131a",
+        "obj-1b34f8ecbf205be72cf018a4",
+        "obj-d1876390430bf3fc73e18df9",
+        "obj-08a255307605b78023a09e71",
+        "obj-ece766b20e08cd873058ac35",
+        "obj-85f2f1e5104015b94815663f",
+        "obj-bf1536f9c3bd0b0949fd49bb",
+        "obj-4640b390723476d92c90959d",
+        "obj-37f78e8d2a844f3e76d25382",
+        "obj-dc0a5790802ce37a9bb319b0",
+        "obj-9aa1b2504c78db3d38f08da6",
+        "obj-cd09f893752a37d9da149fd1",
+        "obj-056cada60a21464400d3f5ee",
+        "obj-947b0623d9c8467457ff1dbb",
+        "obj-b61556000b817f7d45d23f60",
+        "obj-f2fcfd9d7d7b28f85da5c181",
+        "obj-eae26fb2489bd075db68616d",
+        "obj-0f72528d8d2533b95221665a",
+        "obj-ed7bea306c04a85b69821dd6",
+        "obj-ee0e1014b27d44c6200993ef",
+        "obj-7be894ab8b56badd91e075e1",
+        "obj-ba19f5ab189f6c40532d0d79",
+        "obj-9a24ebc71c29ff8e6bfa4b68"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0030",
+        "u-paper-body:block-0031",
+        "u-paper-body:block-0032",
+        "u-paper-body:block-0033",
+        "u-paper-body:block-0034",
+        "u-paper-body:block-0035",
+        "u-paper-body:block-0038",
+        "u-paper-body:block-0039"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Blocks 0030-0035, 0038, 0039 are the 文法经管类 body representative structure, using the school's other numbering system: 一、 and 二、 and 五、结束语 are chapter titles, （一） is the next level down, 1、 is the level below that, and the □□-indented paragraphs (导入语 paragraph, the [1] citation paragraph, the closing paragraph) are ordinary body paragraphs. It is recorded as an alternate variant with a full member map, and its specimen blocks are removed so the clean template does not ship two competing body interfaces.",
+      "judgment_id": "jd-017",
+      "mechanism": "Branching is expressed only through variant_id, variant_role, and the conditions above; structure_ref stays canonical body.chapters so the branch never leaks into the structure identity.",
+      "members": [
+        "body.paragraph",
+        "body.heading.outline1",
+        "body.heading.outline1",
+        "body.heading.outline2",
+        "body.heading.outline3",
+        "body.paragraph",
+        "body.heading.outline1",
+        "body.paragraph"
+      ],
+      "reason": "The alternate hierarchy is real school semantics and must be preserved as a variant record, but keeping its specimen paragraphs would leave a duplicate fillable body interface and imply the student must fill two body structures.",
+      "selection_condition": "Not materialized in this clean template because jd-016 is primary and a reusable template must expose one body structure. This member map is the recorded basis for re-materializing the 一、/（一）/1、 hierarchy if the school or the student's discipline selects this track.",
+      "semantic_role": "body_representative",
+      "structure_ref": "body.chapters",
+      "style_obligation": "If this variant is selected: outline1 小三号 黑体 flush left with 一、 style ordinals; outline2 四号 黑体 flush left with （一） ordinals; outline3 小四号 黑体 with 1、 ordinals; body.paragraph Chinese 小四号 宋体 / Western 小四号 Times New Roman with □□ two-character first-line indent; the fourth level （1） stays inline and never becomes a standalone heading.",
+      "variant_condition": "Applies when the paper belongs to 文法经管类, per the deleted note in block-0029; mutually exclusive with the primary track.",
+      "variant_id": "body.chapters.humanities_law_economics_management",
+      "variant_role": "alternate"
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Ellipsis-only paragraphs would appear as stray content in a clean fillable template.",
+      "covered_object_ids": [
+        "obj-6ae4a90f505f30ea92ef1934",
+        "obj-a55573e7e9c1d858f7c6194e",
+        "obj-f56a030ccc385f78d301b727"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0026",
+        "u-paper-body:block-0036",
+        "u-paper-body:block-0037"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Blocks 0026, 0036, 0037 are standalone …… continuation markers inside the two body specimens, signalling that more chapters follow. They are author-facing repetition markers, not body structure members and not content carriers, so they are deleted and excluded from the body structure judgments.",
+      "judgment_id": "jd-018",
+      "reason": "Treating an ellipsis marker as a structure member would bind a meaningless block to a Registry field and break one-to-one member correspondence in jd-016 and jd-017.",
+      "replacement_or_carrier": "Repeatability is already carried by Registry body.chapters (cardinality many) and its many-valued heading and paragraph children, so no capability is lost by deleting the markers.",
+      "semantic_role": "author_instruction"
+    },
+    {
+      "clean_template_treatment": "keep",
+      "cleanup_reason": "(小三号黑体) is a format instruction whose rule moves to the heading style; the heading text itself stays.",
+      "covered_object_ids": [
+        "obj-5538731523d7fd9e2141cca0",
+        "obj-fbc16d81fe921eb53a3379d2",
+        "obj-424cf5b7e298fde2316d09a7",
+        "obj-38fb93215d10895785aaa2b1"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0041"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0041 (参考文献 (小三号黑体)) is the school-mandated references section heading. The heading text 参考文献 is fixed content and is kept; only the inline format annotation is removed.",
+      "judgment_id": "jd-019",
+      "reason": "The heading names a required school section and its wording does not vary per student, so it is fixed content rather than a fill position.",
+      "semantic_role": "fixed_content",
+      "style_obligation": "Heading renders 小三号 黑体, flush at the left margin as observed. No Registry binding — a fixed section heading is not a student field."
+    },
+    {
+      "bound_field_id": "references.entries",
+      "bound_field_ids": [
+        "references.entries"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "The sample author/journal wording is an example value replaced by the slot; (五号宋体) is a format instruction whose rule moves to the entry style.",
+      "covered_object_ids": [
+        "obj-573c0b851b7d4230e42b8f73",
+        "obj-055a8eb23ec2b27a55ea7d44",
+        "obj-70974b4a4522ec80ac653d07",
+        "obj-6f76107105a0eb6df11e8af6",
+        "obj-fe744ace8f1fd6115364598c",
+        "obj-f07b194e42244e0352198f00",
+        "obj-5dd6bf9194b66c34653a869d",
+        "obj-3173289d1de95a2d80cb8a67",
+        "obj-70d010c9f84ced2fc6d3efbd",
+        "obj-d0c9aa101bd6af0ae56ba1e9",
+        "obj-6c89a59e9282fb398d181bcb",
+        "obj-592de95d52dbd0ad02a159b1",
+        "obj-9c62e75d3d94f7ff4f9604d2"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0042"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0042 ([1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. (五号宋体)) is the only fill position for reference entries and simultaneously demonstrates the school's citation format. It becomes the references entry slot, and the citation pattern is retained as the school's format obligation for the fill stage.",
+      "judgment_id": "jd-020",
+      "mechanism": "Registry references.entries has cardinality many, so one entry carrier serves the whole numbered list; the single [1] sample is not kept as a required first reference.",
+      "reason": "references.entries (rich_text, many, required) matches the responsibility exactly; body.paragraph was deliberately not reused here since body.* fields belong only to the body representative structure.",
+      "registry_field": "references.entries",
+      "semantic_field": "参考文献条目",
+      "semantic_role": "example_value",
+      "style_obligation": "Entries render 五号 宋体 with bracketed sequence numbers [1], [2], … . The school citation pattern 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B. must be carried as the reference format rule, including the [J] document-type marker and full-width punctuation."
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Ellipsis-only paragraph would remain as stray content in a clean template.",
+      "covered_object_ids": [
+        "obj-41494017c2baab04b7be03a2"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0043"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0043 (……) is the continuation marker under 参考文献 indicating that further numbered references follow. It is deleted.",
+      "judgment_id": "jd-021",
+      "reason": "The marker only shows repetition of the entry above; it is not a separate reference responsibility.",
+      "replacement_or_carrier": "Registry references.entries (cardinality many) already carries an unbounded numbered list, so the marker adds no capability.",
+      "semantic_role": "author_instruction"
+    },
+    {
+      "clean_template_treatment": "keep",
+      "cleanup_reason": "(小三号黑体，居中) is a format instruction whose rule moves to the heading style.",
+      "covered_object_ids": [
+        "obj-6385edcd8fa1970492565ef2",
+        "obj-8066356516e91148be163fd9",
+        "obj-fecab28c526908cecebc3355",
+        "obj-a6aff35d7aba7f5eaa51b6e9",
+        "obj-6f22793ac24bb98ce42b29b4",
+        "obj-fb529fe7c11f9a807f20a8de"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0045"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0045 (致□□谢 (小三号黑体，居中)) is the school-mandated acknowledgement section heading. The heading text is fixed content and is kept, including its full-width internal spacing; only the inline format annotation is removed.",
+      "judgment_id": "jd-022",
+      "reason": "Fixed school section heading whose wording does not vary per student; note that unlike 参考文献 and 附录 this heading is centered, so the difference must not be flattened.",
+      "semantic_role": "fixed_content",
+      "style_obligation": "Heading renders 小三号 黑体, centered, and preserves the 致□□谢 layout — two character-width gaps between 致 and 谢 per the unit's □ convention. No Registry binding."
+    },
+    {
+      "bound_field_id": "acknowledgement.body",
+      "bound_field_ids": [
+        "acknowledgement.body"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "The ×××老师 sample sentence is an example value replaced by the slot; (小四号宋体) is a format instruction whose rule moves to the slot style.",
+      "covered_object_ids": [
+        "obj-83db664a2752abf4fb9526e9",
+        "obj-b9b09e33414599f8b32461d0",
+        "obj-78ba108a3e5315ffb7c5fb9d",
+        "obj-0db2a111e4f67f269d152713",
+        "obj-7b3f3f85c27e6170f6686a13",
+        "obj-7a7c9fca30c6f1e924ffc1ae",
+        "obj-2f2a4dc674c98e748104f42f",
+        "obj-a3a2ab84bf2da0157479acac"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0046"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0046 (本论文是在×××老师的悉心指导和热情关怀下完成的……。(小四号宋体)) is a sample acknowledgement sentence and the only fill position for acknowledgement text. It becomes the acknowledgement slot; the sample wording is not kept as fixed school text because it embeds a placeholder teacher name.",
+      "judgment_id": "jd-023",
+      "reason": "Registry acknowledgement.body (rich_text, optional, zh) matches this responsibility; body.paragraph was not reused because body.* fields are reserved for the body representative structure.",
+      "registry_field": "acknowledgement.body",
+      "semantic_field": "致谢正文",
+      "semantic_role": "example_value",
+      "style_obligation": "Slot renders 小四号 宋体 with the school's body first-line indent as shown in the specimen."
+    },
+    {
+      "clean_template_treatment": "keep",
+      "cleanup_reason": "(小三号黑体) is a format instruction whose rule moves to the heading style.",
+      "covered_object_ids": [
+        "obj-88be75c6f3fe25d8b02bdcda",
+        "obj-d299cb66acc8e332a77d29dd",
+        "obj-84da0fe4020dbddcbaa5445b",
+        "obj-80c1e8333343c588715106c6"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0048"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0048 (附录(小三号黑体)) is the school-mandated appendix section heading. The heading text 附录 is fixed content and is kept; only the inline format annotation is removed.",
+      "judgment_id": "jd-024",
+      "reason": "Fixed school section heading whose wording does not vary per student.",
+      "semantic_role": "fixed_content",
+      "style_obligation": "Heading renders 小三号 黑体, flush at the left margin as observed. No Registry binding."
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Duplicate appendix specimen; the naming and multiplicity rules survive on the retained appendix interface.",
+      "covered_object_ids": [
+        "obj-2039180833cf45d1b6978fba",
+        "obj-b07b565c9ded6d1b93b62bf1",
+        "obj-e7cf323e44786c10c23a5126",
+        "obj-35ab3de14e731f93e8f6dfc1",
+        "obj-31c126fbb2be289547afe74d"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0049",
+        "u-paper-body:block-0050"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Blocks 0049 (附录1……（小四号宋体）) and 0050 (附录2……) are appendix enumeration samples showing that a paper may carry several appendices named 附录1, 附录2, … . They describe the same responsibility as the real appendix layout in blocks 0052-0053, so they are deleted instead of being materialized as extra appendix interfaces.",
+      "judgment_id": "jd-025",
+      "reason": "This unit consistently uses enumerated samples to show repetition (chapters 1/2/5, reference [1] plus ……, appendices 附录1/附录2 plus ……), and no school statement in the template or the requirements document asks for a separate appendix index list. Keeping both groups would double-materialize the same appendix responsibility and imply the student must fill 附录1 twice.",
+      "replacement_or_carrier": "The single appendix interface lives on block-0052 (appendix.title slot) and block-0053 (retained appendix content style carrier); Registry appendix.body is a section-typed collection covering 一个或多个附录, and the 附录N naming sequence is preserved as the appendix title convention.",
+      "semantic_role": "example_value"
+    },
+    {
+      "clean_template_treatment": "delete",
+      "cleanup_reason": "Ellipsis-only paragraph would remain as stray content in a clean template.",
+      "covered_object_ids": [
+        "obj-9b0e20238f14f0b5bf587c80"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0051"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0051 (……) is the continuation marker after the appendix enumeration, indicating further appendices. It is deleted.",
+      "judgment_id": "jd-026",
+      "reason": "The marker only shows repetition and carries no distinct appendix responsibility.",
+      "replacement_or_carrier": "Registry appendix.body (section, covering one or more appendices) already carries appendix multiplicity.",
+      "semantic_role": "author_instruction"
+    },
+    {
+      "bound_field_id": "appendix.title",
+      "bound_field_ids": [
+        "appendix.title"
+      ],
+      "clean_template_treatment": "convert_to_field_slot",
+      "cleanup_reason": "（另起一页，小四号黑体）is a format instruction whose page-break and font rules move to the slot's layout and style obligations.",
+      "covered_object_ids": [
+        "obj-69e97cef6672e9bbe019dc07",
+        "obj-dd62afd3443e82aff2762d81",
+        "obj-bc6cd630d7a30d88d4962040",
+        "obj-fe918ef0b9280373f5baed68",
+        "obj-08e9d360eaf35e9e6d4edd05"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0052"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Block-0052 (附录1（另起一页，小四号黑体）) is the real per-appendix title position and also states the school's page-break rule. It becomes the appendix title slot, and the 另起一页 rule is migrated to a layout obligation rather than being lost with the deleted annotation.",
+      "judgment_id": "jd-027",
+      "reason": "Registry appendix.title (附录页或附录章节的标题) is a text leaf field and matches this position; this is the appendix layout that actually starts an appendix, so the fillable interface belongs here rather than on the deleted enumeration samples.",
+      "registry_field": "appendix.title",
+      "semantic_field": "附录标题",
+      "semantic_role": "fill_slot",
+      "style_obligation": "Slot renders 小四号 黑体, flush left, and must carry page-break-before so that each appendix starts on a new page per （另起一页）. The 附录N ordinal convention shown by the school is part of the appendix title pattern."
+    },
+    {
+      "clean_template_treatment": "keep",
+      "cleanup_reason": "The …… placeholder and the parenthetical format note are removed; the paragraph itself is retained empty as the appendix content style carrier so the school's format-inheritance rule keeps a real bearer.",
+      "covered_object_ids": [
+        "obj-03f4ce569da6dd93abc4c54a",
+        "obj-95a99012dd05d4d1c12b82c0",
+        "obj-40394b0a4675382ebbff7812",
+        "obj-301e0aa64a027080e2e5da42"
+      ],
+      "covered_object_locators": [],
+      "covered_ranges": [],
+      "covered_reading_block_ids": [
+        "u-paper-body:block-0053"
+      ],
+      "covered_reading_range_ids": [],
+      "covered_unit_ids": [],
+      "judgment": "Revised after materialization feedback. Block-0053 (……（附录内容的字体字号参照正文的格式要求）) is not a plain single-value fill position. School-semantically it is the appendix content region: an open, section-level area that may hold many paragraphs, tables, figures, or code for one or more appendices, and whose only school rule is that its fonts and sizes follow the body format. It is therefore retained as the appendix content layout/style carrier under the appendix.title anchor from jd-027, not converted into a text field slot. No plain-slot Registry binding is asserted for this range.",
+      "judgment_id": "jd-028",
+      "mechanism": "The appendix content region is section-level, matching Registry appendix.body's content_type=section (一个或多个附录的结构化内容). Section-level expansion into concrete appendix paragraphs is host-managed at fill time under each appendix.title anchor; this judgment only fixes the region's identity and its inherited format obligation.",
+      "reason": "The school semantics did not change; only my binding intent was wrong. The appendix family contains exactly two Registry fields — appendix.title (text leaf, already bound in jd-027) and appendix.body (section container, not a fillable leaf) — and there is no appendix paragraph leaf field. Per the binding rules, body.paragraph must never be reused for appendix content, so an approximate field binding is refused and this range gets a non-executing judgment instead. No school evidence is missing, so this is not a needs_input case.",
+      "replacement_or_carrier": "Retained empty appendix content paragraph directly after the appendix.title slot; it carries the body-inherited appendix content format and gives the fill stage a real style bearer instead of an empty section.",
+      "semantic_role": "layout_carrier",
+      "style_obligation": "Appendix content inherits the body format requirements recorded in jd-001 and jd-016: Chinese 小四号 宋体 and Western 小四号 Times New Roman, exact 22pt line spacing, □□ two-character first-line indent. Appendix content must not define an independent font scheme.",
+      "style_role": "appendix content style carrier inheriting body paragraph formatting"
+    }
+  ],
+  "semantic_judgments_sha256": "681718bc0541e36f4c0c213ef99008930bf8c4a18f82c09ed46ec1e714224648"
+}

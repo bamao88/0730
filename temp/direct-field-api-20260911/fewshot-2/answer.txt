@@ -1,0 +1,50 @@
+```json
+{"items":[
+  {"n":3,"parts":[{"text":"湖 南 农 业 大 学","role":"fill_slot","semantic":"学校名称"},{"text":"（一号华文行楷加粗）","role":"style_only"}]},
+  {"n":4,"parts":[{"text":"全日制普通本科生毕业论文(设计)","role":"fixed_label"},{"text":"（一号黑体加粗）","role":"style_only"}]},
+  {"n":6,"parts":[{"text":"毕业论文（设计）中文题目","role":"fixed_label"},{"text":" ","role":"spacer"},{"text":"（小二黑体加粗）","role":"style_only"}]},
+  {"n":7,"parts":[{"text":"TITLE OF GRADUATION PAPER","role":"fill_slot","semantic":"毕业论文英文题目"},{"text":"（四号Times New Roman加粗，大写）","role":"style_only"}]},
+  {"n":9,"parts":[
+    {"text":"□□□□□□","role":"spacer"},
+    {"text":"学生姓名","role":"fixed_label"},
+    {"text":"（三号黑体加粗）","role":"style_only"},
+    {"text":"：","role":"fixed_label"},
+    {"text":"×××","role":"fill_slot","semantic":"学生姓名"},
+    {"text":"（或×□×）","role":"style_only"},
+    {"text":" ","role":"spacer"},
+    {"text":"（三号楷体加粗）","role":"style_only"}
+  ]},
+  {"n":10,"parts":[
+    {"text":"□□□□□□","role":"spacer"},
+    {"text":"学□□号","role":"fixed_label"},
+    {"text":"：","role":"fixed_label"},
+    {"text":"20","role":"fill_slot","semantic":"学号前两位"},
+    {"text":"××","role":"fill_slot","semantic":"学号第3-4位"},
+    {"text":"××","role":"fill_slot","semantic":"学号第5-6位"},
+    {"text":"××","role":"fill_slot","semantic":"学号第7-8位"},
+    {"text":"××","role":"fill_slot","semantic":"学号第9-10位"},
+    {"text":"××","role":"fill_slot","semantic":"学号第11-12位"}
+  ]},
+  {"n":11,"parts":[
+    {"text":"□□□□□□","role":"spacer"},
+    {"text":"年级专业及班级","role":"fixed_label"},
+    {"text":"：","role":"fixed_label"},
+    {"text":"20","role":"fill_slot","semantic":"年级前两位"},
+    {"text":"××","role":"fill_slot","semantic":"年级第3-4位"},
+    {"text":"级","role":"fixed_label"},
+    {"text":"×××","role":"fill_slot","semantic":"专业名称"},
+    {"text":"（","role":"fixed_label"},
+    {"text":"×","role":"fill_slot","semantic":"专业方向/学制"},
+    {"text":"）","role":"fixed_label"},
+    {"text":"班","role":"fixed_label"}
+  ]},
+  {"n":12,"parts":[
+    {"text":"□□□□□□","role":"spacer"},
+    {"text":"指导老师及职称","role":"fixed_label"},
+    {"text":"：","role":"fixed_label"},
+    {"text":"×××","role":"fill_slot","semantic":"指导老师姓名"},
+    {"text":"□","role":"spacer"},
+    {"text":"教授","role":"fill_slot","semantic":"指导老师职称"}
+  ]}
+]}
+```

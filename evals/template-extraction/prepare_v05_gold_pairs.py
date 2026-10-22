@@ -36,19 +36,57 @@ EVAL_CONFIG_PATH = EVAL_ROOT / "config/eval-config-v1.yaml"
 CONTRACT_SCHEMA_PATH = EVAL_ROOT / "schemas/fill-contract.schema.json"
 CASE_SCHEMA_PATH = EVAL_ROOT / "schemas/case.schema.json"
 REVISION = "2026-08-13.1"
+GOLD_TEMPLATE_NAME = "final-template.gold.docx"
+GOLD_CONTRACT_NAME = "fill-contract.gold.yaml"
 HUNAU_REVISION = "2026-08-13.2"
+HUNAU_STALE_TEMPLATE_SHA256 = (
+    "70b13aecf084816a5ff5abc879c00d26c63552c0c36623060b17cbae3d775f50"
+)
+NJAU_LOGICAL_PAGE_MANIFEST_REF = (
+    "../../../../../temp/manual-gold-preparation/gold/10-school-assets/"
+    "02-njau-undergraduate/logical-pages/unit-manifest.json"
+)
+PKU_SOURCE_TEMPLATE_REF = (
+    "../../../../../temp/manual-gold-preparation/gold/00-inputs/schools/"
+    "pku-graduate__source-template.docx"
+)
+PKU_SOURCE_TEMPLATE_PATH = (
+    REPO_ROOT
+    / "temp/manual-gold-preparation/gold/00-inputs/schools/"
+    "pku-graduate__source-template.docx"
+)
+PKU_EVIDENCE_REFS = [
+    (
+        "../../../../../temp/manual-gold-preparation/gold/10-school-assets/"
+        "03-pku-graduate/README.md"
+    ),
+    (
+        "../../../../../temp/manual-gold-preparation/gold/10-school-assets/"
+        "03-pku-graduate/logical-pages/unit-manifest.json"
+    ),
+    (
+        "../../../../../temp/manual-gold-preparation/gold/90-validation-evidence/"
+        "03-pku-graduate/pku-graduate__pagination-audit.md"
+    ),
+    (
+        "../../../../../temp/manual-gold-preparation/gold/90-validation-evidence/"
+        "03-pku-graduate/pku-graduate__fillable-template-verification.json"
+    ),
+]
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W = f"{{{W_NS}}}"
 
-FIELD_RENAMES = {
-    "body.heading.level1": "body.heading.outline1",
-    "body.heading.level2": "body.heading.outline2",
-    "body.heading.level3": "body.heading.outline3",
-    "body.heading.level4": "body.heading.outline4",
-    "body.heading.level5": "body.heading.outline5",
-    "acknowledgement": "acknowledgement.body",
-}
+RETIRED_FIELD_IDS = frozenset(
+    {
+        "body.heading.level1",
+        "body.heading.level2",
+        "body.heading.level3",
+        "body.heading.level4",
+        "body.heading.level5",
+        "acknowledgement",
+    }
+)
 FIELD_SCALAR_KEYS = {"field_id", "alias", "canonical_field_id"}
 FIELD_LIST_KEYS = {"field_ids", "applies_to"}
 
@@ -194,18 +232,34 @@ def dump_yaml(value: dict[str, Any]) -> bytes:
     ).encode("utf-8")
 
 
-def migrate_field_values(value: Any, *, parent_key: str | None = None) -> Any:
+def _require_current_field_id(field_id: str, *, parent_key: str | None) -> str:
+    if field_id in RETIRED_FIELD_IDS:
+        location = parent_key or "field reference"
+        raise ValueError(
+            f"retired field_id {field_id!r} is not accepted in {location}; "
+            "regenerate the Gold source from the current field_id_vocabulary "
+            "instead of migrating aliases."
+        )
+    return field_id
+
+
+def require_current_field_values(value: Any, *, parent_key: str | None = None) -> Any:
     if isinstance(value, list):
         if parent_key in FIELD_LIST_KEYS:
-            return [FIELD_RENAMES.get(item, item) for item in value]
-        return [migrate_field_values(item) for item in value]
+            return [
+                _require_current_field_id(item, parent_key=parent_key)
+                if isinstance(item, str)
+                else require_current_field_values(item)
+                for item in value
+            ]
+        return [require_current_field_values(item) for item in value]
     if isinstance(value, dict):
         return {
-            key: migrate_field_values(item, parent_key=key)
+            key: require_current_field_values(item, parent_key=key)
             for key, item in value.items()
         }
     if isinstance(value, str) and parent_key in FIELD_SCALAR_KEYS:
-        return FIELD_RENAMES.get(value, value)
+        return _require_current_field_id(value, parent_key=parent_key)
     return value
 
 
@@ -406,7 +460,7 @@ def transform_docx(
     source: Path,
     destination: Path,
     *,
-    migrate_aliases: bool,
+    reject_retired_aliases: bool,
     normalize_slot_color: bool,
     repair_rpr_order: bool,
     materialize_hunau_toc: bool,
@@ -416,20 +470,25 @@ def transform_docx(
         payloads = {info.filename: archive.read(info.filename) for info in infos}
 
     document_xml = payloads["word/document.xml"]
-    if migrate_aliases or normalize_slot_color or repair_rpr_order or materialize_hunau_toc:
+    if (
+        reject_retired_aliases
+        or normalize_slot_color
+        or repair_rpr_order
+        or materialize_hunau_toc
+    ):
         _register_namespaces(document_xml)
         root = ElementTree.fromstring(document_xml)
 
-        if migrate_aliases or normalize_slot_color:
+        if reject_retired_aliases or normalize_slot_color:
             for sdt in root.iter(f"{W}sdt"):
                 properties = sdt.find(f"{W}sdtPr")
                 if properties is None:
                     continue
                 alias = properties.find(f"{W}alias")
-                if migrate_aliases and alias is not None:
+                if reject_retired_aliases and alias is not None:
                     current = alias.get(f"{W}val")
-                    if current in FIELD_RENAMES:
-                        alias.set(f"{W}val", FIELD_RENAMES[current])
+                    if current is not None:
+                        _require_current_field_id(current, parent_key="alias")
                 if normalize_slot_color:
                     content = sdt.find(f"{W}sdtContent")
                     if content is None:
@@ -600,9 +659,9 @@ def evidence_refs(value: Any) -> list[dict[str, Any]]:
 def normalize_pku_slot(raw: dict[str, Any]) -> dict[str, Any]:
     conditional = raw.get("required") == "conditional"
     slot: dict[str, Any] = {
-        "slot_id": raw["slot_id"],
+        "slot_ref": raw["slot_ref"],
         "owner": "slot",
-        "field_id": FIELD_RENAMES.get(raw["field_id"], raw["field_id"]),
+        "field_id": _require_current_field_id(raw["field_id"], parent_key="field_id"),
         "label": raw["label"],
         "content_type": raw["content_type"],
         "required": bool(raw.get("required") is True),
@@ -618,7 +677,7 @@ def normalize_pku_slot(raw: dict[str, Any]) -> dict[str, Any]:
             slot[key] = copy.deepcopy(raw[key])
     value_contract = copy.deepcopy(raw.get("value_contract", {}))
     if conditional:
-        value_contract["condition"] = migrate_field_values(raw.get("condition", {}))
+        value_contract["condition"] = require_current_field_values(raw.get("condition", {}))
     if value_contract:
         slot["value_contract"] = value_contract
     refs = evidence_refs(raw.get("evidence_refs"))
@@ -628,7 +687,10 @@ def normalize_pku_slot(raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def normalize_pku_region(raw: dict[str, Any]) -> dict[str, Any]:
-    field_ids = [FIELD_RENAMES.get(item, item) for item in raw["field_ids"]]
+    field_ids = [
+        _require_current_field_id(item, parent_key="field_ids")
+        for item in raw["field_ids"]
+    ]
     optional_fields = {
         "body.landscape_block",
         "generated.list_of_figures",
@@ -643,7 +705,7 @@ def normalize_pku_region(raw: dict[str, Any]) -> dict[str, Any]:
         "start_locator": locator(raw["start_locator"]),
         "end_locator": locator(raw["end_locator"]),
         "placement_mode": raw["placement_mode"],
-        "style_map": migrate_field_values(copy.deepcopy(raw.get("style_map", {}))),
+        "style_map": require_current_field_values(copy.deepcopy(raw.get("style_map", {}))),
         "repeat_policy": raw["repeat_policy"],
     }
     refs = evidence_refs(raw.get("evidence_refs"))
@@ -657,7 +719,10 @@ def normalize_pku_style(raw: dict[str, Any]) -> dict[str, Any]:
     style = {
         "style_id": raw["style_id"],
         "label": raw["label"],
-        "applies_to": [FIELD_RENAMES.get(item, item) for item in raw.get("applies_to", [])],
+        "applies_to": [
+            _require_current_field_id(item, parent_key="applies_to")
+            for item in raw.get("applies_to", [])
+        ],
         "word_style_id": word_style.get("style_id"),
         "word_style_name": word_style.get("name"),
         "effective_properties": copy.deepcopy(raw.get("properties", {})),
@@ -668,146 +733,21 @@ def normalize_pku_style(raw: dict[str, Any]) -> dict[str, Any]:
     return style
 
 
-def prepare_pku_contract(source: Path, template_hash: str) -> dict[str, Any]:
-    raw = read_yaml(source)
-    slots = [normalize_pku_slot(item) for item in raw["slots"]]
-    for slot in slots:
-        if slot["field_id"] == "acknowledgement.body":
-            slot["required"] = True
-            slot["empty_policy"] = "blocking_review"
-    contract: dict[str, Any] = {
-        "schema_version": "docfit-template-fill-contract/v1",
-        "contract_id": "pku-graduate.fill-contract",
-        "artifact_role": "template_fill_contract",
-        "status": "candidate_pending_human_acceptance",
-        "template_id": "pku-graduate.clean-template",
-        "revision": REVISION,
-        "contract_version": "docfit-template-truth-pack-v0.5-candidate-1",
-        "school_id": "pku-graduate",
-        "school_name": "北京大学研究生",
-        "template_path": "template.docx",
-        "template_sha256": template_hash,
-        "field_registry_ref": registry_ref(),
-        "marker_protocol": {
-            "version": "docfit-content-control-marker/v1",
-            "field_identity_property": "w:alias",
-            "field_identity_rule": "content controls use canonical field_id when present",
-            "slot_identity_property": "w:tag",
-            "slot_identity_rule": (
-                "placeholder anchors are allowed for this accepted legacy surface"
-            ),
-            "word_internal_id_property": "w:id",
-            "word_internal_id_semantics": "non_business_identity",
-        },
-        "responsibility_policy": {
-            "mode": "exhaustive",
-            "analysis_universe": "semantic_document_facts/v1",
-            "protected_basis": "complement_of_slot_and_remove",
-            "slot_basis": "managed_content_controls_and_fill_contract",
-            "remove_basis": "declared_remove_regions",
-        },
-        "canonical_renderer": "microsoft_word",
-        "provenance": {
-            **copy.deepcopy(raw.get("provenance", {})),
-            "selected_accuracy_source": str(source.relative_to(REPO_ROOT)),
-            "selected_template_sha256": template_hash,
-            "registry_migration": "v0.5_clean_break_field_ids",
-        },
-        "locator_contract": copy.deepcopy(raw["locator_contract"]),
-        "regions": [normalize_pku_region(item) for item in raw["regions"]],
-        "slots": slots,
-        "styles": [normalize_pku_style(item) for item in raw["styles"]],
-        "logical_pages": migrate_field_values(copy.deepcopy(raw["logical_pages"])),
-        "review": pending_review(),
-        "validation": copy.deepcopy(raw.get("validation", {})),
-    }
-    apply_page_policy(contract, "pku-graduate")
-    return contract
+def prepare_pku_contract(_source: Path, _template_hash: str) -> dict[str, Any]:
+    raise ValueError(
+        "PKU Gold preparation still uses retired fill-contract/v1 semantics; "
+        "rebuild this source as a v2 contract before generating Eval inputs"
+    )
 
 
 def prepare_existing_v1_contract(
     source: Path, *, school_id: str, template_hash: str
 ) -> dict[str, Any]:
-    contract = migrate_field_values(read_yaml(source))
-    contract["revision"] = HUNAU_REVISION
-    contract["contract_version"] = "docfit-template-truth-pack-v0.5-candidate-1"
-    contract["template_sha256"] = template_hash
-    contract["field_registry_ref"] = registry_ref()
-    contract["status"] = "candidate_pending_human_acceptance"
-    contract["review"] = pending_review()
-    contract.setdefault("provenance", {})["registry_migration"] = (
-        "v0.5_clean_break_field_ids"
+    _ = (source, template_hash)
+    raise ValueError(
+        f"{school_id} Gold preparation still depends on retired fill-contract/v1; "
+        "rebuild this source as a v2 contract before generating Eval inputs"
     )
-    toc_region = next(
-        region
-        for region in contract["regions"]
-        if region["region_id"] == "region.generated.toc"
-    )
-    toc_region["placement_mode"] = "update_existing_word_toc_field_and_cached_result"
-    toc_region["style_map"] = {
-        "body.heading.outline1": "TOC1",
-        "body.heading.outline2": "TOC2",
-        "body.heading.outline3": "TOC3",
-        "tc_fields_switch_C": "TOC1",
-    }
-    toc_region["evidence_refs"] = [
-        {
-            "type": "template_visible_anchor",
-            "value": "目  录",
-            "status": "machine_checked_live_field_and_visible_cache",
-        }
-    ]
-
-    toc_page = next(
-        page for page in contract["logical_pages"] if page["page_id"] == "toc"
-    )
-    toc_page.update(
-        {
-            "source_policy": "generate_word_toc_from_heading_outline_levels_and_tc_fields",
-            "empty_policy": "preserve_cached_example_and_update_on_fill",
-            "first_anchor": "目  录",
-            "boundary_evidence": (
-                "目录独占第3页；Gold 保留可更新的 TOC 字段，并缓存三级目录、"
-                "点引导线和页码，打开文件即可核对。"
-            ),
-        }
-    )
-    contract.setdefault("validation", {})["toc_cache"] = {
-        "status": "machine_checked",
-        "field_instruction": 'TOC \\o "1-3" \\h \\z \\u \\f C',
-        "visible_cache": "materialized",
-        "levels": ["TOC1", "TOC2", "TOC3"],
-        "entry_count": 9,
-        "update_policy": "refresh_after_student_content_fill",
-    }
-    for slot in contract["slots"]:
-        tag = slot.get("locator", {}).get("value")
-        slot["mapping_status"] = "human_confirmed_product_rule_pending_exact_file_review"
-        if slot["field_id"] in {"body.heading.outline2", "body.heading.outline3"}:
-            slot["required"] = False
-        if tag in {"docfit.conclusion.title", "docfit.conclusion.body", "docfit.acknowledgement"}:
-            slot["required"] = True
-            slot["empty_policy"] = "blocking_review"
-        if tag == "docfit.appendix":
-            slot["required"] = False
-            slot["empty_policy"] = "placeholder_review_then_remove_if_not_applicable"
-        if tag == "docfit.cover.advisor":
-            slot["value_contract"] = {
-                "components": ["advisor.name.zh", "advisor.title"],
-                "separator": "　",
-                "separator_policy": "exactly_one_cjk_space",
-                "missing_policy": "blocking_review",
-            }
-        if tag == "docfit.body.advisor":
-            slot["value_contract"] = {
-                "components": ["advisor.name.zh"],
-                "include_advisor_title": False,
-            }
-        expected = slot.get("expected_value_style")
-        if isinstance(expected, dict):
-            expected.setdefault("font", {})["color"] = "000000"
-    apply_page_policy(contract, school_id)
-    return contract
 
 
 def _replace_exact_strings(value: Any, replacements: dict[str, str]) -> Any:
@@ -844,7 +784,7 @@ def prepare_njau_contract(
     source: Path, policy_source: Path, template_hash: str
 ) -> dict[str, Any]:
     contract = json.loads(source.read_text(encoding="utf-8"))
-    contract = migrate_field_values(contract)
+    contract = require_current_field_values(contract)
     policy = read_yaml(policy_source)
     contract.update(
         {
@@ -853,7 +793,7 @@ def prepare_njau_contract(
             "contract_version": "docfit-template-truth-pack-v0.5-candidate-1",
             "school_id": "njau-undergraduate",
             "school_name": "南京农业大学本科",
-            "template_path": "template.docx",
+            "template_path": GOLD_TEMPLATE_NAME,
             "template_sha256": template_hash,
             "field_registry_ref": registry_ref(),
             "responsibility_policy": {
@@ -864,15 +804,19 @@ def prepare_njau_contract(
                 "remove_basis": "declared_remove_regions",
             },
             "canonical_renderer": "microsoft_word",
-            "logical_pages": migrate_field_values(copy.deepcopy(policy["logical_pages"])),
+            "logical_pages": require_current_field_values(
+                copy.deepcopy(policy["logical_pages"])
+            ),
             "review": pending_review(),
             "status": "candidate_pending_human_acceptance",
         }
     )
     provenance = contract.setdefault("provenance", {})
-    provenance["selected_accuracy_source"] = str(source.relative_to(REPO_ROOT))
-    provenance["selected_template_sha256"] = template_hash
-    provenance["registry_migration"] = "v0.5_clean_break_field_ids"
+    provenance.pop("selected_accuracy_source", None)
+    provenance.pop("selected_template_sha256", None)
+    provenance["field_id_vocabulary_policy"] = (
+        "current_registry_field_ids_required_no_alias_migration"
+    )
     # The runtime publication contract carries discovery diagnostics as
     # top-level fields.  The Eval truth-pack schema intentionally keeps the
     # public surface smaller, so retain that evidence under provenance instead
@@ -932,6 +876,16 @@ def prepare_njau_contract(
             }
         elif field_id.startswith("body."):
             slot.setdefault("value_contract", {})["parent_field_id"] = "body.chapters"
+
+    for page in contract["logical_pages"]:
+        if page.get("evidence_ref", "").startswith("../../gold/10-school-assets/"):
+            page["evidence_ref"] = NJAU_LOGICAL_PAGE_MANIFEST_REF
+
+    school_style_observation = (
+        (contract.get("validation") or {}).get("school_style_observation") or {}
+    )
+    if isinstance(school_style_observation, dict):
+        school_style_observation.pop("artifact_path", None)
 
     contract["regions"] = [
         normalize_pku_region(item) for item in policy.get("regions", [])
@@ -1012,8 +966,8 @@ def build_case(
         "school_name": school_name,
         "case_status": "candidate",
         "gold": {
-            "template": "gold/template.docx",
-            "contract": "gold/fill-contract.yaml",
+            "template": f"gold/{GOLD_TEMPLATE_NAME}",
+            "contract": f"gold/{GOLD_CONTRACT_NAME}",
             "template_sha256": template_hash,
             "contract_sha256": contract_hash,
         },
@@ -1064,19 +1018,41 @@ def validate_contract_fields(contract: dict[str, Any]) -> None:
         raise ValueError(f"contract references unknown Registry fields: {unknown}")
 
 
+def assert_destination_not_accepted(case_root: Path) -> None:
+    case_path = case_root / "case.yaml"
+    if case_path.exists():
+        case = read_yaml(case_path)
+        if (
+            case.get("case_status") == "accepted"
+            or case.get("gold_review", {}).get("status") == "accepted"
+        ):
+            raise ValueError(f"refusing to overwrite accepted case: {case_path}")
+    contract_path = case_root / "gold" / GOLD_CONTRACT_NAME
+    if contract_path.exists():
+        contract = read_yaml(contract_path)
+        if contract.get("status") == "accepted":
+            raise ValueError(f"refusing to overwrite accepted contract: {contract_path}")
+
+
 def prepare_case(case_id: str, definition: dict[str, Any], output_root: Path) -> None:
     source_template = Path(definition["template"])
     source_contract = Path(definition["contract"])
     case_root = output_root / case_id
+    assert_destination_not_accepted(case_root)
     gold_root = case_root / "gold"
     gold_root.mkdir(parents=True, exist_ok=True)
-    template_path = gold_root / "template.docx"
+    template_path = gold_root / GOLD_TEMPLATE_NAME
 
     kind = definition["kind"]
+    if kind in {"existing_v1", "pku_r02"}:
+        raise ValueError(
+            f"{definition['school_id']} uses retired fill-contract/v1 preparation "
+            "inputs; rebuild the source contract as v2 before generating Eval cases"
+        )
     transform_docx(
         source_template,
         template_path,
-        migrate_aliases=kind != "pku_r02",
+        reject_retired_aliases=True,
         normalize_slot_color=kind != "pku_r02",
         repair_rpr_order=kind == "existing_v1",
         materialize_hunau_toc=kind == "existing_v1",
@@ -1106,7 +1082,7 @@ def prepare_case(case_id: str, definition: dict[str, Any], output_root: Path) ->
     contract_schema = json.loads(CONTRACT_SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator(contract_schema).validate(contract)
     contract_bytes = dump_yaml(contract)
-    contract_path = gold_root / "fill-contract.yaml"
+    contract_path = gold_root / GOLD_CONTRACT_NAME
     contract_path.write_bytes(contract_bytes)
 
     case = build_case(

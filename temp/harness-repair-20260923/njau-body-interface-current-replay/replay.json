@@ -1,0 +1,33 @@
+{
+  "verification_level": "real replay; original judgments, no Agent call or publication",
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/object-inventory.json": "40c620ee998fe19dbc3cca0bd857389b0ba37401d3176757d2dea5a91ecbbbb1",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-body-interface-task/work/.docfit/harness/semantic-judgments.json": "07e413e62229e515a37563015ebbaa6d20fadb8ff3f2a2353a5d0a330dad3005"
+  },
+  "original_unchanged": true,
+  "candidate_sha256": null,
+  "source_breaks": [
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    },
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    },
+    {
+      "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type": "page"
+    }
+  ],
+  "candidate_breaks": null,
+  "result_summary": {
+    "status": "blocked",
+    "operation_count": null,
+    "cleanup_count": null,
+    "failure": {
+      "code": "materialization_layout_break_mapping_unsupported",
+      "origin": "tool",
+      "message": "Text replacement has no unambiguous output position for a layout break."
+    }
+  }
+}

@@ -1,0 +1,2109 @@
+{
+  "case_id": "hunau-undergraduate",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/manual-gold-preparation/gold/00-inputs/schools/hunau-undergraduate__source-template.docx",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/unit-boundary-flow-proof-20260819-other-schools/hunau-undergraduate",
+  "source_hash": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+  "render_ref": "render:v2:04c9b5ff2bf2ce6618a98480acb7deabc1c2f0cdf49267eab3693f8e1687663f",
+  "semantic_selector": "paragraph, table, picture, shape",
+  "page_count": 19,
+  "pages": [
+    {
+      "page": 1,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=11D447C7]",
+          "type": "paragraph",
+          "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。 …"
+        },
+        {
+          "locator": "/body/p[@paraId=17D2635B]",
+          "type": "paragraph",
+          "text": "（一号华文行楷空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=7D3A4729]",
+          "type": "paragraph",
+          "text": "     湖 南 农 业 大 学（一号华文行楷加粗）"
+        },
+        {
+          "locator": "/body/p[@paraId=3FC8FD6F]",
+          "type": "paragraph",
+          "text": "全日制普通本科生毕业论文(设计)（一号黑体加粗）"
+        },
+        {
+          "locator": "/body/p[@paraId=1CAF69D0]",
+          "type": "paragraph",
+          "text": "（一号黑体空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=107B05EA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5A9EA212]",
+          "type": "paragraph",
+          "text": "          毕业论文（设计）中文题目  （小二黑体加粗）"
+        },
+        {
+          "locator": "/body/p[@paraId=12BC71FF]",
+          "type": "paragraph",
+          "text": "TITLE OF GRADUATION PAPER（四号Times New Roman加粗，大写）"
+        },
+        {
+          "locator": "/body/p[@paraId=626DF4DD]",
+          "type": "paragraph",
+          "text": "（根据题目长短四号字空二或三行）"
+        },
+        {
+          "locator": "/body/p[@paraId=2F57A917]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=50FE92EC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=51575115]",
+          "type": "paragraph",
+          "text": "□□□□□□学生姓名（三号黑体加粗）：×××（或×□×） （三号楷体加粗）"
+        },
+        {
+          "locator": "/body/p[@paraId=1DCE7B4E]",
+          "type": "paragraph",
+          "text": "□□□□□□学□□号：20××××××××××"
+        },
+        {
+          "locator": "/body/p[@paraId=155D2FA9]",
+          "type": "paragraph",
+          "text": "□□□□□□年级专业及班级：20××级×××（×）班"
+        },
+        {
+          "locator": "/body/p[@paraId=32FA3572]",
+          "type": "paragraph",
+          "text": "□□□□□□指导老师及职称：×××□教授 "
+        },
+        {
+          "locator": "/body/p[@paraId=43E12217]",
+          "type": "paragraph",
+          "text": "□□□□□□学□□院：××××学院  （学院名用全称）"
+        },
+        {
+          "locator": "/body/p[@paraId=2EE5B7BB]",
+          "type": "paragraph",
+          "text": "（三号字空二或三行）"
+        },
+        {
+          "locator": "/body/p[@paraId=3DC63F93]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=7981BE8B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=0177DA07]",
+          "type": "paragraph",
+          "text": "湖南·长沙 （小三号黑体）"
+        },
+        {
+          "locator": "/body/p[@paraId=6DF3F7DC]",
+          "type": "paragraph",
+          "text": "提交日期：20××年××月 "
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=4A1EF999]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+        },
+        {
+          "locator": "/body/p[@paraId=215A39BA]",
+          "type": "paragraph",
+          "text": "诚 信 声 明"
+        },
+        {
+          "locator": "/body/p[@paraId=1D655190]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=52F6D59B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=626D8268]",
+          "type": "paragraph",
+          "text": "本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，进行研究工作所取得的成果，成果不存在知识产权争议。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体…"
+        },
+        {
+          "locator": "/body/p[@paraId=1E30CD97]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=514BCC5B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=63EBA93B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=62C82508]",
+          "type": "paragraph",
+          "text": "                    毕业论文（设计）作者签名："
+        },
+        {
+          "locator": "/body/p[@paraId=334193A0]",
+          "type": "paragraph",
+          "text": "                                       年    月    日"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=3E72B657]",
+          "type": "paragraph",
+          "text": "     目录基本格式：1.5倍行距；上下页边距2.54厘米，左右页边距2.6厘米；必须标明一级、二级、三级标题；分散对齐，宋体小四号字。“□” 表示占1个字宽（即2个字符）的空格。"
+        },
+        {
+          "locator": "/body/p[@paraId=51C9EB0B]",
+          "type": "paragraph",
+          "text": "（空三行）"
+        },
+        {
+          "locator": "/body/p[@paraId=4A4AE1C2]",
+          "type": "paragraph",
+          "text": "       目□□录   (二号黑体，居中)"
+        },
+        {
+          "locator": "/body/p[@paraId=35C3A45F]",
+          "type": "paragraph",
+          "text": "（空两行）"
+        },
+        {
+          "locator": "/body/p[@paraId=2D85A2A2]",
+          "type": "paragraph",
+          "text": "（农、理工科类专业用）"
+        },
+        {
+          "locator": "/body/p[@paraId=7ABCFDAF]",
+          "type": "paragraph",
+          "text": "□□摘要……………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=3F5D24CD]",
+          "type": "paragraph",
+          "text": "□□关键词…………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=73599A78]",
+          "type": "paragraph",
+          "text": "□□1前言………………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=392A59B6]",
+          "type": "paragraph",
+          "text": "□□2.2×××× ………………………………………………………………………3"
+        },
+        {
+          "locator": "/body/p[@paraId=28C061ED]",
+          "type": "paragraph",
+          "text": "□□……"
+        },
+        {
+          "locator": "/body/p[@paraId=77798D85]",
+          "type": "paragraph",
+          "text": "□□5结论………………………………………………………………………………8"
+        },
+        {
+          "locator": "/body/p[@paraId=0D373203]",
+          "type": "paragraph",
+          "text": "□□参考文献 ………………………………………………………………………9"
+        },
+        {
+          "locator": "/body/p[@paraId=69A42D24]",
+          "type": "paragraph",
+          "text": "（文科类专业用）"
+        },
+        {
+          "locator": "/body/p[@paraId=5A64A567]",
+          "type": "paragraph",
+          "text": "□□摘要………………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=622A4CC3]",
+          "type": "paragraph",
+          "text": "□□关键词……………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=0BCFC7B5]",
+          "type": "paragraph",
+          "text": "□□一、一级标题………………………………………………………………………1"
+        },
+        {
+          "locator": "/body/p[@paraId=3D2D2FB0]",
+          "type": "paragraph",
+          "text": "□□（一）二级标题………………………………………………………………2"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=40AE38B9]",
+          "type": "paragraph",
+          "text": "□□2 ××××…………………………………………………………………………3"
+        },
+        {
+          "locator": "/body/p[@paraId=76C2E9FE]",
+          "type": "paragraph",
+          "text": "□□……"
+        },
+        {
+          "locator": "/body/p[@paraId=2E97BED8]",
+          "type": "paragraph",
+          "text": "□□五、结束语…………………………………………………………………………………8"
+        },
+        {
+          "locator": "/body/p[@paraId=0E812AD4]",
+          "type": "paragraph",
+          "text": "□□参考文献 ……………………………………………………………………9"
+        },
+        {
+          "locator": "/body/p[@paraId=0C54D000]",
+          "type": "paragraph",
+          "text": "□□致谢……………………………………………………………………………10"
+        },
+        {
+          "locator": "/body/p[@paraId=2CBC4055]",
+          "type": "paragraph",
+          "text": "   "
+        },
+        {
+          "locator": "/body/p[@paraId=4CFCB66C]",
+          "type": "paragraph",
+          "text": "正文基本格式：行距固定值22磅，如有图、表可做适当调整；上下页边距2.54厘米，左右页边距2.6厘米。 “□” 表示占1个字宽（即2个字符）的空格。"
+        },
+        {
+          "locator": "/body/p[@paraId=15EF3A42]",
+          "type": "paragraph",
+          "text": "（小二号字空两行）"
+        },
+        {
+          "locator": "/body/p[@paraId=159AB478]",
+          "type": "paragraph",
+          "text": "毕业论文（设计）中文题目（小二黑体，加粗，居中）"
+        },
+        {
+          "locator": "/body/p[@paraId=6B0A25CD]",
+          "type": "paragraph",
+          "text": "                                    学□□生：×××（或×□×）  （五号宋体居中）"
+        },
+        {
+          "locator": "/body/p[@paraId=7F590AE0]",
+          "type": "paragraph",
+          "text": "指导老师：×××"
+        },
+        {
+          "locator": "/body/p[@paraId=160338AD]",
+          "type": "paragraph",
+          "text": "(湖南农业大学××××学院，长沙 410128)"
+        },
+        {
+          "locator": "/body/p[@paraId=14A1FDB9]",
+          "type": "paragraph",
+          "text": "（五号字空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=258F5084]",
+          "type": "paragraph",
+          "text": "□□摘□要（小四黑体）：……             （五号宋体）"
+        },
+        {
+          "locator": "/body/p[@paraId=0610952C]",
+          "type": "paragraph",
+          "text": "□□关键词：×××；×××；×××；××× "
+        },
+        {
+          "locator": "/body/p[@paraId=45377BD2]",
+          "type": "paragraph",
+          "text": "（五号字空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=7C960206]",
+          "type": "paragraph",
+          "text": "                     Title of Graduation Paper （四号Times New Roman，加粗，居中）"
+        },
+        {
+          "locator": "/body/p[@paraId=21D89F1C]",
+          "type": "paragraph",
+          "text": "Student:×××  （五号Times New Roman，居中）"
+        },
+        {
+          "locator": "/body/p[@paraId=0E5CC37A]",
+          "type": "paragraph",
+          "text": "Tutor:××××"
+        },
+        {
+          "locator": "/body/p[@paraId=17C3CBAE]",
+          "type": "paragraph",
+          "text": "(College of×××××××, Hunan Agricultural University, Changsha 410128, China)"
+        },
+        {
+          "locator": "/body/p[@paraId=4D699A11]",
+          "type": "paragraph",
+          "text": "（五号字空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=67485F6E]",
+          "type": "paragraph",
+          "text": "□□Abstract(小四号Times New Roman， 加粗):……            (五号Times New Roman)"
+        },
+        {
+          "locator": "/body/p[@paraId=5E81F652]",
+          "type": "paragraph",
+          "text": "□□Key words: ×××； ×××；×××； ×××  "
+        },
+        {
+          "locator": "/body/p[@paraId=3AD38F31]",
+          "type": "paragraph",
+          "text": "（五号字空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=612917C0]",
+          "type": "paragraph",
+          "text": "（以下农理工科类用）"
+        },
+        {
+          "locator": "/body/p[@paraId=00810F80]",
+          "type": "paragraph",
+          "text": "1□前言  （一级标题小三号黑体，顶格书写序数，空一格写标题）"
+        },
+        {
+          "locator": "/body/p[@paraId=723C4071]",
+          "type": "paragraph",
+          "text": "□□……  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+        },
+        {
+          "locator": "/body/p[@paraId=0C812FEF]",
+          "type": "paragraph",
+          "text": "2□××××"
+        },
+        {
+          "locator": "/body/p[@paraId=53188CA9]",
+          "type": "paragraph",
+          "text": "2.1□×××××（二级标题四号黑体，顶格书写序数，空一格写标题）"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=6FD90902]",
+          "type": "paragraph",
+          "text": "2.1.1□×××××（三级标题小四号黑体，顶格书写序数，空一格写标题）"
+        },
+        {
+          "locator": "/body/p[@paraId=743B74DB]",
+          "type": "paragraph",
+          "text": "□□（1）……[1]。（一般不设四级标题，如确属需要，第四层次不单独占行书写）"
+        },
+        {
+          "locator": "/body/p[@paraId=27FEDB63]",
+          "type": "paragraph",
+          "text": "……"
+        },
+        {
+          "locator": "/body/p[@paraId=7733391B]",
+          "type": "paragraph",
+          "text": "5□结论"
+        },
+        {
+          "locator": "/body/p[@paraId=0322C057]",
+          "type": "paragraph",
+          "text": "□□……"
+        },
+        {
+          "locator": "/body/p[@paraId=673982EC]",
+          "type": "paragraph",
+          "text": "（以下文法经管类用）"
+        },
+        {
+          "locator": "/body/p[@paraId=24609638]",
+          "type": "paragraph",
+          "text": "□□（导入语）……（正文的中文内容小四号宋体，英文内容小四号Times New Roman）"
+        },
+        {
+          "locator": "/body/p[@paraId=286F9DD7]",
+          "type": "paragraph",
+          "text": "一、×××××（一级标题小三号黑体，顶格书写）"
+        },
+        {
+          "locator": "/body/p[@paraId=5D06FD1F]",
+          "type": "paragraph",
+          "text": "二、×××××"
+        },
+        {
+          "locator": "/body/p[@paraId=70297B0E]",
+          "type": "paragraph",
+          "text": "（一）×××××（二级标题四号黑体，顶格书写）"
+        },
+        {
+          "locator": "/body/p[@paraId=0262BE67]",
+          "type": "paragraph",
+          "text": "□□1、×××××（三级标题小四号黑体）"
+        },
+        {
+          "locator": "/body/p[@paraId=212F21B4]",
+          "type": "paragraph",
+          "text": "□□（1）……[1]。（四级标题不单独占行书写）"
+        },
+        {
+          "locator": "/body/p[@paraId=56801B2C]",
+          "type": "paragraph",
+          "text": "……"
+        },
+        {
+          "locator": "/body/p[@paraId=0B9F54E8]",
+          "type": "paragraph",
+          "text": "五、结束语"
+        },
+        {
+          "locator": "/body/p[@paraId=7A890DA9]",
+          "type": "paragraph",
+          "text": "□□……"
+        },
+        {
+          "locator": "/body/p[@paraId=76DE143D]",
+          "type": "paragraph",
+          "text": "（小四号字空一行）"
+        },
+        {
+          "locator": "/body/p[@paraId=40BB4E23]",
+          "type": "paragraph",
+          "text": "参考文献 (小三号黑体)"
+        },
+        {
+          "locator": "/body/p[@paraId=6CB176CB]",
+          "type": "paragraph",
+          "text": "[1] 作者.论文题名[J].期刊名，出版年，卷（期）：页码A-B.       (五号宋体)"
+        },
+        {
+          "locator": "/body/p[@paraId=4FF6B057]",
+          "type": "paragraph",
+          "text": "（五号字空二行）"
+        },
+        {
+          "locator": "/body/p[@paraId=028A1D17]",
+          "type": "paragraph",
+          "text": "            致□□谢  (小三号黑体，居中)"
+        },
+        {
+          "locator": "/body/p[@paraId=078AC012]",
+          "type": "paragraph",
+          "text": "本论文是在×××老师的悉心指导和热情关怀下完成的……。 (小四号宋体) "
+        },
+        {
+          "locator": "/body/p[@paraId=70F7154E]",
+          "type": "paragraph",
+          "text": "（小四号字空二行）"
+        },
+        {
+          "locator": "/body/p[@paraId=51F94CF5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=640A38AE]",
+          "type": "paragraph",
+          "text": "附录(小三号黑体)"
+        },
+        {
+          "locator": "/body/p[@paraId=772D57B4]",
+          "type": "paragraph",
+          "text": "附录1……（小四号宋体）"
+        },
+        {
+          "locator": "/body/p[@paraId=218A9532]",
+          "type": "paragraph",
+          "text": "附录2……"
+        },
+        {
+          "locator": "/body/p[@paraId=5C8A5BEE]",
+          "type": "paragraph",
+          "text": "……"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=63E9CE14]",
+          "type": "paragraph",
+          "text": "附录1（另起一页，小四号黑体）"
+        },
+        {
+          "locator": "/body/p[@paraId=1B93D1F3]",
+          "type": "paragraph",
+          "text": "……（附录内容的字体字号参照正文的格式要求）"
+        },
+        {
+          "locator": "/body/p[@paraId=10EA1459]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=7F1B4F3A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=55BB6D6A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=12615367]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3AC94C5E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=57838398]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=6B5C4910]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=4E6BEBC3]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=1D4088E9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=4FD109CB]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生"
+        },
+        {
+          "locator": "/body/p[@paraId=21717E99]",
+          "type": "paragraph",
+          "text": "毕业设计任务书"
+        },
+        {
+          "locator": "/body/p[@paraId=1A1282DC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5332EC24]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=639A0016]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=2602321F]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=3D4998D7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=4B79582E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=0938C205]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=6177DD1B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=4E6A43DA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[2]/tc[2]/p[@paraId=18294352]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[2]/tc[2]/p[@paraId=1EECAEC4]",
+          "type": "paragraph",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[1]/tr[5]/tc[1]/p[@paraId=3495E54D]",
+          "type": "paragraph",
+          "text": "学          院"
+        },
+        {
+          "locator": "/body/tbl[1]/tr[5]/tc[2]/p[@paraId=758A939C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=224A55F0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=18CFA06C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=704A069B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=62EC4B10]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=1E088E17]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=2E437E79]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=6E57B6A1]",
+          "type": "paragraph",
+          "text": "20    年     月     日"
+        },
+        {
+          "locator": "/body/p[@paraId=3606340D]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=2707B06A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=6D07963E]",
+          "type": "paragraph",
+          "text": "填 写 说 明"
+        },
+        {
+          "locator": "/body/p[@paraId=571BAA27]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5B5B8E15]",
+          "type": "paragraph",
+          "text": "一、毕业设计任务书是学校根据已经确定的毕业设计题目下达给学生的一种教学文件，是学生在指导教师指导下独立从事毕业设计工作的依据。此表由指导教师填写。"
+        },
+        {
+          "locator": "/body/p[@paraId=62669564]",
+          "type": "paragraph",
+          "text": "二、此任务书必需针对每一位学生，不能多人共用。"
+        },
+        {
+          "locator": "/body/p[@paraId=147E0E66]",
+          "type": "paragraph",
+          "text": "三、选题要恰当，任务要明确，难度要适中，份量要合理，使每个学生在规定的时限内，经过自己的努力，可以完成任务书规定的设计研究内容。"
+        },
+        {
+          "locator": "/body/p[@paraId=42FB1634]",
+          "type": "paragraph",
+          "text": "四、任务书一经下达，不得随意更改。"
+        },
+        {
+          "locator": "/body/p[@paraId=358F96BE]",
+          "type": "paragraph",
+          "text": "五、各栏填写基本要求。"
+        },
+        {
+          "locator": "/body/p[@paraId=6096C64C]",
+          "type": "paragraph",
+          "text": "（一）毕业设计选题来源、选题性质和完成形式："
+        },
+        {
+          "locator": "/body/p[@paraId=13423232]",
+          "type": "paragraph",
+          "text": "请在合适的对应选项前的“□”内打“√”，科研课题请注明课题项目和名称，项目指“国家青年基金”等。"
+        },
+        {
+          "locator": "/body/p[@paraId=6D8C60CF]",
+          "type": "paragraph",
+          "text": "（二）主要内容和要求："
+        },
+        {
+          "locator": "/body/p[@paraId=3D6ACB54]",
+          "type": "paragraph",
+          "text": "明确设计具体任务，设计原始条件及主要技术指标；设计方案的形成（比较与论证）；该生的侧重点；应完成的工作量，如图纸、译文及计算机应用等要求。"
+        },
+        {
+          "locator": "/body/p[@paraId=45071F2C]",
+          "type": "paragraph",
+          "text": "（三）主要中文参考资料与外文资料："
+        },
+        {
+          "locator": "/body/p[@paraId=3D43A3AA]",
+          "type": "paragraph",
+          "text": "在确定了毕业设计题目和明确了要求后，指导教师应给学生提供一些相关资料和相关信息，或划定参考资料的范围，指导学生收集反映当前研究进展的近1－3年参考资料和文献。外文资料是指导老师根据选题情况明确学生需要阅读或翻译成中文的外文文献。"
+        },
+        {
+          "locator": "/body/p[@paraId=66EA91F0]",
+          "type": "paragraph",
+          "text": "（四）毕业设计的进度安排："
+        },
+        {
+          "locator": "/body/p[@paraId=4FED9494]",
+          "type": "paragraph",
+          "text": "实习、调研、收集资料、方案制定约占总时间的20%；主体工作，包括设计、计算、绘制图纸、实验及结果分析等约占总时间的50%；撰写初稿、修改、定稿约占总时间的30%。"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[2]/tr[1]/tc[1]/p[@paraId=0EE7F694]",
+          "type": "paragraph",
+          "text": "毕业设计题目"
+        },
+        {
+          "locator": "/body/tbl[2]/tr[1]/tc[2]/p[@paraId=73EB4DED]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[2]/tr[2]/tc[1]/p[@paraId=5A650D1F]",
+          "type": "paragraph",
+          "text": "选题来源"
+        },
+        {
+          "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=71B54F8D]",
+          "type": "paragraph",
+          "text": "□结合科研课题   课题名称：                                         "
+        },
+        {
+          "locator": "/body/tbl[2]/tr[2]/tc[2]/p[@paraId=53B9C6A3]",
+          "type": "paragraph",
+          "text": "□生产实际或社会实际           □其他    "
+        },
+        {
+          "locator": "/body/tbl[2]/tr[3]/tc[1]/p[@paraId=204A9372]",
+          "type": "paragraph",
+          "text": "选题性质"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[2]/tr[4]/tc[1]/p[@paraId=649C6A7F]",
+          "type": "paragraph",
+          "text": "主要内容和要求"
+        },
+        {
+          "locator": "/body/p[@paraId=440F9385]",
+          "type": "paragraph",
+          "text": "注：此表如不够填写，可另加附页。"
+        },
+        {
+          "locator": "/body/tbl[3]/tr[1]/tc[1]/p[@paraId=249B40FE]",
+          "type": "paragraph",
+          "text": "主要中文参考资料与外文资料"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[3]/tr[2]/tc[1]/p[@paraId=7049866E]",
+          "type": "paragraph",
+          "text": "工作进度安排"
+        },
+        {
+          "locator": "/body/tbl[3]/tr[3]/tc[1]/p[@paraId=41383AAA]",
+          "type": "paragraph",
+          "text": "起止日期"
+        },
+        {
+          "locator": "/body/tbl[3]/tr[3]/tc[2]/p[@paraId=252F503F]",
+          "type": "paragraph",
+          "text": "主要工作内容"
+        },
+        {
+          "locator": "/body/p[@paraId=0992F12C]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生毕业论文"
+        },
+        {
+          "locator": "/body/p[@paraId=653AD65C]",
+          "type": "paragraph",
+          "text": "开题报告"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[4]/tr[2]/tc[3]/p[@paraId=02087071]",
+          "type": "paragraph",
+          "text": "指导教师及职称"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[2]/tc[4]/p[@paraId=18CE55C0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[3]/tc[1]/p[@paraId=5E4DE42B]",
+          "type": "paragraph",
+          "text": "毕业论文题目"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[3]/tc[2]/p[@paraId=6D374140]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=556CEB49]",
+          "type": "paragraph",
+          "text": "文献综述（选题研究意义、国内外研究现状、主要参考文献等，不少于1000字）"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4E8B344C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4D622D36]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4A6D5625]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=5F8EA800]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=7ECFEAAD]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=096AF785]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=67A668C7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=760E94B9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=286C75C5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=63EEC415]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=59E53856]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=49AF2BDC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=603270FC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=0A255A21]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=55FF4AA6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=3DDFB804]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4AA35901]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=779A5640]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=76EBBBC0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4C8EA12C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=16C9E888]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=5AEA7130]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=6F0518B9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=31926CB1]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=596082F6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=668D0E34]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4C66BDE0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=1C8F242D]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=3A6B981B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=4CB721C5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[4]/tr[4]/tc[1]/p[@paraId=289753DE]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5221BAFE]",
+          "type": "paragraph",
+          "text": "注：此表如不够填写，可另加页。"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[1]/tc[1]/p[@paraId=730F9283]",
+          "type": "paragraph",
+          "text": "研究方案（研究目的、内容、方法、预期成果、条件保障等）"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=15A71651]",
+          "type": "paragraph",
+          "text": "进程计划（各研究环节的时间安排、实施进度、完成程度等）"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=460FE34A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=6A8F5AC2]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=1899AC41]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=5A72030B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=62EB9722]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=0311E0E7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=5FEDA075]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=3A319E98]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=1C9E01E4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=74BB450B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=4F54A032]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=7C9278E6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=1A350E7C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=0079795A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=4F311E0D]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=2A5AC6F2]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=778EF845]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=42D75E69]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=5B4DB8D6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=4FB8C9A6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=7F1CD252]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[2]/tc[1]/p[@paraId=0FBD9F02]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[3]/tc[1]/p[@paraId=5AE1133B]",
+          "type": "paragraph",
+          "text": "论证小组意见:"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[1]/p[@paraId=3E0DB5EF]",
+          "type": "paragraph",
+          "text": "论证小组"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[2]/p[@paraId=2F095689]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[3]/p[@paraId=14498EE7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[4]/p[@paraId=64FBF22E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[4]/tc[5]/p[@paraId=3086CCBE]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[1]/p[@paraId=6B0BC5C5]",
+          "type": "paragraph",
+          "text": "成员签名"
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[2]/p[@paraId=3DAF004A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[3]/p[@paraId=7DAAFC1C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[4]/p[@paraId=2396A739]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[5]/tc[5]/p[@paraId=659A0282]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[5]/tr[6]/tc[1]/p[@paraId=3ADD24D2]",
+          "type": "paragraph",
+          "text": "论证地点:                                论证日期:20    年   月  日"
+        },
+        {
+          "locator": "/body/p[@paraId=6589F1CA]",
+          "type": "paragraph",
+          "text": "注：1.此表为做毕业论文的同学填写。"
+        },
+        {
+          "locator": "/body/p[@paraId=780DAFE4]",
+          "type": "paragraph",
+          "text": "    2.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。"
+        },
+        {
+          "locator": "/body/p[@paraId=4021B20B]",
+          "type": "paragraph",
+          "text": "3.此表可从毕业论文管理系统填写打印或教务处网站下载中心下载填写打印。"
+        },
+        {
+          "locator": "/body/p[@paraId=67B81F58]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=1D975A86]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+        },
+        {
+          "locator": "/body/p[@paraId=52787B34]",
+          "type": "paragraph",
+          "text": "开题论证记录表"
+        }
+      ]
+    },
+    {
+      "page": 14,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[6]/tr[4]/tc[1]/p[@paraId=763042FB]",
+          "type": "paragraph",
+          "text": "论文（设计）题目"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[4]/tc[2]/p[@paraId=34867E49]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=04FDEF3C]",
+          "type": "paragraph",
+          "text": "论证小组质疑："
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=1CCF949C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=6284E6E8]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=1F9B4200]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=223FCD2C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=04AEDC4B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[5]/tc[1]/p[@paraId=4345CB6A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=0520E263]",
+          "type": "paragraph",
+          "text": "学生回答简要记录："
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=5999B460]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=78A99A7E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=1D98C8E4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=095F82B6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=30263637]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=44FABB5D]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=61F2C164]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=38F1F4AB]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=354407B5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[6]/tc[1]/p[@paraId=0DE87E74]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[7]/tc[1]/p[@paraId=7E22F52E]",
+          "type": "paragraph",
+          "text": "论证小组"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[7]/tc[1]/p[@paraId=1E24E1F2]",
+          "type": "paragraph",
+          "text": "组长签名"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[7]/tc[2]/p[@paraId=07FCBA8A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[6]/tr[8]/tc[1]/p[@paraId=0995EE6D]",
+          "type": "paragraph",
+          "text": "   论证地点：                           论证日期：20    年    月    日"
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=3E5B394E]",
+          "type": "paragraph",
+          "text": "答 辩 记 录 表"
+        },
+        {
+          "locator": "/body/p[@paraId=4CB232BD]",
+          "type": "paragraph",
+          "text": "学  院：                                        记录人：               "
+        },
+        {
+          "locator": "/body/tbl[7]/tr[4]/tc[1]/p[@paraId=186374A8]",
+          "type": "paragraph",
+          "text": "论文（设计）题目"
+        },
+        {
+          "locator": "/body/tbl[7]/tr[4]/tc[2]/p[@paraId=3A7F06FB]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=27F4B756]",
+          "type": "paragraph",
+          "text": "答辩小组质疑："
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=722A38D4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=58D30E02]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=33CD3945]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=631ADE09]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=18C4F489]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[5]/tc[1]/p[@paraId=56E5E982]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=14D2035D]",
+          "type": "paragraph",
+          "text": "学生答辩简要记录："
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=57D7BB9C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=0A452BB0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=1AA9B484]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=7B7EDA8E]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=4C93790A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=50974D6C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=57820B70]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=32FDB469]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=49FEE920]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[6]/tc[1]/p[@paraId=53424751]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[1]/p[@paraId=70167FE6]",
+          "type": "paragraph",
+          "text": "答辩小组"
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[1]/p[@paraId=2A357F69]",
+          "type": "paragraph",
+          "text": "成员签名"
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[2]/p[@paraId=6165A55A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[3]/p[@paraId=13854F1B]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[4]/p[@paraId=7C387760]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[7]/tc[5]/p[@paraId=1D48A366]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[8]/tc[1]/p[@paraId=5B00CCD0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[8]/tc[2]/p[@paraId=48BE3063]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[8]/tc[3]/p[@paraId=4353243A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[8]/tc[4]/p[@paraId=67A18BE0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[8]/tc[5]/p[@paraId=3B80032A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[7]/tr[9]/tc[1]/p[@paraId=40CECAA6]",
+          "type": "paragraph",
+          "text": "    答辩地点：                             答辩日期：20    年    月    日"
+        }
+      ]
+    },
+    {
+      "page": 16,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/p[@paraId=0781D3EA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/p[@paraId=5496CC7A]",
+          "type": "paragraph",
+          "text": "注：此表可从毕业论文管理系统或教务处网站下载中心下载。记录、签名栏必须用黑色笔手工填写。"
+        },
+        {
+          "locator": "/body/p[@paraId=382F35C5]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+        },
+        {
+          "locator": "/body/p[@paraId=062E8B0E]",
+          "type": "paragraph",
+          "text": "题目变更审批表"
+        },
+        {
+          "locator": "/body/p[@paraId=42994C50]",
+          "type": "paragraph",
+          "text": "学  院：                      "
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[1]/p[@paraId=199BB6BF]",
+          "type": "paragraph",
+          "text": "变更前论文（设计）题目"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[3]/tc[2]/p[@paraId=05BE72F7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[4]/tc[1]/p[@paraId=0744E856]",
+          "type": "paragraph",
+          "text": "变更后论文（设计）题目"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[4]/tc[2]/p[@paraId=7991DDAA]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[5]/tc[1]/p[@paraId=363878E0]",
+          "type": "paragraph",
+          "text": "论文（设计）题目变更原因："
+        },
+        {
+          "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=273E43A0]",
+          "type": "paragraph",
+          "text": "指导教师意见："
+        },
+        {
+          "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=1AB5068D]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=2DC91642]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=16679CF3]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[6]/tc[1]/p[@paraId=1FFCC7E2]",
+          "type": "paragraph",
+          "text": "                     签    名：           年    月    日   "
+        },
+        {
+          "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=1B611B25]",
+          "type": "paragraph",
+          "text": "教学基层组织意见："
+        },
+        {
+          "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=775B1F4C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=7DCCA409]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=2EBDF005]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[8]/tr[7]/tc[1]/p[@paraId=47ADC84E]",
+          "type": "paragraph",
+          "text": "                       负责人签名：           年    月    日   "
+        }
+      ]
+    },
+    {
+      "page": 17,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[1]/tr[2]/tc[1]/p[@paraId=695743A5]",
+          "type": "paragraph",
+          "text": "学    号"
+        },
+        {
+          "locator": "/body/tbl[1]/tr[3]/tc[1]/p[@paraId=705F6442]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[1]/tc[1]/p[@paraId=012E0A96]",
+          "type": "paragraph",
+          "text": "学生姓名"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[1]/tc[3]/p[@paraId=129EF2B5]",
+          "type": "paragraph",
+          "text": "学    号"
+        },
+        {
+          "locator": "/body/tbl[4]/tr[2]/tc[1]/p[@paraId=23EEB883]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[1]/tc[3]/p[@paraId=63A4C877]",
+          "type": "paragraph",
+          "text": "学    号"
+        },
+        {
+          "locator": "/body/tbl[6]/tr[2]/tc[1]/p[@paraId=6C4D272E]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/tbl[7]/tr[1]/tc[3]/p[@paraId=219E9DE6]",
+          "type": "paragraph",
+          "text": "学    号"
+        },
+        {
+          "locator": "/body/tbl[7]/tr[2]/tc[1]/p[@paraId=5EC87A34]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[1]/tc[1]/p[@paraId=0E1163B2]",
+          "type": "paragraph",
+          "text": "学 生 姓 名"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[1]/tc[3]/p[@paraId=0EDF5772]",
+          "type": "paragraph",
+          "text": "学    号"
+        },
+        {
+          "locator": "/body/tbl[8]/tr[2]/tc[1]/p[@paraId=0ACFEADB]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/p[@paraId=5C37C84E]",
+          "type": "paragraph",
+          "text": "注：1.此表可用黑色签字笔填写，也可打印，但意见栏必须相应责任人亲笔填写。"
+        },
+        {
+          "locator": "/body/p[@paraId=630C4415]",
+          "type": "paragraph",
+          "text": "2.此表可从毕业论文管理系统或教务处网站下载中心下载。"
+        },
+        {
+          "locator": "/body/p[@paraId=689CBB1C]",
+          "type": "paragraph",
+          "text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+        },
+        {
+          "locator": "/body/p[@paraId=5FC30713]",
+          "type": "paragraph",
+          "text": "成绩评定表"
+        },
+        {
+          "locator": "/body/p[@paraId=57F33EF0]",
+          "type": "paragraph",
+          "text": "学  院：                      "
+        },
+        {
+          "locator": "/body/tbl[9]/tr[1]/tc[1]/p[@paraId=29C271A1]",
+          "type": "paragraph",
+          "text": "学生姓名"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[1]/tc[3]/p[@paraId=1688E38F]",
+          "type": "paragraph",
+          "text": "学   号"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[2]/tc[1]/p[@paraId=11C07246]",
+          "type": "paragraph",
+          "text": "年级专业及班级"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[2]/tc[3]/p[@paraId=78F945AE]",
+          "type": "paragraph",
+          "text": "指导教师及职称"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[2]/tc[4]/p[@paraId=0DF3120F]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[3]/tc[1]/p[@paraId=7F510EE2]",
+          "type": "paragraph",
+          "text": "毕业论文（设计）题目"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[3]/tc[2]/p[@paraId=63B4FFFE]",
+          "type": "paragraph",
+          "text": " "
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=36635AEE]",
+          "type": "paragraph",
+          "text": "毕业论文（设计）摘要："
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=1CA43AA6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=636AB224]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=0F4105FE]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=4C8F9EDD]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=3CCE69F7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=55C3EEDD]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=58AF6EB9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=5D379243]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=37F2F320]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=7E65E3D8]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=25E2D1C7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[4]/tc[1]/p[@paraId=09967FF6]",
+          "type": "paragraph",
+          "text": "关键词："
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "truncated": false,
+      "objects": [
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=7E16789B]",
+          "type": "paragraph",
+          "text": "指导教师对该学生论文（设计）的评定意见：（主要包括：1、论文（设计）质量评价，2、论文（设计）不足之处，3、是否同意提交）"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=3F1DC3C0]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=73EB76BC]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=2B371045]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=7A77F836]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=677A24F4]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=53E88FB6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[5]/tc[1]/p[@paraId=1BDE289D]",
+          "type": "paragraph",
+          "text": "                                                       指导老师签名："
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=35688CFC]",
+          "type": "paragraph",
+          "text": "答辩小组评语："
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=06F57D5C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=12D6F5C9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=5B9FDECF]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=1F338D48]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=17BFD415]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=3537E3B3]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[6]/tc[1]/p[@paraId=3C271B1A]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=287E36F9]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=0D0FB737]",
+          "type": "paragraph",
+          "text": "答辩小组成绩（百分制）：              折合五级记分制成绩：            "
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=2EF47AC5]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=74169D79]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=22A416DB]",
+          "type": "paragraph",
+          "text": "组长签名：                   "
+        },
+        {
+          "locator": "/body/tbl[9]/tr[7]/tc[1]/p[@paraId=461C3474]",
+          "type": "paragraph",
+          "text": "年    月    日"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=19A73DC8]",
+          "type": "paragraph",
+          "text": "成"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=3FF9F19B]",
+          "type": "paragraph",
+          "text": "绩"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=72B699E0]",
+          "type": "paragraph",
+          "text": "评"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[1]/p[@paraId=623A2D05]",
+          "type": "paragraph",
+          "text": "定"
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=6CDE0263]",
+          "type": "paragraph",
+          "text": "答辩委员会审查意见："
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=1C0E8D8C]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=7558F7D1]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=71280376]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=2719AD58]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=1F1BDCF7]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=0AF8BAF6]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=032930EF]",
+          "type": "paragraph",
+          "text": ""
+        },
+        {
+          "locator": "/body/tbl[9]/tr[8]/tc[2]/p[@paraId=5E46F1D3]",
+          "type": "paragraph",
+          "text": "答辩委员会主任签名："
+        }
+      ]
+    },
+    {
+      "page": 19,
+      "truncated": false,
+      "objects": []
+    }
+  ]
+}

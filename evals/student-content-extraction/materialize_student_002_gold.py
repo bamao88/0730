@@ -2080,7 +2080,7 @@ def validate_registry(registry: JsonObject) -> None:
             raise ValueError(f"Registry parent is missing: {field['field_id']} -> {parent}")
 
 
-def materialize(*, check: bool) -> None:
+def materialize(*, check: bool, scope: str) -> None:
     registry = registry_v3_snapshot()
     validate_registry(registry)
     registry_content = yaml_bytes(registry)
@@ -2116,6 +2116,26 @@ def materialize(*, check: bool) -> None:
     )
     write_or_check(EXTRACTION_MANIFEST, yaml_bytes(extraction_manifest), check=check)
 
+    if scope == "extraction":
+        print(
+            json.dumps(
+                {
+                    "status": "PASS",
+                    "mode": "check" if check else "materialize",
+                    "scope": scope,
+                    "registry_sha256": registry_sha256,
+                    "gold_sha256": gold_sha256,
+                    "product_review_sha256": product_review_sha256,
+                    "gold_item_count": len(gold["items"]),
+                    "coverage": gold["coverage"]["status_counts"],
+                    "figure_asset_count": len(figure_assets),
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return
+
     contract = synced_fill_contract(registry_sha256)
     contract_content = yaml_bytes(contract)
     contract_sha256 = sha256_bytes(contract_content)
@@ -2146,6 +2166,7 @@ def materialize(*, check: bool) -> None:
             {
                 "status": "PASS",
                 "mode": "check" if check else "materialize",
+                "scope": scope,
                 "registry_sha256": registry_sha256,
                 "gold_sha256": gold_sha256,
                 "product_review_sha256": product_review_sha256,
@@ -2167,8 +2188,17 @@ def main() -> None:
         action="store_true",
         help="Validate that committed/generated artifacts exactly match the deterministic output.",
     )
+    parser.add_argument(
+        "--scope",
+        choices=("all", "extraction"),
+        default="all",
+        help=(
+            "Limit validation/materialization to extraction Gold artifacts. "
+            "The default also checks legacy filling artifacts."
+        ),
+    )
     args = parser.parse_args()
-    materialize(check=args.check)
+    materialize(check=args.check, scope=args.scope)
 
 
 if __name__ == "__main__":

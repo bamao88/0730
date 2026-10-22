@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-23T06:50:27.876683+00:00",
+  "data": {
+    "base_candidate_sequence": 3,
+    "base_ledger_digest": "142c2735b09afb6ba87ff4db8a4d6f43937fefc9acc4f12f0f8d2ec375eff34a",
+    "batch_id": "semantic-batch-0002-9b2d8443",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "DocFit bounded post-unit semantic batch. Load the docfit-school-extract Skill and call docfit_evidence with focus=unit_evidence_packet and unit_id=unit-cover-chinese. This is batch 2 of 10 for accepted unit '封面（中文）'. Each entry includes all unit_contexts it crosses, with exact text per unit. Judge each assigned entry once over its complete text. Ordered parts must end at each unit-context text boundary, even when adjacent roles are identical. The unit packet remains the readable context, but this candidate owns exactly the following source entries in this exact order:\n[\"source-entry-0e8dfd6bd9282950de55de0b\", \"source-entry-e9483ae0a9e7042fd27ac0ce\", \"source-entry-df09cdb77fb41813ec986d20\", \"source-entry-b511494b4d9c6ab1aa0d6e50\", \"source-entry-49da2e477eeed285d9d5663d\", \"source-entry-7860371bca78326ca68727e4\"]\nReturn status=complete with one source_entry_id + ordered parts judgment for every listed entry, in manifest order, and no judgment for any other entry. Choose field IDs only from the packet field_id_vocabulary and preserve exact source text. If the readable school evidence is insufficient, return status=needs_input and stop; do not invent an answer. This is a candidate only: Harness accepts the complete aggregated semantic set atomically after every batch is present. Do not materialize, render, publish, delegate, ask the user, or manage batch state. "
+  },
+  "event_digest": "385a4d294762d8c676d3e3fc165e37a82d398d82690644a19c4dfee459eb55e9",
+  "evidence_mode": "replay",
+  "kind": "request",
+  "manifest_digest": "056555a93618f4a923d17ca4004b3f47eeb8f640bf09a445f714a5c4c1b32ab1",
+  "previous_event_digest": "1d5e478527b1553aae5c1d540486275d3504b15e8fb6efb01290f2089327608d",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 4
+}

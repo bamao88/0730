@@ -1,0 +1,50 @@
+{
+  "e2e_agent_loop": false,
+  "failures": {
+    "app_feedback": {
+      "checks": [],
+      "failure": {
+        "code": "initial_source_inventory_invalid",
+        "message": "The immutable initial source inventory is missing, stale or unsupported.",
+        "origin": "harness",
+        "retryable": false,
+        "suggested_actions": [
+          "Start a fresh preparation task from the source document."
+        ]
+      },
+      "schema_version": 1,
+      "status": "needs_input",
+      "warnings": []
+    },
+    "tool": {
+      "checks": [],
+      "failure": {
+        "code": "initial_source_inventory_invalid",
+        "message": "The immutable initial source inventory is missing, stale or unsupported.",
+        "origin": "harness",
+        "retryable": false,
+        "suggested_actions": [
+          "Start a fresh preparation task from the source document."
+        ]
+      },
+      "schema_version": 1,
+      "status": "needs_input",
+      "warnings": []
+    }
+  },
+  "natural_failure": false,
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/prepare-template-task.json": "6276d066f3bf7307fbd66fb9f14eb9a0364aac19eb60bd4eb70759186f1691c3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/unit-boundary-checkpoint.json": "69f00900af7d4b50dc3498b699065cd43d91f4690853878b46374ede1fc745ab"
+  },
+  "original_task": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task",
+  "original_unchanged": true,
+  "product_acceptance": false,
+  "restored_copy_accepts_original_proposal": true,
+  "submitted_units_unchanged": true,
+  "unit_count": 15,
+  "verification_level": "real input fault injection at Tool/App feedback; no Agent call"
+}

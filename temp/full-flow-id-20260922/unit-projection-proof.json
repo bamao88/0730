@@ -1,0 +1,35 @@
+[
+  {
+    "school": "hunau",
+    "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "inventory_digest": "ce34ab643ad28a1c7a36c7fb25edb412292fb9a63237943237a943351fc2ebec",
+    "source_entry_count": 599,
+    "shared_entry": "source-entry-2eb746e9f08a1ba6d753dcf9",
+    "split_offset_harness_computed": 61,
+    "same_id_both_units": true,
+    "coverage_exact": true,
+    "level": "real input mechanical boundary projection; test-authored boundaries, not Agent judgment replay"
+  },
+  {
+    "school": "njau",
+    "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "inventory_digest": "1f2995dabc5660ae6f897733843023361b0afd3c8342fc8e8c52b93f56cd7679",
+    "source_entry_count": 211,
+    "shared_entry": "source-entry-fc0591d9c1444238d6d0645a",
+    "split_offset_harness_computed": 5,
+    "same_id_both_units": true,
+    "coverage_exact": true,
+    "level": "real input mechanical boundary projection; test-authored boundaries, not Agent judgment replay"
+  },
+  {
+    "school": "pku",
+    "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+    "inventory_digest": "6edf23061f90e0f0ae5541c869d1e8e1b5272702a83ed65d60a30dc91c2669fd",
+    "source_entry_count": 525,
+    "shared_entry": "source-entry-349592d33f40f51453f501f4",
+    "split_offset_harness_computed": 4,
+    "same_id_both_units": true,
+    "coverage_exact": true,
+    "level": "real input mechanical boundary projection; test-authored boundaries, not Agent judgment replay"
+  }
+]

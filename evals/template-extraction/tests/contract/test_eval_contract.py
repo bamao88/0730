@@ -81,10 +81,83 @@ def _valid_report() -> dict[str, Any]:
             "registry_sha256": zero_hash,
             "schemas": {
                 "case": "docfit-template-extraction-case/v1",
-                "actual_contract": "docfit-template-fill-contract/v1",
-                "gold_contract": "docfit-template-fill-contract/v1",
+                "actual_contract": "docfit-template-fill-contract/v2",
+                "gold_contract": "docfit-template-fill-contract/v2",
             },
         },
+    }
+
+
+def _valid_fill_contract_v2() -> dict[str, Any]:
+    return {
+        "schema_version": "docfit-template-fill-contract/v2",
+        "contract_id": "synthetic.current-v2",
+        "template_sha256": "0" * 64,
+        "field_registry_ref": {
+            "registry_id": "docfit.thesis.content_fields",
+            "registry_version": "0.1.0",
+            "sha256": "1" * 64,
+        },
+        "marker_protocol": "docfit-content-control-marker/v1",
+        "regions": [
+            {
+                "region_id": "protected.student_name_label",
+                "owner": "protected",
+                "required": True,
+                "locator": {
+                    "type": "text_anchor",
+                    "story": "document",
+                    "part": "word/document.xml",
+                    "left_anchor": "Name:",
+                    "expected_match_count": 1,
+                },
+            }
+        ],
+        "slots": [
+            {
+                "slot_ref": (
+                    "source_entry_id=source-entry-u-all-block-0001;extent=whole_entry;"
+                    f"source_snapshot_sha256={'3' * 64};"
+                    "field_id=author.name.zh"
+                ),
+                "owner": "slot",
+                "field_id": "author.name.zh",
+                "content_type": "text",
+                "required": True,
+                "cardinality": "one",
+                "locator": {
+                    "type": "content_control_tag",
+                    "story": "document",
+                    "part": "word/document.xml",
+                    "value": (
+                        "source_entry_id=source-entry-u-all-block-0001;"
+                        "extent=whole_entry;"
+                        f"source_snapshot_sha256={'3' * 64};"
+                        "field_id=author.name.zh"
+                    ),
+                    "expected_match_count": 1,
+                },
+                "style_contract_ref": {
+                    "style_contract_id": "style.cover.student_name",
+                    "contract_digest": "2" * 64,
+                },
+            }
+        ],
+        "styles": [
+            {
+                "style_contract_id": "style.cover.student_name",
+                "contract_digest": "2" * 64,
+                "owned_properties": ["run.bold"],
+                "effective_properties": {"run.bold": False},
+                "application_scope": "text",
+                "override_policy": {
+                    "managed_direct_formatting": "clear_conflicts",
+                    "unmanaged_properties": "preserve",
+                },
+                "dependencies": [],
+            }
+        ],
+        "style_contract_set_digest": "3" * 64,
     }
 
 
@@ -114,10 +187,17 @@ def test_env_02_lock_has_no_product_runtime_dependencies() -> None:
 def test_env_03_build_targets_are_mutually_isolated() -> None:
     product = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     evaluator = tomllib.loads((PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert product["tool"]["hatch"]["build"]["targets"]["wheel"]["packages"] == ["src/docfit"]
-    assert evaluator["tool"]["hatch"]["build"]["targets"]["wheel"]["packages"] == [
-        "template_extraction_eval"
+    product_packages = product["tool"]["hatch"]["build"]["targets"]["wheel"]["packages"]
+    evaluator_packages = evaluator["tool"]["hatch"]["build"]["targets"]["wheel"][
+        "packages"
     ]
+    assert product_packages == ["src/docfit"]
+    assert evaluator_packages == [
+        "template_extraction_eval",
+        "template_extraction_prep",
+    ]
+    assert "src/docfit" not in evaluator_packages
+    assert not set(evaluator_packages) & set(product_packages)
 
 
 def test_sch_case_01_minimal_case_is_valid() -> None:
@@ -151,23 +231,27 @@ def test_sch_case_04_candidate_cannot_claim_pass() -> None:
         _validate("case.schema.json", value)
 
 
-def test_sch_fill_01_protected_and_slot_contract_is_valid() -> None:
-    _validate(
-        "fill-contract.schema.json",
-        _yaml(FIXTURE_ROOT / "S00-minimal-pass" / "gold-contract.yaml"),
-    )
+def test_sch_fill_01_current_v2_protected_and_slot_contract_is_valid() -> None:
+    _validate("fill-contract.schema.json", _valid_fill_contract_v2())
 
 
 def test_sch_fill_02_invalid_owner_fails() -> None:
-    value = _yaml(FIXTURE_ROOT / "S00-minimal-pass" / "gold-contract.yaml")
+    value = _valid_fill_contract_v2()
     value["regions"][0]["owner"] = "generated"
     with pytest.raises(ValidationError):
         _validate("fill-contract.schema.json", value)
 
 
 def test_sch_fill_03_invalid_component_locator_fails() -> None:
-    value = _yaml(FIXTURE_ROOT / "S00-minimal-pass" / "gold-contract.yaml")
+    value = _valid_fill_contract_v2()
     value["slots"][0]["component_locators"] = [{"type": "content_control_tag"}]
+    with pytest.raises(ValidationError):
+        _validate("fill-contract.schema.json", value)
+
+
+def test_sch_fill_04_retired_v1_version_fails_closed() -> None:
+    value = _valid_fill_contract_v2()
+    value["schema_version"] = "docfit-template-fill-contract/v1"
     with pytest.raises(ValidationError):
         _validate("fill-contract.schema.json", value)
 

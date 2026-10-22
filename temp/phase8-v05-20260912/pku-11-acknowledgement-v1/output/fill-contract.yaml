@@ -1,0 +1,384 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.52dbf9c8148e2e78
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: 52dbf9c8148e2e78da22916641a22c98cc791c42b05b6cbd4d700c72656595a0
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: 304e889a3cc1753d58e9b43d3628e8783f9ced742078dda66784c01323d44dbf
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+  field_id: acknowledgement.body
+  style_role_id: style.slot.49d228c1a738b2d939038213
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.hanging_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+  span_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+  field_id: acknowledgement.body
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.49d228c1a738b2d939038213
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 致谢
+  provenance:
+    field_id: acknowledgement.body
+    span_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+    slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+    source_entry_id: source-entry-63fed97726dff08ab6543496
+    source_snapshot_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+    source_inventory_digest: 218dca86b247a862ba36f9709a844894efee42a9ddc80a8114417bb17b9e89d8
+    expected_source_content: 感谢铁岭TV。
+    word_fragments: &id001
+    - fingerprint: 3e7a6d4b0934a9adaf162685e73c346b353952c5087f3e337171bcaf28f69362
+      locator: /body/p[@paraId=70685273]/r[1]
+      object_id: obj-68501711c2cd6600462423e7
+      object_ref:
+        document_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+        expected_fingerprint: 3e7a6d4b0934a9adaf162685e73c346b353952c5087f3e337171bcaf28f69362
+        object_id: obj-68501711c2cd6600462423e7
+      object_text_end: 4
+      object_text_start: 0
+      source_text_end: 4
+      source_text_start: 0
+      text: 感谢铁岭
+    - fingerprint: a6d1167b1fe030f2db8e10aace737e33dc17ea2fb961bbbc89466de2a57446ae
+      locator: /body/p[@paraId=70685273]/r[2]
+      object_id: obj-1e7ef97128981f1d971ef97d
+      object_ref:
+        document_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+        expected_fingerprint: a6d1167b1fe030f2db8e10aace737e33dc17ea2fb961bbbc89466de2a57446ae
+        object_id: obj-1e7ef97128981f1d971ef97d
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 6
+      source_text_start: 4
+      text: TV
+    - fingerprint: 9502ee567482a1155acbe52d64249179813034bd5ae7e3456ab65fd038dd169e
+      locator: /body/p[@paraId=70685273]/r[3]
+      object_id: obj-b9f91bd78efd27d2aad1c304
+      object_ref:
+        document_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+        expected_fingerprint: 9502ee567482a1155acbe52d64249179813034bd5ae7e3456ab65fd038dd169e
+        object_id: obj-b9f91bd78efd27d2aad1c304
+      object_text_end: 1
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 6
+      text: 。
+    accepted_span: &id002
+      covered_object_ids:
+      - obj-68501711c2cd6600462423e7
+      - obj-1e7ef97128981f1d971ef97d
+      - obj-b9f91bd78efd27d2aad1c304
+      expected_source_content: 感谢铁岭TV。
+      extent:
+        end: 7
+        kind: text
+        start: 0
+      field_id: acknowledgement.body
+      judgment_index: 1
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-63fed97726dff08ab6543496
+      slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+      source_entry_id: source-entry-63fed97726dff08ab6543496
+      source_inventory_digest: 218dca86b247a862ba36f9709a844894efee42a9ddc80a8114417bb17b9e89d8
+      source_snapshot_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      span_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      text: 感谢铁岭TV。
+      text_end: 7
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id003
+      source_judgment_ref: semantic_judgments[1]
+      part_index: 0
+      semantic_judgments_sha256: 4921c8a1fa897983b623cab83aac54c2523ad638229226e7bb86c49a38d01612
+      field_vocabulary_digest: f9ff558a0583b46d12c091bcea5526c2a38af050abc30bf4c31b37e6f7d69895
+    actual_result: &id004
+      outcome: applied
+      candidate_before_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      candidate_after_sha256: 52dbf9c8148e2e78da22916641a22c98cc791c42b05b6cbd4d700c72656595a0
+      operation_sha256: 47f28a521c02f02d9d10727e51de62f2d6014fa8bc0190f3736be49fcaa0a0af
+      mutation_receipt_sha256: eb00f0e8695c405ee4765dec30c82561cd54cf38957e6bf34ee6c060cd0d48ca
+  style_contract_ref:
+    style_contract_id: style.slot.49d228c1a738b2d939038213
+    contract_digest: 71cfffb97aac29844e425fd151ec110b1d22a2c14fb30847d156efc078f460c4
+styles:
+- style_contract_id: style.slot.49d228c1a738b2d939038213
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.first_line_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - paragraph.widow_control
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.first_line_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 7.8
+    paragraph.space_before_pt: 7.8
+    paragraph.widow_control: false
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 12.0
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 71cfffb97aac29844e425fd151ec110b1d22a2c14fb30847d156efc078f460c4
+  label: acknowledgement.body @ source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+    field_id: acknowledgement.body
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 456c39435cbb344638bec7708cf65ec7d01905049c2fcfa7a08afeaf95ed2c2f
+provenance:
+  source_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+    template_sha256: 52dbf9c8148e2e78da22916641a22c98cc791c42b05b6cbd4d700c72656595a0
+    source_inventory_digest: 218dca86b247a862ba36f9709a844894efee42a9ddc80a8114417bb17b9e89d8
+    semantic_judgments_sha256: 4921c8a1fa897983b623cab83aac54c2523ad638229226e7bb86c49a38d01612
+    field_vocabulary_digest: f9ff558a0583b46d12c091bcea5526c2a38af050abc30bf4c31b37e6f7d69895
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 2512b5399b148b751f10dada6225a02d2feea3235a7c12826dec74d426d8e411
+    slots:
+    - field_id: acknowledgement.body
+      span_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      slot_ref: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+      source_entry_id: source-entry-63fed97726dff08ab6543496
+      source_snapshot_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      source_inventory_digest: 218dca86b247a862ba36f9709a844894efee42a9ddc80a8114417bb17b9e89d8
+      expected_source_content: 感谢铁岭TV。
+      word_fragments: *id001
+      accepted_span: *id002
+      accepted_result: *id003
+      actual_result: *id004
+  materialization_digest: 82bde41b6db1b03e70771863d64d8edc8ce1407c47bc72a0d8bd8a9b3671a0aa
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 20
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af
+    final_sha256: 52dbf9c8148e2e78da22916641a22c98cc791c42b05b6cbd4d700c72656595a0
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: 52dbf9c8148e2e78da22916641a22c98cc791c42b05b6cbd4d700c72656595a0
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 456c39435cbb344638bec7708cf65ec7d01905049c2fcfa7a08afeaf95ed2c2f
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 456c39435cbb344638bec7708cf65ec7d01905049c2fcfa7a08afeaf95ed2c2f
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.49d228c1a738b2d939038213
+          contract_digest: 71cfffb97aac29844e425fd151ec110b1d22a2c14fb30847d156efc078f460c4
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+        style_contract_id: style.slot.49d228c1a738b2d939038213
+        contract_digest: 71cfffb97aac29844e425fd151ec110b1d22a2c14fb30847d156efc078f460c4
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-63fed97726dff08ab6543496;extent=text[0:7];source_snapshot_sha256=ce316a7d8edf0a9aba8e4743b8cc080bca7d95826db9b6edb3c1bee5894659af;field_id=acknowledgement.body
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

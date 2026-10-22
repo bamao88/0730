@@ -1,8 +1,10 @@
-"""Versioned JSON Schemas for the five stable Agent-visible Tools."""
+"""Versioned JSON Schemas for Agent-visible DocFit Tools."""
 
 from __future__ import annotations
 
 from typing import Any
+
+from docfit.tools.edit_actions import EDIT_ACTIONS
 
 JsonSchema = dict[str, Any]
 
@@ -46,6 +48,9 @@ INSPECT_SCHEMA: JsonSchema = {
             "uniqueItems": True,
         },
         "output": {"type": "string"},
+        "object_offset": {"type": "integer", "minimum": 0},
+        "object_limit": {"type": "integer", "minimum": 1, "maximum": 200},
+        "include_objects": {"type": "boolean"},
     },
     "required": ["input_docx"],
     "additionalProperties": False,
@@ -56,19 +61,7 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
     "properties": {
         "action": {
             "type": "string",
-            "enum": [
-                "replace_text",
-                "apply_style",
-                "set_properties",
-                "import_content_objects",
-                "clear_content",
-                "remove_object",
-                "materialize_slot",
-                "materialize_structure",
-                "normalize_effective_format",
-                "refresh_toc",
-                "ensure_page_start",
-            ],
+            "enum": list(EDIT_ACTIONS),
         },
         "target_ref": OBJECT_REF_SCHEMA,
         "expected_text": {"type": "string", "minLength": 1},
@@ -90,7 +83,7 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
         "position": {"type": "string", "enum": ["before", "after", "end"]},
         "include_source_final_section_properties": {"type": "boolean"},
         "field_id": {"type": "string", "minLength": 1},
-        "slot_id": {"type": "string", "minLength": 1},
+        "slot_ref": {"type": "string", "minLength": 1},
         "placeholder_text": {"type": "string", "minLength": 1},
         "effective_format": {
             "type": "object",
@@ -107,7 +100,7 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
                 "properties": {
                     "target_ref": OBJECT_REF_SCHEMA,
                     "field_id": {"type": "string", "minLength": 1},
-                    "slot_id": {"type": "string", "minLength": 1},
+                    "slot_ref": {"type": "string", "minLength": 1},
                     "placeholder_text": {"type": "string", "minLength": 1},
                     "effective_format": {
                         "type": "object",
@@ -118,7 +111,7 @@ _EDIT_OPERATION_SCHEMA: JsonSchema = {
                         "additionalProperties": False,
                     },
                 },
-                "required": ["target_ref", "field_id"],
+                "required": ["target_ref", "field_id", "slot_ref"],
                 "additionalProperties": False,
             },
             "minItems": 1,

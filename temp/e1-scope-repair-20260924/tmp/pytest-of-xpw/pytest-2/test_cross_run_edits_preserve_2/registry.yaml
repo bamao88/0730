@@ -1,0 +1,51 @@
+registry_id: test
+registry_version: '1'
+fields:
+  - field_id: thesis.title.zh
+    label: 中文题目
+    content_type: text
+  - field_id: thesis.title.en
+    label: 英文论文题目
+    content_type: text
+    materialization:
+      slot_layout: centered_title
+  - field_id: author.name.zh
+    label: 作者中文姓名
+    content_type: text
+  - field_id: author.name.en
+    label: 作者英文姓名
+    content_type: text
+  - field_id: author.cohort_class
+    label: 年级专业班级
+    content_type: text
+  - field_id: advisor.name.zh
+    label: 导师中文姓名
+    content_type: text
+  - field_id: advisor.name.en
+    label: 导师英文姓名
+    content_type: text
+  - field_id: advisor.title
+    label: 导师职称
+    content_type: text
+  - field_id: author.department
+    label: 学院
+    content_type: text
+  - field_id: author.department.en
+    label: 英文学院
+    content_type: text
+  - field_id: submission.date
+    label: 提交年月
+    content_type: text
+  - field_id: abstract.zh
+    label: 中文摘要
+    content_type: rich_text
+  - field_id: keywords.zh
+    label: 中文关键词
+    content_type: text
+  - field_id: appendix.body
+    label: 附录内容
+    content_type: section
+  - field_id: generated.toc
+    label: 目录
+    content_type: section
+    value_sources: [system_generated]

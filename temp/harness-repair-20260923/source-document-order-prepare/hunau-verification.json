@@ -1,0 +1,10 @@
+{
+  "agent_called": false,
+  "initial_inventory_sha256": "b41b3a68ed4777c367e7403a22624900b219901746429cba549550698b43ec8c",
+  "product_acceptance": false,
+  "source_entry_count": 599,
+  "source_order_version": "docfit-word-story-order/v1",
+  "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+  "task_root": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/source-document-order-prepare/hunau",
+  "verification_level": "real preparation through actual OfficeCLI and App; no Agent call"
+}

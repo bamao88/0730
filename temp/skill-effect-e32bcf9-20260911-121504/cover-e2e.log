@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "template_agent_needs_input",
+    "retryable": false,
+    "message": "The main Agent needs additional semantic input: ['Cover unit lacks a textual source entry that contains the Chinese-title student-value span (thesis.title.zh fill area). Layout context shows blank_layout_candidate at order 6 but no source entry text covers the title value span, so a fill_slot part cannot be emitted without violating ordered-part text-coverage.', 'Cover unit lacks a textual source entry that contains the English-title student-value span (thesis.title.en fill area). Layout context shows blank_layout_candidate at orders 10, 11, 18, 19 but no source entry text covers the title value span, so a fill_slot part cannot be emitted without violating ordered-part text-coverage.']",
+    "suggested_actions": []
+  }
+}

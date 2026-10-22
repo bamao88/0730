@@ -1,0 +1,96 @@
+{
+  "body_cleanup_count": 10,
+  "body_first_bindings": [
+    [
+      {
+        "block_id": "u-paper-body:block-0020",
+        "member_field_id": "body.heading.outline1",
+        "source_judgment_ids": [
+          "J-paper-body-017-body-track-a"
+        ],
+        "variant_id": "track-a-science",
+        "variant_role": "primary"
+      },
+      {
+        "block_id": "u-paper-body:block-0021",
+        "member_field_id": "body.paragraph",
+        "source_judgment_ids": [
+          "J-paper-body-017-body-track-a"
+        ],
+        "variant_id": "track-a-science",
+        "variant_role": "primary"
+      },
+      {
+        "block_id": "u-paper-body:block-0022",
+        "member_field_id": "body.heading.outline1",
+        "source_judgment_ids": [
+          "J-paper-body-017-body-track-a"
+        ],
+        "variant_id": "track-a-science",
+        "variant_role": "primary"
+      }
+    ],
+    [
+      {
+        "block_id": "u-paper-body:block-0030",
+        "member_field_id": "body.paragraph",
+        "source_judgment_ids": [
+          "J-paper-body-018-body-track-b"
+        ],
+        "variant_id": "track-b-humanities",
+        "variant_role": "alternate"
+      },
+      {
+        "block_id": "u-paper-body:block-0031",
+        "member_field_id": "body.heading.outline1",
+        "source_judgment_ids": [
+          "J-paper-body-018-body-track-b"
+        ],
+        "variant_id": "track-b-humanities",
+        "variant_role": "alternate"
+      },
+      {
+        "block_id": "u-paper-body:block-0032",
+        "member_field_id": "body.heading.outline1",
+        "source_judgment_ids": [
+          "J-paper-body-018-body-track-b"
+        ],
+        "variant_id": "track-b-humanities",
+        "variant_role": "alternate"
+      }
+    ]
+  ],
+  "body_intent_count": 2,
+  "body_intent_variant_roles": [
+    "primary",
+    "alternate"
+  ],
+  "body_member_binding_lengths": [
+    9,
+    10
+  ],
+  "body_member_lengths": [
+    9,
+    10
+  ],
+  "body_operation_count": 1,
+  "body_operation_field_ids": [
+    [
+      "body.chapters",
+      "body.heading.outline1",
+      "body.paragraph",
+      "body.heading.outline2",
+      "body.heading.outline3"
+    ]
+  ],
+  "body_operation_variant_roles": [
+    "primary"
+  ],
+  "candidate": "work/.docfit/post-unit-materialization/candidate-0001.docx",
+  "candidate_sha256_matches": true,
+  "operation_count": 16,
+  "passed": true,
+  "receipt_status": "ok",
+  "root": "temp/phase6-canonical-binding-real-replay-20260827-164928/paper-body-canonical-plan",
+  "status": "ok"
+}

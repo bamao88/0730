@@ -9,3 +9,8 @@ edit-plan.json
 !smoke/school-template.docx
 !smoke/school-requirements.pdf
 !smoke/synthetic-marker.png
+
+# Template extraction 0820 minimal-unit inputs are stable generation/replay
+# fixtures, not Eval Gold or generated Actual outputs.
+!template-extraction/minimal-units-0820/units/**/school-template.docx
+!template-extraction/minimal-units-0820/units/**/school-requirements.pdf

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "published": true,
+  "artifact_path": "output/final-template.docx",
+  "fill_contract_path": "output/fill-contract.yaml",
+  "template_sha256": "654e9bc00e6d4a78ea5c433544d9cf4351b44eab7b9f92b0b477568c175a33b3",
+  "counts": {
+    "slot": 7,
+    "remove": 0,
+    "manual": 0,
+    "gap": 7,
+    "unresolved": 42
+  },
+  "checks": [
+    {
+      "name": "source_unchanged",
+      "result": "ok",
+      "sha256": "e201f1fd80cc264b0aa58795fff3ce0b40cf42303df33ebffc461dda31fde92c"
+    },
+    {
+      "name": "registry_bound",
+      "result": "ok",
+      "registry_id": "docfit.thesis.content_fields",
+      "registry_version": "0.5.0",
+      "sha256": "6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17"
+    },
+    {
+      "name": "validation_bound",
+      "result": "ok"
+    },
+    {
+      "name": "visual_review_bound",
+      "result": "ok"
+    },
+    {
+      "name": "package_reopens",
+      "result": "ok"
+    },
+    {
+      "name": "fill_contract_hash_matches_word",
+      "result": "ok"
+    }
+  ]
+}

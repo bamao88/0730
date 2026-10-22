@@ -1,0 +1,225 @@
+{
+  "status": "complete",
+  "summary": "Built post-unit semantic_judgments for the cover unit of 湖南农业大学 全日制普通本科生毕业论文(设计) 封面模板. The preceding 附件1 封面基本格式 preamble (block 1) is style-obligation context kept by post-unit handling and is not emitted as a unit judgment. All 16 in-unit source entries are partitioned in document order: cover layout preamble instructions and per-element font/size/spacing hints are style_only; the school name (湖 南 农 业 大 学) and document type (全日制普通本科生毕业论文(设计)) are fixed_label; the conditional parentheses around 设计 in the document type stay as fixed_label text (the conditional narrowing is a materialization concern, not a part split); the two title placeholders are fill_slot for thesis.title.zh and thesis.title.en; the five basic-information lines are partitioned into fixed_label + fill_slot using author.name.zh, author.student_id, author.cohort_class (年级/专业/班级复合字段), advisor.name.zh and advisor.title; the college entry uses author.department; the (学院名用全称) note is style_only; the location 湖南·长沙 is fixed_label; the submission date placeholder is fill_slot for submission.date. Field IDs are taken only from the pre-input field_id_vocabulary, and only fill_slot parts carry field_id.",
+  "semantic_judgments": [
+    {
+      "source_entry_id": "source-entry-eee86579316ea7c574e3207f",
+      "parts": [
+        {
+          "text": "（一号华文行楷空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "Empty-line format instruction introducing the cover layout; it specifies the empty-line pattern and font (一号华文行楷) for the line gap before the university name. It is a layout/style obligation on the next slot, not a content value, so it carries no field_id and no cleanup."
+    },
+    {
+      "source_entry_id": "source-entry-b153f5e6bf86719aca50c7f9",
+      "parts": [
+        {
+          "text": "湖 南 农 业 大 学（一号华文行楷加粗）",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号华文行楷加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "湖 南 农 业 大 学 is the school name that must remain verbatim on every filled cover (it identifies the institution, not a per-student value), so it is fixed_label. The trailing parenthetical specifies the font and bold requirement for that label; it is a style requirement on the label, not part of the label text, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-41188746a2863266fad60518",
+      "parts": [
+        {
+          "text": "全日制普通本科生毕业论文(设计)",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（一号黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "全日制普通本科生毕业论文(设计) is the document type that identifies the cover for every undergraduate thesis/design; it is fixed_label. The school-conditional \"所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要\" lives in the outer preamble (block 1) and applies to this label at materialization time, so it does not split this part further. The trailing parenthetical specifies the font and bold requirement; it is a style requirement on the label, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-e726637bb392f4a1cc5cf765",
+      "parts": [
+        {
+          "text": "（一号黑体空一行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "Empty-line format instruction between the document type line and the title lines. It specifies an empty-line gap and the font for that line; it is a layout/style obligation, not a content value, so it carries no field_id and no cleanup."
+    },
+    {
+      "source_entry_id": "source-entry-329659f5fc3d1413fb341fb3",
+      "parts": [
+        {
+          "text": "毕业论文（设计）中文题目",
+          "role": "fill_slot",
+          "field_id": "thesis.title.zh"
+        },
+        {
+          "text": "（小二黑体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "The whole \"毕业论文（设计）中文题目\" segment occupies the Chinese title position on the cover; the next slot shows no real value. Per the school rule, when the work is a 论文 the parenthetical 设计 is dropped and when it is a 设计 the 论文 is dropped — that conditional belongs to post-unit materialization, not to a part split. The whole placeholder text is the Chinese thesis title fill position, so it is a single fill_slot bound to thesis.title.zh (which has allowed_part_roles includes fill_slot). The trailing parenthetical specifies the font and bold requirement on the title value, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-bf74a3353df418bfdb93147b",
+      "parts": [
+        {
+          "text": "TITLE OF GRADUATION PAPER",
+          "role": "fill_slot",
+          "field_id": "thesis.title.en"
+        },
+        {
+          "text": "（四号Times New Roman加粗，大写）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "TITLE OF GRADUATION PAPER occupies the English title position on the cover; this is the English thesis title fill position, so it is a single fill_slot bound to thesis.title.en (allowed_part_roles includes fill_slot). The parenthetical specifies the font, weight, and capitalization requirement on the title value, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-6717abf7ed20791ca2c6ce82",
+      "parts": [
+        {
+          "text": "（根据题目长短四号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "Empty-line format instruction between the English title and the basic-information block. It specifies that the gap depends on title length and the font for that gap; it is a layout/style obligation, not a content value, so it carries no field_id and no cleanup."
+    },
+    {
+      "source_entry_id": "source-entry-3b879d2fe97520fea28d9eb9",
+      "parts": [
+        {
+          "text": "□□□□□□学生姓名（三号黑体加粗）：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××（或×□×）",
+          "role": "fill_slot",
+          "field_id": "author.name.zh"
+        },
+        {
+          "text": "（三号楷体加粗）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "The 学生姓名 prefix with its leading alignment spaces, the size hint \"三号黑体加粗\" and the colon is the label segment and stays as fixed_label. ×××（或×□×） is the example placeholder occupying the author name position, so it is fill_slot bound to author.name.zh (allowed_part_roles includes fill_slot). The trailing parenthetical specifies the font and bold requirement on the name value, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-7bd37b8065820e49cdd60b0d",
+      "parts": [
+        {
+          "text": "□□□□□□学□□号：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××××××××××",
+          "role": "fill_slot",
+          "field_id": "author.student_id"
+        }
+      ],
+      "reason": "学号 with its leading alignment spaces and the colon is the label segment and stays as fixed_label. 20×××××××××× is the example placeholder occupying the student-id position, so it is fill_slot bound to author.student_id (allowed_part_roles includes fill_slot). No style hint follows in this entry, so no style_only part is needed."
+    },
+    {
+      "source_entry_id": "source-entry-33b7069c5a23b51f75a2deb5",
+      "parts": [
+        {
+          "text": "□□□□□□年级专业及班级：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××级×××（×）班",
+          "role": "fill_slot",
+          "field_id": "author.cohort_class"
+        }
+      ],
+      "reason": "年级专业及班级 with its leading alignment spaces and the colon is the label segment and stays as fixed_label. The template explicitly merges grade, major, and class into one fillable slot; the vocabulary provides author.cohort_class as the composite 复合信息 field for exactly this case (allowed_part_roles includes fill_slot), so the example placeholder is a single fill_slot bound to author.cohort_class. No style hint follows in this entry, so no style_only part is needed."
+    },
+    {
+      "source_entry_id": "source-entry-1534d668fc2eb3a6672843d7",
+      "parts": [
+        {
+          "text": "□□□□□□指导老师及职称：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "×××",
+          "role": "fill_slot",
+          "field_id": "advisor.name.zh"
+        },
+        {
+          "text": "□",
+          "role": "fixed_label"
+        },
+        {
+          "text": "教授",
+          "role": "fill_slot",
+          "field_id": "advisor.title"
+        }
+      ],
+      "reason": "指导老师及职称 with its leading alignment spaces and the colon is the label segment and stays as fixed_label. The label covers both name and title, so two distinct fillable values sit at this position. The example name ××× and example title 教授 must be bound to different fields because the vocabulary exposes advisor.name.zh and advisor.title separately (both allowed_part_roles include fill_slot). The intervening one-space-width character ⛔ between them is layout spacing for the label/value boundary and is kept as fixed_label; it does not carry a field. No style hint follows in this entry, so no style_only part is needed."
+    },
+    {
+      "source_entry_id": "source-entry-0d171ab0a1928731d320b622",
+      "parts": [
+        {
+          "text": "□□□□□□学□□院：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "××××学院",
+          "role": "fill_slot",
+          "field_id": "author.department"
+        },
+        {
+          "text": "（学院名用全称）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "学院 with its leading alignment spaces and the colon is the label segment and stays as fixed_label. ××××学院 is the example placeholder occupying the college/department position, so it is fill_slot bound to author.department (allowed_part_roles includes fill_slot). The trailing parenthetical is a school format rule requiring the college name to be written in full, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-4d6dbaaca2332dd64d37df71",
+      "parts": [
+        {
+          "text": "（三号字空二或三行）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "Empty-line format instruction between the basic-information block and the location/date footer. It specifies the font and the gap pattern; it is a layout/style obligation, not a content value, so it carries no field_id and no cleanup."
+    },
+    {
+      "source_entry_id": "source-entry-fe79111d3d405cb6f20e7d39",
+      "parts": [
+        {
+          "text": "湖南·长沙",
+          "role": "fixed_label"
+        },
+        {
+          "text": "（小三号黑体）",
+          "role": "style_only"
+        }
+      ],
+      "reason": "湖南·长沙 is the school location that must remain verbatim on every filled cover; it identifies the institution's location, not a per-student value, so it is fixed_label. The trailing parenthetical specifies the font and bold requirement on the location, so it is style_only."
+    },
+    {
+      "source_entry_id": "source-entry-da54fbc60d2e3ec73e91b3b7",
+      "parts": [
+        {
+          "text": "提交日期：",
+          "role": "fixed_label"
+        },
+        {
+          "text": "20××年××月",
+          "role": "fill_slot",
+          "field_id": "submission.date"
+        }
+      ],
+      "reason": "提交日期 with the colon is the label segment and stays as fixed_label. 20××年××月 is the example placeholder occupying the submission date position on the cover, so it is fill_slot bound to submission.date (allowed_part_roles includes fill_slot). No style hint follows in this entry, so no style_only part is needed."
+    }
+  ]
+}

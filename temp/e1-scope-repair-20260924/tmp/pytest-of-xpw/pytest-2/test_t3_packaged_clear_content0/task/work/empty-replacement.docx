@@ -1,0 +1,1 @@
+PKcandidate{"input_docx": "input/school-template.docx", "operations": [{"action": "clear_content", "target_ref": {"document_sha256": "67c5762cde08890c015dc6d8e294e6694b348c7e5b71157a2a40bd0fc6237afd", "expected_fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "object_id": "obj-target"}}], "output_docx": "work/empty-replacement.docx"}

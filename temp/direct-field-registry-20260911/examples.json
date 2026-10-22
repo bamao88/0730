@@ -1,0 +1,152 @@
+[
+  {
+    "说明": "文档类别标题是固定文字；紧接的题名提示独占实际题名位置，另无填写区。后者整段替换，不能保留提示前缀或追加新槽。",
+    "输入": [
+      {
+        "n": 101,
+        "text": "本科毕业论文封面（居中）"
+      },
+      {
+        "n": 102,
+        "text": "本科毕业论文中文标题（黑体）"
+      }
+    ],
+    "输出": {
+      "items": [
+        {
+          "n": 101,
+          "parts": [
+            {
+              "text": "本科毕业论文封面",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（居中）",
+              "role": "style_only",
+              "note": "约束固定文档标题"
+            }
+          ]
+        },
+        {
+          "n": 102,
+          "parts": [
+            {
+              "text": "本科毕业论文中文标题",
+              "role": "fill_slot",
+              "field_id": "thesis.title.zh"
+            },
+            {
+              "text": "（黑体）",
+              "role": "style_only",
+              "note": "约束中文题名"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "说明": "前导间距和标签保留，学号是一个完整字段值。",
+    "输入": [
+      {
+        "n": 103,
+        "text": "□□学籍编号：S20260001"
+      }
+    ],
+    "输出": {
+      "items": [
+        {
+          "n": 103,
+          "parts": [
+            {
+              "text": "□□学籍编号：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "S20260001",
+              "role": "fill_slot",
+              "field_id": "author.student_id"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "说明": "同一行分别有作者姓名、导师姓名、导师职称三个字段。导师姓名和职称紧挨着也需分开；括号说明约束标签。",
+    "输入": [
+      {
+        "n": 104,
+        "text": "作者：王宁；指导教师（宋体）：陈华副教授"
+      }
+    ],
+    "输出": {
+      "items": [
+        {
+          "n": 104,
+          "parts": [
+            {
+              "text": "作者：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "王宁",
+              "role": "fill_slot",
+              "field_id": "author.name.zh"
+            },
+            {
+              "text": "；指导教师",
+              "role": "fixed_label"
+            },
+            {
+              "text": "（宋体）",
+              "role": "style_only",
+              "note": "约束指导教师标签"
+            },
+            {
+              "text": "：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "陈华",
+              "role": "fill_slot",
+              "field_id": "advisor.name.zh"
+            },
+            {
+              "text": "副教授",
+              "role": "fill_slot",
+              "field_id": "advisor.title"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "说明": "学校在一个位置整体填写年级、专业和班级，语义表提供 author.cohort_class 复合字段；值整体替换，标签保留。",
+    "输入": [
+      {
+        "n": 105,
+        "text": "年级、专业、班级：2025级园林（3）班"
+      }
+    ],
+    "输出": {
+      "items": [
+        {
+          "n": 105,
+          "parts": [
+            {
+              "text": "年级、专业、班级：",
+              "role": "fixed_label"
+            },
+            {
+              "text": "2025级园林（3）班",
+              "role": "fill_slot",
+              "field_id": "author.cohort_class"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

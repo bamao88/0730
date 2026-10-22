@@ -15,7 +15,9 @@ from docfit.tools.runtime import JsonObject, ToolFailure, sha256_json
 STYLE_CONTRACT_SCHEMA_VERSION = "docfit-style-contract-set/v2"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _STYLE_ID = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
-_PROPERTY_PATH = re.compile(r"^(run|paragraph|container|page)\.[a-z][a-z0-9_]*$")
+_PROPERTY_PATH = re.compile(
+    r"^(run|paragraph|container|page|cell)\.[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*$"
+)
 _SCOPES = ("text", "run", "paragraph", "block", "table", "section")
 _FILL_CONTRACT_SCHEMA_VERSION = "docfit-template-fill-contract/v2"
 

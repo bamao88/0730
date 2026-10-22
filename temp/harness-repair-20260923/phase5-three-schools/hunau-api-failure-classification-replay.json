@@ -1,0 +1,28 @@
+{
+  "verification_level": "real saved SDK metadata replay; no new Agent query",
+  "original_archive": "temp/harness-repair-20260923/phase5-three-schools/hunau-undergraduate-revision-contract-task/work/.docfit/unit-boundary-executions/f654393f58b74d8b8aa53fdc22f404c5.json",
+  "original_archive_sha256": "ddc0cf4055fc212998efb0e31732a4e9c0b0f7e2f395fe16ca12da01346dfd6d",
+  "original_application_failure": {
+    "code": "unit_checkpoint_result_invalid",
+    "message": "Unit boundary checkpoint did not return structured units.",
+    "origin": "agent",
+    "retryable": true,
+    "status": "error",
+    "suggested_actions": []
+  },
+  "reclassified_failure": {
+    "schema_version": 1,
+    "status": "error",
+    "checks": [],
+    "warnings": [],
+    "failure": {
+      "origin": "environment",
+      "code": "template_agent_api_error",
+      "retryable": true,
+      "message": "The model API request failed; no semantic revision was requested. Inspect the saved SDK diagnostics.",
+      "suggested_actions": []
+    }
+  },
+  "source_runtime_sha256": "a66e26ab24712277b5121be0f5e528c44543ef46d337400b6f5edc83da608119",
+  "does_not_fix_provider_failure": true
+}

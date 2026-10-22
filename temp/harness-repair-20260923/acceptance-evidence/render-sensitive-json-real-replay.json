@@ -1,0 +1,59 @@
+{
+  "verification_level": "real reading-packet replay, not new Agent output",
+  "source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/object-inventory.json",
+  "sha256": "2352ffca31c5f02fbf232d877e28beebc6c2b473686255fd66f31308b18d3efb",
+  "distinct_entries_with_json_copy": 1,
+  "all_copies_roundtrip_exactly": true,
+  "entries": [
+    {
+      "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603",
+      "text": " 学术学位     专业学位",
+      "text_length": 16,
+      "leading_whitespace_count": 0,
+      "trailing_whitespace_count": 0,
+      "render_sensitive_codepoints": [
+        {
+          "offset": 0,
+          "codepoint": "U+F06F",
+          "unicode_category": "Co"
+        },
+        {
+          "offset": 10,
+          "codepoint": "U+F0FE",
+          "unicode_category": "Co"
+        }
+      ],
+      "text_json": "\"\\uf06f \\u5b66\\u672f\\u5b66\\u4f4d    \\uf0fe \\u4e13\\u4e1a\\u5b66\\u4f4d\"",
+      "entry_type": "text",
+      "source_order": {
+        "block": 26,
+        "inline": 0
+      },
+      "semantic_cues": [
+        "centered_heading_candidate"
+      ],
+      "style_summary": {
+        "alignment": "center",
+        "font.ea": "宋体",
+        "font.latin": "宋体",
+        "size": "16pt",
+        "style": "Normal"
+      },
+      "unit_contexts": [
+        {
+          "end_boundary": {
+            "edge": "end",
+            "source_entry_id": "source-entry-911a0e375c3be2c602e47a74"
+          },
+          "start_boundary": {
+            "edge": "start",
+            "source_entry_id": "source-entry-683861e03a00b9a5f4b26173"
+          },
+          "text": " 学术学位     专业学位",
+          "unit_id": "unit-1",
+          "unit_name": "封面"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "feedback": {
+    "type": "materialization_readiness",
+    "mechanical": true,
+    "semantic_authority": false,
+    "agent_action": "Revise semantic_judgments to use source_entry_id, ordered parts, and field_id values from the pre-input field vocabulary. Do not proceed to DOCX materialization until Harness-resolved spans are present."
+  },
+  "checks": [
+    {
+      "name": "materialization_readiness",
+      "result": "needs_input"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "materialization_cleanup_carrier_conflict",
+      "missing_requirement": "one_treatment_per_word_carrier",
+      "why_it_blocks_execution": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. Give every source entry on that carrier one compatible treatment before materialization.",
+      "message": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. Give every source entry on that carrier one compatible treatment before materialization.",
+      "needed_context": "unit_evidence_packet",
+      "evidence_focus": "unit_evidence_packet",
+      "source_judgment_ref": "semantic_judgments[28]",
+      "source_entry_ids": [
+        "source-entry-48b87241485d23bc93ab8dc5",
+        "source-entry-30c9b224bad3fdf824303426"
+      ],
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-48b87241485d23bc93ab8dc5"
+        },
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-30c9b224bad3fdf824303426"
+        }
+      ]
+    }
+  ],
+  "failure": {
+    "origin": "harness",
+    "code": "template_materialization_readiness_incomplete",
+    "retryable": true,
+    "message": "Accepted semantic_judgments are not ready for deterministic materialization.",
+    "suggested_actions": [
+      "return_to_agent_with_materialization_readiness_feedback",
+      "revise_semantic_judgments_for_source_entry_id_ordered_parts_field_id_and_span_ref"
+    ]
+  },
+  "warnings": []
+}

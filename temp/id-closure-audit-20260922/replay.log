@@ -1,0 +1,32 @@
+hunau-01-cover-v5 ok 
+hunau-02-integrity-v1 ok 
+hunau-03-toc-v5-fixed-publication ok 
+hunau-04-paper-body-v1 ok 
+hunau-05-design-task-v5-m3-checkbox ok 
+hunau-06-proposal-v1 ok 
+hunau-07-proposal-record-v7-m3 ok 
+hunau-08-defense-record-v1 ok 
+hunau-09-topic-change-approval-v4-m3 ok 
+hunau-10-grade-form-v7-m3-semantic-lock ok 
+njau-01-cover-v6 ok 
+njau-02-declarations-v1 ok 
+njau-03-toc-v6 failed Accepted semantic review is not materializable: materialization_cleanup_carrier_conflict.
+njau-04-abstract-cn-v3 ok 
+njau-05-abstract-en-v3 ok 
+njau-06-body-v4 ok 
+njau-07-references-v5 {'root': 'temp/phase8-v05-20260912/njau-07-references-v5', 'stale_source_rejection': 'stale_ref', 'replay': 'source_snapshot_unavailable'}
+njau-08-appendix-v5 ok 
+njau-09-academic-achievements-v1 ok 
+njau-10-acknowledgement-v2 ok 
+pku-01-cover-v4 ok 
+pku-02-copyright-v1 ok 
+pku-03-abstract-cn-v2 ok 
+pku-04-abstract-en-v1 ok 
+pku-05-toc-v5 ok 
+pku-06-list-of-figures-v1 ok 
+pku-07-list-of-tables-v1 ok 
+pku-08-body-v12 ok 
+pku-09-references-v1 ok 
+pku-10-appendix-achievements-v1 ok 
+pku-11-acknowledgement-v3 ok 
+pku-12-declarations-v1 ok 

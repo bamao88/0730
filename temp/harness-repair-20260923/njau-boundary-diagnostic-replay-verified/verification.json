@@ -1,0 +1,24 @@
+{
+  "runtime_commit": "37c26bd863f3ebd2e1d54ca9e7d280b36edb1843",
+  "runtime_files": {
+    "src/docfit/template/unit_source.py": "24a124b006f8a0ca75afd29aeb63ef561b470fa3c3bd8a680d639ff6f04ce64a",
+    "src/docfit/tools/service.py": "e852f05e6dddec4fb000f7b977f1a5ed7881e74150ba94b6d75992f6280937b7",
+    "src/docfit/app/prepare_template.py": "2af27cec212e8cab346d57f9603a36ab565deaf5b6d9edba5b541bfea6a63ea8"
+  },
+  "verification_level": "real rejected-candidate replay; new complete-school loop separately pending",
+  "replay": {
+    "path": "temp/harness-repair-20260923/njau-boundary-diagnostic-replay-verified/replay.json",
+    "sha256": "6bf692c5f4a9f49436f1c82c930ba143c316924ab991d4b0b1742686f164ec01",
+    "diagnostic_counts": {
+      "unit_boundary_point_invalid": 2,
+      "unit_boundary_overlap": 11
+    }
+  },
+  "logic_contract": {
+    "passed": 985,
+    "seconds": 19.36,
+    "mypy_source_files": 126,
+    "ruff": "passed"
+  },
+  "product_acceptance": false
+}

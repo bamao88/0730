@@ -1,0 +1,73 @@
+{
+  "runtime_commit": "66788517de79070b157d2a83a81eaaf06ed270cf",
+  "verification_level": "fresh full-school E2E attempt; no reused proof, judgments or budgets",
+  "exit_code": 2,
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "events": {
+    "budget_policy": 1,
+    "request": 7,
+    "response": 7,
+    "local_review": 7,
+    "local_rejected": 7,
+    "run_failed": 1
+  },
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_problem_budget_exhausted",
+    "retryable": false,
+    "message": "Revision limit reached for source-entry-b1676a7fc904cb6f7744e603: source_text_partition.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  },
+  "published_outputs": [],
+  "product_acceptance": false,
+  "public_vs_structured": [
+    {
+      "event": "00000003.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "学术学位    专业学位"
+    },
+    {
+      "event": "00000007.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": " 学术学位     专业学位"
+    },
+    {
+      "event": "00000011.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "学术学位专业学位"
+    },
+    {
+      "event": "00000015.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "学术学位    专业学位"
+    },
+    {
+      "event": "00000019.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "学术学位    专业学位"
+    },
+    {
+      "event": "00000023.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "󰁯 学术学位    󰃾 专业学位"
+    },
+    {
+      "event": "00000027.json",
+      "public_correct_pua_count": 0,
+      "public_wrong_pua_count": 0,
+      "structured_entry_text": "学术学位    专业学位"
+    }
+  ]
+}

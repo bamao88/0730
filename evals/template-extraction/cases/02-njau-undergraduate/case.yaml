@@ -1,19 +1,19 @@
 schema_version: docfit-template-extraction-case/v1
 case_id: 02-njau-undergraduate
-description: 南京农业大学本科 Registry v0.5 模板 Gold 候选文件对
+description: 南京农业大学本科 Registry v0.5 模板 Gold 正式 Gold 文件对
 school_id: njau-undergraduate
 school_name: 南京农业大学本科
-case_status: candidate
+case_status: accepted
 gold:
-  template: gold/template.docx
-  contract: gold/fill-contract.yaml
-  template_sha256: 666d919414a1077f7e2d2042b0a9b094289ea7041c78870a92a925b10f88ab5d
-  contract_sha256: 6f359bd4b07f54f761056651900b9b2019d93011c95d9e5db0f1804345e0ec7a
+  template: gold/final-template.gold.docx
+  contract: gold/fill-contract.gold.yaml
+  template_sha256: 5eef954abe7caf6653a18f6d1ed02bb957ddf3db1dfa40f85ba261ef2e03b5cb
+  contract_sha256: 5dd9f91149057f15147a39afedded985c7205b0f6a2bb6e758d4d4340bbbfb3e
 field_registry_ref:
   path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   id: docfit.thesis.content_fields
   version: 0.5.0
-  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
 eval_config:
   path: ../../config/eval-config-v1.yaml
   id: template-extraction-v1
@@ -21,17 +21,16 @@ eval_config:
   sha256: d734e59ada4e132a9584522a8e26dd10b66f53d536f75628c50cd5ed2aa388b6
 scoring_version: docfit-template-extraction-scoring/v1
 marker_protocol: docfit-content-control-marker/v1
-expected_verdict: INPUT_ERROR
+expected_verdict: PASS
 gold_review:
-  status: candidate
-  reviewer: null
-  reviewed_at: null
-  source_sha256: c0ef71dcd83cd2ccd32e3c0272cf132c2212893bf6115aa164044fb4210e160e
-  source_path: ../../../../temp/docfit-school-extract-v2-njau-tool-v5-r66/output/final-template.docx
-  blockers:
-  - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
+  status: accepted
+  reviewer: xpw
+  reviewed_at: '2026-08-17T00:00:00+08:00'
+  source_sha256: 5eef954abe7caf6653a18f6d1ed02bb957ddf3db1dfa40f85ba261ef2e03b5cb
+  source_path: gold/final-template.gold.docx
+  blockers: []
 permissions:
-  visibility: internal_candidate
+  visibility: internal_gold
   student_personal_data: none_known
   git_storage: approved
   ci_use: approved

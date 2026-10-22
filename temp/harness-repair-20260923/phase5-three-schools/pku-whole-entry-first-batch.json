@@ -1,0 +1,28 @@
+{
+  "verification_level": "natural E2E agent loop batch acceptance only; no final publication",
+  "manifest": "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-manifest.json",
+  "events": {
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000003.json": "8951bb8b70c5257ef4f7b01eab2216b0a1226bab4160fe6fc1d390ac510b48bf",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000004.json": "facee3edcefac37667dbeba15b5d5aba238ac44286b4229aea9431c19b85d7ad",
+    "temp/harness-repair-20260923/phase5-three-schools/pku-whole-entry-task/work/.docfit/harness/semantic-revisions/00000005.json": "80be8e6b7b426b8f5d00cdaaee99dead06bb830a45d69189897222ca0b8b5d21"
+  },
+  "judgment_count": 27,
+  "whole_entry_count": 0,
+  "degree_judgment": {
+    "parts": [
+      {
+        "field_id": "degree.type",
+        "role": "fill_slot",
+        "text": " 学术学位     专业学位"
+      }
+    ],
+    "reason": "Centered degree-type selection line with two checkbox glyphs (U+F06F, U+F0FE) preceding the option labels \"学术学位\" and \"专业学位\". The whole line is the cover-page degree-type decision area described by the degree.type field, replaced as one fill value while preserving the checkbox indicators and option wording.",
+    "source_entry_id": "source-entry-b1676a7fc904cb6f7744e603"
+  },
+  "local_feedback": null,
+  "candidate_recorded": true,
+  "limitations": [
+    "First batch uses literal text only; not natural whole_entry branch evidence.",
+    "Semantic correctness and full-school execution/publication are not proven by local acceptance."
+  ]
+}

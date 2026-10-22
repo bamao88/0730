@@ -1,0 +1,451 @@
+schema_version: docfit-template-fill-contract/v2
+contract_id: docfit.template.a888986a7b7df8e6
+artifact_role: template_fill_contract
+status: candidate_pending_human_acceptance
+revision: '1'
+template_sha256: a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0
+field_registry_ref:
+  registry_id: docfit.thesis.content_fields
+  registry_version: 0.5.0
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+marker_protocol: docfit-content-control-marker/v1
+profile_registry_digest: b2fef887f576d4ad55b2c16795759f0604cb75524392019c89853577dcebd4fb
+school_observation_set_digest: d78a02ac31755badd4b9699b333800157bb64ff0a2ad7f486b290dc7098ae5ae
+school_style_candidates: []
+known_school_style_gaps:
+- slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+  field_id: references.entries
+  style_role_id: style.slot.b7bc21ec388b7ccf1dff7a98
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  property_paths:
+  - run.underline
+  - run.strikethrough
+  - run.vertical_position
+  - run.character_spacing_pt
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  - paragraph.outline_level
+  - numbering
+  - tab_stops
+  unresolved_properties:
+  - paragraph.first_line_indent_chars
+  - paragraph.left_indent_chars
+  - paragraph.right_indent_chars
+  - paragraph.keep_with_next
+  - paragraph.keep_together
+  - paragraph.widow_control
+  - paragraph.outline_level
+  reason: incomplete_school_role_known_gaps
+regions: []
+slots:
+- slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+  span_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+  field_id: references.entries
+  content_type: rich_text
+  required: true
+  locator:
+    type: content_control_tag
+    value: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+    story: document
+    part: word/document.xml
+    expected_match_count: 1
+  handling: styled
+  style_role_id: style.slot.b7bc21ec388b7ccf1dff7a98
+  style_role_type: paragraph
+  property_profile_ref:
+    profile_id: docfit.style.paragraph
+    profile_version: 1.0.0
+    profile_digest: 2de32cc19605eb3cf4759fc9b805e2a554968186ab52f01feb661d4bf4068184
+  label: 参考文献条目
+  provenance:
+    field_id: references.entries
+    span_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+    slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+    source_entry_id: source-entry-7014523a2cd15155c8d0f147
+    source_snapshot_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+    source_inventory_digest: 5a8420ed1feeee4b990bf8e5ab81cb27d8a8520d48d389460613e519648a6db2
+    expected_source_content: "[1]\t张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+    word_fragments: &id001
+    - fingerprint: 880e8c44b7070412f68b07da2e52564dd8dcf2794173441c1afa7572c1f31114
+      locator: /body/p[@paraId=3B89DBB8]/r[1]
+      object_id: obj-0b0eb0bf1f47a6a9dee72fad
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: 880e8c44b7070412f68b07da2e52564dd8dcf2794173441c1afa7572c1f31114
+        object_id: obj-0b0eb0bf1f47a6a9dee72fad
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 3
+      source_text_start: 0
+      text: '[1]'
+    - fingerprint: ff22fe72b0ecb6c6edf58d28328ea779c0285443b1f04130e4037dcad8576976
+      locator: /body/p[@paraId=3B89DBB8]
+      object_id: obj-6b15b19c9a587b1687331625
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: ff22fe72b0ecb6c6edf58d28328ea779c0285443b1f04130e4037dcad8576976
+        object_id: obj-6b15b19c9a587b1687331625
+      object_text_end: 4
+      object_text_start: 3
+      source_text_end: 4
+      source_text_start: 3
+      text: "\t"
+    - fingerprint: 6d179f37577a79e2fca013bf4192012307abb911de09da1f6eccf47dfc0385a7
+      locator: /body/p[@paraId=3B89DBB8]/r[3]
+      object_id: obj-5bc270d95da26825914eff13
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: 6d179f37577a79e2fca013bf4192012307abb911de09da1f6eccf47dfc0385a7
+        object_id: obj-5bc270d95da26825914eff13
+      object_text_end: 3
+      object_text_start: 0
+      source_text_end: 7
+      source_text_start: 4
+      text: 张志奇
+    - fingerprint: 657c357b68c2f01a4f3d8d14699e4074c81604f36aa877a38d448d72959ba335
+      locator: /body/p[@paraId=3B89DBB8]/r[4]
+      object_id: obj-59557cee41064d178b7ca4dd
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: 657c357b68c2f01a4f3d8d14699e4074c81604f36aa877a38d448d72959ba335
+        object_id: obj-59557cee41064d178b7ca4dd
+      object_text_end: 2
+      object_text_start: 0
+      source_text_end: 9
+      source_text_start: 7
+      text: '. '
+    - fingerprint: aafbde413decd19abd689150f30bf0d7c1ef86b194821b8f131de5ff161f9c71
+      locator: /body/p[@paraId=3B89DBB8]/r[5]
+      object_id: obj-7f39cad57ac0cc8bd5d4c4e6
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: aafbde413decd19abd689150f30bf0d7c1ef86b194821b8f131de5ff161f9c71
+        object_id: obj-7f39cad57ac0cc8bd5d4c4e6
+      object_text_end: 11
+      object_text_start: 0
+      source_text_end: 20
+      source_text_start: 9
+      text: 猪场母猪的产后护理技术
+    - fingerprint: f5fe04a41679a7a99e7a4c592f94e05e40c22ccb66060412f8dcf36819dee5a7
+      locator: /body/p[@paraId=3B89DBB8]/r[6]
+      object_id: obj-7aed5b60acf6a09fd65f71d3
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: f5fe04a41679a7a99e7a4c592f94e05e40c22ccb66060412f8dcf36819dee5a7
+        object_id: obj-7aed5b60acf6a09fd65f71d3
+      object_text_end: 6
+      object_text_start: 0
+      source_text_end: 26
+      source_text_start: 20
+      text: ' [J]. '
+    - fingerprint: a7a2a5d04c00da43c0922e707103801d534ddf4464918d24e40f21055b98f3d8
+      locator: /body/p[@paraId=3B89DBB8]/r[7]
+      object_id: obj-59c86a4acd5838ef3a8b2d66
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: a7a2a5d04c00da43c0922e707103801d534ddf4464918d24e40f21055b98f3d8
+        object_id: obj-59c86a4acd5838ef3a8b2d66
+      object_text_end: 6
+      object_text_start: 0
+      source_text_end: 32
+      source_text_start: 26
+      text: 今日畜牧兽医
+    - fingerprint: b0b046fbc52aea4a9b9be72f74cfa8738738276bd11a6f5a13ae66e1bec4fd8a
+      locator: /body/p[@paraId=3B89DBB8]/r[8]
+      object_id: obj-81be10db75ddb82af73f8dad
+      object_ref:
+        document_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+        expected_fingerprint: b0b046fbc52aea4a9b9be72f74cfa8738738276bd11a6f5a13ae66e1bec4fd8a
+        object_id: obj-81be10db75ddb82af73f8dad
+      object_text_end: 19
+      object_text_start: 0
+      source_text_end: 51
+      source_text_start: 32
+      text: ', 2021, 37(09): 62.'
+    accepted_span: &id002
+      covered_object_ids:
+      - obj-0b0eb0bf1f47a6a9dee72fad
+      - obj-6b15b19c9a587b1687331625
+      - obj-5bc270d95da26825914eff13
+      - obj-59557cee41064d178b7ca4dd
+      - obj-7f39cad57ac0cc8bd5d4c4e6
+      - obj-7aed5b60acf6a09fd65f71d3
+      - obj-59c86a4acd5838ef3a8b2d66
+      - obj-81be10db75ddb82af73f8dad
+      expected_source_content: "[1]\t张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+      extent:
+        end: 51
+        kind: text
+        start: 0
+      field_id: references.entries
+      judgment_index: 1
+      part_index: 0
+      role: fill_slot
+      scope:
+        source_entry_id: source-entry-7014523a2cd15155c8d0f147
+      slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+      source_entry_id: source-entry-7014523a2cd15155c8d0f147
+      source_inventory_digest: 5a8420ed1feeee4b990bf8e5ab81cb27d8a8520d48d389460613e519648a6db2
+      source_snapshot_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      span_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      text: "[1]\t张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+      text_end: 51
+      text_start: 0
+      word_fragments: *id001
+    accepted_result: &id003
+      source_judgment_ref: semantic_judgments[1]
+      part_index: 0
+      semantic_judgments_sha256: da07faa6fde61acb3fc4d644d4b4e735e84203c72b3971975c7c4279a86b4ce4
+      field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    actual_result: &id004
+      outcome: applied
+      candidate_before_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      candidate_after_sha256: a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0
+      operation_sha256: acf513c8d74d97d486203598ce3ba2c521917925c2424d6bd576f65fa248ae03
+      mutation_receipt_sha256: b175c51d04c7054736b06ea738c1c8acb909cdaa18ecc84b7fd8ac7241713592
+  style_contract_ref:
+    style_contract_id: style.slot.b7bc21ec388b7ccf1dff7a98
+    contract_digest: 5a6530f3169638a1a17ecaa4be40ed617a0624396707901182b4c659a3a89663
+styles:
+- style_contract_id: style.slot.b7bc21ec388b7ccf1dff7a98
+  application_scope: block
+  owned_properties:
+  - paragraph.alignment
+  - paragraph.hanging_indent_chars
+  - paragraph.line_spacing_rule
+  - paragraph.line_value
+  - paragraph.page_break_before
+  - paragraph.space_after_pt
+  - paragraph.space_before_pt
+  - run.bold
+  - run.character_spacing_pt
+  - run.color
+  - run.font_ascii
+  - run.font_ascii_theme
+  - run.font_complex_script
+  - run.font_complex_script_theme
+  - run.font_east_asia
+  - run.font_east_asia_theme
+  - run.font_hansi
+  - run.font_hansi_theme
+  - run.font_size_pt
+  - run.italic
+  - run.strikethrough
+  - run.vertical_position
+  effective_properties:
+    paragraph.alignment: both
+    paragraph.hanging_indent_chars: 2.0
+    paragraph.line_spacing_rule: auto
+    paragraph.line_value: 1.3
+    paragraph.page_break_before: false
+    paragraph.space_after_pt: 6.0
+    paragraph.space_before_pt: 0.0
+    run.bold: false
+    run.character_spacing_pt: 0.0
+    run.color: auto
+    run.font_ascii: Times New Roman
+    run.font_ascii_theme: minorHAnsi
+    run.font_complex_script: Times New Roman
+    run.font_complex_script_theme: minorBidi
+    run.font_east_asia: 宋体
+    run.font_east_asia_theme: minorEastAsia
+    run.font_hansi: Times New Roman
+    run.font_hansi_theme: minorHAnsi
+    run.font_size_pt: 10.5
+    run.italic: false
+    run.strikethrough: false
+    run.vertical_position: baseline
+  override_policy:
+    managed_direct_formatting: clear_conflicts
+    unmanaged_properties: preserve
+  dependencies: []
+  contract_digest: 5a6530f3169638a1a17ecaa4be40ed617a0624396707901182b4c659a3a89663
+  label: references.entries @ source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+  evidence_refs:
+  - type: template_slot_representative
+    slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+    field_id: references.entries
+    locator:
+      type: content_control_tag
+      value: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+      story: document
+      part: word/document.xml
+      expected_match_count: 1
+style_contract_set_digest: 53e6b948cf12c477955cf55552f621f0e58ba89e0d0c178c0c256b40029e6995
+provenance:
+  source_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+  body_structure_count: 0
+  agent_owned_semantics: true
+  materialization:
+    schema_version: docfit-template-materialization-provenance/v1
+    source_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+    template_sha256: a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0
+    source_inventory_digest: 5a8420ed1feeee4b990bf8e5ab81cb27d8a8520d48d389460613e519648a6db2
+    semantic_judgments_sha256: da07faa6fde61acb3fc4d644d4b4e735e84203c72b3971975c7c4279a86b4ce4
+    field_vocabulary_digest: 861eccc34f5942206a4c088b127f500a7e005b5e99fd69236b0ad43e8cdb0594
+    field_registry_ref:
+      registry_id: docfit.thesis.content_fields
+      registry_version: 0.5.0
+      sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
+    materialization_receipt_sha256: 4be27e1cc124937dba2aa3b0f836accfa473a21dc8d7dd2514d427ed221b3f33
+    slots:
+    - field_id: references.entries
+      span_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      slot_ref: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+      source_entry_id: source-entry-7014523a2cd15155c8d0f147
+      source_snapshot_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      source_inventory_digest: 5a8420ed1feeee4b990bf8e5ab81cb27d8a8520d48d389460613e519648a6db2
+      expected_source_content: "[1]\t张志奇. 猪场母猪的产后护理技术 [J]. 今日畜牧兽医, 2021, 37(09): 62."
+      word_fragments: *id001
+      accepted_span: *id002
+      accepted_result: *id003
+      actual_result: *id004
+  materialization_digest: d65b79a453607dfbb7bc900b2751e0065035ecc3bfbe257379dedf393f794ec2
+review:
+  status: machine_checked_pending_human_signoff
+  reviewer: null
+  reviewed_at: null
+  conclusion: pending
+  blockers: []
+  prepared_by: docfit-main-agent
+validation:
+  docx_validate:
+    schema_version: 1
+    status: ok
+    checks:
+    - name: docx_opens
+      result: ok
+      severity: info
+      blocking: false
+      evidence: Independent ZIP/XML reopen passed.
+      suggested_action: null
+    - name: officecli_openxml
+      result: ok
+      severity: info
+      blocking: false
+      evidence: 'Validation passed: no errors found.'
+      suggested_action: null
+    - name: source_unchanged
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        source_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+      suggested_action: null
+    - name: content_preservation
+      result: issue
+      severity: warning
+      blocking: false
+      evidence:
+        missing_object_count: 6
+      suggested_action: Review intended replacements against source content.
+    - name: placeholder_scan
+      result: ok
+      severity: info
+      blocking: false
+      evidence:
+        placeholder_occurrences: 0
+      suggested_action: null
+    - name: visual_review_coverage
+      result: warning
+      severity: warning
+      blocking: false
+      feedback:
+        type: completion
+        mechanical: true
+        semantic_authority: false
+        agent_action: Render the exact final candidate, review every final page, repair blocking findings, and validate again.
+      evidence:
+        current_visual_snapshot: false
+        all_final_pages_reviewed: false
+        page_count: null
+        reviewed_pages: []
+        missing_pages: []
+        unexpected_pages: []
+        blocking_findings: 0
+      suggested_action: Render the current final DOCX and review every final page.
+    warnings:
+    - code: verification_gap
+      kind: visual_review
+      message: Current LibreOffice render evidence and complete Agent page coverage are absent or incomplete.
+    failure: null
+    source_sha256: 26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c
+    final_sha256: a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0
+    knowledge_version: null
+    task_rule_evidence: []
+    summary:
+      errors: 0
+      issues: 1
+      warnings: 2
+    provider:
+      name: officecli
+      version: 1.0.144
+      executable_sha256: b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9
+      environment:
+        platform: Darwin
+        architecture: arm64
+      expected_version: 1.0.143
+      version_locked: false
+      license: Apache-2.0
+  final_visual_review:
+    schema_version: 1
+    status: host_review_not_requested
+    origin: harness
+    document_sha256: a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0
+    reviewed_pages: []
+    findings: []
+  style_capture:
+    schema_version: docfit-template-style-capture/v2
+    status: passed
+    style_contract_set_digest: 53e6b948cf12c477955cf55552f621f0e58ba89e0d0c178c0c256b40029e6995
+    occurrence_manifest:
+      schema_version: docfit-style-occurrence-manifest/v2
+      style_contract_set_digest: 53e6b948cf12c477955cf55552f621f0e58ba89e0d0c178c0c256b40029e6995
+      occurrences:
+      - occurrence_id: template-slot:source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        style_contract_ref:
+          style_contract_id: style.slot.b7bc21ec388b7ccf1dff7a98
+          contract_digest: 5a6530f3169638a1a17ecaa4be40ed617a0624396707901182b4c659a3a89663
+    validation:
+      status: passed
+      counts:
+        passed: 1
+        failed: 0
+        unresolved: 0
+      passed:
+      - occurrence_id: template-slot:source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+        style_contract_id: style.slot.b7bc21ec388b7ccf1dff7a98
+        contract_digest: 5a6530f3169638a1a17ecaa4be40ed617a0624396707901182b4c659a3a89663
+        locator:
+          type: content_control_tag
+          value: source_entry_id=source-entry-7014523a2cd15155c8d0f147;extent=text[0:51];source_snapshot_sha256=26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c;field_id=references.entries
+          story: document
+          part: word/document.xml
+          expected_match_count: 1
+        status: passed
+        differences: []
+        unresolved_properties: []
+        reasons: []
+      failed: []
+      unresolved: []
+  school_style_observation:
+    status: passed_with_known_gaps
+    artifact_path: school-style-observations.json
+  officecli_validation:
+    passed: true
+    code: null
+    origin: null
+    detail: 'Validation passed: no errors found.'

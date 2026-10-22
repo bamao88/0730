@@ -21,25 +21,25 @@ CASES = PROJECT_ROOT / "cases"
 
 
 @pytest.mark.parametrize(
-    "case_id",
+    ("case_id", "expected_code"),
     [
-        "01-hunau-undergraduate",
-        "02-njau-undergraduate",
-        "03-pku-graduate",
+        ("01-hunau-undergraduate", InputErrorCode.CONTRACT_MISMATCH),
+        ("02-njau-undergraduate", InputErrorCode.SCHEMA_INVALID),
+        ("03-pku-graduate", InputErrorCode.CONTRACT_MISMATCH),
     ],
 )
-def test_gold_01_through_03_candidate_school_cases_cannot_be_scored(
+def test_gold_01_through_03_retired_school_gold_fails_closed(
     case_id: str,
+    expected_code: InputErrorCode,
 ) -> None:
     case_root = CASES / case_id
     with pytest.raises(InputContractError) as captured:
         load_eval_inputs(
             case_root / "case.yaml",
-            case_root / "gold" / "template.docx",
-            case_root / "gold" / "fill-contract.yaml",
+            case_root / "gold" / "final-template.gold.docx",
+            case_root / "gold" / "fill-contract.gold.yaml",
         )
-    assert captured.value.code is InputErrorCode.GOLD_NOT_ACCEPTED
-    assert "Human Gold acceptance" in str(captured.value)
+    assert captured.value.code is expected_code
 
 
 def test_gold_04_top_level_acceptance_cannot_bypass_candidate_contract(
@@ -100,20 +100,21 @@ def test_gold_04_top_level_acceptance_cannot_bypass_candidate_contract(
 
 
 @pytest.mark.parametrize(
-    "case_id",
+    ("case_id", "expected_code"),
     [
-        "01-hunau-undergraduate",
-        "02-njau-undergraduate",
-        "03-pku-graduate",
+        ("01-hunau-undergraduate", InputErrorCode.CONTRACT_MISMATCH),
+        ("02-njau-undergraduate", InputErrorCode.SCHEMA_INVALID),
+        ("03-pku-graduate", InputErrorCode.CONTRACT_MISMATCH),
     ],
 )
-def test_gold_05_through_07_school_gold_has_both_view_truth_but_remains_candidate(
+def test_gold_05_through_07_retired_school_gold_not_truth_ready(
     case_id: str,
+    expected_code: InputErrorCode,
 ) -> None:
-    path = CASES / case_id / "gold" / "fill-contract.yaml"
-    contract = load_fill_contract(path)
-    validate_gold_truth_ready(contract, path=path)
-    assert contract.status == "candidate_pending_human_acceptance"
+    path = CASES / case_id / "gold" / "fill-contract.gold.yaml"
+    with pytest.raises(InputContractError) as captured:
+        validate_gold_truth_ready(load_fill_contract(path), path=path)
+    assert captured.value.code is expected_code
 
 
 def test_gold_08_synthetic_gold_with_both_views_is_truth_ready() -> None:

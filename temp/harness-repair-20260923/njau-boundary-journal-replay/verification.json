@@ -1,0 +1,43 @@
+{
+  "agent_called": false,
+  "changed_unit_positions": 15,
+  "constructed_replay_sequence": true,
+  "event_count": 6,
+  "history": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/njau-boundary-journal-replay/f88d204e6ac746e7a830e34d9d7cf14a",
+  "logic_contract": {
+    "command": "uv run pytest -q tests/contract",
+    "new_boundary_journal_tests": 10,
+    "passed": 1008,
+    "seconds": 18.48
+  },
+  "mypy": {
+    "passed": true,
+    "source_files": 127
+  },
+  "natural_revision": false,
+  "new_journal_live_agent_validation": false,
+  "original_bindings": {
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/prepare-template-task.json": "6276d066f3bf7307fbd66fb9f14eb9a0364aac19eb60bd4eb70759186f1691c3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/unit-boundary-checkpoint.json": "69f00900af7d4b50dc3498b699065cd43d91f4690853878b46374ede1fc745ab",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task/work/.docfit/prepare-template-task.json": "6276d066f3bf7307fbd66fb9f14eb9a0364aac19eb60bd4eb70759186f1691c3",
+    "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/harness-repair-20260923/phase5-three-schools/njau-layout-evidence-task/work/.docfit/unit-boundary-checkpoint.json": "845fc22cd3ebbfb4144b533c2f6a8a91894b239cac11fb48241ec622544814a3"
+  },
+  "original_prompts_available": false,
+  "original_unchanged": true,
+  "product_acceptance": false,
+  "recorded_submissions_unmodified": true,
+  "rejected_then_accepted": true,
+  "ruff": "passed changed Python files",
+  "runtime_bindings": {
+    "src/docfit/app/prepare_template.py": "01144bb815fe53991998e4a9609c4409e0552e015f4fee89273f08fad27030aa",
+    "src/docfit/template/unit_boundary_journal.py": "e492ce5d3139666d5cb092ec948b1c190f4c7171c2fe2247b08aacf73cdfc737"
+  },
+  "runtime_commit": "f7c93702f4a7b8b039693f2aa6bb359593bfe8e3",
+  "verification_level": "real proposal replay through Tool/App feedback and boundary journal"
+}

@@ -1,0 +1,5 @@
+使用 docfit-school-extract Skill，把当前学校模板整理成可供后续填写的模板资产。当前功能区已确定为封面，unit_id=cover；读取 docfit_evidence 的 unit_evidence_packet，结合原文、相邻内容、布局与字段词表判断。
+
+在每个输入文本块上按原文顺序标注 parts，表达最终应保留的文字、应由真实值替换的位置、需要承接的格式说明及其它责任。根据这些判断，宿主将保留固定片段、替换填写片段并处理说明；只有当前输出中声明的填写位置会被建立。parts 的 text 仍是原文，不能改写成填写后的内容。
+
+需要字段的 part 从当前词表选择语义匹配的 field_id。提交 semantic_judgments；必要语义依据缺失时返回 needs_input。不要操作 Word 或交付文件。

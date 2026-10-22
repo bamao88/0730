@@ -1,0 +1,156 @@
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 23%]
+........................................................................ [ 31%]
+........................................................................ [ 39%]
+........................................................................ [ 47%]
+........................................................................ [ 55%]
+........................................................................ [ 63%]
+.....................................................F.................. [ 71%]
+........................................................................ [ 79%]
+........................................................................ [ 87%]
+........................................................................ [ 95%]
+..........................................                               [100%]
+=================================== FAILURES ===================================
+_______ test_template_harness_reports_invisible_trailing_whitespace_gap ________
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-134/test_template_harness_reports_0')
+
+    def test_template_harness_reports_invisible_trailing_whitespace_gap(tmp_path) -> None:
+        task_root = tmp_path / "task"
+        task_root.mkdir()
+        registry = task_root / "input/field-registry.yaml"
+        registry.parent.mkdir(parents=True, exist_ok=True)
+        registry.write_text(
+            "\n".join(
+                (
+                    "registry_id: test",
+                    "registry_version: '1'",
+                    "fields:",
+                    "  - field_id: author.name.zh",
+                    "    label: 作者中文姓名",
+                    "    content_type: text",
+                    "    cardinality: one",
+                )
+            ),
+            encoding="utf-8",
+        )
+        source_entry_id = "source-entry-format-note"
+        source_text = "格式说明     "
+        harness = TemplateHarnessService(task_root=task_root)
+        inventory = {
+            "action": "submit_object_inventory",
+            "document_sha256": SOURCE_HASH,
+            "source_entries": [
+                {
+                    "source_entry_id": source_entry_id,
+                    "text": source_text,
+                    "entry_type": "text",
+                    "source_order": {"block": 1, "inline": 0},
+                    "provenance": [
+                        {
+                            "object_id": "obj-note",
+                            "locator": "/body/p[1]",
+                            "text_span": [0, len(source_text)],
+                        }
+                    ],
+                }
+            ],
+            "objects": [
+                {
+                    "source_entry_id": source_entry_id,
+                    "type": "paragraph",
+                    "locator": "/body/p[1]",
+                    "object_ref": {
+                        "document_sha256": SOURCE_HASH,
+                        "object_id": "obj-note",
+                        "expected_fingerprint": "a" * 64,
+                    },
+                }
+            ],
+        }
+        source_partition(inventory)
+        persist_source_identity(harness._task_root, inventory)
+        harness.handle(inventory)
+    
+        result = harness.handle(
+            {
+                "action": "submit_semantic_judgments",
+                "document_sha256": SOURCE_HASH,
+                "semantic_judgments": [
+                    {
+                        "source_entry_id": source_entry_id,
+                        "parts": [{"text": "格式说明", "role": "style_only"}],
+                    }
+                ],
+            }
+        )
+    
+        assert result["status"] == "needs_input"
+        blocker = result["blockers"][0]
+        assert blocker == {
+            "code": "ordered_part_text_gap",
+            "field": "semantic_judgments[0]",
+            "message": "Ordered parts must cover the complete source entry without omissions.",
+            "source_entry_id": source_entry_id,
+            "text_start": 4,
+            "text_end": 9,
+            "uncovered_text": "     ",
+            "source_text_length": 9,
+            "covered_text_length": 4,
+            "uncovered_text_length": 5,
+            "uncovered_whitespace_codepoints": ["U+0020 × 5"],
+        }
+    
+        accepted = harness.handle(
+            {
+                "action": "submit_semantic_judgments",
+                "document_sha256": SOURCE_HASH,
+                "semantic_judgments": [
+                    {
+                        "source_entry_id": source_entry_id,
+                        "parts": [
+                            {"text": "格式说明", "role": "style_only"},
+                            {
+                                "text": "",
+                                "role": "style_only",
+                                "whitespace": {"codepoint": "U+0020", "count": 5},
+                            },
+                        ],
+                    }
+                ],
+            }
+        )
+    
+        assert accepted["status"] == "ok"
+        stored = json.loads(
+            (task_root / "work/.docfit/harness/semantic-judgments.json").read_text(encoding="utf-8")
+        )
+        stored_part = stored["semantic_judgments"][0]["parts"][1]
+        assert stored_part["text"] == "     "
+        assert "whitespace" not in stored_part
+    
+        whole = harness.handle({
+            "action": "submit_semantic_judgments", "document_sha256": SOURCE_HASH,
+            "semantic_judgments": [{"source_entry_id": source_entry_id,
+                                    "parts": [{"whole_entry": True, "role": "style_only"}]}],
+        })
+        assert whole["status"] == "ok"
+        stored = json.loads(
+            (task_root / "work/.docfit/harness/semantic-judgments.json").read_text(encoding="utf-8")
+        )
+        assert stored["semantic_judgments"][0]["parts"] == [
+            {"text": "格式说明     ", "role": "style_only"},
+        ]
+>       assert stored["resolved_spans"][1]["extent"] == {
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            "kind": "text",
+            "start": 4,
+            "end": 9,
+        }
+E       IndexError: list index out of range
+
+tests/contract/test_template_judgment_shape.py:834: IndexError
+=========================== short test summary info ============================
+FAILED tests/contract/test_template_judgment_shape.py::test_template_harness_reports_invisible_trailing_whitespace_gap
+1 failed, 905 passed in 25.98s

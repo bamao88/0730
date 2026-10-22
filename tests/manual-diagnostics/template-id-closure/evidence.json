@@ -1,0 +1,1226 @@
+{
+  "date": "2026-09-22",
+  "scope": "field ID origin, propagation, source/span/slot identity and persisted provenance only",
+  "scope_excludes": [
+    "school semantic correctness",
+    "visual layout",
+    "human product acceptance",
+    "repair historical product packages",
+    "student content extraction and final fill feature work"
+  ],
+  "baseline_commit": "ce8fe78e17673aba37ed061f3804d3b711eea0f4",
+  "runtime_diff_at_start": "git diff -- src was empty; no runtime changes in this audit",
+  "tests": {
+    "passed": 460,
+    "log_sha256": "a011e93211493c6a522db226231c23b1170d8588c483176dc38cad7c1d0b2796",
+    "note": "Mixed suite: logic/contract and real-input tests with constructed judgments; not a live Agent run."
+  },
+  "artifact_audit": {
+    "rows": 32,
+    "source_current": 29,
+    "review_valid": 32,
+    "vocabulary_valid": 32,
+    "slots_match": 32,
+    "artifacts": {
+      "ok": 29,
+      "template_artifact_provenance_invalid": 3
+    }
+  },
+  "consumer_load": {
+    "ok": 19,
+    "fill_contract_style_contracts_invalid": 11,
+    "fill_contract_style_ref_missing": 2
+  },
+  "real_replay": {
+    "ok": 30,
+    "failed": 1,
+    "source_snapshot_unavailable": 1
+  },
+  "actual_replayed_slots": 261,
+  "negative_replay": [
+    {
+      "case": "unknown_field",
+      "rejected": true,
+      "code": "template_materialization_readiness_incomplete",
+      "output_absent": true
+    },
+    {
+      "case": "retired_alias",
+      "rejected": true,
+      "code": "template_materialization_readiness_incomplete",
+      "output_absent": true
+    },
+    {
+      "case": "independent_target",
+      "rejected": true,
+      "code": "template_materialization_readiness_incomplete",
+      "output_absent": true
+    },
+    {
+      "case": "swapped_extents",
+      "rejected": true,
+      "code": "template_materialization_readiness_incomplete",
+      "output_absent": true
+    },
+    {
+      "case": "legacy_contract",
+      "rejected": true,
+      "code": "template_artifact_provenance_invalid"
+    },
+    {
+      "case": "orphan_slot",
+      "rejected": true,
+      "code": "template_artifact_provenance_invalid"
+    },
+    {
+      "case": "different_word_file",
+      "rejected": true,
+      "code": "template_artifact_provenance_invalid"
+    }
+  ],
+  "historical_e2e": {
+    "level": "historical E2E agent loop evidence reread; no new Agent run",
+    "path": "temp/phase8-v05-20260912/pku-01-cover-v4/work/.docfit/template-agent-execution.json",
+    "sha256": "57f153ce12d6b3e07865dfb045809218f94d0c4552c51766bb5364282d13b193",
+    "session_id": "26e18b34-4cd8-4639-ab99-5b1affcb0cb7",
+    "status": "complete",
+    "agent_field_selection_matches_accepted_review": true,
+    "event_sequence": [
+      {
+        "operation": "sdk_query",
+        "prompt_kind": "initial",
+        "query_index": 1,
+        "stage": "unit-boundary",
+        "status": "response_complete"
+      },
+      {
+        "operation": "harness_feedback_check",
+        "query_index": 1,
+        "stage": "unit-boundary",
+        "status": "accepted"
+      },
+      {
+        "operation": "sdk_query",
+        "prompt_kind": "initial",
+        "query_index": 2,
+        "stage": "template-agent",
+        "status": "response_complete"
+      },
+      {
+        "feedback_type": "ordered_semantic_parts",
+        "operation": "harness_feedback_check",
+        "query_index": 2,
+        "stage": "template-agent",
+        "status": "needs_feedback"
+      },
+      {
+        "operation": "sdk_query",
+        "prompt_kind": "harness_feedback",
+        "query_index": 3,
+        "stage": "template-agent",
+        "status": "response_complete"
+      },
+      {
+        "operation": "harness_feedback_check",
+        "query_index": 3,
+        "stage": "template-agent",
+        "status": "accepted"
+      },
+      {
+        "operation": "input_integrity_check",
+        "stage": "host-post-agent",
+        "status": "ok"
+      },
+      {
+        "operation": "host_candidate_selection",
+        "stage": "host-post-agent",
+        "status": "ok"
+      },
+      {
+        "operation": "publish_template_artifact",
+        "stage": "host-post-agent",
+        "status": "ok"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "root": "temp/phase8-v05-20260912/hunau-01-cover-v5",
+      "consumer_load": "ok",
+      "source_sha256": "3c8dfd62f8379b0e656b06e9f6066b4b439f170ebfbbaea12ceda4795c9d74fd",
+      "ledger_source_sha256": "3c8dfd62f8379b0e656b06e9f6066b4b439f170ebfbbaea12ceda4795c9d74fd",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "038d2f1dc017955cc4e909b10b3fc3309bb841127525f1052984c33a34b93eae",
+      "inventory_sha256": "651ab69d3036a5eeab0ce3087232185ed46c8bc9e1301db516255170c666567c",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 9,
+      "template_sha256": "2f8931ede12ccb603faf4c58358aa7aa64bca6bd7ce812ee6b3e13608c891b22",
+      "contract_template_sha256": "2f8931ede12ccb603faf4c58358aa7aa64bca6bd7ce812ee6b3e13608c891b22",
+      "contract_sha256": "48b21af0e3e7c91a117ba1ab68130657421872d3f8bb0cf08aa99dd514de5bd6",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-01-cover-v5/input/school-template.docx",
+        "source_sha256": "3c8dfd62f8379b0e656b06e9f6066b4b439f170ebfbbaea12ceda4795c9d74fd",
+        "replay": "ok",
+        "output_sha256": "a940b650a0327a1760b11a6297e9d26be84f3531fc1044410942e7ffd756e2b7",
+        "operation_count": 9,
+        "slot_count": 9
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-02-integrity-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "f5e6bc5be6165caa7e26349f036d54f7d45c7c38f712878d571c26bf7dc9d5c0",
+      "ledger_source_sha256": "f5e6bc5be6165caa7e26349f036d54f7d45c7c38f712878d571c26bf7dc9d5c0",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "49f23347a073060f894de8f9499acfb90581401e2a2482cc054ba01008df10f4",
+      "inventory_sha256": "b38bc41fe93afe6fe42560ddcc525b5225e5530d1b0b01619640a54fdedb6535",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "f5e6bc5be6165caa7e26349f036d54f7d45c7c38f712878d571c26bf7dc9d5c0",
+      "contract_template_sha256": "f5e6bc5be6165caa7e26349f036d54f7d45c7c38f712878d571c26bf7dc9d5c0",
+      "contract_sha256": "a001d33a8deda07440a014fb5037c2c58bd66eabf969047f9d79584882f32803",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "b18feeff-7435-4b6e-bb8c-9bb3a07e34f6",
+        "num_turns": 5,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-02-integrity-v1/input/school-template.docx",
+        "source_sha256": "f5e6bc5be6165caa7e26349f036d54f7d45c7c38f712878d571c26bf7dc9d5c0",
+        "replay": "ok",
+        "output_sha256": "fa1adb3b8ad00a254510e42ce9563b9c644c703de049f5ed8c82e6070a0ff329",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-03-toc-v5-fixed-publication",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "d67905351dec342a2cd5ec07926e50eea1d9139385e128d7b54d02c0e8613247",
+      "ledger_source_sha256": "d67905351dec342a2cd5ec07926e50eea1d9139385e128d7b54d02c0e8613247",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "6cf46dde3695acbad9a965e0fb20b2f96ad3eafd4422fd99b785a8a3cdd5c571",
+      "inventory_sha256": "fca3b9d6bcad126522397f9e6d5f3a05f6d143654ca38d7380e1702f28ad0b5d",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "7623da007c6690b237dc6b6535e50bb0e43190f0a3ccaf875700db94143fda2f",
+      "contract_template_sha256": "7623da007c6690b237dc6b6535e50bb0e43190f0a3ccaf875700db94143fda2f",
+      "contract_sha256": "25d874f965502b9e01b7933dffc27843b3d7b3a277e04f28c59a7ed99487ac6b",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-03-toc-v5-fixed-publication/input/school-template.docx",
+        "source_sha256": "d67905351dec342a2cd5ec07926e50eea1d9139385e128d7b54d02c0e8613247",
+        "replay": "ok",
+        "output_sha256": "ccd6d748ac7e9af58086820ceffc5e8b3efe41e62548dab05b812c13134a7e04",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-04-paper-body-v1",
+      "consumer_load": "fill_contract_style_ref_missing",
+      "source_sha256": "5c83e6db134dbb595ba006f895e503437e6f2acc440e67abe084b92f3f609e6a",
+      "ledger_source_sha256": "5c83e6db134dbb595ba006f895e503437e6f2acc440e67abe084b92f3f609e6a",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "f902cc2027e62ac47254d7deea309aa5519c401fb28fac9c196306b8db696d6a",
+      "inventory_sha256": "4282dd8e5dcb5397c8034e28f7ac52f05dcd023e769b87d17b1df58741b403d7",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 42,
+      "template_sha256": "b6bcd94188c2d6995b40687407a93ea8db9420e510e02eb303dcbffd808d22b9",
+      "contract_template_sha256": "b6bcd94188c2d6995b40687407a93ea8db9420e510e02eb303dcbffd808d22b9",
+      "contract_sha256": "2694ba6fe380ce15464d7443c6a163ba76cff1fd2aab17025c39a36e0ecb788f",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "1e32d175-043a-4935-892f-1c4570badffe",
+        "num_turns": 0,
+        "sdk_query_count": 8,
+        "semantic_feedback_attempts": 3,
+        "harness_feedback_attempts": 3
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-04-paper-body-v1/input/school-template.docx",
+        "source_sha256": "5c83e6db134dbb595ba006f895e503437e6f2acc440e67abe084b92f3f609e6a",
+        "replay": "ok",
+        "output_sha256": "c0d7ffe44eafe074aa8d509a29d387ee8c1068da6f2cbf2496f6b9d1a59f50cc",
+        "operation_count": 22,
+        "slot_count": 42
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-05-design-task-v5-m3-checkbox",
+      "consumer_load": "ok",
+      "source_sha256": "a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73",
+      "ledger_source_sha256": "a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "a1ada6967b8b08c69b585b3a7499410fde2e69ffc5739b3ed887127cef74f28f",
+      "inventory_sha256": "5fc9a72bd2c9b086f3cf31d59c47785d93d9168ca0db3c0bc6a634dc138cc77c",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 6,
+      "template_sha256": "175a231915ce040ca18adbc92f93e0ec9afc6d765c6fdf6d92108770f16d6c89",
+      "contract_template_sha256": "175a231915ce040ca18adbc92f93e0ec9afc6d765c6fdf6d92108770f16d6c89",
+      "contract_sha256": "4450dbc3d76af3f719fc11eac8cec249a8a9d423e9ff056c228de8c686263d96",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "62fda021-0c79-4eb2-a7bc-a5ff60780a77",
+        "num_turns": 15,
+        "sdk_query_count": 4,
+        "semantic_feedback_attempts": 2,
+        "harness_feedback_attempts": 2
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-05-design-task-v5-m3-checkbox/input/school-template.docx",
+        "source_sha256": "a177fa5f0742642ed7b3194b6852df5901fd3445492644f6b61364bca9ea0c73",
+        "replay": "ok",
+        "output_sha256": "700991c14493fbb4c2317ff3706d10d64ae4ad8ba88d016ed9318a1bc83ccad0",
+        "operation_count": 6,
+        "slot_count": 6
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-06-proposal-v1",
+      "consumer_load": "ok",
+      "source_sha256": "507fa8d6d1a53ea6e015a70a9dca8cccb0e9a4f20e937956015280a8d158e86b",
+      "ledger_source_sha256": "507fa8d6d1a53ea6e015a70a9dca8cccb0e9a4f20e937956015280a8d158e86b",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "f2f6838d8cb98643d530e7c90e2f058d9e6cb8b248332d45f60edfc333ba5705",
+      "inventory_sha256": "a2622b17e078fabdb00d167db959da1137a97ad55aa3e64d4269fe8434dc47e6",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 6,
+      "template_sha256": "d5426469b11e84255103292a99b29a58ef503323bbabbdab3e7a11a776a926fd",
+      "contract_template_sha256": "d5426469b11e84255103292a99b29a58ef503323bbabbdab3e7a11a776a926fd",
+      "contract_sha256": "9487175fb6973292022b83eb0f229f46b77c0ecf29e59fa8d727898a5b7f56e7",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "failed",
+        "session_id": "4cfa26a9-36be-45d3-b525-479aefd51809",
+        "num_turns": 5,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-06-proposal-v1/input/school-template.docx",
+        "source_sha256": "507fa8d6d1a53ea6e015a70a9dca8cccb0e9a4f20e937956015280a8d158e86b",
+        "replay": "ok",
+        "output_sha256": "d36e8e9eee2ead0d56971d0935adde0ebebe175d7796d505dcbef1700dab8e93",
+        "operation_count": 6,
+        "slot_count": 6
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-07-proposal-record-v7-m3",
+      "consumer_load": "ok",
+      "source_sha256": "89d5ebbea1acb145f4ee694266a154dfb50b27f9b9b03de7c43563510b645ef9",
+      "ledger_source_sha256": "89d5ebbea1acb145f4ee694266a154dfb50b27f9b9b03de7c43563510b645ef9",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "49bf3419fb7e356665061d98cb320e6e5ab435ca88f4ec391b2cfb5365851c89",
+      "inventory_sha256": "6404c2e689318f3a603eff10272a0a54eeb49e68806a198bd574a25aab410396",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 7,
+      "template_sha256": "c0232e02353124b6d2b9b24b3948fb2a74ca995ef33fd3eabaa32aa59d733d9c",
+      "contract_template_sha256": "c0232e02353124b6d2b9b24b3948fb2a74ca995ef33fd3eabaa32aa59d733d9c",
+      "contract_sha256": "0692a5da9979dcc1997e5fee5d20486d1670367674104654454904a2f4806385",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "d0987789-af87-4018-9b84-a792e34c40b6",
+        "num_turns": 6,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-07-proposal-record-v7-m3/input/school-template.docx",
+        "source_sha256": "89d5ebbea1acb145f4ee694266a154dfb50b27f9b9b03de7c43563510b645ef9",
+        "replay": "ok",
+        "output_sha256": "06e524d7310bdf8bb28bdf044a2ab7d8a4d53ea68ff25fa896362533711751fc",
+        "operation_count": 7,
+        "slot_count": 7
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-08-defense-record-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "053ac43474d537965106f0d61b3897cc9a91b76f202f4739b5a71bed37577714",
+      "ledger_source_sha256": "053ac43474d537965106f0d61b3897cc9a91b76f202f4739b5a71bed37577714",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "10e45573cda64d3b70ffd877abc29a67d92f1d96c89a7b190d8d6c6dd2744905",
+      "inventory_sha256": "6d6e5d955a5d7a01f830dd72ffd1e4efe6befcaf285835db298510e1fb6b7c6b",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "053ac43474d537965106f0d61b3897cc9a91b76f202f4739b5a71bed37577714",
+      "contract_template_sha256": "053ac43474d537965106f0d61b3897cc9a91b76f202f4739b5a71bed37577714",
+      "contract_sha256": "a6530eb746fafd978eb38b294b84c64dac27321c3ce67a758d36283825331923",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "e186e6d1-23a5-43eb-bf25-704a19ca51ae",
+        "num_turns": 6,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-08-defense-record-v1/input/school-template.docx",
+        "source_sha256": "053ac43474d537965106f0d61b3897cc9a91b76f202f4739b5a71bed37577714",
+        "replay": "ok",
+        "output_sha256": "ecfec97d014502bc3d1eb2ff6cb1f87a281fb158f32efee000fc368914679d3c",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-09-topic-change-approval-v4-m3",
+      "consumer_load": "ok",
+      "source_sha256": "f62fdd6ddc3ceeab0151c921acd4ce0b656936a309b1350fadde83af942a90da",
+      "ledger_source_sha256": "f62fdd6ddc3ceeab0151c921acd4ce0b656936a309b1350fadde83af942a90da",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "4ab09b2377e998d73ed7c0286916dd7fe64a2bad1bffb2a8b28776dfea28bf08",
+      "inventory_sha256": "e463a1077fef59ff34096fd19fcf4111abb39b4fcc8968a070a5e1bf825a9c70",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 5,
+      "template_sha256": "f0402eb48157b029a7dc8c007a0b7b561f968d6538affb2940b9ea8a3a25bbbc",
+      "contract_template_sha256": "f0402eb48157b029a7dc8c007a0b7b561f968d6538affb2940b9ea8a3a25bbbc",
+      "contract_sha256": "c7b9e5066c7308b40edb395411d2f05d61da1035de15328f23d5e9f4e0c3d03e",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "dd968433-f251-4e0c-81a3-ac91448b7ee8",
+        "num_turns": 6,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-09-topic-change-approval-v4-m3/input/school-template.docx",
+        "source_sha256": "f62fdd6ddc3ceeab0151c921acd4ce0b656936a309b1350fadde83af942a90da",
+        "replay": "ok",
+        "output_sha256": "c4b8544e1a6eda7430fa5ec2baa39644781960620e74b421e26629f9c9bfa37b",
+        "operation_count": 5,
+        "slot_count": 5
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/hunau-10-grade-form-v7-m3-semantic-lock",
+      "consumer_load": "ok",
+      "source_sha256": "7f2f73d4b4535cc8e94cb338722bfa14222c245be7667aba0e3960e89af45896",
+      "ledger_source_sha256": "7f2f73d4b4535cc8e94cb338722bfa14222c245be7667aba0e3960e89af45896",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "c201c1c7f40965b335834d5cd6421b06e65fce73b04aad3ede7f4ae2b7e35a26",
+      "inventory_sha256": "4ff65133eb0bed55506bcea4021024a76a919ee9fa8b0f9e5e75384ecc4b5a7d",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 8,
+      "template_sha256": "76498c6020dc24b15d3d397dd49a66630ca7f2b02520b1c1de103934c5659889",
+      "contract_template_sha256": "76498c6020dc24b15d3d397dd49a66630ca7f2b02520b1c1de103934c5659889",
+      "contract_sha256": "0c77f06920eb924bbfb7612fe96694567f19f3f77abfc5c65b00cbb8e94d295d",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/hunau-10-grade-form-v7-m3-semantic-lock/input/school-template.docx",
+        "source_sha256": "7f2f73d4b4535cc8e94cb338722bfa14222c245be7667aba0e3960e89af45896",
+        "replay": "ok",
+        "output_sha256": "11836d9dbe0293184fb1ceb9ba2f8e80241df0675324d6b0fd1ec089d75fd417",
+        "operation_count": 8,
+        "slot_count": 8
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-01-cover-v6",
+      "consumer_load": "ok",
+      "source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+      "ledger_source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "266fb45c36e62bfbfa273dbe39b42ec5f4853507bae4af92ebe1c6062bca5d1e",
+      "inventory_sha256": "0394bcba766fa30b41ebd99843b7c57bcfea96e497541a7b58ae966fdac25bb5",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 8,
+      "template_sha256": "72bb2c62ad9f6364683d8624e3e262bc41e27f730a8fa0716fe8b071c9064187",
+      "contract_template_sha256": "72bb2c62ad9f6364683d8624e3e262bc41e27f730a8fa0716fe8b071c9064187",
+      "contract_sha256": "3f053020ea35cc1e69a48a89e22d9a5a2870166613a68748b437bd1a6b1eb402",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-01-cover-v6/input/school-template.docx",
+        "source_sha256": "8b2e3b15d9d85ef81e4d1e84dae1764b6eca636c5992932b465299ce68bd8268",
+        "replay": "ok",
+        "output_sha256": "fd1b947f7bd721d685169fd7a4d21f82f5beff15c9f469ccb5d8753a6d8e16d7",
+        "operation_count": 8,
+        "slot_count": 8
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-02-declarations-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "a2431b306ecd2e1dfdf09d67d0de5e24f073b7941d1eef309fefc55da4d3500a",
+      "ledger_source_sha256": "a2431b306ecd2e1dfdf09d67d0de5e24f073b7941d1eef309fefc55da4d3500a",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "2ba294b2224d5bedfa0b7fe738715399b24475912f775d08df047a4bc150468d",
+      "inventory_sha256": "41c1aa114580959668f22c09187c3a411792f36047e99194be7976e1fe33a497",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "a2431b306ecd2e1dfdf09d67d0de5e24f073b7941d1eef309fefc55da4d3500a",
+      "contract_template_sha256": "a2431b306ecd2e1dfdf09d67d0de5e24f073b7941d1eef309fefc55da4d3500a",
+      "contract_sha256": "17ae63b0a7ec892f468a2eb2fa684ee0eb257931a7bff2d21f3a1f36efa91015",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "3eaae0d8-4130-4b12-bd1f-2a334054c6f3",
+        "num_turns": 5,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-02-declarations-v1/input/school-template.docx",
+        "source_sha256": "a2431b306ecd2e1dfdf09d67d0de5e24f073b7941d1eef309fefc55da4d3500a",
+        "replay": "ok",
+        "output_sha256": "9f9b1274fe6a697610d402a49a0d285a6a88743aa1a0d7fc5552c4d62a7a8b4e",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-03-toc-v6",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+      "ledger_source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "2ea1a3c5096be70a2e8147f29a73d6906606c4aac9071ce76e5857a1450b9935",
+      "inventory_sha256": "dae25497ca2eea69a43960d68936e779c750838c12124e771a7f5410e349a630",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "a48380ceb025248d5136437aa186ce585e7b6c225ef40bfd95c2433da8a2777c",
+      "contract_template_sha256": "a48380ceb025248d5136437aa186ce585e7b6c225ef40bfd95c2433da8a2777c",
+      "contract_sha256": "3972859d8d663916528dd38be33dcdf31c548e4acee190c015ce31ac15d77107",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "627712f7-ed76-4ce7-adb0-c4a974ff9681",
+        "num_turns": 2,
+        "sdk_query_count": 4,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 2
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-03-toc-v6/input/school-template.docx",
+        "source_sha256": "f584700986edbad5ceb08aafa5187da5f7bebb68602e803403305dd4ac859e71",
+        "replay": "failed",
+        "error_type": "ToolFailure",
+        "error": "Accepted semantic review is not materializable: materialization_cleanup_carrier_conflict.",
+        "code": "template_materialization_readiness_incomplete"
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-04-abstract-cn-v3",
+      "consumer_load": "ok",
+      "source_sha256": "09ef82a1d09ffbceeaee063119faaea9fa584969c04ef0c7803dce07b625e3d5",
+      "ledger_source_sha256": "09ef82a1d09ffbceeaee063119faaea9fa584969c04ef0c7803dce07b625e3d5",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "26e094814da754941d14116488a6a1a44fd0ce43651fa5a16c69f33d4a869702",
+      "inventory_sha256": "4bdb42ee0ee3cd9dd38061d5ce73cb64b75f568925f141d2083f2f0472ef83f8",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 3,
+      "template_sha256": "5de6ea3c5293372a0753e761c88174ee6da69eb1ecb6e7bd293048c0b37a3082",
+      "contract_template_sha256": "5de6ea3c5293372a0753e761c88174ee6da69eb1ecb6e7bd293048c0b37a3082",
+      "contract_sha256": "6c09f3f0a88df3a8f676513d5c36ff1a17241fa1167f716eca7578e7a1f918a7",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-04-abstract-cn-v3/input/school-template.docx",
+        "source_sha256": "09ef82a1d09ffbceeaee063119faaea9fa584969c04ef0c7803dce07b625e3d5",
+        "replay": "ok",
+        "output_sha256": "5de6ea3c5293372a0753e761c88174ee6da69eb1ecb6e7bd293048c0b37a3082",
+        "operation_count": 3,
+        "slot_count": 3
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-05-abstract-en-v3",
+      "consumer_load": "ok",
+      "source_sha256": "e17b785610eac198498cf77be5efa38b24f2d98425efddef7789a9f150e532d7",
+      "ledger_source_sha256": "e17b785610eac198498cf77be5efa38b24f2d98425efddef7789a9f150e532d7",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "16c99694376da8f7573841dd4b2e9699c8324b25e24895a579522f1bc0d4fa00",
+      "inventory_sha256": "12756a2a05cd5be2d535372745577160494b6aedf0a62f2568346a45eeb41957",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 3,
+      "template_sha256": "50cce1e625f002cba02a6f9d84f2eb6777184ce7c0ea4dcc38547647f95c5c7b",
+      "contract_template_sha256": "50cce1e625f002cba02a6f9d84f2eb6777184ce7c0ea4dcc38547647f95c5c7b",
+      "contract_sha256": "acb562cc8e2ec001e9069b86a77412e7245583549c88222b864baa7e8a88158a",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-05-abstract-en-v3/input/school-template.docx",
+        "source_sha256": "e17b785610eac198498cf77be5efa38b24f2d98425efddef7789a9f150e532d7",
+        "replay": "ok",
+        "output_sha256": "50cce1e625f002cba02a6f9d84f2eb6777184ce7c0ea4dcc38547647f95c5c7b",
+        "operation_count": 3,
+        "slot_count": 3
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-06-body-v4",
+      "consumer_load": "ok",
+      "source_sha256": "c3f46d69f571ad7f2ef7b4e1c341e08fec24111c51f0fd1bfdf780b63dd7e142",
+      "ledger_source_sha256": "51ffe4591ec871b76e8c80abef8c18238f472d98679a1d34e8004eb274abd14a",
+      "source_current": false,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "88422656a988ca102c3a3b943cf8095bef3662bca1d1182098ede602a31c62a6",
+      "inventory_sha256": "e6ec48ae3ef9fd18ad012d7fd196ef446e860a9043bb9329fe59518a398c8e59",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 28,
+      "template_sha256": "eea9113984f7e2144bb9be207b4754d0b10853aac347f928cc0e1caff576c7e6",
+      "contract_template_sha256": "68ebbe64ab7bcdd88e3b53735fd16f8004dcc3d77a995d5fa54a473a0049136d",
+      "contract_sha256": "7a8d1a543712c629838af42596cc621af09822c440fb05cb9798f0161ea78ab3",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "template_artifact_provenance_invalid",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "f5e8c3f3-8a60-4574-95d8-a37d64699e27",
+        "num_turns": 9,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "stale_source_rejection": "stale_ref",
+        "source_path": "temp/phase8-v05-20260912/njau-06-body-v1/input/school-template.docx",
+        "source_sha256": "51ffe4591ec871b76e8c80abef8c18238f472d98679a1d34e8004eb274abd14a",
+        "replay": "ok",
+        "output_sha256": "de00c1626d19863b93dd0749691ed43099db1545f89ed0299e12e614f64fdc71",
+        "operation_count": 1,
+        "slot_count": 28
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-07-references-v5",
+      "consumer_load": "ok",
+      "source_sha256": "273757667bf94d66a973eb1bcdb4494ebc4b15df2d0f0ee2d20214a331f4b407",
+      "ledger_source_sha256": "61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f",
+      "source_current": false,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "8795da4360e4b73610a8c85415c8507dbbec8562a415e3914e9fd79a031c56d9",
+      "inventory_sha256": "66dc21f0463001e27c1270355c93c6b97964aeac1a253cc3a9dba24debae0cc1",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 1,
+      "template_sha256": "e95306c49405a9367ec88078f3fd4bdd6950204a223414b3f90479dee9e8506e",
+      "contract_template_sha256": "424545375f8aff3b1b4c78f1bc7e5d7ca0ad343a2226ee26c1284408eeaca0a0",
+      "contract_sha256": "6b1f6088308a142041915d3101eed28de2b1f867132020d40de412cc9187eab8",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "template_artifact_provenance_invalid",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "a0a0a2c5-f552-42f5-88c6-76a288fc4280",
+        "num_turns": 2,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "stale_source_rejection": "stale_ref",
+        "replay": "source_snapshot_unavailable"
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-08-appendix-v5",
+      "consumer_load": "ok",
+      "source_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+      "ledger_source_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "5a2d4c8bee658df88a101c59a5ef6392374b7b2060c133a3414ab7879697ac35",
+      "inventory_sha256": "cbbed939dd8a68481e29465032b18000969fe755a1acedaf09b7330a73e883f8",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 2,
+      "template_sha256": "14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4",
+      "contract_template_sha256": "14545dacbfb1d6cff5f500f22191925328c3c2840c618eb269857dbc096b94c4",
+      "contract_sha256": "9920208e7b4f41fe08ed57dfbf5c2a9b36d9081a1a6d1f2a129b4aeae7fa58f8",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "5709d13c-390c-4928-afb6-223d60e3a6ab",
+        "num_turns": 5,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-08-appendix-v5/input/school-template.docx",
+        "source_sha256": "309388e90287883f143f32dd495dffdaa526349273cecc8e256117073f19dd08",
+        "replay": "ok",
+        "output_sha256": "7db23c9630015bd906b0e1417f442dd035bb58d3df15e3bbaaa0864b5d9441ea",
+        "operation_count": 2,
+        "slot_count": 2
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-09-academic-achievements-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+      "ledger_source_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "487831f6f94532485bcd38677186254db5357078bcad3a582dd41c0786f3324e",
+      "inventory_sha256": "0b673093c4982b9caf1ea5c51698968a4d4467aaeb82d13edeb2f771994ec8cc",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+      "contract_template_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+      "contract_sha256": "52dc9d6efccabdccf7c8fc0bf64c8a5b00783b48290907ec294a49bc0b46602c",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "semantic-batch-resume",
+        "num_turns": 0,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/njau-09-academic-achievements-v1/input/school-template.docx",
+        "source_sha256": "7499473d6ae8263e0a70c65b4ddfa68c7ec3b729632fd5818b694090d2586a4c",
+        "replay": "ok",
+        "output_sha256": "1ca025366f72b638003cb5a48a3eea3ee298a5b0e1db37d00361594f6bfcdeb1",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/njau-10-acknowledgement-v2",
+      "consumer_load": "ok",
+      "source_sha256": "20662ed27b19bafc41aa229c551d34afec93c229fa1da728278e44a02e0560f6",
+      "ledger_source_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+      "source_current": false,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "fbed7d5dba9b5257385e963a2cba8a5dae93b1afca061b575dfeabef6afca14e",
+      "inventory_sha256": "086900c90835aaa9096085fc0d9dd0401721e1090031075630dceeb8e7e823c9",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 1,
+      "template_sha256": "d279d14c6f570199296671c8c722852afc47c7508ed0b06e4406a18f98bd09a5",
+      "contract_template_sha256": "c07b3a94c4bcb524a2e7104907b8b89b5f5820a0ac47d59909c60b2f28d37f11",
+      "contract_sha256": "b716cbfa8c1c94fbcc0eb73ca1597eacfa079d206e567eed7bb9b09317be6b1b",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "template_artifact_provenance_invalid",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "bbb4ec93-4fec-47cc-a204-6f032b67a614",
+        "num_turns": 2,
+        "sdk_query_count": 4,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 2
+      },
+      "current_replay": {
+        "stale_source_rejection": "stale_ref",
+        "source_path": "temp/phase8-canonical-20260911/njau-10-acknowledgement-v1/input/school-template.docx",
+        "source_sha256": "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01",
+        "replay": "ok",
+        "output_sha256": "d37bdbb341c42a4e6f40572ab8485250169cca068bfd4dfefe1b6e601358e6be",
+        "operation_count": 1,
+        "slot_count": 1
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-01-cover-v4",
+      "consumer_load": "ok",
+      "source_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+      "ledger_source_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "0f18f9bcaa3281674d4df6cb4e0dacb3db327449fe95f27cd95b9d3aead1d091",
+      "inventory_sha256": "18275aaceb37484bdf25799b14228b9f332ff951617243f85f2e17b39a06f972",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 9,
+      "template_sha256": "de6d70ec90d97ae8fbea419a70f41475569977a629c64b0d4b6924e5961e035f",
+      "contract_template_sha256": "de6d70ec90d97ae8fbea419a70f41475569977a629c64b0d4b6924e5961e035f",
+      "contract_sha256": "4b1aa248f1131d5b6f8911a156aadee7100378be404057f5175b30f4c2f02b4f",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "26e18b34-4cd8-4639-ab99-5b1affcb0cb7",
+        "num_turns": 2,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-01-cover-v4/input/school-template.docx",
+        "source_sha256": "93b1956f6552d423a63e2a352b787dca88b7f25bc3315c4acfd388eef716a0a5",
+        "replay": "ok",
+        "output_sha256": "7fd1e041b1bf4ab38513888d10ee32f5d8b17d7847279108ffc2334aa5bc45fe",
+        "operation_count": 9,
+        "slot_count": 9
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-02-copyright-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+      "ledger_source_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "b92012bae7efff4a1dae34e6679ad91bc2f1e5d08c55cc4cfb7b1b0c22481630",
+      "inventory_sha256": "6b1a91cc82fa783a1696f664d646982049946a616a8880f22a74bcb08fb8e03d",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3",
+      "contract_template_sha256": "0ed7697c16a38a981c6537bfa15e48c4840beb46d074d49ddc33c0cbe37646c3",
+      "contract_sha256": "e64fe2c6f4d06b0200cbd98b9080a8afd3eaeb0dfeae91404fe206290471a12c",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "4df42502-edad-4dbf-9c56-fd4b3bd7dc3f",
+        "num_turns": 2,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-02-copyright-v1/input/school-template.docx",
+        "source_sha256": "48c3c89df24619939160475dc2c21b80d72d1c6a1559edf14b360bf40e9e1f43",
+        "replay": "ok",
+        "output_sha256": "64ff7dc262b5ae54602bdbaa9ca654dd335f3055643f662ed9c08dc9fb6542c8",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-03-abstract-cn-v2",
+      "consumer_load": "ok",
+      "source_sha256": "e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c",
+      "ledger_source_sha256": "e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "b1f12b1cdabec3323969da194d0561e2b19fc0867f8ac38fd920002205456e68",
+      "inventory_sha256": "092f8380f5a1e5b908127eaa4c1b1489a47c4783cd23ed09420fc36f6d601812",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 2,
+      "template_sha256": "051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15",
+      "contract_template_sha256": "051cb43853ff6a42da8c0933c3f54128f66c50d32064d60ecc9d8aa79c6d1f15",
+      "contract_sha256": "65d8710d5c6e27e65a05ad185de09281acb26a461bae39aeda54fa788001679e",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "2b503b18-93fb-41e4-93c3-10106ab07185",
+        "num_turns": 0,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-03-abstract-cn-v2/input/school-template.docx",
+        "source_sha256": "e706a91da9503507e6bafaf7614a0ef4ed585148758d2e03a557731feb86d80c",
+        "replay": "ok",
+        "output_sha256": "871dd4c502a3ebfb1d1074ff1bb2c08e7260c4b8330c33a9c64a7b04dd48208d",
+        "operation_count": 2,
+        "slot_count": 2
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-04-abstract-en-v1",
+      "consumer_load": "ok",
+      "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+      "ledger_source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "f5cdda58243cc133513a6ecced3a0e936e41f3ff946a4f042f55dea775c0f6c7",
+      "inventory_sha256": "c9e20f261feb02cfa3654ddd034751af6ad8f655cb567f070074b80ff63380b4",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 5,
+      "template_sha256": "e40c867e3088829bea45396c9f60c2f2a734c64889283a37cba8ec9dc331fe72",
+      "contract_template_sha256": "e40c867e3088829bea45396c9f60c2f2a734c64889283a37cba8ec9dc331fe72",
+      "contract_sha256": "1bb55e8db9e98438c52feb99c45bcdb9ae29867270b4bafbdfed3f332d75752e",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "83dd2da9-0be4-461b-88f5-6f47fe3f3ef4",
+        "num_turns": 6,
+        "sdk_query_count": 1,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-04-abstract-en-v1/input/school-template.docx",
+        "source_sha256": "55fe7daeec89735a51fde6382869749770ccd2c54a3d911a565cccad7855c3d3",
+        "replay": "ok",
+        "output_sha256": "dba2b6d3d3cb4610fcc8a26b7775e040b42ec647b7b6d86f1ce3c69cc6aa1229",
+        "operation_count": 5,
+        "slot_count": 5
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-05-toc-v5",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "bd89fabfa63a4bcf7421ad6cfe84e45bc01358fc399845721299ad0088e47f70",
+      "ledger_source_sha256": "bd89fabfa63a4bcf7421ad6cfe84e45bc01358fc399845721299ad0088e47f70",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "c3c2195f4edf1563e747231f3044a5f329b2285b3d42f73f8319cd26d3bc5cf6",
+      "inventory_sha256": "c55fd44b98c0e4e6d343bf4fa24f252efe5b2b20850d2e50bf18a765910b5e4f",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "9ca2f8c97861deb3a4df4bdd88458b73f03d49cfe8a7043d180691c0623e40ed",
+      "contract_template_sha256": "9ca2f8c97861deb3a4df4bdd88458b73f03d49cfe8a7043d180691c0623e40ed",
+      "contract_sha256": "a08b862d2d6e02760c3886a76278b5bf9c1f4ac7c927b7f98785878f47fd25b4",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "e8a5128c-3fde-496b-8ad3-598fdce1dd0d",
+        "num_turns": 2,
+        "sdk_query_count": 4,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 2
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-05-toc-v5/input/school-template.docx",
+        "source_sha256": "bd89fabfa63a4bcf7421ad6cfe84e45bc01358fc399845721299ad0088e47f70",
+        "replay": "ok",
+        "output_sha256": "d6e4471150f235b479e6ddc956e60fe82221e0ebef07cea44f2873f8a9fcbaf3",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-06-list-of-figures-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "7ebf73e8ed285ff1487c75b381bb3286e9f353d335d5d264fb638a036729fd99",
+      "ledger_source_sha256": "7ebf73e8ed285ff1487c75b381bb3286e9f353d335d5d264fb638a036729fd99",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "b988d1fc99d704848fb053b00b6d724d5ab0ae86c2f7c6b13d7e69ee57cad33a",
+      "inventory_sha256": "c1f649fcae5ec4710ec22dc6b66d0314f93e2de022cd070bb8fd83322dc5fd0a",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "3e0b47a58d33444d374d6b52069f16abeeaf7d1bc58acc994cf16a5bc4c23a18",
+      "contract_template_sha256": "3e0b47a58d33444d374d6b52069f16abeeaf7d1bc58acc994cf16a5bc4c23a18",
+      "contract_sha256": "bf11bee449fafea30de51013ff2f8830ce6b52a3e0d8b2f3fb2a599da2fb2db6",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "5ccfca78-9b52-4678-8be7-51b19390ad71",
+        "num_turns": 5,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-06-list-of-figures-v1/input/school-template.docx",
+        "source_sha256": "7ebf73e8ed285ff1487c75b381bb3286e9f353d335d5d264fb638a036729fd99",
+        "replay": "ok",
+        "output_sha256": "8b93e0c318df08189010d9e7e7f03d7cae2f0ef023f895886e9bc5e1f5c8d6ea",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-07-list-of-tables-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "9e38d8f6f31ec987c82fc2f971dd4a66c754b6e3f5e256a4e611f3b2ed8b9045",
+      "ledger_source_sha256": "9e38d8f6f31ec987c82fc2f971dd4a66c754b6e3f5e256a4e611f3b2ed8b9045",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "4f0e3a266f09a1f8ed8419a8af151a5393e142b74d4030b5cde2b62dfa42ba0f",
+      "inventory_sha256": "be231f048b675e44ecbc24ef695802df5667856566e95de94a113362a12db20a",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "664ef37422f2642fd06b04255657ee951d6bf405cd212f4cfdc5358b9c92fbb0",
+      "contract_template_sha256": "664ef37422f2642fd06b04255657ee951d6bf405cd212f4cfdc5358b9c92fbb0",
+      "contract_sha256": "30b3f4259cae4b4280216bf1bcc9f6e698e083984eb8c0fbff27590fff578511",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "431a5799-bf5b-46cd-a47e-dbd3426b677f",
+        "num_turns": 5,
+        "sdk_query_count": 2,
+        "semantic_feedback_attempts": 0,
+        "harness_feedback_attempts": 0
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-07-list-of-tables-v1/input/school-template.docx",
+        "source_sha256": "9e38d8f6f31ec987c82fc2f971dd4a66c754b6e3f5e256a4e611f3b2ed8b9045",
+        "replay": "ok",
+        "output_sha256": "26e02d2e33ba3d7aedc693f2fa03ce28209a4ee8c718d0320aed9ba84d8ee350",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-08-body-v12",
+      "consumer_load": "fill_contract_style_ref_missing",
+      "source_sha256": "d86fcb99a03f25f443935d2257a5a62cc153a700b89446614512637b7b1f05d3",
+      "ledger_source_sha256": "d86fcb99a03f25f443935d2257a5a62cc153a700b89446614512637b7b1f05d3",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "90f9db2ce55e200e0cce1e8ac072febb57426e56bb82cfdd71bc3117a73e0f8a",
+      "inventory_sha256": "7aa8e1a25899a0b33876718b7c7ee2040df97dcc551bc582efcf3be4cafefd8f",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 110,
+      "template_sha256": "7125825bc826f7478f6973bfcdcfe842316f8e7524b2ae4dffc182210a905c2c",
+      "contract_template_sha256": "7125825bc826f7478f6973bfcdcfe842316f8e7524b2ae4dffc182210a905c2c",
+      "contract_sha256": "5dcc9d8cebdb69eb77d4aa445b5e392f51d2514a7fa7d368adc7635d94f7b4db",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "73291b96-7ec9-4fde-bffb-733455fcd0a1",
+        "num_turns": 0,
+        "sdk_query_count": 7,
+        "semantic_feedback_attempts": 2,
+        "harness_feedback_attempts": 4
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-08-body-v12/input/school-template.docx",
+        "source_sha256": "d86fcb99a03f25f443935d2257a5a62cc153a700b89446614512637b7b1f05d3",
+        "replay": "ok",
+        "output_sha256": "0ffb5b8a63b56749cd6554414d8e60b363d992f2879c6eb9bb53bbeb0dd50e42",
+        "operation_count": 1,
+        "slot_count": 110
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-09-references-v1",
+      "consumer_load": "ok",
+      "source_sha256": "26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c",
+      "ledger_source_sha256": "26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "0d4cfb1aa2182e2f7bf88ede656546506a36475f5f5d6380e57b6013ec701d8b",
+      "inventory_sha256": "f4b5481938d7ef728b266e8c7d784d3e8c3640e71c4dc7bd97231c686d5c842c",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 1,
+      "template_sha256": "a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0",
+      "contract_template_sha256": "a888986a7b7df8e69572eb0773ae2d56aa8002ddda105df980b6b454dc27d6d0",
+      "contract_sha256": "72669a7dcdefec63d91874c85ecadec5071d675ff61a01589801e0b234a4349b",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "301fcd69-ddf7-4e6f-8d94-302aeaacb957",
+        "num_turns": 2,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-09-references-v1/input/school-template.docx",
+        "source_sha256": "26ae4203e272a3f1687823a0795190623ee8503249c67514e83912178eef157c",
+        "replay": "ok",
+        "output_sha256": "3f2572e8ffb7a7df331f263c0956e89ee29c912157a509b44974f0c88a083b7d",
+        "operation_count": 1,
+        "slot_count": 1
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-10-appendix-achievements-v1",
+      "consumer_load": "ok",
+      "source_sha256": "a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88",
+      "ledger_source_sha256": "a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "f16936144a43b56a31e9dfdf21cb522bb048d2d9c67ec3425a24c155ea19ea58",
+      "inventory_sha256": "facc3b9765967d3bd0035aceaaaca5bff140a61a491523afecf4ffe91f92292a",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 5,
+      "template_sha256": "f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd",
+      "contract_template_sha256": "f409592632b0bc6f8e694e79c7ec02c40b0f9e9dd49ead06ba2b1e28bfe72acd",
+      "contract_sha256": "5c2abbf8e126dda2d6c9a8c1cd3648344089cae4e551d757dd2052942c245ed0",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "864a6813-0841-4df0-bddf-654310f99b76",
+        "num_turns": 2,
+        "sdk_query_count": 6,
+        "semantic_feedback_attempts": 3,
+        "harness_feedback_attempts": 4
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-10-appendix-achievements-v1/input/school-template.docx",
+        "source_sha256": "a3971941f59975b7b00b8ef75ac553973be7d98da6a8e3502cfaf05793b3cc88",
+        "replay": "ok",
+        "output_sha256": "cdbc0f7bdcaab8508d6b928cbf104b09f01be80174c66fe24dafbc2101f73c30",
+        "operation_count": 5,
+        "slot_count": 5
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-11-acknowledgement-v3",
+      "consumer_load": "ok",
+      "source_sha256": "d5e12420e0555e9d59f394f0e69bcc934918a59baaf1db906150cb6c26517904",
+      "ledger_source_sha256": "d5e12420e0555e9d59f394f0e69bcc934918a59baaf1db906150cb6c26517904",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "3e4adf3d1f0ef7b90b08aecd0f8358415111971391ebc1c2c8fd911417199c73",
+      "inventory_sha256": "01635f1e68ec64daab7daec6bc74d25f2ff6fc069fab4fd28f52f17aa9f9b67e",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 1,
+      "template_sha256": "c22b1d15c922972551d78009c54f82b09e3949b145cdad30b9e9b370a9918f8b",
+      "contract_template_sha256": "c22b1d15c922972551d78009c54f82b09e3949b145cdad30b9e9b370a9918f8b",
+      "contract_sha256": "a4d5c14278e0f3686675181b1e8593bd29b026c4e44835eae8e708da4d4bb8b6",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "747f4bf6-3336-4987-8f33-4383a4d0db97",
+        "num_turns": 2,
+        "sdk_query_count": 3,
+        "semantic_feedback_attempts": 1,
+        "harness_feedback_attempts": 1
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-11-acknowledgement-v3/input/school-template.docx",
+        "source_sha256": "d5e12420e0555e9d59f394f0e69bcc934918a59baaf1db906150cb6c26517904",
+        "replay": "ok",
+        "output_sha256": "d78684800b177ab0ad6f297b47e9b631752228db51e51d20fc9a49aa47dcf1e4",
+        "operation_count": 1,
+        "slot_count": 1
+      }
+    },
+    {
+      "root": "temp/phase8-v05-20260912/pku-12-declarations-v1",
+      "consumer_load": "fill_contract_style_contracts_invalid",
+      "source_sha256": "b520e60149fb30e4032175dfb6315f12fd2229a5d439a372cf315097082947d9",
+      "ledger_source_sha256": "b520e60149fb30e4032175dfb6315f12fd2229a5d439a372cf315097082947d9",
+      "source_current": true,
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+      "review_sha256": "f086ec276c6d5e6ceaf74391fc4b640c4af6de0c4de80a8011aa3bcfcb10a905",
+      "inventory_sha256": "ca9ff7f9c528de2e06cc9f7930940fe3ffc3523b9bfb476a2b53d73545f4a1de",
+      "vocabulary_errors": [],
+      "accepted_review_valid": true,
+      "slot_count": 0,
+      "template_sha256": "b520e60149fb30e4032175dfb6315f12fd2229a5d439a372cf315097082947d9",
+      "contract_template_sha256": "b520e60149fb30e4032175dfb6315f12fd2229a5d439a372cf315097082947d9",
+      "contract_sha256": "43b663089bc46d74574c89e7f6204b929e52e1c9964c2d3e2dfbd66af99e3034",
+      "published_slots_equal_accepted_spans": true,
+      "artifact_validation": "ok",
+      "historical_execution": {
+        "status": "complete",
+        "session_id": "99d47bb7-76f7-4e5a-ac45-05e5f64683a3",
+        "num_turns": 3,
+        "sdk_query_count": 4,
+        "semantic_feedback_attempts": 2,
+        "harness_feedback_attempts": 2
+      },
+      "current_replay": {
+        "source_path": "temp/phase8-v05-20260912/pku-12-declarations-v1/input/school-template.docx",
+        "source_sha256": "b520e60149fb30e4032175dfb6315f12fd2229a5d439a372cf315097082947d9",
+        "replay": "ok",
+        "output_sha256": "5a5937df8da77d3240961b38d43658d0b89f778263f2bff11106f11a73faef9b",
+        "operation_count": 0,
+        "slot_count": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "verification_level": "natural E2E batch acceptance using boundary transport; not whole-school completion",
+  "runtime": "6678851",
+  "accepted_events": [
+    {
+      "event_path": "temp/harness-repair-20260923/phase5-three-schools/hunau-boundary-codec-task/work/.docfit/harness/semantic-revisions/00000013.json",
+      "sha256": "cac308e46ffa04d55ccf08fa171d4137b02ba4245a02cb66c15a56bf469e7978",
+      "batch_id": "semantic-batch-0001-88423b98",
+      "encoded_parts": [
+        {
+          "source_entry_id": "source-entry-2eb746e9f08a1ba6d753dcf9",
+          "part": {
+            "role": "cleanup",
+            "text": "附件1  封面基本格式：单倍行距；上下页边距均为2.54厘米，左右页边距均为2.6厘米；除基本信息的5行内容外，其余内容均居中。“□” 表示占1个字宽（即2个字符）的空格。所做的为论文,则标题中设计不要；所做的为设计,则标题中论文不要。",
+            "trailing_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 5
+              }
+            ]
+          }
+        },
+        {
+          "source_entry_id": "source-entry-9b2d25e2ec28a655fd44e544",
+          "part": {
+            "leading_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 5
+              }
+            ],
+            "role": "fixed_label",
+            "text": "湖 南 农 业 大 学"
+          }
+        },
+        {
+          "source_entry_id": "source-entry-f3ac4bef4cb2115a98e2e353",
+          "part": {
+            "field_id": "thesis.title.zh",
+            "leading_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 10
+              }
+            ],
+            "role": "fill_slot",
+            "text": "毕业论文（设计）中文题目"
+          }
+        },
+        {
+          "source_entry_id": "source-entry-8a333f36d8520490edcb1d99",
+          "part": {
+            "field_id": "advisor.title",
+            "role": "fill_slot",
+            "text": "教授",
+            "trailing_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            ]
+          }
+        },
+        {
+          "source_entry_id": "source-entry-fd61900f8bd29c28a6049935",
+          "part": {
+            "field_id": "submission.date",
+            "role": "fill_slot",
+            "text": "20××年××月",
+            "trailing_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "event_path": "temp/harness-repair-20260923/phase5-three-schools/hunau-boundary-codec-task/work/.docfit/harness/semantic-revisions/00000017.json",
+      "sha256": "f80e8269cbbac88cb4a0851b03c366b566844478ceff4c6f5ce7348ba1f68206",
+      "batch_id": "semantic-batch-0002-9ce631bd",
+      "encoded_parts": [
+        {
+          "source_entry_id": "source-entry-31fd3bdf894aeca072bc5fa4",
+          "part": {
+            "leading_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 20
+              }
+            ],
+            "role": "fixed_label",
+            "text": "毕业论文（设计）作者签名："
+          }
+        },
+        {
+          "source_entry_id": "source-entry-13cd3b99fc87ab79afde4abb",
+          "part": {
+            "field_id": "submission.date",
+            "leading_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 39
+              }
+            ],
+            "role": "fill_slot",
+            "text": "年    月    日"
+          }
+        }
+      ]
+    }
+  ]
+}

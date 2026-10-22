@@ -1,0 +1,27 @@
+{
+  "verification_level": "real replay",
+  "source_hash": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+  "judgment_source": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/source-entry-real-replay-20260905-103825/work/.docfit/harness/semantic-judgments.json",
+  "source_entry_count": 1,
+  "inventory_status": "ok",
+  "review_status": "ok",
+  "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/id-closure-20260911/slot-replay-final/work/.docfit/post-unit-materialization/candidate-0001.docx",
+  "candidate_hash": "b8418dda61fd8d787f42e0330134721849a48fa7c9e59788cdf934dad8bd277f",
+  "slot_protocol": {
+    "status": "ok",
+    "slot_count": 1,
+    "school_content_control_count": 0,
+    "slots": [
+      {
+        "slot_ref": "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=1;field_id=author.name.zh",
+        "span_ref": "source_entry_id=source-entry-a25cecf54e38b7e36227f4fc;part_index=1",
+        "field_id": "author.name.zh"
+      }
+    ],
+    "failure": null
+  },
+  "limitations": [
+    "No live Agent in this replay",
+    "No publication or visual acceptance claimed"
+  ]
+}

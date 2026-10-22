@@ -1,0 +1,170 @@
+{
+  "content_item_count": 2,
+  "content_items": [
+    {
+      "content_ref": {
+        "source_locators": [
+          "/body/p[@paraId=00100000]"
+        ],
+        "source_object_ids": [
+          "obj-f1752ea7069808539d2e5bb0"
+        ],
+        "student_document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25"
+      },
+      "observed_text": "Verified title",
+      "observed_text_sha256": "646bea8746c1e9fb02220bfe176107712f3ea588b4d70c0ee62b8030173e45b7",
+      "physical_type": "text",
+      "source_content_id": "source-content-14c4a933bdf283bb3c051fc0",
+      "source_facts": {
+        "numbering_shape": "none",
+        "paragraph_style": "Normal",
+        "reading_order_policy": "main_story",
+        "text_length": 14,
+        "xml_inline_sequence": [
+          "text"
+        ]
+      },
+      "source_locators": [
+        "/body/p[@paraId=00100000]"
+      ],
+      "source_object_ids": [
+        "obj-f1752ea7069808539d2e5bb0"
+      ],
+      "source_order": {
+        "block": 1,
+        "inline": 0
+      },
+      "transport_source_locator": "/body/p[@paraId=00100000]",
+      "transport_source_object_id": "obj-f1752ea7069808539d2e5bb0"
+    },
+    {
+      "content_ref": {
+        "source_locators": [
+          "/body/p[@paraId=00100002]"
+        ],
+        "source_object_ids": [
+          "obj-35c94c6aca56c746fb3bd708"
+        ],
+        "student_document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25"
+      },
+      "observed_text": "Student body paragraph",
+      "observed_text_sha256": "677772e32a9ea7aed7be7b91b84a8b26ce3d9c215f231757fde0e179e405a11a",
+      "physical_type": "text",
+      "source_content_id": "source-content-2ba010bbbee0cf845e9663f0",
+      "source_facts": {
+        "numbering_shape": "none",
+        "paragraph_style": "Normal",
+        "reading_order_policy": "main_story",
+        "text_length": 22,
+        "xml_inline_sequence": [
+          "text"
+        ]
+      },
+      "source_locators": [
+        "/body/p[@paraId=00100002]"
+      ],
+      "source_object_ids": [
+        "obj-35c94c6aca56c746fb3bd708"
+      ],
+      "source_order": {
+        "block": 2,
+        "inline": 0
+      },
+      "transport_source_locator": "/body/p[@paraId=00100002]",
+      "transport_source_object_id": "obj-35c94c6aca56c746fb3bd708"
+    }
+  ],
+  "object_count": 2,
+  "objects": [
+    {
+      "body_sequence": 1,
+      "content_id": "content-fd0e86f911aad4d2a58ab349",
+      "content_type": "rich_text",
+      "inline_sequence": [
+        "text"
+      ],
+      "kind": "paragraph",
+      "sequence": 1,
+      "source_locator": "/body/p[@paraId=00100000]",
+      "source_object_ref": {
+        "document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25",
+        "expected_fingerprint": "69be4caf72a0050ee0093494b03be653f21128b423c78c79e35abc4971dd434b",
+        "object_id": "obj-f1752ea7069808539d2e5bb0"
+      },
+      "style": "Normal",
+      "text": "Verified title",
+      "text_sha256": "646bea8746c1e9fb02220bfe176107712f3ea588b4d70c0ee62b8030173e45b7",
+      "transferable": true
+    },
+    {
+      "body_sequence": 2,
+      "content_id": "content-e693deceab710b4e6aa851be",
+      "content_type": "rich_text",
+      "inline_sequence": [
+        "text"
+      ],
+      "kind": "paragraph",
+      "sequence": 2,
+      "source_locator": "/body/p[@paraId=00100002]",
+      "source_object_ref": {
+        "document_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25",
+        "expected_fingerprint": "8db4751d804197020d749f05982801d196616086086f2aac9b6de5cce98c6d4f",
+        "object_id": "obj-35c94c6aca56c746fb3bd708"
+      },
+      "style": "Normal",
+      "text": "Student body paragraph",
+      "text_sha256": "677772e32a9ea7aed7be7b91b84a8b26ce3d9c215f231757fde0e179e405a11a",
+      "transferable": true
+    }
+  ],
+  "package_summary": {
+    "bookmarks": 0,
+    "comments": false,
+    "content_controls": 0,
+    "drawings": 0,
+    "endnotes": false,
+    "equations": 0,
+    "fields": 0,
+    "footers": 0,
+    "footnotes": false,
+    "graphic_objects": 0,
+    "headers": 0,
+    "hyperlinks": 0,
+    "images": 0,
+    "merged_cells": 0,
+    "numbering_part": true,
+    "package_parts": 11,
+    "paragraphs": 2,
+    "sections": 1,
+    "styles_part": true,
+    "tables": 0,
+    "text_boxes": 0,
+    "tracked_deletions": 0,
+    "tracked_insertions": 0,
+    "vml_objects": 0
+  },
+  "privacy": "task_local_contains_student_content",
+  "provider": {
+    "environment": {
+      "architecture": "arm64",
+      "platform": "Darwin"
+    },
+    "executable_sha256": "b6327c943d8b0a8fb2d8254b4c2c2821f2911d38bf5b1adba2cec37d4249f8f9",
+    "expected_version": "1.0.143",
+    "license": "Apache-2.0",
+    "name": "officecli",
+    "version": "1.0.144",
+    "version_locked": false
+  },
+  "risks": [],
+  "schema_version": "docfit-student-source-inventory/v2",
+  "semantic_neutral_profile": {
+    "numbering_shape_counts": {
+      "none": 2
+    }
+  },
+  "source_sha256": "d9fc49ba66a926e67034d8d85067d402bc8afd8956b232ce79f764ed1b150a25",
+  "synthetic_transferable_object_count": 0,
+  "transferable_object_count": 2,
+  "warnings": []
+}

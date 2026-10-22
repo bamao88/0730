@@ -1,0 +1,12 @@
+{
+  "verification_level": "real runtime request inspection, not revision success",
+  "request_path": "temp/harness-repair-20260923/phase5-three-schools/pku-boundary-codec-retry-task/work/.docfit/harness/semantic-revisions/00000002.json",
+  "request_sha256": "207caf53f93d78be8d3b94653732f50744b3cb032b1aab524410e7afbbb24994",
+  "checks": {
+    "leading_whitespace/trailing_whitespace arrays on that SAME part": true,
+    "Visible text and leading_whitespace/trailing_whitespace ARE allowed together": true,
+    "only the separate whitespace property requires empty text": true,
+    "do not add those counts to each other or to text_length": true
+  },
+  "runtime": "6678851"
+}

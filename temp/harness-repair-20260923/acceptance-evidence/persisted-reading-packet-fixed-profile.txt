@@ -1,0 +1,33 @@
+         1573570 function calls in 0.733 seconds
+
+   Ordered by: cumulative time
+   List reduced from 119 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.003    0.003    0.754    0.754 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/tools/service.py:528(_persisted_unit_reading_packet)
+        7    0.000    0.000    0.335    0.048 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:214(from_json)
+     1057    0.002    0.000    0.240    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:278(validate_canonical_source_entries)
+     5782    0.001    0.000    0.238    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:281(<genexpr>)
+     4725    0.011    0.000    0.237    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:174(from_json)
+        1    0.001    0.001    0.211    0.211 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/unit_source.py:213(require_initial_binding)
+        2    0.002    0.001    0.210    0.105 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/unit_source.py:179(validate_unit_proof)
+        2    0.004    0.002    0.197    0.098 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/unit_source.py:103(resolve_unit_partition)
+    27783    0.005    0.000    0.195    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:182(<genexpr>)
+        1    0.001    0.001    0.193    0.193 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/tools/service.py:187(_post_unit_checkpoint)
+    23058    0.052    0.000    0.190    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:97(from_json)
+        7    0.000    0.000    0.159    0.023 /Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/json/__init__.py:299(loads)
+        7    0.000    0.000    0.159    0.023 /Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/json/decoder.py:333(decode)
+        7    0.158    0.023    0.158    0.023 /Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/json/decoder.py:344(raw_decode)
+        1    0.001    0.001    0.147    0.147 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/unit_source.py:198(validate_inventory_partition)
+        7    0.002    0.000    0.146    0.021 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:735(_source_inventory_digest)
+     1050    0.022    0.000    0.119    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_spans.py:373(resolve_source_span)
+        2    0.000    0.000    0.113    0.056 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/unit_source.py:47(load_initial_inventory)
+     6825    0.005    0.000    0.104    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:193(to_json)
+    33306    0.098    0.000    0.098    0.000 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/template/source_entries.py:129(to_json)
+       13    0.000    0.000    0.086    0.007 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/tools/runtime.py:88(sha256_json)
+       13    0.000    0.000    0.080    0.006 /Users/xpw/.codex/worktrees/template-harness-phase3/template-extraction/src/docfit/tools/runtime.py:67(canonical_json)
+        7    0.000    0.000    0.075    0.011 /Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/pathlib.py:1022(read_text)
+        7    0.048    0.007    0.075    0.011 {method 'read' of '_io.TextIOWrapper' objects}
+       13    0.000    0.000    0.068    0.005 /Users/xpw/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/json/__init__.py:183(dumps)
+
+

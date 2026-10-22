@@ -1,0 +1,607 @@
+{
+  "verification_level": "real replay",
+  "purpose": "Read-only diagnosis of saved live Agent candidates against their actual inventory; not an E2E rerun or product acceptance.",
+  "source_paths": {
+    "candidate": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-attempt-1/semantic-batch-candidates.json",
+    "inventory": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task/work/.docfit/harness/object-inventory.json",
+    "manifest": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task/work/.docfit/harness/semantic-batch-manifest.json",
+    "checkpoint": "/Volumes/ExtSSD2601/Docfit-worktrees/template-extraction/temp/span-skill-e2e-20260922-87710163/cover-task/work/.docfit/unit-boundary-checkpoint.json"
+  },
+  "source_sha256": {
+    "candidate": "444567abff3bd5102e4b52647db3fe8c306000734f926d7cc6a5d4cb7345c315",
+    "inventory": "cc7ab075dbe09432653e3292b495cecb74b1893549093272b36172647f60a83c",
+    "manifest": "5ee633487d591b2f76f1a44453a7736dc67b5f55777a07e15b7abd1b8ef7384a",
+    "checkpoint": "59f9a7bcfa2186c6157d946dde03b3af54e80afcb7a69ef1cfc45143ebce9c54"
+  },
+  "source_files_unchanged": true,
+  "review_path": "same pure whitespace decode, schema review, exact span resolver, then coverage functions used by TemplateHarnessService; stopped at first failing layer",
+  "checks": [
+    {
+      "name": "persisted_manifest_and_ledger_bindings",
+      "status": "ok"
+    },
+    {
+      "name": "all_batches_aggregated",
+      "status": "ok",
+      "batch_count": 2
+    },
+    {
+      "name": "whitespace_transport",
+      "status": "ok"
+    },
+    {
+      "name": "schema_role_field_vocabulary",
+      "status": "ok"
+    },
+    {
+      "name": "exact_source_span_resolution",
+      "status": "needs_input"
+    }
+  ],
+  "feedback": {
+    "schema_version": 2,
+    "status": "needs_input",
+    "feedback": {
+      "type": "span_resolution",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": "Revise ordered semantic parts so their text segments partition the named source entry's exact text in order, including any boundary whitespace reported by the current unit packet."
+    },
+    "checks": [
+      {
+        "name": "ordered_span_resolution",
+        "result": "needs_input"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[2].parts[0]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620",
+        "expected_text": "     湖 南 农 ",
+        "submitted_text": "湖 南 农 业 大 学",
+        "source_text_length": 26,
+        "expected_text_length": 11,
+        "submitted_text_length": 11,
+        "mismatch_offset": 0,
+        "expected_leading_whitespace_count": 5,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 5"
+        ],
+        "text_start": 0,
+        "text_end": 11
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[2].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620",
+        "expected_text": "     湖 南 农",
+        "submitted_text": "（一号华文行楷加粗）",
+        "source_text_length": 26,
+        "expected_text_length": 10,
+        "submitted_text_length": 10,
+        "mismatch_offset": 0,
+        "expected_leading_whitespace_count": 5,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 5"
+        ],
+        "text_start": 0,
+        "text_end": 10
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[2]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620",
+        "text_start": 0,
+        "text_end": 26,
+        "uncovered_text": "     湖 南 农 业 大 学（一号华文行楷加粗）",
+        "source_text_length": 26,
+        "covered_text_length": 0,
+        "uncovered_text_length": 26
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[6].parts[0]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+        "expected_text": "          毕业",
+        "submitted_text": "毕业论文（设计）中文题目",
+        "source_text_length": 32,
+        "expected_text_length": 12,
+        "submitted_text_length": 12,
+        "mismatch_offset": 0,
+        "expected_leading_whitespace_count": 10,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 10"
+        ],
+        "text_start": 0,
+        "text_end": 12
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[6].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+        "expected_text": "        ",
+        "submitted_text": "（小二黑体加粗）",
+        "source_text_length": 32,
+        "expected_text_length": 8,
+        "submitted_text_length": 8,
+        "mismatch_offset": 0,
+        "expected_leading_whitespace_count": 10,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 10"
+        ],
+        "text_start": 0,
+        "text_end": 8
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[6]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+        "text_start": 0,
+        "text_end": 32,
+        "uncovered_text": "          毕业论文（设计）中文题目  （小二黑体加粗）",
+        "source_text_length": 32,
+        "covered_text_length": 0,
+        "uncovered_text_length": 32
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[11].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-4085024389c4c34a9ddd141e",
+        "expected_text": " （三号楷体加粗",
+        "submitted_text": "（三号楷体加粗）",
+        "source_text_length": 37,
+        "expected_text_length": 8,
+        "submitted_text_length": 8,
+        "mismatch_offset": 28,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 28,
+        "text_end": 36
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[11]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-4085024389c4c34a9ddd141e",
+        "text_start": 28,
+        "text_end": 37,
+        "uncovered_text": " （三号楷体加粗）",
+        "source_text_length": 37,
+        "covered_text_length": 28,
+        "uncovered_text_length": 9
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[14]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-fcf5ddf12ee9812b36b0f73d",
+        "text_start": 20,
+        "text_end": 21,
+        "uncovered_text": " ",
+        "source_text_length": 21,
+        "covered_text_length": 20,
+        "uncovered_text_length": 1,
+        "uncovered_whitespace_codepoints": [
+          "U+0020"
+        ]
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[15].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-409b074a4b1a5f6d6462a74f",
+        "expected_text": "  （学院名用全",
+        "submitted_text": "（学院名用全称）",
+        "source_text_length": 27,
+        "expected_text_length": 8,
+        "submitted_text_length": 8,
+        "mismatch_offset": 17,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 17,
+        "text_end": 25
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[15]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-409b074a4b1a5f6d6462a74f",
+        "text_start": 17,
+        "text_end": 27,
+        "uncovered_text": "  （学院名用全称）",
+        "source_text_length": 27,
+        "covered_text_length": 17,
+        "uncovered_text_length": 10
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[19].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-7037639ea0acd6749ed9baa3",
+        "expected_text": " （小三号黑体",
+        "submitted_text": "（小三号黑体）",
+        "source_text_length": 13,
+        "expected_text_length": 7,
+        "submitted_text_length": 7,
+        "mismatch_offset": 5,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 5,
+        "text_end": 12
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[19]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-7037639ea0acd6749ed9baa3",
+        "text_start": 5,
+        "text_end": 13,
+        "uncovered_text": " （小三号黑体）",
+        "source_text_length": 13,
+        "covered_text_length": 5,
+        "uncovered_text_length": 8
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[20]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-dcd6229069b523fc5510c265",
+        "text_start": 13,
+        "text_end": 14,
+        "uncovered_text": " ",
+        "source_text_length": 14,
+        "covered_text_length": 13,
+        "uncovered_text_length": 1,
+        "uncovered_whitespace_codepoints": [
+          "U+0020"
+        ]
+      }
+    ],
+    "failure": {
+      "origin": "request",
+      "code": "template_ordered_span_resolution_incomplete",
+      "retryable": true,
+      "message": "Harness could not resolve ordered semantic parts to scoped spans.",
+      "suggested_actions": [
+        "split_parts_against_exact_source_entry_text"
+      ]
+    },
+    "warnings": []
+  },
+  "text_differences": [
+    {
+      "source_entry_id": "source-entry-f9dc3cf468ab7ff8d590a620",
+      "expected_text": "     湖 南 农 业 大 学（一号华文行楷加粗）",
+      "submitted_text": "湖 南 农 业 大 学（一号华文行楷加粗）",
+      "expected_length": 26,
+      "submitted_length": 21,
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "湖 南 农 业 大 学"
+        },
+        {
+          "role": "style_only",
+          "text": "（一号华文行楷加粗）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            0,
+            5
+          ],
+          "submitted_range": [
+            0,
+            0
+          ],
+          "expected": "     ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-887847f8d224e6aff686190d",
+      "expected_text": "          毕业论文（设计）中文题目  （小二黑体加粗）",
+      "submitted_text": "毕业论文（设计）中文题目（小二黑体加粗）",
+      "expected_length": 32,
+      "submitted_length": 20,
+      "parts": [
+        {
+          "field_id": "thesis.title.zh",
+          "role": "fill_slot",
+          "text": "毕业论文（设计）中文题目"
+        },
+        {
+          "role": "style_only",
+          "text": "（小二黑体加粗）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            0,
+            10
+          ],
+          "submitted_range": [
+            0,
+            0
+          ],
+          "expected": "          ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020",
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        },
+        {
+          "type": "delete",
+          "expected_range": [
+            22,
+            24
+          ],
+          "submitted_range": [
+            12,
+            12
+          ],
+          "expected": "  ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020",
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-4085024389c4c34a9ddd141e",
+      "expected_text": "□□□□□□学生姓名（三号黑体加粗）：×××（或×□×） （三号楷体加粗）",
+      "submitted_text": "□□□□□□学生姓名（三号黑体加粗）：×××（或×□×）（三号楷体加粗）",
+      "expected_length": 37,
+      "submitted_length": 36,
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□□□□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "学生姓名（三号黑体加粗）："
+        },
+        {
+          "field_id": "author.name.zh",
+          "role": "fill_slot",
+          "text": "×××（或×□×）"
+        },
+        {
+          "role": "style_only",
+          "text": "（三号楷体加粗）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            28,
+            29
+          ],
+          "submitted_range": [
+            28,
+            28
+          ],
+          "expected": " ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-fcf5ddf12ee9812b36b0f73d",
+      "expected_text": "□□□□□□指导老师及职称：×××□教授 ",
+      "submitted_text": "□□□□□□指导老师及职称：×××□教授",
+      "expected_length": 21,
+      "submitted_length": 20,
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□□□□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "指导老师及职称："
+        },
+        {
+          "field_id": "advisor.name.zh",
+          "role": "fill_slot",
+          "text": "×××"
+        },
+        {
+          "field_id": "advisor.title",
+          "role": "fill_slot",
+          "text": "□教授"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            20,
+            21
+          ],
+          "submitted_range": [
+            20,
+            20
+          ],
+          "expected": " ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-409b074a4b1a5f6d6462a74f",
+      "expected_text": "□□□□□□学□□院：××××学院  （学院名用全称）",
+      "submitted_text": "□□□□□□学□□院：××××学院（学院名用全称）",
+      "expected_length": 27,
+      "submitted_length": 25,
+      "parts": [
+        {
+          "role": "style_only",
+          "text": "□□□□□□"
+        },
+        {
+          "role": "fixed_label",
+          "text": "学□□院："
+        },
+        {
+          "field_id": "author.department",
+          "role": "fill_slot",
+          "text": "××××学院"
+        },
+        {
+          "role": "cleanup",
+          "text": "（学院名用全称）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            17,
+            19
+          ],
+          "submitted_range": [
+            17,
+            17
+          ],
+          "expected": "  ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020",
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-7037639ea0acd6749ed9baa3",
+      "expected_text": "湖南·长沙 （小三号黑体）",
+      "submitted_text": "湖南·长沙（小三号黑体）",
+      "expected_length": 13,
+      "submitted_length": 12,
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "湖南·长沙"
+        },
+        {
+          "role": "style_only",
+          "text": "（小三号黑体）"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            5,
+            6
+          ],
+          "submitted_range": [
+            5,
+            5
+          ],
+          "expected": " ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    },
+    {
+      "source_entry_id": "source-entry-dcd6229069b523fc5510c265",
+      "expected_text": "提交日期：20××年××月 ",
+      "submitted_text": "提交日期：20××年××月",
+      "expected_length": 14,
+      "submitted_length": 13,
+      "parts": [
+        {
+          "role": "fixed_label",
+          "text": "提交日期："
+        },
+        {
+          "field_id": "submission.date",
+          "role": "fill_slot",
+          "text": "20××年××月"
+        }
+      ],
+      "diffs": [
+        {
+          "type": "delete",
+          "expected_range": [
+            13,
+            14
+          ],
+          "submitted_range": [
+            13,
+            13
+          ],
+          "expected": " ",
+          "submitted": "",
+          "expected_codepoints": [
+            "U+0020"
+          ],
+          "submitted_codepoints": []
+        }
+      ]
+    }
+  ],
+  "not_run": [
+    "model",
+    "DOCX materialization",
+    "publication",
+    "product acceptance"
+  ]
+}

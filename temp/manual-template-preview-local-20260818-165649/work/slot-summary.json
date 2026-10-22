@@ -1,0 +1,44 @@
+[
+  {
+    "text": "【中文论文题目】                    ",
+    "alias": "thesis.title.zh",
+    "tag": "slot.thesis.title.zh.fd33b7f04a",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[8]/sdt[@sdtId=196030723]"
+  },
+  {
+    "text": "【作者中文姓名】                    ",
+    "alias": "author.name.zh",
+    "tag": "slot.author.name.zh.47e1bb35fa",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[10]/sdt[@sdtId=238607749]"
+  },
+  {
+    "text": "【学号】                            ",
+    "alias": "author.student_id",
+    "tag": "slot.author.student_id.5ab290afe0",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[11]/sdt[@sdtId=237938624]"
+  },
+  {
+    "text": "【院系】                            ",
+    "alias": "author.department",
+    "tag": "slot.author.department.d6a384597d",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[12]/sdt[@sdtId=252823972]"
+  },
+  {
+    "text": "【专业】                            ",
+    "alias": "author.major",
+    "tag": "slot.author.major.2559234216",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[13]/sdt[@sdtId=72853924]"
+  },
+  {
+    "text": "【导师中文姓名】 ",
+    "alias": "advisor.name.zh",
+    "tag": "slot.advisor.name.zh.cd9e7a01aa",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/sdt[@sdtId=30367536]"
+  },
+  {
+    "text": "【导师职称】",
+    "alias": "advisor.title",
+    "tag": "slot.advisor.title.84657b9a75",
+    "locator": "/body/tbl[1]/tr[1]/tc[1]/p[14]/sdt[@sdtId=225360489]"
+  }
+]

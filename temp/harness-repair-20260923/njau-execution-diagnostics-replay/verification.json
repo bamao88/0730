@@ -1,0 +1,395 @@
+{
+  "verification_level": "real replay of unchanged real judgments through readiness; no Agent or materialization",
+  "input_bindings": {
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/school-template.docx": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/input/field-registry.yaml": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/initial-source-inventory.json": "25c73a16e77b701c6b2bf8b6b1b5a101b062252e70938d7bedd280665d2a6995",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/unit-boundary-checkpoint.json": "69f00900af7d4b50dc3498b699065cd43d91f4690853878b46374ede1fc745ab",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/harness/object-inventory.json": "701fbce573e3cf5ece213e00afd245a46b5cddd9a004dafbbd238e2d92b3421f",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/harness/semantic-judgments.json": "5a29f6c049f9c0ba8b6e1fa47a20d5f09a93c6dc6ae38c9d08b36b2a3abe1a8d",
+    "temp/harness-repair-20260923/phase5-three-schools/njau-boundary-diagnostics-task/work/.docfit/post-unit-materialization/materialization.json": "025a46fffa154cdcb73c8ce07b6a8d652456abbf917ffc864257abbdd571a882"
+  },
+  "original_unchanged": true,
+  "same_blocked_scopes": true,
+  "blocker_count": 9,
+  "blocker_counts": {
+    "materialization_body_structure_carrier_unsupported": 7,
+    "materialization_cleanup_carrier_conflict": 2
+  },
+  "feedback": {
+    "schema_version": 1,
+    "status": "error",
+    "recovery": {
+      "kind": "execution_unsupported",
+      "owner": "tool",
+      "action": "stop"
+    },
+    "feedback": {
+      "type": "materialization_readiness",
+      "mechanical": true,
+      "semantic_authority": false,
+      "agent_action": null
+    },
+    "checks": [
+      {
+        "name": "materialization_readiness",
+        "result": "error"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-3efd73cae8a512c5ce83a203",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-dcf5576c2bfd65495729d26a",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-cdb14f8b3309a8bf179fa46e",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-105fd29ce0a9556e332a14b8",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-d6167ae87cab94b809baef51",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-28e56cb18de09bc75b058829",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_body_structure_carrier_unsupported",
+        "missing_requirement": "one_visible_carrier_per_body_member",
+        "why_it_blocks_execution": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "message": "This body_structure member has no supported body carrier. Its source location is outside the supported body interfaces; preserve its judgment and inspect the execution limitation.",
+        "source_entry_id": "source-entry-eff74536b46d98e710787702",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "field_id": "body.paragraph",
+        "supported_carrier_count": 0
+      },
+      {
+        "code": "materialization_cleanup_carrier_conflict",
+        "missing_requirement": "one_treatment_per_word_carrier",
+        "why_it_blocks_execution": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. The current block deletion cannot preserve the other accepted content; execution must stop without changing the semantic judgments.",
+        "message": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. The current block deletion cannot preserve the other accepted content; execution must stop without changing the semantic judgments.",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "source_judgment_ref": "semantic_judgments[0]",
+        "source_entry_ids": [
+          "source-entry-852593250a6b8daea9640fcb",
+          "source-entry-2e2fe0ca346b5188bc2ecac2",
+          "source-entry-fc0591d9c1444238d6d0645a",
+          "source-entry-9d54f57faf3b5f30eebbf24c",
+          "source-entry-b931deacba2856fb3ce7c86b",
+          "source-entry-5be6ccc670222a702226ff2d",
+          "source-entry-b0fe7d8a79dff391219369f1",
+          "source-entry-1b7591ef0f1788232ed9d779",
+          "source-entry-68fc05ff1056dc3037b2c719",
+          "source-entry-813dfb5f49ef0a4256d95183",
+          "source-entry-17e2679377abb766980c7640",
+          "source-entry-e3bea420b4e548d802e2e1b9",
+          "source-entry-24ac9b719646d00ae5b2dd7f",
+          "source-entry-c5535b8a8362f4863822c436",
+          "source-entry-b666f200010b20ffe84b61c6",
+          "source-entry-d22a3b57b4a4a59adc635195",
+          "source-entry-9dccf7eda8a43cc44a31673b",
+          "source-entry-b4f650846b8a5d913b18ccb4",
+          "source-entry-8a0d7c7d63dd0b97052d545a",
+          "source-entry-2f0225f0c653a4a3a6043d0b",
+          "source-entry-0fdf4dee659c659815e69556",
+          "source-entry-ec6aeef44153c681924e8a3f"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-852593250a6b8daea9640fcb"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2e2fe0ca346b5188bc2ecac2"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-fc0591d9c1444238d6d0645a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9d54f57faf3b5f30eebbf24c"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b931deacba2856fb3ce7c86b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-5be6ccc670222a702226ff2d"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b0fe7d8a79dff391219369f1"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-1b7591ef0f1788232ed9d779"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-68fc05ff1056dc3037b2c719"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-813dfb5f49ef0a4256d95183"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-17e2679377abb766980c7640"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-e3bea420b4e548d802e2e1b9"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-24ac9b719646d00ae5b2dd7f"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-c5535b8a8362f4863822c436"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b666f200010b20ffe84b61c6"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-d22a3b57b4a4a59adc635195"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-9dccf7eda8a43cc44a31673b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-b4f650846b8a5d913b18ccb4"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-8a0d7c7d63dd0b97052d545a"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2f0225f0c653a4a3a6043d0b"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-0fdf4dee659c659815e69556"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-ec6aeef44153c681924e8a3f"
+          }
+        ]
+      },
+      {
+        "code": "materialization_cleanup_carrier_conflict",
+        "missing_requirement": "one_treatment_per_word_carrier",
+        "why_it_blocks_execution": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. The current block deletion cannot preserve the other accepted content; execution must stop without changing the semantic judgments.",
+        "message": "The same Word carrier has both cleanup deletion and retained or materialized semantic content. The current block deletion cannot preserve the other accepted content; execution must stop without changing the semantic judgments.",
+        "needed_context": "unit_evidence_packet",
+        "evidence_focus": "unit_evidence_packet",
+        "source_judgment_ref": "semantic_judgments[1]",
+        "source_entry_ids": [
+          "source-entry-2e2fe0ca346b5188bc2ecac2",
+          "source-entry-741bd7ca7aa2e4c4e09bec91"
+        ],
+        "scope_refs": [
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-2e2fe0ca346b5188bc2ecac2"
+          },
+          {
+            "kind": "source_entry",
+            "ref_id": "source-entry-741bd7ca7aa2e4c4e09bec91"
+          }
+        ]
+      }
+    ],
+    "failure": {
+      "origin": "tool",
+      "code": "template_materialization_execution_unsupported",
+      "retryable": false,
+      "message": "Accepted semantic review is not materializable (9 blockers): materialization_body_structure_carrier_unsupported (7), materialization_cleanup_carrier_conflict (2).",
+      "suggested_actions": [
+        "Preserve the semantic judgments; repair the reported execution or system issue.",
+        "Do not retry semantic judgment or run materialization handlers for this failure."
+      ]
+    },
+    "warnings": []
+  },
+  "failure_message": "Accepted semantic review is not materializable (9 blockers): materialization_body_structure_carrier_unsupported (7), materialization_cleanup_carrier_conflict (2).",
+  "failure_origin": "tool",
+  "semantic_retry": false,
+  "footer_judgment_evidence": [
+    {
+      "source_entry_id": "source-entry-3efd73cae8a512c5ce83a203",
+      "text": "5",
+      "locators": [
+        "/footer[1]/p[1]",
+        "/footer[1]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "5"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"5\". body.paragraph is the closest vocabulary field for this paragraph-level footer content; the rendering layer swaps the digit for a Word PAGE field at output time."
+    },
+    {
+      "source_entry_id": "source-entry-dcf5576c2bfd65495729d26a",
+      "text": "4",
+      "locators": [
+        "/footer[3]/p[1]",
+        "/footer[3]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "4"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"4\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    },
+    {
+      "source_entry_id": "source-entry-cdb14f8b3309a8bf179fa46e",
+      "text": "3",
+      "locators": [
+        "/footer[5]/p[1]",
+        "/footer[5]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "3"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"3\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    },
+    {
+      "source_entry_id": "source-entry-105fd29ce0a9556e332a14b8",
+      "text": "2",
+      "locators": [
+        "/footer[7]/p[1]",
+        "/footer[7]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "2"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"2\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    },
+    {
+      "source_entry_id": "source-entry-d6167ae87cab94b809baef51",
+      "text": "7",
+      "locators": [
+        "/footer[8]/p[1]",
+        "/footer[8]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "7"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"7\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    },
+    {
+      "source_entry_id": "source-entry-28e56cb18de09bc75b058829",
+      "text": "1",
+      "locators": [
+        "/footer[12]/p[1]",
+        "/footer[12]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "1"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"1\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    },
+    {
+      "source_entry_id": "source-entry-eff74536b46d98e710787702",
+      "text": "6",
+      "locators": [
+        "/footer[13]/p[1]",
+        "/footer[13]/p[1]/r[1]"
+      ],
+      "submitted_parts": [
+        {
+          "field_id": "body.paragraph",
+          "role": "body_structure",
+          "text": "6"
+        }
+      ],
+      "submitted_reason": "Footer paragraph (style=footer, alignment=center) carrying the centered page-number digit \"6\". body.paragraph is the closest vocabulary field for paragraph-level footer content."
+    }
+  ],
+  "product_acceptance": false,
+  "runtime_commit": "04ff044fb88f76aae16c2d39faa618f1371a72e2"
+}

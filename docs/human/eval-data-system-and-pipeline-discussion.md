@@ -3,7 +3,7 @@
 > 状态：Human 讨论稿，尚未批准，不定义当前架构
 > 日期：2026-08-04
 > 讨论范围：未来 M3 的 Eval 数据准备与管理
-> 当前权威来源：`docs/docfit-00-index.md` 至 `docs/docfit-06-development-roadmap.md`
+> 当前权威来源：根目录 `ARCHITECTURE.md`、`docs/docfit-03-gold-system-design.md`、相关模块 Contract 和模块边界文档
 
 > 2026-08-06 职责边界更新：本文原称 Content Field Contract 的对象已收窄为
 > 独立 Content Field Registry，详细研发权威为
@@ -1292,5 +1292,5 @@ Student Content Truth 和 Placement Truth 作为内容保留与槽位填写的�
 6. 上述内容通过后，再设计物理目录、可执行 schema 和人工平台页面。
 
 本讨论稿属于未来 M3 设计输入。M3 当前仍在已完成 M0–M2 范围之外；在新的用户批准
-计划和 00–06 协调更新完成前，本文中的文件包、字段和人工平台都不能描述为已实现或
+计划和当前架构入口/模块 Contract 协调更新完成前，本文中的文件包、字段和人工平台都不能描述为已实现或
 已批准架构。

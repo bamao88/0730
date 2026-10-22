@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "application",
+    "code": "final_visual_review_not_passed",
+    "retryable": false,
+    "message": "The final visual review is pending, blocked or requires further inspection.",
+    "suggested_actions": [
+      "Review the saved final-page evidence and record actual observations before resuming.",
+      "Do not change school semantic judgments to bypass the final visual review."
+    ]
+  }
+}

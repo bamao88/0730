@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-24T09:28:47.221050+00:00",
+  "data": {
+    "base_candidate_sequence": 3,
+    "base_ledger_digest": "968047f46687c60d592e167b58bd0c4cf19f066e1d4d753b4c963cd17a57884d",
+    "batch_id": "semantic-batch-0001-77ddf8db",
+    "editable_source_entry_ids": null,
+    "feedback": null,
+    "prompt": "原文：姓名：  \n实际请求"
+  },
+  "event_digest": "814731339d155186797a91b530edafa341bae2a7c76abc08a6a238590fea3368",
+  "evidence_mode": "runtime",
+  "kind": "request",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "previous_event_digest": "3eeed21fa94fb5764aa4b4475d039f7338c87de974ef8940fc77c2c7c62e0b13",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 4
+}

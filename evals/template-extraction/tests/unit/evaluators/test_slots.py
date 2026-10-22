@@ -101,6 +101,21 @@ def test_slot_02_through_05_mutations_have_precise_failure(
         }
         inventory = next(item for item in failed if item.dimension == "slot.inventory")
         assert inventory.failure_code == failure_code
+    elif sample == "S05-slot-field-wrong":
+        assert {item.dimension for item in failed} == {
+            "slot.inventory",
+            "slot.location_boundary",
+            "slot.field_mapping",
+            "slot.value_style",
+        }
+        assert {
+            item.failure_code for item in failed if item.dimension == "slot.inventory"
+        } == {"extra_slot", "required_slot_missing"}
+        assert all(
+            item.failure_code == "required_slot_prerequisite_missing"
+            for item in failed
+            if item.dimension != "slot.inventory"
+        )
     else:
         assert len(failed) == 1
         assert (failed[0].dimension, failed[0].failure_code) == (dimension, failure_code)

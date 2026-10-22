@@ -33,7 +33,7 @@ from docfit.observability.storage import (
 
 RUN_ID = "run_0123456789abcdef0123456789abcdef"
 TASK_REF = "task_fedcba9876543210fedcba9876543210"
-BASE_TIME = datetime(2026, 8, 3, 8, 31, tzinfo=UTC)
+BASE_TIME = datetime.now(UTC).replace(microsecond=0)
 
 
 def _ample_disk_space(_: Path) -> tuple[int, int]:

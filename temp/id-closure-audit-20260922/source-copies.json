@@ -1,0 +1,15 @@
+{
+  "wanted": {
+    "51ffe4591ec871b76e8c80abef8c18238f472d98679a1d34e8004eb274abd14a": "temp/phase8-v05-20260912/njau-06-body-v4",
+    "61122cc9d920337076e464d0c9520a075d61027120644e0aefabe09565dbe52f": "temp/phase8-v05-20260912/njau-07-references-v5",
+    "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01": "temp/phase8-v05-20260912/njau-10-acknowledgement-v2"
+  },
+  "found": {
+    "51ffe4591ec871b76e8c80abef8c18238f472d98679a1d34e8004eb274abd14a": [
+      "temp/phase8-v05-20260912/njau-06-body-v1/input/school-template.docx"
+    ],
+    "aa0a66bab9f718af63e5964a58bbfa4caef1056d3c45aa87abf9a457ab14af01": [
+      "temp/phase8-canonical-20260911/njau-10-acknowledgement-v1/input/school-template.docx"
+    ]
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "code_commit": "5ba6a29",
+  "level": "logic/contract plus explicitly marked real replay",
+  "probes": {
+    "A": {
+      "input_type": "constructed",
+      "before": {
+        "source_entry_id": "source-entry-604bd73f5756fc62cf093a9e",
+        "parts": [
+          {
+            "text": "姓名：",
+            "role": "fixed_label"
+          }
+        ]
+      },
+      "after": {
+        "source_entry_id": "source-entry-604bd73f5756fc62cf093a9e",
+        "parts": [
+          {
+            "text": "姓名：张三",
+            "role": "fixed_label"
+          }
+        ]
+      }
+    },
+    "C": {
+      "requires_prior_role": true,
+      "contains_prior_role": false,
+      "contains_prior_text": false
+    },
+    "E": {
+      "status": "needs_input",
+      "review": {
+        "type": "mechanical_review",
+        "mechanical": true,
+        "semantic_authority": false
+      },
+      "affected": [
+        {
+          "code": "scope_invalid",
+          "source_entry_id": "source-entry-604bd73f5756fc62cf093a9e",
+          "message": "This range needs a revised semantic_judgment in Agent terms."
+        }
+      ],
+      "next_step": "Revise listed entries."
+    },
+    "F": {
+      "level": "logic/contract; mocked objective validation",
+      "visual": {
+        "schema_version": 1,
+        "status": "host_review_not_requested",
+        "origin": "harness",
+        "document_sha256": "5cde0f1298f41f7d1c8b907a36992a7a513225a2615bd6e307bf1a9149b06b40",
+        "reviewed_pages": [],
+        "findings": []
+      },
+      "validation_args": {
+        "source_docx": "/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/tmpqfc_0mru/input/school-template.docx",
+        "source_sha256": "5cde0f1298f41f7d1c8b907a36992a7a513225a2615bd6e307bf1a9149b06b40",
+        "final_docx": "/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/tmpqfc_0mru/input/school-template.docx"
+      }
+    }
+  },
+  "real_replay": {
+    "task_root": "temp/span-skill-e2e-20260922-87710163/body-task",
+    "source_sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+    "ledger_sha256": "a534bce5ad37f6bb5a729a1e9360d12841ea4c5403ec2b3d3e4fc65116877ec6",
+    "judgment_count": 71,
+    "blockers": [
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[16].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-f0c63376279768f327365472",
+        "expected_text": "",
+        "submitted_text": "            (五号Times New Roman)",
+        "source_text_length": 68,
+        "expected_text_length": 0,
+        "submitted_text_length": 31,
+        "mismatch_offset": 68,
+        "text_start": 68,
+        "text_end": 99
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[17]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-c206824b8b3ecd1f798994ae",
+        "text_start": 30,
+        "text_end": 32,
+        "uncovered_text": "  ",
+        "source_text_length": 32,
+        "covered_text_length": 30,
+        "uncovered_text_length": 2,
+        "uncovered_whitespace_codepoints": [
+          "U+0020 × 2"
+        ]
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[20].parts[3]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "source_text_length": 31
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[20].parts[4]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "expected_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标",
+        "submitted_text": "（一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "expected_text_length": 25,
+        "submitted_text_length": 25,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 29
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[20]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-cd6aa8a6ec14a9028ef4059a",
+        "text_start": 4,
+        "text_end": 31,
+        "uncovered_text": "  （一级标题小三号黑体，顶格书写序数，空一格写标题）",
+        "source_text_length": 31,
+        "covered_text_length": 4,
+        "uncovered_text_length": 27
+      },
+      {
+        "code": "ordered_part_empty_for_text_entry",
+        "field": "semantic_judgments[21].parts[2]",
+        "message": "An empty part can target only a canonical empty whole-entry source entry.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "source_text_length": 43
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[21].parts[3]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "expected_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roma",
+        "submitted_text": "（正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "expected_text_length": 37,
+        "submitted_text_length": 37,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 2,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 2"
+        ],
+        "text_start": 4,
+        "text_end": 41
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[21]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-344bb676258ff9ee88721d53",
+        "text_start": 4,
+        "text_end": 43,
+        "uncovered_text": "  （正文的中文内容小四号宋体，英文内容小四号Times New Roman）",
+        "source_text_length": 43,
+        "covered_text_length": 4,
+        "uncovered_text_length": 39
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[41].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "expected_text": " (小三号黑体",
+        "submitted_text": "(小三号黑体)",
+        "source_text_length": 12,
+        "expected_text_length": 7,
+        "submitted_text_length": 7,
+        "mismatch_offset": 4,
+        "expected_leading_whitespace_count": 1,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020"
+        ],
+        "text_start": 4,
+        "text_end": 11
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[41]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-db62d6453a3105d0c9cef4be",
+        "text_start": 4,
+        "text_end": 12,
+        "uncovered_text": " (小三号黑体)",
+        "source_text_length": 12,
+        "covered_text_length": 4,
+        "uncovered_text_length": 8
+      },
+      {
+        "code": "ordered_part_text_mismatch",
+        "field": "semantic_judgments[42].parts[1]",
+        "message": "Ordered part text must equal the source substring at the next exact offset.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "expected_text": "      ",
+        "submitted_text": "(五号宋体)",
+        "source_text_length": 47,
+        "expected_text_length": 6,
+        "submitted_text_length": 6,
+        "mismatch_offset": 34,
+        "expected_leading_whitespace_count": 7,
+        "expected_leading_whitespace_codepoints": [
+          "U+0020 × 7"
+        ],
+        "text_start": 34,
+        "text_end": 40
+      },
+      {
+        "code": "ordered_part_text_gap",
+        "field": "semantic_judgments[42]",
+        "message": "Ordered parts must cover the complete source entry without omissions.",
+        "source_entry_id": "source-entry-bc83b192a296aad304c5ae79",
+        "text_start": 34,
+        "text_end": 47,
+        "uncovered_text": "       (五号宋体)",
+        "source_text_length": 47,
+        "covered_text_length": 34,
+        "uncovered_text_length": 13
+      }
+    ],
+    "all_rejected_turns_available": false
+  },
+  "frozen_inputs": [
+    {
+      "school": "hunau-undergraduate",
+      "source_path": "temp/manual-gold-preparation/gold/00-inputs/schools/hunau-undergraduate__source-template.docx",
+      "frozen_input": "temp/harness-repair-20260923/inputs/hunau-undergraduate/school-template.docx",
+      "source_sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+    },
+    {
+      "school": "njau-undergraduate",
+      "source_path": "temp/manual-gold-preparation/gold/00-inputs/schools/njau-undergraduate__source-template.docx",
+      "frozen_input": "temp/harness-repair-20260923/inputs/njau-undergraduate/school-template.docx",
+      "source_sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+    },
+    {
+      "school": "pku-graduate",
+      "source_path": "temp/manual-gold-preparation/gold/00-inputs/schools/pku-graduate__source-template.docx",
+      "frozen_input": "temp/harness-repair-20260923/inputs/pku-graduate/school-template.docx",
+      "source_sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+      "registry_sha256": "e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd"
+    }
+  ]
+}

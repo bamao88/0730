@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN" data-revision="{{ revision or '' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  {% if csrf_token %}<meta name="docfit-csrf" content="{{ csrf_token }}">{% endif %}
+  <title>{% block title %}DocFit Observer{% endblock %}</title>
+  <link rel="stylesheet" href="/static/observer.css">
+  <script src="/static/observer.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="DocFit 运行观测首页">
+      <span class="brand-mark" aria-hidden="true">D</span>
+      <span><strong>DocFit Observer</strong><small>本地只读运行观测</small></span>
+    </a>
+    {% block header_actions %}{% endblock %}
+  </header>
+  <main id="main" class="page-shell" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+  <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
+</body>
+</html>

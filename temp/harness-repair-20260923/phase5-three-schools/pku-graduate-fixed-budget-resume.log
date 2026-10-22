@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_query_time_budget_exhausted",
+    "retryable": false,
+    "message": "The saved semantic time allowance was exhausted; resume cannot renew it.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  }
+}

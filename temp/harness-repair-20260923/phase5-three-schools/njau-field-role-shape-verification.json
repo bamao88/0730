@@ -1,0 +1,700 @@
+{
+  "observed_at": "2026-09-24T05:13:04.269732+00:00",
+  "session_id": 93517,
+  "exit_code": 2,
+  "failure": {
+    "code": "template_materialization_execution_unsupported",
+    "message": "Accepted semantic review is not materializable: materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous, materialization_body_structure_member_ambiguous.",
+    "origin": "tool",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": [
+      "Preserve the semantic judgments; repair the reported execution or system issue.",
+      "Do not retry semantic judgment or run materialization handlers for this failure."
+    ]
+  },
+  "event_counts": {
+    "budget_policy": 1,
+    "request": 20,
+    "response": 20,
+    "local_review": 19,
+    "candidate_recorded": 14,
+    "local_rejected": 6,
+    "global_review_failed": 1,
+    "run_failed": 1
+  },
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "output_files": [],
+  "blocker_counts": {
+    "materialization_body_structure_member_ambiguous": 18,
+    "materialization_body_structure_carrier_conflict": 18,
+    "materialization_intent_unclassified": 1
+  },
+  "blockers": [
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-45c8fff57bef0b5ed8b4339a",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-88bf733f2f187e61190c69c1",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-7c98c941a064329069d85aaa",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-98ca0bac3115f4ef78d4412c",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-dc89bf778cf0897611974dc7",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-38d3789d2e1adea738992a1e",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-a0924966107c00dc9846f490",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-f1705e3ef3522283710feacb",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-e2f5872e1379a996d8e01977",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-55cbfeb6fec5f17c43e45efd",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-b4882946d2463610d04e5373",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-33a69d5f9c1f788d3201bfbd",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-479747d744be806af677a456",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-a82d8ce6db0af18258498c12",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-65eca32b22676defcb289ad1",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-85221c1158b153541a5c0bcd",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-6e8325111855b9333fa8029f",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_member_ambiguous",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation.",
+      "missing_requirement": "one_body_structure_member_per_source_entry",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_id": "source-entry-cc2f3b6c9730c06074c509df",
+      "why_it_blocks_execution": "The accepted body parts cannot be represented by the currently supported body interfaces. Preserve the judgment and resolve this execution limitation."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-45c8fff57bef0b5ed8b4339a"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.heading.outline2"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-88bf733f2f187e61190c69c1"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-7c98c941a064329069d85aaa"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.heading.outline3"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-98ca0bac3115f4ef78d4412c"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-dc89bf778cf0897611974dc7"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.heading.outline3"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-38d3789d2e1adea738992a1e"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-a0924966107c00dc9846f490"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.heading.outline2"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-f1705e3ef3522283710feacb"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-e2f5872e1379a996d8e01977"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-55cbfeb6fec5f17c43e45efd"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-b4882946d2463610d04e5373"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-33a69d5f9c1f788d3201bfbd"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-479747d744be806af677a456"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-a82d8ce6db0af18258498c12"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-65eca32b22676defcb289ad1"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-85221c1158b153541a5c0bcd"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-6e8325111855b9333fa8029f"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_body_structure_carrier_conflict",
+      "evidence_focus": "unit_evidence_packet",
+      "field_ids": [
+        "body.paragraph"
+      ],
+      "message": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved.",
+      "missing_requirement": "one_body_member_per_visible_carrier",
+      "needed_context": "unit_evidence_packet",
+      "part_indexes": [
+        0,
+        2
+      ],
+      "source_entry_ids": [
+        "source-entry-cc2f3b6c9730c06074c509df"
+      ],
+      "why_it_blocks_execution": "Multiple field-bearing body_structure parts resolve to the same visible body object. The execution layer cannot represent these interfaces together; preserve the judgments while this limitation is resolved."
+    },
+    {
+      "code": "materialization_intent_unclassified",
+      "evidence_focus": "unit_evidence_packet",
+      "message": "Ordered part roles do not form a single executable materialization intent.",
+      "missing_requirement": "executable_ordered_part_roles",
+      "needed_context": "unit_evidence_packet",
+      "scope_refs": [
+        {
+          "kind": "source_entry",
+          "ref_id": "source-entry-3c8a71cc4dcc018098df31ed"
+        }
+      ],
+      "source_entry_ids": [
+        "source-entry-3c8a71cc4dcc018098df31ed"
+      ],
+      "source_judgment_ref": "semantic_judgments[169]",
+      "why_it_blocks_execution": "Ordered part roles do not form a single executable materialization intent."
+    }
+  ],
+  "event_hashes": {
+    "00000001.json": "2b3da6e3629a74117613404aef79d55f3524f704750af360ab0204b8a02e22ef",
+    "00000002.json": "8f62cc744951f1dba671feb8928a9b057f6ed901b6f93cc6c445da96cb1e30c2",
+    "00000003.json": "4b1427e89011eb88267c0f00b30ab934215ce07cca37ca0b96c2fd2a88c3d71e",
+    "00000004.json": "0439b9a72cc61cc82bd4cda801d6a0156beecce3d3b53f567c966390a76e4147",
+    "00000005.json": "5ff45348f7cc529b8551b50e7d9f84b1ceb7aa66bd3c657909549958d955a367",
+    "00000006.json": "96a5c23c5b076a99a459eb69de9f091c6de0ce60cc67e1c7684e5997c900e945",
+    "00000007.json": "b665c472964e75eff09e2d9069c414f07ba5f7f44f73e93c24ddc8e4f8736962",
+    "00000008.json": "82398ee104a07f26295c60a51e604704d9bf652b666cfa7db165bb77f2f14d94",
+    "00000009.json": "30aed7ee4dd0224a41b23922eec4ca1b467869fd8aa732a7d4a9392390118450",
+    "00000010.json": "7c42ab5d8d997c3cbe1e1f543774e57c615f15157f6b189b563e8c1b8d0567e3",
+    "00000011.json": "abe1310724239cd015ef4f6dfa90a8116622dc9c04ddc8bcf24a1df3b4cdcadc",
+    "00000012.json": "5823b6cff780dbc2dee722910d32b742b1938c699f9eca798e69f8a744be314c",
+    "00000013.json": "038ba1c163ae3a838691eab01b68a88038006ce0b8f4d9a01aef8223927d8699",
+    "00000014.json": "0c822dd441628018cbe1f7a867ac6fe2578da2ab466126d6250019e3a1eb67fb",
+    "00000015.json": "c5b02bacec89384b07d9ca2c92ec850ef858483ab199c4d9099e11b58ce1e2f5",
+    "00000016.json": "670312339258b7e0df91be57c2b1e53756966457e31036ff2e89be29b9535c4d",
+    "00000017.json": "cdbbc5bf55a93041f6fa408f23cc3211ecd95599f002c88e318852b55b4ab40b",
+    "00000018.json": "1874df2670a1a78503ea12bbc2001c940834f74f381ac0216235d05ca765087e",
+    "00000019.json": "57e07cbe6fe711e680d414d1ec3b02c0f6eed247ab615e6ace5812af4771f98c",
+    "00000020.json": "d4558845f9320638470a7f17f58b276a635cdcc1dfcad4f8aaafc3b7ee0f4e4f",
+    "00000021.json": "96a2d4bd68b132aca68fa61b70a672ee096c20b694838fd7a6a465e001d16f2c",
+    "00000022.json": "3f3757a72d92315465bd93d5aa15214df3bf8e685ef14534a3774c92ff3cfce7",
+    "00000023.json": "e06a033f72ca0510c3ae84a46ab3ad17238951e6916a6bc26cdc60b84c24e82a",
+    "00000024.json": "a09573b7d36f9865cedf37d0c78a313cb0805dce87658ddd43b4d1b10aa7aefc",
+    "00000025.json": "10da70bed62c75efc5a49a4ed205097ecf11b84c944d184706a014e1ff87e173",
+    "00000026.json": "be9f50744c18c60319526f2b85b5ee255dbef8fd5043ea9928a2258caf7e8731",
+    "00000027.json": "a0e427b2e0aff044ccdf658aee4ef58f2d221ee2a9ecb982369696cb689c6004",
+    "00000028.json": "3b231ddfb4e0d00a665a909d3029914b7f5de052fc7d9b0a3b266b0745b1ed50",
+    "00000029.json": "c3fc86c0820bbd586b3bdb486e22474846d18ce363b9d1b232367725d3b112ee",
+    "00000030.json": "bb84c4c3edcd15a21f99b44af49628d4783083b7ecd526360374784e77b1a2c6",
+    "00000031.json": "f2c3df8bf841bc1979f901b240b2525abec85184c045c938d08e7325ca109cef",
+    "00000032.json": "a23a977a820ecbc3e5e8d86d6bd2289837cc4a649a437969bf4f0f76f8574e91",
+    "00000033.json": "c0fb8c8c4079b45f9575563315072b3eb2df055f3eae6fce9a512c3b404f5720",
+    "00000034.json": "2d81da9a7e3d9eee1c12d4d19cb54950453928ffb24167eb9001f547aea0ba09",
+    "00000035.json": "76252b256a238f1276418180640ffe8f083eb289dd905f2f893a971d1e220d35",
+    "00000036.json": "77f91b7bfab545492100b0a2637cb5a66efd59354fdf4d86351b1089eb81c02a",
+    "00000037.json": "d2eec3aaccc8fe5ae57ea5b93d97f91d31121803a8b20e61abdbd8d06e860ef7",
+    "00000038.json": "64498a257b41a6e1a7ba4c2f400513c0910cbd2a0a518c20a0fcfe003517c992",
+    "00000039.json": "9eefc161cb39ea3c5285c2663381c43425a3defad68dfd8324a894b02dcbc904",
+    "00000040.json": "d2df9be9148834a05c73ded93a1f1d4659a7a743aa5e196289a1a997ffb718e1",
+    "00000041.json": "dd0362dd337edf002b1e91d99ddbb8d13a0060bff7264b97a8a1d486fa7be7d8",
+    "00000042.json": "dd0b67a7a334a65580f3fc30fa4037b78aba101ff1bc4077992e73cc65bc2db0",
+    "00000043.json": "d6d85541148af7ec51fe896cacab322f041b88a58fee7abb700b2dd475037c0c",
+    "00000044.json": "674b24f82217e34258a77748dc7421bb3bebd41f5b747b930669ff67f7e909ce",
+    "00000045.json": "8996928a4a28dc29093ec11fea663d3bbc96fdca8b720c65db08746b71402d5e",
+    "00000046.json": "e1e2496f1c674c63d2f8cae0fabaca6b3c52c319b7279480bbb69cf3d5082343",
+    "00000047.json": "9fc4dbd0358d8a332c5067b7cbc9ccb64cccd57425e15ee54e90a7764c86ad6c",
+    "00000048.json": "761a57b8dddb5162c664d40d436226328e78b6bcb3773a0eda70fb70edf5aac5",
+    "00000049.json": "ad0f7a526bd8bcfe5f8fbead32aba407f6bb93a4ca5f317b0d8583b8a43a6fed",
+    "00000050.json": "5e5ec036b3bf86bdb97f7e37fb2f3a48ce0d175e308afc12aff2c706454c68af",
+    "00000051.json": "bf03e20a40f29a13e37d7265d45bf0e396a1e12bb123f05a86c4743888f4e21a",
+    "00000052.json": "19f635fb80c1874f4bd593b65e5524310e59b006280ead0ee9d7ddf0e1040145",
+    "00000053.json": "5ffdb161c5861fb4aa9f3e14746abbc5b241dca428f7ee7911c8425bd66589c5",
+    "00000054.json": "eef4b613535a0afd6ee32c7be912f2cf67289c214641d3f1b32694b2be99ec41",
+    "00000055.json": "8ceeaee1b50b756386750efdadb4df317c27048db58acaeac8815e3ec03934cc",
+    "00000056.json": "96cd2139a75053342e6136e1edb6ce87203933680a2dc590ab6194e547707690",
+    "00000057.json": "c81997dd2ce55c673c2698de206fb7ec2d9075d230c7c20712d330fed03471bd",
+    "00000058.json": "8996d116fe487d7574d58a723944f6850f9f9824542cb5abd10f086191155a70",
+    "00000059.json": "c02323f6d916761697211746a47b342e0149d8b022f570242013c60c5dde1d53",
+    "00000060.json": "4f19904b8ee06926b2df918e1ab43ec2e4a08d0bcecb9b46ec249b5947cce310",
+    "00000061.json": "9648235ff16717fc917ac36d38166666e65af29497184f49e435ade85c97ba12",
+    "00000062.json": "d88f0d1957580c27f4a79ba13181632e9d7c91c7cd7e0b1cb5e77db35255f85a",
+    "00000063.json": "ff727a99c8fb3082617c9c2abc60b43b471158682ce72f2e17298913721f54a1",
+    "00000064.json": "d8ac8f6c9baf69e868a3d2f108b12a0d0de0cc83d26b3474c73ce1f7dbacf038",
+    "00000065.json": "adc42f52c0c7a1b8416ffb906f4e89ee7434347546070b454e4736b743fb08a5",
+    "00000066.json": "8c923a469488899aad51a2f7d637c2df31b69185d03c40f5bdc58c6167effb4c",
+    "00000067.json": "79cffe4ca57cc0145fbb52bc899688042ab9e67f7649881dae797f3d5660a3f6",
+    "00000068.json": "ebd9c9675aa3bab59f5bd45a479da6b64c67bd14c7f8055b1152bbd447de8801",
+    "00000069.json": "4b994412274a9cc77602b3034e729da2d30398e1a985ad95f37979dba1809e0c",
+    "00000070.json": "b8e2355c6582b63e459f6a7101df2a69ad37fd33a22b83c17e8ba6c31485a05b",
+    "00000071.json": "cdd7a03a5427b342ccdb3aa51236ffd8e90063ee9f8ea5cbbe7b352fa71aba86",
+    "00000072.json": "98a64b4890c2c3fc5871252cffefdc08c80e0e01d49c9a9f63983a389f334b4c",
+    "00000073.json": "bf42139270eb4059e34e721126e6604a7bd6f31dfe29585f91169382cd61dc31",
+    "00000074.json": "d1c66a8e36ddbdbd92628422721b0118be0a85ef674c991adfe7eeeca4fb877c",
+    "00000075.json": "fe956aeac258c0106921ccbc1dc0c0ef34af44d4a0f7c76caf1ff65e84d6313b",
+    "00000076.json": "bfbea7b710dd4b8cb225f83247f64b895d40136359479480a28a67b4174a74a5",
+    "00000077.json": "daee0c44d4f41adcbfba391a376a28faf521ab19991519024214591b5cea56bd",
+    "00000078.json": "2092c83b7305ff8420084863aa91c5c90600a97cb3e7f63ba9d76f457027345d",
+    "00000079.json": "ea388c8b8cc46e159932ac00dcf67e7fb4b7ac3ed44df0fed1a1d9521d167a38",
+    "00000080.json": "4866f7acce03b8d6c1f7b2555dcd499001d2ed6ade2b36c84dc688509dac27a8",
+    "00000081.json": "efbdb4f5423703990be074f2cf4b6440b8256b98fac6e94fc221115a4643206b",
+    "00000082.json": "9ab9cb73e97058361b3bfa7ede1a984acb4592df50420c2812362e017ce4a6fb"
+  },
+  "product_acceptance": false
+}

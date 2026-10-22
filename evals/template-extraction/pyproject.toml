@@ -24,7 +24,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["template_extraction_eval"]
+packages = ["template_extraction_eval", "template_extraction_prep"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -40,4 +40,4 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-packages = ["template_extraction_eval"]
+packages = ["template_extraction_eval", "template_extraction_prep"]

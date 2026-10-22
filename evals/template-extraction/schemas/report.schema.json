@@ -78,7 +78,7 @@
           "dimension": {"type": "string", "minLength": 1},
           "assertion_id": {"type": "string", "minLength": 1},
           "region_id": {"type": ["string", "null"]},
-          "slot_id": {"type": ["string", "null"]},
+          "slot_ref": {"type": ["string", "null"]},
           "gold_locator": {"type": ["object", "null"]},
           "actual_locator": {"type": ["object", "null"]},
           "expected": {},
@@ -135,8 +135,12 @@
           "required": ["case", "actual_contract", "gold_contract"],
           "properties": {
             "case": {"const": "docfit-template-extraction-case/v1"},
-            "actual_contract": {"const": "docfit-template-fill-contract/v1"},
-            "gold_contract": {"const": "docfit-template-fill-contract/v1"}
+            "actual_contract": {
+              "const": "docfit-template-fill-contract/v2"
+            },
+            "gold_contract": {
+              "const": "docfit-template-fill-contract/v2"
+            }
           }
         }
       }

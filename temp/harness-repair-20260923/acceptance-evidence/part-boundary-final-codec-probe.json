@@ -1,0 +1,290 @@
+{
+  "verification_level": "synthetic live SDK compatibility probe, not school E2E",
+  "backend": "minimax",
+  "model": "MiniMax-M3",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "string",
+        "enum": [
+          "complete",
+          "needs_input",
+          "expand_revision"
+        ]
+      },
+      "summary": {
+        "type": "string",
+        "minLength": 1
+      },
+      "needs_input": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "semantic_judgments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "source_entry_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "parts": {
+              "type": "array",
+              "description": "Partition the supplied visible text in reading order. Each part labels one consecutive substring; together they account for the original text once, without overlap or reordering. Semantic boundaries may fall inside unbroken text. This is source annotation, not before/after edits.",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "pattern": "^(?:[^\\u0009-\\u000D\\u001C-\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000](?:[\\s\\S]*[^\\u0009-\\u000D\\u001C-\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000])?)?(?![\\s\\S])",
+                    "description": "Exact consecutive text copied from the supplied entry or range, preserving punctuation and all whitespace. Encode edge whitespace with leading_whitespace/trailing_whitespace runs on this same part; text itself has no edge whitespace. Keep interior whitespace literal and preserve the part boundary. For an empty entry whose extent is whole_entry, use one empty string part. It may be a fill_slot with a vocabulary field when visible layout and neighboring labels show that this exact entry is the value position; otherwise use a non-field role. Include text to be cleaned as its own part; do not rewrite the source or add a new placeholder."
+                  },
+                  "whitespace": {
+                    "type": "object",
+                    "properties": {
+                      "codepoint": {
+                        "type": "string",
+                        "pattern": "^U\\+[0-9A-F]{4,6}$"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "required": [
+                      "codepoint",
+                      "count"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Mechanical transport for a part made only of whitespace when the structured-output channel cannot preserve an all-whitespace text string. Keep text empty and describe one exact codepoint/count run from the supplied source text or whitespace feedback. Valid at any position, including between visible-text parts inside an entry; it is not restricted to entry boundaries. Keep the role and field_id chosen for that whitespace. Do not use this for visible text or mixed text."
+                  },
+                  "leading_whitespace": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "codepoint": {
+                          "type": "string",
+                          "pattern": "^U\\+[0-9A-F]{4,6}$"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "required": [
+                        "codepoint",
+                        "count"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Exact leading whitespace runs of this same visible-text part, in source order."
+                  },
+                  "trailing_whitespace": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "codepoint": {
+                          "type": "string",
+                          "pattern": "^U\\+[0-9A-F]{4,6}$"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "required": [
+                        "codepoint",
+                        "count"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Exact trailing whitespace runs of this same visible-text part, in source order."
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "fixed_label",
+                      "fill_slot",
+                      "body_structure",
+                      "generated_content",
+                      "manual_region",
+                      "style_only",
+                      "cleanup"
+                    ],
+                    "description": "Responsibility of this exact text. A fill_slot is the text to replace with a field value, including a prompt or example occupying that value's position. style_only describes a formatting requirement, not an example field value."
+                  },
+                  "field_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Field from the supplied vocabulary whose meaning and allowed role match the responsibility this part carries in context. A fill_slot binds the value replacing this exact part. Only for fill_slot, body_structure or generated_content."
+                  }
+                },
+                "required": [
+                  "text",
+                  "role"
+                ],
+                "additionalProperties": false,
+                "if": {
+                  "required": [
+                    "whitespace"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "text": {
+                      "const": ""
+                    }
+                  },
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "leading_whitespace"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "trailing_whitespace"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "leading_whitespace"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "trailing_whitespace"
+                          ]
+                        }
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "reason": {
+              "type": "string"
+            },
+            "open_questions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "source_entry_id",
+            "parts"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "revision_request": {
+        "type": "object",
+        "description": "Related existing source entries that also need semantic reconsideration.",
+        "properties": {
+          "source_entry_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Explain the semantic dependency requiring these entries to change."
+          }
+        },
+        "required": [
+          "source_entry_ids",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "status",
+      "summary",
+      "semantic_judgments"
+    ],
+    "additionalProperties": false
+  },
+  "prompt": "Return semantic_judgments in the structured output. Each new judgment names source_entry_id from source_entries and an ordered parts array over that entry's exact text. Preserve all whitespace; merely describing it in reason does not cover it. Boundary counts describe characters already present in the supplied text, not additional text. For an all-whitespace entry, leading and trailing counts refer to the same characters; do not add those counts to each other or to text_length. A source entry may report render_sensitive_codepoints with zero-based offsets, Unicode codepoints, and categories for characters that a font or renderer can hide or substitute. Preserve those exact characters in parts[].text; a JSON Unicode escape is equivalent to the literal character and is not a reason to request more input. For any part made only of whitespace, including a whitespace part inside an entry that also has visible text, keep text empty and use one whitespace codepoint/count transport per codepoint run. For mixed whitespace, return consecutive transport parts in source order with the same role and field_id when their responsibility is the same. Harness expands each run only when it exactly matches the next source substring. A whitespace-only source entry is not an empty source entry; bare empty text without whitespace transport is valid only when source text length is zero. For a part containing visible text, keep text free of leading/trailing whitespace and encode those runs in leading_whitespace/trailing_whitespace arrays on that SAME part. Each array lists codepoint/count runs in source order. Preserve interior whitespace literally. These runs share the part's role and field_id; do not split one fill_slot into several parts merely to transport its edge whitespace. For example, a single part containing \" Example\" is represented as {\"text\":\"Example\",\"leading_whitespace\":[{\"codepoint\":\"U+0020\",\"count\":1}],\"role\":<your chosen role>} with field_id when that role requires it. Visible text and leading_whitespace/trailing_whitespace ARE allowed together; only the separate whitespace property requires empty text. Never substitute a role name or textual placeholder for whitespace. \nSynthetic transport test. Re-encode these already assigned parts without changing their text after decoding, number, roles, or fields. Return complete for source-entry-probe. Do not add field_id to the label. Original parts: [{\"text\": \"Label\", \"role\": \"fixed_label\"}, {\"text\": \" Example value\", \"role\": \"fill_slot\", \"field_id\": \"author.name.en\"}]",
+  "original_parts": [
+    {
+      "text": "Label",
+      "role": "fixed_label"
+    },
+    {
+      "text": " Example value",
+      "role": "fill_slot",
+      "field_id": "author.name.en"
+    }
+  ],
+  "subtype": "success",
+  "is_error": false,
+  "structured_output": {
+    "status": "complete",
+    "summary": "Re-encoded the two parts preserving text, roles, and field_id. The fixed_label \"Label\" has no edge whitespace. The fill_slot with text \" Example value\" is split as a single part: leading_whitespace run U+0020×1 carries the leading space, text holds \"Example value\", no trailing whitespace. No separate whitespace transport parts are needed since each visible-text part carries its own edge whitespace runs.",
+    "semantic_judgments": [
+      {
+        "source_entry_id": "source-entry-probe",
+        "parts": [
+          {
+            "text": "Label",
+            "role": "fixed_label"
+          },
+          {
+            "text": "Example value",
+            "leading_whitespace": [
+              {
+                "codepoint": "U+0020",
+                "count": 1
+              }
+            ],
+            "role": "fill_slot",
+            "field_id": "author.name.en"
+          }
+        ],
+        "reason": "Source substring is \"Label Example value\". Part 1 = \"Label\" (fixed_label). Part 2 = \" Example value\" as a single fill_slot: leading whitespace is U+0020×1, visible text \"Example value\", no trailing whitespace. One source whitespace codepoint U+0020 between the two words of \"Example value\" is interior and preserved literally in text."
+      }
+    ]
+  },
+  "exact_parts_preserved": true,
+  "duration_seconds": 4.27,
+  "schema_warnings": [],
+  "runtime_files": {
+    "src/docfit/app/prepare_template.py": "a5e1b72fe15021f9a3aac5ab97d8d7df0c4df5ce4f90c807a8caa990cf2e3247",
+    "src/docfit/template/harness.py": "8e1a1c7b829266f73c418ef2936358d94677b6228a09be763298b034115a054b"
+  }
+}

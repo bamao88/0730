@@ -1,0 +1,28 @@
+{
+  "runtime_commit": "66788517de79070b157d2a83a81eaaf06ed270cf",
+  "verification_level": "fresh full-school E2E attempt; no reused unit proof, judgments, or budgets",
+  "exit_code": 2,
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "events": {
+    "response": 5,
+    "request": 5,
+    "budget_policy": 1,
+    "local_rejected": 3,
+    "local_review": 4,
+    "needs_input": 1,
+    "candidate_recorded": 1
+  },
+  "failure": {
+    "origin": "agent",
+    "code": "template_agent_needs_input",
+    "retryable": false,
+    "message": "The main Agent needs additional semantic input: ['Confirm whether parts[2] for entry source-entry-6d2edc50afea825d3d5fe765 should split the label \"日期：\" into two parts (parts[2]=text=\"日期\" + leading_whitespace[1 U+0020] as fixed_label, then parts[3]=text=\"：\" as standalone fixed_label) to satisfy the harness, OR whether the entire \"日期：\" stays as one fixed_label with text=\"日期：\" and leading_whitespace=[U+0020, count 1] (in which case the source-order expected_text should be \" 日期：\" not \" 日期\").']",
+    "suggested_actions": []
+  },
+  "published_outputs": [],
+  "product_acceptance": false
+}

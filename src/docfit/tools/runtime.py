@@ -54,6 +54,16 @@ class ToolFailure(Exception):
         return result
 
 
+def invariant_failure(code: str, message: str) -> ToolFailure:
+    return ToolFailure(
+        status="error",
+        origin="invariant",
+        code=code,
+        message=message,
+        retryable=False,
+    )
+
+
 def canonical_json(value: Any) -> bytes:
     return json.dumps(
         value,
@@ -146,19 +156,15 @@ def authorized_path(
             ) from error
         resolved = parent / candidate.name
     if not _within(resolved, task_root):
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="path_not_authorized",
-            message=f"{field} is outside the authorized task root.",
+        raise invariant_failure(
+            "path_not_authorized",
+            f"{field} is outside the authorized task root.",
         )
     read_only_input = task_root / "input"
     if not must_exist and read_only_input.is_dir() and _within(resolved, read_only_input):
-        raise ToolFailure(
-            status="needs_input",
-            origin="request",
-            code="input_directory_read_only",
-            message=f"{field} cannot publish into the task input directory.",
+        raise invariant_failure(
+            "input_directory_read_only",
+            f"{field} cannot publish into the task input directory.",
         )
     if must_exist:
         correct_kind = resolved.is_dir() if expect_directory else resolved.is_file()
@@ -171,6 +177,28 @@ def authorized_path(
                 message=f"{field} must identify a {expected}.",
             )
     return resolved
+
+
+def require_hash_match(
+    *,
+    expected: str,
+    actual: str,
+    code: str,
+    message: str,
+) -> None:
+    if expected != actual:
+        raise invariant_failure(code, message)
+
+
+def require_file_sha256(path: Path, *, expected_sha256: str, code: str) -> str:
+    actual = sha256_file(path)
+    require_hash_match(
+        expected=expected_sha256,
+        actual=actual,
+        code=code,
+        message=f"{path.name} hash no longer matches the authorized snapshot.",
+    )
+    return actual
 
 
 def require_docx(path: Path, *, field: str) -> None:

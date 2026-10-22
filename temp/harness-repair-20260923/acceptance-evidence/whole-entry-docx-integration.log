@@ -1,0 +1,45 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+__ test_0820_cover_replay_materializes_hash_bound_slot[explicit-whole-entry] ___
+
+tmp_path = PosixPath('/private/var/folders/1z/_xsfphts2gvbm6y269lbbt180000gn/T/pytest-of-xpw/pytest-2/test_0820_cover_replay_materia1')
+whole_entry = True
+
+    @pytest.mark.parametrize("whole_entry", [False, True], ids=["literal", "explicit-whole-entry"])
+    def test_0820_cover_replay_materializes_hash_bound_slot(
+        tmp_path: Path,
+        whole_entry: bool,
+    ) -> None:
+        prepared, inventory = _task_from_docx(
+            tmp_path=tmp_path,
+            source_docx=MINIMAL_UNITS / "01-cover/school-template.docx",
+            unit_id="u-cover",
+        )
+        slot_block = _block_id_containing(inventory, "学生姓名")
+        inventory = _slice_inventory(inventory, block_ids=[slot_block])
+        _write_inventory(prepared, inventory)
+        _write_accepted_review(
+            prepared,
+            [
+                _slot_judgment_for_marker(
+                    inventory=inventory,
+                    marker="学生姓名",
+                )
+            ],
+        )
+    
+        if whole_entry:
+            # Constructed fixture judgments exercise transport and materialization only;
+            # this is not a school-semantic acceptance test.
+            review_path = prepared.task_root / "work/.docfit/harness/semantic-judgments.json"
+            literal_review = json.loads(review_path.read_text(encoding="utf-8"))
+            declarations = []
+            for judgment in literal_review["semantic_judgments"]:
+>               assert len(judgment["parts"]) == 1
+E               AssertionError: assert 2 == 1
+E                +  where 2 = len([{'role': 'fixed_label', 'text': '□□□□□□学生姓名（三号黑体加粗）：'}, {'field_id': 'author.name.zh', 'role': 'fill_slot', 'text': '×××（或×□×） （三号楷体加粗）'}])
+
+tests/integration/test_template_materialization_replay.py:650: AssertionError
+=========================== short test summary info ============================
+FAILED tests/integration/test_template_materialization_replay.py::test_0820_cover_replay_materializes_hash_bound_slot[explicit-whole-entry]
+1 failed, 1 passed, 49 deselected in 0.71s

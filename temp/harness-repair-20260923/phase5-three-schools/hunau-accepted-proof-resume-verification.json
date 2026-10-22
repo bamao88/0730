@@ -1,0 +1,29 @@
+{
+  "runtime_commit": "3adad8fc9b2252a77c1a03f8327fa6afa1e70e3c",
+  "verification_level": "explicit accepted unit proof reuse; failed, not publication",
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "events": {
+    "budget_policy": 1,
+    "request": 3,
+    "response": 3,
+    "local_review": 3,
+    "local_rejected": 3,
+    "run_failed": 1
+  },
+  "failure": {
+    "origin": "harness",
+    "code": "semantic_revision_no_progress",
+    "retryable": false,
+    "message": "Repeated unchanged failure for source-entry-9c3b8ddd48c088f666c01ff7: source_text_partition.",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  },
+  "published_outputs": [],
+  "product_acceptance": false,
+  "accepted_proof_unchanged": true
+}

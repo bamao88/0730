@@ -258,6 +258,7 @@ def _annotation(
 
 def test_placement_copies_body_transport_once_in_student_source_order(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     student_content, registry = _student_content(tmp_path)
     template = tmp_path / "template.docx"
@@ -304,6 +305,10 @@ def test_placement_copies_body_transport_once_in_student_source_order(
             ),
         ],
     }
+    monkeypatch.setattr(
+        "docfit.template.artifact.validate_published_template_artifact",
+        lambda **_kwargs: {"template_sha256": contract["template_sha256"]},
+    )
 
     placement = build_placement(
         student_content=student_content,
@@ -398,14 +403,14 @@ def test_fill_contract_v2_rejects_inline_slot_style_even_with_valid_ref(
 
 
 def _slot(
-    slot_id: str,
+    slot_ref: str,
     field_id: str,
     tag: str,
     required: bool,
     style: dict[str, object],
 ) -> dict[str, object]:
     return {
-        "slot_id": slot_id,
+        "slot_ref": slot_ref,
         "field_id": field_id,
         "required": required,
         "locator": {"type": "content_control_tag", "value": tag},

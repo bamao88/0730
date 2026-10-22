@@ -1,19 +1,19 @@
 schema_version: docfit-template-extraction-case/v1
 case_id: 03-pku-graduate
-description: 北京大学研究生 Registry v0.5 模板 Gold 候选文件对
+description: 北京大学研究生 Registry v0.5 模板 Gold 正式 Gold 文件对
 school_id: pku-graduate
 school_name: 北京大学研究生
-case_status: candidate
+case_status: accepted
 gold:
-  template: gold/template.docx
-  contract: gold/fill-contract.yaml
-  template_sha256: 2328d529eef8eedc110783c106d8a9dbcf54eb230f5105c4e7d3fb88c64992d8
-  contract_sha256: 34ded3e6d1dc5f331cffb94eb1d990c16f670a3734810e0cd5ae9790d103239c
+  template: gold/final-template.gold.docx
+  contract: gold/fill-contract.gold.yaml
+  template_sha256: 4e4454bf925c640cc80eaec626c9ab3512ee5a38ee5601c2d481f7a9769bbc50
+  contract_sha256: 5dcff35b423bdea13cac73b869c5b451695cad8f5d89b34f6eed8e344645390f
 field_registry_ref:
   path: ../../../../docs/plans/docfit-content-field-registry/content-fields-v0.5.yaml
   id: docfit.thesis.content_fields
   version: 0.5.0
-  sha256: 6928e3746590cd33de766e481cc0d3ef0700c52023b44513207542020bd83c17
+  sha256: e139059b03883d5fbb07ebc1a35d5dffac654fad7241a61d520d7ecd4dac7ffd
 eval_config:
   path: ../../config/eval-config-v1.yaml
   id: template-extraction-v1
@@ -21,17 +21,16 @@ eval_config:
   sha256: d734e59ada4e132a9584522a8e26dd10b66f53d536f75628c50cd5ed2aa388b6
 scoring_version: docfit-template-extraction-scoring/v1
 marker_protocol: docfit-content-control-marker/v1
-expected_verdict: INPUT_ERROR
+expected_verdict: PASS
 gold_review:
-  status: candidate
-  reviewer: null
-  reviewed_at: null
-  source_sha256: 2328d529eef8eedc110783c106d8a9dbcf54eb230f5105c4e7d3fb88c64992d8
-  source_path: ../../../../temp/manual-gold-preparation/gold/10-school-assets/03-pku-graduate/pku-graduate__fillable-template.docx
-  blockers:
-  - 精确 Word 与填写契约文件对尚待产品负责人最终确认。
+  status: accepted
+  reviewer: xpw
+  reviewed_at: '2026-08-17T00:00:00+08:00'
+  source_sha256: 4e4454bf925c640cc80eaec626c9ab3512ee5a38ee5601c2d481f7a9769bbc50
+  source_path: gold/final-template.gold.docx
+  blockers: []
 permissions:
-  visibility: internal_candidate
+  visibility: internal_gold
   student_personal_data: none_known
   git_storage: approved
   ci_use: approved

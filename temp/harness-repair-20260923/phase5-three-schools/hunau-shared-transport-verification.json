@@ -1,0 +1,31 @@
+{
+  "runtime_commit": "ae1cb9fa22d990cde3877bc30abf76597cdb3843",
+  "verification_level": "E2E post-unit with accepted unit proof reuse; not fresh full-school E2E",
+  "exit_code": 2,
+  "frozen_hash_mismatches": {
+    "inputs": [],
+    "runtime_source": [],
+    "skill": []
+  },
+  "events": {
+    "budget_policy": 1,
+    "request": 12,
+    "response": 12,
+    "local_review": 12,
+    "local_rejected": 10,
+    "candidate_recorded": 2,
+    "run_failed": 1
+  },
+  "failure": {
+    "code": "semantic_problem_budget_exhausted",
+    "message": "Revision limit reached for source-entry-570e993fb4bda03ea1e14c7a: source_text_partition.",
+    "origin": "harness",
+    "retryable": false,
+    "status": "error",
+    "suggested_actions": [
+      "Inspect the saved judgments, feedback and budget evidence."
+    ]
+  },
+  "published_outputs": [],
+  "product_acceptance": false
+}

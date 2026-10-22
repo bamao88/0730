@@ -1,0 +1,24 @@
+{
+  "annotations": [
+    {
+      "classification_status": "classified",
+      "confidence": 1.0,
+      "field_id": "thesis.title.en",
+      "note": "Synthetic exact title.",
+      "source_content_id": "source-content-14c4a933bdf283bb3c051fc0",
+      "value": "Verified title"
+    },
+    {
+      "classification_status": "classified",
+      "confidence": 1.0,
+      "field_id": "body.paragraph",
+      "note": "Synthetic body.",
+      "source_content_id": "source-content-2ba010bbbee0cf845e9663f0",
+      "value": null
+    }
+  ],
+  "relations": [],
+  "schema_version": 3,
+  "summary": "Batch 1/1: Synthetic extraction.",
+  "uncertainties": []
+}

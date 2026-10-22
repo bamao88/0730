@@ -15,6 +15,7 @@ from docfit.app.agent import (
     AUTO_APPROVED_TOOL_NAMES,
     BUILTIN_TOOLS,
     DIRECTORY_POLICY,
+    DOMAIN_SKILL_NAMES,
     LOGGING_POLICY,
     MAIN_AGENT_READ_POLICY,
     READ_ONLY_SUBAGENT_TOOLS,
@@ -25,6 +26,7 @@ from docfit.app.agent import (
     build_unit_analyst_definition,
     project_root,
 )
+from docfit.app.agent_home import assert_isolated_agent_home
 from docfit.app.settings import (
     AgentConfigurationError,
     BackendName,
@@ -175,7 +177,10 @@ def run_doctor(
         project / "pyproject.toml",
         project / "uv.lock",
         project / ".python-version",
-        *(project / ".claude" / "skills" / skill_name / "SKILL.md" for skill_name in SKILL_NAMES),
+        *(
+            project / ".claude" / "skills" / skill_name / "SKILL.md"
+            for skill_name in DOMAIN_SKILL_NAMES
+        ),
     )
     missing_files = [
         str(path.relative_to(project)) for path in required_files if not path.is_file()
@@ -206,7 +211,8 @@ def run_doctor(
     )
 
     try:
-        options = build_agent_options(cwd=project)
+        options = build_agent_options()
+        assert_isolated_agent_home(Path(str(options.cwd)), project=project)
         mcp_names = tuple(options.mcp_servers) if isinstance(options.mcp_servers, dict) else ()
         hooks = options.hooks or {}
         agent_hooks = hooks.get("PreToolUse", [])
@@ -237,7 +243,9 @@ def run_doctor(
             (
                 "Skill, path-bounded Read/Glob/Grep, trusted Bash/Write, AskUserQuestion, "
                 "and Agent are visible; Agent is type-gated to one read-only definition and "
-                "Bash, Write, plus the five DocFit names are pre-approved."
+                "Bash, Write, plus the five DocFit names are pre-approved; the full-tool "
+                "profile loads only the conversion Skill from an Agent home outside the "
+                "repository."
                 if config_ok
                 else "SDK permission or discovery configuration does not match the P1 contract."
             ),
@@ -276,6 +284,7 @@ def run_doctor(
         "current_task_input_read_only",
         "current_task_work_read_only",
         "current_task_output_read_only",
+        "word_packages_through_docfit_tools_only",
         "realpath_before_authorization",
         "sensitive_outside_and_symlink_escape_denied",
     )

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "error",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "agent",
+    "code": "semantic_batch_result_invalid",
+    "retryable": true,
+    "message": "A semantic batch did not return a valid structured result.",
+    "suggested_actions": []
+  }
+}

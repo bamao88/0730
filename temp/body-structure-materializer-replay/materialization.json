@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "operation_count": 1,
+  "cleanup_count": 22,
+  "operations": [
+    {
+      "action": "materialize_structure",
+      "field_id": "body.chapters",
+      "block_id": "u-paper-body:block-0020",
+      "member_count": 9,
+      "members": [
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0020"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0021"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0022"
+        },
+        {
+          "field_id": "body.heading.outline2",
+          "block_id": "u-paper-body:block-0023"
+        },
+        {
+          "field_id": "body.heading.outline3",
+          "block_id": "u-paper-body:block-0024"
+        },
+        {
+          "field_id": "body.numbered_list_item",
+          "block_id": "u-paper-body:block-0025"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0026"
+        },
+        {
+          "field_id": "body.heading.outline1",
+          "block_id": "u-paper-body:block-0027"
+        },
+        {
+          "field_id": "body.paragraph",
+          "block_id": "u-paper-body:block-0028"
+        }
+      ],
+      "judgment_ids": [
+        "u-paper-body:body-track-science"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "block_id": "u-paper-body:block-0001",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0002",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0007",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0010",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0015",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0018",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0040",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0044",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0047",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0019",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0029",
+      "action": "remove_paragraph"
+    },
+    {
+      "block_id": "u-paper-body:block-0030",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0031",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0032",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0033",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0034",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0035",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0036",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0037",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0038",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0039",
+      "action": "remove_alternate_body_structure"
+    },
+    {
+      "block_id": "u-paper-body:block-0048",
+      "action": "strip_instruction_text"
+    }
+  ]
+}

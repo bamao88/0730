@@ -1,0 +1,20 @@
+{
+  "run": "single-zh-repeat-3",
+  "input_characters": 405,
+  "http_status": 200,
+  "status": "completed",
+  "seconds": 2.253,
+  "first_text_seconds": 1.731,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 15,
+    "output_tokens": 50,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 340,
+    "service_tier": "standard"
+  },
+  "returned_model": "MiniMax-M3",
+  "exact_text_partition": {
+    "6": true
+  }
+}

@@ -1,0 +1,20 @@
+Using CPython 3.12.11
+Creating virtual environment at: .venv
+   Building docfit-agent @ file:///Users/xpw/.codex/worktrees/harness-layout-evidence/template-extraction
+      Built docfit-agent @ file:///Users/xpw/.codex/worktrees/harness-layout-evidence/template-extraction
+Installed 47 packages in 154ms
+{
+  "schema_version": 1,
+  "status": "needs_input",
+  "checks": [],
+  "warnings": [],
+  "failure": {
+    "origin": "harness",
+    "code": "unit_boundary_checkpoint_failed",
+    "retryable": true,
+    "message": "Harness rejected unit boundary candidates before main flow.",
+    "suggested_actions": [
+      "revise units[] against Harness feedback"
+    ]
+  }
+}

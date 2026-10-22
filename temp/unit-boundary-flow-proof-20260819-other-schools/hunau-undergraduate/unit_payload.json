@@ -1,0 +1,145 @@
+{
+  "render_ref": "render:v2:04c9b5ff2bf2ce6618a98480acb7deabc1c2f0cdf49267eab3693f8e1687663f",
+  "units": [
+    {
+      "unit_id": "cover",
+      "unit_name": "封面",
+      "start_boundary": {
+        "page": 1,
+        "region": "visual boundary",
+        "seen_text": "附件1 封面基本格式"
+      },
+      "end_boundary": {
+        "page": 1,
+        "region": "visual boundary",
+        "seen_text": "提交日期：20××年××月"
+      }
+    },
+    {
+      "unit_id": "integrity_statement",
+      "unit_name": "诚信声明",
+      "start_boundary": {
+        "page": 2,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+      },
+      "end_boundary": {
+        "page": 2,
+        "region": "visual boundary",
+        "seen_text": "年 月 日"
+      }
+    },
+    {
+      "unit_id": "toc",
+      "unit_name": "目录",
+      "start_boundary": {
+        "page": 3,
+        "region": "visual boundary",
+        "seen_text": "目录基本格式"
+      },
+      "end_boundary": {
+        "page": 4,
+        "region": "visual boundary",
+        "seen_text": "□□致谢"
+      }
+    },
+    {
+      "unit_id": "paper_body_sample",
+      "unit_name": "正文格式样本",
+      "start_boundary": {
+        "page": 4,
+        "region": "visual boundary",
+        "seen_text": "正文基本格式"
+      },
+      "end_boundary": {
+        "page": 6,
+        "region": "visual boundary",
+        "seen_text": "附录内容的字体字号参照正文"
+      }
+    },
+    {
+      "unit_id": "design_task",
+      "unit_name": "毕业设计任务书",
+      "start_boundary": {
+        "page": 6,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生"
+      },
+      "end_boundary": {
+        "page": 10,
+        "region": "visual boundary",
+        "seen_text": "学生本人签名"
+      }
+    },
+    {
+      "unit_id": "proposal_report",
+      "unit_name": "开题报告",
+      "start_boundary": {
+        "page": 10,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文"
+      },
+      "end_boundary": {
+        "page": 13,
+        "region": "visual boundary",
+        "seen_text": "3.此表可从毕业论文管理系统填写打印"
+      }
+    },
+    {
+      "unit_id": "proposal_defense_record",
+      "unit_name": "开题论证记录表",
+      "start_boundary": {
+        "page": 13,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+      },
+      "end_boundary": {
+        "page": 14,
+        "region": "visual boundary",
+        "seen_text": "记录、签名栏必须用黑色笔手工填写"
+      }
+    },
+    {
+      "unit_id": "defense_record",
+      "unit_name": "答辩记录表",
+      "start_boundary": {
+        "page": 15,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+      },
+      "end_boundary": {
+        "page": 16,
+        "region": "visual boundary",
+        "seen_text": "记录、签名栏必须用黑色笔手工填写"
+      }
+    },
+    {
+      "unit_id": "topic_change_approval",
+      "unit_name": "题目变更审批表",
+      "start_boundary": {
+        "page": 16,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+      },
+      "end_boundary": {
+        "page": 17,
+        "region": "visual boundary",
+        "seen_text": "2.此表可从毕业论文管理系统或教务处网站下载中心下载"
+      }
+    },
+    {
+      "unit_id": "grade_form",
+      "unit_name": "成绩评定表",
+      "start_boundary": {
+        "page": 17,
+        "region": "visual boundary",
+        "seen_text": "湖南农业大学全日制普通本科生毕业论文（设计）"
+      },
+      "end_boundary": {
+        "page": 18,
+        "region": "visual boundary",
+        "seen_text": "注：1.此表可用黑色签字笔填写"
+      }
+    }
+  ]
+}

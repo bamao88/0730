@@ -91,6 +91,23 @@ def locate_paragraphs(
         matches = [p for p in matches if locator.left_anchor in p.text]
     if locator.right_anchor is not None:
         matches = [p for p in matches if locator.right_anchor in p.text]
+    if locator.value is not None and locator.type in {
+        "placeholder_anchor",
+        "text_anchor",
+        "text_range",
+    }:
+        value = locator.value
+        normalized_value = " ".join(value.split())
+
+        def matches_value(paragraph: ParagraphFact) -> bool:
+            normalized_text = " ".join(paragraph.text.split())
+            if locator.match_mode == "exact_paragraph":
+                return normalized_text == normalized_value
+            if locator.match_mode == "exact_text":
+                return paragraph.text == value or normalized_text == normalized_value
+            return value in paragraph.text or normalized_value in normalized_text
+
+        matches = [p for p in matches if matches_value(p)]
     if locator.occurrence is not None:
         occurrence_index = locator.occurrence - 1
         if occurrence_index >= len(matches):
@@ -104,4 +121,3 @@ def table_signature(table: TableFact) -> tuple[tuple[int, int, int, str | None, 
         (cell.row, cell.cell, cell.grid_span, cell.vertical_merge, cell.text)
         for cell in table.cells
     )
-

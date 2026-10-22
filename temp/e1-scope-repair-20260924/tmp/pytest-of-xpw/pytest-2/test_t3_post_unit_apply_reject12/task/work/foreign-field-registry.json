@@ -1,0 +1,1 @@
+{"registry_id": "docfit.foreign.fields", "registry_version": "0.1.0", "fields": [{"field_id": "thesis.title.zh", "label": "foreign title", "meaning": "foreign test field", "content_type": "text"}]}

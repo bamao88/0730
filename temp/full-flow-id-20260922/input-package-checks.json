@@ -1,0 +1,47 @@
+[
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/04-paper-body/school-template.docx",
+    "sha256": "4eb1b296b01997fb6be9d930f6fbf13f45081edbea7cdd678f5577159dc4fdbc",
+    "package": "ok"
+  },
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/02-integrity-statement/school-template.docx",
+    "sha256": "6c867472c39606a4dae7bcd84c74dafa9510d118d987f20b0c2bdac0fc28a64d",
+    "package": "ok"
+  },
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/01-cover/school-template.docx",
+    "sha256": "5456f95d56424fccf72bc606b2c75db9eb85a561a0a6bbd2cee6af47a3d6a8cc",
+    "package": "ok"
+  },
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/06-proposal/school-template.docx",
+    "sha256": "4c05ea894121b3ddeedd496a686e42de34a9150a29beb9d020721e4ebe43ea06",
+    "package": "ok"
+  },
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/05-design-task/school-template.docx",
+    "sha256": "7ffd38f9be3d867b8a71e859ed9b952043458cd3116e65191c898c8fc6032ef0",
+    "package": "ok"
+  },
+  {
+    "source": "evals/fixtures/template-extraction/minimal-units-0820/units/03-toc/school-template.docx",
+    "sha256": "8474285cfd11d397cfb3f5820d994bdada1be26129b49bf6657869d817dbca1c",
+    "package": "ok"
+  },
+  {
+    "source": "temp/manual-gold-preparation/gold/00-inputs/schools/pku-graduate__source-template.docx",
+    "sha256": "e27cabb7771f15526488536dc4d06251e0efcd827cad6faeb400b7a017b84375",
+    "package": "ok"
+  },
+  {
+    "source": "temp/manual-gold-preparation/gold/00-inputs/schools/njau-undergraduate__source-template.docx",
+    "sha256": "d87b1a4b17f7162590cde28f8871c210f11f3476a8ebcf3b0bd3767a4bd34b6e",
+    "package": "ok"
+  },
+  {
+    "source": "temp/manual-gold-preparation/gold/00-inputs/schools/hunau-undergraduate__source-template.docx",
+    "sha256": "30290bad5ff0b0843ee752ce3371da7d4ce615c4b24f2a1e8f07ab9c362760c5",
+    "package": "ok"
+  }
+]

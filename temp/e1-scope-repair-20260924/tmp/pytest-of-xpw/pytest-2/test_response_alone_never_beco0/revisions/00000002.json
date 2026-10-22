@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-24T09:28:47.243903+00:00",
+  "data": {
+    "is_error": false,
+    "request_id": 1,
+    "session_id": "test-session",
+    "structured_output": {
+      "semantic_judgments": [
+        {
+          "parts": [
+            {
+              "role": "fixed_label",
+              "text": "姓名：  "
+            }
+          ],
+          "source_entry_id": "source-entry-3a91f5cd248fe7a9726e01d8"
+        }
+      ],
+      "status": "complete",
+      "summary": "判断"
+    }
+  },
+  "event_digest": "069af9a77010fb05948ed3ea566f3eb978189e6487189f09fde2bb345f39db26",
+  "evidence_mode": "runtime",
+  "kind": "response",
+  "manifest_digest": "9a0951af1cdc90bd0769dbf3c2c10d48adf25fb7504e91c1f85125ba34027d46",
+  "previous_event_digest": "109893a6de556267876e6e9b3a5be0f2d847e45ed77919365f7399c6c78115f9",
+  "schema_version": "docfit-semantic-revision-event/v1",
+  "sequence": 2
+}
